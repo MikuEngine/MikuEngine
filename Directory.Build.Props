@@ -17,6 +17,8 @@ $(VcpkgRoot)\installed\$(TripletStatic)\include;
 $(VcpkgRoot)\installed\$(TripletDynamic)\include;
 $(Vendor)\$(TripletStatic)\include;
 $(Vendor)\$(TripletDynamic)\include;
+$(SolutionDir)Library\;
+$(ProjectDir);
 %(AdditionalIncludeDirectories)
 			</AdditionalIncludeDirectories>
         </ClCompile>
