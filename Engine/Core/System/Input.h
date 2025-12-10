@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <directXTK/Mouse.h>
 #include <directXTK/Keyboard.h>

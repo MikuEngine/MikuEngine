@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define HR_CHECK(x) engine::Debug::__CheckResult(x, __FILE__, __LINE__)
 #define FATAL_CHECK(cond, msg) \

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "GraphicsDevice.h"
 
 #include <dxgi1_5.h>

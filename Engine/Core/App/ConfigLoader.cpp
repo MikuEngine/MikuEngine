@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ConfigLoader.h"
 
 #include <json.hpp>
@@ -9,7 +9,7 @@ namespace engine
 
 	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(WindowSettings, width, height, isFullScreen, isResizable, useVsync)
 
-	void ConfigLoader::Load(const std::string& filePath, WindowSettings& outSettings)
+		void ConfigLoader::Load(const std::string& filePath, WindowSettings& outSettings)
 	{
 		if (!std::filesystem::exists(filePath))
 		{

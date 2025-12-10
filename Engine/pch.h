@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -39,4 +39,5 @@ namespace engine
 #include "Common/Debug/Debug.h"
 #include "Core/System/MyTime.h"
 #include "Core/System/Input.h"
+
 
