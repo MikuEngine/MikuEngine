@@ -30,6 +30,9 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="App\TestGameApp.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl" />
@@ -40,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="App\TestGameApp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

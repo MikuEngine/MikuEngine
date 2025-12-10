@@ -145,17 +145,19 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Common\Debug\TestDebug.cpp" />
-    <ClCompile Include="Common\Math\TestMath.cpp" />
+    <ClCompile Include="Common\Debug\Debug.cpp" />
+    <ClCompile Include="Common\Utility\Profiling.cpp" />
+    <ClCompile Include="Common\Utility\StringUtility.cpp" />
+    <ClCompile Include="Core\App\ConfigLoader.cpp" />
+    <ClCompile Include="Core\Graphics\Device\GraphicsDevice.cpp" />
+    <ClCompile Include="Core\System\Input.cpp" />
+    <ClCompile Include="Core\System\MyTime.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Common\Utility\TestUtility.cpp" />
     <ClCompile Include="Core\App\WinApp.cpp" />
-    <ClCompile Include="Core\Graphics\Device\TestDevice.cpp" />
     <ClCompile Include="Core\Graphics\Resource\TestResource.cpp" />
-    <ClCompile Include="Core\System\TestSystem.cpp" />
     <ClCompile Include="Framework\Asset\TestAsset.cpp" />
     <ClCompile Include="Framework\Component\TestComponent.cpp" />
     <ClCompile Include="Framework\GameObject\TestGameObject.cpp" />
@@ -165,8 +167,15 @@
     <ClCompile Include="Framework\System\Test2System.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\Debug\Debug.h" />
+    <ClInclude Include="Common\Math\MathUtility.h" />
+    <ClInclude Include="Common\Utility\Profiling.h" />
+    <ClInclude Include="Common\Utility\StringUtility.h" />
+    <ClInclude Include="Core\App\ConfigLoader.h" />
+    <ClInclude Include="Core\Graphics\Device\GraphicsDevice.h" />
+    <ClInclude Include="Core\System\MyTime.h" />
+    <ClInclude Include="Core\System\Input.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Common\Utility\TestUtility.h" />
     <ClInclude Include="Core\App\WinApp.h" />
   </ItemGroup>
   <ItemGroup>

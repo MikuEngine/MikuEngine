@@ -10,6 +10,7 @@
             <AdditionalIncludeDirectories>
 				$(Vendor)\$(TripletStatic)\include;
 				$(Vendor)\$(TripletDynamic)\include;
+				$(SolutionDir)Engine;
 				$(SolutionDir);
 				$(ProjectDir);
 				%(AdditionalIncludeDirectories)
@@ -26,6 +27,9 @@
 			</AdditionalLibraryDirectories>
 			
             <AdditionalDependencies>
+				d3d11.lib;
+				dxgi.lib;
+				d3dcompiler.lib;
 				directxtk.lib;
 				directxtex.lib;
 				imguid.lib;
@@ -37,8 +41,6 @@
         <PostBuildEvent>
             <Command>
 				xcopy /Y /D "$(Vendor)\$(TripletDynamic)\debug\bin\*.dll" "$(OutDir)"
-
-
 				xcopy /E /Y /D "$(SolutionDir)Resource" "$(OutDir)Resource\"
 				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(OutDir)Shader\"
 			</Command>
@@ -54,6 +56,9 @@
 			</AdditionalLibraryDirectories>
 			
             <AdditionalDependencies>
+				d3d11.lib;
+				dxgi.lib;
+				d3dcompiler.lib;
 				directxtk.lib;
 				directxtex.lib;
 				imgui.lib;
@@ -65,8 +70,6 @@
         <PostBuildEvent>
             <Command>
 				xcopy /Y /D "$(Vendor)\$(TripletDynamic)\bin\*.dll" "$(OutDir)"
-
-				
 				xcopy /E /Y /D "$(SolutionDir)Resource" "$(OutDir)Resource\"
 				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(OutDir)Shader\"
 			</Command>
