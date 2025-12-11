@@ -11,7 +11,7 @@ namespace engine
 	LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	WinApp::WinApp(const std::string& settingFilePath, const WindowSettings& defaultSetting)
-		: m_settings{ defaultSetting }
+		: m_settingFilePath{ settingFilePath }, m_settings{ defaultSetting }
 	{
 		ConfigLoader::Load(settingFilePath, m_settings);
 	}
@@ -65,6 +65,25 @@ namespace engine
 
 		int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 		int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+		bool settingChanged = false;
+
+		if (m_settings.width > screenWidth)
+		{
+			m_settings.width = screenWidth;
+			settingChanged = true;
+		}
+
+		if (m_settings.height > screenHeight)
+		{
+			m_settings.height = screenHeight;
+			settingChanged = true;
+		}
+
+		if (settingChanged)
+		{
+			ConfigLoader::Save(m_settingFilePath, m_settings);
+		}
 
 		m_x = (screenWidth - actualWidth) / 2 < 0 ? 0 : (screenWidth - actualWidth) / 2;
 		m_y = (screenHeight - actualHeight) / 2 < 0 ? 0 : (screenHeight - actualHeight) / 2;
@@ -136,7 +155,7 @@ namespace engine
 	void WinApp::Render()
 	{
 		// final
-		m_graphicsDevice.BeginDraw(Color(DirectX::Colors::Aqua));
+		m_graphicsDevice.BeginDraw();
 		m_graphicsDevice.EndDraw();
 	}
 

@@ -6,10 +6,7 @@
   <Folder Name="/01_Game/">
     <Project Path="Game/TestGame/TestGame.vcxproj" Id="9813ddac-8e6f-4a8e-b058-a5b554562f3e" />
   </Folder>
-  <Folder Name="/02_Tool/">
-    <Project Path="Tool/TestTool/TestTool.vcxproj" Id="e4c17568-2587-478a-8986-4235297434ac" />
-  </Folder>
-  <Folder Name="/03_Engine/">
+  <Folder Name="/02_Engine/">
     <Project Path="Engine/Engine.vcxproj" Id="0922f055-76c0-4a33-b810-587e67fa89a3" />
   </Folder>
 </Solution>

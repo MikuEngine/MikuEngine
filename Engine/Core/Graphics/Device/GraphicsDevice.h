@@ -27,7 +27,7 @@ namespace engine
 	public:
 		void Initialize(HWND hWnd, UINT width, UINT height, bool useVsync);
 		bool Resize(UINT width, UINT height);
-		void BeginDraw(const Color& clearColor);
+		void BeginDraw(const Color& clearColor = {});
 		void EndDraw();
 
 		const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() const;

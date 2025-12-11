@@ -24,7 +24,7 @@ namespace engine
 
 		std::string m_className = "game123";
 		std::string m_windowName = "Default";
-
+		std::string m_settingFilePath;
 		WindowSettings m_settings;
 
 		UINT m_classStyle = 0;
