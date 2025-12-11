@@ -34,8 +34,10 @@ namespace engine
 
                 WriteToFile("[INFO] ", msg);
             }
-            catch (...)
+            catch (std::format_error& e)
             {
+                e;
+
                 OutputDebugStringA("[LOG ERROR] Formatting failed.\n");
             }
         }
@@ -49,8 +51,10 @@ namespace engine
                 std::string output = std::format("[PRINT] {}\n", msg);
                 OutputDebugStringA(output.c_str());
             }
-            catch (...)
+            catch (std::format_error& e)
             {
+                e;
+
                 OutputDebugStringA("[LOG ERROR] Formatting failed.\n");
             }
         }
@@ -68,8 +72,10 @@ namespace engine
 
                 MessageBoxA(nullptr, msg.c_str(), "Engine Error", MB_ICONERROR | MB_OK);
             }
-            catch (...)
+            catch (std::format_error& e)
             {
+                e;
+
                 OutputDebugStringA("[LOG ERROR] Formatting failed.\n");
             }
         }

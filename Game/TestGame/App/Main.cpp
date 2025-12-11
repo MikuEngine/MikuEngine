@@ -10,7 +10,7 @@ int APIENTRY wWinMain(
 {
 	engine::LeakCheck lc;
 
-	game::TestGameApp app("TestGame/config.json");
+	game::TestGameApp app("config.json");
 
 	app.Initialize();
 	app.Run();

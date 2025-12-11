@@ -90,6 +90,7 @@ namespace engine
 	void Debug::WriteToFile(const std::string& prefix, const std::string& msg)
 	{
 		//std::lock_guard<std::mutex> lock(s_mutex);
+
 		std::ofstream file(s_logFilePath, std::ios::app);
 		if (file.is_open())
 		{

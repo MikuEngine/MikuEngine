@@ -26,9 +26,12 @@ namespace engine
 				file >> j;
 				outSettings = j.get<WindowSettings>();
 			}
-			catch (...)
+			catch (nlohmann::json_abi_v3_12_0::detail::parse_error& e)
 			{
-				FATAL_CHECK(false, std::format("config 파일 로드 실패. {}을 지웠다가 다시 시작해주세요.", filePath));
+				e;
+
+				LOG_INFO("파일 오류. 기본 값으로 다시 저장 후 불러옴.");
+				Save(filePath, outSettings);
 			}
 		}
 	}
