@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "TestGameApp.h"
 
+#include "Framework/Scene/SceneManager.h"
+
 namespace game
 {
 	engine::WindowSettings g_default{
@@ -12,12 +14,21 @@ namespace game
 	};
 
 	TestGameApp::TestGameApp()
-		: WinApp()
+		: engine::WinApp()
 	{
 	}
 
 	TestGameApp::TestGameApp(const std::filesystem::path& settingFilePath)
-		: WinApp(settingFilePath, g_default)
+		: engine::WinApp(settingFilePath, g_default)
 	{
+	}
+
+	void TestGameApp::Initialize()
+	{
+		engine::WinApp::Initialize();
+
+		engine::SceneManager::Get().CreateScene("SampleScene");
+
+		engine::SceneManager::Get().ChangeScene("SampleScene");
 	}
 }

@@ -24,11 +24,11 @@ namespace engine
 
     void SceneManager::CreateScene(std::string_view name)
     {
-        //if (m_scenes.find(name.data()) == m_scenes.end())
-        //{
-        //    std::unique_ptr<Scene> newScene = std::make_unique<Scene>();
-        //    m_scenes.emplace(name, std::move(newScene));
-        //}
+        if (m_scenes.find(name.data()) == m_scenes.end())
+        {
+            std::unique_ptr<Scene> newScene = std::make_unique<Scene>();
+            m_scenes.emplace(name, std::move(newScene));
+        }
     }
 
     void SceneManager::ChangeScene(std::string_view name)

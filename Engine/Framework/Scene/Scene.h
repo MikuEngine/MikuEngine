@@ -13,7 +13,7 @@ namespace engine
         virtual ~Scene() = default;
 
     public:
-        virtual void Enter() = 0;
+        virtual void Enter();
         virtual void Exit();
 
     public:

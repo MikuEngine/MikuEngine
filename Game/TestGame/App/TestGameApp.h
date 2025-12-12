@@ -10,5 +10,8 @@ namespace game
     public:
         TestGameApp();
         TestGameApp(const std::filesystem::path& settingFilePath);
+
+    public:
+        void Initialize() override;
     };
 }

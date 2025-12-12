@@ -3,6 +3,11 @@
 
 namespace engine
 {
+    void Scene::Enter()
+    {
+
+    }
+
     void Scene::Exit()
     {
         m_gameObjects.clear();
