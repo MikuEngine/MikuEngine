@@ -4,21 +4,21 @@
 
 namespace engine
 {
-	class Object
-	{
-	private:
-		Handle m_handle;
+    class Object
+    {
+    private:
+        Handle m_handle;
 
-	protected:
-		Object();
-		virtual ~Object();
+    protected:
+        Object();
+        virtual ~Object();
 
-	public:
-		Handle GetHandle() const;
-		static Object* GetObjectFromHandle(Handle handle);
+    public:
+        Handle GetHandle() const;
+        static Object* GetObjectFromHandle(Handle handle);
 
-	private:
-		void RegisterObject(Object* object);
-		void UnregisterObject(Object* object);
-	};
+    private:
+        void RegisterObject(Object* object);
+        void UnregisterObject(Object* object);
+    };
 }
