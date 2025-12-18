@@ -20,21 +20,21 @@ namespace engine
         template <typename T>
         void GetOrCreateInputLayout()
         {
-			VertexFormat format = T::Format;
+            VertexFormat format = T::Format;
 
-			if (auto it = m_inputLayouts.find(format); it != m_inputLayouts.end())
-			{
-				return it->second;
-			}
+            if (auto it = m_inputLayouts.find(format); it != m_inputLayouts.end())
+            {
+                return it->second;
+            }
 
-			auto layoutDesc = T::GetLayout();
-			
-			auto inputLayout = std::make_shared<InputLayout>();
+            auto layoutDesc = T::GetLayout();
+            
+            auto inputLayout = std::make_shared<InputLayout>();
             inputLayout->Create(m_vertexShaderBuffer, layoutDesc.data, layoutDesc.size());
 
-			m_inputLayouts[format] = inputLayout;
+            m_inputLayouts[format] = inputLayout;
 
-			return inputLayout;
+            return inputLayout;
         }
 
     public:

@@ -3,115 +3,115 @@
 
 namespace engine
 {
-	namespace
-	{
-		using ButtonState = DirectX::Mouse::ButtonStateTracker::ButtonState;
+    namespace
+    {
+        using ButtonState = DirectX::Mouse::ButtonStateTracker::ButtonState;
 
-		DirectX::Keyboard g_keyboard;
-		DirectX::Keyboard::State g_keyboardState;
-		DirectX::Keyboard::KeyboardStateTracker g_keyboardStateTracker;
+        DirectX::Keyboard g_keyboard;
+        DirectX::Keyboard::State g_keyboardState;
+        DirectX::Keyboard::KeyboardStateTracker g_keyboardStateTracker;
 
-		DirectX::Mouse g_mouse;
-		DirectX::Mouse::State g_mouseState;
-		DirectX::Mouse::ButtonStateTracker g_mouseStateTracker;
+        DirectX::Mouse g_mouse;
+        DirectX::Mouse::State g_mouseState;
+        DirectX::Mouse::ButtonStateTracker g_mouseStateTracker;
 
-		bool* g_mouseHeldStateTable[static_cast<size_t>(Input::Button::MAX)];
-		ButtonState* g_mouseStateTable[static_cast<size_t>(Input::Button::MAX)];
+        bool* g_mouseHeldStateTable[static_cast<size_t>(Input::Button::MAX)];
+        ButtonState* g_mouseStateTable[static_cast<size_t>(Input::Button::MAX)];
 
-		float g_offsetX = 0.0f;
-		float g_offsetY = 0.0f;
-		float g_scaleX = 1.0f;
-		float g_scaleY = 1.0f;
-	}
+        float g_offsetX = 0.0f;
+        float g_offsetY = 0.0f;
+        float g_scaleX = 1.0f;
+        float g_scaleY = 1.0f;
+    }
 
-	void Input::Initialize(HWND hWnd)
-	{
-		g_mouse.SetWindow(hWnd);
+    void Input::Initialize(HWND hWnd)
+    {
+        g_mouse.SetWindow(hWnd);
 
-		g_mouseHeldStateTable[static_cast<size_t>(Input::Button::LEFT)] = &g_mouseState.leftButton;
-		g_mouseHeldStateTable[static_cast<size_t>(Input::Button::RIGHT)] = &g_mouseState.rightButton;
-		g_mouseHeldStateTable[static_cast<size_t>(Input::Button::MIDDLE)] = &g_mouseState.middleButton;
-		g_mouseHeldStateTable[static_cast<size_t>(Input::Button::SIDE_FRONT)] = &g_mouseState.xButton1;
-		g_mouseHeldStateTable[static_cast<size_t>(Input::Button::SIDE_BACK)] = &g_mouseState.xButton2;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::LEFT)] = &g_mouseState.leftButton;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::RIGHT)] = &g_mouseState.rightButton;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::MIDDLE)] = &g_mouseState.middleButton;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::SIDE_FRONT)] = &g_mouseState.xButton1;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::SIDE_BACK)] = &g_mouseState.xButton2;
 
-		g_mouseStateTable[static_cast<size_t>(Input::Button::LEFT)] = &g_mouseStateTracker.leftButton;
-		g_mouseStateTable[static_cast<size_t>(Input::Button::RIGHT)] = &g_mouseStateTracker.rightButton;
-		g_mouseStateTable[static_cast<size_t>(Input::Button::MIDDLE)] = &g_mouseStateTracker.middleButton;
-		g_mouseStateTable[static_cast<size_t>(Input::Button::SIDE_FRONT)] = &g_mouseStateTracker.xButton1;
-		g_mouseStateTable[static_cast<size_t>(Input::Button::SIDE_BACK)] = &g_mouseStateTracker.xButton2;
-	}
+        g_mouseStateTable[static_cast<size_t>(Input::Button::LEFT)] = &g_mouseStateTracker.leftButton;
+        g_mouseStateTable[static_cast<size_t>(Input::Button::RIGHT)] = &g_mouseStateTracker.rightButton;
+        g_mouseStateTable[static_cast<size_t>(Input::Button::MIDDLE)] = &g_mouseStateTracker.middleButton;
+        g_mouseStateTable[static_cast<size_t>(Input::Button::SIDE_FRONT)] = &g_mouseStateTracker.xButton1;
+        g_mouseStateTable[static_cast<size_t>(Input::Button::SIDE_BACK)] = &g_mouseStateTracker.xButton2;
+    }
 
-	void Input::Update()
-	{
-		g_keyboardState = g_keyboard.GetState();
-		g_keyboardStateTracker.Update(g_keyboardState);
+    void Input::Update()
+    {
+        g_keyboardState = g_keyboard.GetState();
+        g_keyboardStateTracker.Update(g_keyboardState);
 
-		g_mouseState = g_mouse.GetState();
-		g_mouseStateTracker.Update(g_mouseState);
-	}
+        g_mouseState = g_mouse.GetState();
+        g_mouseStateTracker.Update(g_mouseState);
+    }
 
-	bool Input::IsKeyHeld(DirectX::Keyboard::Keys key)
-	{
-		return g_keyboardState.IsKeyDown(key);
-	}
+    bool Input::IsKeyHeld(DirectX::Keyboard::Keys key)
+    {
+        return g_keyboardState.IsKeyDown(key);
+    }
 
-	bool Input::IsKeyPressed(DirectX::Keyboard::Keys key)
-	{
-		return g_keyboardStateTracker.IsKeyPressed(key);
-	}
+    bool Input::IsKeyPressed(DirectX::Keyboard::Keys key)
+    {
+        return g_keyboardStateTracker.IsKeyPressed(key);
+    }
 
-	bool Input::IsKeyReleased(DirectX::Keyboard::Keys key)
-	{
-		return g_keyboardStateTracker.IsKeyReleased(key);
-	}
+    bool Input::IsKeyReleased(DirectX::Keyboard::Keys key)
+    {
+        return g_keyboardStateTracker.IsKeyReleased(key);
+    }
 
-	bool Input::IsMouseHeld(Input::Button button)
-	{
-		return *g_mouseHeldStateTable[static_cast<size_t>(button)];
-	}
+    bool Input::IsMouseHeld(Input::Button button)
+    {
+        return *g_mouseHeldStateTable[static_cast<size_t>(button)];
+    }
 
-	bool Input::IsMousePressed(Input::Button button)
-	{
-		return *g_mouseStateTable[static_cast<size_t>(button)] == ButtonState::PRESSED;
-	}
+    bool Input::IsMousePressed(Input::Button button)
+    {
+        return *g_mouseStateTable[static_cast<size_t>(button)] == ButtonState::PRESSED;
+    }
 
-	bool Input::IsMouseReleased(Input::Button button)
-	{
-		return *g_mouseStateTable[static_cast<size_t>(button)] == ButtonState::RELEASED;
-	}
+    bool Input::IsMouseReleased(Input::Button button)
+    {
+        return *g_mouseStateTable[static_cast<size_t>(button)] == ButtonState::RELEASED;
+    }
 
-	void Input::SetMouseMode(DirectX::Mouse::Mode mode)
-	{
-		g_mouse.SetMode(mode);
-	}
+    void Input::SetMouseMode(DirectX::Mouse::Mode mode)
+    {
+        g_mouse.SetMode(mode);
+    }
 
-	void Input::SetCoordinateTransform(float offsetX, float offsetY, float scaleX, float scaleY)
-	{
-		g_offsetX = offsetX;
-		g_offsetY = offsetY;
-		g_scaleX = scaleX;
-		g_scaleY = scaleY;
-	}
+    void Input::SetCoordinateTransform(float offsetX, float offsetY, float scaleX, float scaleY)
+    {
+        g_offsetX = offsetX;
+        g_offsetY = offsetY;
+        g_scaleX = scaleX;
+        g_scaleY = scaleY;
+    }
 
-	Vector2 Input::GetMouseDelta()
-	{
-		if (g_mouseState.positionMode == DirectX::Mouse::MODE_RELATIVE)
-		{
-			return { static_cast<float>(g_mouseState.x), static_cast<float>(g_mouseState.y) };
-		}
+    Vector2 Input::GetMouseDelta()
+    {
+        if (g_mouseState.positionMode == DirectX::Mouse::MODE_RELATIVE)
+        {
+            return { static_cast<float>(g_mouseState.x), static_cast<float>(g_mouseState.y) };
+        }
 
-		return { 0.0f, 0.0f };
-	}
+        return { 0.0f, 0.0f };
+    }
 
-	Vector2 Input::GetMousePosition()
-	{
-		if (g_mouseState.positionMode == DirectX::Mouse::MODE_ABSOLUTE)
-		{
-			float x = (static_cast<float>(g_mouseState.x) - g_offsetX) / g_scaleX;
-			float y = (static_cast<float>(g_mouseState.y) - g_offsetY) / g_scaleY;
-			return { x, y };
-		}
+    Vector2 Input::GetMousePosition()
+    {
+        if (g_mouseState.positionMode == DirectX::Mouse::MODE_ABSOLUTE)
+        {
+            float x = (static_cast<float>(g_mouseState.x) - g_offsetX) / g_scaleX;
+            float y = (static_cast<float>(g_mouseState.y) - g_offsetY) / g_scaleY;
+            return { x, y };
+        }
 
-		return { 0.0f, 0.0f };
-	}
+        return { 0.0f, 0.0f };
+    }
 }

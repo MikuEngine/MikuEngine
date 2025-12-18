@@ -6,56 +6,56 @@
 
 namespace engine
 {
-	using json = nlohmann::json;
+    using json = nlohmann::json;
 
-	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-		WindowSettings,
-		resolutionWidth,
-		resolutionHeight,
-		supportedResolutions,
-		isFullScreen,
-		useVsync)
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+        WindowSettings,
+        resolutionWidth,
+        resolutionHeight,
+        supportedResolutions,
+        isFullScreen,
+        useVsync)
 
-		void ConfigLoader::Load(const std::filesystem::path& filePath, WindowSettings& outSettings)
-	{
-		if (!std::filesystem::exists(filePath))
-		{
-			Save(filePath, outSettings);
-			return;
-		}
+        void ConfigLoader::Load(const std::filesystem::path& filePath, WindowSettings& outSettings)
+    {
+        if (!std::filesystem::exists(filePath))
+        {
+            Save(filePath, outSettings);
+            return;
+        }
 
-		std::ifstream file(filePath);
-		if (file.is_open())
-		{
-			try
-			{
-				json j;
-				file >> j;
-				outSettings = j.get<WindowSettings>();
-			}
-			catch (json::parse_error& e)
-			{
-				e;
+        std::ifstream file(filePath);
+        if (file.is_open())
+        {
+            try
+            {
+                json j;
+                file >> j;
+                outSettings = j.get<WindowSettings>();
+            }
+            catch (json::parse_error& e)
+            {
+                e;
 
-				LOG_INFO("파일 오류. 기본 값으로 다시 저장 후 불러옴.");
-				Save(filePath, outSettings);
-			}
-		}
-	}
+                LOG_INFO("파일 오류. 기본 값으로 다시 저장 후 불러옴.");
+                Save(filePath, outSettings);
+            }
+        }
+    }
 
-	void ConfigLoader::Save(const std::filesystem::path& filePath, const WindowSettings& settings)
-	{
-		if (filePath.has_parent_path())
-		{
-			std::error_code ec;
-			std::filesystem::create_directories(filePath.parent_path(), ec);
-		}
+    void ConfigLoader::Save(const std::filesystem::path& filePath, const WindowSettings& settings)
+    {
+        if (filePath.has_parent_path())
+        {
+            std::error_code ec;
+            std::filesystem::create_directories(filePath.parent_path(), ec);
+        }
 
-		std::ofstream file(filePath);
-		if (file.is_open())
-		{
-			json j = settings;
-			file << j.dump(4);
-		}
-	}
+        std::ofstream file(filePath);
+        if (file.is_open())
+        {
+            json j = settings;
+            file << j.dump(4);
+        }
+    }
 }

@@ -12,6 +12,6 @@ namespace engine
         return radian * (180.0f / DirectX::XM_PI);
     }
 
-	// radian
-	Vector3 ToEulerAngles(const Quaternion& q);
+    // radian
+    Vector3 ToEulerAngles(const Quaternion& q);
 }
