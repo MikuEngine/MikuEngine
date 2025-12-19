@@ -15,6 +15,7 @@
 #include <format>
 #include <cassert>
 #include <array>
+#include <cstdint>
 
 
 // d3d
@@ -36,11 +37,12 @@ namespace engine
     using TimePoint = std::chrono::time_point<Clock>;
 }
 
-#include "Core/Graphics/Device/GraphicsDevice.h"
+#include "Common/Utility/Singleton.h"
 #include "Common/Utility/StringUtility.h"
-#include "Framework/Object/Ptr.h"
 #include "Common/Debug/Debug.h"
+
+#include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Core/System/MyTime.h"
 #include "Core/System/Input.h"
 
-
+#include "Framework/Object/Ptr.h"

@@ -1,13 +1,8 @@
 ﻿#pragma once
 
-#include <concepts>
-#include <cstdint>
-
-#include "Framework/Object/Component/Component.h"
-
 namespace engine
 {
-    template <std::derived_from<Component> T>
+    template <typename T>
     class System
     {
     protected:

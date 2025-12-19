@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "Common/Utility/Singleton.h"
-#include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Core/Graphics/Resource/ResourceKey.h"
 #include "Core/Graphics/Resource/VertexBuffer.h"
 #include "Core/Graphics/Resource/DefaultResourceTypes.h"

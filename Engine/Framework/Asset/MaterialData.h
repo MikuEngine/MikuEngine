@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <cstdint>
-
 #include "Framework/Asset/AssetData.h"
 
 struct aiScene;

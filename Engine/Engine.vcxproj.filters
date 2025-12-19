@@ -150,6 +150,12 @@
     <ClCompile Include="Framework\System\TransformSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\Object\Component\StaticMeshRenderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Utility\MaterialHelper.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -311,6 +317,15 @@
     <ClInclude Include="Framework\System\TransformSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Framework\Object\Component\StaticMeshRenderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Utility\MaterialHelper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Data\ConstantBufferTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Pixel\Lambert_PS.hlsl" />
@@ -319,6 +334,6 @@
     <FxCompile Include="Shader\Vertex\DefaultVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\Include\Test2Header.hlsli" />
+    <None Include="Shader\Include\Shared.hlsli" />
   </ItemGroup>
 </Project>

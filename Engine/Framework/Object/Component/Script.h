@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <cstdint>
-
 #include "Framework/Object/Component/Component.h"
 
 namespace engine

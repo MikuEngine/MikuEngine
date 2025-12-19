@@ -13,7 +13,7 @@ enum class DefaultSamplerType
     Point,
     Linear,
     Anisotropic,
-    Shadow,
+    Comparison,
     Count
 };
 

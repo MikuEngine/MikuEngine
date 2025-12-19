@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Common\Debug\Debug.cpp" />
     <ClCompile Include="Common\Math\MathUtility.cpp" />
+    <ClCompile Include="Common\Utility\MaterialHelper.cpp" />
     <ClCompile Include="Common\Utility\Profiling.cpp" />
     <ClCompile Include="Common\Utility\StringUtility.cpp" />
     <ClCompile Include="Core\App\ConfigLoader.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Framework\Object\Component\Camera.cpp" />
     <ClCompile Include="Framework\Object\Component\Component.cpp" />
     <ClCompile Include="Framework\Object\Component\Script.cpp" />
+    <ClCompile Include="Framework\Object\Component\StaticMeshRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Transform.cpp" />
     <ClCompile Include="Framework\Object\GameObject\GameObject.cpp" />
     <ClCompile Include="Framework\Object\Object.cpp" />
@@ -197,11 +199,13 @@
   <ItemGroup>
     <ClInclude Include="Common\Debug\Debug.h" />
     <ClInclude Include="Common\Math\MathUtility.h" />
+    <ClInclude Include="Common\Utility\MaterialHelper.h" />
     <ClInclude Include="Common\Utility\Profiling.h" />
     <ClInclude Include="Common\Utility\Singleton.h" />
     <ClInclude Include="Common\Utility\StringUtility.h" />
     <ClInclude Include="Core\App\ConfigLoader.h" />
     <ClInclude Include="Core\App\WindowSettings.h" />
+    <ClInclude Include="Core\Graphics\Data\ConstantBufferTypes.h" />
     <ClInclude Include="Core\Graphics\Data\Vertex.h" />
     <ClInclude Include="Core\Graphics\Device\GraphicsDevice.h" />
     <ClInclude Include="Core\Graphics\Geometry\GeometryGenerator.h" />
@@ -235,6 +239,7 @@
     <ClInclude Include="Framework\Object\Component\Camera.h" />
     <ClInclude Include="Framework\Object\Component\Component.h" />
     <ClInclude Include="Framework\Object\Component\Script.h" />
+    <ClInclude Include="Framework\Object\Component\StaticMeshRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Transform.h" />
     <ClInclude Include="Framework\Object\GameObject\GameObject.h" />
     <ClInclude Include="Framework\Object\Handle.h" />
@@ -272,7 +277,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\Include\Test2Header.hlsli" />
+    <None Include="Shader\Include\Shared.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

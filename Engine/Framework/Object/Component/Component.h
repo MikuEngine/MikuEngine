@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <cstdint>
-
 #include "Framework/Object/Object.h"
 
 namespace engine
@@ -27,7 +25,7 @@ namespace engine
         void SetOwner(GameObject* owner);
 
     private:
-        template <std::derived_from<Component> T>
+        template <typename T>
         friend class System;
         friend class GameObject;
     };

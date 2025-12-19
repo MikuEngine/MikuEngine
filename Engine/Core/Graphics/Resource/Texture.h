@@ -36,4 +36,30 @@ namespace engine
         float GetWidth() const;
         float GetHeight() const;
     };
+
+    struct Textures
+    {
+        std::shared_ptr<Texture> diffuse;
+        std::shared_ptr<Texture> normal;
+        std::shared_ptr<Texture> specular;
+        std::shared_ptr<Texture> emissive;
+        std::shared_ptr<Texture> opacity;
+        std::shared_ptr<Texture> metalness;
+        std::shared_ptr<Texture> roughness;
+        std::shared_ptr<Texture> ambientOcclusion;
+
+        std::array<ID3D11ShaderResourceView*, 8> AsRawArray() const
+        {
+            return {
+                diffuse->GetRawSRV(),
+                normal->GetRawSRV(),
+                specular->GetRawSRV(),
+                emissive->GetRawSRV(),
+                opacity->GetRawSRV(),
+                metalness->GetRawSRV(),
+                roughness->GetRawSRV(),
+                ambientOcclusion->GetRawSRV(),
+            };
+        }
+    };
 }
