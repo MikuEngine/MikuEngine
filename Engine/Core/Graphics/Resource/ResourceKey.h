@@ -13,15 +13,15 @@ namespace engine
 
         auto operator<=>(const VertexBufferKey&) const = default;
     };
-}
 
-namespace std
-{
     inline void HashCombine(size_t& seed, size_t hashValue)
     {
         seed ^= hashValue + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
+}
 
+namespace std
+{
     template <>
     struct hash<engine::VertexFormat>
     {
@@ -38,8 +38,8 @@ namespace std
         {
             size_t seed = 0;
 
-            HashCombine(seed, hash<std::string>()(key.filePath));
-            HashCombine(seed, hash<engine::VertexFormat>()(key.format));
+            engine::HashCombine(seed, hash<std::string>()(key.filePath));
+            engine::HashCombine(seed, hash<engine::VertexFormat>()(key.format));
 
             return seed;
         }

@@ -205,6 +205,7 @@
     <ClInclude Include="Core\Graphics\Geometry\GeometryGenerator.h" />
     <ClInclude Include="Core\Graphics\Resource\BlendState.h" />
     <ClInclude Include="Core\Graphics\Resource\ConstantBuffer.h" />
+    <ClInclude Include="Core\Graphics\Resource\DefaultResourceTypes.h" />
     <ClInclude Include="Core\Graphics\Resource\DepthStencilState.h" />
     <ClInclude Include="Core\Graphics\Resource\IndexBuffer.h" />
     <ClInclude Include="Core\Graphics\Resource\InputLayout.h" />

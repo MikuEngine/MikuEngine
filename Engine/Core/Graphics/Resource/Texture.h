@@ -16,21 +16,13 @@ namespace engine
 
     public:
         void Create(const std::string& filePath);
+        void Create(UINT width, UINT height, DXGI_FORMAT format, UINT bindFlags);
         void Create(
-            const Microsoft::WRL::ComPtr<ID3D11Device>& device,
-            UINT width,
-            UINT height,
-            DXGI_FORMAT format,
-            UINT bindFlags);
-        void Create(
-            const Microsoft::WRL::ComPtr<ID3D11Device>& device,
             const D3D11_TEXTURE2D_DESC& desc,
             DXGI_FORMAT srvFormat = DXGI_FORMAT_UNKNOWN,
             DXGI_FORMAT rtvFormat = DXGI_FORMAT_UNKNOWN,
             DXGI_FORMAT dsvFormat = DXGI_FORMAT_UNKNOWN);
-        void Create(
-            const Microsoft::WRL::ComPtr<ID3D11Device>& device,
-            const std::array<unsigned char, 4>& color);
+        void Create(const std::array<unsigned char, 4>& color);
 
     public:
         const Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& GetSRV() const;

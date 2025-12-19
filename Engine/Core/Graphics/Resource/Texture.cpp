@@ -108,14 +108,12 @@ namespace engine
         {
             HR_CHECK(DirectX::CreateWICTextureFromFile(device.Get(), path.c_str(), nullptr, &m_srv));
         }
+
+        ID3D11Resource;
+        m_srv->GetResource(&aa);
     }
 
-    void Texture::Create(
-        const Microsoft::WRL::ComPtr<ID3D11Device>& device,
-        UINT width,
-        UINT height,
-        DXGI_FORMAT format,
-        UINT bindFlags)
+    void Texture::Create(UINT width, UINT height, DXGI_FORMAT format, UINT bindFlags)
     {
         D3D11_TEXTURE2D_DESC desc{};
         desc.Width = width;
@@ -127,16 +125,17 @@ namespace engine
         desc.SampleDesc.Count = 1;
         desc.Usage = D3D11_USAGE_DEFAULT;
 
-        Create(device, desc);
+        Create(desc);
     }
 
     void Texture::Create(
-        const Microsoft::WRL::ComPtr<ID3D11Device>& device,
         const D3D11_TEXTURE2D_DESC& desc,
         DXGI_FORMAT srvFormat,
         DXGI_FORMAT rtvFormat,
         DXGI_FORMAT dsvFormat)
     {
+        const auto& device = GraphicsDevice::Get().GetDevice();
+
         m_desc = desc;
         HR_CHECK(device->CreateTexture2D(&desc, nullptr, &m_texture));
 
@@ -169,10 +168,10 @@ namespace engine
         }
     }
 
-    void Texture::Create(
-        const Microsoft::WRL::ComPtr<ID3D11Device>& device,
-        const std::array<unsigned char, 4>& color)
+    void Texture::Create(const std::array<unsigned char, 4>& color)
     {
+        const auto& device = GraphicsDevice::Get().GetDevice();
+
         D3D11_SUBRESOURCE_DATA subData{};
         subData.pSysMem = color.data();
         subData.SysMemPitch = static_cast<UINT>(color.size());

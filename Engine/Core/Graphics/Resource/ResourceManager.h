@@ -4,6 +4,7 @@
 #include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Core/Graphics/Resource/ResourceKey.h"
 #include "Core/Graphics/Resource/VertexBuffer.h"
+#include "Core/Graphics/Resource/DefaultResourceTypes.h"
 
 namespace engine
 {
@@ -14,17 +15,13 @@ namespace engine
     class ConstantBuffer;
     class VertexShader;
     class PixelShader;
+    class SamplerState;
+    class RasterizerState;
+    class DepthStencilState;
+    class BlendState;
 
     template <typename T>
     concept IsVertex = requires { T::vertexFormat; };
-
-    enum class DefaultTextureType
-    {
-        White,
-        Black,
-        Flat,
-        Count
-    };
 
     class ResourceManager :
         public Singleton<ResourceManager>
@@ -36,6 +33,13 @@ namespace engine
         std::unordered_map<std::string, std::weak_ptr<ConstantBuffer>> m_constantBuffers;
         std::unordered_map<std::string, std::weak_ptr<VertexShader>> m_vertexShaders;
         std::unordered_map<std::string, std::weak_ptr<PixelShader>> m_pixelShaders;
+
+        // default resources
+        std::array<std::shared_ptr<Texture>, static_cast<size_t>(DefaultTextureType::Count)> m_defaultTextures;
+        std::array<std::shared_ptr<SamplerState>, static_cast<size_t>(DefaultSamplerType::Count)> m_defaultSamplerStates;
+        std::array<std::shared_ptr<RasterizerState>, static_cast<size_t>(DefaultRasterizerType::Count)> m_defaultRasterizerStates;
+        std::array<std::shared_ptr<DepthStencilState>, static_cast<size_t>(DefaultDepthStencilType::Count)> m_defaultDepthStencilStates;
+        std::array<std::shared_ptr<BlendState>, static_cast<size_t>(DefaultBlendType::Count)> m_defaultBlendStates;
 
     private:
         ResourceManager() = default;
@@ -60,7 +64,7 @@ namespace engine
             }
 
             std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>();
-            vertexBuffer->Create(GraphicsDevice::Get().GetDevice(), vertices);
+            vertexBuffer->Create(vertices);
 
             m_vertexBuffers[key] = vertexBuffer;
 
@@ -83,10 +87,33 @@ namespace engine
             DXGI_FORMAT rtvFormat = DXGI_FORMAT_UNKNOWN,
             DXGI_FORMAT dsvFormat = DXGI_FORMAT_UNKNOWN);
 
-        std::shared_ptr<Texture> GetDefaultTexture(DefaultTextureType type);
         std::shared_ptr<ConstantBuffer> GetOrCreateConstantBuffer(const std::string& name, UINT byteWidth);
         std::shared_ptr<VertexShader> GetOrCreateVertexShader(const std::string& filePath);
         std::shared_ptr<PixelShader> GetOrCreatePixelShader(const std::string& filePath);
+
+        std::shared_ptr<SamplerState> GetOrCreateSamplerState(const std::string& filePath);
+        std::shared_ptr<RasterizerState> GetOrCreateRasterizerState(const std::string& filePath);
+        std::shared_ptr<DepthStencilState> GetOrCreateDepthStencilState(const std::string& filePath);
+        std::shared_ptr<BlendState> GetOrCreateBlendState(const std::string& filePath);
+
+        // default
+        std::shared_ptr<Texture> GetDefaultTexture(DefaultTextureType type);
+        std::shared_ptr<SamplerState> GetDefaultSamplerState(const std::string& filePath);
+        std::shared_ptr<RasterizerState> GetDefaultRasterizerState(const std::string& filePath);
+        std::shared_ptr<DepthStencilState> GetDefaultDepthStencilState(const std::string& filePath);
+        std::shared_ptr<BlendState> GetDefaultBlendState(const std::string& filePath);
+
+        /*class SamplerState;
+        class RasterizerState;
+        class DepthStencilState;
+        class BlendState;*/
+
+    private:
+        void CreateDefaultTextures();
+        void CreateDefaultSamplerStates();
+        void CreateDefaultRasterizerStates();
+        void CreateDefaultDepthStencilStates();
+        void CreateDefaultBlendStates();
 
     private:
         friend class Singleton<ResourceManager>;
