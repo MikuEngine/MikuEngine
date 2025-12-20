@@ -2,7 +2,6 @@
 
 #include <filesystem>
 
-#include "Core/System/CoInitializer.h"
 #include "Core/App/WindowSettings.h"
 
 namespace engine
@@ -28,11 +27,9 @@ namespace engine
         int m_screenWidth = 0;
         int m_screenHeight = 0;
 
-        CoInitializer m_coInitializer;
-
     protected:
         WinApp(const std::filesystem::path& settingFilePath = "config.json", const WindowSettings& defaultSetting = {});
-        virtual ~WinApp() = default;
+        virtual ~WinApp();
 
     public:
         virtual void Initialize();

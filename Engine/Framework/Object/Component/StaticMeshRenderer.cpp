@@ -13,17 +13,23 @@
 #include "Common/Utility/MaterialHelper.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/StaticMeshData.h"
+#include "Framework/System/SystemManager.h"
+#include "Framework/System/RenderSystem.h"
+#include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Object/Component/Transform.h"
 
 
 namespace engine
 {
     StaticMeshRenderer::StaticMeshRenderer()
     {
-
+        SystemManager::Get().Render().Register(this);
     }
 
     StaticMeshRenderer::StaticMeshRenderer(const std::string& meshFilePath, const std::string& shaderFilePath)
     {
+        SystemManager::Get().Render().Register(this);
+
         m_staticMeshData = AssetManager::Get().GetOrCreateStaticMeshData(meshFilePath);
         m_materialData = AssetManager::Get().GetOrCreateMaterialData(meshFilePath);
 
@@ -39,6 +45,11 @@ namespace engine
         m_comparisonSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Comparison);
 
         SetupTextures(m_materialData, m_textures);
+    }
+
+    StaticMeshRenderer::~StaticMeshRenderer()
+    {
+        SystemManager::Get().Render().Unregister(this);
     }
 
     void StaticMeshRenderer::SetMesh(const std::string& meshFilePath)
@@ -63,7 +74,10 @@ namespace engine
         deviceContext->VSSetShader(m_finalPassVertexShader->GetRawShader(), nullptr, 0);
         deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::WorldTransform),
             1, m_worldTransformBuffer->GetBuffer().GetAddressOf());
-        //deviceContext->UpdateSubresource(m_worldTransformBuffer->GetRawBuffer(), 0, nullptr, &m_worldTransformCB, 0, 0);
+        
+        WorldTransformBuffer worldData{};
+        worldData.world = GetTransform()->GetWorld().Transpose();
+        deviceContext->UpdateSubresource(m_worldTransformBuffer->GetRawBuffer(), 0, nullptr, &worldData, 0, 0);
 
         deviceContext->PSSetSamplers(0, 1, m_samplerState->GetSamplerState().GetAddressOf());
         deviceContext->PSSetSamplers(1, 1, m_comparisonSamplerState->GetSamplerState().GetAddressOf());

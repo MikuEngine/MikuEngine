@@ -373,6 +373,46 @@ namespace engine
 
     void ResourceManager::CreateDefaultDepthStencilStates()
     {
+        // Less (기본)
+        {
+            D3D11_DEPTH_STENCIL_DESC desc{};
+            desc.DepthEnable = TRUE;
+            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+            desc.DepthFunc = D3D11_COMPARISON_LESS;
+            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::Less)] = std::make_shared<DepthStencilState>();
+            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::Less)]->Create(desc);
+        }
+        // LessEqual (스카이박스 등)
+        {
+            D3D11_DEPTH_STENCIL_DESC desc{};
+            desc.DepthEnable = TRUE;
+            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+            desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::LessEqual)] = std::make_shared<DepthStencilState>();
+            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::LessEqual)]->Create(desc);
+        }
+        // DepthRead (깊이 읽기만 함)
+        {
+            D3D11_DEPTH_STENCIL_DESC desc{};
+            desc.DepthEnable = TRUE;
+            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; // 깊이 쓰기 끔
+            desc.DepthFunc = D3D11_COMPARISON_LESS; // 또는 LESS_EQUAL
+            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::DepthRead)] = std::make_shared<DepthStencilState>();
+            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::DepthRead)]->Create(desc);
+        }
+        // None (깊이 끔 - UI/2D)
+        {
+            D3D11_DEPTH_STENCIL_DESC desc{};
+            desc.DepthEnable = FALSE;
+            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+            desc.DepthFunc = D3D11_COMPARISON_LESS; // 의미 없음
+            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::None)] = std::make_shared<DepthStencilState>();
+            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::None)]->Create(desc);
+        }
+    }
+
+    void ResourceManager::CreateDefaultBlendStates()
+    {
         // Disabled (불투명)
         {
             D3D11_BLEND_DESC desc{}; // 기본값 = FALSE (Disabled)
@@ -409,46 +449,6 @@ namespace engine
             desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
             m_defaultBlendStates[static_cast<size_t>(DefaultBlendType::Additive)] = std::make_shared<BlendState>();
             m_defaultBlendStates[static_cast<size_t>(DefaultBlendType::Additive)]->Create(desc);
-        }
-    }
-
-    void ResourceManager::CreateDefaultBlendStates()
-    {
-        // Less (기본)
-        {
-            D3D11_DEPTH_STENCIL_DESC desc{};
-            desc.DepthEnable = TRUE;
-            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-            desc.DepthFunc = D3D11_COMPARISON_LESS;
-            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::Less)] = std::make_shared<DepthStencilState>();
-            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::Less)]->Create(desc);
-        }
-        // LessEqual (스카이박스 등)
-        {
-            D3D11_DEPTH_STENCIL_DESC desc{};
-            desc.DepthEnable = TRUE;
-            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-            desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::LessEqual)] = std::make_shared<DepthStencilState>();
-            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::LessEqual)]->Create(desc);
-        }
-        // DepthRead (깊이 읽기만 함)
-        {
-            D3D11_DEPTH_STENCIL_DESC desc{};
-            desc.DepthEnable = TRUE;
-            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; // 깊이 쓰기 끔
-            desc.DepthFunc = D3D11_COMPARISON_LESS; // 또는 LESS_EQUAL
-            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::DepthRead)] = std::make_shared<DepthStencilState>();
-            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::DepthRead)]->Create(desc);
-        }
-        // None (깊이 끔 - UI/2D)
-        {
-            D3D11_DEPTH_STENCIL_DESC desc{};
-            desc.DepthEnable = FALSE;
-            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-            desc.DepthFunc = D3D11_COMPARISON_LESS; // 의미 없음
-            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::None)] = std::make_shared<DepthStencilState>();
-            m_defaultDepthStencilStates[static_cast<size_t>(DefaultDepthStencilType::None)]->Create(desc);
         }
     }
 }

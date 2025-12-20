@@ -44,6 +44,7 @@ namespace engine
     public:
         StaticMeshRenderer();
         StaticMeshRenderer(const std::string& meshFilePath, const std::string& shaderFilePath);
+        ~StaticMeshRenderer();
 
     public:
         void SetMesh(const std::string& meshFilePath);

@@ -166,7 +166,6 @@
     <ClCompile Include="Core\Graphics\Resource\Texture.cpp" />
     <ClCompile Include="Core\Graphics\Resource\VertexBuffer.cpp" />
     <ClCompile Include="Core\Graphics\Resource\VertexShader.cpp" />
-    <ClCompile Include="Core\System\CoInitializer.cpp" />
     <ClCompile Include="Core\System\Input.cpp" />
     <ClCompile Include="Core\System\MyTime.cpp" />
     <ClCompile Include="Framework\Asset\AnimationData.cpp" />
@@ -178,6 +177,7 @@
     <ClCompile Include="Framework\Asset\MaterialData.cpp" />
     <ClCompile Include="Framework\Object\Component\Camera.cpp" />
     <ClCompile Include="Framework\Object\Component\Component.cpp" />
+    <ClCompile Include="Framework\Object\Component\Renderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Script.cpp" />
     <ClCompile Include="Framework\Object\Component\StaticMeshRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Transform.cpp" />
@@ -185,6 +185,7 @@
     <ClCompile Include="Framework\Object\Object.cpp" />
     <ClCompile Include="Framework\Scene\Scene.cpp" />
     <ClCompile Include="Framework\Scene\SceneManager.cpp" />
+    <ClCompile Include="Framework\System\RenderSystem.cpp" />
     <ClCompile Include="Framework\System\SystemManager.cpp" />
     <ClCompile Include="Framework\System\ScriptSystem.cpp" />
     <ClCompile Include="Framework\System\TransformSystem.cpp" />
@@ -225,7 +226,6 @@
     <ClInclude Include="Core\Graphics\Resource\Texture.h" />
     <ClInclude Include="Core\Graphics\Resource\VertexBuffer.h" />
     <ClInclude Include="Core\Graphics\Resource\VertexShader.h" />
-    <ClInclude Include="Core\System\CoInitializer.h" />
     <ClInclude Include="Core\System\MyTime.h" />
     <ClInclude Include="Core\System\Input.h" />
     <ClInclude Include="Framework\Asset\AnimationData.h" />
@@ -238,6 +238,7 @@
     <ClInclude Include="Framework\Asset\StaticMeshData.h" />
     <ClInclude Include="Framework\Object\Component\Camera.h" />
     <ClInclude Include="Framework\Object\Component\Component.h" />
+    <ClInclude Include="Framework\Object\Component\Renderer.h" />
     <ClInclude Include="Framework\Object\Component\Script.h" />
     <ClInclude Include="Framework\Object\Component\StaticMeshRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Transform.h" />
@@ -247,6 +248,7 @@
     <ClInclude Include="Framework\Object\Ptr.h" />
     <ClInclude Include="Framework\Scene\Scene.h" />
     <ClInclude Include="Framework\Scene\SceneManager.h" />
+    <ClInclude Include="Framework\System\RenderSystem.h" />
     <ClInclude Include="Framework\System\SystemManager.h" />
     <ClInclude Include="Framework\System\ScriptSystem.h" />
     <ClInclude Include="Framework\System\System.h" />

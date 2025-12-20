@@ -11,6 +11,7 @@
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/ScriptSystem.h"
 #include "Framework/System/TransformSystem.h"
+#include "Framework/System/RenderSystem.h"
 
 namespace engine
 {
@@ -52,6 +53,13 @@ namespace engine
         m_screenHeight{ GetSystemMetrics(SM_CYSCREEN) }
     {
         ValidateSettings();
+
+        HR_CHECK(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED));
+    }
+
+    WinApp::~WinApp()
+    {
+        CoUninitialize();
     }
     
     void WinApp::Initialize()
@@ -218,6 +226,9 @@ namespace engine
         auto& graphicsDevice = GraphicsDevice::Get();
 
         graphicsDevice.BeginDraw(Color(DirectX::Colors::AliceBlue));
+
+        SystemManager::Get().Render().Render();
+
         graphicsDevice.BackBufferDraw();
         graphicsDevice.EndDraw();
     }

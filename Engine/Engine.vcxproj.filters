@@ -54,9 +54,6 @@
     <ClCompile Include="Core\Graphics\Geometry\GeometryGenerator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\System\CoInitializer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Framework\Scene\Scene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -156,6 +153,12 @@
     <ClCompile Include="Common\Utility\MaterialHelper.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\System\RenderSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\Renderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -192,9 +195,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Geometry\GeometryGenerator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\System\CoInitializer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Scene\Scene.h">
@@ -324,6 +324,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Data\ConstantBufferTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\System\RenderSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\Renderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
