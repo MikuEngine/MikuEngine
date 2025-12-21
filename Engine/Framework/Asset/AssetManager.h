@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Common/Utility/Singleton.h"
+#include "Common/Type/DefaultAssetTypes.h"
 
 namespace engine
 {
@@ -10,7 +11,6 @@ namespace engine
     class SkeletalMeshData;
     class AnimationData;
     class SkeletonData;
-
 
     class AssetManager :
         public Singleton<AssetManager>
@@ -29,12 +29,18 @@ namespace engine
         std::unordered_map<std::string, std::weak_ptr<SkeletalMeshData>> m_skeletalMeshDatas;
         std::unordered_map<std::string, std::weak_ptr<AnimationData>> m_animationDatas;
 
+        std::array<std::shared_ptr<StaticMeshData>, static_cast<size_t>(DefaultStaticMeshType::Count)> m_defaultStaticMeshes;
+
     private:
         AssetManager() = default;
         ~AssetManager() = default;
 
     public:
+        void Initialize();
+
+    public:
         std::shared_ptr<StaticMeshData> GetOrCreateStaticMeshData(const std::string& filePath);
+        std::shared_ptr<StaticMeshData> GetDefaultStaticMeshData(DefaultStaticMeshType type);
         std::shared_ptr<MaterialData> GetOrCreateMaterialData(const std::string& filePath);
         std::shared_ptr<SkeletonData> GetOrCreateSkeletonData(const std::string& filePath);
         std::shared_ptr<SkeletalMeshData> GetOrCreateSkeletalMeshData(const std::string& filePath);

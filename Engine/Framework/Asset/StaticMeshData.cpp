@@ -73,6 +73,13 @@ namespace engine
         }
     }
 
+    void StaticMeshData::Create(std::vector<CommonVertex>&& vertices, std::vector<DWORD>&& indices)
+    {
+        m_vertices = std::move(vertices);
+        m_indices = std::move(indices);
+        m_meshSections.push_back({ .indexCount = static_cast<UINT>(m_indices.size()) });
+    }
+
     const std::vector<CommonVertex>& StaticMeshData::GetVertices() const
     {
         return m_vertices;

@@ -1,8 +1,6 @@
 ﻿#include "pch.h"
 #include "GraphicsDevice.h"
 
-#include "Core/Graphics/Geometry/GeometryGenerator.h"
-
 #include <dxgi1_5.h>
 #include <dxgi1_6.h>
 #include <d3dcompiler.h>
@@ -26,11 +24,16 @@ namespace engine
         Microsoft::WRL::ComPtr<IDXGIAdapter3> dxgiAdapter;
 
         // Resources for Blit
-        std::unique_ptr<Mesh> fullscreenQuadMesh;
+        Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+        Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
         Microsoft::WRL::ComPtr<ID3D11VertexShader> defaultVS;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> defaultPS;
         Microsoft::WRL::ComPtr<ID3D11InputLayout> defaultInputLayout;
         Microsoft::WRL::ComPtr<ID3D11SamplerState> defaultSamplerState;
+        UINT vertexCount = 0;
+        UINT indexCount = 0;
+        UINT stride = 0;
+        UINT offset = 0;
     };
 
     GraphicsDevice::GraphicsDevice()
@@ -156,8 +159,40 @@ namespace engine
         // Create Fullscreen Quad Mesh
         {
             MeshData quadData = GeometryGenerator::CreateFullscreenQuad();
-            m_resource->fullscreenQuadMesh = std::make_unique<Mesh>();
-            m_resource->fullscreenQuadMesh->Initialize(m_resource->device, quadData);
+            m_resource->vertexCount = static_cast<UINT>(quadData.vertices.size());
+            m_resource->indexCount = static_cast<UINT>(quadData.indices.size());
+            m_resource->stride = sizeof(CommonVertex);
+            m_resource->offset = 0;
+
+            D3D11_BUFFER_DESC vertexBufferDesc{};
+            vertexBufferDesc.ByteWidth = sizeof(CommonVertex) * m_resource->vertexCount;
+            vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+            vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+            vertexBufferDesc.CPUAccessFlags = 0;
+            vertexBufferDesc.MiscFlags = 0;
+            vertexBufferDesc.StructureByteStride = 0;
+
+            D3D11_SUBRESOURCE_DATA vertexData{};
+            vertexData.pSysMem = quadData.vertices.data();
+            vertexData.SysMemPitch = 0;
+            vertexData.SysMemSlicePitch = 0;
+
+            HR_CHECK(GraphicsDevice::Get().GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &m_resource->vertexBuffer));
+
+            D3D11_BUFFER_DESC indexBufferDesc{};
+            indexBufferDesc.ByteWidth = sizeof(uint32_t) * m_resource->indexCount;
+            indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+            indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+            indexBufferDesc.CPUAccessFlags = 0;
+            indexBufferDesc.MiscFlags = 0;
+            indexBufferDesc.StructureByteStride = 0;
+
+            D3D11_SUBRESOURCE_DATA indexData{};
+            indexData.pSysMem = quadData.indices.data();
+            indexData.SysMemPitch = 0;
+            indexData.SysMemSlicePitch = 0;
+
+            HR_CHECK(GraphicsDevice::Get().GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, &m_resource->indexBuffer));
         }
 
         // Create Default Shaders & Layout
@@ -278,7 +313,9 @@ namespace engine
             m_resource->deviceContext->PSSetSamplers(0, 1, m_resource->defaultSamplerState.GetAddressOf());
 
             // Draw
-            m_resource->fullscreenQuadMesh->Render(m_resource->deviceContext);
+            m_resource->deviceContext->IASetVertexBuffers(0, 1, m_resource->vertexBuffer.GetAddressOf(), &m_resource->stride, &m_resource->offset);
+            m_resource->deviceContext->IASetIndexBuffer(m_resource->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+            m_resource->deviceContext->DrawIndexed(m_resource->indexCount, 0, 0);
 
             // Unbind
             ID3D11ShaderResourceView* nullSRV = nullptr;

@@ -39,6 +39,7 @@ namespace engine
         std::vector<Material> m_materials;
 
     public:
+        void Create();
         void Create(const std::string& filePath);
         void Create(const aiScene* scene);
 

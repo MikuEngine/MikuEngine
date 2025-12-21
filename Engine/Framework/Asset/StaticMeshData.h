@@ -27,6 +27,7 @@ namespace engine
     public:
         void Create(const std::string& filePath);
         void Create(const aiScene* scene);
+        void Create(std::vector<CommonVertex>&& vertices, std::vector<DWORD>&& indices);
 
     public:
         const std::vector<CommonVertex>& GetVertices() const;

@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-#include "Framework/Object/Component/Component.h"
+#include "Framework/Object/Component/Renderer.h"
 #include "Core/Graphics/Resource/Texture.h"
+#include "Common/Type/DefaultAssetTypes.h"
 
 namespace engine
 {
@@ -19,7 +20,7 @@ namespace engine
 
 
     class StaticMeshRenderer :
-        public Component
+        public Renderer
     {
     private:
         std::string m_meshFilePath;
@@ -44,6 +45,7 @@ namespace engine
     public:
         StaticMeshRenderer();
         StaticMeshRenderer(const std::string& meshFilePath, const std::string& shaderFilePath);
+        StaticMeshRenderer(DefaultStaticMeshType type, const std::string& shaderFilePath);
         ~StaticMeshRenderer();
 
     public:
@@ -51,7 +53,9 @@ namespace engine
         void SetPixelShader(const std::string& shaderFilePath);
 
     public:
-        void Draw() const;
-        void DrawShadow() const;
+        bool HasRenderType(RenderType type) const override;
+        void Draw() const override;
+        DirectX::BoundingBox GetBounds() const override;
+        //void DrawShadow() const;
     };
 }

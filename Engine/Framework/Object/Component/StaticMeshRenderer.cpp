@@ -13,6 +13,7 @@
 #include "Common/Utility/MaterialHelper.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/StaticMeshData.h"
+#include "Framework/Asset/MaterialData.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/GameObject/GameObject.h"
@@ -36,10 +37,34 @@ namespace engine
         m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<CommonVertex>(meshFilePath, m_staticMeshData->GetVertices());
         m_indexBuffer = ResourceManager::Get().GetOrCreateIndexBuffer(meshFilePath, m_staticMeshData->GetIndices());
         m_worldTransformBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("WorldTransform", sizeof(WorldTransformBuffer));
-        m_finalPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("BasicVS.hlsl");
-        m_shadowPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("BasicLightViewVS.hlsl");
+        m_finalPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/BasicVS.hlsl");
+        m_shadowPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/BasicLightViewVS.hlsl");
         m_finalPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader(shaderFilePath);
-        m_shadowPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader("LightViewPS.hlsl");
+        m_shadowPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader("Shader/Pixel/LightViewPS.hlsl");
+        m_inputLayout = m_finalPassVertexShader->GetOrCreateInputLayout<CommonVertex>();
+        m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
+        m_comparisonSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Comparison);
+
+        SetupTextures(m_materialData, m_textures);
+    }
+
+    StaticMeshRenderer::StaticMeshRenderer(DefaultStaticMeshType type, const std::string& shaderFilePath)
+    {
+        SystemManager::Get().Render().Register(this);
+
+        m_staticMeshData = AssetManager::Get().GetDefaultStaticMeshData(type);
+        m_materialData = std::make_shared<MaterialData>();
+        m_materialData->Create();
+
+        m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<CommonVertex>(
+            typeid(DefaultStaticMeshType).name() + std::to_string(static_cast<size_t>(type)), m_staticMeshData->GetVertices());
+        m_indexBuffer = ResourceManager::Get().GetOrCreateIndexBuffer(
+            typeid(DefaultStaticMeshType).name() + std::to_string(static_cast<size_t>(type)), m_staticMeshData->GetIndices());
+        m_worldTransformBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("WorldTransform", sizeof(WorldTransformBuffer));
+        m_finalPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/BasicVS.hlsl");
+        m_shadowPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/BasicLightViewVS.hlsl");
+        m_finalPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader(shaderFilePath);
+        m_shadowPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader("Shader/Pixel/LightViewPS.hlsl");
         m_inputLayout = m_finalPassVertexShader->GetOrCreateInputLayout<CommonVertex>();
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
         m_comparisonSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Comparison);
@@ -60,6 +85,11 @@ namespace engine
     {
     }
 
+    bool StaticMeshRenderer::HasRenderType(RenderType type) const
+    {
+        return RenderType::Opaque == type;
+    }
+
     void StaticMeshRenderer::Draw() const
     {
         const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
@@ -67,6 +97,7 @@ namespace engine
         static const UINT s_vertexBufferOffset = 0;
         const UINT s_vertexBufferStride = m_vertexBuffer->GetBufferStride();
 
+        deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
         deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
         deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
@@ -83,8 +114,8 @@ namespace engine
         deviceContext->PSSetSamplers(1, 1, m_comparisonSamplerState->GetSamplerState().GetAddressOf());
         deviceContext->PSSetShader(m_finalPassPixelShader->GetRawShader(), nullptr, 0);
 
-        deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material),
-            1, m_materialBuffer->GetBuffer().GetAddressOf());
+        //deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material),
+        //    1, m_materialBuffer->GetBuffer().GetAddressOf());
 
         const auto& meshSections = m_staticMeshData->GetMeshSections();
 
@@ -98,7 +129,12 @@ namespace engine
         }
     }
 
-    void StaticMeshRenderer::DrawShadow() const
+    DirectX::BoundingBox StaticMeshRenderer::GetBounds() const
     {
+        return DirectX::BoundingBox();
     }
+
+    //void StaticMeshRenderer::DrawShadow() const
+    //{
+    //}
 }

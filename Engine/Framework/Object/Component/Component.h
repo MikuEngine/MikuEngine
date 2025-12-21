@@ -19,7 +19,7 @@ namespace engine
         Transform* GetTransform() const;
         
     public:
-        virtual void OnGui() = 0;
+        virtual void OnGui() {};
 
     private:
         void SetOwner(GameObject* owner);

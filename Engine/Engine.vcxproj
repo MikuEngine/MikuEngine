@@ -152,13 +152,12 @@
     <ClCompile Include="Common\Utility\StringUtility.cpp" />
     <ClCompile Include="Core\App\ConfigLoader.cpp" />
     <ClCompile Include="Core\Graphics\Device\GraphicsDevice.cpp" />
-    <ClCompile Include="Core\Graphics\Geometry\GeometryGenerator.cpp" />
+    <ClCompile Include="Common\Utility\GeometryGenerator.cpp" />
     <ClCompile Include="Core\Graphics\Resource\BlendState.cpp" />
     <ClCompile Include="Core\Graphics\Resource\ConstantBuffer.cpp" />
     <ClCompile Include="Core\Graphics\Resource\DepthStencilState.cpp" />
     <ClCompile Include="Core\Graphics\Resource\IndexBuffer.cpp" />
     <ClCompile Include="Core\Graphics\Resource\InputLayout.cpp" />
-    <ClCompile Include="Core\Graphics\Resource\Mesh.cpp" />
     <ClCompile Include="Core\Graphics\Resource\PixelShader.cpp" />
     <ClCompile Include="Core\Graphics\Resource\RasterizerState.cpp" />
     <ClCompile Include="Core\Graphics\Resource\ResourceManager.cpp" />
@@ -200,6 +199,7 @@
   <ItemGroup>
     <ClInclude Include="Common\Debug\Debug.h" />
     <ClInclude Include="Common\Math\MathUtility.h" />
+    <ClInclude Include="Common\Type\DefaultAssetTypes.h" />
     <ClInclude Include="Common\Utility\MaterialHelper.h" />
     <ClInclude Include="Common\Utility\Profiling.h" />
     <ClInclude Include="Common\Utility\Singleton.h" />
@@ -209,14 +209,13 @@
     <ClInclude Include="Core\Graphics\Data\ConstantBufferTypes.h" />
     <ClInclude Include="Core\Graphics\Data\Vertex.h" />
     <ClInclude Include="Core\Graphics\Device\GraphicsDevice.h" />
-    <ClInclude Include="Core\Graphics\Geometry\GeometryGenerator.h" />
+    <ClInclude Include="Common\Utility\GeometryGenerator.h" />
     <ClInclude Include="Core\Graphics\Resource\BlendState.h" />
     <ClInclude Include="Core\Graphics\Resource\ConstantBuffer.h" />
-    <ClInclude Include="Core\Graphics\Resource\DefaultResourceTypes.h" />
+    <ClInclude Include="Common\Type\DefaultResourceTypes.h" />
     <ClInclude Include="Core\Graphics\Resource\DepthStencilState.h" />
     <ClInclude Include="Core\Graphics\Resource\IndexBuffer.h" />
     <ClInclude Include="Core\Graphics\Resource\InputLayout.h" />
-    <ClInclude Include="Core\Graphics\Resource\Mesh.h" />
     <ClInclude Include="Core\Graphics\Resource\PixelShader.h" />
     <ClInclude Include="Core\Graphics\Resource\RasterizerState.h" />
     <ClInclude Include="Core\Graphics\Resource\Resource.h" />
@@ -257,9 +256,25 @@
     <ClInclude Include="Core\App\WinApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shader\Pixel\BlinnPhongPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shader\Pixel\DefaultPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Pixel\LightViewPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Vertex\BasicLightViewVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Vertex\BasicVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\Vertex\DefaultVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

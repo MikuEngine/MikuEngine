@@ -2,7 +2,8 @@
 
 #include "Core/Graphics/Resource/ResourceKey.h"
 #include "Core/Graphics/Resource/VertexBuffer.h"
-#include "Core/Graphics/Resource/DefaultResourceTypes.h"
+#include "Common/Type/DefaultResourceTypes.h"
+#include "Common/Type/DefaultAssetTypes.h"
 
 namespace engine
 {

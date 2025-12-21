@@ -18,8 +18,6 @@ namespace engine
         public Component
     {
     private:
-        friend class ScriptSystem;
-
         std::array<std::int32_t, static_cast<size_t>(ScriptEvent::Count)> m_systemIndices;
 
     public:
@@ -36,6 +34,9 @@ namespace engine
 
     public:
         void OnGui() override {};
+
+    private:
+        friend class ScriptSystem;
     };
 
     template <typename Base, typename Derived>

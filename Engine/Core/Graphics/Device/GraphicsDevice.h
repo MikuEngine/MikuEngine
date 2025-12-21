@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "Core/Graphics/Resource/Mesh.h"
+#include "Common/Utility/GeometryGenerator.h"
 #include "Common/Utility/Singleton.h"
 
 namespace engine

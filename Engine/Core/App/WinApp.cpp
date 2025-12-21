@@ -7,6 +7,7 @@
 #include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Core/App/ConfigLoader.h"
+#include "Framework/Asset/AssetManager.h"
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/ScriptSystem.h"
@@ -173,6 +174,7 @@ namespace engine
 
         Input::SetCoordinateTransform(viewX, viewY, scaleX, scaleY);
 
+        AssetManager::Get().Initialize();
         ResourceManager::Get().Initialize();
     }
 

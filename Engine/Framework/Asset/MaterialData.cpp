@@ -8,6 +8,11 @@
 
 namespace engine
 {
+    void MaterialData::Create()
+    {
+        m_materials.push_back({ .materialFlags = 0 });
+    }
+
     void MaterialData::Create(const std::string& filePath)
     {
         Assimp::Importer importer;

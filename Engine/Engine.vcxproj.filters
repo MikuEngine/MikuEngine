@@ -48,10 +48,7 @@
     <ClCompile Include="Core\System\Input.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Resource\Mesh.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Graphics\Geometry\GeometryGenerator.cpp">
+    <ClCompile Include="Common\Utility\GeometryGenerator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Scene\Scene.cpp">
@@ -191,10 +188,7 @@
     <ClInclude Include="Core\System\Input.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Resource\Mesh.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Geometry\GeometryGenerator.h">
+    <ClInclude Include="Common\Utility\GeometryGenerator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Scene\Scene.h">
@@ -308,7 +302,7 @@
     <ClInclude Include="Core\Graphics\Resource\BlendState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Resource\DefaultResourceTypes.h">
+    <ClInclude Include="Common\Type\DefaultResourceTypes.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\Camera.h">
@@ -332,12 +326,19 @@
     <ClInclude Include="Framework\Object\Component\Renderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Type\DefaultAssetTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Pixel\Lambert_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\PositionNormal_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\DefaultPixelShader.hlsl" />
     <FxCompile Include="Shader\Vertex\DefaultVertexShader.hlsl" />
+    <FxCompile Include="Shader\Vertex\BasicLightViewVS.hlsl" />
+    <FxCompile Include="Shader\Vertex\BasicVS.hlsl" />
+    <FxCompile Include="Shader\Pixel\BlinnPhongPS.hlsl" />
+    <FxCompile Include="Shader\Pixel\LightViewPS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

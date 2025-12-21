@@ -3,6 +3,8 @@
 
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
+#include "Framework/Object/Component/StaticMeshRenderer.h"
+#include "Framework/Object/Component/Transform.h"
 
 #include "Script/TestScript.h"
 
@@ -36,6 +38,9 @@ namespace game
 
 				engine::Ptr<engine::GameObject> gameObject = scene->CreateGameObject("TestGameObject");
 				engine::Ptr<TestScript> testScript = gameObject->AddComponent<TestScript>();
+				gameObject->AddComponent<engine::StaticMeshRenderer>(DefaultStaticMeshType::Cube, "Shader/Pixel/BlinnPhongPS.hlsl");
+				auto transform = gameObject->GetTransform();
+				transform->SetLocalPosition({ 0.0f, 0.0f, 20.0f });
 			};
 
 		engine::SceneManager::Get().CreateScene("SampleScene1", OnEnter);
