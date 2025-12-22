@@ -56,10 +56,8 @@ namespace engine
         m_materialData = std::make_shared<MaterialData>();
         m_materialData->Create();
 
-        m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<CommonVertex>(
-            typeid(DefaultStaticMeshType).name() + std::to_string(static_cast<size_t>(type)), m_staticMeshData->GetVertices());
-        m_indexBuffer = ResourceManager::Get().GetOrCreateIndexBuffer(
-            typeid(DefaultStaticMeshType).name() + std::to_string(static_cast<size_t>(type)), m_staticMeshData->GetIndices());
+        m_vertexBuffer = ResourceManager::Get().GetDefaultVertexBuffer(type);
+        m_indexBuffer = ResourceManager::Get().GetDefaultIndexBuffer(type);
         m_worldTransformBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("WorldTransform", sizeof(WorldTransformBuffer));
         m_finalPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/BasicVS.hlsl");
         m_shadowPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/BasicLightViewVS.hlsl");

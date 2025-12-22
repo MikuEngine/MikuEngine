@@ -1,8 +1,20 @@
 ﻿#include "pch.h"
 #include "RenderSystem.h"
 
+#include "Core/Graphics/Resource/ResourceManager.h"
+#include "Core/Graphics/Data/ConstantBufferTypes.h"
+#include "Core/Graphics/Resource/ConstantBuffer.h"
+#include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
+#include "Framework/Object/Component/Camera.h"
+
 namespace engine
 {
+    RenderSystem::RenderSystem()
+    {
+        m_transformCB = ResourceManager::Get().GetOrCreateConstantBuffer("Transform", sizeof(TransformBuffer));
+    }
+
     void RenderSystem::Register(Renderer* renderer)
     {
         //if (renderer->HasRenderType(RenderType::Opaque))
@@ -36,25 +48,34 @@ namespace engine
 
     void RenderSystem::Render()
     {
-        for (auto renderer : m_shadowList)
-        {
-            renderer->Draw();
-        }
+        //for (auto renderer : m_shadowList)
+        //{
+        //    renderer->Draw();
+        //}
 
+        auto deviceContext = GraphicsDevice::Get().GetDeviceContext();
+        const auto camera = SceneManager::Get().GetCurrentScene()->GetMainCamera();
+        camera->Update();
+        TransformBuffer transformBuffer;
+        transformBuffer.view = camera->GetView().Transpose();
+        transformBuffer.projection = camera->GetProjection().Transpose();
+
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Transform), 1, m_transformCB->GetBuffer().GetAddressOf());
+        deviceContext->UpdateSubresource(m_transformCB->GetRawBuffer(), 0, nullptr, &transformBuffer, 0, 0);
         for (auto renderer : m_opaqueList)
         {
             renderer->Draw();
         }
 
-        for (auto renderer : m_transparentList)
-        {
-            renderer->Draw();
-        }
+        //for (auto renderer : m_transparentList)
+        //{
+        //    renderer->Draw();
+        //}
 
-        for (auto renderer : m_screenList)
-        {
-            renderer->Draw();
-        }
+        //for (auto renderer : m_screenList)
+        //{
+        //    renderer->Draw();
+        //}
     }
 
     void RenderSystem::AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type)

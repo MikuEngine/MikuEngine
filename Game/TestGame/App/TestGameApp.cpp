@@ -35,7 +35,7 @@ namespace game
 		auto OnEnter = []()
 			{
 				engine::Scene* scene = engine::SceneManager::Get().GetCurrentScene();
-
+				
 				engine::Ptr<engine::GameObject> gameObject = scene->CreateGameObject("TestGameObject");
 				engine::Ptr<TestScript> testScript = gameObject->AddComponent<TestScript>();
 				gameObject->AddComponent<engine::StaticMeshRenderer>(DefaultStaticMeshType::Cube, "Shader/Pixel/BlinnPhongPS.hlsl");

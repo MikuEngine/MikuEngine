@@ -27,7 +27,7 @@ namespace engine
                 return it->second;
             }
 
-            auto layoutDesc = T::GetLayout();
+            auto layoutDesc = T::layout;
             
             auto inputLayout = std::make_shared<InputLayout>();
             inputLayout->Create(m_vertexShaderBuffer, layoutDesc.data(), static_cast<UINT>(layoutDesc.size()));

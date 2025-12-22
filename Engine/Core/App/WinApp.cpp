@@ -227,7 +227,7 @@ namespace engine
     {
         auto& graphicsDevice = GraphicsDevice::Get();
 
-        graphicsDevice.BeginDraw(Color(DirectX::Colors::AliceBlue));
+        graphicsDevice.BeginDraw(Color(0.0f, 0.0f, 0.0f, 1.0f));
 
         SystemManager::Get().Render().Render();
 

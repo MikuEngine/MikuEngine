@@ -23,7 +23,7 @@ namespace engine
 
         float m_near = 1.0f;
         float m_far = 5000.0f;
-        float m_fov = 50.0f;
+        float m_fov = 30.0f;
         float m_scale = 1.0f; // Orthographic용
         float m_width = 1.0f;
         float m_height = 1.0f;
