@@ -59,7 +59,7 @@ cbuffer Global : register(b0) // 프레임 당 한번만 갱신되는 버퍼
     int g_pcfSize;
     
     int g_useIBL;
-    float __pad1_global[3];
+    float3 __pad1_global;
 }
 
 cbuffer Material : register(b1)
@@ -82,7 +82,7 @@ cbuffer Object : register(b2)
     matrix g_worldInverseTranspose;
     
     int g_boneIndex;
-    float __pad1_object[3];
+    float3 __pad1_object;
 }
 
 cbuffer Bone : register(b3)

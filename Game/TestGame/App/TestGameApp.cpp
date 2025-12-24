@@ -5,6 +5,7 @@
 #include "Framework/Scene/Scene.h"
 #include "Framework/Object/Component/StaticMeshRenderer.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/Component/Camera.h"
 
 #include "Script/TestScript.h"
 
@@ -36,11 +37,13 @@ namespace game
 			{
 				engine::Scene* scene = engine::SceneManager::Get().GetCurrentScene();
 				
+				scene->GetMainCamera()->GetTransform()->SetLocalPosition({ 0.0f, 0.0f, -10.0f });
+
 				engine::Ptr<engine::GameObject> gameObject = scene->CreateGameObject("TestGameObject");
 				engine::Ptr<TestScript> testScript = gameObject->AddComponent<TestScript>();
-				gameObject->AddComponent<engine::StaticMeshRenderer>("Resource/Model/Quad.fbx", "Shader/Pixel/BlinnPhongPS.hlsl");
+				gameObject->AddComponent<engine::StaticMeshRenderer>("Resource/Model/Cube_h.fbx", "Shader/Pixel/BlinnPhongPS.hlsl");
 				auto transform = gameObject->GetTransform();
-				transform->SetLocalPosition({ 0.0f, 0.0f, 20.0f });
+				transform->SetLocalPosition({ 0.0f, 0.0f, 0.0f });
 			};
 
 		engine::SceneManager::Get().CreateScene("SampleScene1", OnEnter);

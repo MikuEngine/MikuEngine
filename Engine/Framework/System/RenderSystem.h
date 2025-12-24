@@ -6,6 +6,16 @@
 namespace engine
 {
     class ConstantBuffer;
+    class SamplerState;
+    class Texture;
+    class RasterizerState;
+    class DepthStencilState;
+    class StaticMeshData;
+    class VertexBuffer;
+    class VertexShader;
+    class IndexBuffer;
+    class InputLayout;
+    class PixelShader;
 
     class RenderSystem :
         public System<Renderer>
@@ -16,6 +26,24 @@ namespace engine
         std::vector<Renderer*> m_screenList;
         std::vector<Renderer*> m_shadowList;
         std::shared_ptr<ConstantBuffer> m_globalConstantBuffer;
+        std::shared_ptr<SamplerState> m_comparisonSamplerState;
+        std::shared_ptr<SamplerState> m_clampSamplerState;
+        std::shared_ptr<SamplerState> m_linearSamplerState;
+
+        std::shared_ptr<Texture> m_skyboxEnv;
+        std::shared_ptr<Texture> m_irradianceMap;
+        std::shared_ptr<Texture> m_specularMap;
+        std::shared_ptr<Texture> m_brdfLut;
+
+        //skybox
+        UINT m_indexCount = 0;
+        std::shared_ptr<VertexBuffer> m_cubeVertexBuffer;
+        std::shared_ptr<IndexBuffer> m_cubeIndexBuffer;
+        std::shared_ptr<InputLayout> m_cubeInputLayout;
+        std::shared_ptr<VertexShader> m_skyboxVertexShader;
+        std::shared_ptr<PixelShader> m_skyboxPixelShader;
+        std::shared_ptr<RasterizerState> m_skyboxRSState;
+        std::shared_ptr<DepthStencilState> m_skyboxDSState;
 
     public:
         RenderSystem();

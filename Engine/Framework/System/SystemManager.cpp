@@ -16,6 +16,13 @@ namespace engine
 
     SystemManager::~SystemManager() = default;
 
+    void SystemManager::Shutdown()
+    {
+        m_scriptSystem.reset();
+        m_transformSystem.reset();
+        m_renderSystem.reset();
+    }
+
     ScriptSystem& SystemManager::Script() const
     {
         return *m_scriptSystem.get();

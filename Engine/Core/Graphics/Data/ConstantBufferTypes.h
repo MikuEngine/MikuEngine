@@ -60,6 +60,7 @@ namespace engine
 		Matrix worldInverseTranspose;
 
 		int boneIndex;
+		float __pad1[3];
 	};
 
 	struct CbBone

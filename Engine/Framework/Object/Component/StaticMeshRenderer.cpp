@@ -37,14 +37,17 @@ namespace engine
 
         m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<CommonVertex>(meshFilePath, m_staticMeshData->GetVertices());
         m_indexBuffer = ResourceManager::Get().GetOrCreateIndexBuffer(meshFilePath, m_staticMeshData->GetIndices());
-        m_worldTransformBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("WorldTransform", sizeof(CbObject));
-        m_finalPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/BasicVS.hlsl");
-        m_shadowPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/BasicLightViewVS.hlsl");
-        m_finalPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader(shaderFilePath);
-        m_shadowPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader("Shader/Pixel/LightViewPS.hlsl");
+
+        m_objectConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
+        m_materialConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Material", sizeof(CbMaterial));
+
+        m_finalPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/Static_VS.hlsl");
+        m_shadowPassVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Shader/Vertex/Shadow_Static_VS.hlsl");
+        m_finalPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader("Shader/Pixel/GBuffer_PS.hlsl");
+        m_shadowPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader("Shader/Pixel/Shadow_AlphaTest_PS.hlsl");
+
         m_inputLayout = m_finalPassVertexShader->GetOrCreateInputLayout<CommonVertex>();
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
-        m_comparisonSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Comparison);
 
         SetupTextures(m_materialData, m_textures);
     }
@@ -80,19 +83,19 @@ namespace engine
         deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
 
         deviceContext->VSSetShader(m_finalPassVertexShader->GetRawShader(), nullptr, 0);
-        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object),
-            1, m_worldTransformBuffer->GetBuffer().GetAddressOf());
         
         CbObject cbObject{};
         cbObject.world = GetTransform()->GetWorld().Transpose();
-        deviceContext->UpdateSubresource(m_worldTransformBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
+        cbObject.worldInverseTranspose = GetTransform()->GetWorld().Invert();
 
-        deviceContext->PSSetSamplers(0, 1, m_samplerState->GetSamplerState().GetAddressOf());
-        deviceContext->PSSetSamplers(1, 1, m_comparisonSamplerState->GetSamplerState().GetAddressOf());
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object),
+            1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
+        deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
+
         deviceContext->PSSetShader(m_finalPassPixelShader->GetRawShader(), nullptr, 0);
+        deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
 
-        //deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material),
-        //    1, m_materialBuffer->GetBuffer().GetAddressOf());
+        deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
 
         const auto& meshSections = m_staticMeshData->GetMeshSections();
 
@@ -101,7 +104,16 @@ namespace engine
             const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
 
             deviceContext->PSSetShaderResources(0, static_cast<UINT>(textureSRVs.size()), textureSRVs.data());
-            //deviceContext->UpdateSubresource(m_materialBuffer->GetRawBuffer(), 0, nullptr, &m_materialCBs[meshSection.materialIndex], 0, 0);
+
+            CbMaterial cbMaterial{};
+            cbMaterial.materialBaseColor = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+            cbMaterial.materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
+            cbMaterial.materialRoughness = 0.0f;
+            cbMaterial.materialMetalness = 1.0f;
+            cbMaterial.materialAmbientOcclusion = 1.0f;
+            cbMaterial.overrideMaterial = 1;
+
+            deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
             deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
         }
     }

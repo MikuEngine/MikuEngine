@@ -30,8 +30,8 @@ namespace engine
 
         std::shared_ptr<VertexBuffer> m_vertexBuffer;
         std::shared_ptr<IndexBuffer> m_indexBuffer;
-        std::shared_ptr<ConstantBuffer> m_materialBuffer;
-        std::shared_ptr<ConstantBuffer> m_worldTransformBuffer;
+        std::shared_ptr<ConstantBuffer> m_materialConstantBuffer;
+        std::shared_ptr<ConstantBuffer> m_objectConstantBuffer;
         std::shared_ptr<VertexShader> m_finalPassVertexShader;
         std::shared_ptr<VertexShader> m_shadowPassVertexShader;
         std::shared_ptr<PixelShader> m_finalPassPixelShader;
@@ -39,7 +39,6 @@ namespace engine
         std::vector<Textures> m_textures;
         std::shared_ptr<InputLayout> m_inputLayout;
         std::shared_ptr<SamplerState> m_samplerState;
-        std::shared_ptr<SamplerState> m_comparisonSamplerState;
 
     public:
         StaticMeshRenderer();

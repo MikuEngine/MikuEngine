@@ -181,8 +181,9 @@ namespace engine
     void WinApp::Shutdown()
     {
         SceneManager::Get().Shutdown();
+        SystemManager::Get().Shutdown();
         ResourceManager::Get().Cleanup();
-        //GraphicsDevice::Get()
+        GraphicsDevice::Get().Shutdown();
     }
 
     void WinApp::Run()
@@ -219,20 +220,13 @@ namespace engine
 
         SystemManager::Get().Script().CallStart();
         SystemManager::Get().Script().CallUpdate();
-
-        SystemManager::Get().Transform().UnmarkDirtyThisFrame();
     }
 
     void WinApp::Render()
     {
-        auto& graphicsDevice = GraphicsDevice::Get();
-
-        graphicsDevice.BeginDraw(Color(0.0f, 0.0f, 0.0f, 1.0f));
-
         SystemManager::Get().Render().Render();
 
-        graphicsDevice.BackBufferDraw();
-        graphicsDevice.EndDraw();
+        SystemManager::Get().Transform().UnmarkDirtyThisFrame();
     }
 
     LRESULT WinApp::MessageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

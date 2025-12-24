@@ -21,6 +21,9 @@ namespace engine
         ~SystemManager();
 
     public:
+        void Shutdown();
+
+    public:
         ScriptSystem& Script() const;
         TransformSystem& Transform() const;
         RenderSystem& Render() const;

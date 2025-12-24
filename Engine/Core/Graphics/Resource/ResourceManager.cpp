@@ -301,6 +301,8 @@ namespace engine
             desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
             desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
             desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+            desc.MinLOD = 0;
+            desc.MaxLOD = D3D11_FLOAT32_MAX;
             m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Point)] = std::make_shared<SamplerState>();
             m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Point)]->Create(desc);
         }
@@ -311,6 +313,8 @@ namespace engine
             desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
             desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
             desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+            desc.MinLOD = 0;
+            desc.MaxLOD = D3D11_FLOAT32_MAX;
             m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Linear)] = std::make_shared<SamplerState>();
             m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Linear)]->Create(desc);
         }
@@ -322,18 +326,31 @@ namespace engine
             desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
             desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
             desc.MaxAnisotropy = 16;
+            desc.MinLOD = 0;
+            desc.MaxLOD = D3D11_FLOAT32_MAX;
             m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Anisotropic)] = std::make_shared<SamplerState>();
             m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Anisotropic)]->Create(desc);
         }
         // Shadow PCF
         {
             D3D11_SAMPLER_DESC desc{};
+            desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+            desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+            desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+            desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+            desc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+            m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Comparison)] = std::make_shared<SamplerState>();
+            m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Comparison)]->Create(desc);
+        }
+        // Clamp
+        {
+            D3D11_SAMPLER_DESC desc{};
             desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
             desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
             desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
             desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-            m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Comparison)] = std::make_shared<SamplerState>();
-            m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Comparison)]->Create(desc);
+            m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Clamp)] = std::make_shared<SamplerState>();
+            m_defaultSamplerStates[static_cast<size_t>(DefaultSamplerType::Clamp)]->Create(desc);
         }
     }
 

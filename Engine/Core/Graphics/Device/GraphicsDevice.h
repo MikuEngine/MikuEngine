@@ -17,14 +17,9 @@ namespace engine
         std::unique_ptr<Texture> orm;
         std::unique_ptr<Texture> emissive;
 
-        void Reset()
-        {
-            baseColor.reset();
-            position.reset();
-            normal.reset();
-            orm.reset();
-            emissive.reset();
-        }
+        void Reset();
+        std::array<ID3D11RenderTargetView*, 5> GetRawRTVs() const;
+        std::array<ID3D11ShaderResourceView*, 5> GetRawSRVs() const;
     };
 
     class GraphicsDevice :
@@ -51,6 +46,9 @@ namespace engine
         // Resources for Blit
         Microsoft::WRL::ComPtr<ID3D11VertexShader> m_fullscreenQuadVS;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> m_blitPS;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_globalLightPS;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_hdrPS;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_ldrPS;
         Microsoft::WRL::ComPtr<ID3D11InputLayout> m_quadInputLayout;
         Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerLinear;
 
@@ -60,7 +58,6 @@ namespace engine
         UINT m_quadVertexCount = 0;
         UINT m_quadIndexCount = 0;
         UINT m_quadVertexStride = 0;
-        UINT m_quadVertexOffset = 0;
 
         HWND m_hWnd = nullptr;
         UINT m_resolutionWidth = 0;
@@ -103,25 +100,34 @@ namespace engine
             UINT screenWidth,
             UINT screenHeight,
             bool isFullscreen);
-        void BeginDraw(const Color& clearColor = {});
-        void BackBufferDraw();
+
+        void DrawFullscreenQuad();
 
         void BeginDrawShadowPass();
         void EndDrawShadowPass();
+
         void BeginDrawGeometryPass();
         void EndDrawGeometryPass();
-        void BeginDrawGlobalLightPass();
-        void EndDrawGlobalLightPass();
+
+        void BeginDrawLightPass();
+        void EndDrawLightPass();
+
         void BeginDrawForwardPass();
         void EndDrawForwardPass();
+
         void BeginDrawPostProccessingPass();
         void EndDrawPostProccessingPass();
+
+        void BeginDrawGUIPass();
+        void EndDrawGUIPass();
 
         void EndDraw();
 
         const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() const;
         const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetDeviceContext() const;
         const D3D11_VIEWPORT& GetViewport() const;
+        float GetMaxHDRNits() const;
+        int GetShadowMapSize() const;
 
         void SetVsync(bool useVsync);
 

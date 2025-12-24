@@ -63,52 +63,52 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     float4 lightClipPos = mul(float4(worldPosition, 1.0f), g_mainLightViewProjection);
     
     float shadowFactor = 1.0f;
-    float currentShadowDepth = lightClipPos.z / lightClipPos.w;
-    float2 shadowMapUV = lightClipPos.xy / lightClipPos.w;
+    //float currentShadowDepth = lightClipPos.z / lightClipPos.w;
+    //float2 shadowMapUV = lightClipPos.xy / lightClipPos.w;
     
-    shadowMapUV.y = -shadowMapUV.y;
-    shadowMapUV = shadowMapUV * 0.5f + 0.5f;
+    //shadowMapUV.y = -shadowMapUV.y;
+    //shadowMapUV = shadowMapUV * 0.5f + 0.5f;
     
-    if (all(shadowMapUV >= 0.0f) && all(shadowMapUV <= 1.0f))
-    {
-        if (g_useShadowPCF)
-        {
-            if (currentShadowDepth > 1.0f)
-            {
-                shadowFactor = 1.0f;
-            }
-            else
-            {
-                float texelSize = 1.0f / g_shadowMapSize;
+    //if (all(shadowMapUV >= 0.0f) && all(shadowMapUV <= 1.0f))
+    //{
+    //    if (g_useShadowPCF)
+    //    {
+    //        if (currentShadowDepth > 1.0f)
+    //        {
+    //            shadowFactor = 1.0f;
+    //        }
+    //        else
+    //        {
+    //            float texelSize = 1.0f / g_shadowMapSize;
 
-                int max = g_pcfSize;
-                float sum = 0.0f;
-                for (int y = -max; y <= max; ++y)
-                {
-                    for (int x = -max; x <= max; ++x)
-                    {
-                        float2 offset = float2(x, y) * texelSize;
-                        float2 sampleUV = shadowMapUV + offset;
+    //            int max = g_pcfSize;
+    //            float sum = 0.0f;
+    //            for (int y = -max; y <= max; ++y)
+    //            {
+    //                for (int x = -max; x <= max; ++x)
+    //                {
+    //                    float2 offset = float2(x, y) * texelSize;
+    //                    float2 sampleUV = shadowMapUV + offset;
 
-                        sum += g_texShadowMap.SampleCmpLevelZero(g_samComparison, sampleUV, currentShadowDepth - 0.0001f);
-                    }
-                }
-                shadowFactor = sum / ((max * 2 + 1) * (max * 2 + 1));
-            }
-        }
-        else
-        {
-            float sampleShadowDepth = g_texShadowMap.Sample(g_samLinear, shadowMapUV).r;
-            if (currentShadowDepth > 1.0f)
-            {
-                shadowFactor = 1.0f;
-            }
-            else if (currentShadowDepth > sampleShadowDepth + 0.001f)
-            {
-                shadowFactor = 0.0f;
-            }
-        }
-    }
+    //                    sum += g_texShadowMap.SampleCmpLevelZero(g_samComparison, sampleUV, currentShadowDepth - 0.0001f);
+    //                }
+    //            }
+    //            shadowFactor = sum / ((max * 2 + 1) * (max * 2 + 1));
+    //        }
+    //    }
+    //    else
+    //    {
+    //        float sampleShadowDepth = g_texShadowMap.Sample(g_samLinear, shadowMapUV).r;
+    //        if (currentShadowDepth > 1.0f)
+    //        {
+    //            shadowFactor = 1.0f;
+    //        }
+    //        else if (currentShadowDepth > sampleShadowDepth + 0.001f)
+    //        {
+    //            shadowFactor = 0.0f;
+    //        }
+    //    }
+    //}
     
     float3 f0 = lerp(DielectricFactor, baseColor.rgb, metalness);
     

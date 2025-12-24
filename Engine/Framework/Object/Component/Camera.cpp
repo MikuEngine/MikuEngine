@@ -21,7 +21,7 @@ namespace engine
                 Vector3 translation;
                 world.Decompose(scale, rotation, translation);
 
-                const Vector3 forward = Vector3::Transform(-Vector3::Forward, rotation);
+                const Vector3 forward = Vector3::Transform(Vector3::Forward, rotation);
                 const Vector3 up = Vector3::Transform(Vector3::Up, rotation);
 
                 m_world = Matrix::CreateWorld(translation, forward, up);
