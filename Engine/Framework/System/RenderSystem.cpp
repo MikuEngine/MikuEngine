@@ -155,7 +155,7 @@ namespace engine
         cbGlobal.mainLightColor = Vector3(1.0f, 1.0f, 1.0f);
         cbGlobal.mainLightIntensity = 10.0f;
         cbGlobal.maxHDRNits = graphics.GetMaxHDRNits();
-        cbGlobal.exposure = -1.0f;
+        cbGlobal.exposure = -2.5f;
         cbGlobal.shadowMapSize = graphics.GetShadowMapSize();
         cbGlobal.useShadowPCF = 0;
         cbGlobal.pcfSize = 2;

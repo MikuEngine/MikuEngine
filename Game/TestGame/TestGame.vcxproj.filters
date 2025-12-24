@@ -33,6 +33,9 @@
     <ClCompile Include="App\TestGameApp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Script\EditorCameraController.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl" />
@@ -49,6 +52,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\TestScript.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\EditorCameraController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

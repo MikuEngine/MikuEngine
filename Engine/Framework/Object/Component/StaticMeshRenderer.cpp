@@ -106,12 +106,12 @@ namespace engine
             deviceContext->PSSetShaderResources(0, static_cast<UINT>(textureSRVs.size()), textureSRVs.data());
 
             CbMaterial cbMaterial{};
-            cbMaterial.materialBaseColor = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+            cbMaterial.materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             cbMaterial.materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
             cbMaterial.materialRoughness = 0.0f;
             cbMaterial.materialMetalness = 1.0f;
-            cbMaterial.materialAmbientOcclusion = 1.0f;
-            cbMaterial.overrideMaterial = 1;
+            cbMaterial.materialAmbientOcclusion = 0.7f;
+            cbMaterial.overrideMaterial = 0;
 
             deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
             deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);

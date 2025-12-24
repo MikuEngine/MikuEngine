@@ -8,6 +8,7 @@
 #include "Framework/Object/Component/Camera.h"
 
 #include "Script/TestScript.h"
+#include "Script/EditorCameraController.h"
 
 namespace game
 {
@@ -37,11 +38,13 @@ namespace game
 			{
 				engine::Scene* scene = engine::SceneManager::Get().GetCurrentScene();
 				
-				scene->GetMainCamera()->GetTransform()->SetLocalPosition({ 0.0f, 0.0f, -10.0f });
+				auto camera = scene->GetMainCamera();
+				camera->GetTransform()->SetLocalPosition({ 0.0f, 0.0f, -10.0f });
+				camera->GetGameObject()->AddComponent<EditorCameraController>();
 
 				engine::Ptr<engine::GameObject> gameObject = scene->CreateGameObject("TestGameObject");
 				engine::Ptr<TestScript> testScript = gameObject->AddComponent<TestScript>();
-				gameObject->AddComponent<engine::StaticMeshRenderer>("Resource/Model/Cube_h.fbx", "Shader/Pixel/BlinnPhongPS.hlsl");
+				gameObject->AddComponent<engine::StaticMeshRenderer>("Resource/Model/char.fbx", "Shader/Pixel/BlinnPhongPS.hlsl");
 				auto transform = gameObject->GetTransform();
 				transform->SetLocalPosition({ 0.0f, 0.0f, 0.0f });
 			};

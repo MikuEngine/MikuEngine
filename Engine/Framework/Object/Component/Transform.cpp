@@ -66,7 +66,7 @@ namespace engine
     }
     Vector3 Transform::GetForward() const
     {
-        return Vector3::Transform(Vector3::Forward, m_localRotation);
+        return Vector3::Transform(-Vector3::Forward, m_localRotation);
     }
 
     Vector3 Transform::GetUp() const
