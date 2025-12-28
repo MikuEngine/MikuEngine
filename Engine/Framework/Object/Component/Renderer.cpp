@@ -10,11 +10,11 @@ namespace engine
 	{
 		m_systemIndices.fill(-1);
 
-		SystemManager::Get().Render().Register(this);
+		SystemManager::Get().GetRenderSystem().Register(this);
 	}
 
 	Renderer::~Renderer()
 	{
-		SystemManager::Get().Render().Unregister(this);
+		SystemManager::Get().GetRenderSystem().Unregister(this);
 	}
 }

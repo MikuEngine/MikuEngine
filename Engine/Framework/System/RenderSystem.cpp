@@ -16,6 +16,10 @@
 #include "Framework/Scene/Scene.h"
 #include "Framework/Object/Component/Camera.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/System/SystemManager.h"
+#include "Framework/System/CameraSystem.h"
+#include "Editor/EditorManager.h"
+#include "Editor/EditorCamera.h"
 
 namespace engine
 {
@@ -141,14 +145,42 @@ namespace engine
         auto& graphics = GraphicsDevice::Get();
         auto context = GraphicsDevice::Get().GetDeviceContext();
 
-        const auto camera = SceneManager::Get().GetCurrentScene()->GetMainCamera();
-        camera->Update();
+        Matrix view, projection;
+        Vector3 cameraPosition;
+
+        switch (EditorManager::Get().GetEditorState())
+        {
+        case EditorState::Edit:
+        case EditorState::Pause:
+        {
+            auto* cam = EditorManager::Get().GetEditorCamera();
+            view = cam->GetView();
+            projection = cam->GetProjection();
+            cameraPosition = cam->GetPosition();
+        }
+            break;
+
+        case EditorState::Play:
+        {
+            auto* cam = SystemManager::Get().GetCameraSystem().GetMainCamera();
+            if (cam == nullptr)
+            {
+                return;
+            }
+
+            view = cam->GetView();
+            projection = cam->GetProjection();
+            cameraPosition = GetTranslation(cam->GetWorld());
+        }
+            break;
+        }
+
 
         CbGlobal cbGlobal;
-        cbGlobal.view = camera->GetView().Transpose();
-        cbGlobal.projection = camera->GetProjection().Transpose();
-        cbGlobal.viewProjection = (camera->GetView() * camera->GetProjection()).Transpose();
-        cbGlobal.cameraWorldPoistion = camera->GetWorld().Translation();
+        cbGlobal.view = view.Transpose();
+        cbGlobal.projection = projection.Transpose();
+        cbGlobal.viewProjection = (view * projection).Transpose();
+        cbGlobal.cameraWorldPoistion = cameraPosition;
         cbGlobal.elapsedTime = Time::GetElapsedSeconds(g_startTime);
         cbGlobal.mainLightViewProjection = cbGlobal.viewProjection;
         cbGlobal.mainLightWorldDirection = Vector3(0.0f, 0.0f, 1.0f);
@@ -209,11 +241,15 @@ namespace engine
             context->IASetVertexBuffers(0, 1, m_cubeVertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
             context->IASetIndexBuffer(m_cubeIndexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
             context->IASetInputLayout(m_cubeInputLayout->GetRawInputLayout());
+
             context->VSSetShader(m_skyboxVertexShader->GetRawShader(), nullptr, 0);
+
             context->PSSetShader(m_skyboxPixelShader->GetRawShader(), nullptr, 0);
             context->PSSetSamplers(0, 1, m_linearSamplerState->GetSamplerState().GetAddressOf());
             context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLEnvironment), 1, m_skyboxEnv->GetSRV().GetAddressOf());
+
             context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
+
             context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
 
             context->DrawIndexed(m_indexCount, 0, 0);
@@ -229,14 +265,6 @@ namespace engine
             graphics.DrawFullscreenQuad();
         }
         graphics.EndDrawPostProccessingPass();
-
-        graphics.BeginDrawGUIPass();
-        {
-
-        }
-        graphics.EndDrawGUIPass();
-
-        graphics.EndDraw();
     }
 
     void RenderSystem::AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type)

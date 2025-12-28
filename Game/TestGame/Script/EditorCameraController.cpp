@@ -56,7 +56,7 @@ namespace game
 
 		position += inputVector * speed * engine::Time::DeltaTime();
 
-		if (engine::Input::IsMouseHeld(engine::Input::Button::RIGHT))
+		if (engine::Input::IsMouseHeld(engine::Input::Buttons::RIGHT))
 		{
 			engine::Input::SetMouseMode(Mouse::Mode::MODE_RELATIVE);
 
@@ -73,4 +73,9 @@ namespace game
 		GetTransform()->SetLocalPosition(position);
 		GetTransform()->SetLocalRotation(rotation);
     }
+	
+	std::string EditorCameraController::GetType() const
+	{
+		return "EditorCameraController";
+	}
 }

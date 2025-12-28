@@ -36,17 +36,22 @@ namespace game
 
 		auto OnEnter = []()
 			{
-				engine::Scene* scene = engine::SceneManager::Get().GetCurrentScene();
-				
-				auto camera = scene->GetMainCamera();
-				camera->GetTransform()->SetLocalPosition({ 0.0f, 0.0f, -10.0f });
-				camera->GetGameObject()->AddComponent<EditorCameraController>();
+				//engine::Scene* scene = engine::SceneManager::Get().GetCurrentScene();
+				//
+				//auto camera = scene->GetMainCamera();
+				//camera->GetTransform()->SetLocalPosition({ 0.0f, 0.0f, -10.0f });
+				//camera->GetGameObject()->AddComponent<EditorCameraController>();
 
-				engine::Ptr<engine::GameObject> gameObject = scene->CreateGameObject("TestGameObject");
-				engine::Ptr<TestScript> testScript = gameObject->AddComponent<TestScript>();
-				gameObject->AddComponent<engine::StaticMeshRenderer>("Resource/Model/char.fbx", "Shader/Pixel/BlinnPhongPS.hlsl");
-				auto transform = gameObject->GetTransform();
-				transform->SetLocalPosition({ 0.0f, 0.0f, 0.0f });
+				//engine::Ptr<engine::GameObject> gameObject = scene->CreateGameObject("TestGameObject");
+				//engine::Ptr<TestScript> testScript = gameObject->AddComponent<TestScript>();
+				//gameObject->AddComponent<engine::StaticMeshRenderer>("Resource/Model/char.fbx", "Shader/Pixel/BlinnPhongPS.hlsl");
+				//auto transform = gameObject->GetTransform();
+				//transform->SetLocalPosition({ 0.0f, 10.0f, 0.0f });
+
+
+				//auto floor = scene->CreateGameObject("TestGameObject");
+				//floor->AddComponent<engine::StaticMeshRenderer>("Resource/Model/Floor.fbx", "Shader/Pixel/BlinnPhongPS.hlsl");
+
 			};
 
 		engine::SceneManager::Get().CreateScene("SampleScene1", OnEnter);

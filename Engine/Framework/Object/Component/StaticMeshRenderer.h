@@ -21,6 +21,7 @@ namespace engine
     class StaticMeshRenderer :
         public Renderer
     {
+        REGISTER_COMPONENT(StaticMeshRenderer)
     private:
         std::string m_meshFilePath;
         std::string m_shaderFilePath;
@@ -48,6 +49,12 @@ namespace engine
     public:
         void SetMesh(const std::string& meshFilePath);
         void SetPixelShader(const std::string& shaderFilePath);
+
+    public:
+        void OnGui() override {}
+        void Save(json& j) const override {}
+        void Load(const json& j) override {}
+        std::string GetType() const override;
 
     public:
         bool HasRenderType(RenderType type) const override;

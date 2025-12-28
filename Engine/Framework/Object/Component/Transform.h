@@ -37,6 +37,9 @@ namespace engine
         Vector3 GetUp() const;
         Vector3 GetRight() const;
 
+        const std::vector<Transform*>& GetChildren() const;
+        Transform* GetParent() const;
+
         bool IsDirtyThisFrame() const;
 
         void SetLocalPosition(const Vector3& position);
@@ -46,12 +49,15 @@ namespace engine
         void SetLocalScale(float scale);
 
         void SetParent(Transform* parent);
-        const std::vector<Transform*>& GetChildren() const;
 
         void UnmarkDirtyThisFrame();
+        bool IsDescendantOf(Transform* other) const;
 
     public:
         void OnGui() override;
+        void Save(json& j) const override;
+        void Load(const json& j) override;
+        std::string GetType() const override;
 
     private:
         void RecalculateWorldMatrix();

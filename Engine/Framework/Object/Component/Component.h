@@ -17,12 +17,6 @@ namespace engine
     public:
         GameObject* GetGameObject() const;
         Transform* GetTransform() const;
-        
-    public:
-        virtual void OnGui() {};
-
-    private:
-        void SetOwner(GameObject* owner);
 
     private:
         template <typename T>

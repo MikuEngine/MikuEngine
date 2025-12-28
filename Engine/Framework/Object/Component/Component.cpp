@@ -14,9 +14,4 @@ namespace engine
     {
         return m_owner->GetTransform();
     }
-
-    void Component::SetOwner(GameObject* owner)
-    {
-        m_owner = owner;
-    }
 }

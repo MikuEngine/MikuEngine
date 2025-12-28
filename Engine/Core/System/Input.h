@@ -1,14 +1,11 @@
 ﻿#pragma once
 
-#include <directXTK/Mouse.h>
-#include <directXTK/Keyboard.h>
-
 namespace engine
 {
     class Input
     {
     public:
-        enum class Button
+        enum class Buttons
         {
             LEFT,
             RIGHT,
@@ -25,9 +22,9 @@ namespace engine
         static bool IsKeyPressed(DirectX::Keyboard::Keys key);
         static bool IsKeyReleased(DirectX::Keyboard::Keys key);
 
-        static bool IsMouseHeld(Input::Button button);
-        static bool IsMousePressed(Input::Button button);
-        static bool IsMouseReleased(Input::Button button);
+        static bool IsMouseHeld(Input::Buttons button);
+        static bool IsMousePressed(Input::Buttons button);
+        static bool IsMouseReleased(Input::Buttons button);
 
         static void SetMouseMode(DirectX::Mouse::Mode mode);
         static void SetCoordinateTransform(float offsetX, float offsetY, float scaleX, float scaleY);

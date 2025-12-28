@@ -149,9 +149,9 @@
   <ItemGroup>
     <ClCompile Include="Common\Debug\Debug.cpp" />
     <ClCompile Include="Common\Math\MathUtility.cpp" />
-    <ClCompile Include="Common\Utility\MaterialHelper.cpp" />
+    <ClCompile Include="Core\Graphics\Resource\MaterialHelper.cpp" />
     <ClCompile Include="Common\Utility\Profiling.cpp" />
-    <ClCompile Include="Common\Utility\StringUtility.cpp" />
+    <ClCompile Include="Common\Utility\StringHelper.cpp" />
     <ClCompile Include="Core\App\ConfigLoader.cpp" />
     <ClCompile Include="Core\Graphics\Device\GraphicsDevice.cpp" />
     <ClCompile Include="Core\Graphics\Resource\BlendState.cpp" />
@@ -168,6 +168,8 @@
     <ClCompile Include="Core\Graphics\Resource\VertexShader.cpp" />
     <ClCompile Include="Core\System\Input.cpp" />
     <ClCompile Include="Core\System\MyTime.cpp" />
+    <ClCompile Include="Editor\EditorCamera.cpp" />
+    <ClCompile Include="Editor\EditorManager.cpp" />
     <ClCompile Include="Framework\Asset\AnimationData.cpp" />
     <ClCompile Include="Framework\Asset\AssetManager.cpp" />
     <ClCompile Include="Framework\Asset\FBXData.cpp" />
@@ -177,6 +179,8 @@
     <ClCompile Include="Framework\Asset\MaterialData.cpp" />
     <ClCompile Include="Framework\Object\Component\Camera.cpp" />
     <ClCompile Include="Framework\Object\Component\Component.cpp" />
+    <ClCompile Include="Framework\Object\Component\ComponentFactory.cpp" />
+    <ClCompile Include="Framework\Object\Component\Light.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Script.cpp" />
     <ClCompile Include="Framework\Object\Component\StaticMeshRenderer.cpp" />
@@ -185,6 +189,7 @@
     <ClCompile Include="Framework\Object\Object.cpp" />
     <ClCompile Include="Framework\Scene\Scene.cpp" />
     <ClCompile Include="Framework\Scene\SceneManager.cpp" />
+    <ClCompile Include="Framework\System\CameraSystem.cpp" />
     <ClCompile Include="Framework\System\RenderSystem.cpp" />
     <ClCompile Include="Framework\System\SystemManager.cpp" />
     <ClCompile Include="Framework\System\ScriptSystem.cpp" />
@@ -195,17 +200,19 @@
     </ClCompile>
     <ClCompile Include="Core\App\WinApp.cpp" />
     <ClCompile Include="Framework\Physics\TestPhysics.cpp" />
-    <ClCompile Include="Framework\Serializer\TestSerializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Debug\Debug.h" />
     <ClInclude Include="Common\Math\MathUtility.h" />
+    <ClInclude Include="Common\Utility\JsonHelper.h" />
     <ClInclude Include="Core\Graphics\Data\ShaderSlotTypes.h" />
+    <ClInclude Include="Editor\EditorCamera.h" />
+    <ClInclude Include="Editor\EditorManager.h" />
     <ClInclude Include="Framework\Asset\DefaultAssetTypes.h" />
-    <ClInclude Include="Common\Utility\MaterialHelper.h" />
+    <ClInclude Include="Core\Graphics\Resource\MaterialHelper.h" />
     <ClInclude Include="Common\Utility\Profiling.h" />
     <ClInclude Include="Common\Utility\Singleton.h" />
-    <ClInclude Include="Common\Utility\StringUtility.h" />
+    <ClInclude Include="Common\Utility\StringHelper.h" />
     <ClInclude Include="Core\App\ConfigLoader.h" />
     <ClInclude Include="Core\App\WindowSettings.h" />
     <ClInclude Include="Core\Graphics\Data\ConstantBufferTypes.h" />
@@ -238,6 +245,8 @@
     <ClInclude Include="Framework\Asset\StaticMeshData.h" />
     <ClInclude Include="Framework\Object\Component\Camera.h" />
     <ClInclude Include="Framework\Object\Component\Component.h" />
+    <ClInclude Include="Framework\Object\Component\ComponentFactory.h" />
+    <ClInclude Include="Framework\Object\Component\Light.h" />
     <ClInclude Include="Framework\Object\Component\Renderer.h" />
     <ClInclude Include="Framework\Object\Component\Script.h" />
     <ClInclude Include="Framework\Object\Component\StaticMeshRenderer.h" />
@@ -248,6 +257,7 @@
     <ClInclude Include="Framework\Object\Ptr.h" />
     <ClInclude Include="Framework\Scene\Scene.h" />
     <ClInclude Include="Framework\Scene\SceneManager.h" />
+    <ClInclude Include="Framework\System\CameraSystem.h" />
     <ClInclude Include="Framework\System\RenderSystem.h" />
     <ClInclude Include="Framework\System\SystemManager.h" />
     <ClInclude Include="Framework\System\ScriptSystem.h" />

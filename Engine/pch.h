@@ -23,6 +23,13 @@
 #include <directxtk/SimpleMath.h>
 #include <dxgi1_5.h>
 #include <DirectXCollision.h>
+#include <directXTK/Mouse.h>
+#include <directXTK/Keyboard.h>
+
+
+// ext
+#include <imgui.h>
+#include <json.hpp>
 
 namespace engine
 {
@@ -35,10 +42,14 @@ namespace engine
 
     using Clock = std::chrono::high_resolution_clock;
     using TimePoint = std::chrono::time_point<Clock>;
+
+    using json = nlohmann::ordered_json;
 }
 
 #include "Common/Utility/Singleton.h"
-#include "Common/Utility/StringUtility.h"
+#include "Common/Utility/StringHelper.h"
+#include "Common/Utility/JsonHelper.h"
+#include "Common/Math/MathUtility.h"
 #include "Common/Debug/Debug.h"
 
 #include "Core/Graphics/Device/GraphicsDevice.h"
@@ -46,3 +57,10 @@ namespace engine
 #include "Core/System/Input.h"
 
 #include "Framework/Object/Ptr.h"
+#include "Framework/Object/Component/ComponentFactory.h"
+
+namespace engine
+{
+    using Keys = DirectX::Keyboard::Keys;
+    using Buttons = Input::Buttons;
+}

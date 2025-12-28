@@ -22,6 +22,9 @@ namespace engine
 
     public:
         Transform* GetTransform() const;
+        const std::string& GetName() const;
+
+        void SetName(const std::string& name);
 
     public:
         template <std::derived_from<Component> T, typename... Args>
@@ -29,13 +32,15 @@ namespace engine
         {
             std::unique_ptr<T> component = std::make_unique<T>(std::forward<Args>(args)...);
 
-            component->SetOwner(this);
+            component->m_owner = this;
             T* ptr = component.get();
 
             m_components.push_back(std::move(component));
 
             return ptr;
         }
+
+        Component* AddComponent(std::unique_ptr<Component>&& component);
 
         template <std::derived_from<Component> T>
         T* GetComponent()
@@ -51,7 +56,13 @@ namespace engine
             return nullptr;
         }
 
+        const std::vector<std::unique_ptr<Component>>& GetComponents() const;
+        void RemoveComponent(size_t index);
+
     public:
         virtual void OnGui() {};
+        void Save(json& j) const override;
+        void Load(const json& j) override;
+        std::string GetType() const override;
     };
 }

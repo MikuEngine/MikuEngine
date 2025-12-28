@@ -15,8 +15,8 @@ namespace engine
         DirectX::Mouse::State g_mouseState;
         DirectX::Mouse::ButtonStateTracker g_mouseStateTracker;
 
-        bool* g_mouseHeldStateTable[static_cast<size_t>(Input::Button::MAX)];
-        ButtonState* g_mouseStateTable[static_cast<size_t>(Input::Button::MAX)];
+        bool* g_mouseHeldStateTable[static_cast<size_t>(Input::Buttons::MAX)];
+        ButtonState* g_mouseStateTable[static_cast<size_t>(Input::Buttons::MAX)];
 
         float g_offsetX = 0.0f;
         float g_offsetY = 0.0f;
@@ -28,17 +28,17 @@ namespace engine
     {
         g_mouse.SetWindow(hWnd);
 
-        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::LEFT)] = &g_mouseState.leftButton;
-        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::RIGHT)] = &g_mouseState.rightButton;
-        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::MIDDLE)] = &g_mouseState.middleButton;
-        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::SIDE_FRONT)] = &g_mouseState.xButton1;
-        g_mouseHeldStateTable[static_cast<size_t>(Input::Button::SIDE_BACK)] = &g_mouseState.xButton2;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Buttons::LEFT)] = &g_mouseState.leftButton;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Buttons::RIGHT)] = &g_mouseState.rightButton;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Buttons::MIDDLE)] = &g_mouseState.middleButton;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Buttons::SIDE_FRONT)] = &g_mouseState.xButton1;
+        g_mouseHeldStateTable[static_cast<size_t>(Input::Buttons::SIDE_BACK)] = &g_mouseState.xButton2;
 
-        g_mouseStateTable[static_cast<size_t>(Input::Button::LEFT)] = &g_mouseStateTracker.leftButton;
-        g_mouseStateTable[static_cast<size_t>(Input::Button::RIGHT)] = &g_mouseStateTracker.rightButton;
-        g_mouseStateTable[static_cast<size_t>(Input::Button::MIDDLE)] = &g_mouseStateTracker.middleButton;
-        g_mouseStateTable[static_cast<size_t>(Input::Button::SIDE_FRONT)] = &g_mouseStateTracker.xButton1;
-        g_mouseStateTable[static_cast<size_t>(Input::Button::SIDE_BACK)] = &g_mouseStateTracker.xButton2;
+        g_mouseStateTable[static_cast<size_t>(Input::Buttons::LEFT)] = &g_mouseStateTracker.leftButton;
+        g_mouseStateTable[static_cast<size_t>(Input::Buttons::RIGHT)] = &g_mouseStateTracker.rightButton;
+        g_mouseStateTable[static_cast<size_t>(Input::Buttons::MIDDLE)] = &g_mouseStateTracker.middleButton;
+        g_mouseStateTable[static_cast<size_t>(Input::Buttons::SIDE_FRONT)] = &g_mouseStateTracker.xButton1;
+        g_mouseStateTable[static_cast<size_t>(Input::Buttons::SIDE_BACK)] = &g_mouseStateTracker.xButton2;
     }
 
     void Input::Update()
@@ -65,17 +65,17 @@ namespace engine
         return g_keyboardStateTracker.IsKeyReleased(key);
     }
 
-    bool Input::IsMouseHeld(Input::Button button)
+    bool Input::IsMouseHeld(Input::Buttons button)
     {
         return *g_mouseHeldStateTable[static_cast<size_t>(button)];
     }
 
-    bool Input::IsMousePressed(Input::Button button)
+    bool Input::IsMousePressed(Input::Buttons button)
     {
         return *g_mouseStateTable[static_cast<size_t>(button)] == ButtonState::PRESSED;
     }
 
-    bool Input::IsMouseReleased(Input::Button button)
+    bool Input::IsMouseReleased(Input::Buttons button)
     {
         return *g_mouseStateTable[static_cast<size_t>(button)] == ButtonState::RELEASED;
     }

@@ -3,6 +3,9 @@
 
 #include <DirectXColors.h>
 
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
+
 #include "Common/Utility/Profiling.h"
 #include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -13,6 +16,10 @@
 #include "Framework/System/ScriptSystem.h"
 #include "Framework/System/TransformSystem.h"
 #include "Framework/System/RenderSystem.h"
+#include "Framework/System/CameraSystem.h"
+#include "Editor/EditorManager.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace engine
 {
@@ -176,10 +183,22 @@ namespace engine
 
         AssetManager::Get().Initialize();
         ResourceManager::Get().Initialize();
+        EditorManager::Get().Initialize();
+
+        IMGUI_CHECKVERSION();
+
+        ImGui::CreateContext();
+
+        ImGui_ImplWin32_Init(m_hWnd);
+        ImGui_ImplDX11_Init(GraphicsDevice::Get().GetDevice().Get(), GraphicsDevice::Get().GetDeviceContext().Get());
     }
 
     void WinApp::Shutdown()
     {
+        ImGui_ImplDX11_Shutdown();
+        ImGui_ImplWin32_Shutdown();
+        ImGui::DestroyContext();
+
         SceneManager::Get().Shutdown();
         SystemManager::Get().Shutdown();
         ResourceManager::Get().Cleanup();
@@ -216,21 +235,48 @@ namespace engine
         Time::Update();
         Input::Update();
 
-        SceneManager::Get().CheckSceneChanged();
+        switch (EditorManager::Get().GetEditorState())
+        {
+        case EditorState::Edit:
+            SceneManager::Get().CheckSceneChanged();
+            EditorManager::Get().Update();
+            break;
 
-        SystemManager::Get().Script().CallStart();
-        SystemManager::Get().Script().CallUpdate();
+        case EditorState::Play:
+            SceneManager::Get().CheckSceneChanged();
+
+            SystemManager::Get().GetScriptSystem().CallStart();
+            SystemManager::Get().GetScriptSystem().CallUpdate();
+
+            SystemManager::Get().GetCameraSystem().Update();
+            break;
+
+        case EditorState::Pause:
+            break;
+        }
+
     }
 
     void WinApp::Render()
     {
-        SystemManager::Get().Render().Render();
+        SystemManager::Get().GetRenderSystem().Render();
 
-        SystemManager::Get().Transform().UnmarkDirtyThisFrame();
+#ifdef _DEBUG
+        EditorManager::Get().Render();
+#endif //_DEBUG
+
+        GraphicsDevice::Get().EndDraw();
+
+        SystemManager::Get().GetTransformSystem().UnmarkDirtyThisFrame();
     }
 
     LRESULT WinApp::MessageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
+        if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+        {
+            return 0;
+        }
+
         switch (uMsg)
         {
         case WM_DESTROY:

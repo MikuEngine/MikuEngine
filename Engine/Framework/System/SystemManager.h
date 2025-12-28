@@ -7,6 +7,7 @@ namespace engine
     class ScriptSystem;
     class TransformSystem;
     class RenderSystem;
+    class CameraSystem;
 
     class SystemManager :
         public Singleton<SystemManager>
@@ -15,6 +16,7 @@ namespace engine
         std::unique_ptr<ScriptSystem> m_scriptSystem;
         std::unique_ptr<TransformSystem> m_transformSystem;
         std::unique_ptr<RenderSystem> m_renderSystem;
+        std::unique_ptr<CameraSystem> m_cameraSystem;
 
     private:
         SystemManager();
@@ -24,9 +26,10 @@ namespace engine
         void Shutdown();
 
     public:
-        ScriptSystem& Script() const;
-        TransformSystem& Transform() const;
-        RenderSystem& Render() const;
+        ScriptSystem& GetScriptSystem() const;
+        TransformSystem& GetTransformSystem() const;
+        RenderSystem& GetRenderSystem() const;
+        CameraSystem& GetCameraSystem() const;
 
     private:
         friend class Singleton<SystemManager>;

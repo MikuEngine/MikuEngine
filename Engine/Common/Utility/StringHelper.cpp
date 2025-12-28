@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "StringUtility.h"
+#include "StringHelper.h"
 
 namespace engine
 {

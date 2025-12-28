@@ -160,6 +160,12 @@ struct PS_OUTPUT_GBUFFER
 static const float PI = 3.141592f;
 static const float EPSILON = 0.00001f;
 static const float3 DielectricFactor = float3(0.04f, 0.04f, 0.04f);
+static const matrix Identity = matrix(
+    1.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f
+);
 
 float3 EncodeNormal(float3 n)
 {

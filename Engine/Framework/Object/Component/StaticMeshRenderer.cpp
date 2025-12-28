@@ -10,7 +10,7 @@
 #include "Core/Graphics/Resource/InputLayout.h"
 #include "Core/Graphics/Resource/SamplerState.h"
 #include "Core/Graphics/Data/ConstantBufferTypes.h"
-#include "Common/Utility/MaterialHelper.h"
+#include "Core/Graphics/Resource/MaterialHelper.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/StaticMeshData.h"
 #include "Framework/Asset/MaterialData.h"
@@ -25,12 +25,12 @@ namespace engine
 {
     StaticMeshRenderer::StaticMeshRenderer()
     {
-        SystemManager::Get().Render().Register(this);
+        SystemManager::Get().GetRenderSystem().Register(this);
     }
 
     StaticMeshRenderer::StaticMeshRenderer(const std::string& meshFilePath, const std::string& shaderFilePath)
     {
-        SystemManager::Get().Render().Register(this);
+        SystemManager::Get().GetRenderSystem().Register(this);
 
         m_staticMeshData = AssetManager::Get().GetOrCreateStaticMeshData(meshFilePath);
         m_materialData = AssetManager::Get().GetOrCreateMaterialData(meshFilePath);
@@ -47,14 +47,14 @@ namespace engine
         m_shadowPassPixelShader = ResourceManager::Get().GetOrCreatePixelShader("Shader/Pixel/Shadow_AlphaTest_PS.hlsl");
 
         m_inputLayout = m_finalPassVertexShader->GetOrCreateInputLayout<CommonVertex>();
-        m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
+        m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Anisotropic);
 
         SetupTextures(m_materialData, m_textures);
     }
 
     StaticMeshRenderer::~StaticMeshRenderer()
     {
-        SystemManager::Get().Render().Unregister(this);
+        SystemManager::Get().GetRenderSystem().Unregister(this);
     }
 
     void StaticMeshRenderer::SetMesh(const std::string& meshFilePath)
@@ -63,6 +63,11 @@ namespace engine
 
     void StaticMeshRenderer::SetPixelShader(const std::string& shaderFilePath)
     {
+    }
+
+    std::string StaticMeshRenderer::GetType() const
+    {
+        return "StaticMeshRenderer";
     }
 
     bool StaticMeshRenderer::HasRenderType(RenderType type) const

@@ -1,19 +1,31 @@
 ﻿#include "pch.h"
 #include "Camera.h"
 
-#include "Framework/Object/Component/Transform.h"
 #include "Common/Math/MathUtility.h"
+#include "Framework/Object/Component/Transform.h"
+#include "Framework/System/SystemManager.h"
+#include "Framework/System/CameraSystem.h"
 
 namespace engine
 {
+    Camera::Camera()
+    {
+        SystemManager::Get().GetCameraSystem().Register(this);
+    }
+
+    Camera::~Camera()
+    {
+        SystemManager::Get().GetCameraSystem().Unregister(this);
+    }
+
     void Camera::Update()
     {
         auto transform = GetTransform();
 
-        if (bool isDirtyThisFrame = transform->IsDirtyThisFrame(); m_isDirty || isDirtyThisFrame)
-        {
-            if (isDirtyThisFrame)
-            {
+        //if (bool isDirtyThisFrame = transform->IsDirtyThisFrame(); m_isDirty || isDirtyThisFrame)
+        //{
+        //    if (isDirtyThisFrame)
+        //    {
                 Matrix world = transform->GetWorld();
 
                 Vector3 scale;
@@ -21,18 +33,15 @@ namespace engine
                 Vector3 translation;
                 world.Decompose(scale, rotation, translation);
 
-                const Vector3 forward = Vector3::Transform(Vector3::Forward, rotation);
-                const Vector3 up = Vector3::Transform(Vector3::Up, rotation);
+                const Vector3 forward = Vector3::Transform(Vector3::UnitZ, rotation);
+                const Vector3 up = Vector3::Transform(Vector3::UnitY, rotation);
 
                 m_world = Matrix::CreateWorld(translation, forward, up);
-            }
+            //}
 
             // view
             {
-                m_view = DirectX::XMMatrixLookAtLH(
-                    m_world.Translation(),
-                    m_world.Translation() - m_world.Forward(),
-                    m_world.Up());
+                m_view = DirectX::XMMatrixLookToLH(translation, forward, up);
             }
 
             // projection
@@ -56,8 +65,13 @@ namespace engine
                 m_frustum.Transform(m_frustum, m_world);
             }
 
-            m_isDirty = false;
-        }
+        //    m_isDirty = false;
+        //}
+    }
+
+    std::string Camera::GetType() const
+    {
+        return "Camera";
     }
 
     void Camera::SetProjectionType(ProjectionType type)

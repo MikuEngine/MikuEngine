@@ -2,12 +2,9 @@
 #include "ConfigLoader.h"
 
 #include <fstream>
-#include <json.hpp>
 
 namespace engine
 {
-    using json = nlohmann::json;
-
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
         WindowSettings,
         resolutionWidth,

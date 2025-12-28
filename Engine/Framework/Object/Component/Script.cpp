@@ -13,12 +13,12 @@ namespace engine
 
     ScriptBase::~ScriptBase()
     {
-        SystemManager::Get().Script().Unregister(this);
+        SystemManager::Get().GetScriptSystem().Unregister(this);
     }
 
     void ScriptBase::RegisterScript(std::uint32_t eventFlags)
     {
-        SystemManager::Get().Script().Register(this, eventFlags);
+        SystemManager::Get().GetScriptSystem().Register(this, eventFlags);
     }
 
     void ScriptBase::Initialize()
