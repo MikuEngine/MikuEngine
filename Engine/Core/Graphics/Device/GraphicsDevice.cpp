@@ -168,10 +168,24 @@ namespace engine
         m_deviceContext->DrawIndexed(m_quadIndexCount, 0, 0);
     }
 
+    void GraphicsDevice::ClearAllViews()
+    {
+        constexpr float clearColor[4]{ 0.0f, 0.0f, 0.0f, 1.0f };
+
+        m_deviceContext->ClearDepthStencilView(m_shadowDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+        m_deviceContext->ClearDepthStencilView(m_gameDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+        m_deviceContext->ClearRenderTargetView(m_gBuffer.baseColor->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_gBuffer.position->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_gBuffer.normal->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_gBuffer.orm->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_gBuffer.emissive->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_hdrBuffer->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_finalBuffer->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_backBufferRTV.Get(), clearColor);
+    }
+
     void GraphicsDevice::BeginDrawShadowPass()
     {
-        m_deviceContext->ClearDepthStencilView(m_shadowDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
         m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         m_deviceContext->RSSetViewports(1, &m_shadowViewport);
@@ -188,16 +202,6 @@ namespace engine
 
     void GraphicsDevice::BeginDrawGeometryPass()
     {
-        constexpr float clearColor[4]{ 0.0f, 0.0f, 0.0f, 1.0f };
-
-        m_deviceContext->ClearRenderTargetView(m_gBuffer.baseColor->GetRawRTV(), clearColor);
-        m_deviceContext->ClearRenderTargetView(m_gBuffer.position->GetRawRTV(), clearColor);
-        m_deviceContext->ClearRenderTargetView(m_gBuffer.normal->GetRawRTV(), clearColor);
-        m_deviceContext->ClearRenderTargetView(m_gBuffer.orm->GetRawRTV(), clearColor);
-        m_deviceContext->ClearRenderTargetView(m_gBuffer.emissive->GetRawRTV(), clearColor);
-
-        m_deviceContext->ClearDepthStencilView(m_gameDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
         m_deviceContext->RSSetViewports(1, &m_gameViewport);
         m_deviceContext->RSSetState(nullptr);
 
@@ -216,10 +220,6 @@ namespace engine
 
     void GraphicsDevice::BeginDrawLightPass()
     {
-        constexpr float clearColor[4]{ 0.0f, 0.0f, 0.0f, 1.0f };
-
-        m_deviceContext->ClearRenderTargetView(m_hdrBuffer->GetRawRTV(), clearColor);
-
         m_deviceContext->RSSetState(nullptr);
 
         m_deviceContext->PSSetShader(m_globalLightPS.Get(), nullptr, 0);
@@ -256,7 +256,6 @@ namespace engine
 
     void GraphicsDevice::BeginDrawPostProccessingPass()
     {
-        m_deviceContext->ClearRenderTargetView(m_finalBuffer->GetRawRTV(), Color(0.0f, 0.0f, 0.0f, 1.0f));
 
         m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -312,9 +311,6 @@ namespace engine
 
     void GraphicsDevice::EndDraw()
     {
-        m_deviceContext->ClearRenderTargetView(m_backBufferRTV.Get(), Color(0.0f, 0.0f, 0.0f, 1.0f));
-
-        m_deviceContext->OMSetRenderTargets(1, m_backBufferRTV.GetAddressOf(), nullptr);
 
         m_deviceContext->RSSetViewports(1, &m_backBufferViewport);
         m_deviceContext->RSSetState(nullptr);
@@ -322,6 +318,8 @@ namespace engine
         m_deviceContext->PSSetShader(m_blitPS.Get(), nullptr, 0);
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, m_finalBuffer->GetSRV().GetAddressOf());
         m_deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerLinear.GetAddressOf());
+
+        m_deviceContext->OMSetRenderTargets(1, m_backBufferRTV.GetAddressOf(), nullptr);
 
         DrawFullscreenQuad();
 

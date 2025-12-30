@@ -148,6 +148,8 @@ namespace engine
         Matrix view, projection;
         Vector3 cameraPosition;
 
+        bool isCameraOff = false;
+
 #ifdef _DEBUG
         switch (EditorManager::Get().GetEditorState())
         {
@@ -166,7 +168,8 @@ namespace engine
             auto* cam = SystemManager::Get().GetCameraSystem().GetMainCamera();
             if (cam == nullptr)
             {
-                return;
+                isCameraOff = true;
+                break;
             }
 
             view = cam->GetView();
@@ -216,64 +219,68 @@ namespace engine
 
         context->UpdateSubresource(m_globalConstantBuffer->GetRawBuffer(), 0, nullptr, &cbGlobal, 0, 0);
 
-        graphics.BeginDrawShadowPass();
-        {
+        graphics.ClearAllViews();
 
-        }
-        graphics.EndDrawShadowPass();
-
-        graphics.BeginDrawGeometryPass();
+        if (!isCameraOff)
         {
-            for (auto renderer : m_opaqueList)
+            graphics.BeginDrawShadowPass();
             {
-                renderer->Draw();
+
             }
+            graphics.EndDrawShadowPass();
+
+            graphics.BeginDrawGeometryPass();
+            {
+                for (auto renderer : m_opaqueList)
+                {
+                    renderer->Draw();
+                }
+            }
+            graphics.EndDrawGeometryPass();
+
+            graphics.BeginDrawLightPass();
+            {
+                context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Clamp), 1, m_clampSamplerState->GetSamplerState().GetAddressOf());
+                context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Comparison), 1, m_comparisonSamplerState->GetSamplerState().GetAddressOf());
+
+                ID3D11ShaderResourceView* srvs[3]{ m_irradianceMap->GetRawSRV(), m_specularMap->GetRawSRV(), m_brdfLut->GetRawSRV() };
+                context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLIrradiance), 3, srvs);
+
+                graphics.DrawFullscreenQuad();
+            }
+            graphics.EndDrawLightPass();
+
+            graphics.BeginDrawForwardPass();
+            {
+                context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
+                context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
+
+                const UINT stride = m_cubeVertexBuffer->GetBufferStride();
+                const UINT offset = 0;
+                context->IASetVertexBuffers(0, 1, m_cubeVertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
+                context->IASetIndexBuffer(m_cubeIndexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
+                context->IASetInputLayout(m_cubeInputLayout->GetRawInputLayout());
+
+                context->VSSetShader(m_skyboxVertexShader->GetRawShader(), nullptr, 0);
+
+                context->PSSetShader(m_skyboxPixelShader->GetRawShader(), nullptr, 0);
+                context->PSSetSamplers(0, 1, m_linearSamplerState->GetSamplerState().GetAddressOf());
+                context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLEnvironment), 1, m_skyboxEnv->GetSRV().GetAddressOf());
+
+                context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
+
+                context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
+
+                context->DrawIndexed(m_indexCount, 0, 0);
+
+                context->RSSetState(nullptr);
+                context->OMSetDepthStencilState(nullptr, 0);
+            }
+            graphics.EndDrawForwardPass();
         }
-        graphics.EndDrawGeometryPass();
-
-        graphics.BeginDrawLightPass();
-        {
-            context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Clamp), 1, m_clampSamplerState->GetSamplerState().GetAddressOf());
-            context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Comparison), 1, m_comparisonSamplerState->GetSamplerState().GetAddressOf());
-
-            ID3D11ShaderResourceView* srvs[3]{ m_irradianceMap->GetRawSRV(), m_specularMap->GetRawSRV(), m_brdfLut->GetRawSRV() };
-            context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLIrradiance), 3, srvs);
-
-            graphics.DrawFullscreenQuad();
-        }
-        graphics.EndDrawLightPass();
-
-        graphics.BeginDrawForwardPass();
-        {
-            context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
-            context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
-
-            const UINT stride = m_cubeVertexBuffer->GetBufferStride();
-            const UINT offset = 0;
-            context->IASetVertexBuffers(0, 1, m_cubeVertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
-            context->IASetIndexBuffer(m_cubeIndexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
-            context->IASetInputLayout(m_cubeInputLayout->GetRawInputLayout());
-
-            context->VSSetShader(m_skyboxVertexShader->GetRawShader(), nullptr, 0);
-
-            context->PSSetShader(m_skyboxPixelShader->GetRawShader(), nullptr, 0);
-            context->PSSetSamplers(0, 1, m_linearSamplerState->GetSamplerState().GetAddressOf());
-            context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLEnvironment), 1, m_skyboxEnv->GetSRV().GetAddressOf());
-
-            context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
-
-            context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
-
-            context->DrawIndexed(m_indexCount, 0, 0);
-
-            context->RSSetState(nullptr);
-            context->OMSetDepthStencilState(nullptr, 0);
-        }
-        graphics.EndDrawForwardPass();
 
         graphics.BeginDrawPostProccessingPass();
         {
-
             graphics.DrawFullscreenQuad();
         }
         graphics.EndDrawPostProccessingPass();

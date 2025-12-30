@@ -6,6 +6,7 @@
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/ComponentFactory.h"
+#include "Framework/Scene/Scene.h"
 
 namespace engine
 {
@@ -46,11 +47,70 @@ namespace engine
         m_name = name;
     }
 
+    void GameObject::Destroy()
+    {
+        if (m_isPendingKill)
+        {
+            return;
+        }
+
+        for (auto childTr : m_transform->GetChildren())
+        {
+            childTr->GetGameObject()->Destroy();
+        }
+
+        m_isPendingKill = true;
+
+        SceneManager::Get().GetScene()->RegisterPendingKill(this);
+    }
+
+    bool GameObject::IsPendingKill() const
+    {
+        return m_isPendingKill;
+    }
+
+    void GameObject::RemoveComponentFast(Component* component)
+    {
+        if (component == nullptr)
+        {
+            return;
+        }
+
+        std::int32_t index = component->m_gameObjectIndex;
+        std::int32_t lastIndex = static_cast<std::int32_t>(m_components.size() - 1);
+
+        if (index < 0 || index >= m_components.size() || m_components[index].get() != component)
+        {
+            return;
+        }
+
+        if (index != lastIndex)
+        {
+            m_components[index] = std::move(m_components[lastIndex]);
+            m_components[index]->m_gameObjectIndex = index;
+        }
+
+        m_components.pop_back();
+    }
+
+    void GameObject::BroadcastOnDestroy()
+    {
+        for (auto& comp : m_components)
+        {
+            comp->OnDestroy();
+        }
+    }
+
     Component* GameObject::AddComponent(std::unique_ptr<Component>&& component)
     {
         Component* ptr = component.get();
-        component->m_owner = this;
         m_components.push_back(std::move(component));
+
+        ptr->m_owner = this;
+        ptr->m_gameObjectIndex = static_cast<std::int32_t>(m_components.size() - 1);
+
+        SceneManager::Get().GetScene()->RegisterPendingAdd(ptr);
+
 
         return ptr;
     }
@@ -67,7 +127,14 @@ namespace engine
             return;
         }
 
+        // 인덱스로 지움 OnDestroy 호출 안함
+
         m_components.erase(m_components.begin() + index);
+
+        for (size_t i = index; i < m_components.size(); ++i)
+        {
+            m_components[i]->m_gameObjectIndex = static_cast<int32_t>(i);
+        }
     }
 
     void GameObject::Save(json& j) const

@@ -32,9 +32,11 @@ namespace engine
         bool m_isDirty = true;
 
     public:
-        Camera();
+        Camera() = default;
         ~Camera();
 
+    public:
+        void Initialize() override;
         void Update();
 
     public:

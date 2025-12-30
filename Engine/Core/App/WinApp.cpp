@@ -258,11 +258,15 @@ namespace engine
         {
         case EditorState::Edit:
             SceneManager::Get().CheckSceneChanged();
+            SceneManager::Get().ProcessPendingAdds(false);
+
             EditorManager::Get().Update();
             break;
 
         case EditorState::Play:
             SceneManager::Get().CheckSceneChanged();
+            SceneManager::Get().ProcessPendingAdds(true);
+            SceneManager::Get().ProcessPendingKills();
 
             SystemManager::Get().GetScriptSystem().CallStart();
             SystemManager::Get().GetScriptSystem().CallUpdate();
@@ -275,6 +279,8 @@ namespace engine
         }
 #else
         SceneManager::Get().CheckSceneChanged();
+        SceneManager::Get().ProcessPendingAdds(true);
+        SceneManager::Get().ProcessPendingKills();
 
         SystemManager::Get().GetScriptSystem().CallStart();
         SystemManager::Get().GetScriptSystem().CallUpdate();

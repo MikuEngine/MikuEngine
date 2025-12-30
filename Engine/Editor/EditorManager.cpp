@@ -104,12 +104,11 @@ namespace engine
             if (ImGui::Button("Play"))
             {
                 auto scene = SceneManager::Get().GetScene();
-                if (scene)
-                {
-                    g_tempScene.clear();
-                    scene->SaveToJson(g_tempScene);
-                }
+                g_tempScene.clear();
+                scene->SaveToJson(g_tempScene);
                 m_editorState = EditorState::Play;
+
+                scene->OnPlayStart();
 
                 m_selectedObject = nullptr;
             }
@@ -243,14 +242,23 @@ namespace engine
         {
             ImGui::Text("Current Scene: %s", currentScene->GetName().c_str());
 
-            if (ImGui::Button("Save Scene"))
+            if (m_editorState == EditorState::Edit)
             {
-                currentScene->Save();
-                RefreshFileCache();
+                if (ImGui::Button("Save Scene"))
+                {
+                    currentScene->Save();
+                    RefreshFileCache();
+                }
+            }
+            else
+            {
+                // 플레이 중임을 알리는 비활성화된 버튼 (선택사항)
+                ImGui::BeginDisabled();
+                ImGui::Button("Save Disabled (Playing)");
+                ImGui::EndDisabled();
             }
 
             ImGui::Text("Scene File List");
-
 
             if (ImGui::BeginListBox("##SceneFileList"))
             {
@@ -571,6 +579,28 @@ namespace engine
             m_selectedObject = gameObject;
         }
 
+        if (ImGui::BeginPopupContextItem())
+        {
+            // 여기서 바로 삭제 (Delete 키 확인 로직 없이 심플하게 메뉴만)
+            if (ImGui::MenuItem("Delete"))
+            {
+                if (m_selectedObject == gameObject)
+                {
+                    m_selectedObject = nullptr;
+                }
+
+                // 2. 에디터 전용 삭제 함수 호출 (선형 탐색 + 즉시 삭제)
+                SceneManager::Get().GetScene()->RemoveGameObjectEditor(gameObject);
+
+                // 삭제 후 바로 팝업 닫고 리턴 (더 그리면 유효하지 않은 포인터 접근 위험)
+                ImGui::EndPopup();
+                ImGui::TreePop();
+
+                return;
+            }
+            ImGui::EndPopup();
+        }
+
         if (ImGui::BeginDragDropSource())
         {
             ImGui::SetDragDropPayload("HIERARCHY_DRAG", &gameObject, sizeof(GameObject*));
@@ -584,7 +614,7 @@ namespace engine
             {
                 GameObject* draggedObject = *(GameObject**)payload->Data;
 
-                if (draggedObject != gameObject && !draggedObject->GetTransform()->IsDescendantOf(gameObject->GetTransform()))
+                if (draggedObject != gameObject && !draggedObject->GetTransform()->IsAncestorOf(gameObject->GetTransform()))
                 {
                     draggedObject->GetTransform()->SetParent(gameObject->GetTransform());
                 }
@@ -792,9 +822,7 @@ namespace engine
     }
     void EditorManager::CreateNewScene()
     {
-        // SceneManager에 NewScene 기능이 있다면 호출, 없으면 아래처럼 직접 초기화
-        // (SceneManager::Initialize와 비슷하게 리셋)
-        SceneManager::Get().GetScene()->Reset(); // 혹은 Initialize();
+        SceneManager::Get().GetScene()->ResetToDefaultScene();
         SceneManager::Get().GetScene()->SetName("Untitled"); // 저장 안 된 상태
         // 선택된 오브젝트 해제
         m_selectedObject = nullptr;

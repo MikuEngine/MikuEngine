@@ -21,11 +21,14 @@ namespace engine
         bool m_isDirtyThisFrame = true;
 
     public:
-        Transform();
+        Transform() = default;
         ~Transform();
 
         static void* operator new(size_t size);
         static void operator delete(void* ptr);
+
+    public:
+        void Initialize() override;
 
     public:
         const Vector3& GetLocalPosition() const;
@@ -54,6 +57,7 @@ namespace engine
         void SetParent(Transform* parent);
 
         void UnmarkDirtyThisFrame();
+        bool IsAncestorOf(Transform* other) const;
         bool IsDescendantOf(Transform* other) const;
 
     public:

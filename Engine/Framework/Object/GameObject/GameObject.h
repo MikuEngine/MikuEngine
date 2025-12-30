@@ -2,6 +2,7 @@
 
 #include "Framework/Object/Object.h"
 #include "Framework/Object/Component/Component.h"
+#include "Framework/Scene/SceneManager.h"
 
 namespace engine
 {
@@ -15,6 +16,9 @@ namespace engine
         std::string m_name = "GameObject";
         std::vector<std::unique_ptr<Component>> m_components;
         Transform* m_transform;
+        std::int32_t m_sceneIndex = -1;
+
+        bool m_isPendingKill = false;
 
     public:
         GameObject();
@@ -29,16 +33,23 @@ namespace engine
 
         void SetName(const std::string& name);
 
+        void Destroy();
+        bool IsPendingKill() const;
+        void RemoveComponentFast(Component* component);
+        void BroadcastOnDestroy();
+
     public:
         template <std::derived_from<Component> T, typename... Args>
         T* AddComponent(Args&&... args)
         {
             std::unique_ptr<T> component = std::make_unique<T>(std::forward<Args>(args)...);
 
-            component->m_owner = this;
             T* ptr = component.get();
-
             m_components.push_back(std::move(component));
+
+            ptr->m_owner = this;
+            ptr->m_gameObjectIndex = static_cast<std::int32_t>(m_components.size() - 1);
+            SceneManager::Get().GetScene()->RegisterPendingAdd(ptr);
 
             return ptr;
         }
@@ -67,5 +78,8 @@ namespace engine
         void Save(json& j) const override;
         void Load(const json& j) override;
         std::string GetType() const override;
+
+    private:
+        friend class Scene;
     };
 }

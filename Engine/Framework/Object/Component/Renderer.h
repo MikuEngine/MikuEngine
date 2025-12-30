@@ -24,6 +24,9 @@ namespace engine
 		~Renderer();
 
 	public:
+		void Initialize() override;
+
+	public:
 		virtual bool HasRenderType(RenderType type) const = 0;
 		virtual void Draw(/*RenderType type*/) const = 0;
 		virtual DirectX::BoundingBox GetBounds() const = 0;

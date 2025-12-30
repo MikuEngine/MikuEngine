@@ -20,19 +20,4 @@ namespace engine
     {
         SystemManager::Get().GetScriptSystem().Register(this, eventFlags);
     }
-
-    void ScriptBase::Initialize()
-    {
-        // game 프로젝트에서 구현
-    }
-
-    void ScriptBase::Start()
-    {
-        // game 프로젝트에서 구현
-    }
-
-    void ScriptBase::Update()
-    {
-        // game 프로젝트에서 구현
-    }
 }

@@ -12,7 +12,7 @@ namespace engine
         public Singleton<SceneManager>
     {
     private:
-        std::unique_ptr<Scene> m_activeScene;
+        std::unique_ptr<Scene> m_scene;
 
         std::string m_nextSceneName;
         bool m_isSceneChanged = false;
@@ -29,6 +29,8 @@ namespace engine
         void ChangeScene(const std::string& name);
         void CheckSceneChanged();
         Scene* GetScene() const;
+        void ProcessPendingAdds(bool isPlaying);
+        void ProcessPendingKills();
 
     private:
         friend class Singleton<SceneManager>;

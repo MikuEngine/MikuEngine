@@ -10,13 +10,14 @@ namespace engine
 
     void SceneManager::Initialize()
     {
-        m_activeScene = std::make_unique<Scene>();
-        m_activeScene->SetName("SampleScene");
+        m_scene = std::make_unique<Scene>();
+        m_scene->SetName("SampleScene");
+        m_scene->ResetToDefaultScene();
     }
 
     void SceneManager::Shutdown()
     {
-        m_activeScene.reset();
+        m_scene.reset();
     }
 
     void SceneManager::ChangeScene(const std::string& name)
@@ -29,8 +30,8 @@ namespace engine
     {
         if (m_isSceneChanged)
         {
-            m_activeScene->SetName(m_nextSceneName);
-            m_activeScene->Load();
+            m_scene->SetName(m_nextSceneName);
+            m_scene->Load();
 
             m_isSceneChanged = false;
         }
@@ -38,6 +39,16 @@ namespace engine
 
     Scene* SceneManager::GetScene() const
     {
-        return m_activeScene.get();
+        return m_scene.get();
+    }
+
+    void SceneManager::ProcessPendingAdds(bool isPlaying)
+    {
+        m_scene->ProcessPendingAdds(isPlaying);
+    }
+
+    void SceneManager::ProcessPendingKills()
+    {
+        m_scene->ProcessPendingKills();
     }
 }

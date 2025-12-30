@@ -103,6 +103,8 @@ namespace engine
 
         void DrawFullscreenQuad();
 
+        void ClearAllViews();
+
         void BeginDrawShadowPass();
         void EndDrawShadowPass();
 

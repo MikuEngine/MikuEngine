@@ -28,9 +28,9 @@ namespace engine
         void RegisterScript(std::uint32_t eventFlags);
 
     public:
-        virtual void Initialize();
-        virtual void Start();
-        virtual void Update();
+        void Awake() override {};
+        virtual void Start() {};
+        virtual void Update() {};
 
     public:
         void OnGui() override {};
@@ -50,12 +50,14 @@ namespace engine
         public ScriptBase
     {
     public:
-        Script()
+        void Initialize() override
         {
             std::uint32_t eventFlags = 0;
-            
+
             // 컴파일 타임에 해당 이벤트 함수들 구현되었는지 확인 후
             // 오버라이드 된 함수들만 플래그 켜줌
+
+            // Awake는 등록했든 말든 Scene에서 일괄 호출
 
             if constexpr (IsFuncOverridden(&ScriptBase::Start, &T::Start))
             {
@@ -69,7 +71,5 @@ namespace engine
 
             RegisterScript(eventFlags);
         }
-
-        ~Script() = default;
     };
 }

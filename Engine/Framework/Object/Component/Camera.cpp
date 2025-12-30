@@ -8,14 +8,14 @@
 
 namespace engine
 {
-    Camera::Camera()
-    {
-        SystemManager::Get().GetCameraSystem().Register(this);
-    }
-
     Camera::~Camera()
     {
         SystemManager::Get().GetCameraSystem().Unregister(this);
+    }
+
+    void Camera::Initialize()
+    {
+        SystemManager::Get().GetCameraSystem().Register(this);
     }
 
     void Camera::Update()

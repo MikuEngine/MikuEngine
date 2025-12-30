@@ -42,11 +42,13 @@ namespace engine
         std::shared_ptr<SamplerState> m_samplerState;
 
     public:
-        StaticMeshRenderer();
+        StaticMeshRenderer() = default;
         StaticMeshRenderer(const std::string& meshFilePath, const std::string& shaderFilePath);
         ~StaticMeshRenderer();
 
     public:
+        void Initialize() override;
+
         void SetMesh(const std::string& meshFilePath);
         void SetPixelShader(const std::string& shaderFilePath);
 

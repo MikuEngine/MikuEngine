@@ -23,15 +23,8 @@
 
 namespace engine
 {
-    StaticMeshRenderer::StaticMeshRenderer()
-    {
-        SystemManager::Get().GetRenderSystem().Register(this);
-    }
-
     StaticMeshRenderer::StaticMeshRenderer(const std::string& meshFilePath, const std::string& shaderFilePath)
     {
-        SystemManager::Get().GetRenderSystem().Register(this);
-
         m_staticMeshData = AssetManager::Get().GetOrCreateStaticMeshData(meshFilePath);
         m_materialData = AssetManager::Get().GetOrCreateMaterialData(meshFilePath);
 
@@ -55,6 +48,11 @@ namespace engine
     StaticMeshRenderer::~StaticMeshRenderer()
     {
         SystemManager::Get().GetRenderSystem().Unregister(this);
+    }
+
+    void StaticMeshRenderer::Initialize()
+    {
+        SystemManager::Get().GetRenderSystem().Register(this);
     }
 
     void StaticMeshRenderer::SetMesh(const std::string& meshFilePath)

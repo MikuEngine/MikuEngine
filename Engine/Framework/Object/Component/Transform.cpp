@@ -16,11 +16,6 @@ namespace engine
         StaticMemoryPool<Transform, 4096> g_transformPool;
     }
 
-    Transform::Transform()
-    {
-        SystemManager::Get().GetTransformSystem().Register(this);
-    }
-
     Transform::~Transform()
     {
         if (m_parent != nullptr)
@@ -45,6 +40,11 @@ namespace engine
     void Transform::operator delete(void* ptr)
     {
         g_transformPool.Deallocate(ptr);
+    }
+
+    void Transform::Initialize()
+    {
+        SystemManager::Get().GetTransformSystem().Register(this);
     }
 
     const Vector3& Transform::GetLocalPosition() const
@@ -174,7 +174,7 @@ namespace engine
         m_isDirtyThisFrame = false;
     }
 
-    bool Transform::IsDescendantOf(Transform* other) const
+    bool Transform::IsAncestorOf(Transform* other) const
     {
         Transform* current = other;
         while (current != nullptr)
@@ -187,6 +187,26 @@ namespace engine
             current = current->GetParent();
         }
 
+        return false;
+    }
+
+    bool Transform::IsDescendantOf(Transform* other) const
+    {
+        if (other == nullptr)
+        {
+            return false;
+        }
+
+        Transform* current = m_parent;
+        while (current != nullptr)
+        {
+            if (current == other)
+            {
+                return true;
+            }
+
+            current = current->GetParent();
+        }
         return false;
     }
 
