@@ -30,10 +30,8 @@ namespace engine
                 file >> j;
                 outSettings = j.get<WindowSettings>();
             }
-            catch (json::parse_error& e)
+            catch (...)
             {
-                e;
-
                 LOG_INFO("파일 오류. 기본 값으로 다시 저장 후 불러옴.");
                 Save(filePath, outSettings);
             }
