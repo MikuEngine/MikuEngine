@@ -177,11 +177,13 @@ namespace engine
         cameraPosition = GetTranslation(cam->GetWorld());
 #endif // _DEBUG
 
+        const Matrix viewProjection = view * projection;
 
         CbGlobal cbGlobal;
         cbGlobal.view = view.Transpose();
         cbGlobal.projection = projection.Transpose();
-        cbGlobal.viewProjection = (view * projection).Transpose();
+        cbGlobal.viewProjection = viewProjection.Transpose();
+        cbGlobal.invViewProjection = viewProjection.Invert().Transpose();
         cbGlobal.cameraWorldPoistion = cameraPosition;
         cbGlobal.elapsedTime = Time::GetElapsedSeconds(g_startTime);
         cbGlobal.mainLightViewProjection = cbGlobal.viewProjection;

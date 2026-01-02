@@ -20,6 +20,8 @@ namespace engine
 
 		Matrix viewProjection;
 
+		Matrix invViewProjection;
+
 		Matrix mainLightViewProjection;
 
 		Vector3 cameraWorldPoistion;

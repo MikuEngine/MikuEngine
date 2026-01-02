@@ -11,35 +11,31 @@
 #include "Core/Graphics/Data/Vertex.h"
 #include "Core/Graphics/Resource/Texture.h"
 #include "Core/Graphics/Resource/RasterizerState.h"
-#include "Core/Graphics/Data/ShaderSlotTypes.h"
 
 namespace engine
 {
     void GBufferResources::Reset()
     {
         baseColor.reset();
-        position.reset();
         normal.reset();
         orm.reset();
         emissive.reset();
     }
 
-    std::array<ID3D11RenderTargetView*, 5> GBufferResources::GetRawRTVs() const
+    std::array<ID3D11RenderTargetView*, GBufferResources::count> GBufferResources::GetRawRTVs() const
     {
         return {
             baseColor->GetRawRTV(),
-            position->GetRawRTV(),
             normal->GetRawRTV(),
             orm->GetRawRTV(),
             emissive->GetRawRTV()
         };
     }
 
-    std::array<ID3D11ShaderResourceView*, 5> GBufferResources::GetRawSRVs() const
+    std::array<ID3D11ShaderResourceView*, GBufferResources::count> GBufferResources::GetRawSRVs() const
     {
         return {
             baseColor->GetRawSRV(),
-            position->GetRawSRV(),
             normal->GetRawSRV(),
             orm->GetRawSRV(),
             emissive->GetRawSRV()
@@ -175,7 +171,6 @@ namespace engine
         m_deviceContext->ClearDepthStencilView(m_shadowDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         m_deviceContext->ClearDepthStencilView(m_gameDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.baseColor->GetRawRTV(), clearColor);
-        m_deviceContext->ClearRenderTargetView(m_gBuffer.position->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.normal->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.orm->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.emissive->GetRawRTV(), clearColor);
@@ -205,8 +200,7 @@ namespace engine
         m_deviceContext->RSSetViewports(1, &m_gameViewport);
         m_deviceContext->RSSetState(nullptr);
 
-        auto rtvs = m_gBuffer.GetRawRTVs();
-        m_deviceContext->OMSetRenderTargets(5, rtvs.data(), m_gameDepthBuffer->GetRawDSV());
+        m_deviceContext->OMSetRenderTargets(m_gBuffer.count, m_gBuffer.GetRawRTVs().data(), m_gameDepthBuffer->GetRawDSV());
         m_deviceContext->OMSetDepthStencilState(nullptr, 0);
 
         constexpr float blendFactor[4]{ 0.0f, 0.0f, 0.0f, 0.0f };
@@ -223,10 +217,10 @@ namespace engine
         m_deviceContext->RSSetState(nullptr);
 
         m_deviceContext->PSSetShader(m_globalLightPS.Get(), nullptr, 0);
-        m_deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerLinear.GetAddressOf());
+        m_deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Point), 1, m_samplerPoint.GetAddressOf());
 
-        auto srvs = m_gBuffer.GetRawSRVs();
-        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferBaseColor), 5, srvs.data());
+        m_deviceContext->PSSetShaderResources(m_gBuffer.startSlot, m_gBuffer.count, m_gBuffer.GetRawSRVs().data());
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferDepth), 1, m_gameDepthBuffer->GetSRV().GetAddressOf());
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::ShadowMap), 1, m_shadowDepthBuffer->GetSRV().GetAddressOf());
 
         m_deviceContext->OMSetRenderTargets(1, m_hdrBuffer->GetRTV().GetAddressOf(), nullptr);
@@ -236,8 +230,9 @@ namespace engine
     {
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
 
-        ID3D11ShaderResourceView* nullSRVs[5]{};
-        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferBaseColor), 5, nullSRVs);
+        ID3D11ShaderResourceView* nullSRVs[m_gBuffer.count]{};
+        m_deviceContext->PSSetShaderResources(m_gBuffer.startSlot, m_gBuffer.count, nullSRVs);
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferDepth), 1, nullSRVs);
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::ShadowMap), 1, nullSRVs);
     }
 
@@ -373,6 +368,19 @@ namespace engine
     int GraphicsDevice::GetShadowMapSize() const
     {
         return m_shadowMapSize;
+    }
+
+    BufferTextures GraphicsDevice::GetBufferTextures() const
+    {
+        return {
+            m_hdrBuffer->GetRawSRV(),
+            m_gameDepthBuffer->GetRawSRV(),
+            m_shadowDepthBuffer->GetRawSRV(),
+            m_gBuffer.baseColor->GetRawSRV(),
+            m_gBuffer.normal->GetRawSRV(),
+            m_gBuffer.orm->GetRawSRV(),
+            m_gBuffer.emissive->GetRawSRV()
+        };
     }
 
     void GraphicsDevice::SetVsync(bool useVsync)
@@ -680,16 +688,16 @@ namespace engine
             desc.Height = m_resolutionHeight;
             desc.MipLevels = 1;
             desc.ArraySize = 1;
-            desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+            desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
             desc.Usage = D3D11_USAGE_DEFAULT;
-            desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+            desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
             desc.CPUAccessFlags = 0;
             desc.MiscFlags = 0;
 
             m_gameDepthBuffer = std::make_unique<Texture>();
-            m_gameDepthBuffer->Create(desc);
+            m_gameDepthBuffer->Create(desc, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_D24_UNORM_S8_UINT);
         }
 
         // G-Buffer
@@ -710,11 +718,6 @@ namespace engine
 
             m_gBuffer.baseColor = std::make_unique<Texture>();
             m_gBuffer.baseColor->Create(desc);
-
-            desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-
-            m_gBuffer.position = std::make_unique<Texture>();
-            m_gBuffer.position->Create(desc);
 
             desc.Format = DXGI_FORMAT_R10G10B10A2_UNORM;
 
@@ -910,6 +913,19 @@ namespace engine
             samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
             HR_CHECK(m_device->CreateSamplerState(&samplerDesc, &m_samplerLinear));
+        }
+
+        {
+            D3D11_SAMPLER_DESC samplerDesc{};
+            samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+            samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+            samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+            samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+            samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+            samplerDesc.MinLOD = 0;
+            samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+            HR_CHECK(m_device->CreateSamplerState(&samplerDesc, &m_samplerPoint));
         }
     }
 

@@ -55,6 +55,7 @@ namespace engine
         void DrawHierarchy();
         void DrawEntityNode(GameObject* gameObject);
         void DrawInspector();
+        void DrawDebugInfo();
 
         void ValidateSettingsList();
         void RefreshFileCache();

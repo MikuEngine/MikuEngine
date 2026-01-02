@@ -7,22 +7,11 @@ namespace engine
 {
     void VertexShader::Create(const std::string& filePath)
     {
-        DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#ifdef _DEBUG
-        shaderFlags |= D3DCOMPILE_DEBUG;
-        shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif // _DEBUG
-
-        HR_CHECK(D3DCompileFromFile(
-            ToWideChar(filePath).c_str(),
-            nullptr,
-            D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        GraphicsDevice::CompileShaderFromFile(
+            filePath,
             "main",
             "vs_5_0",
-            shaderFlags,
-            0,
-            &m_vertexShaderBuffer,
-            nullptr));
+            m_vertexShaderBuffer);
 
         HR_CHECK(GraphicsDevice::Get().GetDevice()->CreateVertexShader(
             m_vertexShaderBuffer->GetBufferPointer(),

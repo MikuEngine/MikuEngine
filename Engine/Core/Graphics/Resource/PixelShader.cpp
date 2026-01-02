@@ -7,24 +7,13 @@ namespace engine
 {
     void PixelShader::Create(const std::string& filePath)
     {
-        DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#ifdef _DEBUG
-        shaderFlags |= D3DCOMPILE_DEBUG;
-        shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif // _DEBUG
-
         Microsoft::WRL::ComPtr<ID3DBlob> pixelShaderBuffer;
 
-        HR_CHECK(D3DCompileFromFile(
-            ToWideChar(filePath).c_str(),
-            nullptr,
-            D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        GraphicsDevice::CompileShaderFromFile(
+            filePath,
             "main",
             "ps_5_0",
-            shaderFlags,
-            0,
-            &pixelShaderBuffer,
-            nullptr));
+            pixelShaderBuffer);
 
         HR_CHECK(GraphicsDevice::Get().GetDevice()->CreatePixelShader(
             pixelShaderBuffer->GetBufferPointer(),

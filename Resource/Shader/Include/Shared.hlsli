@@ -11,10 +11,10 @@ Texture2D g_texEmissive                 : register(t5);
 
 // g-buffer textures
 Texture2D g_gBufferBaseColor            : register(t10);
-Texture2D g_gBufferPosition             : register(t11);
-Texture2D g_gBufferNormal               : register(t12);
-Texture2D g_gBufferORM                  : register(t13); // AO(r), roughness(g), metalness(b)
-Texture2D g_gBufferEmissive             : register(t14);
+Texture2D g_gBufferNormal               : register(t11);
+Texture2D g_gBufferORM                  : register(t12); // AO(r), roughness(g), metalness(b)
+Texture2D g_gBufferEmissive             : register(t13);
+Texture2D g_gBufferDepth                : register(t14);
 
 // global
 Texture2D g_texShadowMap                : register(t20);
@@ -41,6 +41,8 @@ cbuffer Global : register(b0) // 프레임 당 한번만 갱신되는 버퍼
     matrix g_projection;
     
     matrix g_viewProjection;
+    
+    matrix g_invViewProjection;
     
     matrix g_mainLightViewProjection;
     
@@ -148,10 +150,9 @@ struct PS_INPUT_GBUFFER
 struct PS_OUTPUT_GBUFFER
 {
     float4 baseColor : SV_Target0;
-    float4 position : SV_Target1;
-    float4 normal : SV_Target2;
-    float4 orm : SV_Target3;
-    float4 emissive : SV_Target4;
+    float4 normal : SV_Target1;
+    float4 orm : SV_Target2;
+    float4 emissive : SV_Target3;
 };
 
 

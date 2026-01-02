@@ -10,10 +10,10 @@ enum class TextureSlot
     Emissive                = 5,
 
     GBufferBaseColor        = 10,
-    GBufferPosition         = 11,
-    GBufferNormal           = 12,
-    GBufferORM              = 13,
-    GBufferEmissive         = 14,
+    GBufferNormal           = 11,
+    GBufferORM              = 12,
+    GBufferEmissive         = 13,
+    GBufferDepth            = 14,
 
     ShadowMap               = 20,
     IBLEnvironment          = 21,

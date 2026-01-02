@@ -30,20 +30,30 @@ float GAFSchlickGGX(float nDotV, float nDotL, float roughness)
 
 float4 main(PS_INPUT_TEXCOORD input) : SV_Target
 {
-    float3 baseColor = g_gBufferBaseColor.Sample(g_samLinear, input.texCoord).rgb;
-    float3 encodedNormal = g_gBufferNormal.Sample(g_samLinear, input.texCoord).rgb;
-    float3 worldPosition = g_gBufferPosition.Sample(g_samLinear, input.texCoord).rgb;
-    float3 emissive = g_gBufferEmissive.Sample(g_samLinear, input.texCoord).rgb;
-    float3 orm = g_gBufferORM.Sample(g_samLinear, input.texCoord).rgb;
+    float3 baseColor = g_gBufferBaseColor.Sample(g_samPoint, input.texCoord).rgb;
+    float3 encodedNormal = g_gBufferNormal.Sample(g_samPoint, input.texCoord).rgb;
+    float depth = g_gBufferDepth.Sample(g_samPoint, input.texCoord).r;
+    float3 emissive = g_gBufferEmissive.Sample(g_samPoint, input.texCoord).rgb;
+    float3 orm = g_gBufferORM.Sample(g_samPoint, input.texCoord).rgb;
     float ao = orm.r;
     float roughness = orm.g;
     float metalness = orm.b;
+    
+    // world position
+    float4 clipPosition;
+    clipPosition.x = input.texCoord.x * 2.0f - 1.0f;
+    clipPosition.y = -(input.texCoord.y * 2.0f - 1.0f);
+    clipPosition.z = depth;
+    clipPosition.w = 1.0f;
+    
+    float4 worldPosition = mul(clipPosition, g_invViewProjection);
+    worldPosition /= worldPosition.w;
     
     // normal
     float3 n = DecodeNormal(encodedNormal);
     
     // view
-    float3 v = normalize(g_cameraWorldPosition - worldPosition);
+    float3 v = normalize(g_cameraWorldPosition - worldPosition.xyz);
     
     // light
     float3 l = -g_mainLightWorldDirection;
@@ -60,7 +70,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     float hDotV = max(0.0f, dot(h, v));
     
     // shadow
-    float4 lightClipPos = mul(float4(worldPosition, 1.0f), g_mainLightViewProjection);
+    float4 lightClipPos = mul(float4(worldPosition.xyz, 1.0f), g_mainLightViewProjection);
     
     float shadowFactor = 1.0f;
     float currentShadowDepth = lightClipPos.z / lightClipPos.w;

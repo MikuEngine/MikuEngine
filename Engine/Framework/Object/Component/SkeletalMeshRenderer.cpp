@@ -209,8 +209,10 @@ namespace engine
         auto animator = GetGameObject()->GetComponent<Animator>();
         if (animator)
         {
-            const auto& matrices = animator->GetFinalBoneMatrices();
-            std::memcpy(m_boneTransformData.boneTransform, matrices.data(), sizeof(Matrix) * 128);
+            std::memcpy(
+                m_boneTransformData.boneTransform,
+                animator->GetFinalBoneMatrices().data(),
+                sizeof(Matrix) * 128);
         }
         else
         {

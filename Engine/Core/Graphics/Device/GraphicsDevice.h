@@ -3,6 +3,7 @@
 #include <filesystem>
 
 #include "Common/Utility/Singleton.h"
+#include "Core/Graphics/Data/ShaderSlotTypes.h"
 
 namespace engine
 {
@@ -12,14 +13,27 @@ namespace engine
     struct GBufferResources
     {
         std::unique_ptr<Texture> baseColor;
-        std::unique_ptr<Texture> position;
         std::unique_ptr<Texture> normal;
         std::unique_ptr<Texture> orm;
         std::unique_ptr<Texture> emissive;
 
+        static constexpr UINT startSlot = static_cast<UINT>(TextureSlot::GBufferBaseColor);
+        static constexpr UINT count = 4;
+
         void Reset();
-        std::array<ID3D11RenderTargetView*, 5> GetRawRTVs() const;
-        std::array<ID3D11ShaderResourceView*, 5> GetRawSRVs() const;
+        std::array<ID3D11RenderTargetView*, count> GetRawRTVs() const;
+        std::array<ID3D11ShaderResourceView*, count> GetRawSRVs() const;
+    };
+
+    struct BufferTextures
+    {
+        ID3D11ShaderResourceView* hdr;
+        ID3D11ShaderResourceView* gameDepth;
+        ID3D11ShaderResourceView* shadowDepth;
+        ID3D11ShaderResourceView* baseColor;
+        ID3D11ShaderResourceView* normal;
+        ID3D11ShaderResourceView* orm;
+        ID3D11ShaderResourceView* emissive;
     };
 
     class GraphicsDevice :
@@ -51,6 +65,7 @@ namespace engine
         Microsoft::WRL::ComPtr<ID3D11PixelShader> m_ldrPS;
         Microsoft::WRL::ComPtr<ID3D11InputLayout> m_quadInputLayout;
         Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerLinear;
+        Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerPoint;
 
         // quad
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_quadVertexBuffer;
@@ -133,6 +148,7 @@ namespace engine
         const D3D11_VIEWPORT& GetViewport() const;
         float GetMaxHDRNits() const;
         int GetShadowMapSize() const;
+        BufferTextures GetBufferTextures() const;
 
         void SetVsync(bool useVsync);
 

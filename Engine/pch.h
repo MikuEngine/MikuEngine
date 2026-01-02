@@ -17,6 +17,7 @@
 #include <array>
 #include <cstdint>
 #include <cmath>
+#include <cstring>
 
 
 // d3d

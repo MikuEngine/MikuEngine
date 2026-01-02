@@ -72,6 +72,7 @@ namespace engine
             DrawEditorController();
             DrawHierarchy();
             DrawInspector();
+            DrawDebugInfo();
         }
         graphics.EndDrawGUIPass();
     }
@@ -713,6 +714,59 @@ namespace engine
                 }
             }
             ImGui::EndPopup();
+        }
+
+        ImGui::End();
+    }
+
+    void EditorManager::DrawDebugInfo()
+    {
+        auto bufferTextures = GraphicsDevice::Get().GetBufferTextures();
+
+        ImGui::Begin("Debug Info");
+
+        if (ImGui::CollapsingHeader("Buffer Textures", ImGuiTreeNodeFlags_CollapsingHeader))
+        {
+            ImGui::BeginGroup();
+            ImGui::Text("Post Process");
+            ImGui::Image((ImTextureID)bufferTextures.hdr, ImVec2(128, 128));
+            ImGui::EndGroup();
+
+            ImGui::SameLine();
+
+            ImGui::BeginGroup();
+            ImGui::Text("Game Depth");
+            ImGui::Image((ImTextureID)bufferTextures.gameDepth, ImVec2(128, 128));
+            ImGui::EndGroup();
+
+            ImGui::BeginGroup();
+            ImGui::Text("Shadow Depth");
+            ImGui::Image((ImTextureID)bufferTextures.shadowDepth, ImVec2(128, 128));
+            ImGui::EndGroup();
+
+            ImGui::SameLine();
+
+            ImGui::BeginGroup();
+            ImGui::Text("Base Color");
+            ImGui::Image((ImTextureID)bufferTextures.baseColor, ImVec2(128, 128));
+            ImGui::EndGroup();
+
+            ImGui::BeginGroup();
+            ImGui::Text("Normal");
+            ImGui::Image((ImTextureID)bufferTextures.normal, ImVec2(128, 128));
+            ImGui::EndGroup();
+
+            ImGui::SameLine();
+
+            ImGui::BeginGroup();
+            ImGui::Text("AO/Roughness/Metalness");
+            ImGui::Image((ImTextureID)bufferTextures.orm, ImVec2(128, 128));
+            ImGui::EndGroup();
+
+            ImGui::BeginGroup();
+            ImGui::Text("Emissive");
+            ImGui::Image((ImTextureID)bufferTextures.emissive, ImVec2(128, 128));
+            ImGui::EndGroup();
         }
 
         ImGui::End();
