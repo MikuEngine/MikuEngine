@@ -1,0 +1,76 @@
+{
+    "Name": "SkeletalMeshTest",
+    "NumGameObjects": 2,
+    "GameObjects": [
+        {
+            "ID": 0,
+            "Name": "MainCamera",
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Camera",
+                    "Near": 1.0,
+                    "Far": 5000.0,
+                    "FOV": 50.0
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "Name": "GameObject",
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "MeshFilePath": "Resource/Model/SkinningTest.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl"
+                },
+                {
+                    "Type": "SkeletalAnimator"
+                },
+                {
+                    "Type": "AnimationPlayer"
+                }
+            ]
+        }
+    ]
+}

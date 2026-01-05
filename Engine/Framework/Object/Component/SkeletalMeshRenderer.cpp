@@ -19,7 +19,7 @@
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
-#include "Framework/Object/Component/Animator.h"
+#include "Framework/Object/Component/SkeletalAnimator.h"
 #include "Core/Graphics/Data/ShaderSlotTypes.h"
 
 namespace engine
@@ -122,6 +122,11 @@ namespace engine
         m_shadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Cutout_PS.hlsl");
     }
 
+    void SkeletalMeshRenderer::Awake()
+    {
+
+    }
+
     void SkeletalMeshRenderer::Refresh()
     {
         SystemManager::Get().GetRenderSystem().Unregister(this);
@@ -198,6 +203,16 @@ namespace engine
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
     }
 
+    std::shared_ptr<SkeletonData> SkeletalMeshRenderer::GetSkeletonData() const
+    {
+        return m_skeletonData;
+    }
+
+    const std::string& SkeletalMeshRenderer::GetMeshPath() const
+    {
+        return m_meshFilePath;
+    }
+
     std::string SkeletalMeshRenderer::GetType() const
     {
         return "SkeletalMeshRenderer";
@@ -206,7 +221,7 @@ namespace engine
     void SkeletalMeshRenderer::Update()
     {
         // Animator에서 행렬 가져오기
-        auto animator = GetGameObject()->GetComponent<Animator>();
+        auto animator = GetGameObject()->GetComponent<SkeletalAnimator>();
         if (animator)
         {
             std::memcpy(

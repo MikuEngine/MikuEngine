@@ -27,6 +27,7 @@ namespace engine
 
 	public:
 		void Initialize() override;
+		virtual void Update() {}
 
 	public:
 		virtual bool HasRenderType(RenderType type) const = 0;

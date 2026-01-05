@@ -98,6 +98,8 @@ namespace engine
 
     void RenderSystem::Register(Renderer* renderer)
     {
+        System<Renderer>::Register(renderer);
+
         if (renderer->HasRenderType(RenderType::Opaque))
         {
             AddRenderer(m_opaqueList, renderer, RenderType::Opaque);
@@ -125,6 +127,16 @@ namespace engine
         RemoveRenderer(m_cutoutList, renderer, RenderType::Cutout);
         RemoveRenderer(m_transparentList, renderer, RenderType::Transparent);
         RemoveRenderer(m_screenList, renderer, RenderType::Screen);
+
+        System<Renderer>::Unregister(renderer);
+    }
+
+    void RenderSystem::Update()
+    {
+        for (auto renderer : m_components)
+        {
+            renderer->Update();
+        }
     }
 
     void RenderSystem::Render()

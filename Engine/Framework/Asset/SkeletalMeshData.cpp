@@ -109,7 +109,7 @@ namespace engine
 
                     const unsigned int boneIndex = skeletonData->GetBoneIndexByBoneName(boneName);
 
-                    skeletonData->SetBoneOffset(Matrix(&bone->mOffsetMatrix.a1), boneIndex);
+                    skeletonData->SetBoneOffset(Matrix(&bone->mOffsetMatrix.a1).Transpose(), boneIndex);
 
                     for (unsigned int k = 0; k < bone->mNumWeights; ++k)
                     {

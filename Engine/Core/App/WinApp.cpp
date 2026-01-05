@@ -18,6 +18,7 @@
 #include "Framework/System/TransformSystem.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/System/CameraSystem.h"
+#include "Framework/System/AnimatorSystem.h"
 #include "Editor/EditorManager.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -233,27 +234,14 @@ namespace engine
             break;
 
         case EditorState::Play:
-            SceneManager::Get().CheckSceneChanged();
-            SceneManager::Get().ProcessPendingAdds(true);
-            SceneManager::Get().ProcessPendingKills();
-
-            SystemManager::Get().GetScriptSystem().CallStart();
-            SystemManager::Get().GetScriptSystem().CallUpdate();
-
-            SystemManager::Get().GetCameraSystem().Update();
+            GamePlayUpdate();
             break;
 
         case EditorState::Pause:
             break;
         }
 #else
-        SceneManager::Get().CheckSceneChanged();
-        SceneManager::Get().ProcessPendingAdds(true);
-        SceneManager::Get().ProcessPendingKills();
-
-        SystemManager::Get().GetScriptSystem().CallStart();
-        SystemManager::Get().GetScriptSystem().CallUpdate();
-        SystemManager::Get().GetCameraSystem().Update();
+        GamePlayUpdate();
 #endif // _DEBUG
     }
 
@@ -268,6 +256,22 @@ namespace engine
         GraphicsDevice::Get().EndDraw();
 
         SystemManager::Get().GetTransformSystem().UnmarkDirtyThisFrame();
+    }
+
+    void WinApp::GamePlayUpdate()
+    {
+        SceneManager::Get().CheckSceneChanged();
+        SceneManager::Get().ProcessPendingAdds(true);
+        SceneManager::Get().ProcessPendingKills();
+
+        SystemManager::Get().GetScriptSystem().CallStart();
+        SystemManager::Get().GetScriptSystem().CallUpdate();
+
+        SystemManager::Get().GetCameraSystem().Update();
+
+        SystemManager::Get().GetAnimatorSystem().Update();
+
+        SystemManager::Get().GetRenderSystem().Update();
     }
 
     LRESULT WinApp::MessageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

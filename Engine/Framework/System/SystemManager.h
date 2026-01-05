@@ -8,6 +8,7 @@ namespace engine
     class TransformSystem;
     class RenderSystem;
     class CameraSystem;
+    class AnimatorSystem;
 
     class SystemManager :
         public Singleton<SystemManager>
@@ -17,6 +18,7 @@ namespace engine
         std::unique_ptr<TransformSystem> m_transformSystem;
         std::unique_ptr<RenderSystem> m_renderSystem;
         std::unique_ptr<CameraSystem> m_cameraSystem;
+        std::unique_ptr<AnimatorSystem> m_animatorSystem;
 
     private:
         SystemManager();
@@ -30,6 +32,7 @@ namespace engine
         TransformSystem& GetTransformSystem() const;
         RenderSystem& GetRenderSystem() const;
         CameraSystem& GetCameraSystem() const;
+        AnimatorSystem& GetAnimatorSystem() const;
 
     private:
         friend class Singleton<SystemManager>;

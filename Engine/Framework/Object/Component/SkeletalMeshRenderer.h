@@ -9,7 +9,7 @@ namespace engine
     class SkeletalMeshData;
     class SkeletonData;
     class MaterialData;
-    class Animator;
+    class SkeletalAnimator;
 
     class VertexBuffer;
     class IndexBuffer;
@@ -63,6 +63,7 @@ namespace engine
         ~SkeletalMeshRenderer();
 
         void Initialize() override;
+        void Awake() override;
         void Update();
 
         void SetMesh(const std::string& meshName);
@@ -71,7 +72,8 @@ namespace engine
         void SetCutoutPixelShader(const std::string& shaderFilePath);
         void SetTransparentPixelShader(const std::string& shaderFilePath);
 
-        std::shared_ptr<SkeletonData> GetSkeletonData() const { return m_skeletonData; }
+        std::shared_ptr<SkeletonData> GetSkeletonData() const;
+        const std::string& GetMeshPath() const;
 
         void OnGui() override;
         void Save(json& j) const override;

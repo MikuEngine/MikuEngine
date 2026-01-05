@@ -168,10 +168,16 @@
     <ClCompile Include="Core\System\ProjectSettings.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\Animator.cpp">
+    <ClCompile Include="Framework\Object\Component\SkeletalAnimator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Object\Component\SkeletalMeshRenderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\Animator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\System\AnimatorSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -371,10 +377,16 @@
     <ClInclude Include="Core\System\ProjectSettings.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\Animator.h">
+    <ClInclude Include="Framework\Object\Component\SkeletalAnimator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\SkeletalMeshRenderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\Animator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\System\AnimatorSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

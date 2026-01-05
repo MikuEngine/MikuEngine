@@ -179,6 +179,7 @@
     <ClCompile Include="Framework\Asset\StaticMeshData.cpp" />
     <ClCompile Include="Framework\Asset\MaterialData.cpp" />
     <ClCompile Include="Framework\Object\Component\Animator.cpp" />
+    <ClCompile Include="Framework\Object\Component\SkeletalAnimator.cpp" />
     <ClCompile Include="Framework\Object\Component\Camera.cpp" />
     <ClCompile Include="Framework\Object\Component\Component.cpp" />
     <ClCompile Include="Framework\Object\Component\ComponentFactory.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="Framework\Object\Object.cpp" />
     <ClCompile Include="Framework\Scene\Scene.cpp" />
     <ClCompile Include="Framework\Scene\SceneManager.cpp" />
+    <ClCompile Include="Framework\System\AnimatorSystem.cpp" />
     <ClCompile Include="Framework\System\CameraSystem.cpp" />
     <ClCompile Include="Framework\System\RenderSystem.cpp" />
     <ClCompile Include="Framework\System\SystemManager.cpp" />
@@ -249,6 +251,7 @@
     <ClInclude Include="Framework\Asset\SkeletonData.h" />
     <ClInclude Include="Framework\Asset\StaticMeshData.h" />
     <ClInclude Include="Framework\Object\Component\Animator.h" />
+    <ClInclude Include="Framework\Object\Component\SkeletalAnimator.h" />
     <ClInclude Include="Framework\Object\Component\Camera.h" />
     <ClInclude Include="Framework\Object\Component\Component.h" />
     <ClInclude Include="Framework\Object\Component\ComponentFactory.h" />
@@ -270,6 +273,7 @@
     <ClInclude Include="Framework\System\ScriptSystem.h" />
     <ClInclude Include="Framework\System\System.h" />
     <ClInclude Include="Framework\System\TransformSystem.h" />
+    <ClInclude Include="Framework\System\AnimatorSystem.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Core\App\WinApp.h" />
   </ItemGroup>

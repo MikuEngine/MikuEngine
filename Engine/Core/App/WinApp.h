@@ -51,6 +51,8 @@ namespace engine
         void Update();
         void Render();
 
+        void GamePlayUpdate();
+
         void ValidateSettings();
         void SetWindowMode(bool isFullscreen);
         void SetResolution(int width, int height, bool isFullscreen);

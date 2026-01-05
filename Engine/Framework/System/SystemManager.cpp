@@ -5,6 +5,7 @@
 #include "Framework/System/TransformSystem.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/System/CameraSystem.h"
+#include "Framework/System/AnimatorSystem.h"
 
 namespace engine
 {
@@ -12,7 +13,8 @@ namespace engine
         : m_scriptSystem{ std::make_unique<ScriptSystem>() },
         m_transformSystem{ std::make_unique<TransformSystem>() },
         m_renderSystem{ std::make_unique<RenderSystem>() },
-        m_cameraSystem{ std::make_unique<CameraSystem>() }
+        m_cameraSystem{ std::make_unique<CameraSystem>() },
+        m_animatorSystem{ std::make_unique<AnimatorSystem>() }
     {
     }
 
@@ -24,6 +26,7 @@ namespace engine
         m_transformSystem.reset();
         m_renderSystem.reset();
         m_cameraSystem.reset();
+        m_animatorSystem.reset();
     }
 
     ScriptSystem& SystemManager::GetScriptSystem() const
@@ -44,5 +47,10 @@ namespace engine
     CameraSystem& SystemManager::GetCameraSystem() const
     {
         return *m_cameraSystem.get();
+    }
+
+    AnimatorSystem& SystemManager::GetAnimatorSystem() const
+    {
+        return *m_animatorSystem.get();
     }
 }

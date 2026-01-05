@@ -148,6 +148,7 @@
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Scene\TestScene.cpp" />
+    <ClCompile Include="Script\AnimationPlayer.cpp" />
     <ClCompile Include="Script\TestScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -180,6 +181,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="App\TestGameApp.h" />
     <ClInclude Include="Script\TestScript.h" />
+    <ClInclude Include="Script\AnimationPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">
