@@ -201,7 +201,7 @@ namespace engine
         cbGlobal.mainLightViewProjection = cbGlobal.viewProjection;
         cbGlobal.mainLightWorldDirection = Vector3(0.0f, 0.0f, 1.0f);
         cbGlobal.mainLightColor = Vector3(1.0f, 1.0f, 1.0f);
-        cbGlobal.mainLightIntensity = 1.0f;
+        cbGlobal.mainLightIntensity = 5.0f;
         cbGlobal.maxHDRNits = graphics.GetMaxHDRNits();
         cbGlobal.exposure = -2.5f;
         cbGlobal.shadowMapSize = graphics.GetShadowMapSize();

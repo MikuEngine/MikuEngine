@@ -40,24 +40,24 @@ float4 main(PS_INPUT_GBUFFER input) : SV_Target
     float metalness = g_texMetalness.Sample(g_samLinear, uv).r;
     
     // normal
-    float3 n = DecodeNormal(encodedNormal);
+    float3 n = normalize(DecodeNormal(encodedNormal));
     
     // view
     float3 v = normalize(g_cameraWorldPosition - worldPosition);
     
     // light
-    float3 l = -g_mainLightWorldDirection;
+    float3 l = -normalize(g_mainLightWorldDirection);
     
     // l-v half
     float3 h = normalize(l + v);
     
-    float nDotH = max(0.0f, dot(n, h));
+    float nDotH = saturate(dot(n, h));
     
-    float nDotL = max(0.0f, dot(n, l));
+    float nDotL = saturate(dot(n, l));
     
-    float nDotV = max(0.0f, dot(n, v));
+    float nDotV = saturate(dot(n, v));
     
-    float hDotV = max(0.0f, dot(h, v));
+    float hDotV = saturate(dot(h, v));
     
     // shadow
     float4 lightClipPos = mul(float4(worldPosition, 1.0f), g_mainLightViewProjection);
