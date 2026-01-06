@@ -12,6 +12,7 @@
 #include "Core/Graphics/Resource/InputLayout.h"
 #include "Core/Graphics/Resource/SamplerState.h"
 #include "Core/Graphics/Resource/Texture.h"
+#include "Core/Graphics/Resource/RasterizerState.h"
 #include "Core/Graphics/Data/ConstantBufferTypes.h"
 #include "Core/Graphics/Data/ShaderSlotTypes.h"
 #include "Framework/Asset/AssetManager.h"
@@ -19,6 +20,26 @@
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/Component/Transform.h"
+
+void to_json(nlohmann::ordered_json& j, engine::MaterialRenderType type)
+{
+    j = nlohmann::ordered_json{ "RenderType", static_cast<int>(type) };
+}
+
+void from_json(const nlohmann::ordered_json& j, engine::MaterialRenderType& type)
+{
+    type = static_cast<engine::MaterialRenderType>(j.at("RenderType"));
+}
+
+void to_json(nlohmann::ordered_json& j, engine::CullMode mode)
+{
+    j = nlohmann::ordered_json{ "CullMode", static_cast<int>(mode) };
+}
+
+void from_json(const nlohmann::ordered_json& j, engine::CullMode& mode)
+{
+    mode = static_cast<engine::CullMode>(j.at("CullMode"));
+}
 
 namespace engine
 {
@@ -80,24 +101,33 @@ namespace engine
 
     void SpriteRenderer::Initialize()
     {
-        m_vsFilePath = "Resource/Shader/Vertex/Quad_VS.hlsl";
-        m_opaquePSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl";
-        m_cutoutPSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl";
-        m_transparentPSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl";
-
         m_simpleMeshData = AssetManager::Get().GetOrCreateSimpleMeshData("Resource/Model/Quad.fbx");
 
-        m_texture = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
+        if (m_texture == nullptr)
+        {
+            m_texture = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
+            m_textureFilePath = "None";
+        }
+
+        if (!m_isLoaded)
+        {
+            m_vsFilePath = "Resource/Shader/Vertex/Quad_VS.hlsl";
+            m_opaquePSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl";
+            m_cutoutPSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl";
+            m_transparentPSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl";
+
+            m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
+            m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
+            m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
+            m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
+        }
 
         m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<PositionTexCoordVertex>("Resource/Model/Quad.fbx", m_simpleMeshData->GetVertices());
         m_indexBuffer = ResourceManager::Get().GetOrCreateIndexBuffer("Resource/Model/Quad.fbx", m_simpleMeshData->GetIndices());
 
-        m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Quad_VS.hlsl");
 
-        m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
-        m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
-        m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
+
         m_shadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl");
 
         m_inputLayout = m_vs->GetOrCreateInputLayout<PositionTexCoordVertex>();
@@ -106,12 +136,23 @@ namespace engine
         m_objectConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
         m_materialConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Material", sizeof(CbMaterial));
 
+        m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidNone);
+
         SystemManager::Get().GetRenderSystem().Register(this);
     }
 
     void SpriteRenderer::SetTexture(const std::string& textureFilePath)
     {
+        if (textureFilePath.empty() || textureFilePath == "None")
+        {
+            return;
+        }
+
+        m_textureFilePath = textureFilePath;
+
         m_texture = ResourceManager::Get().GetOrCreateTexture(textureFilePath);
+        m_width = m_texture->GetWidth();
+        m_height = m_texture->GetHeight();
     }
 
     void SpriteRenderer::SetVertexShader(const std::string& shaderFilePath)
@@ -143,11 +184,28 @@ namespace engine
         m_castShadow = castShadow;
     }
 
+    void SpriteRenderer::SetCullMode(CullMode cullMode)
+    {
+        m_cullMode = cullMode;
+
+        switch (m_cullMode)
+        {
+        case CullMode::None:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidNone);
+            break;
+
+        case CullMode::Back:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidBack);
+            break;
+
+        case CullMode::Front:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidFront);
+            break;
+        }
+    }
+
     void SpriteRenderer::OnGui()
     {
-        ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.5f, 1.0f), "Sprite Renderer");
-        ImGui::Separator();
-        // 1. Texture Selector
         ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
         std::string selectedTex;
         // 확장자는 대표적으로 .png를 넣었지만 내부 로직에서 여러 개 체크하도록 수정 가능
@@ -158,24 +216,11 @@ namespace engine
         ImGui::Spacing();
         // 2. Settings (RenderType, Shadow, etc.)
         // RenderType (Enum to Checkbox or Combo)
-        const char* renderTypes[] = { "Opaque", "Cutout", "Transparent" };
-        int currentType = 0;
-        if (m_renderType == MaterialRenderType::Cutout) currentType = 1;
-        else if (m_renderType == MaterialRenderType::Transparent) currentType = 2;
+        static const char* renderTypes[] = { "Opaque", "Cutout", "Transparent" };
+        int currentType = static_cast<int>(m_renderType);
         if (ImGui::Combo("Render Type", &currentType, renderTypes, IM_ARRAYSIZE(renderTypes)))
         {
-            if (currentType == 0)
-            {
-                m_renderType = MaterialRenderType::Opaque;
-            }
-            else if (currentType == 1)
-            {
-                m_renderType = MaterialRenderType::Cutout;
-            }
-            else if (currentType == 2)
-            {
-                m_renderType = MaterialRenderType::Transparent;
-            }
+            m_renderType = static_cast<MaterialRenderType>(currentType);
 
             ReplaceRenderSystem();
         }
@@ -184,9 +229,17 @@ namespace engine
         {
             SetCastShadow(castShadow);
         }
-        // PPU or Filter Mode (Example)
-        // bool usePoint = ...;
-        // if (ImGui::Checkbox("Point Filter", &usePoint)) { SetFilter(usePoint ? Point : Linear); }
+
+        ImGui::ColorEdit4("Color", &m_color.x);
+
+        static const char* cullModes[] = { "None", "Back", "Front" };
+        int currentMode = static_cast<int>(m_cullMode);
+        if (ImGui::Combo("Cull mode", &currentMode, cullModes, IM_ARRAYSIZE(cullModes)))
+        {
+            m_cullMode = static_cast<CullMode>(currentMode);
+
+            SetCullMode(m_cullMode);
+        }
 
         ImGui::Spacing();
         ImGui::Separator();
@@ -228,20 +281,28 @@ namespace engine
     void SpriteRenderer::Save(json& j) const
     {
         j["Type"] = GetType();
-        j["TextureFilePath"] = m_textureFilePath;
+        j["TextureFilePath"] = m_textureFilePath ;
         j["VSFilePath"] = m_vsFilePath;
         j["OpaquePSFilePath"] = m_opaquePSFilePath;
         j["CutoutPSFilePath"] = m_cutoutPSFilePath;
         j["TransparentPSFilePath"] = m_transparentPSFilePath;
+        j["RenderType"] = m_renderType;
+        j["Color"] = m_color;
+        j["CullMode"] = m_cullMode;
     }
 
     void SpriteRenderer::Load(const json& j)
     {
-        JsonGet(j, "MeshFilePath", m_textureFilePath);
+        JsonGet(j, "TextureFilePath", m_textureFilePath);
         JsonGet(j, "VSFilePath", m_vsFilePath);
         JsonGet(j, "OpaquePSFilePath", m_opaquePSFilePath);
         JsonGet(j, "CutoutPSFilePath", m_cutoutPSFilePath);
         JsonGet(j, "TransparentPSFilePath", m_transparentPSFilePath);
+        JsonGet(j, "RenderType", m_renderType);
+        JsonGet(j, "Color", m_color);
+        JsonGet(j, "CullMode", m_cullMode);
+
+        m_isLoaded = true;
 
         Refresh();
     }
@@ -329,6 +390,8 @@ namespace engine
         // 여기선 m_samplerState가 이미 Initialize 혹은 OnGui에서 설정되었다고 가정
         deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
 
+        deviceContext->RSSetState(m_rasterizerState->GetRawRasterizerState());
+
         // 3. RenderType 분기
         // -----------------------------------------------------------------------
         // [Shadow Pass]
@@ -377,7 +440,7 @@ namespace engine
 
             // -- Material Data --
             CbMaterial cbMaterial{};
-            cbMaterial.materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f); // Tint Color가 있다면 여기에 적용
+            cbMaterial.materialBaseColor = m_color; // Tint Color가 있다면 여기에 적용
             cbMaterial.materialEmissive = Vector3(0, 0, 0);
             cbMaterial.materialRoughness = 1.0f; // 스프라이트는 거칠게 (반사 적게)
             cbMaterial.materialMetalness = 0.0f;
@@ -403,6 +466,8 @@ namespace engine
             // -- Draw --
             deviceContext->DrawIndexed(6, 0, 0);
         }
+
+        //deviceContext->RSSetState(nullptr);
     }
 
     DirectX::BoundingBox SpriteRenderer::GetBounds() const
@@ -412,6 +477,8 @@ namespace engine
 
     void SpriteRenderer::Refresh()
     {
+        SetTexture(m_textureFilePath);
+
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
 
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);

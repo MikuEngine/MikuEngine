@@ -421,8 +421,6 @@ namespace engine
 
     void SkeletalMeshRenderer::OnGui()
     {
-        ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "Skeletal Mesh Renderer");
-        ImGui::Separator();
         // 1. Mesh Selector
         ImGui::Text("Mesh: %s", m_meshFilePath.c_str());
         std::string selectedMesh;

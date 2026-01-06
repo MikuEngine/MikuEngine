@@ -31,9 +31,20 @@ float GAFSchlickGGX(float nDotV, float nDotL, float roughness)
 float4 main(PS_INPUT_TEXCOORD input) : SV_Target
 {
     float2 uv = input.texCoord;
-    float3 baseColor = g_gBufferBaseColor.Sample(g_samPoint, uv).rgb;
-    float3 encodedNormal = g_gBufferNormal.Sample(g_samPoint, uv).rgb;
     float depth = g_gBufferDepth.Sample(g_samPoint, uv).r;
+    if (depth >= 1.0f)
+    {
+        discard;
+    }
+    
+    float3 baseColor = g_gBufferBaseColor.Sample(g_samPoint, uv).rgb;
+    float4 encodedNormal = g_gBufferNormal.Sample(g_samPoint, uv).rgba;
+    float lightingFlag = encodedNormal.a;
+    if (lightingFlag < 0.1f)
+    {
+        return float4(baseColor, 1.0f);
+    }
+    
     float3 emissive = g_gBufferEmissive.Sample(g_samPoint, uv).rgb;
     float3 orm = g_gBufferORM.Sample(g_samPoint, uv).rgb;
     float ao = orm.r;
@@ -51,7 +62,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     worldPosition /= worldPosition.w;
     
     // normal
-    float3 n = normalize(DecodeNormal(encodedNormal));
+    float3 n = normalize(DecodeNormal(encodedNormal.rgb));
     
     // view
     float3 v = normalize(g_cameraWorldPosition - worldPosition.xyz);

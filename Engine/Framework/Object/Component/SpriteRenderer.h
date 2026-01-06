@@ -14,6 +14,14 @@ namespace engine
     class Texture;
     class InputLayout;
     class SamplerState;
+    class RasterizerState;
+
+    enum class CullMode
+    {
+        None,
+        Back,
+        Front
+    };
 
     class SpriteRenderer :
         public Renderer
@@ -47,10 +55,15 @@ namespace engine
         std::shared_ptr<InputLayout> m_inputLayout;
         std::shared_ptr<SamplerState> m_samplerState;
 
+        std::shared_ptr<RasterizerState> m_rasterizerState;
+
         MaterialRenderType m_renderType = MaterialRenderType::Opaque;
+        CullMode m_cullMode = CullMode::None;
         float m_width = 100.0f;
         float m_height = 100.0f;
+        Vector4 m_color{ 1.0f, 1.0f, 1.0f, 1.0f };
         bool m_castShadow = false;
+        bool m_isLoaded = false;
 
     public:
         ~SpriteRenderer();
@@ -64,6 +77,7 @@ namespace engine
         void SetCutoutPixelShader(const std::string& shaderFilePath);
         void SetTransparentPixelShader(const std::string& shaderFilePath);
         void SetCastShadow(bool castShadow);
+        void SetCullMode(CullMode cullMode);
 
     public:
         void OnGui() override;

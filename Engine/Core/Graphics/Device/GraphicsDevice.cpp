@@ -188,6 +188,9 @@ namespace engine
         m_deviceContext->ClearRenderTargetView(m_hdrBuffer->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_finalBuffer->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_backBufferRTV.Get(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_bloomHalfBuffer->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_bloomWorkBuffer->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_aaBuffer->GetRawRTV(), clearColor);
     }
 
     void GraphicsDevice::BeginDrawShadowPass()

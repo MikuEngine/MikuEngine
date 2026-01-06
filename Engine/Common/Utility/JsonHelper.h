@@ -21,6 +21,24 @@ namespace DirectX::SimpleMath
         v.z = j.at("z");
     }
 
+    inline void to_json(nlohmann::ordered_json& j, const Vector4& v)
+    {
+        j = nlohmann::ordered_json{
+            { "x", v.x },
+            { "y", v.y },
+            { "z", v.z },
+            { "w", v.w }
+        };
+    }
+
+    inline void from_json(const nlohmann::ordered_json& j, Vector4& v)
+    {
+        v.x = j.at("x");
+        v.y = j.at("y");
+        v.z = j.at("z");
+        v.w = j.at("w");
+    }
+
     inline void to_json(nlohmann::ordered_json& j, const Quaternion& q)
     {
         j = nlohmann::ordered_json{

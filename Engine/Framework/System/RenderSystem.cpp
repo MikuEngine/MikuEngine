@@ -36,10 +36,10 @@ namespace engine
         m_comparisonSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Comparison);
         m_clampSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Clamp);
 
-        m_skyboxEnv = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/MirroredHallEnvHDR.dds");
-        m_irradianceMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/MirroredHallDiffuseHDR.dds");
-        m_specularMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/MirroredHallSpecularHDR.dds");
-        m_brdfLut = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/MirroredHallBrdf.dds");
+        m_skyboxEnv = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/fieldEnvHDR.dds");
+        m_irradianceMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/fieldDiffuseHDR.dds");
+        m_specularMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/fieldSpecularHDR.dds");
+        m_brdfLut = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/fieldBrdf.dds");
 
         // cube
         {
@@ -301,9 +301,25 @@ namespace engine
                 context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
                 context->OMSetDepthStencilState(m_transparentDSState->GetRawDepthStencilState(), 0);
 
-                for (auto renderer : m_transparentList)
+                static std::vector<std::pair<float, Renderer*>> sortList;
+                sortList.clear();
+                sortList.reserve(m_transparentList.size());
+                Vector3 camPos = cameraPosition;
+                
+                for (auto* renderer : m_transparentList)
                 {
-                    renderer->Draw(RenderType::Transparent);
+                    float distSq = Vector3::DistanceSquared(camPos, renderer->GetTransform()->GetWorld().Translation());
+                    sortList.emplace_back(distSq, renderer);
+                }
+                
+                std::sort(sortList.begin(), sortList.end(),
+                    [](const auto& a, const auto& b) {
+                        return a.first > b.first;
+                    });
+
+                for (auto pair : sortList)
+                {
+                    pair.second->Draw(RenderType::Transparent);
                 }
 
                 context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);

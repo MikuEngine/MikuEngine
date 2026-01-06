@@ -153,9 +153,6 @@ namespace engine
 
     void StaticMeshRenderer::OnGui()
     {
-        ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), "Static Mesh Renderer");
-        ImGui::Separator();
-        // 1. Mesh Selector
         ImGui::Text("Mesh: %s", m_meshFilePath.c_str());
         std::string selectedMesh;
         // 경로 주의: 실행 파일 기준 경로 (보통 Resource/Model)

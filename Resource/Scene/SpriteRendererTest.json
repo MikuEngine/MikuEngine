@@ -1,6 +1,6 @@
 {
     "Name": "SpriteRendererTest",
-    "NumGameObjects": 2,
+    "NumGameObjects": 6,
     "GameObjects": [
         {
             "ID": 0,
@@ -58,11 +58,183 @@
                 },
                 {
                     "Type": "SpriteRenderer",
-                    "TextureFilePath": "",
+                    "TextureFilePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl"
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 2,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.3294117748737335
+                    },
+                    "CullMode": 0
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "GameObject",
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 1.5
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "TextureFilePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 2,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 0.1725490242242813
+                    },
+                    "CullMode": 0
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "GameObject",
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 3.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "TextureFilePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 2,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 1.0,
+                        "w": 0.3333333432674408
+                    },
+                    "CullMode": 0
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "GameObject",
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 5.099999904632568
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "TextureFilePath": "Resource/Texture/Sun.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 2,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "GameObject",
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 6.400000095367432
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "TextureFilePath": "Resource/Texture/Pikachu.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
                 }
             ]
         }

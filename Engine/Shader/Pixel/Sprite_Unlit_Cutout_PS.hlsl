@@ -8,17 +8,9 @@ PS_OUTPUT_GBUFFER main(PS_INPUT_TEXCOORD input)
     
     clip(color.a - 0.5f);
     
-    output.baseColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
-    output.emissive = float4(color.rgb, 1.0f);
+    output.baseColor = float4(color.rgb * g_materialBaseColor.rgb, 1.0f);
     
-    output.orm = float4(0.0f, 1.0f, 0.0f, 0.0f);
-    
-    if (g_overrideMaterial)
-    {
-        output.emissive = g_materialBaseColor;
-    }
-    
-    output.normal = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    output.normal = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
     return output;
 }
