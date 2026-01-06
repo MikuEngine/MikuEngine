@@ -81,9 +81,9 @@ namespace engine
     void SpriteRenderer::Initialize()
     {
         m_vsFilePath = "Resource/Shader/Vertex/Quad_VS.hlsl";
-        m_opaquePSFilePath = "Resource/Shader/Pixel/Blit_Cutout_PS.hlsl";
-        m_cutoutPSFilePath = "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl";
-        m_transparentPSFilePath = "Resource/Shader/Pixel/LightTransparent_PS.hlsl";
+        m_opaquePSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl";
+        m_cutoutPSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl";
+        m_transparentPSFilePath = "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl";
 
         m_simpleMeshData = AssetManager::Get().GetOrCreateSimpleMeshData("Resource/Model/Quad.fbx");
 
@@ -98,7 +98,7 @@ namespace engine
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
-        m_shadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Blit_Cutout_PS.hlsl");
+        m_shadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl");
 
         m_inputLayout = m_vs->GetOrCreateInputLayout<PositionTexCoordVertex>();
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
@@ -164,9 +164,20 @@ namespace engine
         else if (m_renderType == MaterialRenderType::Transparent) currentType = 2;
         if (ImGui::Combo("Render Type", &currentType, renderTypes, IM_ARRAYSIZE(renderTypes)))
         {
-            if (currentType == 0) m_renderType = MaterialRenderType::Opaque;
-            else if (currentType == 1) m_renderType = MaterialRenderType::Cutout;
-            else if (currentType == 2) m_renderType = MaterialRenderType::Transparent;
+            if (currentType == 0)
+            {
+                m_renderType = MaterialRenderType::Opaque;
+            }
+            else if (currentType == 1)
+            {
+                m_renderType = MaterialRenderType::Cutout;
+            }
+            else if (currentType == 2)
+            {
+                m_renderType = MaterialRenderType::Transparent;
+            }
+
+            ReplaceRenderSystem();
         }
         bool castShadow = m_castShadow;
         if (ImGui::Checkbox("Cast Shadow", &castShadow))
@@ -386,7 +397,7 @@ namespace engine
 
             // -- Texture Binding --
             ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
-            deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
+            deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &srv);
 
 
             // -- Draw --
@@ -406,5 +417,11 @@ namespace engine
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
+    }
+
+    void SpriteRenderer::ReplaceRenderSystem()
+    {
+        SystemManager::Get().GetRenderSystem().Unregister(this);
+        SystemManager::Get().GetRenderSystem().Register(this);
     }
 }

@@ -12,6 +12,7 @@
 #include "Core/Graphics/Resource/DepthStencilState.h"
 #include "Core/Graphics/Resource/RasterizerState.h"
 #include "Core/Graphics/Resource/IndexBuffer.h"
+#include "Core/Graphics/Resource/BlendState.h"
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
 #include "Framework/Object/Component/Camera.h"
@@ -93,6 +94,9 @@ namespace engine
 
             m_skyboxDSState = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::LessEqual);
             m_linearSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
+
+            m_transparentBlendState = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlend);
+            m_transparentDSState = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::DepthRead);
         }
     }
 
@@ -203,7 +207,7 @@ namespace engine
         cbGlobal.mainLightColor = Vector3(1.0f, 1.0f, 1.0f);
         cbGlobal.mainLightIntensity = 5.0f;
         cbGlobal.maxHDRNits = graphics.GetMaxHDRNits();
-        cbGlobal.exposure = -2.5f;
+        cbGlobal.exposure = -2.0f;
         cbGlobal.shadowMapSize = graphics.GetShadowMapSize();
         cbGlobal.useShadowPCF = 0;
         cbGlobal.pcfSize = 2;
@@ -294,10 +298,16 @@ namespace engine
                 context->RSSetState(nullptr);
                 context->OMSetDepthStencilState(nullptr, 0);
 
+                context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
+                context->OMSetDepthStencilState(m_transparentDSState->GetRawDepthStencilState(), 0);
+
                 for (auto renderer : m_transparentList)
                 {
                     renderer->Draw(RenderType::Transparent);
                 }
+
+                context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+                context->OMSetDepthStencilState(nullptr, 0);
             }
             graphics.EndDrawForwardPass();
         }

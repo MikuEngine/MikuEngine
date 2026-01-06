@@ -78,5 +78,6 @@ namespace engine
 
     private:
         void Refresh();
+        void ReplaceRenderSystem();
     };
 }

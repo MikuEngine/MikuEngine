@@ -60,9 +60,9 @@
                     "Type": "SpriteRenderer",
                     "TextureFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/Blit_Cutout_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl"
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl"
                 }
             ]
         }

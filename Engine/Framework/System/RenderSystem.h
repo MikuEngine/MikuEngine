@@ -16,6 +16,7 @@ namespace engine
     class IndexBuffer;
     class InputLayout;
     class PixelShader;
+    class BlendState;
 
     class RenderSystem :
         public System<Renderer>
@@ -45,6 +46,10 @@ namespace engine
         std::shared_ptr<PixelShader> m_skyboxPixelShader;
         std::shared_ptr<RasterizerState> m_skyboxRSState;
         std::shared_ptr<DepthStencilState> m_skyboxDSState;
+
+        // transparent
+        std::shared_ptr<BlendState> m_transparentBlendState;
+        std::shared_ptr<DepthStencilState> m_transparentDSState;
 
         float m_bloomStrength = 0.05f;
         float m_bloomThreshold = 1.0f;

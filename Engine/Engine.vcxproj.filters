@@ -427,8 +427,10 @@
     <FxCompile Include="Shader\Pixel\Blur_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\FXAA_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\NormalQuad_VS.hlsl" />
-    <FxCompile Include="Shader\Pixel\Blit_Cutout_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Sprite_Unlit_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\Quad_VS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Sprite_Unlit_Cutout_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Sprite_Unlit_Transparent_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />
