@@ -121,6 +121,11 @@ namespace engine
         return m_frustum;
     }
 
+    Vector3 Camera::GetForward() const
+    {
+        return engine::GetForward(m_world);
+    }
+
     void Camera::SetNear(float value)
     {
         m_near = value;

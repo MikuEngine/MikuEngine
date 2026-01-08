@@ -20,72 +20,28 @@
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/Component/Transform.h"
-
+#include "Common/Utility/StaticMemoryPool.h"
 
 namespace engine
 {
     namespace
     {
-        // [헬퍼] 파일 선택 모달 창 리턴값: 파일 선택 시 true
-        bool DrawFileSelector(const char* label, const std::string& basePath, const std::string& extension, std::string& outSelectedPath)
-        {
-            namespace fs = std::filesystem;
-            bool result = false;
-            // 1. 버튼 그리기
-            if (ImGui::Button(label))
-            {
-                ImGui::OpenPopup(label);
-            }
-            // 2. 모달 창
-            // (항상 화면 중앙에 띄우려면 ImGuiWindowFlags_NoMove 추가)
-            if (ImGui::BeginPopupModal(label, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-            {
-                // 닫기 버튼 (우측 상단 X 대신 직접 구현)
-                if (ImGui::Button("Cancel"))
-                {
-                    ImGui::CloseCurrentPopup();
-                }
-
-                ImGui::Separator();
-                // 리스트 박스 크기 제한
-                ImGui::BeginChild("FileList", ImVec2(400, 300), true);
-                if (fs::exists(basePath))
-                {
-                    // 재귀적으로 폴더 순회
-                    for (const auto& entry : fs::recursive_directory_iterator(basePath))
-                    {
-                        if (entry.is_regular_file() && entry.path().extension() == extension)
-                        {
-                            // 보여줄 이름 (상대 경로로 깔끔하게)
-                            // generic_string(): 윈도우 역슬래시(\)를 슬래시(/)로 통일
-                            std::string fullPath = entry.path().generic_string();
-                            std::string fileName = entry.path().filename().string();
-
-                            // 목록 선택
-                            if (ImGui::Selectable(fullPath.c_str())) // 전체 경로 보여주기 (동명이인 방지)
-                                //if (ImGui::Selectable(fileName.c_str())) // 파일명만 보기
-                            {
-                                outSelectedPath = fullPath;
-                                result = true;
-                                ImGui::CloseCurrentPopup();
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "Path not found: %s", basePath.c_str());
-                }
-                ImGui::EndChild();
-                ImGui::EndPopup();
-            }
-            return result;
-        }
+        StaticMemoryPool<StaticMeshRenderer, 1024> g_staticMeshRendererPool;
     }
 
     StaticMeshRenderer::~StaticMeshRenderer()
     {
         SystemManager::Get().GetRenderSystem().Unregister(this);
+    }
+
+    void* StaticMeshRenderer::operator new(size_t size)
+    {
+        return g_staticMeshRendererPool.Allocate(size);
+    }
+
+    void StaticMeshRenderer::operator delete(void* ptr)
+    {
+        g_staticMeshRendererPool.Deallocate(ptr);
     }
 
     void StaticMeshRenderer::Initialize()

@@ -53,6 +53,9 @@ namespace engine
     public:
         ~StaticMeshRenderer();
 
+        static void* operator new(size_t size);
+        static void operator delete(void* ptr);
+
     public:
         void Initialize() override;
 

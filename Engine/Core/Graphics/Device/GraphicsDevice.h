@@ -39,12 +39,6 @@ namespace engine
         ID3D11ShaderResourceView* aaBuffer;
     };
 
-    struct CbBlur
-    {
-        Vector2 blurDir;
-        float __pad[2];
-    };
-
     class GraphicsDevice :
         public Singleton<GraphicsDevice>
     {

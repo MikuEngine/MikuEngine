@@ -17,9 +17,13 @@
 #include "Core/Graphics/Data/ShaderSlotTypes.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/SimpleMeshData.h"
+#include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/Component/Camera.h"
+#include "Common/Utility/StaticMemoryPool.h"
 
 void to_json(nlohmann::ordered_json& j, engine::MaterialRenderType type)
 {
@@ -41,62 +45,36 @@ void from_json(const nlohmann::ordered_json& j, engine::CullMode& mode)
     mode = static_cast<engine::CullMode>(j.at("CullMode"));
 }
 
+void to_json(nlohmann::ordered_json& j, engine::BillboardType type)
+{
+    j = nlohmann::ordered_json{ "BillboardType", static_cast<int>(type) };
+}
+
+void from_json(const nlohmann::ordered_json& j, engine::BillboardType& type)
+{
+    type = static_cast<engine::BillboardType>(j.at("BillboardType"));
+}
+
 namespace engine
 {
     namespace
     {
-        bool DrawFileSelector(const char* label, const std::string& basePath, const std::string& extension, std::string& outSelectedPath)
-        {
-            namespace fs = std::filesystem;
-            bool result = false;
-            if (ImGui::Button(label))
-            {
-                ImGui::OpenPopup(label);
-            }
-            if (ImGui::BeginPopupModal(label, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-            {
-                if (ImGui::Button("Cancel"))
-                {
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::Separator();
-                ImGui::BeginChild("FileList", ImVec2(400, 300), true);
-                if (fs::exists(basePath))
-                {
-                    for (const auto& entry : fs::recursive_directory_iterator(basePath))
-                    {
-                        // 이미지 확장자 체크 로직 강화 가능
-                        if (entry.is_regular_file())
-                        {
-                            std::string ext = entry.path().extension().string();
-                            // 대소문자 무시 비교 필요할 수 있음
-                            if (ext == extension || (extension == ".png" && (ext == ".jpg" || ext == ".dds" || ext == ".tga")))
-                            {
-                                std::string fullPath = entry.path().generic_string();
-                                if (ImGui::Selectable(fullPath.c_str()))
-                                {
-                                    outSelectedPath = fullPath;
-                                    result = true;
-                                    ImGui::CloseCurrentPopup();
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "Path not found: %s", basePath.c_str());
-                }
-                ImGui::EndChild();
-                ImGui::EndPopup();
-            }
-            return result;
-        }
+        StaticMemoryPool<SpriteRenderer, 1024> g_spriteRendererPool;
     }
 
     SpriteRenderer::~SpriteRenderer()
     {
         SystemManager::Get().GetRenderSystem().Unregister(this);
+    }
+
+    void* SpriteRenderer::operator new(size_t size)
+    {
+        return g_spriteRendererPool.Allocate(size);
+    }
+
+    void SpriteRenderer::operator delete(void* ptr)
+    {
+        g_spriteRendererPool.Deallocate(ptr);
     }
 
     void SpriteRenderer::Initialize()
@@ -135,6 +113,7 @@ namespace engine
 
         m_objectConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
         m_materialConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Material", sizeof(CbMaterial));
+        m_spriteConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Sprite", sizeof(CbSprite));
 
         m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidNone);
 
@@ -204,12 +183,27 @@ namespace engine
         }
     }
 
+    void SpriteRenderer::SetSpriteInfo(const Vector2& offset, const Vector2& scale, const Vector2 pivot)
+    {
+        m_uvOffset = offset;
+        m_uvScale = scale;
+        m_pivot = pivot;
+    }
+
+    void SpriteRenderer::SetBillboardType(BillboardType type)
+    {
+        m_billboardType = type;
+    }
+
     void SpriteRenderer::OnGui()
     {
         ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
         std::string selectedTex;
-        // 확장자는 대표적으로 .png를 넣었지만 내부 로직에서 여러 개 체크하도록 수정 가능
-        if (DrawFileSelector("Select Texture", "Resource/Texture", ".png", selectedTex))
+        
+        static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga" };
+        static std::string hlslExtension{ ".hlsl" };
+
+        if (DrawFileSelector("Select Texture", "Resource/Texture", texExtensions, selectedTex))
         {
             SetTexture(selectedTex);
         }
@@ -241,6 +235,13 @@ namespace engine
             SetCullMode(m_cullMode);
         }
 
+        static const char* billboardTypes[] = { "None", "Spherical", "Cylindrical", "ViewPlaneAligned", "ViewPlaneVertical" };
+        int currentBillboard = static_cast<int>(m_billboardType);
+        if (ImGui::Combo("Billboard", &currentBillboard, billboardTypes, IM_ARRAYSIZE(billboardTypes)))
+        {
+            m_billboardType = static_cast<BillboardType>(currentBillboard);
+        }
+
         ImGui::Spacing();
         ImGui::Separator();
         // 3. Shader Selectors
@@ -249,28 +250,28 @@ namespace engine
         ImGui::Text("Shaders:");
         std::string selectedShader;
         // Opaque
-        if (DrawFileSelector("VS", vertexShaderPath, ".hlsl", selectedShader))
+        if (DrawFileSelector("VS", vertexShaderPath, hlslExtension, selectedShader))
         {
             SetVertexShader(selectedShader);
         }
         ImGui::SameLine();
         ImGui::Text(std::filesystem::path(m_vsFilePath).filename().string().c_str());
         // Opaque PS
-        if (DrawFileSelector("Opaque PS", shaderPath, ".hlsl", selectedShader))
+        if (DrawFileSelector("Opaque PS", shaderPath, hlslExtension, selectedShader))
         {
             SetOpaquePixelShader(selectedShader);
         }
         ImGui::SameLine();
         ImGui::Text(std::filesystem::path(m_opaquePSFilePath).filename().string().c_str());
         // Cutout PS
-        if (DrawFileSelector("Cutout PS", shaderPath, ".hlsl", selectedShader))
+        if (DrawFileSelector("Cutout PS", shaderPath, hlslExtension, selectedShader))
         {
             SetCutoutPixelShader(selectedShader);
         }
         ImGui::SameLine();
         ImGui::Text(std::filesystem::path(m_cutoutPSFilePath).filename().string().c_str());
         // Transparent PS
-        if (DrawFileSelector("Trans PS", shaderPath, ".hlsl", selectedShader))
+        if (DrawFileSelector("Trans PS", shaderPath, hlslExtension, selectedShader))
         {
             SetTransparentPixelShader(selectedShader);
         }
@@ -287,6 +288,7 @@ namespace engine
         j["CutoutPSFilePath"] = m_cutoutPSFilePath;
         j["TransparentPSFilePath"] = m_transparentPSFilePath;
         j["RenderType"] = m_renderType;
+        j["BillboardType"] = m_billboardType;
         j["Color"] = m_color;
         j["CullMode"] = m_cullMode;
     }
@@ -299,6 +301,7 @@ namespace engine
         JsonGet(j, "CutoutPSFilePath", m_cutoutPSFilePath);
         JsonGet(j, "TransparentPSFilePath", m_transparentPSFilePath);
         JsonGet(j, "RenderType", m_renderType);
+        JsonGet(j, "BillboardType", m_billboardType);
         JsonGet(j, "Color", m_color);
         JsonGet(j, "CullMode", m_cullMode);
 
@@ -354,6 +357,14 @@ namespace engine
             return;
         }
 
+        if (type == RenderType::Shadow)
+        {
+            if (!m_castShadow || m_renderType == MaterialRenderType::Transparent)
+            {
+                return;
+            }
+        }
+
         const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
 
         // 1. 공통 State 설정 (IA)
@@ -365,18 +376,161 @@ namespace engine
         deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R16_UINT, 0);
         deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout()); // PositionTexCoordVertex 레이아웃
 
-        // 2. World Matrix 계산 (PPU 적용)
         // 100 픽셀 = 1 유닛 (프로젝트 정책에 따라 상수화 추천)
-        const float ppu = 100.0f;
-        float width = m_width;//m_texture->GetWidth();
-        float height = m_height;// m_texture->GetHeight();
+        constexpr float ppu = 100.0f;
 
         // 이미지 원본 비율에 맞춰 스케일 적용
-        Vector3 imageScale(width / ppu, height / ppu, 1.0f);
+        const Vector3 imageScale(m_width / ppu * m_uvScale.x, m_height / ppu * m_uvScale.y, 1.0f);
 
         // (Local Quad 1x1) * (ImageRatio) * (Transform)
-        Matrix scaleMatrix = Matrix::CreateScale(imageScale);
-        Matrix finalWorld = scaleMatrix * GetTransform()->GetWorld();
+        const Matrix scaleMatrix = Matrix::CreateScale(imageScale);
+        //const Matrix finalWorld = scaleMatrix * GetTransform()->GetWorld();
+
+        Matrix finalWorld;
+
+        if (m_billboardType == BillboardType::None)
+        {
+            // 기본: Transform의 World 행렬 그대로 사용
+            finalWorld = scaleMatrix * GetTransform()->GetWorld();
+        }
+        else
+        {
+            // 빌보드 처리
+            auto transform = GetTransform();
+            Vector3 worldPos = transform->GetWorldPosition();
+            Vector3 worldScale = transform->GetLocalScale(); // 부모 스케일 무시하고 로컬 스케일만 적용? 혹은 GetWorldScale() 필요
+            // 카메라 정보 가져오기
+            // SceneManager를 통해 현재 활성 씬의 카메라를 가져옵니다.
+            auto scene = SceneManager::Get().GetScene();
+            auto camera = scene ? scene->GetMainCamera() : nullptr;
+            if (camera)
+            {
+                Vector3 cameraPos = camera->GetTransform()->GetWorldPosition();
+                Vector3 forward = cameraPos - worldPos; // Sprite -> Camera 방향
+
+                if (m_billboardType == BillboardType::Spherical)
+                {
+                    // 모든 축에서 바라봄
+                    // forward 벡터를 정규화
+                    forward.Normalize();
+
+                    // Up 벡터는 카메라의 Up 벡터를 쓰거나, 월드 Up(0,1,0)과 forward를 이용해 계산
+                    // 여기서는 간단하게 Matrix::CreateBillboard 사용
+                    // 주의: CreateBillboard는 "Camera Position"과 "Object Position"을 인자로 받습니다.
+                    // (DirectXMath 문서 확인 필요: CreateBillboard(object, cameraPos, cameraUp, cameraForward)
+
+                    // Matrix::CreateBillboard:
+                    // Builds a transformation matrix where the object is positioned at "objectPosition" 
+                    // and faces "cameraPosition".
+
+                    Vector3 cameraUp = camera->GetTransform()->GetUp();
+
+                    Matrix billboard = Matrix::CreateBillboard(worldPos, cameraPos, cameraUp);
+
+                    // Scale 적용 (이미지 비율 * 오브젝트 스케일)
+                    // CreateBillboard는 회전/이동만 포함하므로 스케일링은 별도로 곱해줘야 함
+                    // 순서: Scale -> Billboard
+
+                    // 전체 스케일 (이미지 보정 * 오브젝트 스케일)
+                    Matrix totalScale = Matrix::CreateScale(imageScale * worldScale);
+                    finalWorld = totalScale * billboard;
+                }
+                else if (m_billboardType == BillboardType::Cylindrical)
+                {
+                    // Y축 회전만 (수직 빌보드)
+                    // Project forward vector to XZ plane
+                    forward.y = 0.0f;
+                    if (forward.LengthSquared() > 0.0001f) // 0 벡터 방지
+                    {
+                        forward.Normalize();
+
+                        // Y축 회전 행렬 생성 (At, Eye, Up)
+                        // LookAt은 View Matrix를 만드므로, World Matrix를 만들려면 CreateWorld나 LookTo 등을 써야 함.
+                        // Matrix::CreateConstrainedBillboard 사용 가능
+                        // Builds a transformation matrix where the object faces the camera but is constrained to rotate only around a specified axis.
+
+                        Vector3 rotateAxis(0, 1, 0); // Y축
+
+                        // CreateConstrainedBillboard(objPos, camPos, rotateAxis, camForward, objForward)
+                        // 보통 objForward는 (0,0,1)
+
+                        Matrix billboard = Matrix::CreateConstrainedBillboard(worldPos, cameraPos, rotateAxis);
+
+                        Matrix totalScale = Matrix::CreateScale(imageScale * worldScale);
+                        finalWorld = totalScale * billboard;
+                    }
+                    else
+                    {
+                        // 바로 위/아래에 있어서 방향을 알 수 없는 경우 회전 안함
+                        finalWorld = scaleMatrix * transform->GetWorld();
+                    }
+                }
+                else if (m_billboardType == BillboardType::ViewPlaneAligned)
+                {
+                    // [NEW] 카메라 평면과 평행
+                    // 카메라의 회전 행렬을 그대로 가져오면 됨
+                    // (스프라이트의 Forward(-Z)가 카메라의 Forward(Z)와 반대가 되도록? 
+                    //  보통 쿼드는 Z-가 앞인데 카메라는 Z+를 봄 (RH/LH 따름). 
+                    //  단순하게는 카메라의 Rotation Matrix를 그대로 쓰면 됨)
+
+                    // Camera World Matrix에서 Rotation 부분만 추출
+                    Matrix camWorld = camera->GetWorld();
+
+                    // Translation 제거
+                    camWorld._41 = 0; camWorld._42 = 0; camWorld._43 = 0;
+
+                    // Scale 제거 (카메라에 스케일이 있다면 문제될 수 있으니 정규화 필요)
+                    Vector3 right = Vector3(camWorld._11, camWorld._12, camWorld._13);
+                    Vector3 up = Vector3(camWorld._21, camWorld._22, camWorld._23);
+                    Vector3 fwd = Vector3(camWorld._31, camWorld._32, camWorld._33);
+
+                    right.Normalize();
+                    up.Normalize();
+                    fwd.Normalize();
+
+                    Matrix billboard = Matrix::Identity;
+                    billboard.Right(right);
+                    billboard.Up(up);
+                    billboard.Forward(fwd);
+
+                    // 최종 행렬: Scale * Rotation(Camera) * Translation(Object)
+                    Matrix totalScale = Matrix::CreateScale(imageScale * worldScale);
+                    Matrix translation = Matrix::CreateTranslation(worldPos);
+
+                    finalWorld = totalScale * billboard * translation;
+                }
+                else if (m_billboardType == BillboardType::ViewPlaneVertical)
+                {
+                    // [NEW] View Plane Vertical
+                    // 카메라의 Forward를 가져와서 Y축 성분을 제거하고 정규화
+                    Vector3 cameraForward = camera->GetForward();
+                    cameraForward.y = 0.0f;
+
+                    if (cameraForward.LengthSquared() > 0.0001f)
+                    {
+                        cameraForward.Normalize();
+
+                        // CreateWorld(pos, forward, up) - Y축은 (0,1,0) 고정
+                        // Sprite의 Forward를 Camera의 ProjectOnXZ(Forward)와 일치시킴
+                        Matrix bb = Matrix::CreateWorld(worldPos, -cameraForward, Vector3::UnitY);
+
+                        Matrix totalScale = Matrix::CreateScale(imageScale * worldScale);
+                        finalWorld = totalScale * bb;
+                    }
+                    else
+                    {
+                        // 카메라가 완전히 위/아래를 볼 때는 회전하지 않음 (기존 transform 유지)
+                        const Matrix scaleMatrix = Matrix::CreateScale(imageScale);
+                        finalWorld = scaleMatrix * transform->GetWorld();
+                    }
+                }
+            }
+            else
+            {
+                // 카메라가 없으면 일반 렌더링
+                finalWorld = scaleMatrix * transform->GetWorld();
+            }
+        }
 
         CbObject cbObject{};
         cbObject.world = finalWorld.Transpose();
@@ -386,88 +540,70 @@ namespace engine
         deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
         deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object), 1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
 
+        CbSprite cbSprite{};
+        cbSprite.uvOffset = m_uvOffset;
+        cbSprite.uvScale = m_uvScale;
+        cbSprite.pivot = m_pivot;
+
+        deviceContext->UpdateSubresource(m_spriteConstantBuffer->GetRawBuffer(), 0, nullptr, &cbSprite, 0, 0);
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Sprite), 1, m_spriteConstantBuffer->GetBuffer().GetAddressOf());
+
         // Sampler (Point or Linear 확인하여 바인딩)
         // 여기선 m_samplerState가 이미 Initialize 혹은 OnGui에서 설정되었다고 가정
         deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
 
         deviceContext->RSSetState(m_rasterizerState->GetRawRasterizerState());
 
-        // 3. RenderType 분기
-        // -----------------------------------------------------------------------
-        // [Shadow Pass]
-        // -----------------------------------------------------------------------
         if (type == RenderType::Shadow)
         {
-            if (!m_castShadow) return; // 그림자 끄기 옵션
-            if (m_renderType == MaterialRenderType::Transparent) return; // 투명 객체는 보통 그림자 X
-
-            // Shadow Vertex Shader
-            // (주의: Static Mesh용 Shadow VS 사용. Skinned 아님)
             deviceContext->VSSetShader(m_shadowVS->GetRawShader(), nullptr, 0);
 
-            // Cutout(Alpha Test) 일 경우 Pixel Shader 필요
             if (m_renderType == MaterialRenderType::Cutout)
             {
                 deviceContext->PSSetShader(m_shadowCutoutPS->GetRawShader(), nullptr, 0);
                 ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
                 deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &srv);
             }
-            else // Opaque
+            else
             {
                 deviceContext->PSSetShader(nullptr, nullptr, 0);
             }
 
-            // Quad Index Draw (6 indices)
             deviceContext->DrawIndexed(6, 0, 0);
         }
-        // -----------------------------------------------------------------------
-        // [Main Pass] (Opaque, Cutout, Transparent)
-        // -----------------------------------------------------------------------
         else
         {
-            // 현재 렌더링 패스와 내 머티리얼 타입이 일치하는지 확인
-            MaterialRenderType targetType;
-            if (type == RenderType::Opaque) targetType = MaterialRenderType::Opaque;
-            else if (type == RenderType::Cutout) targetType = MaterialRenderType::Cutout;
-            else targetType = MaterialRenderType::Transparent;
+            switch (type)
+            {
+            case RenderType::Opaque:
+                deviceContext->PSSetShader(m_opaquePS->GetRawShader(), nullptr, 0);
+                break;
 
-            if (m_renderType != targetType) return;
+            case RenderType::Cutout:
+                deviceContext->PSSetShader(m_cutoutPS->GetRawShader(), nullptr, 0);
+                break;
 
-
-            // -- Vertex Shader --
+            case RenderType::Transparent:
+                deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
+                break;
+            }
+            
             deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
 
-
-            // -- Material Data --
             CbMaterial cbMaterial{};
-            cbMaterial.materialBaseColor = m_color; // Tint Color가 있다면 여기에 적용
-            cbMaterial.materialEmissive = Vector3(0, 0, 0);
-            cbMaterial.materialRoughness = 1.0f; // 스프라이트는 거칠게 (반사 적게)
+            cbMaterial.materialBaseColor = m_color;
+            cbMaterial.materialEmissive = Vector3(0.0f, 0.0f, 0.0f);
+            cbMaterial.materialRoughness = 1.0f;
             cbMaterial.materialMetalness = 0.0f;
 
             deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
             deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
-
-
-            // -- Pixel Shader Selection --
-            if (m_renderType == MaterialRenderType::Opaque)
-                deviceContext->PSSetShader(m_opaquePS->GetRawShader(), nullptr, 0);
-            else if (m_renderType == MaterialRenderType::Cutout)
-                deviceContext->PSSetShader(m_cutoutPS->GetRawShader(), nullptr, 0);
-            else if (m_renderType == MaterialRenderType::Transparent)
-                deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
-
-
-            // -- Texture Binding --
+            
             ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
             deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &srv);
 
-
-            // -- Draw --
             deviceContext->DrawIndexed(6, 0, 0);
         }
-
-        //deviceContext->RSSetState(nullptr);
     }
 
     DirectX::BoundingBox SpriteRenderer::GetBounds() const

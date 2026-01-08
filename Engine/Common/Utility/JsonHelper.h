@@ -80,4 +80,104 @@ namespace engine
             }
         }
     }
+
+    inline bool DrawFileSelector(const char* label, const std::string& basePath, const std::string& extension, std::string& outSelectedPath)
+    {
+        namespace fs = std::filesystem;
+        bool result = false;
+        if (ImGui::Button(label))
+        {
+            ImGui::OpenPopup(label);
+        }
+
+        // 팝업 ID가 겹치지 않게 label 사용
+        if (ImGui::BeginPopupModal(label, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            if (ImGui::Button("Cancel"))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::Separator();
+
+            ImGui::BeginChild("FileList", ImVec2(400, 300), true);
+            if (fs::exists(basePath))
+            {
+                for (const auto& entry : fs::recursive_directory_iterator(basePath))
+                {
+                    if (entry.is_regular_file())
+                    {
+                        // 확장자 체크
+                        if (entry.path().extension() == extension)
+                        {
+                            std::string fullPath = entry.path().generic_string();
+                            // 선택 가능 항목
+                            if (ImGui::Selectable(fullPath.c_str()))
+                            {
+                                outSelectedPath = fullPath;
+                                result = true;
+                                ImGui::CloseCurrentPopup();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Path not found: %s", basePath.c_str());
+            }
+            ImGui::EndChild();
+            ImGui::EndPopup();
+        }
+        return result;
+    }
+
+    inline bool DrawFileSelector(const char* label, const std::string& basePath, const std::vector<std::string>& extensions, std::string& outSelectedPath)
+    {
+        namespace fs = std::filesystem;
+        bool result = false;
+        if (ImGui::Button(label))
+        {
+            ImGui::OpenPopup(label);
+        }
+
+        // 팝업 ID가 겹치지 않게 label 사용
+        if (ImGui::BeginPopupModal(label, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            if (ImGui::Button("Cancel"))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::Separator();
+
+            ImGui::BeginChild("FileList", ImVec2(400, 300), true);
+            if (fs::exists(basePath))
+            {
+                for (const auto& entry : fs::recursive_directory_iterator(basePath))
+                {
+                    if (entry.is_regular_file())
+                    {
+                        // 확장자 체크
+                        if (std::find(extensions.begin(), extensions.end(), entry.path().extension()) != extensions.end())
+                        {
+                            std::string fullPath = entry.path().generic_string();
+                            // 선택 가능 항목
+                            if (ImGui::Selectable(fullPath.c_str()))
+                            {
+                                outSelectedPath = fullPath;
+                                result = true;
+                                ImGui::CloseCurrentPopup();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Path not found: %s", basePath.c_str());
+            }
+            ImGui::EndChild();
+            ImGui::EndPopup();
+        }
+        return result;
+    }
 }

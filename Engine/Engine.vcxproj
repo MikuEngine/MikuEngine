@@ -177,6 +177,8 @@
     <ClCompile Include="Framework\Asset\SimpleMeshData.cpp" />
     <ClCompile Include="Framework\Asset\SkeletalMeshData.cpp" />
     <ClCompile Include="Framework\Asset\SkeletonData.cpp" />
+    <ClCompile Include="Framework\Asset\SpriteAnimationData.cpp" />
+    <ClCompile Include="Framework\Asset\SpriteData.cpp" />
     <ClCompile Include="Framework\Asset\StaticMeshData.cpp" />
     <ClCompile Include="Framework\Asset\MaterialData.cpp" />
     <ClCompile Include="Framework\Object\Component\Animator.cpp" />
@@ -188,6 +190,7 @@
     <ClCompile Include="Framework\Object\Component\Renderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Script.cpp" />
     <ClCompile Include="Framework\Object\Component\SkeletalMeshRenderer.cpp" />
+    <ClCompile Include="Framework\Object\Component\SpriteAnimator.cpp" />
     <ClCompile Include="Framework\Object\Component\SpriteRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\StaticMeshRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Transform.cpp" />
@@ -253,6 +256,8 @@
     <ClInclude Include="Framework\Asset\SimpleMeshData.h" />
     <ClInclude Include="Framework\Asset\SkeletalMeshData.h" />
     <ClInclude Include="Framework\Asset\SkeletonData.h" />
+    <ClInclude Include="Framework\Asset\SpriteAnimationData.h" />
+    <ClInclude Include="Framework\Asset\SpriteData.h" />
     <ClInclude Include="Framework\Asset\StaticMeshData.h" />
     <ClInclude Include="Framework\Object\Component\Animator.h" />
     <ClInclude Include="Framework\Object\Component\SkeletalAnimator.h" />
@@ -263,6 +268,7 @@
     <ClInclude Include="Framework\Object\Component\Renderer.h" />
     <ClInclude Include="Framework\Object\Component\Script.h" />
     <ClInclude Include="Framework\Object\Component\SkeletalMeshRenderer.h" />
+    <ClInclude Include="Framework\Object\Component\SpriteAnimator.h" />
     <ClInclude Include="Framework\Object\Component\SpriteRenderer.h" />
     <ClInclude Include="Framework\Object\Component\StaticMeshRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Transform.h" />

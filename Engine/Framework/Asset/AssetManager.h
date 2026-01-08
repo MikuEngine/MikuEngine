@@ -11,6 +11,8 @@ namespace engine
     class AnimationData;
     class SkeletonData;
     class SimpleMeshData;
+    class SpriteData;
+    class SpriteAnimationData;
 
     class AssetManager :
         public Singleton<AssetManager>
@@ -29,6 +31,8 @@ namespace engine
         std::unordered_map<std::string, std::weak_ptr<SkeletalMeshData>> m_skeletalMeshDatas;
         std::unordered_map<std::string, std::weak_ptr<AnimationData>> m_animationDatas;
         std::unordered_map<std::string, std::weak_ptr<SimpleMeshData>> m_simpleMeshDatas;
+        std::unordered_map<std::string, std::weak_ptr<SpriteData>> m_spriteDatas;
+        std::unordered_map<std::string, std::weak_ptr<SpriteAnimationData>> m_spriteAnimationDatas;
 
 
     private:
@@ -45,6 +49,8 @@ namespace engine
         std::shared_ptr<AnimationData> GetOrCreateAnimationData(const std::string& filePath);
         std::shared_ptr<SimpleMeshData> GetOrCreateSimpleMeshData(const std::string& filePath);
         std::shared_ptr<SkeletalMeshData> GetOrCreateSkeletalMeshData(const std::string& filePath);
+        std::shared_ptr<SpriteData> GetOrCreateSpriteData(const std::string& filePath);
+        std::shared_ptr<SpriteAnimationData> GetOrCreateSpriteAnimationData(const std::string& filePath);
 
     private:
         friend class Singleton<AssetManager>;

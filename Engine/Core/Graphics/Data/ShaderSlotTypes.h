@@ -38,5 +38,7 @@ enum class ConstantBufferSlot
     Global = 0,
     Material = 1,
     Object = 2,
-    Bone = 3
+    Bone = 3,
+    Blur = 4,
+    Sprite = 5
 };

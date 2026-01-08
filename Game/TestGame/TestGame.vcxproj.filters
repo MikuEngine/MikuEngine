@@ -21,9 +21,6 @@
     <ClCompile Include="Manager\TestManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\TestScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Script\TestScript.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -37,6 +34,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\FreeCameraController.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Rotator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\SpritePlayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -61,6 +64,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\FreeCameraController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Rotator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\SpritePlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,6 +8,8 @@
 #include "Framework/Asset/SkeletonData.h"
 #include "Framework/Asset/AnimationData.h"
 #include "Framework/Asset/SimpleMeshData.h"
+#include "Framework/Asset/SpriteData.h"
+#include "Framework/Asset/SpriteAnimationData.h"
 
 namespace engine
 {
@@ -143,5 +145,41 @@ namespace engine
         m_tempAssets[m_tempAssetIndex++ % MAX_TEMP_ASSET] = fbx;
 
         return fbx->GetSkeletonData();
+    }
+
+    std::shared_ptr<SpriteData> AssetManager::GetOrCreateSpriteData(const std::string& filePath)
+    {
+        if (auto find = m_spriteDatas.find(filePath); find != m_spriteDatas.end())
+        {
+            if (!find->second.expired())
+            {
+                return find->second.lock();
+            }
+        }
+
+        auto spriteData = std::make_shared<SpriteData>();
+        spriteData->Create(filePath);
+
+        m_spriteDatas[filePath] = spriteData;
+
+        return spriteData;
+    }
+
+    std::shared_ptr<SpriteAnimationData> AssetManager::GetOrCreateSpriteAnimationData(const std::string& filePath)
+    {
+        if (auto find = m_spriteAnimationDatas.find(filePath); find != m_spriteAnimationDatas.end())
+        {
+            if (!find->second.expired())
+            {
+                return find->second.lock();
+            }
+        }
+
+        auto spriteAnimationData = std::make_shared<SpriteAnimationData>();
+        spriteAnimationData->Create(filePath);
+
+        m_spriteAnimationDatas[filePath] = spriteAnimationData;
+
+        return spriteAnimationData;
     }
 }

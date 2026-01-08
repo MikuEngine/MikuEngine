@@ -35,6 +35,8 @@ namespace engine
         const Quaternion& GetLocalRotation() const;
         const Vector3& GetLocalScale() const;
 
+        Vector3 GetWorldPosition();
+
         Vector3 GetLocalEulerAngles() const;
 
         const Matrix& GetWorld();
@@ -59,6 +61,9 @@ namespace engine
         void UnmarkDirtyThisFrame();
         bool IsAncestorOf(Transform* other) const;
         bool IsDescendantOf(Transform* other) const;
+
+        void Rotate(const Vector3& axis, float angleDegree, bool isLocal = true);
+        void Translate(const Vector3& translation, bool isLocal = true);
 
     public:
         void OnGui() override;

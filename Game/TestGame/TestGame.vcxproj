@@ -147,9 +147,16 @@
   <ItemGroup>
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
-    <ClCompile Include="Scene\TestScene.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
     <ClCompile Include="Script\FreeCameraController.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Script\Rotator.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Script\SpritePlayer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -185,6 +192,14 @@
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
     <ClInclude Include="Script\FreeCameraController.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\Rotator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\SpritePlayer.h">
       <SubType>
       </SubType>
     </ClInclude>

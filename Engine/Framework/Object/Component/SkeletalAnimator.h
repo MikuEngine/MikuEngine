@@ -40,7 +40,7 @@ namespace engine
         void Play(const std::string& animationName, bool loop = true);
         void PlayCrossFade(int index, float transitionDuration, bool loop = true);
         void PlayCrossFade(const std::string& animationName, float transitionDuration, bool loop = true);
-        void Update();
+        void Update() override;
 
         const BoneMatrixArray& GetFinalBoneMatrices() const;
 

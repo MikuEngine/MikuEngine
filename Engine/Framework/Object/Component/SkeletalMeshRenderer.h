@@ -62,6 +62,9 @@ namespace engine
         SkeletalMeshRenderer();
         ~SkeletalMeshRenderer();
 
+        static void* operator new(size_t size);
+        static void operator delete(void* ptr);
+
         void Initialize() override;
         void Awake() override;
         void Update();

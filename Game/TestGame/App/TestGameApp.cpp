@@ -7,6 +7,7 @@
 #include "Framework/Object/Component/StaticMeshRenderer.h"
 #include "Framework/Object/Component/SkeletalMeshRenderer.h"
 #include "Framework/Object/Component/SkeletalAnimator.h"
+#include "Framework/Object/Component/SpriteAnimator.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/Camera.h"
 

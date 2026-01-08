@@ -105,6 +105,13 @@ cbuffer Blur : register(b4)
     float2 __pad1_Blur;
 }
 
+cbuffer Sprite : register(b5)
+{
+    float2 g_uvOffset;
+    float2 g_uvScale;
+    float2 g_pivot;
+    float2 __pad1_Sprite;
+};
 
 struct VS_INPUT_POSITION
 {

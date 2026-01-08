@@ -11,6 +11,8 @@
 #include "Core/Graphics/Data/Vertex.h"
 #include "Core/Graphics/Resource/Texture.h"
 #include "Core/Graphics/Resource/RasterizerState.h"
+#include "Core/Graphics/Data/ConstantBufferTypes.h"
+#include "Core/Graphics/Data/ShaderSlotTypes.h"
 
 namespace engine
 {
@@ -297,7 +299,7 @@ namespace engine
 
             CbBlur cb{};
             cb.blurDir = Vector2(1.0f / (m_resolutionWidth / 2.0f), 0.0f);
-            m_deviceContext->PSSetConstantBuffers(4, 1, m_blurConstantBuffer.GetAddressOf());
+            m_deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Blur), 1, m_blurConstantBuffer.GetAddressOf());
             m_deviceContext->UpdateSubresource(m_blurConstantBuffer.Get(), 0, nullptr, &cb, 0, 0);
 
             DrawFullscreenQuad();
@@ -312,7 +314,7 @@ namespace engine
 
             CbBlur cb{};
             cb.blurDir = Vector2(0.0f, 1.0f / (m_resolutionHeight / 2.0f));
-            m_deviceContext->PSSetConstantBuffers(4, 1, m_blurConstantBuffer.GetAddressOf());
+            m_deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Blur), 1, m_blurConstantBuffer.GetAddressOf());
             m_deviceContext->UpdateSubresource(m_blurConstantBuffer.Get(), 0, nullptr, &cb, 0, 0);
 
             DrawFullscreenQuad();

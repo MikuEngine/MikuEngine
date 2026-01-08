@@ -62,6 +62,11 @@ namespace engine
         return m_localScale;
     }
 
+    Vector3 Transform::GetWorldPosition()
+    {
+        return GetWorld().Translation();
+    }
+
     Vector3 Transform::GetLocalEulerAngles() const
     {
         Vector3 euler = m_localRotation.ToEuler();
@@ -208,6 +213,45 @@ namespace engine
             current = current->GetParent();
         }
         return false;
+    }
+
+    void Transform::Rotate(const Vector3& axis, float angleDegree, bool isLocal)
+    {
+        float radian = ToRadian(angleDegree);
+
+        Vector3 normalizedAxis = axis;
+        normalizedAxis.Normalize();
+
+        Quaternion deltaRotation = Quaternion::CreateFromAxisAngle(normalizedAxis, radian);
+
+        if (isLocal)
+        {
+            m_localRotation = m_localRotation * deltaRotation;
+        }
+        else
+        {
+            m_localRotation = deltaRotation * m_localRotation;
+        }
+
+        m_localRotation.Normalize();
+
+        MarkDirty();
+    }
+
+    void Transform::Translate(const Vector3& translation, bool isLocal)
+    {
+        if (isLocal)
+        {
+            Vector3 localTranslation = Vector3::Transform(translation, m_localRotation);
+
+            m_localPosition += localTranslation;
+        }
+        else
+        {
+            m_localPosition += translation;
+        }
+
+        MarkDirty();
     }
 
     void Transform::OnGui()

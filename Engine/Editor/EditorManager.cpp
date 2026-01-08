@@ -3,6 +3,8 @@
 
 #include <fstream>
 
+#include "Common/Utility/Profiling.h"
+#include "Common/Utility/StringHelper.h"
 #include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
@@ -566,7 +568,7 @@ namespace engine
         {
             for (const auto& gameObject : scene->GetGameObjects())
             {
-                if (gameObject->GetTransform()->GetParent() == nullptr)
+                if (gameObject && gameObject->GetTransform()->GetParent() == nullptr)
                 {
                     DrawEntityNode(gameObject.get());
                 }
@@ -613,7 +615,10 @@ namespace engine
 
                 // 삭제 후 바로 팝업 닫고 리턴 (더 그리면 유효하지 않은 포인터 접근 위험)
                 ImGui::EndPopup();
-                ImGui::TreePop();
+                if (opened)
+                {
+                    ImGui::TreePop();
+                }
 
                 return;
             }
@@ -663,6 +668,8 @@ namespace engine
             return;
         }
         
+        ImGui::PushID(m_selectedObject);
+
         char buf[256];
         strcpy_s(buf, m_selectedObject->GetName().c_str());
         if (ImGui::InputText("Name", buf, 256))
@@ -734,6 +741,7 @@ namespace engine
             ImGui::EndPopup();
         }
 
+        ImGui::PopID();
         ImGui::End();
     }
 
@@ -804,6 +812,14 @@ namespace engine
             ImGui::Text("FXAA");
             ImGui::Image((ImTextureID)bufferTextures.aaBuffer, ImVec2(128, 128));
             ImGui::EndGroup();
+        }
+
+        if (ImGui::CollapsingHeader("Profile", ImGuiTreeNodeFlags_CollapsingHeader))
+        {
+            ImGui::Text("FPS: %d", Profiling::GetLastFPS());
+            ImGui::Text("DRAM: %s", FormatBytes(Profiling::GetDRAMUsage()).c_str());
+            ImGui::Text("VRAM: %s", FormatBytes(Profiling::GetVRAMUsage()).c_str());
+            ImGui::Text("PageFile: %s", FormatBytes(Profiling::GetPageFileUsage()).c_str());
         }
 
         ImGui::End();

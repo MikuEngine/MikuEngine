@@ -1,0 +1,115 @@
+{
+    "name": "Explosion.png",
+    "width": 960,
+    "height": 576,
+    "sprites": [
+        {
+            "name": "Explosion_a_0",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_1",
+            "x": 192.0,
+            "y": 0.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_2",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_3",
+            "x": 576.0,
+            "y": 0.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_4",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_5",
+            "x": 0.0,
+            "y": 192.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_6",
+            "x": 192.0,
+            "y": 192.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_7",
+            "x": 384.0,
+            "y": 192.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_8",
+            "x": 576.0,
+            "y": 192.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_9",
+            "x": 768.0,
+            "y": 192.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_10",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Explosion_a_11",
+            "x": 192.0,
+            "y": 384.0,
+            "width": 192.0,
+            "height": 192.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        }
+    ]
+}

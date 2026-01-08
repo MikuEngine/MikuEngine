@@ -244,6 +244,8 @@ namespace engine
 #else
         GamePlayUpdate();
 #endif // _DEBUG
+
+        Profiling::UpdateMemoryUsage();
     }
 
     void WinApp::Render()

@@ -76,6 +76,20 @@ namespace engine
 	{
 		Matrix boneTransform[128];
 	};
+
+	struct CbBlur
+	{
+		Vector2 blurDir;
+		float __pad[2];
+	};
+
+	struct CbSprite
+	{
+		Vector2 uvOffset;
+		Vector2 uvScale;
+		Vector2 pivot;
+		float __pad[2];
+	};
 }
 
 #pragma warning(pop)
