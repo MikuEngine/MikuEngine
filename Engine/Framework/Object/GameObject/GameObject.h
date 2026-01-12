@@ -17,7 +17,9 @@ namespace engine
         Transform* m_transform;
         std::int32_t m_sceneIndex = -1;
 
+        bool m_hasAwoken = false;
         bool m_isPendingKill = false;
+        bool m_activeInHierarchy = true;
 
     public:
         GameObject();
@@ -32,10 +34,21 @@ namespace engine
 
         void SetName(const std::string& name);
 
+        bool HasAwoken() const;
+        void Awake();
         void Destroy();
         bool IsPendingKill() const;
         void RemoveComponentFast(Component* component);
+
         void BroadcastOnDestroy();
+
+        bool IsActiveSelf() const;
+        bool IsActive() const override;
+        void SetActive(bool active) override;
+        void UpdateActiveInHierarchy(bool parentActive);
+
+    private:
+        void RegisterComponentPendingAdd(Component* component);
 
     public:
         template <std::derived_from<Component> T, typename... Args>
@@ -48,7 +61,7 @@ namespace engine
 
             ptr->m_owner = this;
             ptr->m_gameObjectIndex = static_cast<std::int32_t>(m_components.size() - 1);
-            SceneManager::Get().GetScene()->RegisterPendingAdd(ptr);
+            RegisterComponentPendingAdd(ptr);
 
             return ptr;
         }

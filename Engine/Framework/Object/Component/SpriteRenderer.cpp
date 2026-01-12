@@ -79,8 +79,6 @@ namespace engine
 
     void SpriteRenderer::Initialize()
     {
-        m_simpleMeshData = AssetManager::Get().GetOrCreateSimpleMeshData("Resource/Model/Quad.fbx");
-
         if (m_texture == nullptr)
         {
             m_texture = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
@@ -100,8 +98,8 @@ namespace engine
             m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
         }
 
-        m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<PositionTexCoordVertex>("Resource/Model/Quad.fbx", m_simpleMeshData->GetVertices());
-        m_indexBuffer = ResourceManager::Get().GetOrCreateIndexBuffer("Resource/Model/Quad.fbx", m_simpleMeshData->GetIndices());
+        m_vertexBuffer = ResourceManager::Get().GetGeometryVertexBuffer("DefaultQuad");
+        m_indexBuffer = ResourceManager::Get().GetGeometryIndexBuffer("DefaultQuad");
 
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Quad_VS.hlsl");
 
@@ -373,7 +371,7 @@ namespace engine
 
         deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
-        deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R16_UINT, 0);
+        deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), m_indexBuffer->GetIndexFormat(), 0);
         deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout()); // PositionTexCoordVertex 레이아웃
 
         // 100 픽셀 = 1 유닛 (프로젝트 정책에 따라 상수화 추천)
@@ -569,7 +567,7 @@ namespace engine
                 deviceContext->PSSetShader(nullptr, nullptr, 0);
             }
 
-            deviceContext->DrawIndexed(6, 0, 0);
+            deviceContext->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
         }
         else
         {
@@ -602,7 +600,7 @@ namespace engine
             ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
             deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &srv);
 
-            deviceContext->DrawIndexed(6, 0, 0);
+            deviceContext->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
         }
     }
 

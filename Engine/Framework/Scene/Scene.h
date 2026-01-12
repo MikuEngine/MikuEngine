@@ -20,6 +20,7 @@ namespace engine
         std::vector<std::unique_ptr<GameObject>> m_incubator;
         std::vector<GameObject*> m_gameObjectAddList;
         std::vector<Component*> m_componentAddList;
+        std::vector<Component*> m_componentAddProcList;
 
         // 삭제 대기열
         std::vector<GameObject*> m_gameObjectKillList;
@@ -38,7 +39,6 @@ namespace engine
 
         void ResetToDefaultScene();
         void Clear();
-        void OnPlayStart();
 
         void RegisterPendingAdd(GameObject* gameObject);
         void RegisterPendingAdd(Component* component);

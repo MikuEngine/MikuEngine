@@ -6,7 +6,7 @@ namespace engine
 {
     enum class LightType
     {
-        Directional,
+        Global,
         Point,
         Spot
     };
@@ -15,5 +15,12 @@ namespace engine
         public Component
     {
         //REGISTER_COMPONENT(Light)
+
+    private:
+        LightType m_type = LightType::Global;
+        Vector3 m_color{ 1.0f, 1.0f, 1.0f };
+        float m_intensity = 1.0f;
+        float m_range = 10.0f;
+        float m_spotAngle = 45.0f;
     };
 }

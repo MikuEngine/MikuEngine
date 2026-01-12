@@ -4,18 +4,15 @@
 
 namespace game
 {
-    class Rotator :
-        public engine::Script<Rotator>
+    class Test2 :
+        public engine::Script<Test2>
     {
-        REGISTER_COMPONENT(Rotator)
-
-    private:
-        float m_speed = 0.0f;
+        REGISTER_COMPONENT(Test2)
 
     public:
         void Awake() override;
         //void Start() override;
-        void Update() override;
+        //void Update() override;
 
     public:
         void OnGui() override;

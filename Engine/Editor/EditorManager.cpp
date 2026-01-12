@@ -112,9 +112,10 @@ namespace engine
                 auto scene = SceneManager::Get().GetScene();
                 g_tempScene.clear();
                 scene->SaveToJson(g_tempScene);
+                scene->LoadFromJson(g_tempScene);
+
                 m_editorState = EditorState::Play;
 
-                scene->OnPlayStart();
 
                 m_selectedObject = nullptr;
             }
@@ -683,6 +684,8 @@ namespace engine
             m_selectedObject->GetTransform()->OnGui();
         }
         
+        ImGui::Spacing();
+
         auto& components = m_selectedObject->GetComponents();
         int removeIndex = -1;
         for (int i = 0; i < components.size(); ++i)
@@ -714,6 +717,8 @@ namespace engine
             }
 
             ImGui::PopID();
+
+            ImGui::Spacing();
         }
         
         if (removeIndex != -1)

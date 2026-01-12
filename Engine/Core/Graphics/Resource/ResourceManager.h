@@ -3,6 +3,7 @@
 #include "Core/Graphics/Resource/ResourceKey.h"
 #include "Core/Graphics/Resource/VertexBuffer.h"
 #include "Core/Graphics/Resource/DefaultResourceTypes.h"
+#include "Common/Utility/CommonTypes.h"
 
 namespace engine
 {
@@ -43,18 +44,26 @@ namespace engine
         std::array<std::shared_ptr<DepthStencilState>, static_cast<size_t>(DefaultDepthStencilType::Count)> m_defaultDepthStencilStates;
         std::array<std::shared_ptr<BlendState>, static_cast<size_t>(DefaultBlendType::Count)> m_defaultBlendStates;
 
+        std::vector<std::shared_ptr<Resource>> m_globalCachedResources;
+        std::vector<std::shared_ptr<Resource>> m_sceneCachedResources;
+
     private:
         ResourceManager() = default;
         ~ResourceManager();
 
     public:
         void Initialize();
+
+        void CleanupSceneScope();
         void Cleanup();
 
     public:
         // VertexBuffer는 버텍스 타입별로 구분이 필요하기 때문에 템플릿으로 만듦
         template <IsVertex T>
-        std::shared_ptr<VertexBuffer> GetOrCreateVertexBuffer(const std::string& filePath, const std::vector<T>& vertices)
+        std::shared_ptr<VertexBuffer> GetOrCreateVertexBuffer(
+            const std::string& filePath,
+            const std::vector<T>& vertices,
+            LifeScope scope = LifeScope::Owning)
         {
             VertexBufferKey key{ filePath, T::vertexFormat };
             if (auto find = m_vertexBuffers.find(key); find != m_vertexBuffers.end())
@@ -68,36 +77,65 @@ namespace engine
             std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>();
             vertexBuffer->Create(vertices);
 
+            CacheResource(vertexBuffer, scope);
+
             m_vertexBuffers[key] = vertexBuffer;
 
             return vertexBuffer;
         }
 
-        std::shared_ptr<IndexBuffer> GetOrCreateIndexBuffer(const std::string& filePath, const std::vector<DWORD>& indices);
-        std::shared_ptr<IndexBuffer> GetOrCreateIndexBuffer(const std::string& filePath, const std::vector<WORD>& indices);
-        std::shared_ptr<Texture> GetOrCreateTexture(const std::string& filePath);
+        std::shared_ptr<IndexBuffer> GetOrCreateIndexBuffer(
+            const std::string& filePath,
+            const std::vector<DWORD>& indices,
+            LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<IndexBuffer> GetOrCreateIndexBuffer(
+            const std::string& filePath,
+            const std::vector<WORD>& indices,
+            LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<Texture> GetOrCreateTexture(const std::string& filePath, LifeScope scope = LifeScope::Owning);
         std::shared_ptr<Texture> GetOrCreateTexture(
             const std::string& name,
             UINT width,
             UINT height,
             DXGI_FORMAT format,
-            UINT bindFlags);
+            UINT bindFlags,
+            LifeScope scope = LifeScope::Owning);
 
         std::shared_ptr<Texture> GetOrCreateTexture(
             const std::string& name,
             const D3D11_TEXTURE2D_DESC& desc,
             DXGI_FORMAT srvFormat = DXGI_FORMAT_UNKNOWN,
             DXGI_FORMAT rtvFormat = DXGI_FORMAT_UNKNOWN,
-            DXGI_FORMAT dsvFormat = DXGI_FORMAT_UNKNOWN);
+            DXGI_FORMAT dsvFormat = DXGI_FORMAT_UNKNOWN,
+            LifeScope scope = LifeScope::Owning);
 
-        std::shared_ptr<ConstantBuffer> GetOrCreateConstantBuffer(const std::string& name, UINT byteWidth);
-        std::shared_ptr<VertexShader> GetOrCreateVertexShader(const std::string& filePath);
-        std::shared_ptr<PixelShader> GetOrCreatePixelShader(const std::string& filePath);
+        std::shared_ptr<ConstantBuffer> GetOrCreateConstantBuffer(
+            const std::string& name,
+            UINT byteWidth,
+            LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<VertexShader> GetOrCreateVertexShader(
+            const std::string& filePath,
+            LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<PixelShader> GetOrCreatePixelShader(
+            const std::string& filePath,
+            LifeScope scope = LifeScope::Owning);
 
-        std::shared_ptr<SamplerState> GetOrCreateSamplerState(const std::string& name, const D3D11_SAMPLER_DESC& desc);
-        std::shared_ptr<RasterizerState> GetOrCreateRasterizerState(const std::string& name, const D3D11_RASTERIZER_DESC& desc);
-        std::shared_ptr<DepthStencilState> GetOrCreateDepthStencilState(const std::string& name, const D3D11_DEPTH_STENCIL_DESC& desc);
-        std::shared_ptr<BlendState> GetOrCreateBlendState(const std::string& name, const D3D11_BLEND_DESC& desc);
+        std::shared_ptr<SamplerState> GetOrCreateSamplerState(
+            const std::string& name,
+            const D3D11_SAMPLER_DESC& desc,
+            LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<RasterizerState> GetOrCreateRasterizerState(
+            const std::string& name,
+            const D3D11_RASTERIZER_DESC& desc,
+            LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<DepthStencilState> GetOrCreateDepthStencilState(
+            const std::string& name,
+            const D3D11_DEPTH_STENCIL_DESC& desc,
+            LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<BlendState> GetOrCreateBlendState(
+            const std::string& name,
+            const D3D11_BLEND_DESC& desc,
+            LifeScope scope = LifeScope::Owning);
 
         // default
         std::shared_ptr<Texture> GetDefaultTexture(DefaultTextureType type);
@@ -105,6 +143,8 @@ namespace engine
         std::shared_ptr<RasterizerState> GetDefaultRasterizerState(DefaultRasterizerType type);
         std::shared_ptr<DepthStencilState> GetDefaultDepthStencilState(DefaultDepthStencilType type);
         std::shared_ptr<BlendState> GetDefaultBlendState(DefaultBlendType type);
+        std::shared_ptr<VertexBuffer> GetGeometryVertexBuffer(const std::string& name);
+        std::shared_ptr<IndexBuffer> GetGeometryIndexBuffer(const std::string& name);
 
     private:
         void CreateDefaultTextures();
@@ -112,6 +152,9 @@ namespace engine
         void CreateDefaultRasterizerStates();
         void CreateDefaultDepthStencilStates();
         void CreateDefaultBlendStates();
+        void CreateGeometryResources();
+
+        void CacheResource(const std::shared_ptr<Resource>& resource, LifeScope scope);
 
     private:
         friend class Singleton<ResourceManager>;

@@ -42,6 +42,9 @@
     <ClCompile Include="Script\SpritePlayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Script\Test2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl" />
@@ -70,6 +73,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\SpritePlayer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Test2.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

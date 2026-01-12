@@ -47,6 +47,16 @@ namespace engine
         m_name = name;
     }
 
+    bool GameObject::HasAwoken() const
+    {
+        return m_hasAwoken;
+    }
+
+    void GameObject::Awake()
+    {
+        m_hasAwoken = true;
+    }
+
     void GameObject::Destroy()
     {
         if (m_isPendingKill)
@@ -95,9 +105,83 @@ namespace engine
 
     void GameObject::BroadcastOnDestroy()
     {
-        for (auto& comp : m_components)
+        for (auto& component : m_components)
         {
-            comp->OnDestroy();
+            component->OnDestroy();
+        }
+    }
+
+    bool GameObject::IsActiveSelf() const
+    {
+        return m_active;
+    }
+
+    bool GameObject::IsActive() const
+    {
+        return m_activeInHierarchy;
+    }
+
+    void GameObject::SetActive(bool active)
+    {
+        if (m_active == active)
+        {
+            return;
+        }
+
+        m_active = active;
+
+        if (!m_hasAwoken)
+        {
+            return;
+        }
+
+        bool parentActive = true;
+        if (auto parent = m_transform->GetParent(); parent != nullptr)
+        {
+            parentActive = parent->IsActive();
+        }
+
+        UpdateActiveInHierarchy(parentActive);
+    }
+
+    void GameObject::RegisterComponentPendingAdd(Component* component)
+    {
+        SceneManager::Get().GetScene()->RegisterPendingAdd(component);
+    }
+
+    void GameObject::UpdateActiveInHierarchy(bool parentActive)
+    {
+        bool newActiveInHierarchy = parentActive && m_active;
+
+        if (m_activeInHierarchy == newActiveInHierarchy)
+        {
+            return;
+        }
+
+        m_activeInHierarchy = newActiveInHierarchy;
+
+        if (m_hasAwoken)
+        {
+            for (auto& component : m_components)
+            {
+                // 컴포넌트가 켜져 있을 때만 반응
+                if (component->IsActive())
+                {
+                    if (m_activeInHierarchy)
+                    {
+                        component->OnEnable();
+                    }
+                    else
+                    {
+                        component->OnDisable();
+                    }
+                }
+            }
+        }
+
+        for (auto childTransform : m_transform->GetChildren())
+        {
+            childTransform->GetGameObject()->UpdateActiveInHierarchy(m_activeInHierarchy);
         }
     }
 

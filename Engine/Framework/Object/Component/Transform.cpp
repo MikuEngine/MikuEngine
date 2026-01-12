@@ -8,6 +8,7 @@
 #include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/TransformSystem.h"
+#include "Framework/Object/GameObject/GameObject.h"
 
 namespace engine
 {
@@ -155,11 +156,15 @@ namespace engine
         }
 
         m_parent = parent;
+        bool parentActive = true;
 
         if (m_parent != nullptr)
         {
             m_parent->AddChild(this);
+            parentActive = m_parent->GetGameObject()->IsActive();
         }
+
+        GetGameObject()->UpdateActiveInHierarchy(parentActive);
 
         MarkDirty();
     }

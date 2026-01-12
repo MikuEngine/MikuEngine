@@ -17,4 +17,9 @@ namespace engine
     {
         return m_bufferStride;
     }
+
+    UINT VertexBuffer::GetVertexCount() const
+    {
+        return m_vertexCount;
+    }
 }

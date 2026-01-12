@@ -79,7 +79,7 @@ namespace engine
         }
 
         const auto& animations = m_animationData->GetAnimations();
-        if (index < 0 || animations.size() >= index || (m_currentAnimIndex == index && m_nextAnimIndex == -1))
+        if (index < 0 || animations.size() <= index || (m_currentAnimIndex == index && m_nextAnimIndex == -1))
         {
             return;
         }

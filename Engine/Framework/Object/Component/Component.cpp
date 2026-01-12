@@ -17,6 +17,53 @@ namespace engine
         return m_owner->GetTransform();
     }
 
+    bool Component::IsActive() const
+    {
+        if (!m_active)
+        {
+            return false;
+        }
+
+        return m_owner->IsActive();
+    }
+
+    void Component::SetActive(bool active)
+    {
+        if (m_active == active)
+        {
+            return;
+        }
+
+        m_active = active;
+
+        if (!m_hasAwoken)
+        {
+            return;
+        }
+
+        if (m_owner->IsActive())
+        {
+            if (m_active)
+            {
+                OnEnable();
+            }
+            else
+            {
+                OnDisable();
+            }
+        }
+    }
+
+    void Component::MarkAsAwoken()
+    {
+        m_hasAwoken = true;
+    }
+
+    bool Component::HasAwoken() const
+    {
+        return m_hasAwoken;
+    }
+
     void Component::Destroy()
     {
         if (m_isPendingKill)

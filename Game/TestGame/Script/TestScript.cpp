@@ -1,10 +1,17 @@
 ﻿#include "GamePCH.h"
 #include "TestScript.h"
 
-#include "Framework/Object/Component/Transform.h"
+#include "Test2.h"
+
 
 namespace game
 {
+    void TestScript::Awake()
+    {
+        auto gameObject = CreateGameObject("Test2");
+        gameObject->AddComponent<Test2>();
+    }
+
     void TestScript::Start()
     {
         LOG_PRINT("TestScript Start");

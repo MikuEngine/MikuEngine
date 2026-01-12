@@ -161,6 +161,9 @@ namespace engine
 
         AssetManager::Get().Initialize();
         ResourceManager::Get().Initialize();
+
+        GraphicsDevice::Get().InitializeResources();
+
         SceneManager::Get().Initialize();
 
 #ifdef _DEBUG

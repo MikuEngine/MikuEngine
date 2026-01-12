@@ -40,6 +40,7 @@ namespace engine
             m_indices.push_back(mesh->mFaces[j].mIndices[2]);
         }
     }
+
     const std::vector<PositionTexCoordVertex>& SimpleMeshData::GetVertices() const
     {
         return m_vertices;

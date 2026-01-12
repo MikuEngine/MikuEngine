@@ -14,6 +14,8 @@ namespace engine
         Count         = 5
     };
 
+    class GameObject;
+
     class ScriptBase :
         public Component
     {
@@ -31,6 +33,8 @@ namespace engine
         void Awake() override {};
         virtual void Start() {};
         virtual void Update() {};
+
+        GameObject* CreateGameObject(const std::string& name = "GameObject");
 
     public:
         void OnGui() override {};

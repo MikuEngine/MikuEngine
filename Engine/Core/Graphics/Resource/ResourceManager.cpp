@@ -12,6 +12,7 @@
 #include "Core/Graphics/Resource/BlendState.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/StaticMeshData.h"
+#include "Framework/Asset/GeometryData.h"
 
 namespace engine
 {
@@ -19,11 +20,20 @@ namespace engine
 
     void ResourceManager::Initialize()
     {
+        m_globalCachedResources.reserve(100);
+        m_sceneCachedResources.reserve(200);
+
         CreateDefaultTextures();
         CreateDefaultSamplerStates();
         CreateDefaultRasterizerStates();
         CreateDefaultDepthStencilStates();
         CreateDefaultBlendStates();
+        CreateGeometryResources();
+    }
+
+    void ResourceManager::CleanupSceneScope()
+    {
+        m_sceneCachedResources.clear();
     }
 
     void ResourceManager::Cleanup()
@@ -34,9 +44,15 @@ namespace engine
         m_defaultRasterizerStates.fill(nullptr);
         m_defaultDepthStencilStates.fill(nullptr);
         m_defaultBlendStates.fill(nullptr);
+
+        m_globalCachedResources.clear();
+        m_sceneCachedResources.clear();
     }
 
-    std::shared_ptr<IndexBuffer> ResourceManager::GetOrCreateIndexBuffer(const std::string& filePath, const std::vector<DWORD>& indices)
+    std::shared_ptr<IndexBuffer> ResourceManager::GetOrCreateIndexBuffer(
+        const std::string& filePath,
+        const std::vector<DWORD>& indices,
+        LifeScope scope)
     {
         if (auto find = m_indexBuffers.find(filePath); find != m_indexBuffers.end())
         {
@@ -49,12 +65,16 @@ namespace engine
         auto indexBuffer = std::make_shared<IndexBuffer>();
         indexBuffer->Create(indices);
 
+        CacheResource(indexBuffer, scope);
+
         m_indexBuffers[filePath] = indexBuffer;
 
         return indexBuffer;
     }
 
-    std::shared_ptr<IndexBuffer> ResourceManager::GetOrCreateIndexBuffer(const std::string& filePath, const std::vector<WORD>& indices)
+    std::shared_ptr<IndexBuffer> ResourceManager::GetOrCreateIndexBuffer(const std::string& filePath,
+        const std::vector<WORD>& indices,
+        LifeScope scope)
     {
         if (auto find = m_indexBuffers.find(filePath); find != m_indexBuffers.end())
         {
@@ -67,12 +87,14 @@ namespace engine
         auto indexBuffer = std::make_shared<IndexBuffer>();
         indexBuffer->Create(indices);
 
+        CacheResource(indexBuffer, scope);
+
         m_indexBuffers[filePath] = indexBuffer;
 
         return indexBuffer;
     }
 
-    std::shared_ptr<Texture> ResourceManager::GetOrCreateTexture(const std::string& filePath)
+    std::shared_ptr<Texture> ResourceManager::GetOrCreateTexture(const std::string& filePath, LifeScope scope)
     {
         if (auto find = m_textures.find(filePath); find != m_textures.end())
         {
@@ -85,6 +107,8 @@ namespace engine
         auto texture = std::make_shared<Texture>();
         texture->Create(filePath);
 
+        CacheResource(texture, scope);
+
         m_textures[filePath] = texture;
 
         return texture;
@@ -95,7 +119,8 @@ namespace engine
         UINT width,
         UINT height,
         DXGI_FORMAT format,
-        UINT bindFlags)
+        UINT bindFlags,
+        LifeScope scope)
     {
         if (auto find = m_textures.find(name); find != m_textures.end())
         {
@@ -108,6 +133,8 @@ namespace engine
         auto texture = std::make_shared<Texture>();
         texture->Create(width, height, format, bindFlags);
 
+        CacheResource(texture, scope);
+
         m_textures[name] = texture;
 
         return texture;
@@ -118,7 +145,8 @@ namespace engine
         const D3D11_TEXTURE2D_DESC& desc,
         DXGI_FORMAT srvFormat,
         DXGI_FORMAT rtvFormat,
-        DXGI_FORMAT dsvFormat)
+        DXGI_FORMAT dsvFormat,
+        LifeScope scope)
     {
         if (auto find = m_textures.find(name); find != m_textures.end())
         {
@@ -131,12 +159,17 @@ namespace engine
         auto texture = std::make_shared<Texture>();
         texture->Create(desc, srvFormat, rtvFormat, dsvFormat);
 
+        CacheResource(texture, scope);
+
         m_textures[name] = texture;
 
         return texture;
     }
 
-    std::shared_ptr<ConstantBuffer> ResourceManager::GetOrCreateConstantBuffer(const std::string& name, UINT byteWidth)
+    std::shared_ptr<ConstantBuffer> ResourceManager::GetOrCreateConstantBuffer(
+        const std::string& name,
+        UINT byteWidth,
+        LifeScope scope)
     {
         if (auto find = m_constantBuffers.find(name); find != m_constantBuffers.end())
         {
@@ -149,12 +182,14 @@ namespace engine
         auto constantBuffer = std::make_shared<ConstantBuffer>();
         constantBuffer->Create(byteWidth);
 
+        CacheResource(constantBuffer, scope);
+
         m_constantBuffers[name] = constantBuffer;
 
         return constantBuffer;
     }
 
-    std::shared_ptr<VertexShader> ResourceManager::GetOrCreateVertexShader(const std::string& filePath)
+    std::shared_ptr<VertexShader> ResourceManager::GetOrCreateVertexShader(const std::string& filePath, LifeScope scope)
     {
         if (auto find = m_vertexShaders.find(filePath); find != m_vertexShaders.end())
         {
@@ -167,12 +202,14 @@ namespace engine
         auto vertexShader = std::make_shared<VertexShader>();
         vertexShader->Create(filePath);
 
+        CacheResource(vertexShader, scope);
+
         m_vertexShaders[filePath] = vertexShader;
 
         return vertexShader;
     }
 
-    std::shared_ptr<PixelShader> ResourceManager::GetOrCreatePixelShader(const std::string& filePath)
+    std::shared_ptr<PixelShader> ResourceManager::GetOrCreatePixelShader(const std::string& filePath, LifeScope scope)
     {
         if (auto find = m_pixelShaders.find(filePath); find != m_pixelShaders.end())
         {
@@ -185,6 +222,8 @@ namespace engine
         auto pixelShader = std::make_shared<PixelShader>();
         pixelShader->Create(filePath);
 
+        CacheResource(pixelShader, scope);
+
         m_pixelShaders[filePath] = pixelShader;
 
         return pixelShader;
@@ -192,7 +231,8 @@ namespace engine
 
     std::shared_ptr<SamplerState> ResourceManager::GetOrCreateSamplerState(
         const std::string& name,
-        const D3D11_SAMPLER_DESC& desc)
+        const D3D11_SAMPLER_DESC& desc,
+        LifeScope scope)
     {
         if (auto find = m_samplerStates.find(name); find != m_samplerStates.end())
         {
@@ -205,6 +245,8 @@ namespace engine
         auto samplerState = std::make_shared<SamplerState>();
         samplerState->Create(desc);
 
+        CacheResource(samplerState, scope);
+
         m_samplerStates[name] = samplerState;
 
         return samplerState;
@@ -212,7 +254,8 @@ namespace engine
 
     std::shared_ptr<RasterizerState> ResourceManager::GetOrCreateRasterizerState(
         const std::string& name,
-        const D3D11_RASTERIZER_DESC& desc)
+        const D3D11_RASTERIZER_DESC& desc,
+        LifeScope scope)
     {
         if (auto find = m_rasterizerStates.find(name); find != m_rasterizerStates.end())
         {
@@ -225,6 +268,8 @@ namespace engine
         auto rasterizerState = std::make_shared<RasterizerState>();
         rasterizerState->Create(desc);
 
+        CacheResource(rasterizerState, scope);
+
         m_rasterizerStates[name] = rasterizerState;
 
         return rasterizerState;
@@ -232,7 +277,8 @@ namespace engine
 
     std::shared_ptr<DepthStencilState> ResourceManager::GetOrCreateDepthStencilState(
         const std::string& name,
-        const D3D11_DEPTH_STENCIL_DESC& desc)
+        const D3D11_DEPTH_STENCIL_DESC& desc,
+        LifeScope scope)
     {
         if (auto find = m_depthStencilStates.find(name); find != m_depthStencilStates.end())
         {
@@ -245,6 +291,8 @@ namespace engine
         auto depthStencilState = std::make_shared<DepthStencilState>();
         depthStencilState->Create(desc);
 
+        CacheResource(depthStencilState, scope);
+
         m_depthStencilStates[name] = depthStencilState;
 
         return depthStencilState;
@@ -252,7 +300,8 @@ namespace engine
 
     std::shared_ptr<BlendState> ResourceManager::GetOrCreateBlendState(
         const std::string& name,
-        const D3D11_BLEND_DESC& desc)
+        const D3D11_BLEND_DESC& desc,
+        LifeScope scope)
     {
         if (auto find = m_blendStates.find(name); find != m_blendStates.end())
         {
@@ -264,6 +313,8 @@ namespace engine
 
         auto blendState = std::make_shared<BlendState>();
         blendState->Create(desc);
+
+        CacheResource(blendState, scope);
 
         m_blendStates[name] = blendState;
 
@@ -293,6 +344,37 @@ namespace engine
     std::shared_ptr<BlendState> ResourceManager::GetDefaultBlendState(DefaultBlendType type)
     {
         return m_defaultBlendStates[static_cast<size_t>(type)];
+    }
+
+    std::shared_ptr<VertexBuffer> ResourceManager::GetGeometryVertexBuffer(const std::string& name)
+    {
+        VertexBufferKey key{ name, CommonVertex::vertexFormat };
+        if (auto find = m_vertexBuffers.find(key); find != m_vertexBuffers.end())
+        {
+            if (!find->second.expired())
+            {
+                return find->second.lock();
+            }
+        }
+
+        assert(false && "없는 기본 도형. 추가 필요");
+
+        return nullptr;
+    }
+
+    std::shared_ptr<IndexBuffer> ResourceManager::GetGeometryIndexBuffer(const std::string& name)
+    {
+        if (auto find = m_indexBuffers.find(name); find != m_indexBuffers.end())
+        {
+            if (!find->second.expired())
+            {
+                return find->second.lock();
+            }
+        }
+
+        assert(false && "없는 기본 도형. 추가 필요");
+
+        return nullptr;
     }
 
     void ResourceManager::CreateDefaultTextures()
@@ -485,6 +567,106 @@ namespace engine
             desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
             m_defaultBlendStates[static_cast<size_t>(DefaultBlendType::Additive)] = std::make_shared<BlendState>();
             m_defaultBlendStates[static_cast<size_t>(DefaultBlendType::Additive)]->Create(desc);
+        }
+    }
+
+    void ResourceManager::CreateGeometryResources()
+    {
+        {
+            VertexBufferKey key{ "DefaultQuad", CommonVertex::vertexFormat };
+            auto geometryData = AssetManager::Get().GetGeometryData("DefaultQuad");
+            auto vertexBuffer = std::make_shared<VertexBuffer>();
+            vertexBuffer->Create(geometryData->GetVertices());
+
+            CacheResource(vertexBuffer, LifeScope::Global);
+            m_vertexBuffers[key] = vertexBuffer;
+
+            auto indexBuffer = std::make_shared<IndexBuffer>();
+            indexBuffer->Create(geometryData->GetIndices());
+
+            CacheResource(indexBuffer, LifeScope::Global);
+            m_indexBuffers["DefaultQuad"] = indexBuffer;
+        }
+
+        {
+            VertexBufferKey key{ "DefaultCube", CommonVertex::vertexFormat };
+            auto geometryData = AssetManager::Get().GetGeometryData("DefaultCube");
+            auto vertexBuffer = std::make_shared<VertexBuffer>();
+            vertexBuffer->Create(geometryData->GetVertices());
+
+            CacheResource(vertexBuffer, LifeScope::Global);
+            m_vertexBuffers[key] = vertexBuffer;
+
+            auto indexBuffer = std::make_shared<IndexBuffer>();
+            indexBuffer->Create(geometryData->GetIndices());
+
+            CacheResource(indexBuffer, LifeScope::Global);
+            m_indexBuffers["DefaultCube"] = indexBuffer;
+        }
+
+        {
+            VertexBufferKey key{ "DefaultSphere", CommonVertex::vertexFormat };
+            auto geometryData = AssetManager::Get().GetGeometryData("DefaultSphere");
+            auto vertexBuffer = std::make_shared<VertexBuffer>();
+            vertexBuffer->Create(geometryData->GetVertices());
+
+            CacheResource(vertexBuffer, LifeScope::Global);
+            m_vertexBuffers[key] = vertexBuffer;
+
+            auto indexBuffer = std::make_shared<IndexBuffer>();
+            indexBuffer->Create(geometryData->GetIndices());
+
+            CacheResource(indexBuffer, LifeScope::Global);
+            m_indexBuffers["DefaultSphere"] = indexBuffer;
+        }
+
+        {
+            VertexBufferKey key{ "DefaultPlane", CommonVertex::vertexFormat };
+            auto geometryData = AssetManager::Get().GetGeometryData("DefaultPlane");
+            auto vertexBuffer = std::make_shared<VertexBuffer>();
+            vertexBuffer->Create(geometryData->GetVertices());
+
+            CacheResource(vertexBuffer, LifeScope::Global);
+            m_vertexBuffers[key] = vertexBuffer;
+
+            auto indexBuffer = std::make_shared<IndexBuffer>();
+            indexBuffer->Create(geometryData->GetIndices());
+
+            CacheResource(indexBuffer, LifeScope::Global);
+            m_indexBuffers["DefaultPlane"] = indexBuffer;
+        }
+
+        {
+            VertexBufferKey key{ "DefaultCone", CommonVertex::vertexFormat };
+            auto geometryData = AssetManager::Get().GetGeometryData("DefaultCone");
+            auto vertexBuffer = std::make_shared<VertexBuffer>();
+            vertexBuffer->Create(geometryData->GetVertices());
+
+            CacheResource(vertexBuffer, LifeScope::Global);
+            m_vertexBuffers[key] = vertexBuffer;
+
+            auto indexBuffer = std::make_shared<IndexBuffer>();
+            indexBuffer->Create(geometryData->GetIndices());
+
+            CacheResource(indexBuffer, LifeScope::Global);
+            m_indexBuffers["DefaultCone"] = indexBuffer;
+        }
+    }
+
+    void ResourceManager::CacheResource(const std::shared_ptr<Resource>& resource, LifeScope scope)
+    {
+        switch (scope)
+        {
+        case LifeScope::Global:
+            m_globalCachedResources.push_back(resource);
+            break;
+
+        case LifeScope::Scene:
+            m_sceneCachedResources.push_back(resource);
+            break;
+
+        default:
+            break;
         }
     }
 }

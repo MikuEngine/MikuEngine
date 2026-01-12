@@ -38,7 +38,6 @@ namespace engine
         std::shared_ptr<Texture> m_brdfLut;
 
         //skybox
-        UINT m_indexCount = 0;
         std::shared_ptr<VertexBuffer> m_cubeVertexBuffer;
         std::shared_ptr<IndexBuffer> m_cubeIndexBuffer;
         std::shared_ptr<InputLayout> m_cubeInputLayout;

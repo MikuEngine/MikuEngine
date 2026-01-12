@@ -43,49 +43,8 @@ namespace engine
 
         // cube
         {
-            std::vector<PositionVertex> vertices{
-                // Back Face (Z = -0.5)
-                { { -0.5f,  0.5f, -0.5f } }, // 0: Top-Left-Back
-                { {  0.5f,  0.5f, -0.5f } }, // 1: Top-Right-Back
-                { { -0.5f, -0.5f, -0.5f } }, // 2: Bottom-Left-Back
-                { {  0.5f, -0.5f, -0.5f } }, // 3: Bottom-Right-Back
-
-                // Front Face (Z = +0.5)
-                { { -0.5f,  0.5f,  0.5f } }, // 4: Top-Left-Front
-                { {  0.5f,  0.5f,  0.5f } }, // 5: Top-Right-Front
-                { { -0.5f, -0.5f,  0.5f } }, // 6: Bottom-Left-Front
-                { {  0.5f, -0.5f,  0.5f } }, // 7: Bottom-Right-Front
-            };
-
-            std::vector<DWORD> indices{
-                // Back Face
-                0, 1, 2,
-                2, 1, 3,
-
-                // Front Face
-                5, 4, 7,
-                7, 4, 6,
-
-                // Left Face
-                4, 0, 6,
-                6, 0, 2,
-
-                // Right Face
-                1, 5, 3,
-                3, 5, 7,
-
-                // Top Face
-                4, 5, 0,
-                0, 5, 1,
-
-                // Bottom Face
-                2, 3, 6,
-                6, 3, 7
-            };
-
-            m_indexCount = static_cast<UINT>(indices.size());
-            m_cubeVertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<PositionVertex>("SkyboxCube", vertices);
-            m_cubeIndexBuffer = ResourceManager::Get().GetOrCreateIndexBuffer("SkyboxCube", indices);
+            m_cubeVertexBuffer = ResourceManager::Get().GetGeometryVertexBuffer("DefaultCube");
+            m_cubeIndexBuffer = ResourceManager::Get().GetGeometryIndexBuffer("DefaultCube");
             m_skyboxVertexShader = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Skybox_VS.hlsl");
             m_skyboxPixelShader = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Skybox_PS.hlsl");
             m_cubeInputLayout = m_skyboxVertexShader->GetOrCreateInputLayout<PositionVertex>();
@@ -280,7 +239,7 @@ namespace engine
                 const UINT stride = m_cubeVertexBuffer->GetBufferStride();
                 const UINT offset = 0;
                 context->IASetVertexBuffers(0, 1, m_cubeVertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
-                context->IASetIndexBuffer(m_cubeIndexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
+                context->IASetIndexBuffer(m_cubeIndexBuffer->GetRawBuffer(), m_cubeIndexBuffer->GetIndexFormat(), 0);
                 context->IASetInputLayout(m_cubeInputLayout->GetRawInputLayout());
 
                 context->VSSetShader(m_skyboxVertexShader->GetRawShader(), nullptr, 0);
@@ -293,7 +252,7 @@ namespace engine
 
                 context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
 
-                context->DrawIndexed(m_indexCount, 0, 0);
+                context->DrawIndexed(m_cubeIndexBuffer->GetIndexCount(), 0, 0);
 
                 context->RSSetState(nullptr);
                 context->OMSetDepthStencilState(nullptr, 0);

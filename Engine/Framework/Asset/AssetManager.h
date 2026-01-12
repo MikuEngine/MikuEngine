@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Common/Utility/Singleton.h"
+#include "Common/Utility/CommonTypes.h"
 
 namespace engine
 {
@@ -13,6 +14,7 @@ namespace engine
     class SimpleMeshData;
     class SpriteData;
     class SpriteAnimationData;
+    class GeometryData;
 
     class AssetManager :
         public Singleton<AssetManager>
@@ -33,7 +35,10 @@ namespace engine
         std::unordered_map<std::string, std::weak_ptr<SimpleMeshData>> m_simpleMeshDatas;
         std::unordered_map<std::string, std::weak_ptr<SpriteData>> m_spriteDatas;
         std::unordered_map<std::string, std::weak_ptr<SpriteAnimationData>> m_spriteAnimationDatas;
+        std::unordered_map<std::string, std::weak_ptr<GeometryData>> m_geometryDatas;
 
+        std::vector<std::shared_ptr<AssetData>> m_globalCachedDatas;
+        std::vector<std::shared_ptr<AssetData>> m_sceneCachedDatas;
 
     private:
         AssetManager() = default;
@@ -42,15 +47,22 @@ namespace engine
     public:
         void Initialize();
 
+        void CleanupSceneScope();
+
     public:
-        std::shared_ptr<StaticMeshData> GetOrCreateStaticMeshData(const std::string& filePath);
-        std::shared_ptr<MaterialData> GetOrCreateMaterialData(const std::string& filePath);
-        std::shared_ptr<SkeletonData> GetOrCreateSkeletonData(const std::string& filePath);
-        std::shared_ptr<AnimationData> GetOrCreateAnimationData(const std::string& filePath);
-        std::shared_ptr<SimpleMeshData> GetOrCreateSimpleMeshData(const std::string& filePath);
-        std::shared_ptr<SkeletalMeshData> GetOrCreateSkeletalMeshData(const std::string& filePath);
-        std::shared_ptr<SpriteData> GetOrCreateSpriteData(const std::string& filePath);
-        std::shared_ptr<SpriteAnimationData> GetOrCreateSpriteAnimationData(const std::string& filePath);
+        std::shared_ptr<StaticMeshData> GetOrCreateStaticMeshData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<MaterialData> GetOrCreateMaterialData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<SkeletonData> GetOrCreateSkeletonData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<AnimationData> GetOrCreateAnimationData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<SimpleMeshData> GetOrCreateSimpleMeshData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<SkeletalMeshData> GetOrCreateSkeletalMeshData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<SpriteData> GetOrCreateSpriteData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<SpriteAnimationData> GetOrCreateSpriteAnimationData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<GeometryData> GetGeometryData(const std::string& name);
+
+    private:
+        void CreateGeometryData();
+        void CacheData(const std::shared_ptr<AssetData>& data, LifeScope scope);
 
     private:
         friend class Singleton<AssetManager>;

@@ -10,12 +10,21 @@ namespace engine
         Handle m_handle;
 
     protected:
+        bool m_active = true;
+
+    protected:
         Object();
         virtual ~Object();
 
     public:
         Handle GetHandle() const;
         static Object* GetObjectFromHandle(Handle handle);
+
+        virtual bool IsActive() const;
+        virtual void SetActive(bool active);
+
+        virtual void OnEnable() {}
+        virtual void OnDisable() {}
 
     public:
         virtual void OnGui() {}

@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="Common\Debug\Debug.cpp" />
     <ClCompile Include="Common\Math\MathUtility.cpp" />
+    <ClCompile Include="Framework\Asset\GeometryGenerator.cpp" />
     <ClCompile Include="Core\Graphics\Resource\MaterialHelper.cpp" />
     <ClCompile Include="Common\Utility\Profiling.cpp" />
     <ClCompile Include="Common\Utility\StringHelper.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="Framework\Asset\AnimationData.cpp" />
     <ClCompile Include="Framework\Asset\AssetManager.cpp" />
     <ClCompile Include="Framework\Asset\FBXData.cpp" />
+    <ClCompile Include="Framework\Asset\GeometryData.cpp" />
     <ClCompile Include="Framework\Asset\SimpleMeshData.cpp" />
     <ClCompile Include="Framework\Asset\SkeletalMeshData.cpp" />
     <ClCompile Include="Framework\Asset\SkeletonData.cpp" />
@@ -214,6 +216,8 @@
   <ItemGroup>
     <ClInclude Include="Common\Debug\Debug.h" />
     <ClInclude Include="Common\Math\MathUtility.h" />
+    <ClInclude Include="Common\Utility\CommonTypes.h" />
+    <ClInclude Include="Framework\Asset\GeometryGenerator.h" />
     <ClInclude Include="Common\Utility\JsonHelper.h" />
     <ClInclude Include="Common\Utility\StaticMemoryPool.h" />
     <ClInclude Include="Common\Utility\TextureHelper.h" />
@@ -252,6 +256,7 @@
     <ClInclude Include="Framework\Asset\AssetData.h" />
     <ClInclude Include="Framework\Asset\AssetManager.h" />
     <ClInclude Include="Framework\Asset\FBXData.h" />
+    <ClInclude Include="Framework\Asset\GeometryData.h" />
     <ClInclude Include="Framework\Asset\MaterialData.h" />
     <ClInclude Include="Framework\Asset\SimpleMeshData.h" />
     <ClInclude Include="Framework\Asset\SkeletalMeshData.h" />

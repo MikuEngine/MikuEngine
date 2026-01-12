@@ -44,8 +44,6 @@ namespace engine
         std::string m_cutoutPSFilePath;
         std::string m_transparentPSFilePath;
 
-        std::shared_ptr<SimpleMeshData> m_simpleMeshData;
-
         std::shared_ptr<VertexBuffer> m_vertexBuffer;
         std::shared_ptr<IndexBuffer> m_indexBuffer;
         

@@ -49,6 +49,30 @@ namespace engine
         return nullptr; // 이미 삭제되었거나 재사용된 객체임
     }
 
+    bool Object::IsActive() const
+    {
+        return m_active;
+    }
+
+    void Object::SetActive(bool active)
+    {
+        if (m_active == active)
+        {
+            return;
+        }
+
+        m_active = active;
+
+        if (m_active)
+        {
+            OnEnable();
+        }
+        else
+        {
+            OnDisable();
+        }
+    }
+
     void Object::RegisterObject(Object* object)
     {
         std::uint32_t index = 0;

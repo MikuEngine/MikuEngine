@@ -9,6 +9,13 @@ namespace engine
 {
     class Texture;
     class RasterizerState;
+    class VertexBuffer;
+    class IndexBuffer;
+    class VertexShader;
+    class PixelShader;
+    class InputLayout;
+    class SamplerState;
+    class ConstantBuffer;
 
     struct GBufferResources
     {
@@ -68,27 +75,29 @@ namespace engine
         Microsoft::WRL::ComPtr<IDXGIAdapter3> m_dxgiAdapter;
 
         // shaders
-        Microsoft::WRL::ComPtr<ID3D11VertexShader> m_fullscreenQuadVS;
-        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_blitPS;
-        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_globalLightPS;
-        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_hdrPS;
-        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_ldrPS;
-        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_brightPassPS;
-        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_blurPS;
-        Microsoft::WRL::ComPtr<ID3D11PixelShader> m_fxaaPS;
+        std::shared_ptr<VertexShader> m_fullscreenQuadVS;
+        std::shared_ptr<PixelShader> m_blitPS;
+        std::shared_ptr<PixelShader> m_globalLightPS;
+        std::shared_ptr<PixelShader> m_hdrPS;
+        std::shared_ptr<PixelShader> m_ldrPS;
+        std::shared_ptr<PixelShader> m_brightPassPS;
+        std::shared_ptr<PixelShader> m_blurPS;
+        std::shared_ptr<PixelShader> m_fxaaPS;
 
-        Microsoft::WRL::ComPtr<ID3D11InputLayout> m_quadInputLayout;
-        Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerLinear;
-        Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerPoint;
+        std::shared_ptr<InputLayout> m_quadInputLayout;
+        std::shared_ptr<SamplerState> m_samplerLinear;
+        std::shared_ptr<SamplerState> m_samplerPoint;
 
-        Microsoft::WRL::ComPtr<ID3D11Buffer> m_blurConstantBuffer;
+        std::shared_ptr<ConstantBuffer> m_blurConstantBuffer;
 
         // quad
-        Microsoft::WRL::ComPtr<ID3D11Buffer> m_quadVertexBuffer;
-        Microsoft::WRL::ComPtr<ID3D11Buffer> m_quadIndexBuffer;
-        UINT m_quadVertexCount = 0;
+        std::shared_ptr<VertexBuffer> m_quadVertexBuffer;
+        std::shared_ptr<IndexBuffer> m_quadIndexBuffer;
+        /*Microsoft::WRL::ComPtr<ID3D11Buffer> m_quadVertexBuffer;
+        Microsoft::WRL::ComPtr<ID3D11Buffer> m_quadIndexBuffer;*/
+        /*UINT m_quadVertexCount = 0;
         UINT m_quadIndexCount = 0;
-        UINT m_quadVertexStride = 0;
+        UINT m_quadVertexStride = 0;*/
 
         HWND m_hWnd = nullptr;
         UINT m_resolutionWidth = 0;
@@ -123,6 +132,7 @@ namespace engine
             UINT screenHeight,
             bool isFullscreen,
             bool useVsync);
+        void InitializeResources();
         void Shutdown();
 
     public:

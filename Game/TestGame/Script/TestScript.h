@@ -20,6 +20,7 @@ namespace game
         float m_aaa;
 
     public:
+        void Awake() override;
         void Start() override;
         void Update() override;
 

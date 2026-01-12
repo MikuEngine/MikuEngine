@@ -71,6 +71,7 @@ namespace engine
         m_incubator.clear();
         m_gameObjectAddList.clear();
         m_componentAddList.clear();
+        m_componentAddProcList.clear();
 
         auto gameObject = CreateGameObject("MainCamera");
         gameObject->AddComponent<Camera>();
@@ -87,17 +88,7 @@ namespace engine
         m_incubator.clear();
         m_gameObjectAddList.clear();
         m_componentAddList.clear();
-    }
-
-    void Scene::OnPlayStart()
-    {
-        for (auto& gameObject : m_gameObjects)
-        {
-            for (auto& component : gameObject->GetComponents())
-            {
-                component->Awake();
-            }
-        }
+        m_componentAddProcList.clear();
     }
 
     void Scene::RegisterPendingAdd(GameObject* gameObject)
@@ -112,29 +103,80 @@ namespace engine
 
     void Scene::ProcessPendingAdds(bool isPlaying)
     {
-        for (auto& gameObject : m_incubator)
-        {
-            m_gameObjects.push_back(std::move(gameObject));
-            m_gameObjects.back()->m_sceneIndex = static_cast<int32_t>(m_gameObjects.size() - 1);
-        }
+        int safeGuard = 0;
+        constexpr int MAX_ITERATIONS = 10;
 
-        m_incubator.clear();
-
-        for (auto component : m_componentAddList)
+        while (!m_componentAddList.empty() || !m_incubator.empty())
         {
-            component->Initialize();
-        }
-
-        if (isPlaying)
-        {
-            for (auto component : m_componentAddList)
+            if (safeGuard++ > MAX_ITERATIONS)
             {
-                component->Awake();
+                LOG_ERROR("Scene::ProcessPendingAdds - 재귀 생성 한계 초과 (Infinite Loop Check)");
+                break;
+            }
+
+            if (!m_incubator.empty())
+            {
+                size_t neededCapacity = m_gameObjects.size() + m_incubator.size();
+                if (m_gameObjects.capacity() < neededCapacity)
+                {
+                    m_gameObjects.reserve(neededCapacity * 2);
+                }
+
+                for (auto& gameObject : m_incubator)
+                {
+                    m_gameObjects.push_back(std::move(gameObject));
+                    m_gameObjects.back()->m_sceneIndex = static_cast<std::int32_t>(m_gameObjects.size() - 1);
+                    m_gameObjects.back()->Awake();
+                }
+                m_incubator.clear();
+            }
+
+            if (!m_componentAddList.empty())
+            {
+                std::swap(m_componentAddList, m_componentAddProcList);
+
+                for (auto component : m_componentAddProcList)
+                {
+                    if (component->GetGameObject()->IsPendingKill())
+                    {
+                        continue;
+                    }
+
+                    component->Initialize();
+                }
+
+                if (isPlaying)
+                {
+                    for (auto component : m_componentAddProcList)
+                    {
+                        if (component->GetGameObject()->IsPendingKill())
+                        {
+                            continue;
+                        }
+
+                        component->Awake();
+                        component->MarkAsAwoken();
+                    }
+
+                    for (auto component : m_componentAddProcList)
+                    {
+                        if (component->GetGameObject()->IsPendingKill())
+                        {
+                            continue;
+                        }
+
+                        if (component->IsActive())
+                        {
+                            component->OnEnable();
+                        }
+                    }
+                }
+
+                m_componentAddProcList.clear();
             }
         }
 
-        m_gameObjectAddList.clear(); // 하는 게 없는데?
-        m_componentAddList.clear();
+        m_gameObjectAddList.clear();
     }
 
     void Scene::RegisterPendingKill(GameObject* gameObject)
@@ -152,6 +194,11 @@ namespace engine
         // 컴포넌트 먼저 삭제
         for (auto component : m_componentKillList)
         {
+            if (component->IsActive())
+            {
+                component->SetActive(false);
+            }
+
             component->OnDestroy();
             component->GetGameObject()->RemoveComponentFast(component);
         }
@@ -166,6 +213,11 @@ namespace engine
             if (index < 0 || index >= m_gameObjects.size() || m_gameObjects[index].get() != gameObject)
             {
                 continue;
+            }
+
+            if (gameObject->IsActive())
+            {
+                gameObject->SetActive(false);
             }
 
             gameObject->BroadcastOnDestroy();

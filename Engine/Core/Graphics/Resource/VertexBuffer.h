@@ -11,15 +11,17 @@ namespace engine
     private:
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
         UINT m_bufferStride = 0;
+        UINT m_vertexCount = 0;
 
     public:
         template <typename T>
         void Create(const std::vector<T>& vertices)
         {
             m_bufferStride = sizeof(T);
+            m_vertexCount = static_cast<UINT>(vertices.size());
 
             D3D11_BUFFER_DESC desc{};
-            desc.ByteWidth = static_cast<UINT>(sizeof(T) * vertices.size());
+            desc.ByteWidth = m_bufferStride * m_vertexCount;
             desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
             desc.Usage = D3D11_USAGE_DEFAULT;
             desc.CPUAccessFlags = 0;
@@ -34,5 +36,6 @@ namespace engine
         const Microsoft::WRL::ComPtr<ID3D11Buffer>& GetBuffer() const;
         ID3D11Buffer* GetRawBuffer() const;
         UINT GetBufferStride() const;
+        UINT GetVertexCount() const;
     };
 }

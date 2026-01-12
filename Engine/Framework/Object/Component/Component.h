@@ -16,10 +16,16 @@ namespace engine
         std::int32_t m_gameObjectIndex = -1;
 
         bool m_isPendingKill = false;
+        bool m_hasAwoken = false;
 
     public:
         GameObject* GetGameObject() const;
         Transform* GetTransform() const;
+
+        bool IsActive() const override;
+        void SetActive(bool active) override;
+        void MarkAsAwoken();
+        bool HasAwoken() const;
 
         virtual void Initialize() {}
         virtual void Awake() {} // Initialize 직후 호출
