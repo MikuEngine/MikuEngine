@@ -1,18 +1,6 @@
 ﻿#include "GamePCH.h"
 #include "TestGameApp.h"
 
-#include "Framework/Scene/SceneManager.h"
-#include "Framework/Scene/Scene.h"
-#include "Framework/Object/Component/SpriteRenderer.h"
-#include "Framework/Object/Component/StaticMeshRenderer.h"
-#include "Framework/Object/Component/SkeletalMeshRenderer.h"
-#include "Framework/Object/Component/SkeletalAnimator.h"
-#include "Framework/Object/Component/SpriteAnimator.h"
-#include "Framework/Object/Component/Transform.h"
-#include "Framework/Object/Component/Camera.h"
-
-#include "Script/TestScript.h"
-
 namespace game
 {
 	engine::WindowSettings g_default{
