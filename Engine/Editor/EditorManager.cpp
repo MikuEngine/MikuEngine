@@ -82,11 +82,6 @@ namespace engine
         graphics.EndDrawGUIPass();
     }
 
-    GameObject* EditorManager::GetSelectedObject() const
-    {
-        return nullptr;
-    }
-
     EditorState EditorManager::GetEditorState() const
     {
         return m_editorState;
@@ -95,10 +90,6 @@ namespace engine
     EditorCamera* EditorManager::GetEditorCamera() const
     {
         return m_editorCamera.get();
-    }
-
-    void EditorManager::SetSelectedObject(GameObject* gameObject)
-    {
     }
 
     void EditorManager::DrawPlayController()
@@ -115,7 +106,6 @@ namespace engine
                 scene->LoadFromJson(g_tempScene);
 
                 m_editorState = EditorState::Play;
-
 
                 m_selectedObject = nullptr;
             }
@@ -302,8 +292,6 @@ namespace engine
                     if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0) && m_editorState == EditorState::Edit)
                     {
                         RequestSceneChange(filename);
-                        /*SceneManager::Get().ChangeScene(filename);
-                        m_selectedObject = nullptr;*/
                     }
                 }
 
@@ -594,7 +582,21 @@ namespace engine
             flags |= ImGuiTreeNodeFlags_Leaf;
         }
         
+        // [추가] 비활성화 시 회색 처리 (Alpha 0.5)
+        bool isHierarchyActive = gameObject->IsActive(); // IsActive()는 부모까지 체크함
+        if (!isHierarchyActive)
+        {
+            ImVec4 v4 = ImGui::GetStyle().Colors[ImGuiCol_Text];
+            v4.w = 0.5f;
+            ImGui::PushStyleColor(ImGuiCol_Text, v4);
+        }
+
         bool opened = ImGui::TreeNodeEx((void*)(uint64_t)gameObject, flags, gameObject->GetName().c_str());
+
+        if (!isHierarchyActive)
+        {
+            ImGui::PopStyleColor();
+        }
 
         if (ImGui::IsItemClicked())
         {
@@ -671,6 +673,13 @@ namespace engine
         
         ImGui::PushID(m_selectedObject);
 
+        bool goActive = m_selectedObject->IsActiveSelf();
+        if (ImGui::Checkbox("##GO_Active", &goActive))
+        {
+            m_selectedObject->SetActive(goActive);
+        }
+        ImGui::SameLine();
+
         char buf[256];
         strcpy_s(buf, m_selectedObject->GetName().c_str());
         if (ImGui::InputText("Name", buf, 256))
@@ -699,7 +708,29 @@ namespace engine
                 continue;
             }
 
+            // [추가] Component Active Checkbox
+            // 중요: Object::IsActive()를 명시적 호출하여 순수하게 멤버 변수 m_active 값만 가져옴
+            bool compActive = comp->Object::IsActive();
+            if (ImGui::Checkbox("##Comp_Active", &compActive))
+            {
+                comp->SetActive(compActive);
+            }
+            ImGui::SameLine(); // 헤더와 한 줄에 표시하기 위함
+
+            bool isCompActive = comp->Object::IsActive(); // 단순히 체크박스 상태만 반영
+            if (!isCompActive)
+            {
+                ImVec4 v4 = ImGui::GetStyle().Colors[ImGuiCol_Text];
+                v4.w = 0.5f;
+                ImGui::PushStyleColor(ImGuiCol_Text, v4);
+            }
+
             bool open = ImGui::CollapsingHeader(comp->GetType().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+
+            if (!isCompActive)
+            {
+                ImGui::PopStyleColor();
+            }
 
             if (ImGui::BeginPopupContextItem())
             {

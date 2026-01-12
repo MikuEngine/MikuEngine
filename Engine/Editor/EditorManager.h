@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "Core/System/ProjectSettings.h"
+#include "Framework/Object/Ptr.h"
+#include "Framework/Object/GameObject/GameObject.h"
 
 namespace engine
 {
@@ -18,7 +20,7 @@ namespace engine
         public Singleton<EditorManager>
     {
     private:
-        GameObject* m_selectedObject = nullptr;
+        Ptr<GameObject> m_selectedObject = nullptr;
         std::unique_ptr<EditorCamera> m_editorCamera = nullptr;
         EditorState m_editorState = EditorState::Edit;
 
@@ -43,11 +45,8 @@ namespace engine
         void Update();
         void Render();
 
-        GameObject* GetSelectedObject() const;
         EditorState GetEditorState() const;
         EditorCamera* GetEditorCamera() const;
-
-        void SetSelectedObject(GameObject* gameObject);
 
     private:
         void DrawPlayController();
