@@ -177,7 +177,8 @@ namespace engine
 
     void StaticMeshRenderer::Save(json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
+
         j["MeshFilePath"] = m_meshFilePath;
         j["VSFilePath"] = m_vsFilePath;
         j["OpaquePSFilePath"] = m_opaquePSFilePath;
@@ -187,6 +188,8 @@ namespace engine
 
     void StaticMeshRenderer::Load(const json& j)
     {
+        Object::Load(j);
+
         JsonGet(j,"MeshFilePath", m_meshFilePath);
         JsonGet(j,"VSFilePath", m_vsFilePath);
         JsonGet(j,"OpaquePSFilePath", m_opaquePSFilePath);

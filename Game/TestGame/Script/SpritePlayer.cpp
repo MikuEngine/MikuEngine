@@ -17,11 +17,12 @@ namespace game
 
     void SpritePlayer::Save(engine::json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
     }
 
     void SpritePlayer::Load(const engine::json& j)
     {
+        Object::Load(j);
     }
 
     std::string SpritePlayer::GetType() const

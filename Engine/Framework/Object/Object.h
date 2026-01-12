@@ -28,8 +28,8 @@ namespace engine
 
     public:
         virtual void OnGui() {}
-        virtual void Save(json& j) const {}
-        virtual void Load(const json& j) {}
+        virtual void Save(json& j) const;
+        virtual void Load(const json& j);
         virtual std::string GetType() const = 0;
 
     private:

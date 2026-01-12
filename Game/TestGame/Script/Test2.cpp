@@ -17,11 +17,12 @@ namespace game
 
     void Test2::Save(engine::json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
     }
 
     void Test2::Load(const engine::json& j)
     {
+        Object::Load(j);
     }
 
     std::string Test2::GetType() const

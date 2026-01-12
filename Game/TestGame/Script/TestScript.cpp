@@ -47,12 +47,15 @@ namespace game
 
     void TestScript::Save(engine::json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
+
         j["Speed"] = m_speed;
     }
 
     void TestScript::Load(const engine::json& j)
     {
+        Object::Load(j);
+
         engine::JsonGet(j, "Speed", m_speed);
     }
 

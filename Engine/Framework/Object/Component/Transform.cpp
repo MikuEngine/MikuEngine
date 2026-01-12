@@ -279,7 +279,8 @@ namespace engine
 
     void Transform::Save(json& j) const
     {
-        j["Type"] = "Transform";
+        Object::Save(j);
+
         j["Position"] = m_localPosition;
         j["Rotation"] = m_localRotation;
         j["Scale"] = m_localScale;
@@ -287,6 +288,8 @@ namespace engine
 
     void Transform::Load(const json& j)
     {
+        Object::Load(j);
+
         JsonGet(j, "Position", m_localPosition);
         JsonGet(j, "Rotation", m_localRotation);
         JsonGet(j, "Scale", m_localScale);

@@ -7,6 +7,7 @@
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/ComponentFactory.h"
 #include "Framework/Scene/Scene.h"
+#include "Editor/EditorManager.h"
 
 namespace engine
 {
@@ -130,11 +131,6 @@ namespace engine
 
         m_active = active;
 
-        if (!m_hasAwoken)
-        {
-            return;
-        }
-
         bool parentActive = true;
         if (auto parent = m_transform->GetParent(); parent != nullptr)
         {
@@ -162,6 +158,26 @@ namespace engine
 
         if (m_hasAwoken)
         {
+#ifdef _DEBUG
+            if (EditorManager::Get().GetEditorState() == EditorState::Play)
+            {
+                for (auto& component : m_components)
+                {
+                    // 컴포넌트가 켜져 있을 때만 반응
+                    if (component->IsActive())
+                    {
+                        if (m_activeInHierarchy)
+                        {
+                            component->OnEnable();
+                        }
+                        else
+                        {
+                            component->OnDisable();
+                        }
+                    }
+                }
+            }
+#else
             for (auto& component : m_components)
             {
                 // 컴포넌트가 켜져 있을 때만 반응
@@ -177,6 +193,7 @@ namespace engine
                     }
                 }
             }
+#endif //_DEBUG
         }
 
         for (auto childTransform : m_transform->GetChildren())
@@ -224,6 +241,7 @@ namespace engine
     void GameObject::Save(json& j) const
     {
         j["Name"] = m_name;
+        j["Active"] = m_active;
         j["Components"] = json::array();
         
         for (const auto& comp : m_components)
@@ -240,7 +258,8 @@ namespace engine
 
     void GameObject::Load(const json& j)
     {
-        JsonGet(j, "Name", m_name);
+        //JsonGet(j, "Name", m_name);
+        JsonGet(j, "Active", m_active);
 
         JsonArrayForEach(j, "Components", [&](const json& compJson)
             {

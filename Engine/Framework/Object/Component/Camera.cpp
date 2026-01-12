@@ -78,7 +78,8 @@ namespace engine
 
     void Camera::Save(json& j) const
     {
-        j["Type"] = "Camera";
+        Object::Save(j);
+
         j["Near"] = m_near;
         j["Far"] = m_far;
         j["FOV"] = m_fov;
@@ -86,6 +87,8 @@ namespace engine
 
     void Camera::Load(const json& j)
     {
+        Object::Load(j);
+
         JsonGet(j, "Near", m_near);
         JsonGet(j, "Far", m_far);
         JsonGet(j, "FOV", m_fov);

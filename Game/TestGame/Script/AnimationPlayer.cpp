@@ -20,11 +20,12 @@ namespace game
 
     void AnimationPlayer::Save(engine::json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
     }
 
     void AnimationPlayer::Load(const engine::json& j)
     {
+        Object::Load(j);
     }
 
     std::string AnimationPlayer::GetType() const

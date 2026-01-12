@@ -279,7 +279,8 @@ namespace engine
 
     void SpriteRenderer::Save(json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
+
         j["TextureFilePath"] = m_textureFilePath ;
         j["VSFilePath"] = m_vsFilePath;
         j["OpaquePSFilePath"] = m_opaquePSFilePath;
@@ -293,6 +294,8 @@ namespace engine
 
     void SpriteRenderer::Load(const json& j)
     {
+        Object::Load(j);
+
         JsonGet(j, "TextureFilePath", m_textureFilePath);
         JsonGet(j, "VSFilePath", m_vsFilePath);
         JsonGet(j, "OpaquePSFilePath", m_opaquePSFilePath);

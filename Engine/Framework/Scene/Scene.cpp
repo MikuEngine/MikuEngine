@@ -442,6 +442,14 @@ namespace engine
                 }
             }
         }
+
+        for (auto go : m_gameObjectAddList)
+        {
+            if (go->GetTransform()->GetParent() == nullptr)
+            {
+                go->UpdateActiveInHierarchy(go->IsActiveSelf());
+            }
+        }
     }
 
     void Scene::LoadFromJson(const json& inJson)
@@ -491,6 +499,14 @@ namespace engine
                 {
                     c->GetTransform()->SetParent(p->GetTransform());
                 }
+            }
+        }
+
+        for (auto go : m_gameObjectAddList)
+        {
+            if (go->GetTransform()->GetParent() == nullptr)
+            {
+                go->UpdateActiveInHierarchy(go->IsActiveSelf());
             }
         }
     }

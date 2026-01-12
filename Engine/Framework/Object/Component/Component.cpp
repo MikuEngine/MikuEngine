@@ -4,6 +4,7 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
+#include "Editor/EditorManager.h"
 
 namespace engine
 {
@@ -41,6 +42,19 @@ namespace engine
             return;
         }
 
+#ifdef _DEBUG
+        if (m_owner->IsActive() && EditorManager::Get().GetEditorState() == EditorState::Play)
+        {
+            if (m_active)
+            {
+                OnEnable();
+            }
+            else
+            {
+                OnDisable();
+            }
+        }
+#else
         if (m_owner->IsActive())
         {
             if (m_active)
@@ -52,6 +66,7 @@ namespace engine
                 OnDisable();
             }
         }
+#endif //_DEBUG
     }
 
     void Component::MarkAsAwoken()

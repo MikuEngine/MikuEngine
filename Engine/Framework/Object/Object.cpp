@@ -73,6 +73,17 @@ namespace engine
         }
     }
 
+    void Object::Save(json& j) const
+    {
+        j["Type"] = GetType();
+        j["Active"] = m_active;
+    }
+
+    void Object::Load(const json& j)
+    {
+        JsonGet(j, "Active", m_active);
+    }
+
     void Object::RegisterObject(Object* object)
     {
         std::uint32_t index = 0;

@@ -293,13 +293,16 @@ namespace engine
 
 	void SpriteAnimator::Save(json& j) const
 	{
-		j["Type"] = GetType();
+		Object::Save(j);
+
 		j["SpriteDataPath"] = m_spriteDataPath;
 		j["AnimationDataPaths"] = m_animDataPaths;
 	}
 
 	void SpriteAnimator::Load(const json& j)
 	{
+		Object::Load(j);
+
 		JsonGet(j, "SpriteDataPath", m_spriteDataPath);
 		JsonGet(j, "AnimationDataPaths", m_animDataPaths);
 	}

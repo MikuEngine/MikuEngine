@@ -89,12 +89,15 @@ namespace game
 
     void FreeCameraController::Save(engine::json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
+
         j["MoveSpeed"] = m_moveSpeed;
     }
 
     void FreeCameraController::Load(const engine::json& j)
     {
+        Object::Load(j);
+
         engine::JsonGet(j, "MoveSpeed", m_moveSpeed);
     }
 

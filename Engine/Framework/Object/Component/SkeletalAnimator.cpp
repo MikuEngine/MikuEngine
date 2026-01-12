@@ -230,11 +230,12 @@ namespace engine
 
     void SkeletalAnimator::Save(json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
     }
 
     void SkeletalAnimator::Load(const json& j)
     {
+        Object::Load(j);
     }
 
     std::string SkeletalAnimator::GetType() const

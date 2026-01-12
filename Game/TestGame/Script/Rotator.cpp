@@ -38,12 +38,15 @@ namespace game
 
     void Rotator::Save(engine::json& j) const
     {
-        j["Type"] = GetType();
+        Object::Save(j);
+
         j["Speed"] = m_speed;
     }
 
     void Rotator::Load(const engine::json& j)
     {
+        Object::Load(j);
+
         engine::JsonGet(j, "Speed", m_speed);
     }
 
