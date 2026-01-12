@@ -11,6 +11,7 @@ namespace engine
     class RenderSystem;
     class CameraSystem;
     class AnimatorSystem;
+    class LightSystem;
 
     class SystemManager :
         public Singleton<SystemManager>
@@ -21,6 +22,8 @@ namespace engine
         std::unique_ptr<RenderSystem> m_renderSystem;
         std::unique_ptr<CameraSystem> m_cameraSystem;
         std::unique_ptr<AnimatorSystem> m_animatorSystem;
+        std::unique_ptr<LightSystem> m_lightSystem;
+
         // PhysicsSystem과 CollisionSystem은 Singleton이므로 별도 멤버 불필요
 
     private:
@@ -36,7 +39,8 @@ namespace engine
         RenderSystem& GetRenderSystem() const;
         CameraSystem& GetCameraSystem() const;
         AnimatorSystem& GetAnimatorSystem() const;
-        
+        LightSystem& GetLightSystem() const;
+
         // 물리 시스템 접근 (Singleton 래핑)
         PhysicsSystem& GetPhysicsSystem() const;
         CollisionSystem& GetCollisionSystem() const;

@@ -13,12 +13,16 @@
 #include "Core/Graphics/Resource/RasterizerState.h"
 #include "Core/Graphics/Resource/IndexBuffer.h"
 #include "Core/Graphics/Resource/BlendState.h"
+
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
 #include "Framework/Object/Component/Camera.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/CameraSystem.h"
+#include "Framework/System/LightSystem.h"
+#include "Framework/Object/Component/Light.h"
+
 #include "Editor/EditorManager.h"
 #include "Editor/EditorCamera.h"
 
@@ -154,6 +158,19 @@ namespace engine
 
         const Matrix viewProjection = view * projection;
 
+        auto& lightSystem = SystemManager::Get().GetLightSystem();
+        auto* mainLight = lightSystem.GetMainLight();
+        Vector3 lightDir = Vector3(0.0f, -1.0f, 0.0f); // 조명 없을 때 기본 방향
+        Vector3 lightColor = Vector3(0.0f, 0.0f, 0.0f);
+        float lightIntensity = 1.0f;
+        if (mainLight != nullptr)
+        {
+            lightDir = -mainLight->GetTransform()->GetUp();
+            lightColor = mainLight->GetColor();
+            lightIntensity = mainLight->GetIntensity();
+        }
+        lightDir.Normalize();
+
         CbGlobal cbGlobal;
         cbGlobal.view = view.Transpose();
         cbGlobal.projection = projection.Transpose();
@@ -162,9 +179,9 @@ namespace engine
         cbGlobal.cameraWorldPoistion = cameraPosition;
         cbGlobal.elapsedTime = Time::GetElapsedSeconds(g_startTime);
         cbGlobal.mainLightViewProjection = cbGlobal.viewProjection;
-        cbGlobal.mainLightWorldDirection = Vector3(0.0f, 0.0f, 1.0f);
-        cbGlobal.mainLightColor = Vector3(1.0f, 1.0f, 1.0f);
-        cbGlobal.mainLightIntensity = 5.0f;
+        cbGlobal.mainLightWorldDirection = lightDir;
+        cbGlobal.mainLightColor = lightColor;
+        cbGlobal.mainLightIntensity = lightIntensity;
         cbGlobal.maxHDRNits = graphics.GetMaxHDRNits();
         cbGlobal.exposure = -2.0f;
         cbGlobal.shadowMapSize = graphics.GetShadowMapSize();

@@ -11,6 +11,7 @@
 #include <Engine/Framework/Object/Component/SkeletalAnimator.h>
 #include <Engine/Framework/Object/Component/SpriteAnimator.h>
 #include <Engine/Framework/Object/Component/Camera.h>
+#include <Engine/Framework/Object/Component/Light.h>
 
 // Physics Components
 #include <Engine/Framework/Object/Component/Rigidbody.h>

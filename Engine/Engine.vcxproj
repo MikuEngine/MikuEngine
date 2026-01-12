@@ -202,6 +202,7 @@
     <ClCompile Include="Framework\Scene\SceneManager.cpp" />
     <ClCompile Include="Framework\System\AnimatorSystem.cpp" />
     <ClCompile Include="Framework\System\CameraSystem.cpp" />
+    <ClCompile Include="Framework\System\LightSystem.cpp" />
     <ClCompile Include="Framework\System\RenderSystem.cpp" />
     <ClCompile Include="Framework\System\SystemManager.cpp" />
     <ClCompile Include="Framework\System\ScriptSystem.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="Framework\Scene\Scene.h" />
     <ClInclude Include="Framework\Scene\SceneManager.h" />
     <ClInclude Include="Framework\System\CameraSystem.h" />
+    <ClInclude Include="Framework\System\LightSystem.h" />
     <ClInclude Include="Framework\System\RenderSystem.h" />
     <ClInclude Include="Framework\System\SystemManager.h" />
     <ClInclude Include="Framework\System\ScriptSystem.h" />
