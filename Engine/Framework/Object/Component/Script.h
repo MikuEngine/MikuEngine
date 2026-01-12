@@ -63,10 +63,7 @@ namespace engine
 
             // Awake는 등록했든 말든 Scene에서 일괄 호출
 
-            if constexpr (IsFuncOverridden(&ScriptBase::Start, &T::Start))
-            {
-                eventFlags |= 1U << static_cast<int>(ScriptEvent::Start);
-            }
+            eventFlags |= 1U << static_cast<int>(ScriptEvent::Start); // start는 한번이니까 그냥 다 호출함
 
             if constexpr (IsFuncOverridden(&ScriptBase::Update, &T::Update))
             {

@@ -7,7 +7,10 @@ namespace engine
     {
         for (auto animator : m_components)
         {
-            animator->Update();
+            if (animator->IsActive())
+            {
+                animator->Update();
+            }
         }
     }
 }

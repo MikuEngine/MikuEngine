@@ -7,7 +7,10 @@ namespace engine
     {
         for (auto& transform : m_components)
         {
-            transform->UnmarkDirtyThisFrame();
+            if (transform->IsActive())
+            {
+                transform->UnmarkDirtyThisFrame();
+            }
         }
     }
 }

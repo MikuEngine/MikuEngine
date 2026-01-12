@@ -14,7 +14,7 @@ namespace game
 
     public:
         void Awake() override;
-        //void Start() override;
+        void Start() override;
         void Update() override;
 
     public:

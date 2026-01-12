@@ -13,6 +13,11 @@ namespace game
         //gameObject->Destroy();
     }
 
+    void Rotator::Start()
+    {
+        LOG_PRINT("Rotator Start");
+    }
+
     void Rotator::Update()
     {
         GetTransform()->Rotate(engine::Vector3::UnitZ, 90.0f * m_speed * engine::Time::DeltaTime());

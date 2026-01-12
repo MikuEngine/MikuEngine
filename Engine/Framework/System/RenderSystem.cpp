@@ -197,12 +197,18 @@ namespace engine
             {
                 for (auto renderer : m_opaqueList)
                 {
-                    renderer->Draw(RenderType::Shadow);
+                    if (renderer->IsActive())
+                    {
+                        renderer->Draw(RenderType::Shadow);
+                    }
                 }
 
                 for (auto renderer : m_cutoutList)
                 {
-                    renderer->Draw(RenderType::Shadow);
+                    if (renderer->IsActive())
+                    {
+                        renderer->Draw(RenderType::Shadow);
+                    }
                 }
             }
             graphics.EndDrawShadowPass();
@@ -211,12 +217,18 @@ namespace engine
             {
                 for (auto renderer : m_opaqueList)
                 {
-                    renderer->Draw(RenderType::Opaque);
+                    if (renderer->IsActive())
+                    {
+                        renderer->Draw(RenderType::Opaque);
+                    }
                 }
 
                 for (auto renderer : m_cutoutList)
                 {
-                    renderer->Draw(RenderType::Cutout);
+                    if (renderer->IsActive())
+                    {
+                        renderer->Draw(RenderType::Cutout);
+                    }
                 }
             }
             graphics.EndDrawGeometryPass();
@@ -262,13 +274,19 @@ namespace engine
 
                 static std::vector<std::pair<float, Renderer*>> sortList;
                 sortList.clear();
-                sortList.reserve(m_transparentList.size());
+                if (sortList.capacity() < m_transparentList.size())
+                {
+                    sortList.reserve(static_cast<size_t>(m_transparentList.size() * 1.5f));
+                }
                 Vector3 camPos = cameraPosition;
                 
                 for (auto* renderer : m_transparentList)
                 {
-                    float distSq = Vector3::DistanceSquared(camPos, renderer->GetTransform()->GetWorld().Translation());
-                    sortList.emplace_back(distSq, renderer);
+                    if (renderer->IsActive())
+                    {
+                        float distSq = Vector3::DistanceSquared(camPos, renderer->GetTransform()->GetWorld().Translation());
+                        sortList.emplace_back(distSq, renderer);
+                    }
                 }
                 
                 std::sort(sortList.begin(), sortList.end(),
@@ -293,7 +311,10 @@ namespace engine
         {
             for (auto renderer : m_screenList)
             {
-                renderer->Draw(RenderType::Screen);
+                if (renderer->IsActive())
+                {
+                    renderer->Draw(RenderType::Screen);
+                }
             }
         }
         graphics.EndDrawScreenPass();

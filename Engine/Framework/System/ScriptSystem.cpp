@@ -24,19 +24,37 @@ namespace engine
 
     void ScriptSystem::CallStart()
     {
-        for (auto& script : m_startScripts)
+        for (size_t i = 0; i < m_startScripts.size(); )
         {
-            script->Start();
-            script->m_systemIndices[static_cast<size_t>(ScriptEvent::Start)] = -1;
-        }
+            auto script = m_startScripts[i];
 
-        m_startScripts.clear();
+            if (script->IsActive())
+            {
+                script->Start();
+
+                RemoveScript(m_startScripts, script, ScriptEvent::Start);
+            }
+            else
+            {
+                ++i;
+            }
+        }
     }
 
     void ScriptSystem::CallUpdate()
     {
         for (auto& script : m_updateScripts)
         {
+            if (!script->IsActive())
+            {
+                continue;
+            }
+
+            if (script->m_systemIndices[static_cast<size_t>(ScriptEvent::Start)] != -1)
+            {
+                continue;
+            }
+
             script->Update();
         }
     }
