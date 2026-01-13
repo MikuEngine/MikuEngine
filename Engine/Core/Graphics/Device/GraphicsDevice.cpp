@@ -257,8 +257,6 @@ namespace engine
 
     void GraphicsDevice::EndDrawLightPass()
     {
-        DrawFullscreenQuad();
-
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
 
         ID3D11ShaderResourceView* nullSRVs[m_gBuffer.count]{};

@@ -12,7 +12,7 @@ namespace engine
 	using Vector4 = DirectX::SimpleMath::Vector4;
 	using Matrix = DirectX::SimpleMath::Matrix;
 
-	struct CbGlobal
+	struct CbFrame
 	{
 		Matrix view;
 		

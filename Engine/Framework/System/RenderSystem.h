@@ -72,5 +72,10 @@ namespace engine
     private:
         void AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type);
         void RemoveRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type);
+
+        void DrawGlobalLight();
+        void DrawLocalLight();
+        void DrawSkybox();
+        void DrawTransparents(const Vector3& cameraPosition);
     };
 }

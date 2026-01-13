@@ -35,7 +35,7 @@ namespace engine
 
     RenderSystem::RenderSystem()
     {
-        m_globalConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("CbGlobal", sizeof(CbGlobal));
+        m_globalConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("CbFrame", sizeof(CbFrame));
 
         m_comparisonSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Comparison);
         m_clampSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Clamp);
@@ -109,7 +109,7 @@ namespace engine
     void RenderSystem::Render()
     {
         auto& graphics = GraphicsDevice::Get();
-        auto context = GraphicsDevice::Get().GetDeviceContext();
+        const auto& context = GraphicsDevice::Get().GetDeviceContext();
 
         Matrix view, projection;
         Vector3 cameraPosition;
@@ -188,29 +188,29 @@ namespace engine
         }
         lightDir.Normalize();
 
-        CbGlobal cbGlobal;
-        cbGlobal.view = view.Transpose();
-        cbGlobal.projection = projection.Transpose();
-        cbGlobal.viewProjection = viewProjection.Transpose();
-        cbGlobal.invViewProjection = viewProjection.Invert().Transpose();
-        cbGlobal.cameraWorldPoistion = cameraPosition;
-        cbGlobal.elapsedTime = Time::GetElapsedSeconds(g_startTime);
-        cbGlobal.mainLightViewProjection = (lightView * lightProjection).Transpose();
-        cbGlobal.mainLightWorldDirection = lightDir;
-        cbGlobal.mainLightColor = lightColor;
-        cbGlobal.mainLightIntensity = lightIntensity;
-        cbGlobal.maxHDRNits = graphics.GetMaxHDRNits();
-        cbGlobal.exposure = m_exposure;
-        cbGlobal.shadowMapSize = graphics.GetShadowMapSize();
-        cbGlobal.useShadowPCF = 1;
-        cbGlobal.pcfSize = 2;
-        cbGlobal.useIBL = 1;
-        cbGlobal.bloomStrength = m_bloomStrength;
-        cbGlobal.bloomThreshold = m_bloomThreshold;
-        cbGlobal.bloomSoftKnee = m_bloomSoftKnee;
-        cbGlobal.fxaaQualitySubpix = 0.75f;           // 0.0 to 1.0 (default: 0.75)
-        cbGlobal.fxaaQualityEdgeThreshold = 0.166f;    // 0.063 to 0.333 (default: 0.166)
-        cbGlobal.fxaaQualityEdgeThresholdMin = 0.0833f; // 0.0312 to 0.0833 (default: 0.0833)
+        CbFrame cbFrame;
+        cbFrame.view = view.Transpose();
+        cbFrame.projection = projection.Transpose();
+        cbFrame.viewProjection = viewProjection.Transpose();
+        cbFrame.invViewProjection = viewProjection.Invert().Transpose();
+        cbFrame.cameraWorldPoistion = cameraPosition;
+        cbFrame.elapsedTime = Time::GetElapsedSeconds(g_startTime);
+        cbFrame.mainLightViewProjection = (lightView * lightProjection).Transpose();
+        cbFrame.mainLightWorldDirection = lightDir;
+        cbFrame.mainLightColor = lightColor;
+        cbFrame.mainLightIntensity = lightIntensity;
+        cbFrame.maxHDRNits = graphics.GetMaxHDRNits();
+        cbFrame.exposure = -2.5f;
+        cbFrame.shadowMapSize = graphics.GetShadowMapSize();
+        cbFrame.useShadowPCF = 1;
+        cbFrame.pcfSize = 2;
+        cbFrame.useIBL = 1;
+        cbFrame.bloomStrength = m_bloomStrength;
+        cbFrame.bloomThreshold = m_bloomThreshold;
+        cbFrame.bloomSoftKnee = m_bloomSoftKnee;
+        cbFrame.fxaaQualitySubpix = 0.75f;           // 0.0 to 1.0 (default: 0.75)
+        cbFrame.fxaaQualityEdgeThreshold = 0.166f;    // 0.063 to 0.333 (default: 0.166)
+        cbFrame.fxaaQualityEdgeThresholdMin = 0.0833f; // 0.0312 to 0.0833 (default: 0.0833)
 
         context->VSSetConstantBuffers(
             static_cast<UINT>(ConstantBufferSlot::Global),
@@ -221,7 +221,7 @@ namespace engine
             1,
             m_globalConstantBuffer->GetBuffer().GetAddressOf());
 
-        context->UpdateSubresource(m_globalConstantBuffer->GetRawBuffer(), 0, nullptr, &cbGlobal, 0, 0);
+        context->UpdateSubresource(m_globalConstantBuffer->GetRawBuffer(), 0, nullptr, &cbFrame, 0, 0);
 
         graphics.ClearAllViews();
 
@@ -269,72 +269,16 @@ namespace engine
 
             graphics.BeginDrawLightPass();
             {
-                context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Clamp), 1, m_clampSamplerState->GetSamplerState().GetAddressOf());
-                context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Comparison), 1, m_comparisonSamplerState->GetSamplerState().GetAddressOf());
+                DrawGlobalLight();
 
-                ID3D11ShaderResourceView* srvs[3]{ m_irradianceMap->GetRawSRV(), m_specularMap->GetRawSRV(), m_brdfLut->GetRawSRV() };
-                context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLIrradiance), 3, srvs);
+                DrawLocalLight();
             }
             graphics.EndDrawLightPass();
 
             graphics.BeginDrawForwardPass();
             {
-                context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
-                context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
-
-                const UINT stride = m_cubeVertexBuffer->GetBufferStride();
-                const UINT offset = 0;
-                context->IASetVertexBuffers(0, 1, m_cubeVertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
-                context->IASetIndexBuffer(m_cubeIndexBuffer->GetRawBuffer(), m_cubeIndexBuffer->GetIndexFormat(), 0);
-                context->IASetInputLayout(m_cubeInputLayout->GetRawInputLayout());
-
-                context->VSSetShader(m_skyboxVertexShader->GetRawShader(), nullptr, 0);
-
-                context->PSSetShader(m_skyboxPixelShader->GetRawShader(), nullptr, 0);
-                context->PSSetSamplers(0, 1, m_linearSamplerState->GetSamplerState().GetAddressOf());
-                context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLEnvironment), 1, m_skyboxEnv->GetSRV().GetAddressOf());
-
-                context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
-
-                context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
-
-                context->DrawIndexed(m_cubeIndexBuffer->GetIndexCount(), 0, 0);
-
-                context->RSSetState(nullptr);
-                context->OMSetDepthStencilState(nullptr, 0);
-
-                context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
-                context->OMSetDepthStencilState(m_transparentDSState->GetRawDepthStencilState(), 0);
-
-                static std::vector<std::pair<float, Renderer*>> sortList;
-                sortList.clear();
-                if (sortList.capacity() < m_transparentList.size())
-                {
-                    sortList.reserve(static_cast<size_t>(m_transparentList.size() * 1.5f));
-                }
-                Vector3 camPos = cameraPosition;
-                
-                for (auto* renderer : m_transparentList)
-                {
-                    if (renderer->IsActive())
-                    {
-                        float distSq = Vector3::DistanceSquared(camPos, renderer->GetTransform()->GetWorld().Translation());
-                        sortList.emplace_back(distSq, renderer);
-                    }
-                }
-                
-                std::sort(sortList.begin(), sortList.end(),
-                    [](const auto& a, const auto& b) {
-                        return a.first > b.first;
-                    });
-
-                for (auto pair : sortList)
-                {
-                    pair.second->Draw(RenderType::Transparent);
-                }
-
-                context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-                context->OMSetDepthStencilState(nullptr, 0);
+                DrawSkybox();
+                DrawTransparents(cameraPosition);
             }
             graphics.EndDrawForwardPass();
         }
@@ -398,5 +342,92 @@ namespace engine
 
         back->m_systemIndices[static_cast<size_t>(type)] = index;
         renderer->m_systemIndices[static_cast<size_t>(type)] = -1;
+    }
+
+    void RenderSystem::DrawGlobalLight()
+    {
+        const auto& context = GraphicsDevice::Get().GetDeviceContext();
+
+        context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Clamp), 1, m_clampSamplerState->GetSamplerState().GetAddressOf());
+        context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Comparison), 1, m_comparisonSamplerState->GetSamplerState().GetAddressOf());
+
+        ID3D11ShaderResourceView* srvs[3]{ m_irradianceMap->GetRawSRV(), m_specularMap->GetRawSRV(), m_brdfLut->GetRawSRV() };
+        context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLIrradiance), 3, srvs);
+
+        GraphicsDevice::Get().DrawFullscreenQuad();
+
+    }
+
+    void RenderSystem::DrawLocalLight()
+    {
+        const auto& context = GraphicsDevice::Get().GetDeviceContext();
+
+
+    }
+
+    void RenderSystem::DrawSkybox()
+    {
+        const auto& context = GraphicsDevice::Get().GetDeviceContext();
+
+        context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
+        context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
+
+        const UINT stride = m_cubeVertexBuffer->GetBufferStride();
+        const UINT offset = 0;
+        context->IASetVertexBuffers(0, 1, m_cubeVertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
+        context->IASetIndexBuffer(m_cubeIndexBuffer->GetRawBuffer(), m_cubeIndexBuffer->GetIndexFormat(), 0);
+        context->IASetInputLayout(m_cubeInputLayout->GetRawInputLayout());
+
+        context->VSSetShader(m_skyboxVertexShader->GetRawShader(), nullptr, 0);
+
+        context->PSSetShader(m_skyboxPixelShader->GetRawShader(), nullptr, 0);
+        context->PSSetSamplers(0, 1, m_linearSamplerState->GetSamplerState().GetAddressOf());
+        context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLEnvironment), 1, m_skyboxEnv->GetSRV().GetAddressOf());
+
+        context->RSSetState(m_skyboxRSState->GetRawRasterizerState());
+
+        context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
+
+        context->DrawIndexed(m_cubeIndexBuffer->GetIndexCount(), 0, 0);
+
+        context->RSSetState(nullptr);
+        context->OMSetDepthStencilState(nullptr, 0);
+    }
+
+    void RenderSystem::DrawTransparents(const Vector3& cameraPosition)
+    {
+        const auto& context = GraphicsDevice::Get().GetDeviceContext();
+
+        context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
+        context->OMSetDepthStencilState(m_transparentDSState->GetRawDepthStencilState(), 0);
+
+        static std::vector<std::pair<float, Renderer*>> sortList;
+        sortList.clear();
+        if (sortList.capacity() < m_transparentList.size())
+        {
+            sortList.reserve(static_cast<size_t>(m_transparentList.size() * 1.5f));
+        }
+
+        for (auto* renderer : m_transparentList)
+        {
+            if (renderer->IsActive())
+            {
+                float distSq = Vector3::DistanceSquared(cameraPosition, renderer->GetTransform()->GetWorld().Translation());
+                sortList.emplace_back(distSq, renderer);
+            }
+        }
+
+        std::sort(sortList.begin(), sortList.end(),
+            [](const auto& a, const auto& b) {
+                return a.first > b.first;
+            });
+
+        for (auto pair : sortList)
+        {
+            pair.second->Draw(RenderType::Transparent);
+        }
+
+        context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+        context->OMSetDepthStencilState(nullptr, 0);
     }
 }

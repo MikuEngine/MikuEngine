@@ -34,7 +34,7 @@ SamplerState g_samClamp                 : register(s3);
 
 
 
-cbuffer Global : register(b0) // 프레임 당 한번만 갱신되는 버퍼
+cbuffer Frame : register(b0) // 프레임 당 한번만 갱신되는 버퍼
 {
     matrix g_view;
     
@@ -68,7 +68,7 @@ cbuffer Global : register(b0) // 프레임 당 한번만 갱신되는 버퍼
     float g_fxaaQualitySubpix; // 0.0 to 1.0 (default: 0.75)
     float g_fxaaQualityEdgeThreshold; // 0.063 to 0.333 (default: 0.166)
     float g_fxaaQualityEdgeThresholdMin; // 0.0312 to 0.0833 (default: 0.0833)
-    float __pad1_Global;
+    float __pad1_Frame;
 }
 
 cbuffer Material : register(b1)
