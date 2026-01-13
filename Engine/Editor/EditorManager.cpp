@@ -16,6 +16,8 @@
 
 #include "Editor/EditorCamera.h"
 
+#include "Framework/Physics/PhysicsDebugRenderer.h"
+
 namespace engine
 {
     namespace
@@ -857,6 +859,9 @@ namespace engine
             ImGui::Text("VRAM: %s", FormatBytes(Profiling::GetVRAMUsage()).c_str());
             ImGui::Text("PageFile: %s", FormatBytes(Profiling::GetPageFileUsage()).c_str());
         }
+
+        // Physics Debug
+        PhysicsDebugRenderer::Get().OnGui();
 
         ImGui::End();
     }

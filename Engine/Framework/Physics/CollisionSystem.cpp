@@ -5,6 +5,7 @@
 #include "Framework/Object/Component/Rigidbody.h"
 #include "Framework/Object/Component/Script.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Physics/PhysicsDebugRenderer.h"
 
 namespace engine
 {
@@ -52,6 +53,9 @@ namespace engine
 
     void CollisionSystem::ProcessEvents()
     {
+        // 디버그 렌더러 충돌 상태 초기화
+        PhysicsDebugRenderer::Get().ClearCollidingState();
+
         ProcessCollisionEvents();
         ProcessTriggerEvents();
     }
@@ -288,6 +292,10 @@ namespace engine
         // 디스패치 시점에 다시 유효성 검사
         if (!a || !b) return;
 
+        // 디버그 렌더러에 충돌 상태 표시
+        PhysicsDebugRenderer::Get().MarkColliding(a.Get());
+        PhysicsDebugRenderer::Get().MarkColliding(b.Get());
+
         GameObject* goA = a->GetGameObject();
         GameObject* goB = b->GetGameObject();
 
@@ -319,7 +327,12 @@ namespace engine
     {
         // Enter와 유사하게 구현
         if (!a || !b) return;
-        // TODO: 구현
+
+        // 디버그 렌더러에 충돌 상태 표시
+        PhysicsDebugRenderer::Get().MarkColliding(a.Get());
+        PhysicsDebugRenderer::Get().MarkColliding(b.Get());
+
+        // TODO: Script 콜백 구현
     }
 
     void CollisionSystem::DispatchCollisionExit(Ptr<Collider> a, Ptr<Collider> b)

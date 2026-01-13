@@ -9,6 +9,7 @@
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Scene/SceneManager.h"
+#include "Framework/Physics/PhysicsDebugRenderer.h"
 
 namespace engine
 {
@@ -87,6 +88,9 @@ namespace engine
         // 7. 레이어 매트릭스 기본 설정
         m_layerMatrix.SetupDefault();
 
+        // 8. 디버그 렌더러 초기화
+        PhysicsDebugRenderer::Get().Initialize();
+
         m_isInitialized = true;
         LOG_PRINT("[PhysicsSystem] Initialized successfully");
     }
@@ -97,6 +101,9 @@ namespace engine
         {
             return;
         }
+
+        // 디버그 렌더러 정리
+        PhysicsDebugRenderer::Get().Shutdown();
 
         // Scene 데이터 정리
         for (auto& [scene, data] : m_sceneDataMap)
@@ -784,5 +791,31 @@ namespace engine
     {
         Scene* activeScene = SceneManager::Get().GetScene();
         return GetSceneData(activeScene);
+    }
+
+    const std::vector<Collider*>& PhysicsSystem::GetRegisteredColliders() const
+    {
+        static const std::vector<Collider*> empty;
+        
+        Scene* activeScene = SceneManager::Get().GetScene();
+        auto it = m_sceneDataMap.find(activeScene);
+        if (it != m_sceneDataMap.end())
+        {
+            return it->second.colliders;
+        }
+        return empty;
+    }
+
+    const std::vector<CharacterController*>& PhysicsSystem::GetRegisteredControllers() const
+    {
+        static const std::vector<CharacterController*> empty;
+        
+        Scene* activeScene = SceneManager::Get().GetScene();
+        auto it = m_sceneDataMap.find(activeScene);
+        if (it != m_sceneDataMap.end())
+        {
+            return it->second.controllers;
+        }
+        return empty;
     }
 }

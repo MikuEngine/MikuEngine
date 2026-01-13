@@ -7,8 +7,7 @@ namespace engine
 {
     class Object;
 
-    // Object*로부터 Handle을 얻는 헬퍼 (Ptr.cpp에서 정의)
-    Handle GetHandleFromObject(Object* obj);
+    // Handle로부터 Object*를 얻는 헬퍼 (Ptr.cpp에서 정의)
     Object* GetObjectFromHandle(Handle handle);
 
     // ═══════════════════════════════════════════════════════════════

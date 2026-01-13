@@ -26,6 +26,8 @@
 #include "Editor/EditorManager.h"
 #include "Editor/EditorCamera.h"
 
+#include "Framework/Physics/PhysicsDebugRenderer.h"
+
 namespace engine
 {
     namespace
@@ -335,6 +337,9 @@ namespace engine
 
                 context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
                 context->OMSetDepthStencilState(nullptr, 0);
+
+                // Physics Debug Rendering
+                PhysicsDebugRenderer::Get().Render(view, projection);
             }
             graphics.EndDrawForwardPass();
         }

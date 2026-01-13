@@ -203,6 +203,10 @@ namespace engine
         void SetDebugRenderEnabled(bool enabled) { m_settings.enableDebugRender = enabled; }
         bool IsDebugRenderEnabled() const { return m_settings.enableDebugRender; }
 
+        // 등록된 컴포넌트 접근 (디버그 렌더링용)
+        const std::vector<Collider*>& GetRegisteredColliders() const;
+        const std::vector<CharacterController*>& GetRegisteredControllers() const;
+
     private:
         // 시뮬레이션 헬퍼
         void SyncTransformsToPhysics(PxSceneData& data);
