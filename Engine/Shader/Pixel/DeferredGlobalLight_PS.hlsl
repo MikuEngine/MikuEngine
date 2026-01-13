@@ -112,7 +112,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
                         float2 offset = float2(x, y) * texelSize;
                         float2 sampleUV = shadowMapUV + offset;
 
-                        sum += g_texShadowMap.SampleCmpLevelZero(g_samComparison, sampleUV, currentShadowDepth - 0.0001f);
+                        sum += g_texShadowMap.SampleCmpLevelZero(g_samComparison, sampleUV, currentShadowDepth - 0.00001f);
                     }
                 }
                 shadowFactor = sum / ((max * 2 + 1) * (max * 2 + 1));
@@ -172,7 +172,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     
         float3 specularIBL = prefilteredColor * (f0 * specularBRDF.x + specularBRDF.y);
         
-        ambientLighting = (diffuseIBL + specularIBL) * 0.7f;
+        ambientLighting = (diffuseIBL + specularIBL) * ao;
     }
     
     float3 final = directLighting + ambientLighting + emissive;

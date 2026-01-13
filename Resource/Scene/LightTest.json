@@ -50,10 +50,10 @@
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": -0.3535534143447876,
-                        "y": 0.14644663035869598,
-                        "z": 0.3535534143447876,
-                        "w": 0.8535533547401428
+                        "x": 0.15808825194835663,
+                        "y": 0.841361939907074,
+                        "z": -0.34850355982780457,
+                        "w": 0.38165876269340515
                     },
                     "Scale": {
                         "x": 1.0,
@@ -72,10 +72,10 @@
                     },
                     "Intensity": 1.0,
                     "Range": 10.0,
-                    "Angle": 2.200000047683716,
+                    "Angle": 0.10000000149011612,
                     "Near": 90000.0,
                     "Far": 100000.0,
-                    "ForwardDistance": 651.0,
+                    "ForwardDistance": 0.0,
                     "HeightRatio": 0.9200000166893005
                 }
             ]
@@ -90,7 +90,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.0,
+                        "y": 4.900000095367432,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -100,15 +100,15 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 5.0,
+                        "y": 5.0,
+                        "z": 5.0
                     }
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "MeshFilePath": "Resource/Model/Girl.fbx",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -136,9 +136,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.10000000149011612,
+                        "y": 0.10000000149011612,
+                        "z": 0.10000000149011612
                     }
                 },
                 {

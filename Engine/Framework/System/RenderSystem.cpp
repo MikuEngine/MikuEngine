@@ -202,7 +202,7 @@ namespace engine
         cbGlobal.maxHDRNits = graphics.GetMaxHDRNits();
         cbGlobal.exposure = m_exposure;
         cbGlobal.shadowMapSize = graphics.GetShadowMapSize();
-        cbGlobal.useShadowPCF = 0;
+        cbGlobal.useShadowPCF = 1;
         cbGlobal.pcfSize = 2;
         cbGlobal.useIBL = 1;
         cbGlobal.bloomStrength = m_bloomStrength;
