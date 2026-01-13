@@ -11,6 +11,7 @@ namespace engine
         Vector3 m_localPosition{ 0.0f, 0.0f, 0.0f };
         Quaternion m_localRotation = Quaternion::Identity;
         Vector3 m_localScale{ 1.0f, 1.0f, 1.0f };
+        Vector3 m_localEulerRotation{ 0.0f, 0.0f, 0.0f };
 
         Matrix m_world{ Matrix::Identity };
 

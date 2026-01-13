@@ -20,8 +20,12 @@ namespace engine
         LightType m_lightType = LightType::Directional;
         Vector3 m_color{ 1.0f, 1.0f, 1.0f };
         float m_intensity = 1.0f;
+        float m_lightNear = 90000.0f;
+        float m_lightFar = 100000.0f;
+        float m_lightForwardDist = 1000.0f;
+        float m_lightHeightRatio = 0.9f;
         float m_range = 10.0f;
-        float m_spotAngle = 45.0f;
+        float m_angle = 45.0f;
 
     public:
         ~Light();
@@ -33,13 +37,21 @@ namespace engine
         void SetColor(const Vector3& color);
         void SetIntensity(float intensity);
         void SetRange(float range);
-        void SetSpotAngle(float angle);
+        void SetAngle(float angle);
+        void SetLightNear(float lightNear);
+        void SetLightFar(float lightFar);
+        void SetForwardDist(float forwardDist);
+        void SetHeightRatio(float heightRatio);
 
         LightType GetLightType() const;
         const Vector3& GetColor() const;
         float GetIntensity() const;
         float GetRange() const;
-        float GetSpotAngle() const;
+        float GetAngle() const;
+        float GetLightNear() const;
+        float GetLightFar() const;
+        float GetForwardDist() const;
+        float GetHeightRatio() const;
 
     public:
         void OnGui() override;

@@ -70,12 +70,7 @@ namespace engine
 
     Vector3 Transform::GetLocalEulerAngles() const
     {
-        Vector3 euler = m_localRotation.ToEuler();
-        euler.x = ToDegree(euler.x);
-        euler.y = ToDegree(euler.y);
-        euler.z = ToDegree(euler.z);
-
-        return euler;
+        return m_localEulerRotation;
     }
 
     const Matrix& Transform::GetWorld()
@@ -119,6 +114,11 @@ namespace engine
     {
         m_localRotation = rotation;
 
+        Vector3 euler = rotation.ToEuler();
+        m_localEulerRotation.x = ToDegree(euler.x);
+        m_localEulerRotation.y = ToDegree(euler.y);
+        m_localEulerRotation.z = ToDegree(euler.z);
+
         MarkDirty();
     }
 
@@ -128,6 +128,8 @@ namespace engine
             ToRadian(euler.y),
             ToRadian(euler.x),
             ToRadian(euler.z));
+
+        m_localEulerRotation = euler;
 
         MarkDirty();
     }

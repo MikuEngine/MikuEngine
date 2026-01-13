@@ -53,6 +53,7 @@ namespace engine
         const Matrix& GetProjection() const;
         const DirectX::BoundingFrustum& GetFrustum() const;
         Vector3 GetForward() const;
+        Vector3 GetPosition() const;
 
         void SetNear(float value);
         void SetFar(float value);

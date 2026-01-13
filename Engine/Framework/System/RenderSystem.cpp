@@ -113,6 +113,7 @@ namespace engine
 
         Matrix view, projection;
         Vector3 cameraPosition;
+        Vector3 cameraForward;
 
         bool isCameraOff = false;
 
@@ -126,6 +127,7 @@ namespace engine
             view = cam->GetView();
             projection = cam->GetProjection();
             cameraPosition = cam->GetPosition();
+            cameraForward = GetForward(view.Invert());
         }
             break;
 
@@ -140,7 +142,8 @@ namespace engine
 
             view = cam->GetView();
             projection = cam->GetProjection();
-            cameraPosition = GetTranslation(cam->GetWorld());
+            cameraPosition = cam->GetPosition();
+            cameraForward = cam->GetForward();
         }
             break;
         }
@@ -153,7 +156,8 @@ namespace engine
 
         view = cam->GetView();
         projection = cam->GetProjection();
-        cameraPosition = GetTranslation(cam->GetWorld());
+        cameraPosition = cam->GetPosition();
+        cameraForward = cam->GetForward();
 #endif // _DEBUG
 
         const Matrix viewProjection = view * projection;
@@ -162,12 +166,25 @@ namespace engine
         auto* mainLight = lightSystem.GetMainLight();
         Vector3 lightDir = Vector3(0.0f, -1.0f, 0.0f); // 조명 없을 때 기본 방향
         Vector3 lightColor = Vector3(0.0f, 0.0f, 0.0f);
+
+        Matrix lightView, lightProjection;
+
         float lightIntensity = 1.0f;
         if (mainLight != nullptr)
         {
+            Vector3 lightUp = mainLight->GetTransform()->GetForward();
             lightDir = -mainLight->GetTransform()->GetUp();
             lightColor = mainLight->GetColor();
             lightIntensity = mainLight->GetIntensity();
+
+            Vector3 focusPosition = cameraPosition + cameraForward * mainLight->GetForwardDist();
+            Vector3 lightPosition = focusPosition + -lightDir * mainLight->GetLightFar() * mainLight->GetHeightRatio();
+            lightView = DirectX::XMMatrixLookAtLH(lightPosition, focusPosition, lightUp);
+            lightProjection = DirectX::XMMatrixPerspectiveFovLH(
+                ToRadian(mainLight->GetAngle()),
+                1.0f,
+                mainLight->GetLightNear(),
+                mainLight->GetLightFar());
         }
         lightDir.Normalize();
 
@@ -178,12 +195,12 @@ namespace engine
         cbGlobal.invViewProjection = viewProjection.Invert().Transpose();
         cbGlobal.cameraWorldPoistion = cameraPosition;
         cbGlobal.elapsedTime = Time::GetElapsedSeconds(g_startTime);
-        cbGlobal.mainLightViewProjection = cbGlobal.viewProjection;
+        cbGlobal.mainLightViewProjection = (lightView * lightProjection).Transpose();
         cbGlobal.mainLightWorldDirection = lightDir;
         cbGlobal.mainLightColor = lightColor;
         cbGlobal.mainLightIntensity = lightIntensity;
         cbGlobal.maxHDRNits = graphics.GetMaxHDRNits();
-        cbGlobal.exposure = -2.0f;
+        cbGlobal.exposure = m_exposure;
         cbGlobal.shadowMapSize = graphics.GetShadowMapSize();
         cbGlobal.useShadowPCF = 0;
         cbGlobal.pcfSize = 2;

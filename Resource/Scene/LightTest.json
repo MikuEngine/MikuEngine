@@ -1,6 +1,6 @@
 {
     "Name": "LightTest",
-    "NumGameObjects": 3,
+    "NumGameObjects": 4,
     "GameObjects": [
         {
             "ID": 0,
@@ -50,10 +50,10 @@
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
+                        "x": -0.3535534143447876,
+                        "y": 0.14644663035869598,
+                        "z": 0.3535534143447876,
+                        "w": 0.8535533547401428
                     },
                     "Scale": {
                         "x": 1.0,
@@ -72,12 +72,52 @@
                     },
                     "Intensity": 1.0,
                     "Range": 10.0,
-                    "SpotAngle": 45.0
+                    "Angle": 2.200000047683716,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 651.0,
+                    "HeightRatio": 0.9200000166893005
                 }
             ]
         },
         {
             "ID": 2,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl"
+                }
+            ]
+        },
+        {
+            "ID": 3,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -104,7 +144,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "MeshFilePath": "Resource/Model/Floor.fbx",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",

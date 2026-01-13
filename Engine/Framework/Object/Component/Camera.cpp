@@ -129,6 +129,11 @@ namespace engine
         return engine::GetForward(m_world);
     }
 
+    Vector3 Camera::GetPosition() const
+    {
+        return engine::GetTranslation(m_world);
+    }
+
     void Camera::SetNear(float value)
     {
         m_near = value;

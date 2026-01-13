@@ -53,6 +53,7 @@ namespace engine
         float m_bloomStrength = 0.05f;
         float m_bloomThreshold = 1.0f;
         float m_bloomSoftKnee = 2.0f;
+        float m_exposure = -2.0f;
 
     public:
         RenderSystem();

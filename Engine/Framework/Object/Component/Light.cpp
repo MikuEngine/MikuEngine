@@ -46,9 +46,29 @@ namespace engine
 		m_range = range;
 	}
 
-	void Light::SetSpotAngle(float angle)
+	void Light::SetAngle(float angle)
 	{
-		m_spotAngle = angle;
+		m_angle = angle;
+	}
+
+	void Light::SetLightNear(float lightNear)
+	{
+		m_lightNear = lightNear;
+	}
+
+	void Light::SetLightFar(float lightFar)
+	{
+		m_lightFar = lightFar;
+	}
+
+	void Light::SetForwardDist(float forwardDist)
+	{
+		m_lightForwardDist = forwardDist;
+	}
+
+	void Light::SetHeightRatio(float heightRatio)
+	{
+		m_lightHeightRatio = heightRatio;
 	}
 
 	LightType Light::GetLightType() const
@@ -71,9 +91,29 @@ namespace engine
 		return m_range;
 	}
 
-	float Light::GetSpotAngle() const
+	float Light::GetAngle() const
 	{
-		return m_spotAngle;
+		return m_angle;
+	}
+
+	float Light::GetLightNear() const
+	{
+		return m_lightNear;
+	}
+
+	float Light::GetLightFar() const
+	{
+		return m_lightFar;
+	}
+
+	float Light::GetForwardDist() const
+	{
+		return m_lightForwardDist;
+	}
+
+	float Light::GetHeightRatio() const
+	{
+		return m_lightHeightRatio;
 	}
 
 	void Light::OnGui()
@@ -87,15 +127,25 @@ namespace engine
 		}
 		// Common Properties
 		ImGui::ColorEdit3("Color", &m_color.x);
-		ImGui::DragFloat("Intensity", &m_intensity, 0.1f, 0.0f, 100.0f);
+		ImGui::DragFloat("Intensity", &m_intensity, 0.1f, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 		// Type Specific Properties
+		if (m_lightType == LightType::Directional)
+		{
+			ImGui::SeparatorText("Shadow Frustum Setting");
+			ImGui::DragFloat("Near", &m_lightNear, 1.0f, 1.0f, m_lightFar - 10.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp);
+			ImGui::DragFloat("Far", &m_lightFar, 1.0f, m_lightNear + 10.0f, FLT_MAX, "%.0f", ImGuiSliderFlags_AlwaysClamp);
+			ImGui::DragFloat("FOV", &m_angle, 0.1f, 0.1f, 189.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+			ImGui::DragFloat("Forward Distance", &m_lightForwardDist);
+			ImGui::DragFloat("Height Ratio", &m_lightHeightRatio, 0.01f, 0.01f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+		}
+
 		if (m_lightType == LightType::Point || m_lightType == LightType::Spot)
 		{
-			ImGui::DragFloat("Range", &m_range, 0.1f, 0.0f, 100.0f);
+			ImGui::DragFloat("Range", &m_range, 0.1f, 0.0f, FLT_MAX, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 		}
 		if (m_lightType == LightType::Spot)
 		{
-			ImGui::SliderFloat("Spot Angle", &m_spotAngle, 1.0f, 90.0f);
+			ImGui::SliderFloat("Spot Angle", &m_angle, 0.1f, 189.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 		}
 	}
 
@@ -107,7 +157,11 @@ namespace engine
 		j["Color"] = m_color;
 		j["Intensity"] = m_intensity;
 		j["Range"] = m_range;
-		j["SpotAngle"] = m_spotAngle;
+		j["Angle"] = m_angle;
+		j["Near"] = m_lightNear;
+		j["Far"] = m_lightFar;
+		j["ForwardDistance"] = m_lightForwardDist;
+		j["HeightRatio"] = m_lightHeightRatio;
 	}
 
 	void Light::Load(const json& j)
@@ -118,7 +172,11 @@ namespace engine
 		JsonGet(j, "Color", m_color);
 		JsonGet(j, "Intensity", m_intensity);
 		JsonGet(j, "Range", m_range);
-		JsonGet(j, "SpotAngle", m_spotAngle);
+		JsonGet(j, "Angle", m_angle);
+		JsonGet(j, "Near", m_lightNear);
+		JsonGet(j, "Far", m_lightFar);
+		JsonGet(j, "ForwardDistance", m_lightForwardDist);
+		JsonGet(j, "HeightRatio", m_lightHeightRatio);
 	}
 
 	std::string Light::GetType() const
