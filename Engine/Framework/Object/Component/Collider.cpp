@@ -102,12 +102,13 @@ namespace engine
     void Collider::SetCenter(const Vector3& center)
     {
         m_center = center;
+        UpdateLocalPose();
+    }
 
-        if (m_shape)
-        {
-            physx::PxTransform localPose(PhysicsUtility::ToPxVec3(m_center));
-            m_shape->setLocalPose(localPose);
-        }
+    void Collider::SetRotation(const Vector3& rotation)
+    {
+        m_rotation = rotation;
+        UpdateLocalPose();
     }
 
     void Collider::SetIsTrigger(bool isTrigger)
@@ -207,13 +208,33 @@ namespace engine
 
     void Collider::OnGui()
     {
-        // ImGui로 속성 편집
-        // 파생 클래스에서 추가 구현
+        // Center (로컬 오프셋)
+        Vector3 center = m_center;
+        if (ImGui::DragFloat3("Center", &center.x, 0.01f))
+        {
+            SetCenter(center);
+        }
+
+        // Rotation (로컬 회전)
+        Vector3 rotation = m_rotation;
+        if (ImGui::DragFloat3("Rotation", &rotation.x, 0.5f, -360.0f, 360.0f))
+        {
+            SetRotation(rotation);
+        }
+
+        // Trigger
+        bool isTrigger = m_isTrigger;
+        if (ImGui::Checkbox("Is Trigger", &isTrigger))
+        {
+            SetIsTrigger(isTrigger);
+        }
     }
 
     void Collider::Save(json& j) const
     {
+        Object::Save(j);  // Type 필드 저장
         j["center"] = { m_center.x, m_center.y, m_center.z };
+        j["rotation"] = { m_rotation.x, m_rotation.y, m_rotation.z };
         j["isTrigger"] = m_isTrigger;
         j["layer"] = m_layer;
         j["collisionMask"] = m_collisionMask;
@@ -225,6 +246,11 @@ namespace engine
         {
             auto& c = j["center"];
             m_center = Vector3(c[0].get<float>(), c[1].get<float>(), c[2].get<float>());
+        }
+        if (j.contains("rotation"))
+        {
+            auto& r = j["rotation"];
+            m_rotation = Vector3(r[0].get<float>(), r[1].get<float>(), r[2].get<float>());
         }
         if (j.contains("isTrigger"))
         {
@@ -273,9 +299,8 @@ namespace engine
             return;
         }
 
-        // 로컬 오프셋 설정
-        physx::PxTransform localPose(PhysicsUtility::ToPxVec3(m_center));
-        m_shape->setLocalPose(localPose);
+        // 로컬 오프셋 및 회전 설정
+        UpdateLocalPose();
 
         // Trigger 설정
         if (m_isTrigger)
@@ -322,8 +347,19 @@ namespace engine
         }
 
         // Static Actor 생성
-        physx::PxTransform transform = PhysicsUtility::ToPxTransform(GetTransform());
-        m_ownedStaticActor = physics->createRigidStatic(transform);
+        physx::PxTransform pxTransform;
+        if (IgnoresWorldRotation())
+        {
+            // 월드 회전 무시 - 위치만 사용
+            Vector3 worldPos = GetTransform()->GetWorldPosition();
+            pxTransform = physx::PxTransform(PhysicsUtility::ToPxVec3(worldPos));
+        }
+        else
+        {
+            // 위치와 회전 모두 사용
+            pxTransform = PhysicsUtility::ToPxTransform(GetTransform());
+        }
+        m_ownedStaticActor = physics->createRigidStatic(pxTransform);
 
         if (!m_ownedStaticActor)
         {
@@ -359,5 +395,23 @@ namespace engine
 
         m_shape->setSimulationFilterData(filterData);
         m_shape->setQueryFilterData(filterData);
+    }
+
+    void Collider::UpdateLocalPose()
+    {
+        if (!m_shape)
+        {
+            return;
+        }
+
+        // 오일러 각도(degrees)를 쿼터니언으로 변환
+        Vector3 radians = m_rotation * (DirectX::XM_PI / 180.0f);
+        Quaternion quat = Quaternion::CreateFromYawPitchRoll(radians.y, radians.x, radians.z);
+
+        physx::PxTransform localPose(
+            PhysicsUtility::ToPxVec3(m_center),
+            physx::PxQuat(quat.x, quat.y, quat.z, quat.w)
+        );
+        m_shape->setLocalPose(localPose);
     }
 }

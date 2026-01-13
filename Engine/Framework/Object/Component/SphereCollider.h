@@ -24,6 +24,9 @@ namespace engine
         float GetRadius() const { return m_radius; }
         void SetRadius(float radius);
 
+        // 구체는 월드 회전 무시
+        bool IgnoresWorldRotation() const override { return true; }
+
     protected:
         physx::PxGeometry* CreateGeometry() override;
         void UpdateGeometry() override;

@@ -29,8 +29,14 @@ namespace engine
     {
         Collider::OnGui();
         
-        // TODO: ImGui 편집
-        // ImGui::DragFloat("Radius", &m_radius, 0.1f, 0.001f, 1000.0f);
+        ImGui::Separator();
+        
+        // Radius
+        float radius = m_radius;
+        if (ImGui::DragFloat("Radius", &radius, 0.01f, 0.001f, 1000.0f))
+        {
+            SetRadius(radius);
+        }
     }
 
     void SphereCollider::Save(json& j) const

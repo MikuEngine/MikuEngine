@@ -44,8 +44,14 @@ namespace engine
     {
         Collider::OnGui();
         
-        // TODO: ImGui 편집
-        // ImGui::DragFloat3("Size", &m_size.x, 0.1f, 0.001f, 1000.0f);
+        ImGui::Separator();
+        
+        // Size
+        Vector3 size = m_size;
+        if (ImGui::DragFloat3("Size", &size.x, 0.01f, 0.001f, 1000.0f))
+        {
+            SetSize(size);
+        }
     }
 
     void BoxCollider::Save(json& j) const

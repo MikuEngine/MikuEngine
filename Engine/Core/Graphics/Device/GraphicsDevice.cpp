@@ -402,6 +402,18 @@ namespace engine
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
     }
 
+    void GraphicsDevice::BeginDrawDebugPass()
+    {
+        // 디버그 렌더링용 패스 - finalBuffer에 렌더링, 깊이 테스트 없음
+        m_deviceContext->RSSetViewports(1, &m_gameViewport);
+        m_deviceContext->OMSetRenderTargets(1, m_finalBuffer->GetRTV().GetAddressOf(), nullptr);
+    }
+
+    void GraphicsDevice::EndDrawDebugPass()
+    {
+        m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+    }
+
     void GraphicsDevice::BeginDrawGUIPass()
     {
         m_deviceContext->OMSetRenderTargets(1, m_finalBuffer->GetRTV().GetAddressOf(), nullptr);

@@ -9,6 +9,7 @@
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
 #include "Framework/Physics/PhysicsDebugRenderer.h"
 
 namespace engine
@@ -223,6 +224,51 @@ namespace engine
 
         m_sceneDataMap[scene] = std::move(data);
         LOG_PRINT("[PhysicsSystem] Created physics scene");
+
+        // 이미 씬에 존재하는 물리 컴포넌트들을 등록
+        RegisterExistingPhysicsComponents(scene);
+    }
+
+    void PhysicsSystem::RegisterExistingPhysicsComponents(Scene* scene)
+    {
+        if (!scene) return;
+
+        const auto& gameObjects = scene->GetGameObjects();
+        
+        for (const auto& go : gameObjects)
+        {
+            if (!go) continue;
+
+            // Rigidbody 등록 및 초기화
+            if (Rigidbody* rb = go->GetComponent<Rigidbody>())
+            {
+                if (!rb->GetPxActor())
+                {
+                    rb->Awake();  // Actor 생성
+                }
+                RegisterRigidbody(rb);
+            }
+
+            // Collider 등록 및 초기화
+            if (Collider* collider = go->GetComponent<Collider>())
+            {
+                if (!collider->GetPxShape())
+                {
+                    collider->Awake();  // Shape 생성
+                }
+                RegisterCollider(collider);
+            }
+
+            // CharacterController 등록 및 초기화
+            if (CharacterController* controller = go->GetComponent<CharacterController>())
+            {
+                if (!controller->GetPxController())
+                {
+                    controller->Awake();  // Controller 생성
+                }
+                RegisterController(controller);
+            }
+        }
     }
 
     void PhysicsSystem::DestroyScenePhysics(Scene* scene)

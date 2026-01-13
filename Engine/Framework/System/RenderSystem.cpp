@@ -399,6 +399,13 @@ namespace engine
             }
         }
         graphics.EndDrawScreenPass();
+
+        // Physics Debug Rendering (PostProcessing 이후, finalBuffer에 렌더링)
+        graphics.BeginDrawDebugPass();
+        {
+            PhysicsDebugRenderer::Get().Render(view, projection);
+        }
+        graphics.EndDrawDebugPass();
     }
 
     void RenderSystem::GetBloomSettings(float& bloomStrength, float& bloomThreshold, float& bloomSoftKnee)

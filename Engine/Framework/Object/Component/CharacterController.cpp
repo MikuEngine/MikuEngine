@@ -229,6 +229,7 @@ namespace engine
 
     void CharacterController::Save(json& j) const
     {
+        Object::Save(j);  // Type 필드 저장
         j["height"] = m_height;
         j["radius"] = m_radius;
         j["skinWidth"] = m_skinWidth;

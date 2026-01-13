@@ -216,6 +216,9 @@ namespace engine
         // Scene 데이터 접근
         PxSceneData* GetSceneData(Scene* scene);
         PxSceneData* GetActiveSceneData();
+        
+        // 기존 물리 컴포넌트 등록 (씬 로드 후)
+        void RegisterExistingPhysicsComponents(Scene* scene);
 
         friend class Singleton<PhysicsSystem>;
     };

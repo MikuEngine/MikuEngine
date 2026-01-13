@@ -19,6 +19,8 @@
 #include "Framework/System/RenderSystem.h"
 #include "Framework/System/CameraSystem.h"
 #include "Framework/System/AnimatorSystem.h"
+#include "Framework/Physics/PhysicsSystem.h"
+#include "Framework/Physics/CollisionSystem.h"
 #include "Editor/EditorManager.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -165,6 +167,9 @@ namespace engine
         GraphicsDevice::Get().InitializeResources();
 
         SceneManager::Get().Initialize();
+        
+        // Physics 시스템 초기화
+        PhysicsSystem::Get().Initialize();
 
 #ifdef _DEBUG
         EditorManager::Get().Initialize();
@@ -190,6 +195,7 @@ namespace engine
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
 
+        PhysicsSystem::Get().Shutdown();
         SceneManager::Get().Shutdown();
         SystemManager::Get().Shutdown();
         ResourceManager::Get().Cleanup();
@@ -272,6 +278,10 @@ namespace engine
 
         SystemManager::Get().GetScriptSystem().CallStart();
         SystemManager::Get().GetScriptSystem().CallUpdate();
+
+        // Physics 시뮬레이션
+        PhysicsSystem::Get().Update(Time::FixedDeltaTime());
+        CollisionSystem::Get().ProcessEvents();
 
         SystemManager::Get().GetCameraSystem().Update();
 

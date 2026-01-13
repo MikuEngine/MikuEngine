@@ -165,6 +165,9 @@ namespace engine
         void BeginDrawScreenPass();
         void EndDrawScreenPass();
 
+        void BeginDrawDebugPass();
+        void EndDrawDebugPass();
+
         void BeginDrawGUIPass();
         void EndDrawGUIPass();
 

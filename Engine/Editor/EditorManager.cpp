@@ -17,6 +17,8 @@
 #include "Editor/EditorCamera.h"
 
 #include "Framework/Physics/PhysicsDebugRenderer.h"
+#include "Framework/Physics/PhysicsSystem.h"
+#include "Framework/Physics/CollisionSystem.h"
 
 namespace engine
 {
@@ -107,6 +109,9 @@ namespace engine
                 scene->SaveToJson(g_tempScene);
                 scene->LoadFromJson(g_tempScene);
 
+                // 물리 씬 생성
+                PhysicsSystem::Get().CreateScenePhysics(scene);
+
                 m_editorState = EditorState::Play;
 
                 m_selectedObject = nullptr;
@@ -117,6 +122,10 @@ namespace engine
             if (ImGui::Button("Stop"))
             {
                 auto scene = SceneManager::Get().GetScene();
+                
+                // 물리 씬 파괴
+                PhysicsSystem::Get().DestroyScenePhysics(scene);
+                
                 if (scene && !g_tempScene.empty())
                 {
                     scene->LoadFromJson(g_tempScene);

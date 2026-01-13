@@ -1,6 +1,6 @@
 {
     "Name": "z_JC_Test_Scene",
-    "NumGameObjects": 2,
+    "NumGameObjects": 6,
     "GameObjects": [
         {
             "ID": 0,
@@ -47,7 +47,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -0.699999988079071
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -85,7 +85,81 @@
                     "Speed": 1.0
                 },
                 {
+                    "Type": "BoxCollider",
+                    "Active": true,
                     "center": [
+                        -0.009999999776482582,
+                        -0.14000000059604645,
+                        0.029999999329447746
+                    ],
+                    "rotation": [
+                        16.0,
+                        -6.0,
+                        -15.0
+                    ],
+                    "isTrigger": false,
+                    "layer": 0,
+                    "collisionMask": 4294967295,
+                    "size": [
+                        1.309999942779541,
+                        1.2100000381469727,
+                        1.38100004196167
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "SecondObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -4.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 0,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 1
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
                         0.0,
                         0.0,
                         0.0
@@ -98,6 +172,156 @@
                         1.0,
                         1.0
                     ]
+                },
+                {
+                    "Type": "Rotator",
+                    "Active": true,
+                    "Speed": -1.0
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "Sphere",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -0.6000000238418579,
+                        "y": 3.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.08165895193815231,
+                        "y": 0.02624216303229332,
+                        "z": -0.9165096282958984,
+                        "w": 0.3907086253166199
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 0,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 0.22549021244049072,
+                        "z": 0.22549021244049072,
+                        "w": 1.0
+                    },
+                    "CullMode": 1
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        -0.27000001072883606,
+                        0.20999999344348907,
+                        -0.17000000178813934
+                    ],
+                    "rotation": [
+                        14.0,
+                        6.5,
+                        -31.5
+                    ],
+                    "isTrigger": false,
+                    "layer": 0,
+                    "collisionMask": 4294967295,
+                    "radius": 1.2109999656677246
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Capsule",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": -1.5,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl"
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "layer": 0,
+                    "collisionMask": 4294967295,
+                    "radius": 0.9309999942779541,
+                    "height": 3.200000047683716
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 }
             ]
         }

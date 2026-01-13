@@ -417,6 +417,7 @@ namespace engine
 
     void Rigidbody::Save(json& j) const
     {
+        Object::Save(j);  // Type 필드 저장
         j["type"] = static_cast<int>(m_type);
         j["mass"] = m_mass;
         j["linearDamping"] = m_linearDamping;

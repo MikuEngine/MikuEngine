@@ -30,6 +30,7 @@ namespace engine
 
         // 속성
         Vector3 m_center{ 0.0f, 0.0f, 0.0f };   // 로컬 오프셋
+        Vector3 m_rotation{ 0.0f, 0.0f, 0.0f }; // 로컬 회전 (오일러 각도, degrees)
         bool m_isTrigger = false;
         
         // 레이어
@@ -57,6 +58,10 @@ namespace engine
         const Vector3& GetCenter() const { return m_center; }
         void SetCenter(const Vector3& center);
 
+        // 로컬 회전 (오일러 각도, degrees)
+        const Vector3& GetRotation() const { return m_rotation; }
+        void SetRotation(const Vector3& rotation);
+
         // Trigger 모드
         bool IsTrigger() const { return m_isTrigger; }
         void SetIsTrigger(bool isTrigger);
@@ -74,6 +79,9 @@ namespace engine
         
         uint64_t GetAttackSourceId() const { return m_attackSourceId; }
         void SetAttackSourceId(uint64_t id) { m_attackSourceId = id; }
+
+        // 월드 회전 무시 여부 (Sphere, Capsule은 true)
+        virtual bool IgnoresWorldRotation() const { return false; }
 
         // ═══════════════════════════════════════
         // Rigidbody 연결
@@ -111,5 +119,6 @@ namespace engine
         void AttachToRigidbody();
         void CreateOwnedStaticActor();
         void UpdateFilterData();
+        virtual void UpdateLocalPose();  // center와 rotation을 shape에 적용
     };
 }
