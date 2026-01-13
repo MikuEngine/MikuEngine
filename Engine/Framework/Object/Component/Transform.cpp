@@ -294,6 +294,7 @@ namespace engine
 
         JsonGet(j, "Position", m_localPosition);
         JsonGet(j, "Rotation", m_localRotation);
+        SetLocalRotation(m_localRotation);
         JsonGet(j, "Scale", m_localScale);
     }
 
