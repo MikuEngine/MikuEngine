@@ -7,6 +7,7 @@
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/CharacterController.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Scene/SceneManager.h"
 
 namespace engine
@@ -441,11 +442,12 @@ namespace engine
 
             if (hit.block.shape)
             {
-                outHit.collider = static_cast<Collider*>(hit.block.shape->userData);
-                if (outHit.collider)
+                Collider* col = static_cast<Collider*>(hit.block.shape->userData);
+                outHit.collider = Ptr<Collider>(col);
+                if (col)
                 {
-                    outHit.rigidbody = outHit.collider->GetAttachedRigidbody();
-                    outHit.gameObject = outHit.collider->GetGameObject();
+                    outHit.rigidbody = Ptr<Rigidbody>(col->GetAttachedRigidbody());
+                    outHit.gameObject = Ptr<GameObject>(col->GetGameObject());
                 }
             }
         }
@@ -497,11 +499,12 @@ namespace engine
 
                 if (touch.shape)
                 {
-                    result.collider = static_cast<Collider*>(touch.shape->userData);
-                    if (result.collider)
+                    Collider* col = static_cast<Collider*>(touch.shape->userData);
+                    result.collider = Ptr<Collider>(col);
+                    if (col)
                     {
-                        result.rigidbody = result.collider->GetAttachedRigidbody();
-                        result.gameObject = result.collider->GetGameObject();
+                        result.rigidbody = Ptr<Rigidbody>(col->GetAttachedRigidbody());
+                        result.gameObject = Ptr<GameObject>(col->GetGameObject());
                     }
                 }
 
@@ -554,11 +557,12 @@ namespace engine
 
             if (hit.block.shape)
             {
-                outHit.collider = static_cast<Collider*>(hit.block.shape->userData);
-                if (outHit.collider)
+                Collider* col = static_cast<Collider*>(hit.block.shape->userData);
+                outHit.collider = Ptr<Collider>(col);
+                if (col)
                 {
-                    outHit.rigidbody = outHit.collider->GetAttachedRigidbody();
-                    outHit.gameObject = outHit.collider->GetGameObject();
+                    outHit.rigidbody = Ptr<Rigidbody>(col->GetAttachedRigidbody());
+                    outHit.gameObject = Ptr<GameObject>(col->GetGameObject());
                 }
             }
         }

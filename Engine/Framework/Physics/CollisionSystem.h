@@ -22,28 +22,21 @@ namespace engine
     {
     private:
         uint64_t m_id;
-        GameObject* m_attacker = nullptr;
-        std::unordered_set<GameObject*> m_hitTargets;
+        Ptr<GameObject> m_attacker;
+        std::unordered_set<Handle> m_hitTargets;  // Handle로 추적 (파괴된 오브젝트 안전)
         
         bool m_isConsumed = false;
         CollisionPriority m_consumedBy = CollisionPriority::Default;
 
     public:
-        AttackInstance(uint64_t id, GameObject* attacker)
-            : m_id(id), m_attacker(attacker) {}
+        // 생성자는 cpp에서 정의 (GameObject 완전한 정의 필요)
+        AttackInstance(uint64_t id, GameObject* attacker);
 
         uint64_t GetId() const { return m_id; }
-        GameObject* GetAttacker() const { return m_attacker; }
+        Ptr<GameObject> GetAttacker() const { return m_attacker; }
 
-        bool HasHit(GameObject* target) const
-        {
-            return m_hitTargets.find(target) != m_hitTargets.end();
-        }
-
-        void RecordHit(GameObject* target)
-        {
-            m_hitTargets.insert(target);
-        }
+        bool HasHit(GameObject* target) const;
+        void RecordHit(GameObject* target);
 
         bool IsConsumed() const { return m_isConsumed; }
 
@@ -72,14 +65,15 @@ namespace engine
         std::vector<TriggerEvent> m_pendingTriggerEvents;
 
         // Trigger Stay 추적 (PhysX가 제공하지 않음)
+        // Handle 기반으로 추적하여 댕글링 방지
         struct TriggerPair
         {
-            Collider* trigger;
-            Collider* other;
+            Handle triggerHandle;
+            Handle otherHandle;
 
             bool operator==(const TriggerPair& rhs) const
             {
-                return trigger == rhs.trigger && other == rhs.other;
+                return triggerHandle == rhs.triggerHandle && otherHandle == rhs.otherHandle;
             }
         };
 
@@ -87,8 +81,11 @@ namespace engine
         {
             size_t operator()(const TriggerPair& p) const
             {
-                size_t h1 = std::hash<void*>()(p.trigger);
-                size_t h2 = std::hash<void*>()(p.other);
+                // index와 generation을 조합하여 해시 생성
+                size_t h1 = std::hash<uint64_t>()(
+                    (static_cast<uint64_t>(p.triggerHandle.index) << 32) | p.triggerHandle.generation);
+                size_t h2 = std::hash<uint64_t>()(
+                    (static_cast<uint64_t>(p.otherHandle.index) << 32) | p.otherHandle.generation);
                 return h1 ^ (h2 << 1);
             }
         };
@@ -136,16 +133,19 @@ namespace engine
         void ProcessCollisionEvents();
         void ProcessTriggerEvents();
 
-        void DispatchCollisionEnter(Collider* a, Collider* b, const std::vector<ContactPoint>& contacts);
-        void DispatchCollisionStay(Collider* a, Collider* b, const std::vector<ContactPoint>& contacts);
-        void DispatchCollisionExit(Collider* a, Collider* b);
+        void DispatchCollisionEnter(Ptr<Collider> a, Ptr<Collider> b, const std::vector<ContactPoint>& contacts);
+        void DispatchCollisionStay(Ptr<Collider> a, Ptr<Collider> b, const std::vector<ContactPoint>& contacts);
+        void DispatchCollisionExit(Ptr<Collider> a, Ptr<Collider> b);
 
-        void DispatchTriggerEnter(Collider* trigger, Collider* other);
-        void DispatchTriggerStay(Collider* trigger, Collider* other);
-        void DispatchTriggerExit(Collider* trigger, Collider* other);
+        void DispatchTriggerEnter(Ptr<Collider> trigger, Ptr<Collider> other);
+        void DispatchTriggerStay(Ptr<Collider> trigger, Ptr<Collider> other);
+        void DispatchTriggerExit(Ptr<Collider> trigger, Ptr<Collider> other);
 
         // 접촉점 노말 반전 (상대방에게 전달할 때)
         std::vector<ContactPoint> FlipContactNormals(const std::vector<ContactPoint>& contacts);
+
+        // Handle로부터 TriggerPair 생성
+        TriggerPair MakeTriggerPair(Collider* trigger, Collider* other);
 
         friend class Singleton<CollisionSystem>;
     };

@@ -3,6 +3,8 @@
 #include <vector>
 #include <cstdint>
 
+#include "Framework/Object/Ptr.h"
+
 namespace engine
 {
     class Collider;
@@ -27,9 +29,9 @@ namespace engine
 
     struct CollisionInfo
     {
-        Collider* collider = nullptr;       // 충돌한 상대 콜라이더
-        Rigidbody* rigidbody = nullptr;     // 상대 리지드바디 (있으면)
-        GameObject* gameObject = nullptr;   // 상대 게임오브젝트
+        Ptr<Collider> collider;             // 충돌한 상대 콜라이더
+        Ptr<Rigidbody> rigidbody;           // 상대 리지드바디 (있으면)
+        Ptr<GameObject> gameObject;         // 상대 게임오브젝트
         std::vector<ContactPoint> contacts; // 접촉점들
         Vector3 relativeVelocity;           // 상대 속도
         float totalImpulse = 0.0f;          // 총 충격량
@@ -84,8 +86,8 @@ namespace engine
     struct CollisionEvent
     {
         CollisionEventType type;
-        Collider* colliderA = nullptr;
-        Collider* colliderB = nullptr;
+        Ptr<Collider> colliderA;
+        Ptr<Collider> colliderB;
         std::vector<ContactPoint> contacts;
         
         // 우선순위 시스템용
@@ -97,8 +99,8 @@ namespace engine
     struct TriggerEvent
     {
         TriggerEventType type;
-        Collider* trigger = nullptr;    // 트리거 콜라이더
-        Collider* other = nullptr;      // 진입한 콜라이더
+        Ptr<Collider> trigger;      // 트리거 콜라이더
+        Ptr<Collider> other;        // 진입한 콜라이더
     };
 
     // ═══════════════════════════════════════════════════════════════
@@ -113,8 +115,8 @@ namespace engine
         Vector3 normal;             // 충돌 표면 노말
         float distance = 0.0f;      // Ray 시작점으로부터 거리
         
-        Collider* collider = nullptr;
-        Rigidbody* rigidbody = nullptr;
-        GameObject* gameObject = nullptr;
+        Ptr<Collider> collider;
+        Ptr<Rigidbody> rigidbody;
+        Ptr<GameObject> gameObject;
     };
 }

@@ -198,6 +198,7 @@
     <ClCompile Include="Framework\Object\Component\Transform.cpp" />
     <ClCompile Include="Framework\Object\GameObject\GameObject.cpp" />
     <ClCompile Include="Framework\Object\Object.cpp" />
+    <ClCompile Include="Framework\Object\Ptr.cpp" />
     <ClCompile Include="Framework\Scene\Scene.cpp" />
     <ClCompile Include="Framework\Scene\SceneManager.cpp" />
     <ClCompile Include="Framework\System\AnimatorSystem.cpp" />

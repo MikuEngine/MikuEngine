@@ -67,8 +67,8 @@ namespace engine
             // 충돌 이벤트 생성
             CollisionEvent event;
             event.type = eventType;
-            event.colliderA = colliderA;
-            event.colliderB = colliderB;
+            event.colliderA = Ptr<Collider>(colliderA);
+            event.colliderB = Ptr<Collider>(colliderB);
 
             // 접촉점 추출 (Exit 제외)
             if (eventType != CollisionEventType::Exit)
@@ -128,8 +128,8 @@ namespace engine
             // 트리거 이벤트 생성
             TriggerEvent event;
             event.type = eventType;
-            event.trigger = trigger;
-            event.other = other;
+            event.trigger = Ptr<Collider>(trigger);
+            event.other = Ptr<Collider>(other);
 
             // CollisionSystem에 큐잉
             CollisionSystem::Get().QueueTriggerEvent(event);
