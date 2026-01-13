@@ -26,13 +26,6 @@ namespace engine
         REGISTER_COMPONENT(SkeletalMeshRenderer)
 
     private:
-        std::string m_meshFilePath;
-        std::string m_vsFilePath;
-        std::string m_opaquePSFilePath;
-        std::string m_cutoutPSFilePath;
-        std::string m_transparentPSFilePath;
-
-        // 리소스
         std::shared_ptr<SkeletalMeshData> m_meshData;
         std::shared_ptr<SkeletonData> m_skeletonData;
         std::shared_ptr<MaterialData> m_materialData;
@@ -57,6 +50,20 @@ namespace engine
         std::shared_ptr<SamplerState> m_samplerState;
 
         CbBone m_boneTransformData; // CPU측 본 데이터
+
+        std::string m_meshFilePath;
+        std::string m_vsFilePath;
+        std::string m_opaquePSFilePath;
+        std::string m_cutoutPSFilePath;
+        std::string m_transparentPSFilePath;
+
+        Vector4 m_materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        Vector3 m_materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
+        float m_materialRoughness = 0.0f;
+        float m_materialMetalness = 0.0f;
+        float m_materialAmbientOcclusion = 1.0f;
+        bool m_overrideMaterial = false;
+
 
     public:
         SkeletalMeshRenderer();

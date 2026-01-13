@@ -23,12 +23,6 @@ namespace engine
         REGISTER_COMPONENT(StaticMeshRenderer)
 
     private:
-        std::string m_meshFilePath;
-        std::string m_vsFilePath;
-        std::string m_opaquePSFilePath;
-        std::string m_cutoutPSFilePath;
-        std::string m_transparentPSFilePath;
-
         std::shared_ptr<StaticMeshData> m_staticMeshData;
         std::shared_ptr<MaterialData> m_materialData;
 
@@ -49,6 +43,19 @@ namespace engine
         std::vector<Textures> m_textures;
         std::shared_ptr<InputLayout> m_inputLayout;
         std::shared_ptr<SamplerState> m_samplerState;
+
+        std::string m_meshFilePath;
+        std::string m_vsFilePath;
+        std::string m_opaquePSFilePath;
+        std::string m_cutoutPSFilePath;
+        std::string m_transparentPSFilePath;
+
+        Vector4 m_materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        Vector3 m_materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
+        float m_materialRoughness = 0.0f;
+        float m_materialMetalness = 0.0f;
+        float m_materialAmbientOcclusion = 1.0f;
+        bool m_overrideMaterial = false;
 
     public:
         ~StaticMeshRenderer();

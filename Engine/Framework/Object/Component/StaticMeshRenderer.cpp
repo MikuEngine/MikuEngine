@@ -117,6 +117,15 @@ namespace engine
             SetMesh(selectedMesh);
         }
 
+        ImGui::SeparatorText("Material");
+
+        ImGui::Checkbox("Override Material", &m_overrideMaterial);
+        ImGui::ColorEdit4("Base Color", &m_materialBaseColor.x);
+        ImGui::ColorEdit3("Emissive", &m_materialEmissive.x);
+        ImGui::SliderFloat("Roughness", &m_materialRoughness, 0.0f, 1.0f);
+        ImGui::SliderFloat("Metalness", &m_materialMetalness, 0.0f, 1.0f);
+        ImGui::SliderFloat("Ambient Occlusion", &m_materialAmbientOcclusion, 0.0f, 1.0f);
+
         ImGui::Spacing();
         // 2. Shader Selectors
         // (Shader 폴더 경로가 Resource/Shader인지 Shader인지 확인 필요)
@@ -184,6 +193,12 @@ namespace engine
         j["OpaquePSFilePath"] = m_opaquePSFilePath;
         j["CutoutPSFilePath"] = m_cutoutPSFilePath;
         j["TransparentPSFilePath"] = m_transparentPSFilePath;
+        j["MaterialBaseColor"] = m_materialBaseColor;
+        j["MaterialEmissive"] = m_materialEmissive;
+        j["MaterialRoughness"] = m_materialRoughness;
+        j["MaterialMetalness"] = m_materialMetalness;
+        j["MaterialAmbientOcclusion"] = m_materialAmbientOcclusion;
+        j["OverrideMaterial"] = m_overrideMaterial;
     }
 
     void StaticMeshRenderer::Load(const json& j)
@@ -195,6 +210,12 @@ namespace engine
         JsonGet(j,"OpaquePSFilePath", m_opaquePSFilePath);
         JsonGet(j,"CutoutPSFilePath", m_cutoutPSFilePath);
         JsonGet(j,"TransparentPSFilePath", m_transparentPSFilePath);
+        JsonGet(j, "MaterialBaseColor", m_materialBaseColor);
+        JsonGet(j, "MaterialEmissive", m_materialEmissive);
+        JsonGet(j, "MaterialRoughness", m_materialRoughness);
+        JsonGet(j, "MaterialMetalness", m_materialMetalness);
+        JsonGet(j, "MaterialAmbientOcclusion", m_materialAmbientOcclusion);
+        JsonGet(j, "OverrideMaterial", m_overrideMaterial);
 
         Refresh();
     }
@@ -272,6 +293,20 @@ namespace engine
         deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
         deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
 
+        if (type != RenderType::Shadow)
+        {
+            CbMaterial cbMaterial{};
+            cbMaterial.materialBaseColor = m_materialBaseColor;
+            cbMaterial.materialEmissive = m_materialEmissive;
+            cbMaterial.materialRoughness = m_materialRoughness;
+            cbMaterial.materialMetalness = m_materialMetalness;
+            cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;
+            cbMaterial.overrideMaterial = m_overrideMaterial ? 1 : 0;
+
+            deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
+            deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
+        }
+
         switch (type)
         {
         case RenderType::Shadow:
@@ -316,15 +351,7 @@ namespace engine
             const auto& meshSections = m_staticMeshData->GetMeshSections();
             const auto& materials = m_materialData->GetMaterials();
 
-            CbMaterial cbMaterial{};
-            cbMaterial.materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-            cbMaterial.materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
-            cbMaterial.materialRoughness = 0.0f;
-            cbMaterial.materialMetalness = 0.0f;
-            cbMaterial.materialAmbientOcclusion = 1.0f;
-            cbMaterial.overrideMaterial = 0;
 
-            deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
 
             for (const auto& meshSection : meshSections)
             {
@@ -353,16 +380,6 @@ namespace engine
             const auto& meshSections = m_staticMeshData->GetMeshSections();
             const auto& materials = m_materialData->GetMaterials();
 
-            CbMaterial cbMaterial{};
-            cbMaterial.materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-            cbMaterial.materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
-            cbMaterial.materialRoughness = 0.0f;
-            cbMaterial.materialMetalness = 0.0f;
-            cbMaterial.materialAmbientOcclusion = 1.0f;
-            cbMaterial.overrideMaterial = 0;
-
-            deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
-
             for (const auto& meshSection : meshSections)
             {
                 if (materials[meshSection.materialIndex].renderType != MaterialRenderType::Cutout)
@@ -390,14 +407,6 @@ namespace engine
 
             const auto& meshSections = m_staticMeshData->GetMeshSections();
             const auto& materials = m_materialData->GetMaterials();
-
-            CbMaterial cbMaterial{};
-            cbMaterial.materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-            cbMaterial.materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
-            cbMaterial.materialRoughness = 0.0f;
-            cbMaterial.materialMetalness = 0.0f;
-            cbMaterial.materialAmbientOcclusion = 1.0f;
-            cbMaterial.overrideMaterial = 0;
 
             for (const auto& meshSection : meshSections)
             {
