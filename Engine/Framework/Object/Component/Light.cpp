@@ -145,7 +145,7 @@ namespace engine
 		}
 		if (m_lightType == LightType::Spot)
 		{
-			ImGui::SliderFloat("Spot Angle", &m_angle, 0.1f, 189.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+			ImGui::DragFloat("Spot Angle", &m_angle, 0.01f, 0.1f, 189.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 		}
 	}
 
