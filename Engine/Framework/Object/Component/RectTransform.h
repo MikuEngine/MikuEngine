@@ -38,27 +38,27 @@ namespace engine
 
 	public:
 		// Getter
-		const Vector2& GetAnchoredPosition() const { return m_anchoredPosition; }
-		float GetWidth() const { return m_width; }
-		float GetHeight() const { return m_height; }
-		Vector2 GetSize() const { return { m_width, m_height }; }
-		const Vector2& GetPivot() const { return m_pivot; }
-		const Vector2& GetAnchorMin() const { return m_anchorMin; }
-		const Vector2& GetAnchorMax() const { return m_anchorMax; }
-		const UIRect& GetWorldRect() const { return m_worldRect; }
+		const Vector2& GetAnchoredPosition();
+		float GetWidth() const;
+		float GetHeight() const;
+		Vector2 GetSize() const;
+		const Vector2& GetPivot() const;
+		const Vector2& GetAnchorMin() const;
+		const Vector2& GetAnchorMax() const;
+		const UIRect& GetWorldRect() const;
 
-		bool IsUIDirty() const { return m_uiDirty; }
+		bool IsUIDirty() const;
 	public:
 		// Setter
-		void SetAnchoredPosition(const Vector2& p);
+		void SetAnchoredPosition(const Vector2& pos);
 		void SetWidth(float w);
 		void SetHeight(float h);
 		void SetSize(float w, float h);
-		void SetPivot(const Vector2& p);
-		void SetAnchorMin(const Vector2& a);
-		void SetAnchorMax(const Vector2& a);
+		void SetPivot(const Vector2& pivot);
+		void SetAnchorMin(const Vector2& anchorMin);
+		void SetAnchorMax(const Vector2& anchorMax);
 
-		void MarkUIDirty(bool v = true) { m_uiDirty = v; }
+		void MarkUIDirty(bool v = true);
 
 	public:
 		// Calculate
