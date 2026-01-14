@@ -37,9 +37,38 @@ namespace engine
 		~RectTransform() override = default;
 
 	public:
+		// Getter
 		const Vector2& GetAnchoredPosition() const { return m_anchoredPosition; }
-		//const Vector2& GetSizeDelta() const { return m_sizeDelta; }
+		float GetWidth() const { return m_width; }
+		float GetHeight() const { return m_height; }
+		Vector2 GetSize() const { return { m_width, m_height }; }
+		const Vector2& GetPivot() const { return m_pivot; }
+		const Vector2& GetAnchorMin() const { return m_anchorMin; }
+		const Vector2& GetAnchorMax() const { return m_anchorMax; }
+		const UIRect& GetWorldRect() const { return m_worldRect; }
 
+		bool IsUIDirty() const { return m_uiDirty; }
+	public:
+		// Setter
+		void SetAnchoredPosition(const Vector2& p);
+		void SetWidth(float w);
+		void SetHeight(float h);
+		void SetSize(float w, float h);
+		void SetPivot(const Vector2& p);
+		void SetAnchorMin(const Vector2& a);
+		void SetAnchorMax(const Vector2& a);
+
+		void MarkUIDirty(bool v = true) { m_uiDirty = v; }
+
+	public:
+		// Calculate
+		void Recalculate(const UIRect& parentRect);
+
+	public:
+		void OnGui() override;
+		void Save(json& j) const override;
+		void Load(const json& j) override;
+		std::string GetType() const override;
 	};
 
 }
