@@ -407,9 +407,9 @@ namespace engine
         ImGui::Checkbox("Override Material", &m_overrideMaterial);
         ImGui::ColorEdit4("Base Color", &m_materialBaseColor.x);
         ImGui::ColorEdit3("Emissive", &m_materialEmissive.x);
-        ImGui::SliderFloat("Roughness", &m_materialRoughness, 0.0f, 1.0f);
-        ImGui::SliderFloat("Metalness", &m_materialMetalness, 0.0f, 1.0f);
-        ImGui::SliderFloat("Ambient Occlusion", &m_materialAmbientOcclusion, 0.0f, 1.0f);
+        ImGui::DragFloat("Roughness", &m_materialRoughness, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+        ImGui::DragFloat("Metalness", &m_materialMetalness, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+        ImGui::DragFloat("Ambient Occlusion", &m_materialAmbientOcclusion, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
 
         ImGui::Spacing();
         // 2. Shader Selectors

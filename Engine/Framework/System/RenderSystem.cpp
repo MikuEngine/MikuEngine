@@ -42,10 +42,10 @@ namespace engine
         m_comparisonSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Comparison);
         m_clampSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Clamp);
 
-        m_skyboxEnv = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/fieldEnvHDR.dds");
-        m_irradianceMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/fieldDiffuseHDR.dds");
-        m_specularMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/fieldSpecularHDR.dds");
-        m_brdfLut = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/fieldBrdf.dds");
+        m_skyboxEnv = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/PlainsSunsetEnvHDR.dds");
+        m_irradianceMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/PlainsSunsetDiffuseHDR.dds");
+        m_specularMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/PlainsSunsetSpecularHDR.dds");
+        m_brdfLut = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/PlainsSunsetBrdf.dds");
 
         // cube
         {

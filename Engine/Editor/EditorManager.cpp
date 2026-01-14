@@ -695,7 +695,10 @@ namespace engine
         strcpy_s(buf, m_selectedObject->GetName().c_str());
         if (ImGui::InputText("Name", buf, 256))
         {
-            m_selectedObject->SetName(buf);
+            if (!ImGui::IsItemDeactivatedAfterEdit())
+            {
+                m_selectedObject->SetName(buf);
+            }
         }
         
         ImGui::Separator();
