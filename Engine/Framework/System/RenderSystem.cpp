@@ -73,7 +73,7 @@ namespace engine
 
             m_lightVolumeVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/LightVolume_VS.hlsl");
             m_pointLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredPointLight_PS.hlsl");
-            //m_spotLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Skybox_PS.hlsl");
+            m_spotLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredSpotLight_PS.hlsl");
             m_lightVolumeInputLayout = m_lightVolumeVS->GetOrCreateInputLayout<PositionVertex>();
             m_localLightCB = ResourceManager::Get().GetOrCreateConstantBuffer("LocalLight", sizeof(CbLocalLight));
             m_objectCB = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
@@ -530,11 +530,68 @@ namespace engine
             }
             else if (light->GetLightType() == LightType::Spot)
             {
-                // Spot Light: 원뿔 형태
-                // 스케일과 회전(Direction) 필요
-                // GeometryGenerator::MakeCone의 기본 방향(Y+ 등) 확인 후 회전 적용 필요
+                // 1. Light의 World Matrix에서 Basis Vector 추출 및 정규화 (Scale 제거)
+                    //    Decompose 비용 회피
+                Matrix lightWorld = light->GetTransform()->GetWorld();
+                Vector3 right(lightWorld._11, lightWorld._12, lightWorld._13);
+                Vector3 up(lightWorld._21, lightWorld._22, lightWorld._23);
+                Vector3 forward(lightWorld._31, lightWorld._32, lightWorld._33);
+                right.Normalize();
+                up.Normalize();
+                forward.Normalize(); // 이것이 실제 Light Direction (Z+)
+                // 2. Scale이 제거된 Unscaled Light World Matrix (Rotation + Translation)
+                Matrix unscaledLightWorld = Matrix::Identity;
+                unscaledLightWorld._11 = right.x;   unscaledLightWorld._12 = right.y;   unscaledLightWorld._13 = right.z;
+                unscaledLightWorld._21 = up.x;      unscaledLightWorld._22 = up.y;      unscaledLightWorld._23 = up.z;
+                unscaledLightWorld._31 = forward.x; unscaledLightWorld._32 = forward.y; unscaledLightWorld._33 = forward.z;
 
-                // ... (Point와 유사) ...
+                // Translation
+                unscaledLightWorld._41 = lightWorld._41;
+                unscaledLightWorld._42 = lightWorld._42;
+                unscaledLightWorld._43 = lightWorld._43;
+                // ------------------------------------------------------------------
+                float range = light->GetRange();
+                float angle = light->GetAngle(); // Half-Angle (Degree)
+                // 3. Offset: Cone Mesh의 Tip(0, 0.5, 0)을 원점(0, 0, 0)으로 내림
+                Matrix offset = Matrix::CreateTranslation(0.0f, -0.5f, 0.0f);
+                // 4. Scale: Cone 크기 설정
+                //    - 높이(Y): 1.0 -> range
+                //    - 밑면 반지름(XZ): 0.5 -> range * tan(angle) 이므로 2배 적용
+                float coneRadius = range * std::tan(ToRadian(angle));
+
+                // Cone Mesh는 Y축으로 서 있으므로 Y축에 range(길이)를 곱함
+                Matrix coneScale = Matrix::CreateScale(coneRadius * 2.0f * 2.0f, range * 2.0f, coneRadius * 2.0f * 2.0f);
+                // 5. Pre-Rotate: 
+                //    Cone Mesh는 기본적으로 -Y 방향을 보고 있음 (Tip이 위, Bottom이 아래).
+                //    우리는 Light의 Forward인 Z+ 방향으로 빛을 쏘고 싶음.
+                //    -Y -> +Z 로 회전시키려면 X축 기준 +90도 회전
+                Matrix preRotate = Matrix::CreateRotationX(ToRadian(-90.0f));
+                // 6. 최종 World Matrix 조합
+                //    순서: Offset -> ConeScale -> PreRotate -> UnscaledLightWorld
+                Matrix world = offset * coneScale * preRotate * unscaledLightWorld;
+                // --- CB 업데이트 ---
+                CbLocalLight cbData;
+                cbData.lightColor = light->GetColor();
+                cbData.lightIntensity = light->GetIntensity();
+                cbData.lightPosition = Vector3(lightWorld._41, lightWorld._42, lightWorld._43);
+                cbData.lightRange = range;
+
+                // Light Direction: 이제 Z+ (Forward) 벡터를 사용
+                cbData.lightDirection = forward;
+
+                cbData.lightAngle = angle;
+
+                // 셰이더 설정 및 그리기
+                context->PSSetShader(m_spotLightPS->GetRawShader(), nullptr, 0);
+                context->UpdateSubresource(m_localLightCB->GetRawBuffer(), 0, nullptr, &cbData, 0, 0);
+                CbObject cbObj;
+                cbObj.world = world.Transpose();
+                context->UpdateSubresource(m_objectCB->GetRawBuffer(), 0, nullptr, &cbObj, 0, 0);
+                static const UINT stride = m_coneVB->GetBufferStride();
+                static const UINT offsetVal = 0;
+                context->IASetVertexBuffers(0, 1, m_coneVB->GetBuffer().GetAddressOf(), &stride, &offsetVal);
+                context->IASetIndexBuffer(m_coneIB->GetRawBuffer(), m_coneIB->GetIndexFormat(), 0);
+                context->DrawIndexed(m_coneIB->GetIndexCount(), 0, 0);
             }
         }
 

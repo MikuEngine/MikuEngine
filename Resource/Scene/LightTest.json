@@ -1,6 +1,6 @@
 {
     "Name": "LightTest",
-    "NumGameObjects": 7,
+    "NumGameObjects": 8,
     "GameObjects": [
         {
             "ID": 0,
@@ -112,7 +112,22 @@
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl"
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false
                 }
             ]
         },
@@ -148,7 +163,22 @@
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl"
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false
                 }
             ]
         },
@@ -277,6 +307,50 @@
                     "Intensity": 4.5,
                     "Range": 9.100000381469727,
                     "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "SpotLight1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -25.399999618530273,
+                        "y": 10.300000190734863,
+                        "z": -19.700000762939453
+                    },
+                    "Rotation": {
+                        "x": 0.328076034784317,
+                        "y": 0.3577423095703125,
+                        "z": -0.1358935534954071,
+                        "w": 0.8636662364006042
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.9117646217346191,
+                        "y": 0.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 8.0,
+                    "Range": 82.4000015258789,
+                    "Angle": 11.229999542236328,
                     "Near": 90000.0,
                     "Far": 100000.0,
                     "ForwardDistance": 1000.0,

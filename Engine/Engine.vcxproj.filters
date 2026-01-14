@@ -556,6 +556,7 @@
     <FxCompile Include="Shader\Pixel\Sprite_Unlit_Transparent_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\DeferredPointLight_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\LightVolume_VS.hlsl" />
+    <FxCompile Include="Shader\Pixel\DeferredSpotLight_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />
