@@ -8,4 +8,17 @@ namespace engine
 	{
 		return nullptr;
 	}
+	void UIElement::OnGui()
+	{
+	}
+	void UIElement::Save(json& j) const
+	{
+	}
+	void UIElement::Load(const json& j)
+	{
+	}
+	std::string UIElement::GetType() const
+	{
+		return std::string();
+	}
 }
