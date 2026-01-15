@@ -13,6 +13,8 @@
 #include "Framework/Object/Component/ComponentFactory.h"
 #include "Framework/Object/Component/Canvas.h"
 
+#include "Framework/Object/Component/UIImage.h"
+
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 

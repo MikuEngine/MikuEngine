@@ -227,7 +227,8 @@
     <ClCompile Include="Framework\Object\Component\Collider.cpp" />
     <ClCompile Include="Framework\Object\Component\Rigidbody.cpp" />
     <ClCompile Include="Framework\Object\Component\SphereCollider.cpp" />
-    <ClCompile Include="UIElement.cpp" />
+    <ClCompile Include="Framework\Object\Component\UIElement.cpp" />
+    <ClCompile Include="Framework\Object\Component\UIImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Object\Component\Canvas.h" />
@@ -325,7 +326,8 @@
     <ClInclude Include="Framework\Object\Component\Collider.h" />
     <ClInclude Include="Framework\Object\Component\Rigidbody.h" />
     <ClInclude Include="Framework\Object\Component\SphereCollider.h" />
-    <ClInclude Include="UIElement.h" />
+    <ClInclude Include="Framework\Object\Component\UIElement.h" />
+    <ClInclude Include="Framework\Object\Component\UIImage.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Pixel\DeferredPointLight_PS.hlsl">

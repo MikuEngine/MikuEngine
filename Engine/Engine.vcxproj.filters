@@ -246,7 +246,10 @@
     <ClCompile Include="Framework\Object\Component\Canvas.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UIElement.cpp">
+    <ClCompile Include="Framework\Object\Component\UIElement.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\UIImage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -536,7 +539,10 @@
     <ClInclude Include="Framework\Object\Component\Canvas.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UIElement.h">
+    <ClInclude Include="Framework\Object\Component\UIElement.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\UIImage.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

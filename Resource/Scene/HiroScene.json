@@ -1,6 +1,6 @@
 {
     "Name": "HiroScene",
-    "NumGameObjects": 4,
+    "NumGameObjects": 5,
     "GameObjects": [
         {
             "ID": 0,
@@ -169,6 +169,63 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 2,
+            "Name": "UIObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "TexturePath": "",
+                    "AlphaBlend": true,
+                    "SkipInvalidRect": true
                 }
             ]
         }
