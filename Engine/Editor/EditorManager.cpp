@@ -98,6 +98,11 @@ namespace engine
         return m_editorCamera.get();
     }
 
+    GameObject* EditorManager::GetSelectedObject() const
+    {
+        return m_selectedObject.Get();
+    }
+
     void EditorManager::DrawPlayController()
     {
         ImGui::Begin("Play Control");

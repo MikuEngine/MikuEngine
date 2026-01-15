@@ -26,6 +26,7 @@ Texture2D g_texIBLSpecularBRDFLUT       : register(t24);
 // utility
 Texture2D g_texBlit                     : register(t30);
 Texture2D g_texHDR                      : register(t31);
+Texture2D<uint2> g_texStencilMap        : register(t32);
 
 SamplerState g_samLinear                : register(s0);
 SamplerState g_samPoint                 : register(s1);

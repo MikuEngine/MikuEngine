@@ -16,6 +16,7 @@ namespace engine
     class InputLayout;
     class SamplerState;
     class ConstantBuffer;
+    class DepthStencilState;
 
     struct GBufferResources
     {
@@ -68,6 +69,10 @@ namespace engine
         // fxaa
         std::unique_ptr<Texture> m_aaBuffer;
 
+        // outline
+        std::unique_ptr<Texture> m_outlineStencilBuffer;
+        std::unique_ptr<DepthStencilState> m_maskDSS;
+
         std::unique_ptr<RasterizerState> m_shadowMapRSS;
 
         GBufferResources m_gBuffer;
@@ -83,6 +88,7 @@ namespace engine
         std::shared_ptr<PixelShader> m_brightPassPS;
         std::shared_ptr<PixelShader> m_blurPS;
         std::shared_ptr<PixelShader> m_fxaaPS;
+        std::shared_ptr<PixelShader> m_outlinePS;
 
         std::shared_ptr<InputLayout> m_quadInputLayout;
         std::shared_ptr<SamplerState> m_samplerLinear;
@@ -164,6 +170,9 @@ namespace engine
 
         void BeginDrawScreenPass();
         void EndDrawScreenPass();
+
+        void BeginDrawOutlinePass();
+        void EndDrawOutlinePass();
 
         void BeginDrawDebugPass();
         void EndDrawDebugPass();

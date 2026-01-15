@@ -53,11 +53,12 @@ namespace engine
 
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Static_VS.hlsl");
+        m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Static_VS.hlsl");
 
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
-        m_shadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Cutout_PS.hlsl");
+        m_maskCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Mask_Cutout_PS.hlsl");
 
         m_inputLayout = m_vs->GetOrCreateInputLayout<CommonVertex>();
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
@@ -274,6 +275,11 @@ namespace engine
 
     void StaticMeshRenderer::Draw(RenderType type) const
     {
+        if (!m_staticMeshData)
+        {
+            return;
+        }
+
         const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
 
         static const UINT s_vertexBufferOffset = 0;
@@ -327,7 +333,7 @@ namespace engine
                     break;
 
                 case MaterialRenderType::Cutout:
-                    deviceContext->PSSetShader(m_shadowCutoutPS->GetRawShader(), nullptr, 0);
+                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
                     deviceContext->PSSetShaderResources(
                         static_cast<UINT>(TextureSlot::BaseColor),
                         1,
@@ -432,6 +438,45 @@ namespace engine
     DirectX::BoundingBox StaticMeshRenderer::GetBounds() const
     {
         return DirectX::BoundingBox();
+    }
+
+    void StaticMeshRenderer::DrawMask() const
+    {
+        if (!m_staticMeshData)
+        {
+            return;
+        }
+
+        const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
+
+        static const UINT s_vertexBufferOffset = 0;
+        const UINT s_vertexBufferStride = m_vertexBuffer->GetBufferStride();
+
+        deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
+        deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
+        deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+
+        CbObject cbObject{};
+        cbObject.world = GetTransform()->GetWorld().Transpose();
+
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object),
+            1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
+        deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
+        deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
+
+        deviceContext->VSSetShader(m_simpleVS->GetRawShader(), nullptr, 0);
+        deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+
+        const auto& meshSections = m_staticMeshData->GetMeshSections();
+        const auto& materials = m_materialData->GetMaterials();
+
+        for (const auto& meshSection : meshSections)
+        {
+            ID3D11ShaderResourceView* srv = m_textures[meshSection.materialIndex].baseColor->GetRawSRV();
+            deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &srv);
+            deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+        }
     }
 
     void StaticMeshRenderer::Refresh()

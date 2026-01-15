@@ -72,11 +72,12 @@ namespace engine
         // 셰이더 로드 (기본)
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Skinned_VS.hlsl"); // Skinned Shadow VS
+        m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Skinned_VS.hlsl");
 
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
-        m_shadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Cutout_PS.hlsl");
+        m_maskCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Mask_Cutout_PS.hlsl");
     }
 
     void SkeletalMeshRenderer::Awake()
@@ -103,6 +104,7 @@ namespace engine
                 m_vsFilePath = "Resource/Shader/Vertex/Rigid_VS.hlsl";
                 m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
                 m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Rigid_VS.hlsl");
+                m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Rigid_VS.hlsl");
 
                 m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<CommonVertex>(m_meshFilePath, m_meshData->GetVertices());
                 
@@ -114,6 +116,7 @@ namespace engine
                 m_vsFilePath = "Resource/Shader/Vertex/Skinned_VS.hlsl";
                 m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
                 m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Skinned_VS.hlsl");
+                m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Skinned_VS.hlsl");
 
                 m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<BoneWeightVertex>(m_meshFilePath, m_meshData->GetBoneWeightVertices());
                 
@@ -241,9 +244,6 @@ namespace engine
         deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
         deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
 
-        // Bone Buffer 바인딩 (Slot 3) - Rigid도 참조할 수 있음
-        deviceContext->VSSetConstantBuffers(3, 1, m_boneConstantBuffer->GetBuffer().GetAddressOf());
-
         // Sampler
         deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
 
@@ -308,7 +308,7 @@ namespace engine
                 // Shadow PS 설정 (섹션별)
                 if (matType == MaterialRenderType::Cutout)
                 {
-                    deviceContext->PSSetShader(m_shadowCutoutPS->GetRawShader(), nullptr, 0);
+                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
                     const auto textureSRVs = m_textures[section.materialIndex].AsRawArray();
                     if (!textureSRVs.empty()) 
                          deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &textureSRVs[0]); // BaseColor만
@@ -354,6 +354,71 @@ namespace engine
     DirectX::BoundingBox SkeletalMeshRenderer::GetBounds() const
     {
         return DirectX::BoundingBox(); // TODO: 계산 필요
+    }
+
+    void SkeletalMeshRenderer::DrawMask() const
+    {
+        if (!m_meshData)
+        {
+            return;
+        }
+
+        const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
+
+        static const UINT s_vertexBufferOffset = 0;
+        const UINT s_vertexBufferStride = m_vertexBuffer->GetBufferStride(); // 자동 (Common or BoneWeight)
+
+        deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
+        deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
+        deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+
+        // Sampler
+        deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
+
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Bone),
+            1, m_boneConstantBuffer->GetBuffer().GetAddressOf());
+        deviceContext->UpdateSubresource(m_boneConstantBuffer->GetRawBuffer(), 0, nullptr, &m_boneTransformData, 0, 0);
+
+        // CbObject 준비
+        CbObject cbObject{};
+        cbObject.world = GetTransform()->GetWorld().Transpose();
+        cbObject.boneIndex = -1; // 기본값
+
+        deviceContext->VSSetShader(m_simpleVS->GetRawShader(), nullptr, 0);
+
+        const auto& meshSections = m_meshData->GetMeshSections();
+        const auto& materials = m_materialData->GetMaterials();
+
+        for (const auto& section : meshSections)
+        {
+            // 필터링
+            MaterialRenderType matType = materials[section.materialIndex].renderType;
+
+            deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+            const auto textureSRVs = m_textures[section.materialIndex].AsRawArray();
+            if (!textureSRVs.empty())
+            {
+                deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &textureSRVs[0]); // BaseColor만
+            }
+
+            // Rigid Mesh라면 boneIndex 업데이트
+            if (m_meshData->IsRigid())
+            {
+                cbObject.boneIndex = section.boneIndex;
+            }
+            else
+            {
+                cbObject.boneIndex = -1;
+            }
+
+            // Object Buffer 업데이트 (World + BoneIndex)
+            deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object), 1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
+            deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
+
+            // Draw
+            deviceContext->DrawIndexed(section.indexCount, section.indexOffset, section.vertexOffset);
+        }
     }
 
     void SkeletalMeshRenderer::Save(json& j) const

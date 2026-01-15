@@ -34,6 +34,8 @@ namespace engine
 		virtual void Draw(RenderType type) const = 0;
 		virtual DirectX::BoundingBox GetBounds() const = 0;
 
+		virtual void DrawMask() const {}
+
 	private:
 		friend class RenderSystem;
 	};

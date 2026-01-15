@@ -48,6 +48,8 @@ namespace engine
         EditorState GetEditorState() const;
         EditorCamera* GetEditorCamera() const;
 
+        GameObject* GetSelectedObject() const;
+
     private:
         void DrawPlayController();
         void DrawEditorController();

@@ -104,7 +104,7 @@ namespace engine
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Quad_VS.hlsl");
 
 
-        m_shadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl");
+        m_maskCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Mask_Cutout_PS.hlsl");
 
         m_inputLayout = m_vs->GetOrCreateInputLayout<PositionTexCoordVertex>();
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
@@ -561,7 +561,7 @@ namespace engine
 
             if (m_renderType == MaterialRenderType::Cutout)
             {
-                deviceContext->PSSetShader(m_shadowCutoutPS->GetRawShader(), nullptr, 0);
+                deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
                 ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
                 deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &srv);
             }
@@ -610,6 +610,210 @@ namespace engine
     DirectX::BoundingBox SpriteRenderer::GetBounds() const
     {
         return DirectX::BoundingBox();
+    }
+
+    void SpriteRenderer::DrawMask() const
+    {
+        if (!m_texture)
+        {
+            return;
+        }
+
+        const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
+
+        // 1. 공통 State 설정 (IA)
+        static const UINT stride = m_vertexBuffer->GetBufferStride();
+        static const UINT offset = 0;
+
+        deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
+        deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), m_indexBuffer->GetIndexFormat(), 0);
+        deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout()); // PositionTexCoordVertex 레이아웃
+
+        // 100 픽셀 = 1 유닛 (프로젝트 정책에 따라 상수화 추천)
+        constexpr float ppu = 100.0f;
+
+        // 이미지 원본 비율에 맞춰 스케일 적용
+        const Vector3 imageScale(m_width / ppu * m_uvScale.x, m_height / ppu * m_uvScale.y, 1.0f);
+
+        // (Local Quad 1x1) * (ImageRatio) * (Transform)
+        const Matrix scaleMatrix = Matrix::CreateScale(imageScale);
+        //const Matrix finalWorld = scaleMatrix * GetTransform()->GetWorld();
+
+        Matrix finalWorld;
+
+        if (m_billboardType == BillboardType::None)
+        {
+            // 기본: Transform의 World 행렬 그대로 사용
+            finalWorld = scaleMatrix * GetTransform()->GetWorld();
+        }
+        else
+        {
+            // 빌보드 처리
+            auto transform = GetTransform();
+            Vector3 worldPos = transform->GetWorldPosition();
+            Vector3 worldScale = transform->GetLocalScale(); // 부모 스케일 무시하고 로컬 스케일만 적용? 혹은 GetWorldScale() 필요
+            // 카메라 정보 가져오기
+            // SceneManager를 통해 현재 활성 씬의 카메라를 가져옵니다.
+            auto scene = SceneManager::Get().GetScene();
+            auto camera = scene ? scene->GetMainCamera() : nullptr;
+            if (camera)
+            {
+                Vector3 cameraPos = camera->GetTransform()->GetWorldPosition();
+                Vector3 forward = cameraPos - worldPos; // Sprite -> Camera 방향
+
+                if (m_billboardType == BillboardType::Spherical)
+                {
+                    // 모든 축에서 바라봄
+                    // forward 벡터를 정규화
+                    forward.Normalize();
+
+                    // Up 벡터는 카메라의 Up 벡터를 쓰거나, 월드 Up(0,1,0)과 forward를 이용해 계산
+                    // 여기서는 간단하게 Matrix::CreateBillboard 사용
+                    // 주의: CreateBillboard는 "Camera Position"과 "Object Position"을 인자로 받습니다.
+                    // (DirectXMath 문서 확인 필요: CreateBillboard(object, cameraPos, cameraUp, cameraForward)
+
+                    // Matrix::CreateBillboard:
+                    // Builds a transformation matrix where the object is positioned at "objectPosition" 
+                    // and faces "cameraPosition".
+
+                    Vector3 cameraUp = camera->GetTransform()->GetUp();
+
+                    Matrix billboard = Matrix::CreateBillboard(worldPos, cameraPos, cameraUp);
+
+                    // Scale 적용 (이미지 비율 * 오브젝트 스케일)
+                    // CreateBillboard는 회전/이동만 포함하므로 스케일링은 별도로 곱해줘야 함
+                    // 순서: Scale -> Billboard
+
+                    // 전체 스케일 (이미지 보정 * 오브젝트 스케일)
+                    Matrix totalScale = Matrix::CreateScale(imageScale * worldScale);
+                    finalWorld = totalScale * billboard;
+                }
+                else if (m_billboardType == BillboardType::Cylindrical)
+                {
+                    // Y축 회전만 (수직 빌보드)
+                    // Project forward vector to XZ plane
+                    forward.y = 0.0f;
+                    if (forward.LengthSquared() > 0.0001f) // 0 벡터 방지
+                    {
+                        forward.Normalize();
+
+                        // Y축 회전 행렬 생성 (At, Eye, Up)
+                        // LookAt은 View Matrix를 만드므로, World Matrix를 만들려면 CreateWorld나 LookTo 등을 써야 함.
+                        // Matrix::CreateConstrainedBillboard 사용 가능
+                        // Builds a transformation matrix where the object faces the camera but is constrained to rotate only around a specified axis.
+
+                        Vector3 rotateAxis(0, 1, 0); // Y축
+
+                        // CreateConstrainedBillboard(objPos, camPos, rotateAxis, camForward, objForward)
+                        // 보통 objForward는 (0,0,1)
+
+                        Matrix billboard = Matrix::CreateConstrainedBillboard(worldPos, cameraPos, rotateAxis);
+
+                        Matrix totalScale = Matrix::CreateScale(imageScale * worldScale);
+                        finalWorld = totalScale * billboard;
+                    }
+                    else
+                    {
+                        // 바로 위/아래에 있어서 방향을 알 수 없는 경우 회전 안함
+                        finalWorld = scaleMatrix * transform->GetWorld();
+                    }
+                }
+                else if (m_billboardType == BillboardType::ViewPlaneAligned)
+                {
+                    // [NEW] 카메라 평면과 평행
+                    // 카메라의 회전 행렬을 그대로 가져오면 됨
+                    // (스프라이트의 Forward(-Z)가 카메라의 Forward(Z)와 반대가 되도록? 
+                    //  보통 쿼드는 Z-가 앞인데 카메라는 Z+를 봄 (RH/LH 따름). 
+                    //  단순하게는 카메라의 Rotation Matrix를 그대로 쓰면 됨)
+
+                    // Camera World Matrix에서 Rotation 부분만 추출
+                    Matrix camWorld = camera->GetWorld();
+
+                    // Translation 제거
+                    camWorld._41 = 0; camWorld._42 = 0; camWorld._43 = 0;
+
+                    // Scale 제거 (카메라에 스케일이 있다면 문제될 수 있으니 정규화 필요)
+                    Vector3 right = Vector3(camWorld._11, camWorld._12, camWorld._13);
+                    Vector3 up = Vector3(camWorld._21, camWorld._22, camWorld._23);
+                    Vector3 fwd = Vector3(camWorld._31, camWorld._32, camWorld._33);
+
+                    right.Normalize();
+                    up.Normalize();
+                    fwd.Normalize();
+
+                    Matrix billboard = Matrix::Identity;
+                    billboard.Right(right);
+                    billboard.Up(up);
+                    billboard.Forward(fwd);
+
+                    // 최종 행렬: Scale * Rotation(Camera) * Translation(Object)
+                    Matrix totalScale = Matrix::CreateScale(imageScale * worldScale);
+                    Matrix translation = Matrix::CreateTranslation(worldPos);
+
+                    finalWorld = totalScale * billboard * translation;
+                }
+                else if (m_billboardType == BillboardType::ViewPlaneVertical)
+                {
+                    // [NEW] View Plane Vertical
+                    // 카메라의 Forward를 가져와서 Y축 성분을 제거하고 정규화
+                    Vector3 cameraForward = camera->GetForward();
+                    cameraForward.y = 0.0f;
+
+                    if (cameraForward.LengthSquared() > 0.0001f)
+                    {
+                        cameraForward.Normalize();
+
+                        // CreateWorld(pos, forward, up) - Y축은 (0,1,0) 고정
+                        // Sprite의 Forward를 Camera의 ProjectOnXZ(Forward)와 일치시킴
+                        Matrix bb = Matrix::CreateWorld(worldPos, -cameraForward, Vector3::UnitY);
+
+                        Matrix totalScale = Matrix::CreateScale(imageScale * worldScale);
+                        finalWorld = totalScale * bb;
+                    }
+                    else
+                    {
+                        // 카메라가 완전히 위/아래를 볼 때는 회전하지 않음 (기존 transform 유지)
+                        const Matrix scaleMatrix = Matrix::CreateScale(imageScale);
+                        finalWorld = scaleMatrix * transform->GetWorld();
+                    }
+                }
+            }
+            else
+            {
+                // 카메라가 없으면 일반 렌더링
+                finalWorld = scaleMatrix * transform->GetWorld();
+            }
+        }
+
+        CbObject cbObject{};
+        cbObject.world = finalWorld.Transpose();
+        cbObject.worldInverseTranspose = finalWorld.Invert(); // Normal 계산용
+        cbObject.boneIndex = -1;
+
+        deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object), 1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
+
+        CbSprite cbSprite{};
+        cbSprite.uvOffset = m_uvOffset;
+        cbSprite.uvScale = m_uvScale;
+        cbSprite.pivot = m_pivot;
+
+        deviceContext->UpdateSubresource(m_spriteConstantBuffer->GetRawBuffer(), 0, nullptr, &cbSprite, 0, 0);
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Sprite), 1, m_spriteConstantBuffer->GetBuffer().GetAddressOf());
+
+        // Sampler (Point or Linear 확인하여 바인딩)
+        // 여기선 m_samplerState가 이미 Initialize 혹은 OnGui에서 설정되었다고 가정
+        deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
+
+        deviceContext->RSSetState(m_rasterizerState->GetRawRasterizerState());
+
+        deviceContext->VSSetShader(m_shadowVS->GetRawShader(), nullptr, 0);
+        deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+        ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
+        deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &srv);
+
+        deviceContext->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
     }
 
     void SpriteRenderer::Refresh()

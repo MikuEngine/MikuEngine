@@ -546,7 +546,7 @@
     <FxCompile Include="Shader\Vertex\Shadow_Static_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Shadow_Rigid_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Shadow_Skinned_VS.hlsl" />
-    <FxCompile Include="Shader\Pixel\Shadow_Cutout_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Mask_Cutout_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\Static_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Rigid_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Skinned_VS.hlsl" />
@@ -563,6 +563,10 @@
     <FxCompile Include="Shader\Pixel\DeferredPointLight_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\LightVolume_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\DeferredSpotLight_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Outline_PS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Simple_Static_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Simple_Rigid_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Simple_Skinned_VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

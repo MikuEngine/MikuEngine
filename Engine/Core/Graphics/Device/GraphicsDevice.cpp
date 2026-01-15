@@ -19,6 +19,7 @@
 #include "Core/Graphics/Resource/InputLayout.h"
 #include "Core/Graphics/Resource/SamplerState.h"
 #include "Core/Graphics/Resource/ConstantBuffer.h"
+#include "Core/Graphics/Resource/DepthStencilState.h"
 #include "Core/Graphics/Data/ConstantBufferTypes.h"
 #include "Core/Graphics/Data/ShaderSlotTypes.h"
 #include "Framework/Asset/GeometryGenerator.h"
@@ -109,11 +110,14 @@ namespace engine
         m_fxaaPS.reset();
         m_globalLightPS.reset();
         m_blitPS.reset();
+        m_outlinePS.reset();
         m_fullscreenQuadVS.reset();
 
         m_dxgiAdapter.Reset();
         m_blurConstantBuffer.reset();
         m_screenSizeCB.reset();
+
+        m_maskDSS.reset();
 
         m_gBuffer.Reset();
 
@@ -125,6 +129,7 @@ namespace engine
         m_bloomHalfBuffer.reset();
         m_bloomWorkBuffer.reset();
         m_aaBuffer.reset();
+        m_outlineStencilBuffer.reset();
 
         m_backBufferRTV.Reset();
 
@@ -196,6 +201,7 @@ namespace engine
 
         m_deviceContext->ClearDepthStencilView(m_shadowDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         m_deviceContext->ClearDepthStencilView(m_gameDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+        m_deviceContext->ClearDepthStencilView(m_outlineStencilBuffer->GetRawDSV(), D3D11_CLEAR_STENCIL, 0.0f, 0);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.baseColor->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.normal->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.orm->GetRawRTV(), clearColor);
@@ -400,6 +406,27 @@ namespace engine
     void GraphicsDevice::EndDrawScreenPass()
     {
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+    }
+
+    void GraphicsDevice::BeginDrawOutlinePass()
+    {
+        m_deviceContext->OMSetRenderTargets(0, nullptr, m_outlineStencilBuffer->GetRawDSV());
+        m_deviceContext->OMSetDepthStencilState(m_maskDSS->GetRawDepthStencilState(), 1);
+    }
+
+    void GraphicsDevice::EndDrawOutlinePass()
+    {
+        m_deviceContext->OMSetRenderTargets(1, m_finalBuffer->GetRTV().GetAddressOf(), nullptr);
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::StencilMap), 1, m_outlineStencilBuffer->GetSRV().GetAddressOf());
+
+        m_deviceContext->PSSetShader(m_outlinePS->GetRawShader(), nullptr, 0);
+
+        DrawFullscreenQuad();
+        
+        m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+        ID3D11ShaderResourceView* nullSRV = nullptr;
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::StencilMap), 1, &nullSRV);
     }
 
     void GraphicsDevice::BeginDrawDebugPass()
@@ -881,7 +908,7 @@ namespace engine
         // bloom textures
         {
             // 메모리 절약을 위해 R11G11B10_FLOAT 사용 권장 (없으면 R16G16B16A16_FLOAT)
-            D3D11_TEXTURE2D_DESC desc = {};
+            D3D11_TEXTURE2D_DESC desc{};
             desc.Format = DXGI_FORMAT_R11G11B10_FLOAT;
             desc.SampleDesc.Count = 1;
             desc.Usage = D3D11_USAGE_DEFAULT;
@@ -897,6 +924,22 @@ namespace engine
 
             m_bloomWorkBuffer = std::make_unique<Texture>();
             m_bloomWorkBuffer->Create(desc);
+        }
+
+        // outline
+        {
+            D3D11_TEXTURE2D_DESC desc{};
+            desc.Width = m_resolutionWidth;
+            desc.Height = m_resolutionHeight;
+            desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+            desc.SampleDesc.Count = 1;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+
+            m_outlineStencilBuffer = std::make_unique<Texture>();
+            m_outlineStencilBuffer->Create(desc, DXGI_FORMAT_X24_TYPELESS_G8_UINT, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_D24_UNORM_S8_UINT);
         }
 
         m_gameViewport.TopLeftX = 0.0f;
@@ -991,6 +1034,36 @@ namespace engine
         // Blur Constant Buffer
         {
             m_blurConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Blur", sizeof(CbBlur));
+        }
+
+        // mask depth stencil state
+        {
+            D3D11_DEPTH_STENCIL_DESC desc{};
+            desc.DepthEnable = false;
+            desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+            desc.DepthFunc = D3D11_COMPARISON_ALWAYS; // 혹은 ALWAYS (벽 뒤에 있는 것도 외곽선 따려면)
+
+            // Stencil 설정 (핵심)
+            desc.StencilEnable = true;
+            desc.StencilReadMask = 0xFF;
+            desc.StencilWriteMask = 0xFF;
+
+            // 픽셀이 그려질 때 스텐실 버퍼에 무엇을 할 것인가?
+            desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+            desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+            desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE; // <--- 통과하면 Ref 값으로 덮어씀 (Replace)
+            desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;    // <--- 무조건 통과 (깊이 테스트만 통과한다면)
+
+            // BackFace도 동일하게 설정
+            desc.BackFace = desc.FrontFace;
+
+            m_maskDSS = std::make_unique<DepthStencilState>();
+            m_maskDSS->Create(desc);
+        }
+
+        // outline ps
+        {
+            m_outlinePS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Outline_PS.hlsl");
         }
 
         m_screenSizeCB = ResourceManager::Get().GetOrCreateConstantBuffer("ScreenSize", sizeof(CbScreenSize));

@@ -400,6 +400,21 @@ namespace engine
         }
         graphics.EndDrawScreenPass();
 
+#ifdef _DEBUG
+        if (auto gameObject = EditorManager::Get().GetSelectedObject(); gameObject != nullptr)
+        {
+            graphics.BeginDrawOutlinePass();
+            {
+                auto renderer = gameObject->GetComponent<Renderer>();
+                if (renderer != nullptr)
+                {
+                    renderer->DrawMask();
+                }
+            }
+            graphics.EndDrawOutlinePass();
+        }
+#endif
+
         // Physics Debug Rendering (PostProcessing 이후, finalBuffer에 렌더링)
         graphics.BeginDrawDebugPass();
         {

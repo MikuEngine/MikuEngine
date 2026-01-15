@@ -34,11 +34,12 @@ namespace engine
 
         std::shared_ptr<VertexShader> m_vs;
         std::shared_ptr<VertexShader> m_shadowVS;
+        std::shared_ptr<VertexShader> m_simpleVS;
 
         std::shared_ptr<PixelShader> m_opaquePS;
         std::shared_ptr<PixelShader> m_cutoutPS;
         std::shared_ptr<PixelShader> m_transparentPS;
-        std::shared_ptr<PixelShader> m_shadowCutoutPS;
+        std::shared_ptr<PixelShader> m_maskCutoutPS;
 
         std::vector<Textures> m_textures;
         std::shared_ptr<InputLayout> m_inputLayout;
@@ -82,6 +83,7 @@ namespace engine
         bool HasRenderType(RenderType type) const override;
         void Draw(RenderType type) const override;
         DirectX::BoundingBox GetBounds() const override;
+        void DrawMask() const override;
 
     private:
         void Refresh();

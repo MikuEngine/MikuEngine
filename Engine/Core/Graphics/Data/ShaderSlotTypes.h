@@ -22,7 +22,8 @@ enum class TextureSlot
     IBLSpecularBRDFLUT      = 24,
 
     Blit                    = 30,
-    HDR                     = 31
+    HDR                     = 31,
+    StencilMap              = 32,
 };
 
 enum class SamplerSlot
