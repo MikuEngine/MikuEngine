@@ -272,6 +272,16 @@ namespace engine
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::ShadowMap), 1, nullSRVs);
     }
 
+    void GraphicsDevice::BeginDrawEditorPass()
+    {
+        m_deviceContext->OMSetRenderTargets(1, m_hdrBuffer->GetRTV().GetAddressOf(), m_gameDepthBuffer->GetRawDSV());
+    }
+
+    void GraphicsDevice::EndDrawEditorPass()
+    {
+        m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+    }
+
     void GraphicsDevice::BeginDrawForwardPass()
     {
         m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -1001,10 +1011,10 @@ namespace engine
         {
             auto geometryData = GeometryGenerator::MakeQuad(2.0f, 2.0f);
 
-            m_quadVertexBuffer = std::make_shared<VertexBuffer>();
+            m_quadVertexBuffer = std::make_unique<VertexBuffer>();
             m_quadVertexBuffer->Create(geometryData.vertices);
 
-            m_quadIndexBuffer = std::make_shared<IndexBuffer>();
+            m_quadIndexBuffer = std::make_unique<IndexBuffer>();
             m_quadIndexBuffer->Create(geometryData.indices);
         }
 

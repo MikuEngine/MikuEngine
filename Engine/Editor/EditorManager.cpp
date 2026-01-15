@@ -17,6 +17,7 @@
 #include "Framework/System/RenderSystem.h"
 
 #include "Editor/EditorCamera.h"
+#include "Editor/EditorGrid.h"
 
 #include "Framework/Physics/PhysicsDebugRenderer.h"
 #include "Framework/Physics/PhysicsSystem.h"
@@ -35,6 +36,10 @@ namespace engine
     void EditorManager::Initialize()
     {
         m_editorCamera = std::make_unique<EditorCamera>();
+        m_editorGrid = std::make_unique<EditorGrid>();
+
+        m_editorGrid->Initialize();
+
         m_projectSettings.Load();
 
         RefreshFileCache();
@@ -86,6 +91,11 @@ namespace engine
             DrawDebugInfo();
         }
         graphics.EndDrawGUIPass();
+    }
+
+    void EditorManager::Shutdown()
+    {
+        m_editorGrid.reset(); // 그래픽 리소스 있어서 해제 필요
     }
 
     EditorState EditorManager::GetEditorState() const
@@ -955,6 +965,11 @@ namespace engine
         PhysicsDebugRenderer::Get().OnGui();
 
         ImGui::End();
+    }
+
+    void EditorManager::DrawEditorGrid()
+    {
+        m_editorGrid->Draw();
     }
 
     void EditorManager::ValidateSettingsList()

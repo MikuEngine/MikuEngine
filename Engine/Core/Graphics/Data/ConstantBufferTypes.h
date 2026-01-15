@@ -108,6 +108,15 @@ namespace engine
 		Vector2 screenSize;
 		float __pad[2];
 	};
+
+	struct CbGrid
+	{
+		Vector4 gridColor; // 그리드 색상
+
+		float gridSpacing; // 격자 간격 (예: 1.0)
+		float gridWidth; // 선 두께 (예: 0.02 ~ 0.05)
+		float __pad1[2];
+	};
 }
 
 #pragma warning(pop)

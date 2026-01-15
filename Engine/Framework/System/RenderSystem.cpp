@@ -324,6 +324,14 @@ namespace engine
             }
             graphics.EndDrawLightPass();
 
+            //{
+            //    graphics.BeginDrawEditorPass();
+            //    {
+            //        EditorManager::Get().DrawEditorGrid();
+            //    }
+            //    graphics.EndDrawEditorPass();
+            //}
+
             graphics.BeginDrawForwardPass();
             {
                 context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
@@ -349,6 +357,13 @@ namespace engine
 
                 context->RSSetState(nullptr);
                 context->OMSetDepthStencilState(nullptr, 0);
+
+#ifdef _DEBUG
+                if (EditorManager::Get().GetEditorState() != EditorState::Play)
+                {
+                    EditorManager::Get().DrawEditorGrid();
+                }
+#endif // _DEBUG
 
                 context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
                 context->OMSetDepthStencilState(m_transparentDSState->GetRawDepthStencilState(), 0);
@@ -385,6 +400,8 @@ namespace engine
             }
             graphics.EndDrawForwardPass();
         }
+
+        
 
         graphics.ExecutePostProcessing();
 

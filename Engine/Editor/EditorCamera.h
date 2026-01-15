@@ -29,6 +29,7 @@ namespace engine
         const Matrix& GetView() const;
         const Matrix& GetProjection() const;
         const Vector3& GetPosition() const;
+        float GetFar() const;
 
         void SetPosition(const Vector3& position);
         void SetCameraInfo(float fov, float aspect, float nearZ, float farZ);

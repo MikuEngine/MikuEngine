@@ -137,6 +137,11 @@ namespace engine
         return m_position;
     }
 
+    float EditorCamera::GetFar() const
+    {
+        return m_far;
+    }
+
     void EditorCamera::SetPosition(const Vector3& position)
     {
         m_position = position;

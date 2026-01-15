@@ -99,13 +99,8 @@ namespace engine
         std::shared_ptr<ConstantBuffer> m_screenSizeCB;
 
         // quad
-        std::shared_ptr<VertexBuffer> m_quadVertexBuffer;
-        std::shared_ptr<IndexBuffer> m_quadIndexBuffer;
-        /*Microsoft::WRL::ComPtr<ID3D11Buffer> m_quadVertexBuffer;
-        Microsoft::WRL::ComPtr<ID3D11Buffer> m_quadIndexBuffer;*/
-        /*UINT m_quadVertexCount = 0;
-        UINT m_quadIndexCount = 0;
-        UINT m_quadVertexStride = 0;*/
+        std::unique_ptr<VertexBuffer> m_quadVertexBuffer;
+        std::unique_ptr<IndexBuffer> m_quadIndexBuffer;
 
         HWND m_hWnd = nullptr;
         UINT m_resolutionWidth = 0;
@@ -162,6 +157,9 @@ namespace engine
 
         void BeginDrawLightPass();
         void EndDrawLightPass();
+
+        void BeginDrawEditorPass();
+        void EndDrawEditorPass();
 
         void BeginDrawForwardPass();
         void EndDrawForwardPass();

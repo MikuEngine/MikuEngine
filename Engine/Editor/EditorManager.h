@@ -8,6 +8,7 @@ namespace engine
 {
     class GameObject;
     class EditorCamera;
+    class EditorGrid;
 
     enum class EditorState
     {
@@ -22,6 +23,7 @@ namespace engine
     private:
         Ptr<GameObject> m_selectedObject = nullptr;
         std::unique_ptr<EditorCamera> m_editorCamera = nullptr;
+        std::unique_ptr<EditorGrid> m_editorGrid = nullptr;
         EditorState m_editorState = EditorState::Edit;
 
         ProjectSettings m_projectSettings;
@@ -44,11 +46,14 @@ namespace engine
         void Initialize();
         void Update();
         void Render();
+        void Shutdown();
 
         EditorState GetEditorState() const;
         EditorCamera* GetEditorCamera() const;
 
         GameObject* GetSelectedObject() const;
+
+        void DrawEditorGrid();
 
     private:
         void DrawPlayController();

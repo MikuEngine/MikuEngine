@@ -195,6 +195,7 @@ namespace engine
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
 
+        EditorManager::Get().Shutdown();
         PhysicsSystem::Get().Shutdown();
         SceneManager::Get().Shutdown();
         SystemManager::Get().Shutdown();

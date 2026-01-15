@@ -132,6 +132,15 @@ cbuffer ScreenSize : register(b7)
     float2 __pad1_ScreenSize;
 };
 
+cbuffer Grid : register(b8)
+{
+    float4 g_gridColor; // 그리드 색상
+    
+    float g_gridSpacing; // 격자 간격 (예: 1.0)
+    float g_gridWidth; // 선 두께 (예: 0.02 ~ 0.05)
+    float2 __pad1_Grid;
+};
+
 struct VS_INPUT_POSITION
 {
     float3 position : POSITION;
@@ -196,6 +205,12 @@ struct PS_OUTPUT_GBUFFER
 struct PS_INPUT
 {
     float4 position : SV_Position;
+};
+
+struct PS_INPUT_WORLD_POSITION
+{
+    float4 position : SV_Position;
+    float3 worldPosition : TEXCOORD0;
 };
 
 static const float PI = 3.141592f;

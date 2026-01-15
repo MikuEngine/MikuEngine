@@ -246,6 +246,9 @@
     <ClCompile Include="Framework\Object\Component\Canvas.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\EditorGrid.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -533,6 +536,9 @@
     <ClInclude Include="Framework\Object\Component\Canvas.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\EditorGrid.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\FullscreenQuad_VS.hlsl" />
@@ -567,6 +573,8 @@
     <FxCompile Include="Shader\Vertex\Simple_Static_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Simple_Rigid_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Simple_Skinned_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Grid_VS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Grid_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

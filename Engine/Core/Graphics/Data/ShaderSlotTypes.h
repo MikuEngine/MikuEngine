@@ -44,4 +44,5 @@ enum class ConstantBufferSlot
     Sprite = 5,
     LocalLight = 6,
     ScreenSize = 7,
+    Grid = 8,
 };
