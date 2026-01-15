@@ -11,6 +11,8 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/ComponentFactory.h"
+#include "Framework/Object/Component/Canvas.h"
+
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 
@@ -571,9 +573,14 @@ namespace engine
                 // Canvas 프리셋 (지금은 그냥 UI 오브젝트 + 이름만 Canvas로)
                 if (ImGui::MenuItem("Canvas"))
                 {
-                    if (scene)
+                    GameObject* go = scene->CreateGameObject(CreateObjectType::UI, "Canvas");
+                    if (go)
                     {
-                        scene->CreateGameObject(CreateObjectType::UI, "Canvas");
+                        // Canvas 컴포넌트 자동 부착
+                        if (go->GetComponent<engine::Canvas>() == nullptr)
+                        {
+                            go->AddComponent<engine::Canvas>();
+                        }
                     }
 
                     ImGui::CloseCurrentPopup();
@@ -750,15 +757,28 @@ namespace engine
         ImGui::Separator();
 
         Transform* tr = m_selectedObject->GetTransform();
-        std::string trNameStr = tr ? tr->GetType().c_str() : "Transform";
+        std::string trNameStr = tr ? tr->GetType() : "Transform";
+
+        engine::Canvas* canvas = m_selectedObject->GetComponent<engine::Canvas>();
+        bool lockRectTransform = canvas ? canvas->IsRectTransformLockedInEditor() : false;
+
         if (ImGui::CollapsingHeader(trNameStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (tr)
             {
-                tr->OnGui();
-            }
+                if (lockRectTransform)
+                {
+                    ImGui::BeginDisabled(true);
+                    tr->OnGui();
+                    ImGui::EndDisabled();
 
-            //m_selectedObject->GetTransform()->OnGui();
+                    ImGui::TextDisabled("Canvas RectTransform is locked.");
+                }
+                else
+                {
+                    tr->OnGui();
+                }
+            }
         }
         
         ImGui::Spacing();
