@@ -1,6 +1,6 @@
 {
     "Name": "HiroScene",
-    "NumGameObjects": 2,
+    "NumGameObjects": 4,
     "GameObjects": [
         {
             "ID": 0,
@@ -60,6 +60,123 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "Canvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": [
+                        0.0,
+                        0.0
+                    ],
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": [
+                        0.5,
+                        0.5
+                    ],
+                    "AnchorMin": [
+                        0.5,
+                        0.5
+                    ],
+                    "AnchorMax": [
+                        0.5,
+                        0.5
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 2,
+            "Name": "Image",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": [
+                        0.0,
+                        0.0
+                    ],
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": [
+                        0.5,
+                        0.5
+                    ],
+                    "AnchorMin": [
+                        0.5,
+                        0.5
+                    ],
+                    "AnchorMax": [
+                        0.5,
+                        0.5
+                    ]
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 0,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
                 }
             ]
         }

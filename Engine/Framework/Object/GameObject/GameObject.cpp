@@ -5,6 +5,7 @@
 #include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/ComponentFactory.h"
 #include "Framework/Scene/Scene.h"
 #include "Editor/EditorManager.h"
@@ -238,6 +239,53 @@ namespace engine
         }
     }
 
+    RectTransform* GameObject::ReplaceTransformWithRectTransform()
+    {
+        // 이미 RectTransform이면 그대로 반환
+        if (auto* already = dynamic_cast<RectTransform*>(m_transform))
+        {
+            return already;
+        }
+
+        Transform* old = m_transform;
+
+        // 여기서 새 RectTransform을 추가합니다.
+        RectTransform* rt = AddComponent<RectTransform>();
+
+        // 기본 Transform을 RectTransform으로 교체합니다.
+        m_transform = rt;
+
+        if (old == nullptr)
+        {
+            return rt;
+        }
+            
+        rt->SetLocalPosition(old->GetLocalPosition());
+        rt->SetLocalRotation(old->GetLocalRotation());
+        rt->SetLocalScale(old->GetLocalScale());
+
+        Transform* parent = old->GetParent();
+        std::vector<Transform*> children = old->GetChildren();
+        rt->SetParent(parent);
+        old->SetParent(nullptr);
+
+        for (Transform* c : children)
+        {
+            if (c != nullptr)
+            {
+                c->SetParent(rt);
+            }
+        }
+
+        Scene* scene = SceneManager::Get().GetScene();
+        if (scene != nullptr)
+        {
+            scene->RegisterPendingKill(old);
+        }
+
+        return rt;
+    }
+
     void GameObject::Save(json& j) const
     {
         j["Name"] = m_name;
@@ -264,24 +312,45 @@ namespace engine
         JsonArrayForEach(j, "Components", [&](const json& compJson)
             {
                 std::string type = compJson.value("Type", "");
-
                 if (type.empty())
-                {
                     return;
-                }
 
                 if (type == "Transform")
                 {
-                    GetTransform()->Load(compJson);
-                }
-                else
-                {
-                    auto newComp = ComponentFactory::Get().Create(type);
-                    if (newComp)
+                    // 기본 Transform 로드
+                    if (GetTransform())
                     {
-                        newComp->Load(compJson);
-                        AddComponent(std::move(newComp));
+                        GetTransform()->Load(compJson);
                     }
+                    return;
+                }
+
+                if (type == "RectTransform")
+                {
+                    // 핵심: RectTransform은 "추가"가 아니라 "교체" 후 로드
+                    RectTransform* rt = ReplaceTransformWithRectTransform();
+                    if (rt)
+                    {
+                        rt->Load(compJson);
+                    }
+                    return;
+                }
+            });
+
+        JsonArrayForEach(j, "Components", [&](const json& compJson)
+            {
+                std::string type = compJson.value("Type", "");
+                if (type.empty())
+                    return;
+
+                if (type == "Transform" || type == "RectTransform")
+                    return; // 위에서 처리 완료
+
+                auto newComp = ComponentFactory::Get().Create(type);
+                if (newComp)
+                {
+                    newComp->Load(compJson);
+                    AddComponent(std::move(newComp));
                 }
             });
     }

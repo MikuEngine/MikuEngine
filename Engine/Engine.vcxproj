@@ -147,6 +147,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Framework\Object\Component\Canvas.cpp" />
     <ClCompile Include="Common\Debug\Debug.cpp" />
     <ClCompile Include="Common\Math\MathUtility.cpp" />
     <ClCompile Include="Framework\Asset\GeometryGenerator.cpp" />
@@ -228,6 +229,7 @@
     <ClCompile Include="Framework\Object\Component\SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Framework\Object\Component\Canvas.h" />
     <ClInclude Include="Common\Debug\Debug.h" />
     <ClInclude Include="Common\Math\MathUtility.h" />
     <ClInclude Include="Common\Utility\CommonTypes.h" />

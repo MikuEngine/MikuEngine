@@ -552,7 +552,53 @@ namespace engine
 
         if (ImGui::Button("Create GameObject"))
         {
-            SceneManager::Get().GetScene()->CreateGameObject();
+            ImGui::OpenPopup("CreateGameObjectPopup");
+        }
+
+        if (ImGui::BeginPopup("CreateGameObjectPopup"))
+        {
+            auto* scene = SceneManager::Get().GetScene();
+
+            // 1) 기본 오브젝트
+            if (ImGui::MenuItem("Default (Transform)"))
+            {
+                if (scene)
+                {
+                    scene->CreateGameObject(CreateObjectType::Default, "GameObject");
+                }
+
+                ImGui::CloseCurrentPopup();
+            }
+
+            // 2) UI 하위 메뉴
+            if (ImGui::BeginMenu("UI"))
+            {
+                // Canvas 프리셋 (지금은 그냥 UI 오브젝트 + 이름만 Canvas로)
+                if (ImGui::MenuItem("Canvas"))
+                {
+                    if (scene)
+                    {
+                        scene->CreateGameObject(CreateObjectType::UI, "Canvas");
+                    }
+
+                    ImGui::CloseCurrentPopup();
+                }
+
+                // UI 빈 오브젝트(= RectTransform)
+                if (ImGui::MenuItem("UI Object (RectTransform)"))
+                {
+                    if (scene)
+                    {
+                        scene->CreateGameObject(CreateObjectType::UI, "UIObject");
+                    }
+
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndPopup();
         }
 
         ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 10.0f));
@@ -707,9 +753,17 @@ namespace engine
         }
         
         ImGui::Separator();
-        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+
+        Transform* tr = m_selectedObject->GetTransform();
+        std::string trNameStr = tr ? tr->GetType().c_str() : "Transform";
+        if (ImGui::CollapsingHeader(trNameStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
         {
-            m_selectedObject->GetTransform()->OnGui();
+            if (tr)
+            {
+                tr->OnGui();
+            }
+
+            //m_selectedObject->GetTransform()->OnGui();
         }
         
         ImGui::Spacing();
@@ -721,7 +775,7 @@ namespace engine
             auto& comp = components[i];
             ImGui::PushID(comp.get());
 
-            if (comp->GetType() == "Transform")
+            if (comp->GetType() == "Transform" || comp->GetType() == "RectTransform")
             {
                 ImGui::PopID();
                 continue;

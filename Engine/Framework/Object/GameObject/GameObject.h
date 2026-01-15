@@ -7,6 +7,7 @@ namespace engine
 {
     class Component;
     class Transform;
+    class RectTransform;
 
     class GameObject :
         public Object
@@ -84,6 +85,8 @@ namespace engine
 
         const std::vector<std::unique_ptr<Component>>& GetComponents() const;
         void RemoveComponent(size_t index);
+
+        RectTransform* ReplaceTransformWithRectTransform();
 
     public:
         virtual void OnGui() {};
