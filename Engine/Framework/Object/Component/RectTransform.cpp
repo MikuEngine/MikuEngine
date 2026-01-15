@@ -155,32 +155,21 @@ namespace engine
     {
         Object::Save(j);
 
-        j["AnchoredPosition"] = { m_anchoredPosition.x, m_anchoredPosition.y };
+        j["AnchoredPosition"] = m_anchoredPosition;
         j["Width"] = m_width;
         j["Height"] = m_height;
 
-        j["Pivot"] = { m_pivot.x, m_pivot.y };
-        j["AnchorMin"] = { m_anchorMin.x, m_anchorMin.y };
-        j["AnchorMax"] = { m_anchorMax.x, m_anchorMax.y };
+        j["Pivot"] = m_pivot;
+        j["AnchorMin"] = m_anchorMin;
+        j["AnchorMax"] = m_anchorMax;
     }
 
     void RectTransform::Load(const json& j)
     {
-        auto loadVec2 = [&](const char* key, Vector2& out)
-            {
-                if (!j.contains(key)) return;
-                const auto& a = j[key];
-                if (!a.is_array() || a.size() != 2) return;
-
-                out.x = a[0].get<float>();
-                out.y = a[1].get<float>();
-            };
-
-        loadVec2("AnchoredPosition", m_anchoredPosition);
-        loadVec2("Pivot", m_pivot);
-        loadVec2("AnchorMin", m_anchorMin);
-        loadVec2("AnchorMax", m_anchorMax);
-
+        JsonGet(j, "AnchoredPosition", m_anchoredPosition);
+        JsonGet(j, "Pivot", m_pivot);
+        JsonGet(j, "AnchorMin", m_anchorMin);
+        JsonGet(j, "AnchorMax", m_anchorMax);
         JsonGet(j, "Width", m_width);
         JsonGet(j, "Height", m_height);
     }

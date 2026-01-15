@@ -44,7 +44,7 @@ namespace engine
 		Component::Save(j);
 
 		j["LockRectTransform"] = m_lockRectTransformInEditor;
-		j["ReferenceResolution"] = { m_referenceResolution.x, m_referenceResolution.y };
+		j["ReferenceResolution"] = m_referenceResolution;
 		j["SortingOrder"] = m_sortingOrder;
 	}
 
@@ -52,17 +52,8 @@ namespace engine
 	{
 		Component::Load(j);
 
-		if (j.contains("LockRectTransform") && j["LockRectTransform"].is_boolean())
-			m_lockRectTransformInEditor = j["LockRectTransform"].get<bool>();
-
-		if (j.contains("ReferenceResolution") &&
-			j["ReferenceResolution"].is_array() &&
-			j["ReferenceResolution"].size() == 2)
-		{
-			m_referenceResolution.x = j["ReferenceResolution"][0].get<float>();
-			m_referenceResolution.y = j["ReferenceResolution"][1].get<float>();
-		}
-
+		JsonGet(j, "LockRectTransform", m_lockRectTransformInEditor);
+		JsonGet(j, "ReferenceResolution", m_referenceResolution);
 		JsonGet(j, "SortingOrder", m_sortingOrder);
 	}
 
