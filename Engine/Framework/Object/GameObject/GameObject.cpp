@@ -312,24 +312,45 @@ namespace engine
         JsonArrayForEach(j, "Components", [&](const json& compJson)
             {
                 std::string type = compJson.value("Type", "");
-
                 if (type.empty())
-                {
                     return;
-                }
 
                 if (type == "Transform")
                 {
-                    GetTransform()->Load(compJson);
-                }
-                else
-                {
-                    auto newComp = ComponentFactory::Get().Create(type);
-                    if (newComp)
+                    // 기본 Transform 로드
+                    if (GetTransform())
                     {
-                        newComp->Load(compJson);
-                        AddComponent(std::move(newComp));
+                        GetTransform()->Load(compJson);
                     }
+                    return;
+                }
+
+                if (type == "RectTransform")
+                {
+                    // 핵심: RectTransform은 "추가"가 아니라 "교체" 후 로드
+                    RectTransform* rt = ReplaceTransformWithRectTransform();
+                    if (rt)
+                    {
+                        rt->Load(compJson);
+                    }
+                    return;
+                }
+            });
+
+        JsonArrayForEach(j, "Components", [&](const json& compJson)
+            {
+                std::string type = compJson.value("Type", "");
+                if (type.empty())
+                    return;
+
+                if (type == "Transform" || type == "RectTransform")
+                    return; // 위에서 처리 완료
+
+                auto newComp = ComponentFactory::Get().Create(type);
+                if (newComp)
+                {
+                    newComp->Load(compJson);
+                    AddComponent(std::move(newComp));
                 }
             });
     }
