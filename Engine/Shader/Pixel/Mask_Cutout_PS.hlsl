@@ -2,5 +2,7 @@
 
 void main(PS_INPUT_TEXCOORD input)
 {
-    clip(g_texBaseColor.Sample(g_samLinear, input.texCoord).a - 0.5f);
+    float threshold = 0.001f;
+    
+    clip(g_texBaseColor.Sample(g_samLinear, input.texCoord).a - threshold);
 }
