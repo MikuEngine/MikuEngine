@@ -9,6 +9,7 @@
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/Camera.h"
 #include "Framework/Object/Component/Transform.h"
+#include <Framework/Object/Component/RectTransform.h>
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/CameraSystem.h"
 
@@ -16,11 +17,33 @@ namespace engine
 {
     GameObject* Scene::CreateGameObject(const std::string& name)
     {
+        //m_incubator.push_back(std::make_unique<GameObject>());
+
+        //GameObject* ptr = m_incubator.back().get();
+        //ptr->m_name = name;
+        //ptr->m_sceneIndex = static_cast<int32_t>(m_gameObjects.size() - 1);
+
+        //RegisterPendingAdd(ptr);
+
+        //return ptr;
+        return CreateGameObject(CreateObjectType::Default, name);
+    }
+
+    GameObject* Scene::CreateGameObject(CreateObjectType type, const std::string& name)
+    {
         m_incubator.push_back(std::make_unique<GameObject>());
 
         GameObject* ptr = m_incubator.back().get();
         ptr->m_name = name;
         ptr->m_sceneIndex = static_cast<int32_t>(m_gameObjects.size() - 1);
+
+        switch (type)
+        {
+        case CreateObjectType::UI:
+
+            ptr->ReplaceTransformWithRectTransform();
+            break;
+        }
 
         RegisterPendingAdd(ptr);
 

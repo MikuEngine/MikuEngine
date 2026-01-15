@@ -545,10 +545,49 @@ namespace engine
     {
         ImGui::Begin("Hierarchy");
 
+        //if (ImGui::Button("Create GameObject"))
+        //{
+        //    SceneManager::Get().GetScene()->CreateGameObject();
+        //}
+
+
         if (ImGui::Button("Create GameObject"))
         {
-            SceneManager::Get().GetScene()->CreateGameObject();
+            ImGui::OpenPopup("CreateGameObjectPopup");
         }
+
+        // 생성 팝업
+        if (ImGui::BeginPopup("CreateGameObjectPopup"))
+        {
+            auto* scene = SceneManager::Get().GetScene();
+
+            // Default 생성
+            if (ImGui::MenuItem("Default (Transform)"))
+            {
+                if (scene)
+                {
+                    scene->CreateGameObject(CreateObjectType::Default, "GameObject");
+                }
+                ImGui::CloseCurrentPopup();
+            }
+
+            // UI 생성
+            if (ImGui::MenuItem("UI (RectTransform)"))
+            {
+                if (scene)
+                {
+                    scene->CreateGameObject(CreateObjectType::UI, "UIObject");
+                }
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
+
+
+
+
+
 
         ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 10.0f));
         if (ImGui::BeginDragDropTarget())
@@ -702,9 +741,17 @@ namespace engine
         }
         
         ImGui::Separator();
-        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+
+        Transform* tr = m_selectedObject->GetTransform();
+        std::string trNameStr = tr ? tr->GetType().c_str() : "Transform";
+        if (ImGui::CollapsingHeader(trNameStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
         {
-            m_selectedObject->GetTransform()->OnGui();
+            if (tr)
+            {
+                tr->OnGui();
+            }
+
+            //m_selectedObject->GetTransform()->OnGui();
         }
         
         ImGui::Spacing();
@@ -716,7 +763,7 @@ namespace engine
             auto& comp = components[i];
             ImGui::PushID(comp.get());
 
-            if (comp->GetType() == "Transform")
+            if (comp->GetType() == "Transform" || comp->GetType() == "RectTransform")
             {
                 ImGui::PopID();
                 continue;

@@ -35,6 +35,7 @@ namespace engine
 
     public:
         GameObject* CreateGameObject(const std::string& name = "GameObject");
+        GameObject* CreateGameObject(CreateObjectType type, const std::string& name = "GameObject");
         Camera* GetMainCamera() const;
         const std::vector<std::unique_ptr<GameObject>>& GetGameObjects() const;
         const std::string& GetName() const;
