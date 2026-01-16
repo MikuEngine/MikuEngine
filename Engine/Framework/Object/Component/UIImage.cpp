@@ -23,6 +23,7 @@ namespace engine
 		UIElement::Initialize();
 
 		m_vs = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/FullscreenQuad_VS.hlsl");
+		m_ps = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Blit_PS.hlsl");
 		m_inputLayout = m_vs->GetOrCreateInputLayout<PositionTexCoordVertex>();
 
 		m_sampler = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
