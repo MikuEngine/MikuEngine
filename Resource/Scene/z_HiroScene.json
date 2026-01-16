@@ -1,6 +1,6 @@
 {
-    "Name": "HiroScene",
-    "NumGameObjects": 5,
+    "Name": "z_HiroScene",
+    "NumGameObjects": 3,
     "GameObjects": [
         {
             "ID": 0,
@@ -38,33 +38,6 @@
         },
         {
             "ID": 1,
-            "Name": "GameObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 2,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -123,58 +96,8 @@
             ]
         },
         {
-            "ID": 3,
-            "ParentID": 2,
-            "Name": "UIObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 4,
-            "ParentID": 2,
+            "ID": 2,
+            "ParentID": 1,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -223,7 +146,11 @@
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "TexturePath": "",
+                    "TexturePath": "Resource/Texture/Earth.png",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Blit_PS.hlsl",
+                    "RenderType": 2,
                     "AlphaBlend": true,
                     "SkipInvalidRect": true
                 }

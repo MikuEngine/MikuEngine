@@ -6,6 +6,7 @@
 namespace engine
 {
 	class Texture;
+	class ConstantBuffer;
 	class VertexShader;
 	class PixelShader;
 	class InputLayout;
@@ -19,27 +20,38 @@ namespace engine
 	{
 		REGISTER_COMPONENT(UIImage);
 	private:
-		// Texture
 		std::string m_textureFilePath;
+		std::string m_vsFilePath;
+		std::string m_opaquePSFilePath;
+		std::string m_cutoutPSFilePath;
+		std::string m_transparentPSFilePath;
+
 		std::shared_ptr<Texture> m_texture;
 
-		// Shader
 		std::shared_ptr<VertexShader> m_vs;
-		std::shared_ptr<PixelShader> m_ps;
 
-		// Geometry
+		std::shared_ptr<PixelShader> m_opaquePS;
+		std::shared_ptr<PixelShader> m_cutoutPS;
+		std::shared_ptr<PixelShader> m_transparentPS;
+		std::shared_ptr<PixelShader> m_maskCutoutPS;
+
 		std::shared_ptr<VertexBuffer> m_vertexBuffer;
 		std::shared_ptr<IndexBuffer> m_indexBuffer;
 		std::shared_ptr<InputLayout> m_inputLayout;
 
-		// State
-		std::shared_ptr<SamplerState> m_sampler;
+		std::shared_ptr<SamplerState> m_samplerState;
 		std::shared_ptr<BlendState> m_blend;
 		std::shared_ptr<DepthStencilState> m_depthNone;
 
-		// Options
+
 		bool m_useAlphaBlend = true;
 		bool m_drawOnlyWhenRectValid = true;
+		bool m_isLoaded = false;
+
+		float m_width = 100.0f;
+		float m_height = 100.0f;
+
+		MaterialRenderType m_renderType = MaterialRenderType::Transparent;
 
 	public:
 		UIImage() = default;
@@ -50,7 +62,7 @@ namespace engine
 		void DrawUI() const override;
 
 	public:
-		void SetTexture(const std::string& filePath);
+		void SetTexture(const std::string& textureFilePath);
 		const std::string& GetTexturePath() const;
 
 		void SetAlphaBlend(bool enable);
@@ -66,5 +78,9 @@ namespace engine
 		void Save(json& j) const override;
 		void Load(const json& j) override;
 		std::string GetType() const override;
+
+	private:
+		void ReplaceRenderSystem();
+		void Refresh();
 	};
 }

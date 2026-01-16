@@ -46,8 +46,10 @@ namespace engine
 		const Vector2& GetAnchorMin() const;
 		const Vector2& GetAnchorMax() const;
 		const UIRect& GetWorldRect() const;
+		RectTransform* FindPrentRectTransform() const;
 
 		bool IsUIDirty() const;
+
 	public:
 		// Setter
 		void SetAnchoredPosition(const Vector2& pos);
@@ -63,6 +65,7 @@ namespace engine
 	public:
 		// Calculate
 		void Recalculate(const UIRect& parentRect);
+		UIRect& GetWorldRectResolved(const UIRect& rootRect);
 
 	public:
 		void OnGui() override;

@@ -1,8 +1,34 @@
 ﻿#include "EnginePCH.h"
 #include "Canvas.h"
 
+#include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/Component/RectTransform.h"
+
 namespace engine
 {
+	namespace
+	{
+		void RecalcTree(Transform* tr, const UIRect& parentRect)
+		{
+			if (!tr) return;
+
+			UIRect myRect = parentRect;
+
+			if (auto* rt = dynamic_cast<RectTransform*>(tr))
+			{
+				if (rt->IsUIDirty())
+					rt->Recalculate(parentRect);
+
+				myRect = rt->GetWorldRect();
+			}
+
+			const auto& children = tr->GetChildren();
+			for (auto* child : children)
+				RecalcTree(child, myRect);
+		}
+	}
+
 	const Vector2& Canvas::GetReferenceResolution() const
 	{
 		return m_referenceResolution;
@@ -31,6 +57,23 @@ namespace engine
 	void Canvas::SetSortingOrder(int order)
 	{
 		m_sortingOrder = order;
+	}
+
+	void Canvas::ReclaulateLayout(float viewportW, float viewportH)
+	{
+		UIRect rootRect;
+		rootRect.x = 0.0f;
+		rootRect.y = 0.0f;
+		rootRect.w = viewportW;
+		rootRect.h = viewportH;
+
+		GameObject* go = GetGameObject();
+		if (!go) return;
+
+		Transform* tr = go->GetTransform();
+		if (!tr) return;
+
+		RecalcTree(tr, rootRect);
 	}
 
 	void Canvas::OnGui()

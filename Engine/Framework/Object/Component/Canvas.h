@@ -31,6 +31,9 @@ namespace engine
 		void SetSortingOrder(int order);
 
 	public:
+		void ReclaulateLayout(float viewportW, float viewportH);
+
+	public:
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
