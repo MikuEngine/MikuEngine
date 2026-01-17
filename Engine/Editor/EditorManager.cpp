@@ -77,6 +77,18 @@ namespace engine
         if (!ImGui::GetIO().WantCaptureMouse)
         {
             m_editorCamera->Update();
+
+            if (Input::IsMousePressed(Buttons::LEFT))
+            {
+                Vector2 pos = Input::GetMousePosition();
+
+                GameObject* gameObject = SystemManager::Get().GetRenderSystem().PickObject(
+                    static_cast<int>(pos.x), static_cast<int>(pos.y));
+                if (gameObject != nullptr)
+                {
+                    m_selectedObject = gameObject;
+                }
+            }
         }
     }
 

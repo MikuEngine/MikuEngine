@@ -73,6 +73,10 @@ namespace engine
         std::unique_ptr<Texture> m_outlineStencilBuffer;
         std::unique_ptr<DepthStencilState> m_maskDSS;
 
+        // picking
+        std::unique_ptr<Texture> m_pickingIdBuffer;
+        std::unique_ptr<Texture> m_stagingIdBuffer;
+
         std::unique_ptr<RasterizerState> m_shadowMapRSS;
 
         GBufferResources m_gBuffer;
@@ -177,6 +181,9 @@ namespace engine
 
         void BeginDrawGUIPass();
         void EndDrawGUIPass();
+
+        void BeginDrawPickingPass();
+        unsigned int EndDrawPickingPass(int mouseX, int mouseY);
 
         void EndDraw();
 

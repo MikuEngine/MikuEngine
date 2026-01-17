@@ -7,16 +7,16 @@ namespace engine
 {
     void SpriteData::Create(const std::string& filePath)
     {
-        std::ifstream i{ filePath };
-        if (!i.is_open())
+        std::ifstream f{ filePath };
+        if (!f.is_open())
         {
             LOG_INFO("{} 파일 열기 실패", filePath);
             return;
         }
 
         json j;
-        i >> j;
-        i.close();
+        f >> j;
+        f.close();
 
         m_name = j["name"];
         m_width = j["width"];

@@ -11,7 +11,7 @@ namespace engine
 
         m_mainCamera = camera;
 
-        auto viewport = GraphicsDevice::Get().GetViewport();
+        const auto& viewport = GraphicsDevice::Get().GetViewport();
 
         m_mainCamera->SetWidth(viewport.Width);
         m_mainCamera->SetHeight(viewport.Height);

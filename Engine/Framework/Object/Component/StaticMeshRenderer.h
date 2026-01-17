@@ -40,6 +40,7 @@ namespace engine
         std::shared_ptr<PixelShader> m_cutoutPS;
         std::shared_ptr<PixelShader> m_transparentPS;
         std::shared_ptr<PixelShader> m_maskCutoutPS;
+        std::shared_ptr<PixelShader> m_pickingPS;
 
         std::vector<Textures> m_textures;
         std::shared_ptr<InputLayout> m_inputLayout;
@@ -84,6 +85,7 @@ namespace engine
         void Draw(RenderType type) const override;
         DirectX::BoundingBox GetBounds() const override;
         void DrawMask() const override;
+        void DrawPickingID() const override;
 
     private:
         void Refresh();

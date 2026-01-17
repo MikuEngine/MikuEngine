@@ -35,6 +35,7 @@ namespace engine
 		virtual DirectX::BoundingBox GetBounds() const = 0;
 
 		virtual void DrawMask() const {}
+		virtual void DrawPickingID() const {}
 
 	private:
 		friend class RenderSystem;

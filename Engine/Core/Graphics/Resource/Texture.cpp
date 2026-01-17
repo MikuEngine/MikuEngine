@@ -189,6 +189,11 @@ namespace engine
         HR_CHECK(device->CreateShaderResourceView(m_texture.Get(), &srvDesc, &m_srv));
     }
 
+    const Microsoft::WRL::ComPtr<ID3D11Texture2D>& Texture::GetTexture() const
+    {
+        return m_texture;
+    }
+
     const Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& Texture::GetSRV() const
     {
         return m_srv;
@@ -202,6 +207,11 @@ namespace engine
     const Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& Texture::GetDSV() const
     {
         return m_dsv;
+    }
+
+    ID3D11Texture2D* Texture::GetRawTexture() const
+    {
+        return m_texture.Get();
     }
 
     ID3D11ShaderResourceView* Texture::GetRawSRV() const

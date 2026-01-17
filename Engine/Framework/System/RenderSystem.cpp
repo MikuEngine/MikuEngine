@@ -110,6 +110,11 @@ namespace engine
                 m_lightVolumeDSS = ResourceManager::Get().GetOrCreateDepthStencilState("LightVolume", desc);
             }
         }
+
+        // picking
+        {
+            m_pickingIdCB = ResourceManager::Get().GetOrCreateConstantBuffer("PickingId", sizeof(CbPickingId));
+        }
     }
 
     void RenderSystem::Register(Renderer* renderer)
@@ -324,14 +329,6 @@ namespace engine
             }
             graphics.EndDrawLightPass();
 
-            //{
-            //    graphics.BeginDrawEditorPass();
-            //    {
-            //        EditorManager::Get().DrawEditorGrid();
-            //    }
-            //    graphics.EndDrawEditorPass();
-            //}
-
             graphics.BeginDrawForwardPass();
             {
                 context->OMSetDepthStencilState(m_skyboxDSState->GetRawDepthStencilState(), 0);
@@ -401,8 +398,6 @@ namespace engine
             graphics.EndDrawForwardPass();
         }
 
-        
-
         graphics.ExecutePostProcessing();
 
         graphics.BeginDrawScreenPass();
@@ -452,6 +447,40 @@ namespace engine
         m_bloomStrength = bloomStrength;
         m_bloomThreshold = bloomThreshold;
         m_bloomSoftKnee = bloomSoftKnee;
+    }
+
+    GameObject* RenderSystem::PickObject(int mouseX, int mouseY)
+    {
+        auto& graphics = GraphicsDevice::Get();
+        const auto& context = graphics.GetDeviceContext();
+
+        graphics.BeginDrawPickingPass();
+        {
+            context->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::PickingId), 1, m_pickingIdCB->GetBuffer().GetAddressOf());
+            
+            for (unsigned int i = 0; i < m_components.size(); ++i)
+            {
+                if (!m_components[i]->IsActive())
+                {
+                    continue;
+                }
+
+                CbPickingId cb{};
+                cb.pickingId = i + 1;
+
+                context->UpdateSubresource(m_pickingIdCB->GetRawBuffer(), 0, nullptr, &cb, 0, 0);
+
+                m_components[i]->DrawPickingID();
+            }
+        }
+        unsigned int picked = graphics.EndDrawPickingPass(mouseX, mouseY);
+
+        if (picked != 0)
+        {
+            return m_components[picked - 1]->GetGameObject();
+        }
+
+        return nullptr;
     }
 
     void RenderSystem::AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type)
@@ -525,7 +554,6 @@ namespace engine
             {
                 continue; // 이미 처리함
             }
-            CbLocalLight cbData;
 
             // Transform 계산 (라이트 위치/크기에 맞춰 World Matrix 생성)
             Matrix world = Matrix::Identity;
@@ -537,6 +565,7 @@ namespace engine
                 world = Matrix::CreateScale(range * 2) * Matrix::CreateTranslation(light->GetTransform()->GetWorldPosition());
 
                 // CB 데이터 채우기
+                CbLocalLight cbData;
                 cbData.lightColor = light->GetColor();
                 cbData.lightIntensity = light->GetIntensity();
                 cbData.lightPosition = light->GetTransform()->GetWorldPosition();
@@ -582,7 +611,6 @@ namespace engine
                 unscaledLightWorld._42 = lightWorld._42;
                 unscaledLightWorld._43 = lightWorld._43;
                 // ------------------------------------------------------------------
-                float range = light->GetRange();
                 float angle = light->GetAngle(); // Half-Angle (Degree)
                 // 3. Offset: Cone Mesh의 Tip(0, 0.5, 0)을 원점(0, 0, 0)으로 내림
                 Matrix offset = Matrix::CreateTranslation(0.0f, -0.5f, 0.0f);
@@ -600,7 +628,7 @@ namespace engine
                 Matrix preRotate = Matrix::CreateRotationX(ToRadian(-90.0f));
                 // 6. 최종 World Matrix 조합
                 //    순서: Offset -> ConeScale -> PreRotate -> UnscaledLightWorld
-                Matrix world = offset * coneScale * preRotate * unscaledLightWorld;
+                world = offset * coneScale * preRotate * unscaledLightWorld;
                 // --- CB 업데이트 ---
                 CbLocalLight cbData;
                 cbData.lightColor = light->GetColor();

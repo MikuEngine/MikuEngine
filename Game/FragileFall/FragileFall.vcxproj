@@ -19,23 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>18.0</VCProjectVersion>
+    <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9813ddac-8e6f-4a8e-b058-a5b554562f3e}</ProjectGuid>
-    <RootNamespace>TestGame</RootNamespace>
+    <ProjectGuid>{4b911974-e102-4b54-a697-2a0fa376cb52}</ProjectGuid>
+    <RootNamespace>FragileFall</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -71,15 +71,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(SolutionDir)Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\</OutDir>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <IntDir>$(SolutionDir)Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
     <ExternalIncludePath>$(SolutionDir)Vendor\PhysX\include;$(SolutionDir)Vendor\x64-windows-static-md\include;$(SolutionDir)Vendor\x64-windows\include;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(SolutionDir)Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\</OutDir>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <IntDir>$(SolutionDir)Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
     <ExternalIncludePath>$(SolutionDir)Vendor\PhysX\include;$(SolutionDir)Vendor\x64-windows-static-md\include;$(SolutionDir)Vendor\x64-windows\include;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -88,7 +86,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,7 +100,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,73 +152,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App\Main.cpp" />
-    <ClCompile Include="Manager\TestManager.cpp" />
-    <ClCompile Include="Script\AnimationPlayer.cpp" />
-    <ClCompile Include="Script\FreeCameraController.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Script\Rotator.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Script\SpritePlayer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Script\Test2.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Script\TestScript.cpp" />
     <ClCompile Include="GamePCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="App\TestGameApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="Shader\Pixel\TestPixelShader.hlsl">
+    <FxCompile Include="Shader\Pixel\Test123PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shader\Vertex\Test123VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\Include\TestHeader.hlsli" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="GamePCH.h" />
-    <ClInclude Include="App\TestGameApp.h" />
-    <ClInclude Include="Script\FreeCameraController.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Script\Rotator.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Script\SpritePlayer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Script\Test2.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Script\TestScript.h" />
-    <ClInclude Include="Script\AnimationPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">

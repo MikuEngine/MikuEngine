@@ -141,7 +141,13 @@ cbuffer Grid : register(b8)
     float2 __pad1_Grid;
 };
 
-cbuffer UIElement : register(b9)
+cbuffer PickingId : register(b9)
+{
+    uint g_pickingId;
+    float3 __pad1_PickingId;
+};
+
+cbuffer UIElement : register(b10)
 {
     float4x4 g_uiClip;
     float4 g_uiColor;

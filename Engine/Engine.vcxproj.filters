@@ -587,6 +587,7 @@
     <FxCompile Include="Shader\Vertex\Simple_Skinned_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Grid_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\Grid_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Picking_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

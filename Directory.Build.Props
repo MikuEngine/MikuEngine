@@ -20,7 +20,7 @@
 				$(ProjectDir);
 				%(AdditionalIncludeDirectories)
 			</AdditionalIncludeDirectories>
-			<AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+			<AdditionalOptions>/utf-8 %(AdditionalOptions) </AdditionalOptions>
         </ClCompile>
 
 		<Link>
@@ -60,9 +60,9 @@
             <Command>
 				xcopy /Y /D "$(Vendor)\$(TripletDynamic)\debug\bin\*.dll" "$(OutDir)"
 				xcopy /Y /D "$(PhysX)\bin\debug\*.dll" "$(OutDir)"
-				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(OutDir)Resource\Shader\"
 				if exist "$(OutDir)Resource" rmdir /S /Q "$(OutDir)Resource"
 				if not exist "$(OutDir)Resource" mklink /J "$(OutDir)Resource" "$(SolutionDir)Resource"
+				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(SolutionDir)Resource\Shader\"
 			</Command>
 		</PostBuildEvent>
 	</ItemDefinitionGroup>
@@ -99,9 +99,9 @@
             <Command>
 				xcopy /Y /D "$(Vendor)\$(TripletDynamic)\bin\*.dll" "$(OutDir)"
 				xcopy /Y /D "$(PhysX)\bin\release\*.dll" "$(OutDir)"
-				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(OutDir)Resource\Shader\"
 				if exist "$(OutDir)Resource" rmdir /S /Q "$(OutDir)Resource"
 				if not exist "$(OutDir)Resource" mklink /J "$(OutDir)Resource" "$(SolutionDir)Resource"
+				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(SolutionDir)Resource\Shader\"
 			</Command>
 		</PostBuildEvent>
     </ItemDefinitionGroup>

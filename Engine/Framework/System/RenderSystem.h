@@ -17,6 +17,7 @@ namespace engine
     class InputLayout;
     class PixelShader;
     class BlendState;
+    class GameObject;
 
     class RenderSystem :
         public System<Renderer>
@@ -58,6 +59,7 @@ namespace engine
         std::shared_ptr<InputLayout> m_lightVolumeInputLayout;
         std::shared_ptr<ConstantBuffer> m_localLightCB;
         std::shared_ptr<ConstantBuffer> m_objectCB;
+        std::shared_ptr<ConstantBuffer> m_pickingIdCB;
 
         std::shared_ptr<BlendState> m_additiveBS;
         std::shared_ptr<RasterizerState> m_frontRSS;
@@ -85,6 +87,8 @@ namespace engine
 
         void GetBloomSettings(float& bloomStrength, float& bloomThreshold, float& bloomSoftKnee);
         void SetBloomSettings(float bloomStrength, float bloomThreshold, float bloomSoftKnee);
+
+        GameObject* PickObject(int mouseX, int mouseY);
 
     private:
         void AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type);

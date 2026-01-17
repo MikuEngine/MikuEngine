@@ -118,7 +118,14 @@ namespace engine
 		float __pad1[2];
 	};
 
-	struct CbUIElement
+	struct CbPickingId
+	{
+		unsigned int pickingId;
+		float __pad1[3];
+
+	};
+	
+		struct CbUIElement
 	{
 		Matrix clip;          // 최종 SV_Position용
 		Vector4 color;        // RGBA
@@ -126,7 +133,6 @@ namespace engine
 		Vector4 clipRect;     // (xMin, yMin, xMax, yMax) in pixels 또는 NDC 중 하나로 통일
 		uint32_t flags;       // useClip, isText 등
 		float pad[3];
-	};
 }
 
 #pragma warning(pop)

@@ -25,10 +25,12 @@ namespace engine
         void Create(const std::array<unsigned char, 4>& color);
 
     public:
+        const Microsoft::WRL::ComPtr<ID3D11Texture2D>& GetTexture() const;
         const Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& GetSRV() const;
         const Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetRTV() const;
         const Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDSV() const;
 
+        ID3D11Texture2D* GetRawTexture() const;
         ID3D11ShaderResourceView* GetRawSRV() const;
         ID3D11RenderTargetView* GetRawRTV() const;
         ID3D11DepthStencilView* GetRawDSV() const;

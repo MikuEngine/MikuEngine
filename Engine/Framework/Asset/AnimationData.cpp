@@ -139,9 +139,9 @@ namespace engine
     {
         m_animations.reserve(scene->mNumAnimations);
 
-        for (unsigned int i = 0; i < scene->mNumAnimations; ++i)
+        for (unsigned int k = 0; k < scene->mNumAnimations; ++k)
         {
-            const aiAnimation* aiAnim = scene->mAnimations[i];
+            const aiAnimation* aiAnim = scene->mAnimations[k];
 
             Animation animation{};
 

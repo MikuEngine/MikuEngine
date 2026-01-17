@@ -130,6 +130,8 @@ namespace engine
         m_bloomWorkBuffer.reset();
         m_aaBuffer.reset();
         m_outlineStencilBuffer.reset();
+        m_pickingIdBuffer.reset();
+        m_stagingIdBuffer.reset();
 
         m_backBufferRTV.Reset();
 
@@ -201,7 +203,6 @@ namespace engine
 
         m_deviceContext->ClearDepthStencilView(m_shadowDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         m_deviceContext->ClearDepthStencilView(m_gameDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-        m_deviceContext->ClearDepthStencilView(m_outlineStencilBuffer->GetRawDSV(), D3D11_CLEAR_STENCIL, 0.0f, 0);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.baseColor->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.normal->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.orm->GetRawRTV(), clearColor);
@@ -420,6 +421,7 @@ namespace engine
 
     void GraphicsDevice::BeginDrawOutlinePass()
     {
+        m_deviceContext->ClearDepthStencilView(m_outlineStencilBuffer->GetRawDSV(), D3D11_CLEAR_STENCIL, 0.0f, 0);
         m_deviceContext->OMSetRenderTargets(0, nullptr, m_outlineStencilBuffer->GetRawDSV());
         m_deviceContext->OMSetDepthStencilState(m_maskDSS->GetRawDepthStencilState(), 1);
     }
@@ -437,6 +439,7 @@ namespace engine
 
         ID3D11ShaderResourceView* nullSRV = nullptr;
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::StencilMap), 1, &nullSRV);
+        m_deviceContext->OMSetDepthStencilState(nullptr, 0);
     }
 
     void GraphicsDevice::BeginDrawDebugPass()
@@ -473,6 +476,43 @@ namespace engine
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+    }
+
+    void GraphicsDevice::BeginDrawPickingPass()
+    {
+        m_deviceContext->OMSetRenderTargets(1, m_pickingIdBuffer->GetRTV().GetAddressOf(), m_gameDepthBuffer->GetRawDSV());
+        float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+        m_deviceContext->ClearRenderTargetView(m_pickingIdBuffer->GetRawRTV(), clearColor);
+        m_deviceContext->ClearDepthStencilView(m_gameDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+        m_deviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+    }
+
+    unsigned int GraphicsDevice::EndDrawPickingPass(int mouseX, int mouseY)
+    {
+        m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+        D3D11_BOX srcBox{};
+        srcBox.left = mouseX;
+        srcBox.right = mouseX + 1;
+        srcBox.top = mouseY;
+        srcBox.bottom = mouseY + 1;
+        srcBox.front = 0;
+        srcBox.back = 1;
+
+        m_deviceContext->CopySubresourceRegion(m_stagingIdBuffer->GetRawTexture(), 0, 0, 0, 0, m_pickingIdBuffer->GetRawTexture(), 0, &srcBox);
+
+        D3D11_MAPPED_SUBRESOURCE map{};
+        if (SUCCEEDED(m_deviceContext->Map(m_stagingIdBuffer->GetRawTexture(), 0, D3D11_MAP_READ, 0, &map)))
+        {
+            unsigned int* data = static_cast<unsigned int*>(map.pData);
+            unsigned int pick = data[0];
+
+            m_deviceContext->Unmap(m_stagingIdBuffer->GetRawTexture(), 0);
+
+            return pick;
+        }
+
+        return 0;
     }
 
     void GraphicsDevice::EndDraw()
@@ -950,6 +990,38 @@ namespace engine
 
             m_outlineStencilBuffer = std::make_unique<Texture>();
             m_outlineStencilBuffer->Create(desc, DXGI_FORMAT_X24_TYPELESS_G8_UINT, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_D24_UNORM_S8_UINT);
+        }
+
+        // picking id
+        {
+            D3D11_TEXTURE2D_DESC desc{};
+            desc.Width = m_resolutionWidth;
+            desc.Height = m_resolutionHeight;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+            desc.Format = DXGI_FORMAT_R32_UINT;
+            desc.SampleDesc.Count = 1;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.BindFlags = D3D11_BIND_RENDER_TARGET;
+
+            m_pickingIdBuffer = std::make_unique<Texture>();
+            m_pickingIdBuffer->Create(desc);
+        }
+
+        // staging id
+        {
+            D3D11_TEXTURE2D_DESC desc{};
+            desc.Width = 1;
+            desc.Height = 1;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+            desc.Format = DXGI_FORMAT_R32_UINT;
+            desc.SampleDesc.Count = 1;
+            desc.Usage = D3D11_USAGE_STAGING;
+            desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+
+            m_stagingIdBuffer = std::make_unique<Texture>();
+            m_stagingIdBuffer->Create(desc);
         }
 
         m_gameViewport.TopLeftX = 0.0f;

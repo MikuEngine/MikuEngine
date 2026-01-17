@@ -7,6 +7,6 @@ PS_INPUT_WORLD_POSITION main(VS_INPUT_POSITION input)
     output.position = mul(float4(input.position, 1.0f), g_world);
     output.worldPosition = output.position.xyz;
     output.position = mul(output.position, g_viewProjection);
-    
+    //output.position.z -= 0.001f * output.position.w;
     return output;
 }

@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1_Game", "1_Game", "{C8D527
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2_Engine", "2_Engine", "{6C388440-97AD-4663-8639-E92FC942DE36}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FragileFall", "Game\FragileFall\FragileFall.vcxproj", "{4B911974-E102-4B54-A697-2A0FA376CB52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -35,6 +37,14 @@ Global
 		{0922F055-76C0-4A33-B810-587E67FA89A3}.Release|x64.Build.0 = Release|x64
 		{0922F055-76C0-4A33-B810-587E67FA89A3}.Release|x86.ActiveCfg = Release|Win32
 		{0922F055-76C0-4A33-B810-587E67FA89A3}.Release|x86.Build.0 = Release|Win32
+		{4B911974-E102-4B54-A697-2A0FA376CB52}.Debug|x64.ActiveCfg = Debug|x64
+		{4B911974-E102-4B54-A697-2A0FA376CB52}.Debug|x64.Build.0 = Debug|x64
+		{4B911974-E102-4B54-A697-2A0FA376CB52}.Debug|x86.ActiveCfg = Debug|Win32
+		{4B911974-E102-4B54-A697-2A0FA376CB52}.Debug|x86.Build.0 = Debug|Win32
+		{4B911974-E102-4B54-A697-2A0FA376CB52}.Release|x64.ActiveCfg = Release|x64
+		{4B911974-E102-4B54-A697-2A0FA376CB52}.Release|x64.Build.0 = Release|x64
+		{4B911974-E102-4B54-A697-2A0FA376CB52}.Release|x86.ActiveCfg = Release|Win32
+		{4B911974-E102-4B54-A697-2A0FA376CB52}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +52,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9813DDAC-8E6F-4A8E-B058-A5B554562F3E} = {C8D5274F-AC00-46C7-1F8D-E88E81087A52}
 		{0922F055-76C0-4A33-B810-587E67FA89A3} = {6C388440-97AD-4663-8639-E92FC942DE36}
+		{4B911974-E102-4B54-A697-2A0FA376CB52} = {C8D5274F-AC00-46C7-1F8D-E88E81087A52}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3F7D818-C8F1-4A19-8E09-B5720E064B23}

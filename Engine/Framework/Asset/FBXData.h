@@ -20,7 +20,7 @@ namespace engine
         public AssetData
     {
     private:
-        FBXAssetKind m_kind;
+        FBXAssetKind m_kind = FBXAssetKind::Static;
         std::shared_ptr<StaticMeshData> m_staticMesh;
         std::shared_ptr<MaterialData> m_material;
         std::shared_ptr<SkeletalMeshData> m_skeletalMesh;

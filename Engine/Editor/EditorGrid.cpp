@@ -32,7 +32,19 @@ namespace engine
 		m_samplerLinear = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
 		m_gridCB = ResourceManager::Get().GetOrCreateConstantBuffer("Grid", sizeof(CbGrid));
 		m_objectCB = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
-		m_rss = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidNone);
+
+		{
+			D3D11_RASTERIZER_DESC desc{};
+			desc.FillMode = D3D11_FILL_SOLID;
+			desc.CullMode = D3D11_CULL_NONE;
+			desc.FrontCounterClockwise = false;
+			desc.DepthBias = -10;
+			desc.DepthBiasClamp = 0.0f;
+			desc.SlopeScaledDepthBias = -1.0f;
+			desc.DepthClipEnable = true;
+
+			m_rss = ResourceManager::Get().GetOrCreateRasterizerState("Grid", desc);
+		}
 
 		m_bs = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlend);
 	}
