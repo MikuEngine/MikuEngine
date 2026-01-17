@@ -402,13 +402,18 @@ namespace engine
 
         graphics.BeginDrawScreenPass();
         {
+            context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
+            context->OMSetDepthStencilState(nullptr, 0); // UI는 보통 depth off
+
             for (auto renderer : m_screenList)
             {
                 if (renderer->IsActive())
-                {
                     renderer->Draw(RenderType::Screen);
-                }
             }
+
+            // 복구
+            context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+            context->OMSetDepthStencilState(nullptr, 0);
         }
         graphics.EndDrawScreenPass();
 
