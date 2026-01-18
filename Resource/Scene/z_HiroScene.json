@@ -125,22 +125,22 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -206.60000610351563,
+                        "x": 2.5,
                         "y": -86.30000305175781
                     },
-                    "Width": 223.89999389648438,
-                    "Height": 125.9000015258789,
+                    "Width": 360.79998779296875,
+                    "Height": 243.6999969482422,
                     "Pivot": {
-                        "x": 1.0,
-                        "y": 0.5600000023841858
+                        "x": 0.5,
+                        "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.3400000035762787,
-                        "y": 0.4300000071525574
+                        "x": 0.0,
+                        "y": 0.0
                     },
                     "AnchorMax": {
                         "x": 0.0,
-                        "y": 0.9599999785423279
+                        "y": 0.0
                     }
                 },
                 {
@@ -149,7 +149,7 @@
                     "TexturePath": "Resource/Texture/Pikachu.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "AlphaBlend": true,
+                    "AlphaBlend": false,
                     "SkipInvalidRect": true
                 }
             ]
@@ -184,22 +184,22 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -9.300000190734863,
-                        "y": 120.30000305175781
+                        "x": 0.0,
+                        "y": 0.0
                     },
-                    "Width": 142.60000610351563,
+                    "Width": 147.10000610351563,
                     "Height": 107.4000015258789,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.25,
+                        "y": 0.25
                     },
                     "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.75,
+                        "y": 0.75
                     }
                 },
                 {
