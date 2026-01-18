@@ -127,12 +127,14 @@ namespace engine
 
 	struct CbUIElement
 	{
-		Matrix clip;          // 최종 SV_Position용
-		Vector4 color;        // RGBA
-		Vector4 uv;           // offset.xy, scale.xy
-		Vector4 clipRect;     // (xMin, yMin, xMax, yMax) in pixels 또는 NDC 중 하나로 통일
-		uint32_t flags;       // useClip, isText 등
+		Matrix clip;        // 최종 SV_Position용
+		Vector4 color;      // RGBA
+		Vector4 uv;         // offset.xy, scale.xy
+		Vector4 clipRect;   // (xMin, yMin, xMax, yMax) in pixels 또는 NDC 중 하나로 통일
+		uint32_t maskMode;  // none, rect, circle, ring, rectring
 		float pad[3];
+
+		Vector4 mask0;		// 원형 프로그레스 바 전용
 	};
 
 }

@@ -153,8 +153,9 @@ cbuffer UIElement : register(b10)
     float4 g_uiColor;
     float4 g_uiUV;
     float4 g_uiClipRect;
-    uint g_uiFlags;
+    uint g_uiMaskMode;  // 0 none, 1 rect, 2 circle, 3 ring, 4 rectring
     float3 __uiPad;
+    float4 g_uiMask0;
 }
 
 struct VS_INPUT_POSITION
