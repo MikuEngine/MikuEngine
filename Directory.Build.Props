@@ -4,7 +4,6 @@
         <TripletStatic>x64-windows-static-md</TripletStatic>
         <TripletDynamic>x64-windows</TripletDynamic>
 		<PhysX>$(SolutionDir)Vendor\PhysX</PhysX>
-		
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
     </PropertyGroup>
@@ -15,6 +14,7 @@
 				$(Vendor)\$(TripletStatic)\include;
 				$(Vendor)\$(TripletDynamic)\include;
 				$(PhysX)\include;
+				$(FMOD)\inc;
 				$(SolutionDir)Engine;
 				$(SolutionDir);
 				$(ProjectDir);
@@ -34,6 +34,7 @@
 				$(Vendor)\$(TripletStatic)\debug\lib;
 				$(Vendor)\$(TripletDynamic)\debug\lib;
 				$(PhysX)\lib\debug;
+				$(FMOD)\lib\x64;
 				%(AdditionalLibraryDirectories)
 			</AdditionalLibraryDirectories>
 			
@@ -52,6 +53,7 @@
 				PhysXExtensions_static_64.lib;
 				PhysXCharacterKinematic_static_64.lib;
 				PhysXPvdSDK_static_64.lib;
+				fmodL_vc.lib;
 				%(AdditionalDependencies)
 			</AdditionalDependencies>
         </Link>
@@ -73,6 +75,7 @@
 				$(Vendor)\$(TripletStatic)\lib;
 				$(Vendor)\$(TripletDynamic)\lib;
 				$(PhysX)\lib\release;
+				$(FMOD)\lib\x64;
 				%(AdditionalLibraryDirectories)
 			</AdditionalLibraryDirectories>
 			
@@ -91,6 +94,7 @@
 				PhysXExtensions_static_64.lib;
 				PhysXCharacterKinematic_static_64.lib;
 				PhysXPvdSDK_static_64.lib;
+				fmod_vc.lib
 				%(AdditionalDependencies)
 			</AdditionalDependencies>
         </Link>
@@ -102,6 +106,7 @@
 				if exist "$(OutDir)Resource" rmdir /S /Q "$(OutDir)Resource"
 				if not exist "$(OutDir)Resource" mklink /J "$(OutDir)Resource" "$(SolutionDir)Resource"
 				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(SolutionDir)Resource\Shader\"
+				xcopy /y /d "$(FMOD)\lib\x64\*.dll" "$(OutDir)"
 			</Command>
 		</PostBuildEvent>
     </ItemDefinitionGroup>
