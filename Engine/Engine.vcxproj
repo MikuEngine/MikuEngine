@@ -316,6 +316,7 @@
     <ClInclude Include="Framework\System\CameraSystem.h" />
     <ClInclude Include="Framework\System\LightSystem.h" />
     <ClInclude Include="Framework\System\RenderSystem.h" />
+    <ClInclude Include="Framework\System\SoundSystem.h" />
     <ClInclude Include="Framework\System\SystemManager.h" />
     <ClInclude Include="Framework\System\ScriptSystem.h" />
     <ClInclude Include="Framework\System\System.h" />
