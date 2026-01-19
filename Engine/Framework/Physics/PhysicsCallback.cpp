@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PhysicsCallback.h"
 
 #include "Framework/Physics/CollisionSystem.h"
@@ -6,6 +6,7 @@
 #include "Framework/Physics/PhysicsUtility.h"
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/Rigidbody.h"
+#include "Framework/Object/GameObject/GameObject.h"
 
 namespace engine
 {
@@ -18,6 +19,8 @@ namespace engine
         const physx::PxContactPair* pairs,
         physx::PxU32 nbPairs)
     {
+        LOG_PRINT("[PhysicsCallback] onContact called with {} pairs", nbPairs);
+        
         // 삭제된 Actor 스킵
         if (pairHeader.flags & (physx::PxContactPairHeaderFlag::eREMOVED_ACTOR_0 |
                                 physx::PxContactPairHeaderFlag::eREMOVED_ACTOR_1))
@@ -32,6 +35,12 @@ namespace engine
             // 삭제된 Shape 스킵
             if (pair.flags & (physx::PxContactPairFlag::eREMOVED_SHAPE_0 |
                               physx::PxContactPairFlag::eREMOVED_SHAPE_1))
+            {
+                continue;
+            }
+
+            // Shape nullptr 체크
+            if (!pair.shapes[0] || !pair.shapes[1])
             {
                 continue;
             }
@@ -61,8 +70,12 @@ namespace engine
             }
             else
             {
+                LOG_PRINT("[PhysicsCallback] Unknown event flags: 0x{:X}", static_cast<unsigned int>(pair.events));
                 continue;
             }
+            
+            LOG_PRINT("[PhysicsCallback] Event type determined: {} (flags=0x{:X})", 
+                static_cast<int>(eventType), static_cast<unsigned int>(pair.events));
 
             // 충돌 이벤트 생성
             CollisionEvent event;
@@ -82,6 +95,10 @@ namespace engine
             event.priority = (priorityA > priorityB) ? priorityA : priorityB;
 
             // CollisionSystem에 큐잉
+            LOG_PRINT("[PhysicsCallback] Queuing collision event: {} <-> {}, type={}",
+                colliderA->GetGameObject()->GetName(),
+                colliderB->GetGameObject()->GetName(),
+                static_cast<int>(eventType));
             CollisionSystem::Get().QueueCollisionEvent(event);
         }
     }
@@ -90,6 +107,8 @@ namespace engine
         physx::PxTriggerPair* pairs,
         physx::PxU32 count)
     {
+        LOG_PRINT("[PhysicsCallback] onTrigger called with {} pairs", count);
+        
         for (physx::PxU32 i = 0; i < count; ++i)
         {
             const physx::PxTriggerPair& pair = pairs[i];
@@ -97,6 +116,18 @@ namespace engine
             // 삭제된 Shape 스킵
             if (pair.flags & (physx::PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER |
                               physx::PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
+            {
+                continue;
+            }
+
+            // Shape nullptr 체크
+            if (!pair.triggerShape || !pair.otherShape)
+            {
+                continue;
+            }
+
+            // Actor nullptr 체크
+            if (!pair.triggerActor || !pair.otherActor)
             {
                 continue;
             }
@@ -199,6 +230,15 @@ namespace engine
         const void* constantBlock,
         physx::PxU32 constantBlockSize)
     {
+        // 필터 셰이더 호출 확인 (항상 로그 - 디버깅용)
+        static int totalCalls = 0;
+        totalCalls++;
+        if (totalCalls <= 50)  // 처음 50번은 항상 로그
+        {
+            LOG_PRINT("[PhysicsFilterShader] Called #{}: layer0={}, mask0=0x{:X}, layer1={}, mask1=0x{:X}",
+                totalCalls, filterData0.word0, filterData0.word1, filterData1.word0, filterData1.word1);
+        }
+
         // filterData.word0 = 자신의 레이어 인덱스
         // filterData.word1 = 충돌할 레이어 마스크
 
@@ -208,6 +248,37 @@ namespace engine
         {
             pairFlags = physx::PxPairFlag::eTRIGGER_DEFAULT;
             return physx::PxFilterFlag::eDEFAULT;
+        }
+
+        // Kinematic 확인
+        bool isKinematic0 = physx::PxFilterObjectIsKinematic(attributes0);
+        bool isKinematic1 = physx::PxFilterObjectIsKinematic(attributes1);
+        
+        // 디버깅: Kinematic 쌍 로그 (너무 많이 출력되지 않도록 주의)
+        static int logCount = 0;
+        if (isKinematic0 || isKinematic1)
+        {
+            if (logCount++ % 100 == 0)  // 100번에 한 번만 로그
+            {
+                LOG_PRINT("[PhysicsFilterShader] Kinematic pair check: isKinematic0={}, isKinematic1={}, layer0={}, layer1={}",
+                    isKinematic0, isKinematic1, filterData0.word0, filterData1.word0);
+            }
+        }
+        
+        // Kinematic-Kinematic 쌍은 충돌 이벤트 생성 안 함 (PhysX 기본 동작)
+        if (isKinematic0 && isKinematic1)
+        {
+            return physx::PxFilterFlag::eSUPPRESS;
+        }
+        
+        // Kinematic-Static 쌍도 기본적으로 무시 (CharacterController 사용 권장)
+        // CharacterController는 자체 충돌 감지 시스템 사용
+        bool isKinematicStaticPair = (isKinematic0 && !isKinematic1) || (!isKinematic0 && isKinematic1);
+        if (isKinematicStaticPair)
+        {
+            // Kinematic-Static은 기본적으로 충돌 무시 (성능 최적화)
+            // 플레이어 캐릭터는 CharacterController 사용 권장
+            return physx::PxFilterFlag::eSUPPRESS;
         }
 
         // 레이어 마스크로 충돌 여부 결정
@@ -228,7 +299,7 @@ namespace engine
             return physx::PxFilterFlag::eSUPPRESS;
         }
 
-        // 충돌 플래그 설정
+        // 일반 충돌 플래그 설정 (Dynamic-Dynamic, Dynamic-Static 등)
         pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT
                   | physx::PxPairFlag::eNOTIFY_TOUCH_FOUND
                   | physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS

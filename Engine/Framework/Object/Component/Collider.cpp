@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Collider.h"
 
 #include "Framework/Object/Component/Rigidbody.h"
@@ -228,6 +228,19 @@ namespace engine
         {
             SetIsTrigger(isTrigger);
         }
+
+        // Physics Layer 콤보박스
+        const char* layerNames[] = {
+            "Default", "Player", "Enemy", "Projectile", 
+            "Environment", "Trigger", "Layer6", "Layer7"
+        };
+        int currentLayer = static_cast<int>(m_layer);
+        if (currentLayer >= IM_ARRAYSIZE(layerNames)) currentLayer = 0;
+        
+        if (ImGui::Combo("Physics Layer", &currentLayer, layerNames, IM_ARRAYSIZE(layerNames)))
+        {
+            SetLayer(static_cast<uint32_t>(currentLayer));
+        }
     }
 
     void Collider::Save(json& j) const
@@ -308,6 +321,12 @@ namespace engine
             m_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
             m_shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, true);
         }
+        else
+        {
+            // 일반 Collider: 시뮬레이션 활성화
+            m_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+            m_shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+        }
 
         // 쿼리 활성화
         m_shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
@@ -323,13 +342,51 @@ namespace engine
     {
         if (!m_shape || !m_attachedRigidbody)
         {
+            LOG_ERROR("[Collider] AttachToRigidbody failed: shape or rigidbody is null");
             return;
         }
 
         physx::PxRigidActor* actor = m_attachedRigidbody->GetPxActor();
         if (actor)
         {
+            // Shape 플래그 확인 (부착 전)
+            physx::PxShapeFlags flagsBefore = m_shape->getFlags();
+            bool isSimBefore = flagsBefore.isSet(physx::PxShapeFlag::eSIMULATION_SHAPE);
+            bool isTriggerBefore = flagsBefore.isSet(physx::PxShapeFlag::eTRIGGER_SHAPE);
+            
             actor->attachShape(*m_shape);
+            
+            // 필터 데이터 재설정 (Shape 부착 후)
+            UpdateFilterData();
+            
+            // Shape 플래그 확인 (부착 후)
+            physx::PxShapeFlags flagsAfter = m_shape->getFlags();
+            bool isSimAfter = flagsAfter.isSet(physx::PxShapeFlag::eSIMULATION_SHAPE);
+            bool isTriggerAfter = flagsAfter.isSet(physx::PxShapeFlag::eTRIGGER_SHAPE);
+            
+            const char* rbType = m_attachedRigidbody->IsDynamic() ? "Dynamic" : 
+                (m_attachedRigidbody->IsKinematic() ? "Kinematic" : "Static");
+            const char* triggerStr = m_isTrigger ? "true" : "false";
+            LOG_PRINT("[Collider] Shape attached to {} Rigidbody (trigger={}, layer={}, mask=0x{:X})", 
+                rbType, triggerStr, m_layer, m_collisionMask);
+            LOG_PRINT("[Collider] Shape flags: SIMULATION={}->{}, TRIGGER={}->{}, flags=0x{:X}", 
+                isSimBefore, isSimAfter, isTriggerBefore, isTriggerAfter, 
+                static_cast<unsigned int>(flagsAfter));
+            
+            // Actor가 이미 씬에 등록되어 있으면 Shape 부착을 반영하기 위해 다시 등록
+            physx::PxScene* scene = actor->getScene();
+            if (scene)
+            {
+                // Actor를 씬에서 제거했다가 다시 추가하여 Shape 변경사항 반영
+                scene->removeActor(*actor);
+                scene->addActor(*actor);
+                LOG_PRINT("[Collider] Actor re-added to scene after shape attachment: shapes={}", 
+                    actor->getNbShapes());
+            }
+        }
+        else
+        {
+            LOG_ERROR("[Collider] AttachToRigidbody failed: PxActor is null");
         }
     }
 
@@ -371,12 +428,25 @@ namespace engine
 
         // Shape 부착
         m_ownedStaticActor->attachShape(*m_shape);
+        
+        // Shape 플래그 확인
+        physx::PxShapeFlags flags = m_shape->getFlags();
+        bool isSim = flags.isSet(physx::PxShapeFlag::eSIMULATION_SHAPE);
+        bool isTrigger = flags.isSet(physx::PxShapeFlag::eTRIGGER_SHAPE);
+        LOG_PRINT("[Collider] Static Actor shape flags: SIMULATION={}, TRIGGER={}, flags=0x{:X}", 
+            isSim, isTrigger, static_cast<unsigned int>(flags));
 
         // Scene에 추가
         physx::PxScene* pxScene = PhysicsSystem::Get().GetActivePxScene();
         if (pxScene)
         {
             pxScene->addActor(*m_ownedStaticActor);
+            LOG_PRINT("[Collider] Static Actor added to scene: layer={}, mask=0x{:X}, shapes={}", 
+                m_layer, m_collisionMask, m_ownedStaticActor->getNbShapes());
+        }
+        else
+        {
+            LOG_ERROR("[Collider] Failed to add Static Actor to scene: scene is null");
         }
     }
 

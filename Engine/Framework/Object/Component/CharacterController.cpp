@@ -69,7 +69,10 @@ namespace engine
 
         // 필터 설정
         physx::PxControllerFilters filters;
-        // TODO: 레이어 기반 필터링
+        
+        // 레이어 기반 필터링 설정
+        // CharacterController는 모든 레이어와 충돌 (기본값)
+        // 필요시 필터 쿼리 콜백을 통해 제어 가능
 
         // 이동 수행
         physx::PxControllerCollisionFlags flags = m_controller->move(
@@ -215,7 +218,30 @@ namespace engine
     void CharacterController::SetLayer(uint32_t layer)
     {
         m_layer = layer;
-        // TODO: 컨트롤러 필터 데이터 갱신
+        
+        // 컨트롤러의 Actor에 필터 데이터 설정
+        if (m_controller)
+        {
+            physx::PxRigidDynamic* actor = m_controller->getActor();
+            if (actor)
+            {
+                physx::PxU32 nbShapes = actor->getNbShapes();
+                physx::PxShape* shapes[10];
+                actor->getShapes(shapes, nbShapes);
+                
+                for (physx::PxU32 i = 0; i < nbShapes; ++i)
+                {
+                    physx::PxFilterData filterData;
+                    filterData.word0 = m_layer;  // 자신의 레이어
+                    filterData.word1 = PhysicsLayer::Mask::All;  // 모든 레이어와 충돌
+                    filterData.word2 = 0;
+                    filterData.word3 = 0;
+                    
+                    shapes[i]->setSimulationFilterData(filterData);
+                    shapes[i]->setQueryFilterData(filterData);
+                }
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -224,7 +250,105 @@ namespace engine
 
     void CharacterController::OnGui()
     {
-        // TODO: ImGui 편집
+        // 레이어 선택
+        static const char* layerNames[] = {
+            "Default", "Player", "Enemy", "Projectile", "Environment", "Trigger",
+            "Layer6", "Layer7", "Layer8", "Layer9", "Layer10", "Layer11", "Layer12", "Layer13", "Layer14", "Layer15",
+            "Layer16", "Layer17", "Layer18", "Layer19", "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
+            "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
+        };
+        
+        int currentLayer = static_cast<int>(m_layer);
+        if (currentLayer >= IM_ARRAYSIZE(layerNames)) currentLayer = 0;
+        
+        if (ImGui::Combo("Physics Layer", &currentLayer, layerNames, IM_ARRAYSIZE(layerNames)))
+        {
+            SetLayer(static_cast<uint32_t>(currentLayer));
+        }
+
+        ImGui::Separator();
+
+        // 형태 설정
+        if (ImGui::TreeNode("Shape"))
+        {
+            float height = m_height;
+            if (ImGui::DragFloat("Height", &height, 0.01f, m_radius * 2.0f + 0.01f, 10.0f))
+            {
+                SetHeight(height);
+            }
+
+            float radius = m_radius;
+            if (ImGui::DragFloat("Radius", &radius, 0.01f, 0.01f, 5.0f))
+            {
+                SetRadius(radius);
+            }
+
+            float skinWidth = m_skinWidth;
+            if (ImGui::DragFloat("Skin Width", &skinWidth, 0.001f, 0.0f, 1.0f))
+            {
+                SetSkinWidth(skinWidth);
+                // Skin Width 변경 시 컨트롤러 재생성 필요
+                if (m_controller)
+                {
+                    // 컨트롤러 재생성
+                    OnDestroy();
+                    Awake();
+                }
+            }
+
+            ImGui::TreePop();
+        }
+
+        // 이동 설정
+        if (ImGui::TreeNode("Movement"))
+        {
+            float stepOffset = m_stepOffset;
+            if (ImGui::DragFloat("Step Offset", &stepOffset, 0.01f, 0.0f, 2.0f))
+            {
+                SetStepOffset(stepOffset);
+            }
+
+            float slopeLimit = m_slopeLimit;
+            if (ImGui::DragFloat("Slope Limit (degrees)", &slopeLimit, 1.0f, 0.0f, 90.0f))
+            {
+                SetSlopeLimit(slopeLimit);
+            }
+
+            ImGui::TreePop();
+        }
+
+        // 오프셋
+        Vector3 center = m_center;
+        if (ImGui::DragFloat3("Center", &center.x, 0.01f))
+        {
+            SetCenter(center);
+        }
+
+        ImGui::Separator();
+
+        // 상태 표시 (읽기 전용)
+        if (ImGui::TreeNode("Status"))
+        {
+            ImGui::Text("Grounded: %s", m_isGrounded ? "Yes" : "No");
+            
+            std::string collisionInfo = "None";
+            if (m_lastCollisionFlags & ControllerCollisionFlags::Sides) collisionInfo += " Sides";
+            if (m_lastCollisionFlags & ControllerCollisionFlags::Above) collisionInfo += " Above";
+            if (m_lastCollisionFlags & ControllerCollisionFlags::Below) collisionInfo += " Below";
+            ImGui::Text("Collision: %s", collisionInfo.c_str());
+
+            Vector3 velocity = m_velocity;
+            ImGui::Text("Velocity: (%.2f, %.2f, %.2f)", velocity.x, velocity.y, velocity.z);
+
+            if (m_controller)
+            {
+                physx::PxExtendedVec3 pos = m_controller->getPosition();
+                ImGui::Text("Controller Pos: (%.2f, %.2f, %.2f)", 
+                    static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z));
+            }
+
+            ImGui::TreePop();
+        }
     }
 
     void CharacterController::Save(json& j) const
@@ -304,6 +428,23 @@ namespace engine
             if (actor)
             {
                 actor->userData = this;
+                
+                // 필터 데이터 설정
+                physx::PxU32 nbShapes = actor->getNbShapes();
+                physx::PxShape* shapes[10];
+                actor->getShapes(shapes, nbShapes);
+                
+                for (physx::PxU32 i = 0; i < nbShapes; ++i)
+                {
+                    physx::PxFilterData filterData;
+                    filterData.word0 = m_layer;  // 자신의 레이어
+                    filterData.word1 = PhysicsLayer::Mask::All;  // 모든 레이어와 충돌
+                    filterData.word2 = 0;
+                    filterData.word3 = 0;
+                    
+                    shapes[i]->setSimulationFilterData(filterData);
+                    shapes[i]->setQueryFilterData(filterData);
+                }
             }
         }
     }
@@ -319,7 +460,21 @@ namespace engine
         Vector3 worldPos = PhysicsUtility::FromPxExtendedVec3(pxPos) - m_center;
 
         // Transform에 적용
-        // TODO: 부모가 있는 경우 로컬 좌표로 변환
-        GetTransform()->SetLocalPosition(worldPos);
+        Transform* transform = GetTransform();
+        Transform* parent = transform->GetParent();
+        
+        if (parent)
+        {
+            // 부모가 있는 경우: 월드 좌표를 로컬 좌표로 변환
+            Matrix parentWorld = parent->GetWorld();
+            Matrix parentWorldInv = parentWorld.Invert();
+            Vector3 localPos = Vector3::Transform(worldPos, parentWorldInv);
+            transform->SetLocalPosition(localPos);
+        }
+        else
+        {
+            // 부모가 없는 경우: 월드 좌표 = 로컬 좌표
+            transform->SetLocalPosition(worldPos);
+        }
     }
 }

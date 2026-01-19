@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/ComponentFactory.h"

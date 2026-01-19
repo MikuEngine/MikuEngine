@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Rigidbody.h"
 
 #include "Framework/Object/Component/Collider.h"
@@ -149,12 +149,6 @@ namespace engine
     {
         m_constraints = constraints;
         UpdateConstraints();
-    }
-
-    void Rigidbody::SetLayer(uint32_t layer)
-    {
-        m_layer = layer;
-        // Collider의 필터 데이터도 갱신 필요
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -412,7 +406,102 @@ namespace engine
 
     void Rigidbody::OnGui()
     {
-        // TODO: ImGui 편집
+        // Body Type 콤보박스
+        const char* bodyTypes[] = { "Dynamic", "Kinematic", "Static" };
+        int currentType = static_cast<int>(m_type);
+        if (ImGui::Combo("Body Type", &currentType, bodyTypes, IM_ARRAYSIZE(bodyTypes)))
+        {
+            SetRigidbodyType(static_cast<RigidbodyType>(currentType));
+        }
+
+        // Dynamic일 때만 의미 있는 속성들
+        bool isDynamic = (m_type == RigidbodyType::Dynamic);
+
+        // Use Gravity (Dynamic일 때만 활성화)
+        if (!isDynamic) ImGui::BeginDisabled();
+        bool useGravity = m_useGravity;
+        if (ImGui::Checkbox("Use Gravity", &useGravity))
+        {
+            SetUseGravity(useGravity);
+        }
+        if (!isDynamic) ImGui::EndDisabled();
+
+        // Mass (Dynamic일 때만 활성화)
+        if (!isDynamic) ImGui::BeginDisabled();
+        float mass = m_mass;
+        if (ImGui::DragFloat("Mass", &mass, 0.1f, 0.001f, 1000.0f))
+        {
+            SetMass(mass);
+        }
+        if (!isDynamic) ImGui::EndDisabled();
+
+        // Linear Damping
+        float linearDamping = m_linearDamping;
+        if (ImGui::DragFloat("Linear Damping", &linearDamping, 0.01f, 0.0f, 10.0f))
+        {
+            SetLinearDamping(linearDamping);
+        }
+
+        // Angular Damping
+        float angularDamping = m_angularDamping;
+        if (ImGui::DragFloat("Angular Damping", &angularDamping, 0.01f, 0.0f, 10.0f))
+        {
+            SetAngularDamping(angularDamping);
+        }
+
+        // Constraints (접이식)
+        if (ImGui::TreeNode("Constraints"))
+        {
+            uint32_t constraints = static_cast<uint32_t>(m_constraints);
+            
+            ImGui::Text("Freeze Position");
+            bool freezePosX = (constraints & static_cast<uint32_t>(RigidbodyConstraints::FreezePositionX)) != 0;
+            bool freezePosY = (constraints & static_cast<uint32_t>(RigidbodyConstraints::FreezePositionY)) != 0;
+            bool freezePosZ = (constraints & static_cast<uint32_t>(RigidbodyConstraints::FreezePositionZ)) != 0;
+            
+            if (ImGui::Checkbox("X##PosX", &freezePosX)) 
+            {
+                constraints ^= static_cast<uint32_t>(RigidbodyConstraints::FreezePositionX);
+                SetConstraints(static_cast<RigidbodyConstraints>(constraints));
+            }
+            ImGui::SameLine();
+            if (ImGui::Checkbox("Y##PosY", &freezePosY))
+            {
+                constraints ^= static_cast<uint32_t>(RigidbodyConstraints::FreezePositionY);
+                SetConstraints(static_cast<RigidbodyConstraints>(constraints));
+            }
+            ImGui::SameLine();
+            if (ImGui::Checkbox("Z##PosZ", &freezePosZ))
+            {
+                constraints ^= static_cast<uint32_t>(RigidbodyConstraints::FreezePositionZ);
+                SetConstraints(static_cast<RigidbodyConstraints>(constraints));
+            }
+
+            ImGui::Text("Freeze Rotation");
+            bool freezeRotX = (constraints & static_cast<uint32_t>(RigidbodyConstraints::FreezeRotationX)) != 0;
+            bool freezeRotY = (constraints & static_cast<uint32_t>(RigidbodyConstraints::FreezeRotationY)) != 0;
+            bool freezeRotZ = (constraints & static_cast<uint32_t>(RigidbodyConstraints::FreezeRotationZ)) != 0;
+            
+            if (ImGui::Checkbox("X##RotX", &freezeRotX))
+            {
+                constraints ^= static_cast<uint32_t>(RigidbodyConstraints::FreezeRotationX);
+                SetConstraints(static_cast<RigidbodyConstraints>(constraints));
+            }
+            ImGui::SameLine();
+            if (ImGui::Checkbox("Y##RotY", &freezeRotY))
+            {
+                constraints ^= static_cast<uint32_t>(RigidbodyConstraints::FreezeRotationY);
+                SetConstraints(static_cast<RigidbodyConstraints>(constraints));
+            }
+            ImGui::SameLine();
+            if (ImGui::Checkbox("Z##RotZ", &freezeRotZ))
+            {
+                constraints ^= static_cast<uint32_t>(RigidbodyConstraints::FreezeRotationZ);
+                SetConstraints(static_cast<RigidbodyConstraints>(constraints));
+            }
+
+            ImGui::TreePop();
+        }
     }
 
     void Rigidbody::Save(json& j) const
@@ -424,7 +513,6 @@ namespace engine
         j["angularDamping"] = m_angularDamping;
         j["useGravity"] = m_useGravity;
         j["constraints"] = static_cast<uint32_t>(m_constraints);
-        j["layer"] = m_layer;
     }
 
     void Rigidbody::Load(const json& j)
@@ -452,10 +540,6 @@ namespace engine
         if (j.contains("constraints"))
         {
             m_constraints = static_cast<RigidbodyConstraints>(j["constraints"].get<uint32_t>());
-        }
-        if (j.contains("layer"))
-        {
-            m_layer = j["layer"].get<uint32_t>();
         }
     }
 
@@ -487,6 +571,12 @@ namespace engine
                 if (m_type == RigidbodyType::Kinematic)
                 {
                     dynamic->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
+                }
+                else
+                {
+                    // Dynamic: Sleep 비활성화 (항상 충돌 감지)
+                    dynamic->wakeUp();
+                    dynamic->setSleepThreshold(0.0f);  // Sleep하지 않음
                 }
 
                 dynamic->setMass(m_mass);
