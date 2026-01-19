@@ -114,7 +114,7 @@ namespace engine
 
 			UIInteractable* it = AsInteractable(e);
 			if (!it) continue;
-			if (!it->IsInteraactable()) continue;
+			if (!it->IsInteractable()) continue;
 
 			return e;
 		}
