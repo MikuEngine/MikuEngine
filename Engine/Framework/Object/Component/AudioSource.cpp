@@ -108,7 +108,9 @@ namespace engine
             bool is3d = m_is3D;
             if (ImGui::Checkbox("Is 3D", &is3d)) Set3D(is3d);
 
-            if (ImGui::Checkbox("Play On Awake", &m_playOnAwake));
+            //if (ImGui::Checkbox("Play On Awake", &m_playOnAwake));
+            // 신익: 위에 코드 경고 뜸 확인하고 주석 제거하거나 if문 사용하는 코드로 바꾸면됨
+            ImGui::Checkbox("Play On Awake", &m_playOnAwake);
 
             float vol = m_volume;
             if (ImGui::SliderFloat("Volume", &vol, 0.0f, 1.0f)) SetVolume(vol);

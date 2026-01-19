@@ -92,12 +92,10 @@ namespace engine
 
         m_skeletalMeshDatas[filePath] = fbx->GetSkeletalMeshData();
         m_materialDatas[filePath] = fbx->GetMaterialData();
-        m_animationDatas[filePath] = fbx->GetAnimationData();
         m_skeletonDatas[filePath] = fbx->GetSkeletonData();
 
         CacheData(fbx->GetSkeletalMeshData(), scope);
         CacheData(fbx->GetMaterialData(), scope);
-        CacheData(fbx->GetAnimationData(), scope);
         CacheData(fbx->GetSkeletonData(), scope);
 
         m_tempAssets[m_tempAssetIndex++ % MAX_TEMP_ASSET] = fbx;
@@ -116,17 +114,11 @@ namespace engine
         }
 
         auto fbx = std::make_shared<FBXAssetData>();
-        fbx->Create(FBXAssetKind::Skeletal, filePath);
+        fbx->Create(FBXAssetKind::Animation, filePath);
 
-        m_skeletalMeshDatas[filePath] = fbx->GetSkeletalMeshData();
-        m_materialDatas[filePath] = fbx->GetMaterialData();
         m_animationDatas[filePath] = fbx->GetAnimationData();
-        m_skeletonDatas[filePath] = fbx->GetSkeletonData();
 
-        CacheData(fbx->GetSkeletalMeshData(), scope);
-        CacheData(fbx->GetMaterialData(), scope);
         CacheData(fbx->GetAnimationData(), scope);
-        CacheData(fbx->GetSkeletonData(), scope);
 
         m_tempAssets[m_tempAssetIndex++ % MAX_TEMP_ASSET] = fbx;
 
@@ -168,12 +160,10 @@ namespace engine
 
         m_skeletalMeshDatas[filePath] = fbx->GetSkeletalMeshData();
         m_materialDatas[filePath] = fbx->GetMaterialData();
-        m_animationDatas[filePath] = fbx->GetAnimationData();
         m_skeletonDatas[filePath] = fbx->GetSkeletonData();
 
         CacheData(fbx->GetSkeletalMeshData(), scope);
         CacheData(fbx->GetMaterialData(), scope);
-        CacheData(fbx->GetAnimationData(), scope);
         CacheData(fbx->GetSkeletonData(), scope);
 
         m_tempAssets[m_tempAssetIndex++ % MAX_TEMP_ASSET] = fbx;
