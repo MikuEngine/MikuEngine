@@ -96,6 +96,7 @@ namespace engine
 		if (m_background)
 		{
 			m_background->m_raycastTarget = false;
+			m_tintNormal = m_background->GetColor();
 		}
 
 		ApplyVisual();

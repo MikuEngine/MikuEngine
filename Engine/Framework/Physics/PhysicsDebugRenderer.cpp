@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PhysicsDebugRenderer.h"
 
 #include "Framework/Physics/PhysicsSystem.h"
@@ -12,6 +12,8 @@
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
 #include "Core/Graphics/Device/GraphicsDevice.h"
+#include "Core/Graphics/Resource/ResourceManager.h"
+#include "Core/Graphics/Resource/DepthStencilState.h"
 
 namespace engine
 {
@@ -96,11 +98,17 @@ namespace engine
         Microsoft::WRL::ComPtr<ID3D11InputLayout> prevInputLayout;
         Microsoft::WRL::ComPtr<ID3D11VertexShader> prevVS;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> prevPS;
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> prevRTV;
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilView> prevDSV;
         D3D11_PRIMITIVE_TOPOLOGY prevTopology;
+        D3D11_VIEWPORT prevViewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+        UINT numViewports = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
         FLOAT prevBlendFactor[4];
         UINT prevSampleMask;
         UINT prevStencilRef;
 
+        context->OMGetRenderTargets(1, prevRTV.GetAddressOf(), prevDSV.GetAddressOf());
+        context->RSGetViewports(&numViewports, prevViewports);
         context->OMGetBlendState(prevBlendState.GetAddressOf(), prevBlendFactor, &prevSampleMask);
         context->OMGetDepthStencilState(prevDepthState.GetAddressOf(), &prevStencilRef);
         context->RSGetState(prevRasterState.GetAddressOf());
@@ -115,8 +123,11 @@ namespace engine
         m_effect->SetWorld(Matrix::Identity);
 
         // 상태 설정
+        // 깊이 테스트 완전 비활성화 (피킹과 충돌 방지)
+        // 디버그 렌더러는 항상 위에 그려지므로 깊이 테스트가 필요 없음
+        auto depthNoneState = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::None);
         context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
-        context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
+        context->OMSetDepthStencilState(depthNoneState->GetRawDepthStencilState(), 0);  // 깊이 테스트 비활성화
         context->RSSetState(m_states->CullNone());
 
         // Effect 적용 및 InputLayout 설정
@@ -132,6 +143,9 @@ namespace engine
         m_batch->End();
 
         // 이전 상태 복원
+        // 렌더 타겟은 EndDrawDebugPass()에서 해제하므로 여기서 복원하지 않음
+        // (피킹 패스와의 충돌 방지)
+        context->RSSetViewports(numViewports, prevViewports);
         context->OMSetBlendState(prevBlendState.Get(), prevBlendFactor, prevSampleMask);
         context->OMSetDepthStencilState(prevDepthState.Get(), prevStencilRef);
         context->RSSetState(prevRasterState.Get());

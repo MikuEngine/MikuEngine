@@ -265,9 +265,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\System\UIEventSystem.cpp">
-	  <Filter>소스 파일</Filter>
-	  </ClCompile>
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Framework\System\SoundSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\UISlider.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -579,6 +582,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\System\UIEventSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\UISlider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,7 +8,7 @@ namespace engine
 	public:
 		virtual ~UIInteractable() = default;
 
-		virtual bool IsInteraactable() const { return true; }
+		virtual bool IsInteractable() const { return true; }
 
 		virtual void OnMouseEnter(const Vector2& mousePos) {}
 		virtual void OnMouseExit(const Vector2& mousePos) {}

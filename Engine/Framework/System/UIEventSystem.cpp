@@ -114,7 +114,7 @@ namespace engine
 
 			UIInteractable* it = AsInteractable(e);
 			if (!it) continue;
-			if (!it->IsInteraactable()) continue;
+			if (!it->IsInteractable()) continue;
 
 			return e;
 		}
@@ -147,19 +147,6 @@ namespace engine
 
 	void UIEventSystem::HandlePressDragRelease(const MouseState& mouse, UIElement* newHover)
 	{
-		float dist = (mouse.position - m_pressStartPos).Length();
-
-		if (dist >= m_dragThresholdPixels)
-		{
-			m_isDragging = true;
-			m_dragTarget = m_pressed;
-
-			if (UIInteractable* it = AsInteractable(m_dragTarget))
-			{
-				it->OnBeginDrag(mouse.position, 0);
-			}
-		}
-		
 		// Click
 		if (mouse.leftDown)
 		{
@@ -186,6 +173,28 @@ namespace engine
 				{
 					it->OnMouseOver(mouse.position);
 				}
+			}
+
+			if (!m_isDragging && m_pressed && !m_dragTarget)
+			{
+				float dist = (mouse.position - m_pressStartPos).Length();
+
+				if (dist >= m_dragThresholdPixels)
+				{
+					m_isDragging = true;
+					m_dragTarget = m_pressed;
+
+					if (UIInteractable* it = AsInteractable(m_dragTarget))
+					{
+						it->OnBeginDrag(mouse.position, 0);
+					}
+				}
+			}
+
+			if (m_isDragging && m_dragTarget)
+			{
+				if (UIInteractable* it = AsInteractable(m_dragTarget))
+					it->OnDrag(mouse.position, mouse.delta, 0);
 			}
 		}
 		
