@@ -66,6 +66,7 @@
 				if exist "$(OutDir)Resource" rmdir /S /Q "$(OutDir)Resource"
 				if not exist "$(OutDir)Resource" mklink /J "$(OutDir)Resource" "$(SolutionDir)Resource"
 				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(SolutionDir)Resource\Shader\"
+				xcopy /y /d "$(FMOD)\lib\x64\*.dll" "$(OutDir)"
 			</Command>
 		</PostBuildEvent>
 	</ItemDefinitionGroup>

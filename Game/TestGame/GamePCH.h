@@ -19,3 +19,7 @@
 #include <Engine/Framework/Object/Component/SphereCollider.h>
 #include <Engine/Framework/Object/Component/CapsuleCollider.h>
 #include <Engine/Framework/Object/Component/CharacterController.h>
+
+// Sound Component
+#include <Engine/Framework/System/SoundSystem.h>
+#include <Engine/Framework/Object/Component/AudioSource.h>

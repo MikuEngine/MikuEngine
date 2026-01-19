@@ -13,7 +13,8 @@ namespace engine
     enum class FBXAssetKind
     {
         Static,
-        Skeletal
+        Skeletal,
+        Animation
     };
 
     class FBXAssetData :
@@ -39,5 +40,6 @@ namespace engine
     private:
         void LoadStaticMesh(const std::string& filePath);
         void LoadSkeletalMesh(const std::string& filePath);
+        void LoadAnimation(const std::string& filePath);
     };
 }

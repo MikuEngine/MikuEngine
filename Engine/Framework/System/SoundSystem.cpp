@@ -1,21 +1,29 @@
 ﻿#include "EnginePCH.h"
 #include "SoundSystem.h"
-
+#include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Object/Component/Transform.h"
 
 namespace engine
 {
+    // ==============================================================
+    // Sound Class Implementation
+    // ==============================================================
+
     Sound::Sound(FMOD::System* system, int index, std::string name)
         : m_pSystem(system), m_id(index), m_name(name) {
     }
 
-    Sound::~Sound() {}
+    Sound::~Sound()
+    {
+        Release();
+    }
 
     void Sound::Release()
     {
         if (m_pSound) { m_pSound->release(); m_pSound = nullptr; }
     }
 
-    void Sound::Play2D(bool bLoop, EventSoundEnd callback)
+    void Sound::Play2D(bool bLoop, EventEndPlay callback)
     {
         if (m_pSystem)
         {
@@ -30,7 +38,7 @@ namespace engine
                     info.pChannel = m_pChannel;
                     info.callback = callback;
 
-                    SoundManager::GetInstance().AddCallback(info);
+                    SoundSystem::Get().m_callbackList.push_back(info);
                 }
             }
         }
@@ -40,20 +48,18 @@ namespace engine
     {
         if (m_pSystem)
         {
-            // 소리 재생 시작 (일시정지 상태로)
             m_pSystem->playSound(m_pSound, nullptr, true, &m_pChannel);
 
             if (m_pChannel)
             {
-                // 루프 설정
                 m_pChannel->setMode(bLoop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
 
-                // 소리 위치 설정
                 FMOD_VECTOR pos = ToFmodVector(position);
                 FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
                 m_pChannel->set3DAttributes(&pos, &vel);
 
-                // 재생 시작
+                m_pChannel->set3DMinMaxDistance(1.0f, 500.0f);
+
                 m_pChannel->setPaused(false);
             }
         }
@@ -84,17 +90,174 @@ namespace engine
         if (m_pChannel) m_pChannel->setVolume(vol);
     }
 
+    // ==============================================================
+    // SoundSystem Class Implementation
+    // ==============================================================
 
-    SoundManager::SoundManager() {}
-    SoundManager::~SoundManager() { Release(); }
+    SoundSystem::SoundSystem() {}
+    SoundSystem::~SoundSystem() { Shutdown(); }
 
-    void SoundManager::DrawImgui()
+    bool SoundSystem::Initialize()
+    {
+        FMOD_RESULT ret;
+        ret = FMOD::System_Create(&m_pSystem);
+        if (ret != FMOD_OK) return false;
+
+        // 512 채널, 일반 초기화
+        ret = m_pSystem->init(512, FMOD_INIT_NORMAL, nullptr);
+        if (ret != FMOD_OK) return false;
+
+        // 3D 세팅: 거리 계수 (1.0f = 미터 단위), 왼손 좌표계/오른손 좌표계에 따라 수정 필요
+        m_pSystem->set3DSettings(1.0f, 1.0f, 1.0f);
+
+        return true;
+    }
+
+    void SoundSystem::Shutdown()
+    {
+        m_callbackList.clear();
+
+        for (auto& pair : m_soundResources)
+        {
+            if (pair.second)
+            {
+                pair.second->Release();
+                delete pair.second;
+            }
+        }
+        m_soundResources.clear();
+
+        if (m_pSystem)
+        {
+            m_pSystem->close();
+            m_pSystem->release();
+            m_pSystem = nullptr;
+        }
+    }
+
+    void SoundSystem::Register(AudioSource* source)
+    {
+        System<AudioSource>::Register(source);
+    }
+
+    void SoundSystem::Unregister(AudioSource* source)
+    {
+        System<AudioSource>::Unregister(source);
+    }
+
+    void SoundSystem::Update()
+    {
+        if (!m_pSystem) return;
+
+        FMOD_VECTOR pos = ToFmodVector(m_listenerPos);
+        FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+        FMOD_VECTOR forward = ToFmodVector(m_listenerForward);
+        FMOD_VECTOR up = ToFmodVector(m_listenerUp);
+
+        // 리스너 0번 업데이트 (메인 카메라)
+        m_pSystem->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+
+        // 등록된 AudioSource 컴포넌트들의 위치 업데이트
+        for (AudioSource* source : m_components)
+        {
+            // 컴포넌트가 활성화 상태이고, 3D 사운드인 경우에만 위치 갱신
+            if (source->IsActive() &&
+                source->Is3D())
+            {
+                Sound* sound = source->GetSoundResource();
+
+                // 현재 재생 중인 사운드가 있다면 위치 동기화
+                // (GameObject의 Transform을 가져와서 FMOD 채널에 적용)
+                if (sound)
+                {
+                    Transform* transform = source->GetGameObject()->GetTransform();
+                    sound->Update3DPosition(transform->GetWorldPosition());
+                }
+            }
+        }
+
+        // 콜백 리스트 처리 (재생 끝난 사운드 콜백 호출)
+        for (auto iter = m_callbackList.begin(); iter != m_callbackList.end(); )
+        {
+            bool isPlaying = false;
+            FMOD::Channel* ch = iter->pChannel;
+
+            if (ch)
+            {
+                ch->isPlaying(&isPlaying);
+            }
+
+            if (!isPlaying)             // 재생이 끝났다면
+            {
+                if (iter->callback)
+                {
+                    iter->callback();   // 콜백 실행
+                }
+                iter = m_callbackList.erase(iter);
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+
+        // FMOD 시스템 틱 업데이트
+        m_pSystem->update();
+    }
+
+    Sound* SoundSystem::GetOrLoadSound(const std::string& filename, bool is3D)
+    {
+        // 이미 로드된 리소스인지 확인
+        auto iter = m_soundResources.find(filename);
+        if (iter != m_soundResources.end())
+        {
+            return iter->second;
+        }
+
+        std::string fullPath = m_soundPath + filename;
+
+        // 사운드 객체 생성
+        // m_soundResources.size()를 ID로 사용하거나 별도 ID 관리
+        Sound* sound = new Sound(m_pSystem, m_index++, filename);
+
+        FMOD_MODE mode = FMOD_DEFAULT;
+        if (is3D)
+        {
+            // 3D 사운드: 거리 감쇠(RollOff) 적용
+            mode = FMOD_3D | FMOD_3D_LINEARROLLOFF;
+        }
+        else
+        {
+            mode = FMOD_2D;
+        }
+
+        FMOD_RESULT ret = m_pSystem->createSound(fullPath.c_str(), mode, 0, &sound->m_pSound);
+
+        if (ret != FMOD_OK)
+        {
+            LOG_ERROR("SoundSystem::GetOrLoadSound error");
+            delete sound;
+            return nullptr;
+        }
+
+        if (is3D)
+        {
+            // 1미터부터 소리감쇄, 500미터 이후로는 안 들림
+            sound->m_pSound->set3DMinMaxDistance(1.0f, 500.0f);
+        }
+
+        // 캐싱 맵에 추가
+        m_soundResources.insert(make_pair(filename, sound));
+        return sound;
+    }
+
+    void SoundSystem::DrawImgui()
     {
         if (ImGui::Button("Refresh List"))
         {
             RefreshSoundList();
         }
-        if (ImGui::BeginListBox("##SoundPlayList", ImVec2(-1, 300))) // 높이 300
+        if (ImGui::BeginListBox("##SoundPlayList", ImVec2(-1, 300)))
         {
             for (int i = 0; i < static_cast<int>(m_PlayUIList.size()); ++i)
             {
@@ -111,10 +274,11 @@ namespace engine
 
                 if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
                 {
-                    Sound* snd = LoadSound(label, false);
+                    Sound* snd = GetOrLoadSound(label, false);
 
                     // event
-                    if (snd) snd->Play2D(false, []() {
+                    if (snd) snd->Play2D(false, []()
+                    {
                         //std::cout << "play 끝!" << std::endl;
                     });
                 }
@@ -159,7 +323,7 @@ namespace engine
                         ImGui::EndPopup();
                         break;
                     }
-                    */
+                    //*/
                     ImGui::EndPopup();
                 }
             }
@@ -167,110 +331,14 @@ namespace engine
         }
     }
 
-    bool SoundManager::Init()
+    void SoundSystem::SetListenerAttributes(const XMFLOAT3& pos, const XMFLOAT3& forward, const XMFLOAT3& up)
     {
-        FMOD_RESULT ret;
-        ret = FMOD::System_Create(&m_pSystem);
-        if (ret != FMOD_OK) return false;
-
-        // 512 채널, 일반 초기화
-        ret = m_pSystem->init(512, FMOD_INIT_NORMAL, nullptr);
-        if (ret != FMOD_OK) return false;
-
-        // 3D 세팅: 거리 계수 (1.0f = 미터 단위)
-        m_pSystem->set3DSettings(1.0f, 1.0f, 1.0f);
-
-        return true;
+        m_listenerPos = pos;
+        m_listenerForward = forward;
+        m_listenerUp = up;
     }
 
-    void SoundManager::Update(const XMFLOAT3& camPos, const XMFLOAT3& camForward, const XMFLOAT3& camUp)
-    {
-        if (!m_pSystem) return;
-
-        // 카메라 위치 업데이트
-        FMOD_VECTOR pos = ToFmodVector(camPos);
-        FMOD_VECTOR forward = ToFmodVector(camForward);
-        FMOD_VECTOR up = ToFmodVector(camUp);
-        FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-
-        for (auto iter = m_callbackList.begin(); iter != m_callbackList.end(); )
-        {
-            bool isPlaying = false;
-            FMOD::Channel* ch = iter->pChannel;
-
-            if (ch)
-            {
-                ch->isPlaying(&isPlaying);
-            }
-
-            if (!isPlaying)
-            {
-                if (iter->callback)
-                {
-                    iter->callback();
-                }
-
-                iter = m_callbackList.erase(iter);
-            }
-            else
-            {
-                ++iter;
-            }
-        }
-
-        // 리스너 0번 업데이트
-        m_pSystem->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
-
-        if (m_pSystem) m_pSystem->update();
-    }
-
-    Sound* SoundManager::LoadSound(std::string filename, bool is3D)
-    {
-        if (m_SoundList.find(filename) != m_SoundList.end())
-            return m_SoundList[filename];
-
-        Sound* sound = new Sound(m_pSystem, m_index++, filename);
-
-        FMOD_MODE mode = FMOD_DEFAULT;
-        if (is3D)
-        {
-            mode = FMOD_3D | FMOD_3D_LINEARROLLOFF;
-        }
-        else
-        {
-            mode = FMOD_2D;
-        }
-
-        FMOD_RESULT ret = m_pSystem->createSound((m_soundPath + filename).c_str(), mode, 0, &sound->m_pSound);
-
-        if (ret != FMOD_OK)
-        {
-            delete sound;
-            return nullptr;
-        }
-
-        if (is3D)
-        {
-            sound->m_pSound->set3DMinMaxDistance(1.0f, 100.0f);
-        }
-
-        m_SoundList.insert(make_pair(filename, sound));
-        return sound;
-    }
-
-    Sound* SoundManager::GetSound(std::string filename)
-    {
-        auto iter = m_SoundList.find(filename);
-
-        if (iter != m_SoundList.end())
-        {
-            return iter->second;
-        }
-
-        return nullptr;
-    }
-
-    void SoundManager::RefreshSoundList()
+    void SoundSystem::RefreshSoundList()
     {
         m_PlayUIList.clear();
 
@@ -290,16 +358,19 @@ namespace engine
         }
     }
 
-    bool SoundManager::Release()
+    bool SoundSystem::Release()
     {
         m_callbackList.clear();
 
-        for (auto& pair : m_SoundList)
+        for (auto& pair : m_soundResources)
         {
-            pair.second->Release();
-            delete pair.second;
+            if (pair.second)
+            {
+                pair.second->Release();
+                delete pair.second;
+            }
         }
-        m_SoundList.clear();
+        m_soundResources.clear();
 
         if (m_pSystem)
         {
@@ -310,6 +381,4 @@ namespace engine
 
         return true;
     }
-
-
 }

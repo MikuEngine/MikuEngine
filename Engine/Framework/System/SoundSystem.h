@@ -2,26 +2,29 @@
 
 #include "fmod.hpp"
 #include "fmod_errors.h"
-#include <filesystem>
 #include <map>
 #include <string>
 #include <vector>
 #include <list>
-#include <functional>
 #include <DirectXMath.h>
+#include "Framework/Object/Component/AudioSource.h"
+#include "Framework/System/System.h"
 
 using namespace DirectX;
 namespace fs = std::filesystem;
-using EventSoundEnd = std::function<void()>;
 
 namespace engine
 {
+    // ==============================================================
+    // Sound Class Implementation
+    // ==============================================================
+
 	inline FMOD_VECTOR ToFmodVector(const XMFLOAT3& v) { return { v.x, v.y, v.z }; }
 
 	struct SoundCallbackInfo
 	{
-		FMOD::Channel* pChannel;
-		EventSoundEnd callback;
+		FMOD::Channel* pChannel = nullptr;
+        EventEndPlay callback = nullptr;
 	};
 
     class Sound
@@ -39,7 +42,7 @@ namespace engine
 
         void Release();
 
-        void Play2D(bool bLoop = false, EventSoundEnd callback = nullptr);
+        void Play2D(bool bLoop = false, EventEndPlay callback = nullptr);
 
         void Play3D(const XMFLOAT3& position, bool bLoop = false);
 
@@ -49,55 +52,69 @@ namespace engine
         void SetVolume(float vol);
     };
 
-    class SoundManager
+    // ==============================================================
+    // SoundSystem Class Implementation
+    // ==============================================================
+
+    class SoundSystem : 
+        public System<AudioSource>,
+        public Singleton<SoundSystem>
     {
+        friend class Singleton<SoundSystem>;
+        friend class Sound;
+
+    private:
+        SoundSystem();
+        virtual ~SoundSystem();
+
+    private:
+        FMOD::System* m_pSystem = nullptr;
+        std::map<std::string, Sound*> m_soundResources; // 리소스 캐싱
+
+        // FMOD 리스너(듣는 사람) 정보
+        XMFLOAT3 m_listenerPos = { 0, 0, 0 };
+        XMFLOAT3 m_listenerForward = { 0, 0, 1 };
+        XMFLOAT3 m_listenerUp = { 0, 1, 0 };
+
+        // 콜백 처리용
+        std::list<SoundCallbackInfo> m_callbackList;
+
+        std::vector<std::string> m_PlayUIList;
+        const std::string m_soundPath = "../../Resource/Sound/";
+        int m_selectedSoundIndex = 0;
+        int m_index = 0;
+
     public:
-        static SoundManager& GetInstance() { static SoundManager instance; return instance; }
-
-        bool Init();
-
-        void Update(const XMFLOAT3& camPos, const XMFLOAT3& camForward, const XMFLOAT3& camUp);
+        bool Initialize();
+        void Shutdown();
 
         bool Release();
 
-        Sound* LoadSound(std::string filename, bool is3D = false);
-        Sound* GetSound(std::string filename);
+        void Register(AudioSource* source) override;
+        void Unregister(AudioSource* source) override;
 
+        void Update();
+
+        Sound* GetOrLoadSound(const std::string& filename, bool is3D);
 
         void RefreshSoundList();
 
-    private:
-        SoundManager();
-        ~SoundManager();
+        // FMOD Listener 설정 (CameraSystem에서 Main Camera 정보를 받아와서 호출해줘야 함)
+        void SetListenerAttributes(const XMFLOAT3& pos, const XMFLOAT3& forward, const XMFLOAT3& up);
 
-        FMOD::System* m_pSystem = nullptr;
-        std::map<std::string, Sound*> m_SoundList;
-        std::vector<std::string> m_PlayUIList;
-        int m_selectedSoundIndex = 0;
-        int m_index = 0;
-        const std::string m_soundPath = "../Resource/sound/";
-
-        // event
-        std::list<SoundCallbackInfo> m_callbackList;
-
-    public:
         void DrawImgui();
-        void AddCallback(const SoundCallbackInfo& info) { m_callbackList.push_back(info); }
-
     };
 
 }
 
-/* sound event 사용 예시
-
-재생 후 로그 출력
+/*// sound event 사용 예시
+**재생 후 로그 출력**
 attackSound->Play(false, [](){
     std::cout << "공격 소리 끝!" << std::endl;
 });
 
-재생 후 오브젝트 삭제
+**재생 후 오브젝트 삭제**
 dieSound->Play(false, [this](){
     GameObject::Destroy(this->GetGameObject());
 });
-
-*/
+//*/
