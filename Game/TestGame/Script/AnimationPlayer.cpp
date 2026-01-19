@@ -55,7 +55,7 @@ namespace game
             }
         }
 
-        float rotationSpeed = engine::ToRadian(90.0f); // 초당 90도
+        constexpr float rotationSpeed = engine::ToRadian(90.0f); // 초당 90도
         float dt = engine::Time::DeltaTime();
 
         // 1. 입력에 따라 각도(Scalar) 값만 변경
