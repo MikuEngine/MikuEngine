@@ -63,3 +63,6 @@ dkms.conf
 *.user
 imgui.ini
 *.cso
+
+# CustomSetting
+/Resource/Setting/ProjectSettings.json

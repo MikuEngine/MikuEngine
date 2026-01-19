@@ -21,6 +21,7 @@
 #include "Framework/System/AnimatorSystem.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/CollisionSystem.h"
+#include "Framework/System/UIEventSystem.h"
 #include "Editor/EditorManager.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -289,6 +290,9 @@ namespace engine
         SystemManager::Get().GetAnimatorSystem().Update();
 
         SystemManager::Get().GetRenderSystem().Update();
+
+        SystemManager::Get().GetUIEventSystem().Update();
+
     }
 
     LRESULT WinApp::MessageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

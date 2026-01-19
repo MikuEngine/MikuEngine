@@ -92,6 +92,37 @@ namespace engine
 
         std::unordered_set<TriggerPair, TriggerPairHash> m_activeTriggerPairs;
 
+        // Collision Stay 추적 (PhysX가 매 프레임 Stay 이벤트를 보내지 않을 수 있음)
+        // Handle 기반으로 추적하여 댕글링 방지
+        struct CollisionPair
+        {
+            Handle colliderAHandle;
+            Handle colliderBHandle;
+
+            bool operator==(const CollisionPair& rhs) const
+            {
+                // 순서 무관하게 비교 (A-B == B-A)
+                return (colliderAHandle == rhs.colliderAHandle && colliderBHandle == rhs.colliderBHandle) ||
+                       (colliderAHandle == rhs.colliderBHandle && colliderBHandle == rhs.colliderAHandle);
+            }
+        };
+
+        struct CollisionPairHash
+        {
+            size_t operator()(const CollisionPair& p) const
+            {
+                // 순서 무관하게 해시 생성 (A-B == B-A)
+                size_t h1 = std::hash<uint64_t>()(
+                    (static_cast<uint64_t>(p.colliderAHandle.index) << 32) | p.colliderAHandle.generation);
+                size_t h2 = std::hash<uint64_t>()(
+                    (static_cast<uint64_t>(p.colliderBHandle.index) << 32) | p.colliderBHandle.generation);
+                // 순서 무관하게 하기 위해 작은 값과 큰 값을 조합
+                return h1 < h2 ? (h1 ^ (h2 << 1)) : (h2 ^ (h1 << 1));
+            }
+        };
+
+        std::unordered_set<CollisionPair, CollisionPairHash> m_activeCollisionPairs;
+
         // 공격 인스턴스 관리 (우선순위 시스템)
         std::unordered_map<uint64_t, AttackInstance> m_activeAttacks;
         uint64_t m_nextAttackId = 1;

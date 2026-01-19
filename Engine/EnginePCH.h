@@ -19,6 +19,7 @@
 #include <cmath>
 #include <cstring>
 #include <filesystem>
+#include <functional>
 
 
 // d3d
@@ -48,6 +49,8 @@ namespace engine
 
     using Clock = std::chrono::high_resolution_clock;
     using TimePoint = std::chrono::time_point<Clock>;
+
+    using EventEndPlay = std::function<void()>;
 
     using json = nlohmann::ordered_json;
 }

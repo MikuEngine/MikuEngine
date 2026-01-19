@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "CollisionSystem.h"
 
 #include "Framework/Object/Component/Collider.h"
@@ -58,6 +58,22 @@ namespace engine
 
         ProcessCollisionEvents();
         ProcessTriggerEvents();
+
+        // 활성 충돌 쌍에 대해 매 프레임 MarkColliding 호출 (Stay 이벤트가 없어도 시각적 피드백 유지)
+        for (const auto& pair : m_activeCollisionPairs)
+        {
+            Object* objA = GetObjectFromHandle(pair.colliderAHandle);
+            Object* objB = GetObjectFromHandle(pair.colliderBHandle);
+            
+            Collider* colliderA = dynamic_cast<Collider*>(objA);
+            Collider* colliderB = dynamic_cast<Collider*>(objB);
+            
+            if (colliderA && colliderB)
+            {
+                PhysicsDebugRenderer::Get().MarkColliding(colliderA);
+                PhysicsDebugRenderer::Get().MarkColliding(colliderB);
+            }
+        }
     }
 
     void CollisionSystem::ProcessCollisionEvents()
@@ -66,6 +82,8 @@ namespace engine
         {
             return;
         }
+
+        LOG_PRINT("[CollisionSystem] Processing {} collision events", m_pendingCollisionEvents.size());
 
         // 우선순위로 정렬 (높은 것 먼저)
         std::sort(m_pendingCollisionEvents.begin(), m_pendingCollisionEvents.end(),
@@ -107,6 +125,11 @@ namespace engine
             }
 
             // 이벤트 타입에 따라 디스패치
+            LOG_PRINT("[CollisionSystem] Dispatching collision event: type={}, colliderA={}, colliderB={}",
+                static_cast<int>(event.type),
+                event.colliderA ? event.colliderA->GetGameObject()->GetName() : "null",
+                event.colliderB ? event.colliderB->GetGameObject()->GetName() : "null");
+            
             switch (event.type)
             {
             case CollisionEventType::Enter:
@@ -152,6 +175,11 @@ namespace engine
 
     void CollisionSystem::ProcessTriggerEvents()
     {
+        if (!m_pendingTriggerEvents.empty())
+        {
+            LOG_PRINT("[CollisionSystem] Processing {} trigger events", m_pendingTriggerEvents.size());
+        }
+        
         // Enter/Exit 이벤트 처리
         for (const TriggerEvent& event : m_pendingTriggerEvents)
         {
@@ -254,6 +282,19 @@ namespace engine
             }
         }
 
+        // 활성 충돌 쌍에서 제거
+        for (auto it = m_activeCollisionPairs.begin(); it != m_activeCollisionPairs.end(); )
+        {
+            if (it->colliderAHandle == colliderHandle || it->colliderBHandle == colliderHandle)
+            {
+                it = m_activeCollisionPairs.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
+
         // 대기 중인 이벤트에서 제거
         // Ptr은 자동으로 무효화되므로 명시적 제거는 선택사항이지만,
         // 메모리 절약을 위해 미리 제거
@@ -293,6 +334,9 @@ namespace engine
         if (!a || !b) return;
 
         // 디버그 렌더러에 충돌 상태 표시
+        LOG_PRINT("[CollisionSystem] MarkColliding: {} <-> {}", 
+            a->GetGameObject()->GetName(), 
+            b->GetGameObject()->GetName());
         PhysicsDebugRenderer::Get().MarkColliding(a.Get());
         PhysicsDebugRenderer::Get().MarkColliding(b.Get());
 
@@ -320,6 +364,12 @@ namespace engine
         // 현재는 주석 처리된 OnCollisionEnter가 활성화되면 호출
 
         // B의 모든 Script에 알림
+
+        // 활성 충돌 쌍에 추가
+        CollisionPair pair;
+        pair.colliderAHandle = a.GetHandle();
+        pair.colliderBHandle = b.GetHandle();
+        m_activeCollisionPairs.insert(pair);
     }
 
     void CollisionSystem::DispatchCollisionStay(
@@ -329,6 +379,9 @@ namespace engine
         if (!a || !b) return;
 
         // 디버그 렌더러에 충돌 상태 표시
+        LOG_PRINT("[CollisionSystem] MarkColliding (Stay): {} <-> {}", 
+            a->GetGameObject()->GetName(), 
+            b->GetGameObject()->GetName());
         PhysicsDebugRenderer::Get().MarkColliding(a.Get());
         PhysicsDebugRenderer::Get().MarkColliding(b.Get());
 
@@ -355,11 +408,21 @@ namespace engine
         infoForB.gameObject = Ptr<GameObject>(goA);
 
         // Script 콜백 호출
+
+        // 활성 충돌 쌍에서 제거
+        CollisionPair pair;
+        pair.colliderAHandle = a.GetHandle();
+        pair.colliderBHandle = b.GetHandle();
+        m_activeCollisionPairs.erase(pair);
     }
 
     void CollisionSystem::DispatchTriggerEnter(Ptr<Collider> trigger, Ptr<Collider> other)
     {
         if (!trigger || !other) return;
+
+        // 디버그 렌더러에 충돌 상태 표시
+        PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
+        PhysicsDebugRenderer::Get().MarkColliding(other.Get());
 
         // Trigger 측 Script들에 알림
         // Other 측 Script들에도 알림
@@ -368,13 +431,16 @@ namespace engine
     void CollisionSystem::DispatchTriggerStay(Ptr<Collider> trigger, Ptr<Collider> other)
     {
         if (!trigger || !other) return;
-        // TODO: 구현
+
+        // 디버그 렌더러에 충돌 상태 표시
+        PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
+        PhysicsDebugRenderer::Get().MarkColliding(other.Get());
     }
 
     void CollisionSystem::DispatchTriggerExit(Ptr<Collider> trigger, Ptr<Collider> other)
     {
         if (!trigger || !other) return;
-        // TODO: 구현
+        // Exit 시에는 MarkColliding 호출하지 않음 (자동으로 다음 프레임에 초기화됨)
     }
 
     std::vector<ContactPoint> CollisionSystem::FlipContactNormals(

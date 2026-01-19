@@ -12,20 +12,30 @@ namespace engine
 	{
 	public:
 		UIElement() = default;
-		~UIElement() override = default;
+		~UIElement() override;
+
+	public:
+		void Initialize() override;
+		void OnEnable() override;
+		void OnDisable() override;
 
 	public:
 		bool HasRenderType(RenderType type) const override;
 		void Draw(RenderType type) const override;
 		DirectX::BoundingBox GetBounds() const override;
 
-	protected:
-		virtual void DrawUI() const = 0;
+	public:
+		int m_orderInLayer = 0;
+		bool m_raycastTarget = true;
+
+		std::int32_t m_systemIndex = -1;
 
 		// Helper
 		RectTransform* GetRectTransform() const;
 		Canvas* GetCanvasInParent() const;
 
+	protected:
+		virtual void DrawUI() const = 0;
 		bool CanDraw() const;
 	};
 }

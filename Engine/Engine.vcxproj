@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Editor\EditorGrid.cpp" />
+    <ClCompile Include="Framework\Object\Component\AudioSource.cpp" />
     <ClCompile Include="Framework\Object\Component\Canvas.cpp" />
     <ClCompile Include="Common\Debug\Debug.cpp" />
     <ClCompile Include="Common\Math\MathUtility.cpp" />
@@ -216,6 +217,7 @@
     <ClCompile Include="Framework\System\CameraSystem.cpp" />
     <ClCompile Include="Framework\System\LightSystem.cpp" />
     <ClCompile Include="Framework\System\RenderSystem.cpp" />
+    <ClCompile Include="Framework\System\SoundSystem.cpp" />
     <ClCompile Include="Framework\System\SystemManager.cpp" />
     <ClCompile Include="Framework\System\ScriptSystem.cpp" />
     <ClCompile Include="Framework\System\TransformSystem.cpp" />
@@ -239,9 +241,14 @@
     <ClCompile Include="Framework\Object\Component\UIElement.cpp" />
     <ClCompile Include="Framework\Object\Component\UIImage.cpp" />
     <ClCompile Include="Framework\Object\Component\UIText.cpp" />
+    <ClCompile Include="Framework\Object\Component\UIButton.cpp" />
+    <ClCompile Include="Framework\Object\Component\UIInteractable.cpp" />
+    <ClCompile Include="Framework\System\UIEventSystem.cpp" />
+    <ClCompile Include="Framework\Object\Component\UISlider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorGrid.h" />
+    <ClInclude Include="Framework\Object\Component\AudioSource.h" />
     <ClInclude Include="Framework\Object\Component\Canvas.h" />
     <ClInclude Include="Common\Debug\Debug.h" />
     <ClInclude Include="Common\Math\MathUtility.h" />
@@ -341,6 +348,10 @@
     <ClInclude Include="Framework\Object\Component\UIElement.h" />
     <ClInclude Include="Framework\Object\Component\UIImage.h" />
     <ClInclude Include="Framework\Object\Component\UIText.h" />
+    <ClInclude Include="Framework\Object\Component\UIButton.h" />
+    <ClInclude Include="Framework\Object\Component\UIInteractable.h" />
+    <ClInclude Include="Framework\System\UIEventSystem.h" />
+    <ClInclude Include="Framework\Object\Component\UISlider.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Pixel\DeferredPointLight_PS.hlsl">
