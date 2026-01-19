@@ -63,7 +63,18 @@
                 },
                 {
                     "Type": "SoundTest",
-                    "Active": true
+                    "Active": false
+                },
+                {
+                    "Type": "AudioSource",
+                    "Active": true,
+                    "ClipName": "",
+                    "IsLoop": false,
+                    "Is3D": false,
+                    "PlayOnAwake": false,
+                    "Volume": 1.0,
+                    "MinDist": 1.0,
+                    "MaxDist": 500.0
                 }
             ]
         }
