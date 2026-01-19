@@ -35,7 +35,7 @@ namespace engine
 
 		// ImagePath
 		std::string m_spriteNormal;
-		std::string m_spriteHover;
+		std::string m_spriteHovered;
 		std::string m_spritePressed;
 		std::string m_spriteDisabled;
 
@@ -52,10 +52,14 @@ namespace engine
 						const std::string& pressed,
 						const std::string& disabled);
 		
+		void SetInteractable(bool v);
+		State GetState() const { return m_state; }
+
 	public:
 		// Input
 		void OnMouseEnter(const Vector2& mousePos) override;
 		void OnMouseExit(const Vector2&) override;
+		void OnMouseUp(const Vector2&, int mouseButton) override;
 		void OnMouseDown(const Vector2&, int mouseButton) override;
 		void OnMouseClick(const Vector2&, int mouseButton) override;
 

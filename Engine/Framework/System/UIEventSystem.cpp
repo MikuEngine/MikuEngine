@@ -25,10 +25,14 @@ namespace engine
 
 	void UIEventSystem::Register(UIElement* e)
 	{
+		System<UIElement>::Register(e);
+		MarkDirty();
 	}
 
 	void UIEventSystem::Unregister(UIElement* e)
 	{
+		System<UIElement>::Unregister(e);
+		MarkDirty();
 	}
 
 	void UIEventSystem::Update()
