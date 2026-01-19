@@ -421,6 +421,9 @@ namespace engine
 
     void GraphicsDevice::BeginDrawOutlinePass()
     {
+        // 뷰포트 명시적으로 설정 (디버그 렌더러의 뷰포트 변경 영향 방지)
+        m_deviceContext->RSSetViewports(1, &m_gameViewport);
+        
         m_deviceContext->ClearDepthStencilView(m_outlineStencilBuffer->GetRawDSV(), D3D11_CLEAR_STENCIL, 0.0f, 0);
         m_deviceContext->OMSetRenderTargets(0, nullptr, m_outlineStencilBuffer->GetRawDSV());
         m_deviceContext->OMSetDepthStencilState(m_maskDSS->GetRawDepthStencilState(), 1);
@@ -428,6 +431,9 @@ namespace engine
 
     void GraphicsDevice::EndDrawOutlinePass()
     {
+        // 뷰포트 명시적으로 설정 (디버그 렌더러의 뷰포트 변경 영향 방지)
+        m_deviceContext->RSSetViewports(1, &m_gameViewport);
+        
         m_deviceContext->OMSetRenderTargets(1, m_finalBuffer->GetRTV().GetAddressOf(), nullptr);
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::StencilMap), 1, m_outlineStencilBuffer->GetSRV().GetAddressOf());
 
@@ -444,13 +450,15 @@ namespace engine
 
     void GraphicsDevice::BeginDrawDebugPass()
     {
-        // 디버그 렌더링용 패스 - finalBuffer에 렌더링, 깊이 테스트 없음
+        // 디버그 렌더링용 패스 - finalBuffer에 렌더링
+        // 깊이 버퍼 사용 안 함 (피킹과 충돌 방지)
         m_deviceContext->RSSetViewports(1, &m_gameViewport);
         m_deviceContext->OMSetRenderTargets(1, m_finalBuffer->GetRTV().GetAddressOf(), nullptr);
     }
 
     void GraphicsDevice::EndDrawDebugPass()
     {
+        // 렌더 타겟 해제 (피킹 패스와의 충돌 방지)
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
     }
 
@@ -480,6 +488,9 @@ namespace engine
 
     void GraphicsDevice::BeginDrawPickingPass()
     {
+        // 뷰포트 명시적으로 설정 (디버그 렌더러의 뷰포트 변경 영향 방지)
+        m_deviceContext->RSSetViewports(1, &m_gameViewport);
+        
         m_deviceContext->OMSetRenderTargets(1, m_pickingIdBuffer->GetRTV().GetAddressOf(), m_gameDepthBuffer->GetRawDSV());
         float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
         m_deviceContext->ClearRenderTargetView(m_pickingIdBuffer->GetRawRTV(), clearColor);

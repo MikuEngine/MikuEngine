@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PhysicsSystem.h"
 
 #include "Framework/Physics/PhysicsUtility.h"
@@ -191,6 +191,10 @@ namespace engine
         sceneDesc.filterShader = PhysicsFilterShader;
         sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS;
         
+        // Kinematic-Static 충돌 감지 활성화
+        // PhysX 5.x에서는 필터 셰이더에서만 처리 가능
+        // (staticKinematicFilteringMode는 PhysX 4.x용)
+        
         // 솔버 설정
         sceneDesc.solverType = physx::PxSolverType::ePGS;
 
@@ -203,9 +207,6 @@ namespace engine
             LOG_ERROR("[PhysicsSystem] Failed to create PxScene");
             return;
         }
-
-        // 이벤트 콜백 설정
-        data.pxScene->setSimulationEventCallback(&data.eventCallback);
 
         // CharacterController Manager 생성
         data.controllerManager = PxCreateControllerManager(*data.pxScene);
@@ -222,7 +223,13 @@ namespace engine
             }
         }
 
+        // 먼저 map에 저장 (이동 후 주소가 변경되므로)
         m_sceneDataMap[scene] = std::move(data);
+        
+        // map에 저장된 후의 콜백 주소로 설정 (중요!)
+        PxSceneData& storedData = m_sceneDataMap[scene];
+        storedData.pxScene->setSimulationEventCallback(&storedData.eventCallback);
+        
         LOG_PRINT("[PhysicsSystem] Created physics scene");
 
         // 이미 씬에 존재하는 물리 컴포넌트들을 등록
@@ -343,7 +350,8 @@ namespace engine
         // 3. PhysX → Transform 동기화 (Dynamic)
         SyncPhysicsToTransforms(*data);
 
-        // 4. 충돌 이벤트 처리는 CollisionSystem에서
+        // 4. 충돌 이벤트 처리
+        CollisionSystem::Get().ProcessEvents();
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -368,6 +376,14 @@ namespace engine
         if (actor && data->pxScene)
         {
             data->pxScene->addActor(*actor);
+            LOG_PRINT("[PhysicsSystem] Rigidbody Actor added to scene: type={}, shapes={}",
+                rb->IsDynamic() ? "Dynamic" : (rb->IsKinematic() ? "Kinematic" : "Static"),
+                actor->getNbShapes());
+        }
+        else
+        {
+            LOG_ERROR("[PhysicsSystem] Failed to add Rigidbody Actor to scene: actor={}, scene={}",
+                actor != nullptr, data->pxScene != nullptr);
         }
     }
 
@@ -754,7 +770,16 @@ namespace engine
                 if (dynamic)
                 {
                     physx::PxTransform target = PhysicsUtility::ToPxTransform(rb->GetTransform());
-                    dynamic->setKinematicTarget(target);
+                    physx::PxTransform currentPose = dynamic->getGlobalPose();
+                    
+                    // 위치가 변경되었는지 확인
+                    float distSq = (target.p - currentPose.p).magnitudeSquared();
+                    if (distSq > 0.0001f)  // 0.01cm 이상 이동
+                    {
+                        dynamic->setKinematicTarget(target);
+                        LOG_PRINT("[PhysicsSystem] Kinematic moved: pos=({:.2f}, {:.2f}, {:.2f}), shapes={}",
+                            target.p.x, target.p.y, target.p.z, dynamic->getNbShapes());
+                    }
                 }
             }
             // Dynamic: Transform이 수정된 경우만 (텔레포트 등)

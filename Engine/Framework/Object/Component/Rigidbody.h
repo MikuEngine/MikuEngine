@@ -2,7 +2,6 @@
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/ComponentFactory.h"
-#include "Framework/Physics/PhysicsLayer.h"
 #include <PxPhysicsAPI.h>
 
 namespace engine
@@ -76,11 +75,8 @@ namespace engine
         float m_mass = 1.0f;
         float m_linearDamping = 0.0f;
         float m_angularDamping = 0.05f;
-        bool m_useGravity = true;
+        bool m_useGravity = false;  // 기본값: 중력 비활성화
         RigidbodyConstraints m_constraints = RigidbodyConstraints::None;
-
-        // 레이어
-        uint32_t m_layer = PhysicsLayer::Default;
 
         // 텔레포트 요청
         bool m_hasPendingTeleport = false;
@@ -126,13 +122,6 @@ namespace engine
 
         RigidbodyConstraints GetConstraints() const { return m_constraints; }
         void SetConstraints(RigidbodyConstraints constraints);
-
-        // ═══════════════════════════════════════
-        // 레이어
-        // ═══════════════════════════════════════
-        
-        uint32_t GetLayer() const { return m_layer; }
-        void SetLayer(uint32_t layer);
 
         // ═══════════════════════════════════════
         // 힘/토크 적용
