@@ -412,10 +412,10 @@
                     "Type": "UIButton",
                     "Active": true,
                     "State": 0,
-                    "SpriteNormal": "Resource/Texture/Earth.png",
-                    "SpriteHover": "Resource/Texture/Sun.png",
-                    "SpritePressed": "Resource/Texture/Moon.png",
-                    "SpriteDisabled": "Resource/Texture/Pikachu.png",
+                    "SpriteNormal": "Resource/Texture/UI/Button/Button_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/Button_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/Button_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/Button_Normal.png",
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -444,7 +444,7 @@
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "TexturePath": "Resource/Texture/Earth.png",
+                    "TexturePath": "Resource/Texture/UI/Button/Button_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {

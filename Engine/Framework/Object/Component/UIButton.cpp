@@ -138,7 +138,7 @@ namespace engine
 
 		bool changed = false;
 
-		if (DrawFileSelector("Normal Sprite", "Resource/Texture", texExtensions, selectedTex[0]))
+		if (DrawFileSelector("Normal Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[0]))
 		{
 			m_spriteNormal = selectedTex[0];
 			changed = true;
@@ -146,7 +146,7 @@ namespace engine
 		ImGui::SameLine();
 		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteNormal).filename().string().c_str());
 
-		if (DrawFileSelector("Hovered Sprite", "Resource/Texture", texExtensions, selectedTex[1]))
+		if (DrawFileSelector("Hovered Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[1]))
 		{
 			m_spriteHovered = selectedTex[1];
 			changed = true;
@@ -154,7 +154,7 @@ namespace engine
 		ImGui::SameLine();
 		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteHovered).filename().string().c_str());
 
-		if (DrawFileSelector("Pressed Sprite", "Resource/Texture", texExtensions, selectedTex[2]))
+		if (DrawFileSelector("Pressed Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[2]))
 		{
 			m_spritePressed = selectedTex[2];
 			changed = true;
@@ -162,7 +162,7 @@ namespace engine
 		ImGui::SameLine();
 		ImGui::Text("Texture: %s", std::filesystem::path(m_spritePressed).filename().string().c_str());
 
-		if (DrawFileSelector("Disabled Sprite", "Resource/Texture", texExtensions, selectedTex[3]))
+		if (DrawFileSelector("Disabled Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[3]))
 		{
 			m_spriteDisabled = selectedTex[3];
 			changed = true;
