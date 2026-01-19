@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Editor\EditorGrid.cpp" />
+    <ClCompile Include="Framework\Object\Component\AudioSource.cpp" />
     <ClCompile Include="Framework\Object\Component\Canvas.cpp" />
     <ClCompile Include="Common\Debug\Debug.cpp" />
     <ClCompile Include="Common\Math\MathUtility.cpp" />
@@ -247,6 +248,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorGrid.h" />
+    <ClInclude Include="Framework\Object\Component\AudioSource.h" />
     <ClInclude Include="Framework\Object\Component\Canvas.h" />
     <ClInclude Include="Common\Debug\Debug.h" />
     <ClInclude Include="Common\Math\MathUtility.h" />

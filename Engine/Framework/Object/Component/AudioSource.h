@@ -28,7 +28,6 @@ namespace engine
         ~AudioSource();
 
         void Initialize() override;
-        void Update();
 
         void Play(EventEndPlay callback = nullptr);
         void Stop();
