@@ -38,7 +38,7 @@ namespace engine
                     info.pChannel = m_pChannel;
                     info.callback = callback;
 
-                    SoundSystem::GetInstance().m_callbackList.push_back(info);
+                    SoundSystem::Get().m_callbackList.push_back(info);
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace engine
     // ==============================================================
 
     SoundSystem::SoundSystem() {}
-    SoundSystem::~SoundSystem() { Finalize(); }
+    SoundSystem::~SoundSystem() { Shutdown(); }
 
     bool SoundSystem::Initialize()
     {
@@ -113,7 +113,7 @@ namespace engine
         return true;
     }
 
-    void SoundSystem::Finalize()
+    void SoundSystem::Shutdown()
     {
         m_callbackList.clear();
 
@@ -235,9 +235,8 @@ namespace engine
 
         if (ret != FMOD_OK)
         {
-            // 로드 실패 시 정리
+            LOG_ERROR("SoundSystem::GetOrLoadSound error");
             delete sound;
-            // 에러 로그 출력 (필요시)
             return nullptr;
         }
 

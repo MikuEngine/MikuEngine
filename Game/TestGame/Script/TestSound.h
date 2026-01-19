@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include <Framework/Object/Component/Script.h>
 
 namespace game
@@ -11,8 +10,8 @@ namespace game
 
     public:
         void Awake() override;
-        //void Start() override;
-        //void Update() override;
+        void Start() override;
+        void Update() override;
 
     public:
         void OnGui() override;

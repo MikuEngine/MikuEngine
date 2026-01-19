@@ -22,6 +22,7 @@
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/System/UIEventSystem.h"
+#include "Framework/System/SoundSystem.h"
 #include "Editor/EditorManager.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -172,6 +173,8 @@ namespace engine
         // Physics 시스템 초기화
         PhysicsSystem::Get().Initialize();
 
+        SoundSystem::Get().Initialize();
+
 #ifdef _DEBUG
         EditorManager::Get().Initialize();
 #else
@@ -198,6 +201,7 @@ namespace engine
 
         EditorManager::Get().Shutdown();
         PhysicsSystem::Get().Shutdown();
+        SoundSystem::Get().Shutdown();
         SceneManager::Get().Shutdown();
         SystemManager::Get().Shutdown();
         ResourceManager::Get().Cleanup();
@@ -230,7 +234,7 @@ namespace engine
 
     void WinApp::Update()
     {
-        Profiling::UpdateFPS(true);
+        Profiling::UpdateFPS(false);
         Time::Update();
         Input::Update();
 
@@ -292,6 +296,8 @@ namespace engine
         SystemManager::Get().GetRenderSystem().Update();
 
         SystemManager::Get().GetUIEventSystem().Update();
+
+        SoundSystem::Get().Update();
 
     }
 

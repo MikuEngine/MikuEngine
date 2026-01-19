@@ -28,7 +28,7 @@ namespace engine
     {
         m_clipName = name;
 
-        m_soundResource = SoundSystem::GetInstance().GetOrLoadSound(name, m_is3D);
+        m_soundResource = SoundSystem::Get().GetOrLoadSound(name, m_is3D);
     }
 
     void AudioSource::Play(EventEndPlay callback)
@@ -46,6 +46,7 @@ namespace engine
         else
         {
             m_soundResource->Play2D(m_isLoop, callback);
+            LOG_PRINT("play2d Start");
         }
 
         // 재생 시작 후 볼륨 적용 (FMOD 채널이 생성된 직 후여야 적용됨)

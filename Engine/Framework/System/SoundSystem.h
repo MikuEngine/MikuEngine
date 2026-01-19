@@ -57,12 +57,15 @@ namespace engine
     // ==============================================================
 
     class SoundSystem : 
-        public System<AudioSource>
+        public System<AudioSource>,
+        public Singleton<SoundSystem>
     {
+        friend class Singleton<SoundSystem>;
         friend class Sound;
 
-    public:
-        static SoundSystem& GetInstance() { static SoundSystem instance; return instance; }
+    private:
+        SoundSystem();
+        virtual ~SoundSystem();
 
     private:
         FMOD::System* m_pSystem = nullptr;
@@ -77,17 +80,13 @@ namespace engine
         std::list<SoundCallbackInfo> m_callbackList;
 
         std::vector<std::string> m_PlayUIList;
-        const std::string m_soundPath = "../Resource/Sound/";
+        const std::string m_soundPath = "../../Resource/Sound/";
         int m_selectedSoundIndex = 0;
         int m_index = 0;
 
-    private:
-        SoundSystem();
-        ~SoundSystem();
-
     public:
         bool Initialize();
-        void Finalize();
+        void Shutdown();
 
         bool Release();
 
