@@ -24,6 +24,10 @@ namespace engine
         case FBXAssetKind::Skeletal:
             LoadSkeletalMesh(filePath);
             break;
+
+        case FBXAssetKind::Animation:
+            LoadAnimation(filePath);
+            break;
         }
     }
 
@@ -101,8 +105,24 @@ namespace engine
         // material 생성
         m_material = std::make_shared<MaterialData>();
         m_material->Create(scene);
+    }
 
-        // animation 생성
+    void FBXAssetData::LoadAnimation(const std::string& filePath)
+    {
+        Assimp::Importer importer;
+        importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
+
+        const unsigned int importFlags =
+            aiProcess_LimitBoneWeights |
+            aiProcess_ConvertToLeftHanded;
+
+        const aiScene* scene = importer.ReadFile(filePath, importFlags);
+
+        // bone 생성
+        m_skeleton = std::make_shared<SkeletonData>();
+        m_skeleton->Create(scene);
+
+        // material 생성
         m_animation = std::make_shared<AnimationData>();
         m_animation->Create(scene, m_skeleton);
     }
