@@ -15,6 +15,7 @@
 
 #include "Framework/Object/Component/UIImage.h"
 #include "Framework/Object/Component/UIText.h"
+#include "Framework/Object/Component/UIButton.h"
 
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"

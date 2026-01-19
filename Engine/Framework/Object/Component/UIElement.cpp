@@ -1,6 +1,9 @@
 ﻿#include "EnginePCH.h"
 #include "UIElement.h"
 
+#include "Framework/System/SystemManager.h"
+#include "Framework/System/UIEventSystem.h"
+
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/RectTransform.h"
@@ -8,6 +11,30 @@
 
 namespace engine
 {
+	UIElement::~UIElement()
+	{
+		SystemManager::Get().GetUIEventSystem().Unregister(this);
+		SystemManager::Get().GetUIEventSystem().MarkDirty();
+	}
+
+	void UIElement::Initialize()
+	{
+		SystemManager::Get().GetUIEventSystem().Register(this);
+		SystemManager::Get().GetUIEventSystem().MarkDirty();
+	}
+
+	void UIElement::OnEnable()
+	{
+		SystemManager::Get().GetUIEventSystem().Register(this);
+		SystemManager::Get().GetUIEventSystem().MarkDirty();
+	}
+
+	void UIElement::OnDisable()
+	{
+		SystemManager::Get().GetUIEventSystem().Unregister(this);
+		SystemManager::Get().GetUIEventSystem().MarkDirty();
+	}
+
 	bool UIElement::HasRenderType(RenderType type) const
 	{
 		return type == RenderType::Screen;
