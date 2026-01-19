@@ -241,6 +241,7 @@
     <ClCompile Include="Framework\Object\Component\UIText.cpp" />
     <ClCompile Include="Framework\Object\Component\UIButton.cpp" />
     <ClCompile Include="Framework\Object\Component\UIInteractable.cpp" />
+    <ClCompile Include="Framework\System\UIEventSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorGrid.h" />
@@ -345,6 +346,7 @@
     <ClInclude Include="Framework\Object\Component\UIText.h" />
     <ClInclude Include="Framework\Object\Component\UIButton.h" />
     <ClInclude Include="Framework\Object\Component\UIInteractable.h" />
+    <ClInclude Include="Framework\System\UIEventSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Pixel\DeferredPointLight_PS.hlsl">
