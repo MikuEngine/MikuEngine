@@ -1,6 +1,6 @@
 {
     "Name": "z_HiroScene",
-    "NumGameObjects": 5,
+    "NumGameObjects": 6,
     "GameObjects": [
         {
             "ID": 0,
@@ -155,7 +155,7 @@
                         "z": 1.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": false,
+                    "AlphaBlend": true,
                     "SkipInvalidRect": true
                 }
             ]
@@ -287,6 +287,76 @@
                     },
                     "AlphaBlend": true,
                     "SkipInvalidRect": true
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "ParentID": 1,
+            "Name": "UIText",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Text": "Text",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "FontMetaPath": "",
+                    "FontScale": 1.0,
+                    "LetterSpacing": 0.0,
+                    "LineSpacing": 0.0,
+                    "AlphaBlend": true,
+                    "SkipInvalidRect": true,
+                    "WordWrap": false,
+                    "AlignH": 0,
+                    "AlignV": 0
                 }
             ]
         }

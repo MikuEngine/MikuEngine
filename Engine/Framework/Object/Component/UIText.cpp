@@ -152,11 +152,12 @@ namespace engine
 
 	bool UIText::HasRenderType(RenderType type) const
 	{
-		return false;
+		return type == RenderType::Screen;
 	}
 
 	void UIText::Draw(RenderType type) const
 	{
+		UIElement::Draw(type);
 	}
 
 	DirectX::BoundingBox UIText::GetBounds() const
