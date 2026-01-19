@@ -216,6 +216,7 @@
     <ClCompile Include="Framework\System\CameraSystem.cpp" />
     <ClCompile Include="Framework\System\LightSystem.cpp" />
     <ClCompile Include="Framework\System\RenderSystem.cpp" />
+    <ClCompile Include="Framework\System\SoundSystem.cpp" />
     <ClCompile Include="Framework\System\SystemManager.cpp" />
     <ClCompile Include="Framework\System\ScriptSystem.cpp" />
     <ClCompile Include="Framework\System\TransformSystem.cpp" />

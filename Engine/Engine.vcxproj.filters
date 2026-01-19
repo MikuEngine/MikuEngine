@@ -265,6 +265,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\System\UIEventSystem.cpp">
+	  <Filter>소스 파일</Filter>
+	  </ClCompile>
+    <ClCompile Include="Framework\System\SoundSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
