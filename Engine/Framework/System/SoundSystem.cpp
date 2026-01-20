@@ -44,7 +44,7 @@ namespace engine
         }
     }
 
-    void Sound::Play3D(const XMFLOAT3& position, bool bLoop)
+    void Sound::Play3D(const Vector3& position, bool bLoop)
     {
         if (m_pSystem)
         {
@@ -56,16 +56,15 @@ namespace engine
 
                 FMOD_VECTOR pos = ToFmodVector(position);
                 FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+
                 m_pChannel->set3DAttributes(&pos, &vel);
-
                 m_pChannel->set3DMinMaxDistance(1.0f, 500.0f);
-
                 m_pChannel->setPaused(false);
             }
         }
     }
 
-    void Sound::Update3DPosition(const XMFLOAT3& position)
+    void Sound::Update3DPosition(const Vector3& position)
     {
         if (m_pChannel)
         {
@@ -331,7 +330,7 @@ namespace engine
         }
     }
 
-    void SoundSystem::SetListenerAttributes(const XMFLOAT3& pos, const XMFLOAT3& forward, const XMFLOAT3& up)
+    void SoundSystem::SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up)
     {
         m_listenerPos = pos;
         m_listenerForward = forward;
