@@ -728,6 +728,19 @@ namespace engine
             // 여기서 바로 삭제 (Delete 키 확인 로직 없이 심플하게 메뉴만)
             if (ImGui::MenuItem("Delete"))
             {
+                // 자식이 있는 오브젝트는 삭제 불가
+                if (!gameObject->GetTransform()->GetChildren().empty())
+                {
+                    LOG_INFO("[Editor] Cannot delete '{}': has {} children. Delete children first.",
+                        gameObject->GetName(), gameObject->GetTransform()->GetChildren().size());
+                    ImGui::EndPopup();
+                    if (opened)
+                    {
+                        ImGui::TreePop();
+                    }
+                    return;
+                }
+
                 if (m_selectedObject == gameObject)
                 {
                     m_selectedObject = nullptr;

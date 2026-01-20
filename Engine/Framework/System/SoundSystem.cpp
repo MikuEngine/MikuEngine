@@ -23,7 +23,7 @@ namespace engine
         if (m_pSound) { m_pSound->release(); m_pSound = nullptr; }
     }
 
-    void Sound::Play2D(bool bLoop, EventEndPlay callback)
+    FMOD::Channel* Sound::Play2D(bool bLoop, EventEndPlay callback)
     {
         if (m_pSystem)
         {
@@ -38,10 +38,16 @@ namespace engine
                     info.pChannel = m_pChannel;
                     info.callback = callback;
 
+                    LOG_PRINT("Sound::Play2D :: 돌아가나요");
+
                     SoundSystem::Get().m_callbackList.push_back(info);
                 }
+
+                m_pChannel->setPaused(false);
+                return m_pChannel;
             }
         }
+        return nullptr;
     }
 
     void Sound::Play3D(const Vector3& position, bool bLoop)
@@ -93,9 +99,6 @@ namespace engine
     // SoundSystem Class Implementation
     // ==============================================================
 
-    SoundSystem::SoundSystem() {}
-    SoundSystem::~SoundSystem() { Shutdown(); }
-
     bool SoundSystem::Initialize()
     {
         FMOD_RESULT ret;
@@ -132,6 +135,7 @@ namespace engine
             m_pSystem->release();
             m_pSystem = nullptr;
         }
+
     }
 
     void SoundSystem::Register(AudioSource* source)
@@ -173,18 +177,52 @@ namespace engine
                     sound->Update3DPosition(transform->GetWorldPosition());
                 }
             }
+
+            if (source->IsPlaying())
+            {
+                FMOD::Channel* channel = source->GetChannel();
+                
+                if (channel == nullptr)
+                {
+                    source->SetForceStopState();
+                    continue;
+                }
+
+                bool isFmodPlaying = false;
+                FMOD_RESULT res = channel->isPlaying(&isFmodPlaying);
+
+                // 채널 소멸 후 핸들 유효하지 않음
+                if (res == FMOD_ERR_INVALID_HANDLE)
+                {
+                    // LOG_PRINT("Sound Finished (Invalid Handle)");
+                    LOG_PRINT("SoundSystem update :: 채널 핸들 유효하지 않음");
+                    source->SetForceStopState();
+                }
+                // 일시정지거나 막 끝난 직후
+                else if (res == FMOD_OK && !isFmodPlaying)
+                {
+                    // LOG_PRINT("Sound Finished (Not Playing)");
+                    LOG_PRINT("SoundSystem update :: 막 끝남");
+                    source->SetForceStopState();
+                }
+
+            }
+            else
+            {
+                //LOG_PRINT("SoundSystem update :: source->IsPlaying() else");
+            }
         }
 
         // 콜백 리스트 처리 (재생 끝난 사운드 콜백 호출)
         for (auto iter = m_callbackList.begin(); iter != m_callbackList.end(); )
         {
             bool isPlaying = false;
-            FMOD::Channel* ch = iter->pChannel;
-
-            if (ch)
+            if (iter->pChannel)
             {
-                ch->isPlaying(&isPlaying);
+                iter->pChannel->isPlaying(&isPlaying);
             }
+
+            LOG_PRINT("SoundSystem update :: 콜백 리스트 처리");
 
             if (!isPlaying)             // 재생이 끝났다면
             {
@@ -391,29 +429,5 @@ namespace engine
                 }
             }
         }
-    }
-
-    bool SoundSystem::Release()
-    {
-        m_callbackList.clear();
-
-        for (auto& pair : m_soundResources)
-        {
-            if (pair.second)
-            {
-                pair.second->Release();
-                delete pair.second;
-            }
-        }
-        m_soundResources.clear();
-
-        if (m_pSystem)
-        {
-            m_pSystem->close();
-            m_pSystem->release();
-            m_pSystem = nullptr;
-        }
-
-        return true;
     }
 }

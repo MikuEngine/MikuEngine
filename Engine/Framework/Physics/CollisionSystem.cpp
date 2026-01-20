@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "CollisionSystem.h"
 
 #include "Framework/Object/Component/Collider.h"
@@ -454,6 +454,7 @@ namespace engine
         return flipped;
     }
 
+    //TriggerPair구조체 내부에서 Handle 멤버 사용함. 
     CollisionSystem::TriggerPair CollisionSystem::MakeTriggerPair(Collider* trigger, Collider* other)
     {
         TriggerPair pair;

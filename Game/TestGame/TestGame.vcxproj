@@ -166,7 +166,27 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Script\AimPointer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Script\SpritePlayer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Script\TempBullet.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Script\TempBulletFactory.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Script\TempMonster.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Script\TempPlayer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -206,6 +226,10 @@
   <ItemGroup>
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
+    <ClInclude Include="Script\AimPointer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Script\FreeCameraController.h">
       <SubType>
       </SubType>
@@ -215,6 +239,22 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Script\SpritePlayer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\TempBullet.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\TempBulletFactory.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\TempMonster.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\TempPlayer.h">
       <SubType>
       </SubType>
     </ClInclude>

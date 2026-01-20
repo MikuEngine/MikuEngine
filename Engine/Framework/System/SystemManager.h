@@ -3,6 +3,7 @@
 #include "Common/Utility/Singleton.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/CollisionSystem.h"
+#include "Framework/System/SoundSystem.h"
 
 namespace engine
 {
@@ -49,6 +50,8 @@ namespace engine
 
         // UISystem
         UIEventSystem& GetUIEventSystem() const;
+
+        SoundSystem& GetSoundSystem() const;
 
     private:
         friend class Singleton<SystemManager>;
