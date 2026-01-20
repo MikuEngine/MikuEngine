@@ -3,6 +3,7 @@
 #include "Core/System/ProjectSettings.h"
 #include "Framework/Object/Ptr.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include <unordered_set>
 
 namespace engine
 {
@@ -22,6 +23,7 @@ namespace engine
     {
     private:
         Ptr<GameObject> m_selectedObject = nullptr;
+        std::unordered_set<GameObject*> m_expandedNodes;  // 자동으로 펼쳐야 할 노드
         std::unique_ptr<EditorCamera> m_editorCamera = nullptr;
         std::unique_ptr<EditorGrid> m_editorGrid = nullptr;
         EditorState m_editorState = EditorState::Edit;
@@ -52,6 +54,7 @@ namespace engine
         EditorCamera* GetEditorCamera() const;
 
         GameObject* GetSelectedObject() const;
+        void SetSelectedObject(GameObject* obj);  // 선택 시 부모 계층 자동 펼침
 
         void DrawEditorGrid();
 
