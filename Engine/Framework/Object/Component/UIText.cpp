@@ -1,6 +1,8 @@
 ﻿#include "EnginePCH.h"
 #include "UIText.h"
 
+#include <imgui_stdlib.h>
+
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Core/Graphics/Resource/Texture.h"
 #include "Core/Graphics/Resource/ConstantBuffer.h"
@@ -16,18 +18,65 @@
 #include "Core/Graphics/Data/ConstantBufferTypes.h"
 #include "Core/Graphics/Device/GraphicsDevice.h"
 
+#include "Framework/Asset/FontData.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/Component/RectTransform.h"
 
 namespace engine
 {
+	static bool NextUtf8Codepoint(const char*& p, const char* end, uint32_t& outCp)
+	{
+		if (p >= end) return false;
+
+		const unsigned char c0 = (unsigned char)*p;
+
+		if (c0 < 0x80) { outCp = c0; ++p; return true; }
+
+		auto need = [&](int n) { return (p + n) <= end; };
+
+		if ((c0 & 0xE0) == 0xC0)
+		{
+			if (!need(2)) { outCp = '?'; ++p; return true; }
+			unsigned char c1 = (unsigned char)p[1];
+			if ((c1 & 0xC0) != 0x80) { outCp = '?'; ++p; return true; }
+			outCp = ((c0 & 0x1F) << 6) | (c1 & 0x3F);
+			p += 2; return true;
+		}
+
+		if ((c0 & 0xF0) == 0xE0)
+		{
+			if (!need(3)) { outCp = '?'; ++p; return true; }
+			unsigned char c1 = (unsigned char)p[1];
+			unsigned char c2 = (unsigned char)p[2];
+			if (((c1 & 0xC0) != 0x80) || ((c2 & 0xC0) != 0x80)) { outCp = '?'; ++p; return true; }
+			outCp = ((c0 & 0x0F) << 12) | ((c1 & 0x3F) << 6) | (c2 & 0x3F);
+			p += 3; return true;
+		}
+
+		if ((c0 & 0xF8) == 0xF0)
+		{
+			if (!need(4)) { outCp = '?'; ++p; return true; }
+			unsigned char c1 = (unsigned char)p[1];
+			unsigned char c2 = (unsigned char)p[2];
+			unsigned char c3 = (unsigned char)p[3];
+			if (((c1 & 0xC0) != 0x80) || ((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80)) { outCp = '?'; ++p; return true; }
+			outCp = ((c0 & 0x07) << 18) | ((c1 & 0x3F) << 12) | ((c2 & 0x3F) << 6) | (c3 & 0x3F);
+			p += 4; return true;
+		}
+
+		outCp = '?'; ++p; return true;
+	}
+
 	void UIText::Initialize()
 	{
 		UIElement::Initialize();
 
-		m_vs = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/UIQuad_VS.hlsl");
-		m_ps = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/UIQuad_PS.hlsl");
+		m_vsFilePath = "Resource/Shader/Vertex/UIQuad_VS.hlsl";
+		m_psFilePath = "Resource/Shader/Pixel/UIQuad_PS.hlsl";
+
+		m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
+		m_ps = ResourceManager::Get().GetOrCreatePixelShader(m_psFilePath);
 
 		m_vertexBuffer = ResourceManager::Get().GetGeometryVertexBuffer("DefaultQuad");
 		m_indexBuffer = ResourceManager::Get().GetGeometryIndexBuffer("DefaultQuad");
@@ -40,15 +89,19 @@ namespace engine
 
 		m_uiCB = ResourceManager::Get().GetOrCreateConstantBuffer("UIElement", sizeof(CbUIElement));
 
-		RefreshFont();
-
 		SystemManager::Get().GetRenderSystem().Register(this);
 	}
 
 	void UIText::DrawUI() const
 	{
+		if (!IsActive() || !GetGameObject()) return;
+
 		auto* rt = GetRectTransform();
-		if (!rt || !m_font || !m_font->atlas) return;
+		if (!rt) return;
+
+		if (!m_font) return;
+
+		if (!m_vs || !m_ps || !m_vertexBuffer || !m_indexBuffer || !m_uiCB) return;
 
 		auto& gd = GraphicsDevice::Get();
 		auto dc = gd.GetDeviceContext();
@@ -57,10 +110,7 @@ namespace engine
 		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
 		const UIRect rect = rt->GetWorldRectResolved(rootRect);
 
-		if (m_drawOnlyWhenRectValid)
-		{
-			if (rect.w <= 0.0f || rect.h <= 0.0f) return;
-		}
+		if (rect.w <= 0.0f || rect.h <= 0.0f) return;
 
 		// IA
 		dc->IASetInputLayout(m_inputLayout->GetRawInputLayout());
@@ -91,9 +141,6 @@ namespace engine
 
 		// Texture/Sampler
 		{
-			ID3D11ShaderResourceView* srv = m_font->atlas->GetRawSRV();
-			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
-
 			auto samp = m_sampler ? m_sampler->GetSamplerState().GetAddressOf() : nullptr;
 			if (samp)
 				dc->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, samp);
@@ -102,6 +149,101 @@ namespace engine
 		dc->RSSetState(nullptr);
 		dc->RSSetViewports(1, &vp);
 
+		const auto& fd = m_font->GetDesc();
+		const float atlasW = static_cast<float>(fd.atlasWidth);
+		const float atlasH = static_cast<float>(fd.atlasHeight);
+
+		const float asc = m_font->GetAscenderPx();
+		const float lineH = m_font->GetLineHeightPx() * m_lineSpacingMul;
+
+		float penX = rect.x;
+		float baseLineY = rect.y + asc;
+
+		const char* p = m_text.data();
+		const char* end = p + m_text.size();
+
+		while (p < end)
+		{
+			uint32_t cp = 0;
+			if (!NextUtf8Codepoint(p, end, cp))
+				break;
+
+			if (cp == '\n')
+			{
+				penX = rect.x;
+				baseLineY += lineH;
+				continue;
+			}
+
+			if (cp == '\t')
+			{
+				penX += (m_fontPixelSize * 0.5f) * 4.0f;
+				continue;
+			}
+
+			const FontGlyph& g = m_font->EnsureGlyph(dc.Get(), cp);
+
+			const float adv = g.advance + m_letterSpacingPx;
+
+			if (g.IsEmptyBitmap())
+			{
+				penX += adv;
+				continue;
+			}
+
+			// Pixel
+			const float gx = penX + g.bearingX;
+			const float gy = baseLineY - g.bearingY;
+
+			const float gw = g.width;
+			const float gh = g.height;
+
+			{
+				const float cx = gx + gw * 0.5f;
+				const float cy = gy + gh * 0.5f;
+
+				const float tx = (cx / vp.Width) * 2.0f - 1.0f;
+				const float ty = 1.0f - (cy / vp.Height) * 2.0f;
+
+				const float sx = (gw / vp.Width) * 2.0f;
+				const float sy = (gh / vp.Height) * 2.0f;
+
+				CbUIElement cbUI{};
+				cbUI.clip = DirectX::XMMatrixTranspose(
+					DirectX::XMMatrixScaling(sx, sy, 1.0f) *
+					DirectX::XMMatrixTranslation(tx, ty, 0.0f)
+				);
+
+				cbUI.color = m_color;
+
+				// UV: (x,y,w,h) -> (u0,v0,u1,v1)
+				const float u0 = g.x / atlasW;
+				const float v0 = g.y / atlasH;
+
+				const float su = (g.w / atlasW);
+				const float sv = (g.h / atlasH);
+
+				cbUI.uv = Vector4(u0, v0, su, sv);
+
+				// 클리핑은 일단 뷰포트 전체로. (원하면 rect 기반 clipRect로 바꾸면 됨)
+				cbUI.clipRect = Vector4(0, 0, vp.Width, vp.Height);
+				cbUI.maskMode = 1; // rect
+
+				dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
+				dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
+				dc->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
+			}
+
+			{
+				ID3D11ShaderResourceView* srv = m_font->GetAtlasSRV(g.page);
+				dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
+			}
+
+			dc->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
+
+			penX += adv;
+		}
+
 		// SRV unbind
 		{
 			ID3D11ShaderResourceView* nullSRV = nullptr;
@@ -109,9 +251,9 @@ namespace engine
 		}
 	}
 
-	void UIText::SetText(const std::string& text)
+	void UIText::SetText(const std::string& utf8)
 	{
-		m_text = text;
+		m_text = utf8;
 	}
 
 	const std::string& UIText::GetText() const
@@ -129,15 +271,26 @@ namespace engine
 		return m_color;
 	}
 
-	void UIText::SetFont(const std::string& fontMetaPath)
+	void UIText::SetFontPath(const std::string& ttfPath)
 	{
-		m_fontFilePath = fontMetaPath;
+		m_fontPath = ttfPath;
 		RefreshFont();
 	}
 
 	const std::string& UIText::GetFontPath() const
 	{
-		return m_fontFilePath;
+		return m_fontPath;
+	}
+
+	void UIText::SetFontPixelSize(int px)
+	{
+		m_fontPixelSize = std::max(4, px);
+		RefreshFont();
+	}
+
+	int UIText::GetFontPixelSize() const
+	{
+		return m_fontPixelSize;
 	}
 
 	void UIText::SetAlphaBlend(bool enable)
@@ -148,6 +301,26 @@ namespace engine
 	bool UIText::IsAlphaBlend() const
 	{
 		return m_useAlphaBlend;
+	}
+
+	void UIText::SetLetterSpacing(float px)
+	{
+		m_letterSpacingPx = px;
+	}
+
+	float UIText::GetLetterSpacing() const
+	{
+		return m_letterSpacingPx;
+	}
+
+	void UIText::SetLineSpacing(float mul)
+	{
+		m_lineSpacingMul = mul;
+	}
+
+	float UIText::GetLineSpacing() const
+	{
+		return m_lineSpacingMul;
 	}
 
 	bool UIText::HasRenderType(RenderType type) const
@@ -162,52 +335,69 @@ namespace engine
 
 	DirectX::BoundingBox UIText::GetBounds() const
 	{
-		return DirectX::BoundingBox();
+		return UIElement::GetBounds();
 	}
 
 	void UIText::OnGui()
 	{
-		//ImGui::InputTextMultiline("Text");
-		ImGui::DragFloat("Font Scale", &m_fontScale, 0.01f, 0.1f, 10.0f);
-		ImGui::DragFloat("Letter Spacing", &m_letterSpacing, 0.1f, -50.0f, 200.0f);
-		ImGui::DragFloat("Line Spacing", &m_lineSpacing, 0.1f, -50.0f, 200.0f);
+		ImGui::Text("Font: %s", std::filesystem::path(m_fontPath).filename().string().c_str());
+
+		std::string selected;
+		static std::vector<std::string> exts{ ".ttf", ".otf", ".ttc" };
+
+		if (DrawFileSelector("Select Font", "Resource/Font", exts, selected))
+		{
+			SetFontPath(selected);
+		}
+
+		ImGui::InputTextMultiline("Text", &m_text);
 		ImGui::ColorEdit4("Color", &m_color.x);
+
 		ImGui::Checkbox("Alpha Blend", &m_useAlphaBlend);
-		ImGui::Checkbox("Draw Only When Rect Valid", &m_drawOnlyWhenRectValid);
+
+		//ImGui::SliderInt("Font Px", &m_fontPixelSize, 8, 128);
+		//if (ImGui::Button("Rebuild Font"))
+		//	RefreshFont();
+
+		if (ImGui::SliderInt("Font Px", &m_fontPixelSize, 8, 128))
+		{
+			RefreshFont();
+		}
+
+		ImGui::SliderFloat("Letter Spacing(px)", &m_letterSpacingPx, -5.0f, 20.0f);
+		ImGui::SliderFloat("Line Spacing(mul)", &m_lineSpacingMul, 0.5f, 3.0f);
 	}
 
 	void UIText::Save(json& j) const
 	{
 		UIElement::Save(j);
+
 		j["Text"] = m_text;
+		j["FontPath"] = m_fontPath;
+		j["FontPx"] = m_fontPixelSize;
+
 		j["Color"] = m_color;
-		j["FontMetaPath"] = m_fontFilePath;
-		j["FontScale"] = m_fontScale;
-		j["LetterSpacing"] = m_letterSpacing;
-		j["LineSpacing"] = m_lineSpacing;
 		j["AlphaBlend"] = m_useAlphaBlend;
-		j["SkipInvalidRect"] = m_drawOnlyWhenRectValid;
-		j["WordWrap"] = m_wordWrap;
-		j["AlignH"] = (int)m_alignH;
-		j["AlignV"] = (int)m_alignV;
+
+		j["LetterSpacingPx"] = m_letterSpacingPx;
+		j["LineSpacingMul"] = m_lineSpacingMul;
 	}
 
 	void UIText::Load(const json& j)
 	{
 		UIElement::Load(j);
+
 		JsonGet(j, "Text", m_text);
+		JsonGet(j, "FontPath", m_fontPath);
+		JsonGet(j, "FontPx", m_fontPixelSize);
+
 		JsonGet(j, "Color", m_color);
-		JsonGet(j, "FontMetaPath", m_fontFilePath);
-		JsonGet(j, "FontScale", m_fontScale);
-		JsonGet(j, "LetterSpacing", m_letterSpacing);
-		JsonGet(j, "LineSpacing", m_lineSpacing);
 		JsonGet(j, "AlphaBlend", m_useAlphaBlend);
-		JsonGet(j, "SkipInvalidRect", m_drawOnlyWhenRectValid);
-		JsonGet(j, "WordWrap", m_wordWrap);
 
-		//JsonGet(j, "Align", )
+		JsonGet(j, "LetterSpacingPx", m_letterSpacingPx);
+		JsonGet(j, "LineSpacingMul", m_lineSpacingMul);
 
-	    RefreshFont();
+		RefreshFont();
 	}
 
 	std::string UIText::GetType() const
@@ -217,10 +407,37 @@ namespace engine
 
 	void UIText::RefreshFont()
 	{
+		if (m_fontPath.empty() || m_fontPath == "None")
+		{
+			m_font.reset();
+			return;
+		}
 
+		auto device = GraphicsDevice::Get().GetDevice();
+
+		if (!device)
+		{
+			m_font.reset();
+			return;
+		}
+
+		std::shared_ptr<FontData> font = std::make_shared<FontData>();
+
+		FontData::Desc d{};
+		d.ttfPath = m_fontPath;
+		d.pixelSize = m_fontPixelSize;
+		d.atlasWidth = 1024;
+		d.atlasHeight = 1024;
+		d.padding = 1;
+		d.atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+		d.maxPages = 4;
+
+		if (!font->Initialize(device.Get(), d))
+		{
+			m_font.reset();
+			return;
+		}
+
+		m_font = std::move(font);
 	}
-
-	//void UIText::DrawGlyphQuad(const UIRect& glyphRectPx, const Vector4& uv01, const Vector4& color) const
-	//{
-	//}
 }

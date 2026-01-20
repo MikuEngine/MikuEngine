@@ -51,5 +51,10 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     }
 
     float4 tex = g_texBlit.Sample(g_samLinear, input.texCoord);
-    return tex * g_uiColor;
+
+    float4 final = tex * g_uiColor;
+    
+    final.rgb = LinearToSRGB(final.rgb);
+    
+    return final;
 }
