@@ -44,9 +44,9 @@ namespace engine
 
         void Play2D(bool bLoop = false, EventEndPlay callback = nullptr);
 
-        void Play3D(const XMFLOAT3& position, bool bLoop = false);
+        void Play3D(const Vector3& position, bool bLoop = false);
 
-        void Update3DPosition(const XMFLOAT3& position);
+        void Update3DPosition(const Vector3& position);
 
         void Stop();
         void SetVolume(float vol);
@@ -72,15 +72,15 @@ namespace engine
         std::map<std::string, Sound*> m_soundResources; // 리소스 캐싱
 
         // FMOD 리스너(듣는 사람) 정보
-        XMFLOAT3 m_listenerPos = { 0, 0, 0 };
-        XMFLOAT3 m_listenerForward = { 0, 0, 1 };
-        XMFLOAT3 m_listenerUp = { 0, 1, 0 };
+        Vector3 m_listenerPos = { 0, 0, 0 };
+        Vector3 m_listenerForward = { 0, 0, 1 };
+        Vector3 m_listenerUp = { 0, 1, 0 };
 
         // 콜백 처리용
         std::list<SoundCallbackInfo> m_callbackList;
 
         std::vector<std::string> m_PlayUIList;
-        const std::string m_soundPath = "../../Resource/Sound/";
+        const std::string m_soundPath = "Resource/Sound/";
         int m_selectedSoundIndex = 0;
         int m_index = 0;
 
@@ -100,7 +100,7 @@ namespace engine
         void RefreshSoundList();
 
         // FMOD Listener 설정 (CameraSystem에서 Main Camera 정보를 받아와서 호출해줘야 함)
-        void SetListenerAttributes(const XMFLOAT3& pos, const XMFLOAT3& forward, const XMFLOAT3& up);
+        void SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up);
 
         void DrawImgui();
     };

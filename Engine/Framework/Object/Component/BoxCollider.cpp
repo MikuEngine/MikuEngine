@@ -40,6 +40,14 @@ namespace engine
         m_shape->setGeometry(box);
     }
 
+    void BoxCollider::ApplyScaleRatio(const Vector3& scaleRatio)
+    {
+        // 스케일 비율만큼 크기 조정
+        m_size.x *= scaleRatio.x;
+        m_size.y *= scaleRatio.y;
+        m_size.z *= scaleRatio.z;
+    }
+
     void BoxCollider::OnGui()
     {
         Collider::OnGui();

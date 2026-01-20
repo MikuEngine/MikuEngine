@@ -30,6 +30,7 @@ namespace engine
     protected:
         physx::PxGeometry* CreateGeometry() override;
         void UpdateGeometry() override;
+        void ApplyScaleRatio(const Vector3& scaleRatio) override;
 
     public:
         void OnGui() override;
