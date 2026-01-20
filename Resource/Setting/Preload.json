@@ -1,0 +1,15 @@
+{
+  "Global": [
+    { "Type": "StaticMesh", "Path": "Resource/Model/Cube.fbx" },
+    { "Type": "StaticMesh", "Path": "Resource/Model/Sphere.fbx" },
+    { "Type": "StaticMesh", "Path": "Resource/Model/Quad.fbx" }
+  ],
+  "Scenes": {
+    "StaticMeshTest": [
+        { "Type": "StaticMesh", "Path": "Resource/Model/Girl.fbx" },
+        { "Type": "StaticMesh", "Path": "Resource/Model/HighPolySphere.fbx" },
+        { "Type": "StaticMesh", "Path": "Resource/Model/Floor.fbx" },
+        { "Type": "StaticMesh", "Path": "Resource/Model/char.fbx" }
+    ]
+  }
+}

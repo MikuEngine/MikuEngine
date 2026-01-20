@@ -23,7 +23,7 @@ namespace engine
         // assimp로 fbx로드할 때는 mesh, material, animation등 여러가지를 전부 불러와야해서
         // fbx 로드할 때 임시 공간에 저장해둠
         // 개별 파일로 분리하면 필요없음
-        static constexpr size_t MAX_TEMP_ASSET = 5;
+        static constexpr size_t MAX_TEMP_ASSET = 2;
         std::array<std::shared_ptr<AssetData>, MAX_TEMP_ASSET> m_tempAssets;
         size_t m_tempAssetIndex = 0;
 

@@ -2,6 +2,9 @@
 #include "SceneManager.h"
 
 #include "Framework/Scene/Scene.h"
+#include "Framework/Asset/PreloadManager.h"
+#include "Framework/Asset/AssetManager.h"
+#include "Core/Graphics/Resource/ResourceManager.h"
 
 namespace engine
 {
@@ -28,12 +31,42 @@ namespace engine
 
     void SceneManager::CheckSceneChanged()
     {
-        if (m_isSceneChanged)
+        if (m_isSceneChanged && m_sceneState == SceneState::Active)
         {
             m_scene->SetName(m_nextSceneName);
-            m_scene->Load();
+
+            ResourceManager::Get().CleanupSceneScope();
+            AssetManager::Get().CleanupSceneScope();
+
+            m_scene->Clear();
 
             m_isSceneChanged = false;
+            m_sceneState = SceneState::Loading;
+
+            PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName);
+        }
+    }
+
+    void SceneManager::ProcessResourceLoading()
+    {
+        if (m_sceneState == SceneState::Loading)
+        {
+            if (!PreloadManager::Get().IsLoading())
+            {
+                m_scene->Load();
+
+                m_sceneState = SceneState::Active;
+            }
+        }
+    }
+
+    void SceneManager::RenderLoadingScreen()
+    {
+        if (m_sceneState == SceneState::Loading)
+        {
+            float progress = PreloadManager::Get().GetProgress();
+
+            LOG_PRINT("loading progress: {}", progress);
         }
     }
 
@@ -50,5 +83,10 @@ namespace engine
     void SceneManager::ProcessPendingKills()
     {
         m_scene->ProcessPendingKills();
+    }
+
+    SceneState SceneManager::GetSceneState() const
+    {
+        return m_sceneState;
     }
 }

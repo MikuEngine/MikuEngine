@@ -1,6 +1,6 @@
 {
     "Name": "StaticMeshTest",
-    "NumGameObjects": 13,
+    "NumGameObjects": 15,
     "GameObjects": [
         {
             "ID": 0,
@@ -83,7 +83,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -134,7 +135,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -185,7 +187,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -236,7 +239,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -287,7 +291,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -338,7 +343,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -389,7 +395,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -440,7 +447,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -491,7 +499,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -542,7 +551,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -593,7 +603,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -637,7 +648,113 @@
                     "Near": 90000.0,
                     "Far": 100000.0,
                     "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": -263.29998779296875,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/char.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 21.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/HighPolySphere2.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         }
