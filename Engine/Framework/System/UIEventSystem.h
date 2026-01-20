@@ -47,7 +47,6 @@ namespace engine
 		UIElement* HitTestTopmost(const Vector2& mousePos) const;
 
 		void HandleHover(UIElement* target, const MouseState& mouse);
-
 		void HandlePressDragRelease(UIElement* target, const MouseState& mouse);
 
 	private:
@@ -55,7 +54,6 @@ namespace engine
 		std::vector<UIElement*> m_sortedTopBottom;
 
 		PointerPhase m_phase = PointerPhase::None;
-
 
 		UIElement* m_hovered = nullptr;
 		UIElement* m_pressed = nullptr;
@@ -66,9 +64,6 @@ namespace engine
 
 		float m_dragThresholdPixels = 5.0f;
 		Vector2 m_prevMousePos{ 0.0f, 0.0f };
-
-		bool m_pressCanceled = false;
-		bool m_prevInsidePressed = false;
 
 	private:
 		friend class System<UIElement>;

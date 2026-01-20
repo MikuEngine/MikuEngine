@@ -218,8 +218,7 @@ namespace engine
 		ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
 		std::string selectedTex;
 
-		static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga" };
-		static std::string hlslExtension{ ".hlsl" };
+		static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga"};
 
 		if (DrawFileSelector("Select Texture", "Resource/Texture", texExtensions, selectedTex))
 		{
