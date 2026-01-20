@@ -146,8 +146,8 @@
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "Layer": 1005,
-                    "OrderInLayer": -15,
+                    "Layer": 1,
+                    "OrderInLayer": 50,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/Earth.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
@@ -214,8 +214,8 @@
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "Layer": 684,
-                    "OrderInLayer": 528,
+                    "Layer": 1,
+                    "OrderInLayer": 59,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/Moon.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
@@ -262,7 +262,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -137.1999969482422
+                        "y": 101.30000305175781
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -282,7 +282,7 @@
                 {
                     "Type": "UIText",
                     "Active": true,
-                    "Layer": 0,
+                    "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "asdfghj\nddddd",
@@ -303,7 +303,7 @@
         {
             "ID": 5,
             "ParentID": 1,
-            "Name": "UIObject",
+            "Name": "Text2",
             "Active": true,
             "Components": [
                 {
@@ -331,7 +331,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 153.1999969482422
+                        "y": 19.399999618530273
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -356,11 +356,11 @@
                     "RaycastTarget": true,
                     "Text": "UIText",
                     "FontPath": "Resource/Font/consola.ttf",
-                    "FontPx": 32,
+                    "FontPx": 113,
                     "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.5882352590560913,
+                        "y": 0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -372,7 +372,7 @@
         {
             "ID": 6,
             "ParentID": 1,
-            "Name": "UIObject",
+            "Name": "PikaPika",
             "Active": true,
             "Components": [
                 {

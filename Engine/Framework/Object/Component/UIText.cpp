@@ -340,6 +340,8 @@ namespace engine
 
 	void UIText::OnGui()
 	{
+		UIElement::OnGui();
+
 		ImGui::Text("Font: %s", std::filesystem::path(m_fontPath).filename().string().c_str());
 
 		std::string selected;
@@ -354,15 +356,10 @@ namespace engine
 		ImGui::ColorEdit4("Color", &m_color.x);
 
 		ImGui::Checkbox("Alpha Blend", &m_useAlphaBlend);
-
-		//ImGui::SliderInt("Font Px", &m_fontPixelSize, 8, 128);
-		//if (ImGui::Button("Rebuild Font"))
-		//	RefreshFont();
-
-		if (ImGui::SliderInt("Font Px", &m_fontPixelSize, 8, 128))
-		{
+		
+		ImGui::SliderInt("Font Px", &m_fontPixelSize, 1, 256);
+		if (ImGui::Button("Rebuild Font"))
 			RefreshFont();
-		}
 
 		ImGui::SliderFloat("Letter Spacing(px)", &m_letterSpacingPx, -5.0f, 20.0f);
 		ImGui::SliderFloat("Line Spacing(mul)", &m_lineSpacingMul, 0.5f, 3.0f);
