@@ -630,6 +630,8 @@
     <FxCompile Include="Shader\Vertex\Grid_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\Grid_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\Picking_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\UIQuad_PS.hlsl" />
+    <FxCompile Include="Shader\Vertex\UIQuad_VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />
