@@ -197,6 +197,68 @@ namespace engine
         }
 
         m_attachedRigidbody = nullptr;
+    }
+
+    void Collider::OnParentChanged()
+    {
+        if (!m_shape)
+        {
+            return;
+        }
+
+        // 1. 기존 Rigidbody에서 분리
+        if (m_attachedRigidbody)
+        {
+            physx::PxRigidActor* actor = m_attachedRigidbody->GetPxActor();
+            if (actor)
+            {
+                actor->detachShape(*m_shape);
+            }
+            m_attachedRigidbody = nullptr;
+        }
+        else if (m_ownedStaticActor)
+        {
+            // 독립 Static Actor 정리
+            m_ownedStaticActor->detachShape(*m_shape);
+            physx::PxScene* pxScene = PhysicsSystem::Get().GetActivePxScene();
+            if (pxScene)
+            {
+                pxScene->removeActor(*m_ownedStaticActor);
+            }
+            m_ownedStaticActor->release();
+            m_ownedStaticActor = nullptr;
+        }
+
+        // 2. 새로운 부모 계층에서 Rigidbody 탐색
+        Rigidbody* newRigidbody = nullptr;
+        
+        // 자신의 GameObject에서 Rigidbody 확인
+        newRigidbody = GetGameObject()->GetComponent<Rigidbody>();
+        
+        // 없으면 부모 계층에서 탐색
+        if (!newRigidbody)
+        {
+            Transform* parent = GetTransform()->GetParent();
+            while (parent && !newRigidbody)
+            {
+                newRigidbody = parent->GetGameObject()->GetComponent<Rigidbody>();
+                parent = parent->GetParent();
+            }
+        }
+
+        // 3. 새로운 Rigidbody에 부착 또는 독립 Static Actor 생성
+        if (newRigidbody)
+        {
+            m_attachedRigidbody = newRigidbody;
+            AttachToRigidbody();
+        }
+        else
+        {
+            CreateOwnedStaticActor();
+        }
+
+        // 4. LocalPose 업데이트 (Transform Local 좌표 반영)
+        UpdateLocalPose();
 
         // 독립 Static Actor 생성
         CreateOwnedStaticActor();
@@ -229,6 +291,22 @@ namespace engine
             SetIsTrigger(isTrigger);
         }
 
+        // Transform 스케일 동기화
+        bool syncWithTransform = m_syncWithTransform;
+        if (ImGui::Checkbox("Sync With Transform", &syncWithTransform))
+        {
+            SetSyncWithTransform(syncWithTransform);
+            if (syncWithTransform)
+            {
+                // 동기화 활성화 시 현재 스케일로 초기화
+                m_lastSyncedScale = GetTransform()->GetLocalScale();
+            }
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Enable to automatically sync collider size with Transform scale");
+        }
+
         // Physics Layer 콤보박스
         const char* layerNames[] = {
             "Default", "Player", "Enemy", "Projectile", 
@@ -249,6 +327,7 @@ namespace engine
         j["center"] = { m_center.x, m_center.y, m_center.z };
         j["rotation"] = { m_rotation.x, m_rotation.y, m_rotation.z };
         j["isTrigger"] = m_isTrigger;
+        j["syncWithTransform"] = m_syncWithTransform;
         j["layer"] = m_layer;
         j["collisionMask"] = m_collisionMask;
     }
@@ -269,6 +348,10 @@ namespace engine
         {
             m_isTrigger = j["isTrigger"].get<bool>();
         }
+        if (j.contains("syncWithTransform"))
+        {
+            m_syncWithTransform = j["syncWithTransform"].get<bool>();
+        }
         if (j.contains("layer"))
         {
             m_layer = j["layer"].get<uint32_t>();
@@ -276,6 +359,42 @@ namespace engine
         if (j.contains("collisionMask"))
         {
             m_collisionMask = j["collisionMask"].get<uint32_t>();
+        }
+    }
+
+    void Collider::CheckAndSyncTransformScale()
+    {
+        if (!m_syncWithTransform || !m_shape)
+        {
+            return;
+        }
+
+        Vector3 currentScale = GetTransform()->GetLocalScale();
+        
+        // 스케일 변경 감지
+        const float epsilon = 0.0001f;
+        bool scaleChanged = 
+            std::abs(currentScale.x - m_lastSyncedScale.x) > epsilon ||
+            std::abs(currentScale.y - m_lastSyncedScale.y) > epsilon ||
+            std::abs(currentScale.z - m_lastSyncedScale.z) > epsilon;
+
+        if (scaleChanged)
+        {
+            // 스케일 비율 계산
+            Vector3 scaleRatio(
+                m_lastSyncedScale.x != 0.0f ? currentScale.x / m_lastSyncedScale.x : 1.0f,
+                m_lastSyncedScale.y != 0.0f ? currentScale.y / m_lastSyncedScale.y : 1.0f,
+                m_lastSyncedScale.z != 0.0f ? currentScale.z / m_lastSyncedScale.z : 1.0f
+            );
+
+            // 파생 클래스에서 스케일 적용 (가상 함수)
+            ApplyScaleRatio(scaleRatio);
+
+            // 마지막 동기화 스케일 업데이트
+            m_lastSyncedScale = currentScale;
+
+            // Geometry 업데이트
+            UpdateGeometry();
         }
     }
 
@@ -474,13 +593,43 @@ namespace engine
             return;
         }
 
-        // 오일러 각도(degrees)를 쿼터니언으로 변환
+        // 기본 오프셋: Collider의 center
+        Vector3 totalOffset = m_center;
+        Quaternion totalRotation;
+
+        // 오일러 각도(degrees)를 쿼터니언으로 변환 (Collider 자체 회전)
         Vector3 radians = m_rotation * (DirectX::XM_PI / 180.0f);
-        Quaternion quat = Quaternion::CreateFromYawPitchRoll(radians.y, radians.x, radians.z);
+        totalRotation = Quaternion::CreateFromYawPitchRoll(radians.y, radians.x, radians.z);
+
+        // 부모 Rigidbody가 있는 경우, Transform의 Local 좌표를 Shape LocalPose에 반영
+        if (m_attachedRigidbody)
+        {
+            // Rigidbody가 같은 GameObject에 있는지 확인
+            bool isSameGameObject = (m_attachedRigidbody->GetGameObject() == GetGameObject());
+            
+            if (!isSameGameObject)
+            {
+                // 다른 GameObject (부모 계층의 Rigidbody)
+                // Rigidbody의 Transform 기준으로 상대 위치 계산
+                Transform* rbTransform = m_attachedRigidbody->GetTransform();
+                Transform* myTransform = GetTransform();
+                
+                // 내 World Position - Rigidbody의 World Position = 상대 오프셋
+                Vector3 rbWorldPos = rbTransform->GetWorldPosition();
+                Vector3 myWorldPos = myTransform->GetWorldPosition();
+                Vector3 relativeOffset = myWorldPos - rbWorldPos;
+                
+                // 총 오프셋 = 상대 오프셋 + Collider center
+                totalOffset = relativeOffset + m_center;
+                
+                // 회전도 상대적으로 계산 (필요 시)
+                // 현재는 간단히 Collider 자체 회전만 사용
+            }
+        }
 
         physx::PxTransform localPose(
-            PhysicsUtility::ToPxVec3(m_center),
-            physx::PxQuat(quat.x, quat.y, quat.z, quat.w)
+            PhysicsUtility::ToPxVec3(totalOffset),
+            physx::PxQuat(totalRotation.x, totalRotation.y, totalRotation.z, totalRotation.w)
         );
         m_shape->setLocalPose(localPose);
     }

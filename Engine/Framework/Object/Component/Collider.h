@@ -32,6 +32,8 @@ namespace engine
         Vector3 m_center{ 0.0f, 0.0f, 0.0f };   // 로컬 오프셋
         Vector3 m_rotation{ 0.0f, 0.0f, 0.0f }; // 로컬 회전 (오일러 각도, degrees)
         bool m_isTrigger = false;
+        bool m_syncWithTransform = true;        // Transform 스케일과 자동 동기화
+        Vector3 m_lastSyncedScale{ 1.0f, 1.0f, 1.0f };  // 마지막 동기화된 스케일
         
         // 레이어
         uint32_t m_layer = PhysicsLayer::Default;
@@ -66,6 +68,11 @@ namespace engine
         bool IsTrigger() const { return m_isTrigger; }
         void SetIsTrigger(bool isTrigger);
 
+        // Transform 스케일 동기화
+        bool IsSyncWithTransform() const { return m_syncWithTransform; }
+        void SetSyncWithTransform(bool sync) { m_syncWithTransform = sync; }
+        void CheckAndSyncTransformScale();  // Transform 스케일 변경 체크 및 동기화
+
         // 레이어
         uint32_t GetLayer() const { return m_layer; }
         void SetLayer(uint32_t layer);
@@ -94,6 +101,9 @@ namespace engine
         void OnRigidbodyAttached(Rigidbody* rb);
         void OnRigidbodyDetached();
 
+        // 부모 Transform이 변경될 때 호출 (Transform에서 호출)
+        void OnParentChanged();
+
         // ═══════════════════════════════════════
         // PhysX 접근
         // ═══════════════════════════════════════
@@ -113,6 +123,7 @@ namespace engine
         // 파생 클래스에서 구현
         virtual physx::PxGeometry* CreateGeometry() = 0;
         virtual void UpdateGeometry() = 0;
+        virtual void ApplyScaleRatio(const Vector3& scaleRatio) {}  // 스케일 비율 적용
 
         // 공통 초기화
         void CreateShape();
