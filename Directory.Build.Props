@@ -5,6 +5,7 @@
         <TripletDynamic>x64-windows</TripletDynamic>
 		<PhysX>$(SolutionDir)Vendor\PhysX</PhysX>
 		<FMOD>$(SolutionDir)Vendor\FMOD</FMOD>
+		<FreeType>$(SolutionDir)Vendor\FreeType</FreeType>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
     </PropertyGroup>
@@ -16,6 +17,7 @@
 				$(Vendor)\$(TripletDynamic)\include;
 				$(PhysX)\include;
 				$(FMOD)\inc;
+				$(FreeType)\include;
 				$(SolutionDir)Engine;
 				$(SolutionDir);
 				$(ProjectDir);
@@ -36,6 +38,7 @@
 				$(Vendor)\$(TripletDynamic)\debug\lib;
 				$(PhysX)\lib\debug;
 				$(FMOD)\lib\x64;
+				$(FreeType)\lib\debug;
 				%(AdditionalLibraryDirectories)
 			</AdditionalLibraryDirectories>
 			
@@ -55,6 +58,7 @@
 				PhysXCharacterKinematic_static_64.lib;
 				PhysXPvdSDK_static_64.lib;
 				fmodL_vc.lib;
+				freetype.lib;
 				%(AdditionalDependencies)
 			</AdditionalDependencies>
         </Link>
@@ -78,6 +82,7 @@
 				$(Vendor)\$(TripletDynamic)\lib;
 				$(PhysX)\lib\release;
 				$(FMOD)\lib\x64;
+				$(FreeType)\lib\release;
 				%(AdditionalLibraryDirectories)
 			</AdditionalLibraryDirectories>
 			
@@ -97,6 +102,7 @@
 				PhysXCharacterKinematic_static_64.lib;
 				PhysXPvdSDK_static_64.lib;
 				fmod_vc.lib;
+				freetype.lib;
 				%(AdditionalDependencies)
 			</AdditionalDependencies>
         </Link>
