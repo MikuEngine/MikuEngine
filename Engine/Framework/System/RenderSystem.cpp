@@ -23,6 +23,9 @@
 #include "Framework/System/LightSystem.h"
 #include "Framework/Object/Component/Light.h"
 
+#include "Framework/Object/Component/Canvas.h"
+#include "Framework/Object/Component/UIElement.h"
+
 #include "Editor/EditorManager.h"
 #include "Editor/EditorCamera.h"
 
@@ -138,6 +141,8 @@ namespace engine
 
         if (renderer->HasRenderType(RenderType::Screen))
         {
+            m_screenDirty = true;
+
             AddRenderer(m_screenList, renderer, RenderType::Screen);
         }
     }
@@ -405,7 +410,9 @@ namespace engine
             context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
             context->OMSetDepthStencilState(nullptr, 0); // UI는 보통 depth off
 
-            for (auto renderer : m_screenList)
+            auto drawList = RebuildScreenDrawList(m_screenList);
+
+            for (auto renderer : drawList)
             {
                 if (renderer->IsActive())
                     renderer->Draw(RenderType::Screen);
@@ -486,6 +493,11 @@ namespace engine
         }
 
         return nullptr;
+    }
+
+    void RenderSystem::MarkScreenDirty()
+    {
+        m_screenDirty = true;
     }
 
     void RenderSystem::AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type)
@@ -729,5 +741,53 @@ namespace engine
 
         context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
         context->OMSetDepthStencilState(nullptr, 0);
+    }
+
+    std::vector<Renderer*> RenderSystem::RebuildScreenDrawList(const std::vector<Renderer*>& v)
+    {
+        std::vector<Renderer*> drawList = v;
+
+        std::stable_sort(drawList.begin(),
+            drawList.end(),
+            [](Renderer* a, Renderer* b) {
+                if (!a) return true;
+                if (!b) return false;
+
+                auto* ua = dynamic_cast<UIElement*>(a);
+                auto* ub = dynamic_cast<UIElement*>(b);
+
+                // Canvas Sort
+                int ca = 0, cb = 0;
+                if (ua)
+                {
+                    if (Canvas* c = ua->GetCanvasInParent())
+                        ca = c->GetSortingOrder();
+                }
+                if (ub)
+                {
+                    if (Canvas* c = ub->GetCanvasInParent())
+                        cb = c->GetSortingOrder();
+                }
+                if (ca != cb) return ca < cb;
+
+                // UI Layer Sort
+                int la = ua ? ua->GetLayer() : 0;
+                int lb = ub ? ub->GetLayer() : 0;
+                if (la != lb) return la < lb;
+
+                // Order Layer Sort
+                int oa = ua ? ua->GetOrderInLayer() : 0;
+                int ob = ub ? ub->GetOrderInLayer() : 0;
+                if (oa != ob) return oa < ob;
+
+                // 4) tie-break (UIElement만)
+                std::uint64_t sa = ua ? ua->m_registerSerial : 0;
+                std::uint64_t sb = ub ? ub->m_registerSerial : 0;
+                if (sa != sb) return sa < sb;
+
+                return false;
+            });
+
+        return drawList;
     }
 }

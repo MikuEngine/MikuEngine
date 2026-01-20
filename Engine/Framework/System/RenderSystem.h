@@ -27,6 +27,7 @@ namespace engine
         std::vector<Renderer*> m_cutoutList;
         std::vector<Renderer*> m_transparentList;
         std::vector<Renderer*> m_screenList;
+        std::vector<Renderer*> m_screenDrawList;
 
         std::shared_ptr<ConstantBuffer> m_frameCB;
         std::shared_ptr<SamplerState> m_comparisonSamplerState;
@@ -74,6 +75,9 @@ namespace engine
         float m_bloomSoftKnee = 2.0f;
         float m_exposure = -2.0f;
 
+        bool m_screenDirty = true;
+        std::uint64_t m_screenSerialCounter = 0;
+
     public:
         RenderSystem();
 
@@ -90,6 +94,8 @@ namespace engine
 
         GameObject* PickObject(int mouseX, int mouseY);
 
+        void MarkScreenDirty();
+
     private:
         void AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type);
         void RemoveRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type);
@@ -98,5 +104,8 @@ namespace engine
         void DrawLocalLight();
         void DrawSkybox();
         void DrawTransparents(const Vector3& cameraPosition);
+
+        //void RebuildScreenDrawList();
+        std::vector<Renderer*> RebuildScreenDrawList(const std::vector<Renderer*>& v);
     };
 }
