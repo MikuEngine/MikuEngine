@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Framework/Asset/FontData.h"
 #include "Framework/Object/Component/UIElement.h"
 
 namespace engine
