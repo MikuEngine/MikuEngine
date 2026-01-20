@@ -461,7 +461,8 @@ namespace engine
 
                 if (c != nullptr && p != nullptr)
                 {
-                    c->GetTransform()->SetParent(p->GetTransform());
+                    // 씬 로드 시에는 저장된 Local 좌표를 유지 (worldPositionStays = false)
+                    c->GetTransform()->SetParent(p->GetTransform(), false);
                 }
             }
         }
@@ -520,7 +521,8 @@ namespace engine
 
                 if (c != nullptr && p != nullptr)
                 {
-                    c->GetTransform()->SetParent(p->GetTransform());
+                    // 씬 로드 시에는 저장된 Local 좌표를 유지 (worldPositionStays = false)
+                    c->GetTransform()->SetParent(p->GetTransform(), false);
                 }
             }
         }

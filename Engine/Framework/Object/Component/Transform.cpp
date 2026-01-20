@@ -10,6 +10,7 @@
 #include "Framework/System/TransformSystem.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
+#include "Framework/Object/Component/Collider.h"
 
 namespace engine
 {
@@ -67,6 +68,30 @@ namespace engine
     Vector3 Transform::GetWorldPosition()
     {
         return GetWorld().Translation();
+    }
+
+    Quaternion Transform::GetWorldRotation()
+    {
+        if (m_parent != nullptr)
+        {
+            // World = Parent * Local (부모 회전 먼저, 그 다음 자식 로컬 회전)
+            return m_parent->GetWorldRotation() * m_localRotation;
+        }
+        return m_localRotation;
+    }
+
+    Vector3 Transform::GetWorldScale()
+    {
+        if (m_parent != nullptr)
+        {
+            Vector3 parentScale = m_parent->GetWorldScale();
+            return Vector3(
+                m_localScale.x * parentScale.x,
+                m_localScale.y * parentScale.y,
+                m_localScale.z * parentScale.z
+            );
+        }
+        return m_localScale;
     }
 
     Vector3 Transform::GetLocalEulerAngles() const
@@ -151,13 +176,27 @@ namespace engine
         MarkDirty();
     }
 
-    void Transform::SetParent(Transform* parent)
+    void Transform::SetParent(Transform* parent, bool worldPositionStays)
     {
+        // World 좌표 저장 (부모 변경 전)
+        Vector3 savedWorldPosition;
+        Quaternion savedWorldRotation;
+        Vector3 savedWorldScale;
+        
+        if (worldPositionStays)
+        {
+            savedWorldPosition = GetWorldPosition();
+            savedWorldRotation = GetWorldRotation();
+            savedWorldScale = GetWorldScale();
+        }
+
+        // 기존 부모에서 분리
         if (m_parent != nullptr)
         {
             m_parent->RemoveChild(this);
         }
 
+        // 새 부모 설정
         m_parent = parent;
         bool parentActive = true;
 
@@ -167,9 +206,81 @@ namespace engine
             parentActive = m_parent->GetGameObject()->IsActive();
         }
 
+        // World 좌표 유지를 위해 Local 좌표 재계산
+        if (worldPositionStays)
+        {
+            if (m_parent != nullptr)
+            {
+                // 행렬 역변환 방식 사용 (비균등 스케일에 더 정확)
+                Matrix parentWorldInverse = m_parent->GetWorld().Invert();
+                
+                // 저장된 World 변환으로 행렬 생성
+                Matrix savedWorldMatrix = Matrix::CreateScale(savedWorldScale) *
+                                          Matrix::CreateFromQuaternion(savedWorldRotation) *
+                                          Matrix::CreateTranslation(savedWorldPosition);
+                
+                // Local = World * inv(Parent)
+                Matrix localMatrix = savedWorldMatrix * parentWorldInverse;
+                
+                // 행렬 분해
+                Vector3 newLocalScale;
+                Quaternion newLocalRotation;
+                Vector3 newLocalPosition;
+                
+                if (localMatrix.Decompose(newLocalScale, newLocalRotation, newLocalPosition))
+                {
+                    m_localPosition = newLocalPosition;
+                    m_localRotation = newLocalRotation;
+                    m_localRotation.Normalize();
+                    m_localScale = newLocalScale;
+                }
+                else
+                {
+                    // Decompose 실패 시 (비균등 스케일 + 회전으로 인한 Shearing)
+                    // 간단한 fallback: 위치만 정확히 계산하고 나머지는 유지
+                    LOG_INFO("[Transform] Matrix decompose failed - non-uniform scale with rotation may cause shearing");
+                    m_localPosition = Vector3(localMatrix._41, localMatrix._42, localMatrix._43);
+                    m_localRotation = savedWorldRotation;
+                    m_localScale = savedWorldScale;
+                }
+
+                // 오일러 각도 업데이트
+                m_localEulerRotation = m_localRotation.ToEuler() * (180.0f / DirectX::XM_PI);
+            }
+            else
+            {
+                // 부모 없음: World = Local
+                m_localPosition = savedWorldPosition;
+                m_localRotation = savedWorldRotation;
+                m_localScale = savedWorldScale;
+                m_localEulerRotation = m_localRotation.ToEuler() * (180.0f / DirectX::XM_PI);
+            }
+        }
+
         GetGameObject()->UpdateActiveInHierarchy(parentActive);
 
         MarkDirty();
+
+        // 물리 컴포넌트에 부모 변경 알림
+        NotifyPhysicsComponentsParentChanged();
+    }
+
+    void Transform::NotifyPhysicsComponentsParentChanged()
+    {
+        // 이 GameObject의 모든 Collider에 알림
+        for (const auto& component : GetGameObject()->GetComponents())
+        {
+            if (Collider* collider = dynamic_cast<Collider*>(component.get()))
+            {
+                collider->OnParentChanged();
+            }
+        }
+
+        // 자식들에게도 재귀적으로 알림 (자식 Collider가 부모 Rigidbody를 찾아야 함)
+        for (Transform* child : m_children)
+        {
+            child->NotifyPhysicsComponentsParentChanged();
+        }
     }
 
     const std::vector<Transform*>& Transform::GetChildren() const
@@ -274,9 +385,30 @@ namespace engine
             SetLocalRotation(euler);
         }
 
-        if (ImGui::DragFloat3("Scale", &m_localScale.x, 0.1f))
+        // 자식이 있으면 균등 스케일만 허용 (비균등 스케일 + 회전 시 Shearing 방지)
+        bool hasChildren = !m_children.empty();
+        
+        if (hasChildren)
         {
-            MarkDirty();
+            // 균등 스케일: 하나의 값으로 모든 축 제어
+            float uniformScale = m_localScale.x;
+            if (ImGui::DragFloat("Scale (Uniform)", &uniformScale, 0.1f, 0.001f, 1000.0f))
+            {
+                m_localScale = Vector3(uniformScale, uniformScale, uniformScale);
+                MarkDirty();
+            }
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("This object has children. Only uniform scale is allowed to prevent shearing.");
+            }
+        }
+        else
+        {
+            // Leaf 노드: 비균등 스케일 허용
+            if (ImGui::DragFloat3("Scale", &m_localScale.x, 0.1f))
+            {
+                MarkDirty();
+            }
         }
     }
 
@@ -343,6 +475,20 @@ namespace engine
 
     void Transform::AddChild(Transform* child)
     {
+        // 자식 추가 시 비균등 스케일이면 균등 스케일로 강제 변환 (Shearing 방지)
+        bool isNonUniformScale = 
+            std::abs(m_localScale.x - m_localScale.y) > 0.0001f ||
+            std::abs(m_localScale.y - m_localScale.z) > 0.0001f;
+        
+        if (isNonUniformScale)
+        {
+            // 가장 큰 값으로 균등 스케일 적용
+            float maxScale = std::max({m_localScale.x, m_localScale.y, m_localScale.z});
+            m_localScale = Vector3(maxScale, maxScale, maxScale);
+            LOG_INFO("[Transform] Non-uniform scale converted to uniform ({}) when adding child", maxScale);
+            MarkDirty();
+        }
+        
         m_children.push_back(child);
     }
 

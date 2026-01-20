@@ -37,6 +37,8 @@ namespace engine
         const Vector3& GetLocalScale() const;
 
         Vector3 GetWorldPosition();
+        Quaternion GetWorldRotation();
+        Vector3 GetWorldScale();
 
         Vector3 GetLocalEulerAngles() const;
 
@@ -57,7 +59,7 @@ namespace engine
         void SetLocalScale(const Vector3& scale);
         void SetLocalScale(float scale);
 
-        void SetParent(Transform* parent);
+        void SetParent(Transform* parent, bool worldPositionStays = true);
 
         void UnmarkDirtyThisFrame();
         bool IsAncestorOf(Transform* other) const;
@@ -77,5 +79,6 @@ namespace engine
         void MarkDirty();
         void AddChild(Transform* child);
         void RemoveChild(Transform* child);
+        void NotifyPhysicsComponentsParentChanged();
     };
 }

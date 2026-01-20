@@ -182,7 +182,11 @@ namespace engine
         
         // PhysicsSystem에 등록된 콜라이더 (Play 모드)
         const auto& registeredColliders = PhysicsSystem::Get().GetRegisteredColliders();
-        if (!registeredColliders.empty())
+        
+        // 에디터 모드 체크 (등록된 콜라이더가 없으면 에디터 모드)
+        bool isEditMode = registeredColliders.empty();
+        
+        if (!isEditMode)
         {
             colliders = registeredColliders;
         }
@@ -253,19 +257,56 @@ namespace engine
                 Vector3 finalPos = worldPos + rotatedCenter;
                 Quaternion finalRot = worldRot * localRot;
 
-                DrawBox(finalPos, box->GetHalfExtents(), finalRot, color);
+                Vector3 halfExtents = box->GetHalfExtents();
+                
+                // 에디터 모드: m_size에 스케일 미적용 → 스케일 적용 필요
+                // 플레이 모드: m_size에 이미 WorldScale 적용됨 → 스케일 적용 X
+                if (isEditMode)
+                {
+                    halfExtents.x *= scale.x;
+                    halfExtents.y *= scale.y;
+                    halfExtents.z *= scale.z;
+                }
+
+                DrawBox(finalPos, halfExtents, finalRot, color);
             }
             else if (SphereCollider* sphere = dynamic_cast<SphereCollider*>(collider))
             {
                 // SphereCollider: 월드 회전 무시, 로컬 오프셋만 적용
+                Matrix world = transform->GetWorld();
+                Vector3 scale;
+                Quaternion worldRot;
+                Vector3 translation;
+                world.Decompose(scale, worldRot, translation);
+
                 Vector3 finalPos = worldPos + center;
-                DrawSphere(finalPos, sphere->GetRadius(), color);
+                float radius = sphere->GetRadius();
+                // 에디터 모드에서만 스케일 적용 (플레이 모드에서는 m_radius에 이미 적용됨)
+                if (isEditMode)
+                {
+                    radius *= std::max({ scale.x, scale.y, scale.z });
+                }
+                DrawSphere(finalPos, radius, color);
             }
             else if (CapsuleCollider* capsule = dynamic_cast<CapsuleCollider*>(collider))
             {
-                // CapsuleCollider: 월드 회전 무시, 로컬 회전만 적용
+                // CapsuleCollider
                 Vector3 finalPos = worldPos + center;
-                DrawCapsule(finalPos, capsule->GetRadius(), capsule->GetHeight(), localRot, color);
+                float capsuleRadius = capsule->GetRadius();
+                float capsuleHeight = capsule->GetHeight();
+                // 에디터 모드에서만 스케일 적용
+                if (isEditMode)
+                {
+                    Matrix world = transform->GetWorld();
+                    Vector3 scale;
+                    Quaternion worldRot;
+                    Vector3 translation;
+                    world.Decompose(scale, worldRot, translation);
+                    float maxScale = std::max({ scale.x, scale.y, scale.z });
+                    capsuleRadius *= maxScale;
+                    capsuleHeight *= maxScale;
+                }
+                DrawCapsule(finalPos, capsuleRadius, capsuleHeight, localRot, color);
             }
 
             // 피봇 표시
