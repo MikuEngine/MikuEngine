@@ -20,6 +20,7 @@ enum class TextureSlot
     IBLIrradiance           = 22,
     IBLSpecular             = 23,
     IBLSpecularBRDFLUT      = 24,
+    PointShadowMap          = 25,
 
     Blit                    = 30,
     HDR                     = 31,
@@ -46,5 +47,6 @@ enum class ConstantBufferSlot
     ScreenSize = 7,
     Grid = 8,
     PickingId = 9,
-	UIElement = 10,
+    UIElement = 10,
+    ShadowPoint = 11,
 };

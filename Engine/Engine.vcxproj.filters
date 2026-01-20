@@ -636,6 +636,12 @@
     <FxCompile Include="Shader\Vertex\Grid_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\Grid_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\Picking_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Shadow_Point_Cutout_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Shadow_Point_PS.hlsl" />
+    <FxCompile Include="Shader\Geometry\Shadow_Point_GS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Point_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Point_Rigid_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Point_Skinned_VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

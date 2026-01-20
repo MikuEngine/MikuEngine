@@ -17,13 +17,6 @@ float4 main(PS_INPUT input) : SV_Target
         discard;
     }
     
-    float3 baseColor = g_gBufferBaseColor.Sample(g_samPoint, uv).rgb;
-    
-    float3 orm = g_gBufferORM.Sample(g_samPoint, uv).rgb;
-    float ao = orm.r;
-    float roughness = orm.g;
-    float metalness = orm.b;
-    
     // world position
     float4 clipPosition;
     clipPosition.x = uv.x * 2.0f - 1.0f;
@@ -34,12 +27,6 @@ float4 main(PS_INPUT input) : SV_Target
     float4 worldPosition = mul(clipPosition, g_invViewProjection);
     worldPosition /= worldPosition.w;
     
-    // normal
-    float3 n = normalize(DecodeNormal(encodedNormal.rgb));
-    
-    // view
-    float3 v = normalize(g_cameraWorldPosition - worldPosition.xyz);
-    
     // light
     float3 l = g_lightPosition - worldPosition.xyz;
     float dist = length(l);
@@ -48,6 +35,31 @@ float4 main(PS_INPUT input) : SV_Target
     {
         discard;
     }
+    
+    if (g_useLocalLightShadow)
+    { // 섀도우 맵 샘플링 (저장된 값 = 정규화된 가장 가까운 거리)
+        float closestDistNorm = g_texPointShadowMap.Sample(g_samLinear, float4(normalize(-l), (float) g_localLightShadowIndex)).r;
+        float closestDist = closestDistNorm * g_lightRange;
+    
+    // Bias 적용 비교
+        if (dist > closestDist + 0.1f) // Bias
+        {
+            discard;
+        }
+    }
+    
+    float3 baseColor = g_gBufferBaseColor.Sample(g_samPoint, uv).rgb;
+    
+    float3 orm = g_gBufferORM.Sample(g_samPoint, uv).rgb;
+    float ao = orm.r;
+    float roughness = orm.g;
+    float metalness = orm.b;
+    
+    // normal
+    float3 n = normalize(DecodeNormal(encodedNormal.rgb));
+    
+    // view
+    float3 v = normalize(g_cameraWorldPosition - worldPosition.xyz);
     
     l /= max(dist, EPSILON);
     

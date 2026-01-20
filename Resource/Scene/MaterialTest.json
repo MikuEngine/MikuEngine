@@ -76,7 +76,9 @@
                     "Near": 90000.0,
                     "Far": 100000.0,
                     "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
                 }
             ]
         },
@@ -127,7 +129,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -179,7 +182,8 @@
                     "MaterialRoughness": 0.20000000298023224,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -231,7 +235,8 @@
                     "MaterialRoughness": 0.4000000059604645,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -283,7 +288,8 @@
                     "MaterialRoughness": 0.6000000238418579,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -335,7 +341,8 @@
                     "MaterialRoughness": 0.800000011920929,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -387,7 +394,8 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -438,7 +446,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -490,7 +499,8 @@
                     "MaterialRoughness": 0.20000000298023224,
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -542,7 +552,8 @@
                     "MaterialRoughness": 0.4000000059604645,
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -594,7 +605,8 @@
                     "MaterialRoughness": 0.6000000238418579,
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -646,7 +658,8 @@
                     "MaterialRoughness": 0.800000011920929,
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -698,7 +711,8 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -749,7 +763,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -801,7 +816,8 @@
                     "MaterialRoughness": 0.20000000298023224,
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -853,7 +869,8 @@
                     "MaterialRoughness": 0.4000000059604645,
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -905,7 +922,8 @@
                     "MaterialRoughness": 0.6000000238418579,
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -957,7 +975,8 @@
                     "MaterialRoughness": 0.800000011920929,
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1009,7 +1028,8 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1060,7 +1080,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1112,7 +1133,8 @@
                     "MaterialRoughness": 0.20000000298023224,
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1164,7 +1186,8 @@
                     "MaterialRoughness": 0.4000000059604645,
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1216,7 +1239,8 @@
                     "MaterialRoughness": 0.6000000238418579,
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1268,7 +1292,8 @@
                     "MaterialRoughness": 0.800000011920929,
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1320,7 +1345,8 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1371,7 +1397,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1423,7 +1450,8 @@
                     "MaterialRoughness": 0.20000000298023224,
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1475,7 +1503,8 @@
                     "MaterialRoughness": 0.4000000059604645,
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1527,7 +1556,8 @@
                     "MaterialRoughness": 0.6000000238418579,
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1579,7 +1609,8 @@
                     "MaterialRoughness": 0.800000011920929,
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1631,7 +1662,8 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1682,7 +1714,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1734,7 +1767,8 @@
                     "MaterialRoughness": 0.20000000298023224,
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1786,7 +1820,8 @@
                     "MaterialRoughness": 0.4000000059604645,
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1838,7 +1873,8 @@
                     "MaterialRoughness": 0.6000000238418579,
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1890,7 +1926,8 @@
                     "MaterialRoughness": 0.800000011920929,
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         },
@@ -1942,7 +1979,8 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true
+                    "OverrideMaterial": true,
+                    "CastShadow": false
                 }
             ]
         }

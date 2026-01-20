@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
+#include "Framework/Object/Component/Light.h"
 #include "Framework/Asset/MaterialData.h"
 
 namespace engine
@@ -33,7 +34,9 @@ namespace engine
 		virtual bool HasRenderType(RenderType type) const = 0;
 		virtual void Draw(RenderType type) const = 0;
 		virtual DirectX::BoundingBox GetBounds() const = 0;
+		virtual bool IsCastShadow() const { return false; }
 
+		virtual void DrawShadow(RenderType renderType, LightType lightType) const {}
 		virtual void DrawMask() const {}
 		virtual void DrawPickingID() const {}
 

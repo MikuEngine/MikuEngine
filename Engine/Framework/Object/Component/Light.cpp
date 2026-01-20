@@ -71,6 +71,21 @@ namespace engine
 		m_lightHeightRatio = heightRatio;
 	}
 
+	void Light::SetShadowBias(float bias)
+	{
+		m_shadowBias = bias;
+	}
+
+	void Light::SetCastShadows(bool castShadows)
+	{
+		m_castShadows = castShadows;
+	}
+
+	void Light::SetShadowIndex(int index)
+	{
+		m_shadowIndex = index;
+	}
+
 	LightType Light::GetLightType() const
 	{
 		return m_lightType;
@@ -116,6 +131,21 @@ namespace engine
 		return m_lightHeightRatio;
 	}
 
+	float Light::GetShadowBias() const
+	{
+		return m_shadowBias;
+	}
+
+	int Light::GetShadowIndex() const
+	{
+		return m_shadowIndex;
+	}
+
+	bool Light::IsCastShadows() const
+	{
+		return m_castShadows;
+	}
+
 	void Light::OnGui()
 	{
 		// Light Type
@@ -128,6 +158,7 @@ namespace engine
 		// Common Properties
 		ImGui::ColorEdit3("Color", &m_color.x);
 		ImGui::DragFloat("Intensity", &m_intensity, 0.1f, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+		ImGui::Checkbox("Cast Shadows", &m_castShadows);
 		// Type Specific Properties
 		if (m_lightType == LightType::Directional)
 		{
@@ -141,7 +172,7 @@ namespace engine
 
 		if (m_lightType == LightType::Point || m_lightType == LightType::Spot)
 		{
-			ImGui::DragFloat("Range", &m_range, 0.1f, 0.0f, FLT_MAX, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+			ImGui::DragFloat("Range", &m_range, 0.1f, 0.1f, FLT_MAX, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 		}
 		if (m_lightType == LightType::Spot)
 		{
@@ -162,6 +193,8 @@ namespace engine
 		j["Far"] = m_lightFar;
 		j["ForwardDistance"] = m_lightForwardDist;
 		j["HeightRatio"] = m_lightHeightRatio;
+		j["ShadowBias"] = m_shadowBias;
+		j["CastShadows"] = m_castShadows;
 	}
 
 	void Light::Load(const json& j)
@@ -177,6 +210,8 @@ namespace engine
 		JsonGet(j, "Far", m_lightFar);
 		JsonGet(j, "ForwardDistance", m_lightForwardDist);
 		JsonGet(j, "HeightRatio", m_lightHeightRatio);
+		JsonGet(j, "ShadowBias", m_shadowBias);
+		JsonGet(j, "CastShadows", m_castShadows);
 	}
 
 	std::string Light::GetType() const

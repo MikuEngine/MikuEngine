@@ -22,6 +22,7 @@ TextureCube g_texIBLEnvironment         : register(t21);
 TextureCube g_texIBLIrradiance          : register(t22);
 TextureCube g_texIBLSpecular            : register(t23);
 Texture2D g_texIBLSpecularBRDFLUT       : register(t24);
+TextureCubeArray g_texPointShadowMap    : register(t25);
 
 // utility
 Texture2D g_texBlit                     : register(t30);
@@ -70,7 +71,7 @@ cbuffer Frame : register(b0) // 프레임 당 한번만 갱신되는 버퍼
     float g_fxaaQualityEdgeThreshold; // 0.063 to 0.333 (default: 0.166)
     float g_fxaaQualityEdgeThresholdMin; // 0.0312 to 0.0833 (default: 0.0833)
     float __pad1_Frame;
-}
+};
 
 cbuffer Material : register(b1)
 {
@@ -83,7 +84,7 @@ cbuffer Material : register(b1)
     float g_materialMetalness;
     float g_materialAmbientOcclusion;
     int g_overrideMaterial;
-}
+};
 
 cbuffer Object : register(b2)
 {
@@ -93,18 +94,18 @@ cbuffer Object : register(b2)
     
     int g_boneIndex;
     float3 __pad1_object;
-}
+};
 
 cbuffer Bone : register(b3)
 {
     matrix g_boneTransform[128];
-}
+};
 
 cbuffer Blur : register(b4)
 {
     float2 g_blurDir;
     float2 __pad1_Blur;
-}
+};
 
 cbuffer Sprite : register(b5)
 {
@@ -124,6 +125,10 @@ cbuffer LocalLight : register(b6)
     
     float3 g_lightDirection;
     float g_lightAngle;
+    
+    int g_localLightShadowIndex;
+    int g_useLocalLightShadow;
+    float2 __pad1_LocalLight;
 };
 
 cbuffer ScreenSize : register(b7)
@@ -153,10 +158,19 @@ cbuffer UIElement : register(b10)
     float4 g_uiColor;
     float4 g_uiUV;
     float4 g_uiClipRect;
-    uint g_uiMaskMode;  // 0 none, 1 rect, 2 circle, 3 ring, 4 rectring
+    uint g_uiMaskMode; // 0 none, 1 rect, 2 circle, 3 ring, 4 rectring
     float3 __uiPad;
     float4 g_uiMask0;
-}
+};
+
+cbuffer ShadowPoint : register(b11)
+{
+    matrix g_viewProjections[6];
+    float3 g_shadowLightPosition;
+    float g_shadowLightRange;
+    int g_shadowLightIndex;
+    float3 __pad_ShadowPoint;
+};
 
 struct VS_INPUT_POSITION
 {
@@ -228,6 +242,20 @@ struct PS_INPUT_WORLD_POSITION
 {
     float4 position : SV_Position;
     float3 worldPosition : TEXCOORD0;
+};
+
+struct PS_INPUT_RT_INDEX
+{
+    float4 position : SV_Position;
+    float4 worldPos : TEXCOORD0;
+    float2 texCoord : TEXCOORD1;
+    uint rtIndex : SV_RenderTargetArrayIndex;
+};
+
+struct GS_INPUT_POSITION
+{
+    float4 position : SV_Position; // world
+    float2 texCoord : TEXCOORD0;
 };
 
 static const float PI = 3.141592f;

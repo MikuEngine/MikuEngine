@@ -1,6 +1,6 @@
 {
     "Name": "LightTest",
-    "NumGameObjects": 8,
+    "NumGameObjects": 13,
     "GameObjects": [
         {
             "ID": 0,
@@ -76,7 +76,9 @@
                     "Near": 90000.0,
                     "Far": 100000.0,
                     "ForwardDistance": 0.0,
-                    "HeightRatio": 0.9200000166893005
+                    "HeightRatio": 0.9200000166893005,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
                 }
             ]
         },
@@ -127,7 +129,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": true
                 }
             ]
         },
@@ -141,7 +144,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": -2.0,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -178,7 +181,8 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false
+                    "OverrideMaterial": false,
+                    "CastShadow": false
                 }
             ]
         },
@@ -191,9 +195,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": 2.4000000953674316,
-                        "z": -3.299999952316284
+                        "x": 12.399999618530273,
+                        "y": 21.600000381469727,
+                        "z": 4.5
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -216,106 +220,20 @@
                         "y": 0.0,
                         "z": 0.0
                     },
-                    "Intensity": 8.899999618530273,
-                    "Range": 8.100000381469727,
+                    "Intensity": 39.5,
+                    "Range": 38.900001525878906,
                     "Angle": 45.0,
                     "Near": 90000.0,
                     "Far": 100000.0,
                     "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": true
                 }
             ]
         },
         {
             "ID": 5,
-            "Name": "PointLight2",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 2.5,
-                        "z": -12.199999809265137
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.2941175699234009,
-                        "y": 1.0,
-                        "z": 0.0
-                    },
-                    "Intensity": 5.5,
-                    "Range": 10.0,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421
-                }
-            ]
-        },
-        {
-            "ID": 6,
-            "Name": "PointLight3",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 1.600000023841858,
-                        "z": -23.399999618530273
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.0,
-                        "y": 0.058823585510253906,
-                        "z": 1.0
-                    },
-                    "Intensity": 4.5,
-                    "Range": 9.100000381469727,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421
-                }
-            ]
-        },
-        {
-            "ID": 7,
             "Name": "SpotLight1",
             "Active": true,
             "Components": [
@@ -354,7 +272,355 @@
                     "Near": 90000.0,
                     "Far": 100000.0,
                     "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "PointLight2",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -3.0999999046325684,
+                        "y": 10.100000381469727,
+                        "z": -5.300000190734863
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.2941175699234009,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "Intensity": 6.5,
+                    "Range": 26.100000381469727,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": true
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "PointLight3",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 13.600000381469727,
+                        "z": 6.599999904632568
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 16.700000762939453,
+                    "Range": 50.29999923706055,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": true
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "PointLight4",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -3.700000047683716,
+                        "y": 15.199999809265137,
+                        "z": -0.699999988079071
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 25.700000762939453,
+                    "Range": 23.5,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": true
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 6.699999809265137,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Girl.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -6.599999904632568,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Girl.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 4.800000190734863,
+                        "z": -8.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -3.299999952316284,
+                        "y": 5.900000095367432,
+                        "z": 4.699999809265137
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true
                 }
             ]
         }

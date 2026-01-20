@@ -13,6 +13,7 @@
 #include "Core/Graphics/Resource/RasterizerState.h"
 #include "Core/Graphics/Resource/IndexBuffer.h"
 #include "Core/Graphics/Resource/BlendState.h"
+#include "Core/Graphics/Resource/GeometryShader.h"
 
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
@@ -114,6 +115,12 @@ namespace engine
         // picking
         {
             m_pickingIdCB = ResourceManager::Get().GetOrCreateConstantBuffer("PickingId", sizeof(CbPickingId));
+        }
+
+        // point shadow
+        {
+            m_shadowPointGS = ResourceManager::Get().GetOrCreateGeometryShader("Resource/Shader/Geometry/Shadow_Point_GS.hlsl");
+            m_shadowPointCB = ResourceManager::Get().GetOrCreateConstantBuffer("ShadowPoint", sizeof(CbShadowPoint));
         }
     }
 
@@ -281,25 +288,12 @@ namespace engine
 
         if (!isCameraOff)
         {
-            graphics.BeginDrawShadowPass();
+            if (mainLight != nullptr)
             {
-                for (auto renderer : m_opaqueList)
-                {
-                    if (renderer->IsActive())
-                    {
-                        renderer->Draw(RenderType::Shadow);
-                    }
-                }
-
-                for (auto renderer : m_cutoutList)
-                {
-                    if (renderer->IsActive())
-                    {
-                        renderer->Draw(RenderType::Shadow);
-                    }
-                }
+                DrawGlobalLightShadow();
             }
-            graphics.EndDrawShadowPass();
+
+            DrawPointLightShadow();
 
             graphics.BeginDrawGeometryPass();
             {
@@ -321,13 +315,18 @@ namespace engine
             }
             graphics.EndDrawGeometryPass();
 
-            graphics.BeginDrawLightPass();
+            graphics.BeginDrawGlobalLightPass();
             {
                 DrawGlobalLight();
+            }
+            graphics.EndDrawGlobalLightPass();
 
+            graphics.BeginDrawLocalLightPass();
+            {
                 DrawLocalLight();
             }
-            graphics.EndDrawLightPass();
+            graphics.EndDrawLocalLightPass();
+            
 
             graphics.BeginDrawForwardPass();
             {
@@ -520,6 +519,105 @@ namespace engine
         renderer->m_systemIndices[static_cast<size_t>(type)] = -1;
     }
 
+    void RenderSystem::DrawGlobalLightShadow()
+    {
+        auto& graphics = GraphicsDevice::Get();
+
+        graphics.BeginDrawGlobalShadowPass();
+        {
+            for (auto renderer : m_opaqueList)
+            {
+                if (renderer->IsActive() && renderer->IsCastShadow())
+                {
+                    renderer->DrawShadow(RenderType::Opaque, LightType::Directional);
+                }
+            }
+
+            for (auto renderer : m_cutoutList)
+            {
+                if (renderer->IsActive() && renderer->IsCastShadow())
+                {
+                    renderer->DrawShadow(RenderType::Cutout, LightType::Directional);
+                }
+            }
+        }
+        graphics.EndDrawGlobalShadowPass();
+    }
+
+    void RenderSystem::DrawPointLightShadow()
+    {
+        auto& graphics = GraphicsDevice::Get();
+        auto* context = graphics.GetDeviceContext().Get();
+        auto& lightSystem = SystemManager::Get().GetLightSystem();
+
+
+        const auto& lights = lightSystem.GetLights();
+
+        graphics.BeginDrawPointShadowPass();
+        {
+
+            context->GSSetShader(m_shadowPointGS->GetRawShader(), nullptr, 0);
+            context->GSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::ShadowPoint), 1, m_shadowPointCB->GetBuffer().GetAddressOf());
+            context->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::ShadowPoint), 1, m_shadowPointCB->GetBuffer().GetAddressOf());
+
+            int shadowIndex = 0;
+
+            for (auto light : lights)
+            {
+                if (!light->IsActive() || !light->IsCastShadows() || light->GetLightType() != LightType::Point)
+                {
+                    continue;
+                }
+
+                if (shadowIndex >= GraphicsDevice::MAX_POINT_SHADOWS)
+                {
+                    break;
+                }
+
+                light->SetShadowIndex(shadowIndex);
+
+                CbShadowPoint cb{};
+                Vector3 lightPos = light->GetTransform()->GetWorldPosition();
+                float range = light->GetRange();
+                Matrix shadowProj = DirectX::XMMatrixPerspectiveFovLH(ToRadian(90.0f), 1.0f, 0.1f, range);
+
+                cb.viewProjections[0] = (Matrix(DirectX::XMMatrixLookAtLH(lightPos, lightPos + Vector3(1, 0, 0), Vector3(0, 1, 0))) * shadowProj).Transpose();
+                cb.viewProjections[1] = (Matrix(DirectX::XMMatrixLookAtLH(lightPos, lightPos + Vector3(-1, 0, 0), Vector3(0, 1, 0))) * shadowProj).Transpose();
+                cb.viewProjections[2] = (Matrix(DirectX::XMMatrixLookAtLH(lightPos, lightPos + Vector3(0, 1, 0), Vector3(0, 0, -1))) * shadowProj).Transpose();
+                cb.viewProjections[3] = (Matrix(DirectX::XMMatrixLookAtLH(lightPos, lightPos + Vector3(0, -1, 0), Vector3(0, 0, 1))) * shadowProj).Transpose();
+                cb.viewProjections[4] = (Matrix(DirectX::XMMatrixLookAtLH(lightPos, lightPos + Vector3(0, 0, 1), Vector3(0, 1, 0))) * shadowProj).Transpose();
+                cb.viewProjections[5] = (Matrix(DirectX::XMMatrixLookAtLH(lightPos, lightPos + Vector3(0, 0, -1), Vector3(0, 1, 0))) * shadowProj).Transpose();
+
+                cb.shadowLightIndex = shadowIndex;
+                cb.shadowLightPosition = lightPos;
+                cb.shadowLightRange = range;
+                context->UpdateSubresource(m_shadowPointCB->GetRawBuffer(), 0, nullptr, &cb, 0, 0);
+
+                for (auto renderer : m_opaqueList)
+                {
+                    if (renderer->IsActive() && renderer->IsCastShadow())
+                    {
+                        renderer->DrawShadow(RenderType::Opaque, LightType::Point);
+                    }
+                }
+
+                for (auto renderer : m_cutoutList)
+                {
+                    if (renderer->IsActive() && renderer->IsCastShadow())
+                    {
+                        renderer->DrawShadow(RenderType::Cutout, LightType::Point);
+                    }
+                }
+
+                ++shadowIndex;
+            }
+
+        }
+        graphics.EndDrawPointShadowPass();
+
+        context->GSSetShader(nullptr, nullptr, 0);
+    }
+
     void RenderSystem::DrawGlobalLight()
     {
         const auto& context = GraphicsDevice::Get().GetDeviceContext();
@@ -531,7 +629,6 @@ namespace engine
         context->PSSetShaderResources(static_cast<UINT>(TextureSlot::IBLIrradiance), 3, srvs);
 
         GraphicsDevice::Get().DrawFullscreenQuad();
-
     }
 
     void RenderSystem::DrawLocalLight()
@@ -575,6 +672,18 @@ namespace engine
                 cbData.lightIntensity = light->GetIntensity();
                 cbData.lightPosition = light->GetTransform()->GetWorldPosition();
                 cbData.lightRange = range;
+
+                if (int index = light->GetShadowIndex(); index != -1 && light->IsCastShadows())
+                {
+                    cbData.localLightShadowIndex = index;
+                    cbData.useLocalLightShadow = 1;
+
+                    light->SetShadowIndex(-1);
+                }
+                else
+                {
+                    cbData.useLocalLightShadow = 0;
+                }
 
                 // PS 설정
                 context->PSSetShader(m_pointLightPS->GetRawShader(), nullptr, 0);

@@ -101,6 +101,10 @@ namespace engine
 
 		Vector3 lightDirection;
 		float lightAngle;
+
+		int localLightShadowIndex;
+		int useLocalLightShadow;
+		float __pad[2];
 	};
 
 	struct CbScreenSize
@@ -135,6 +139,16 @@ namespace engine
 		float pad[3];
 
 		Vector4 mask0;		// 원형 프로그레스 바 전용
+	};
+
+
+	struct CbShadowPoint
+	{
+		Matrix viewProjections[6];
+		Vector3 shadowLightPosition;
+		float shadowLightRange;
+		int shadowLightIndex;
+		float __pad[3];
 	};
 
 }

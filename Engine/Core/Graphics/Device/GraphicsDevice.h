@@ -60,7 +60,13 @@ namespace engine
         std::unique_ptr<Texture> m_finalBuffer;
         std::unique_ptr<Texture> m_hdrBuffer;
         std::unique_ptr<Texture> m_gameDepthBuffer;
+
+        // shadow
         std::unique_ptr<Texture> m_shadowDepthBuffer;
+        std::unique_ptr<Texture> m_pointShadowLinearBuffer;
+        std::unique_ptr<Texture> m_pointShadowDepthBuffer;
+
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_gameDepthReadOnlyDSV;
 
         // bloom
         std::unique_ptr<Texture> m_bloomHalfBuffer;
@@ -114,6 +120,7 @@ namespace engine
         D3D11_VIEWPORT m_gameViewport{};
         D3D11_VIEWPORT m_backBufferViewport{};
         D3D11_VIEWPORT m_shadowViewport{};
+        D3D11_VIEWPORT m_pointShadowViewport{};
 
         UINT m_syncInterval = 0;
         UINT m_presentFlags = 0;
@@ -125,6 +132,9 @@ namespace engine
         float m_monitorMaxNits = 0.0f;
         bool m_forceLDR = false;
         bool m_isHDRSupported = false;
+
+    public:
+        static constexpr int MAX_POINT_SHADOWS = 4; // 동시에 그림자 켤 수 있는 최대 라이트 수
 
     private:
         GraphicsDevice();
@@ -153,14 +163,20 @@ namespace engine
 
         void ClearAllViews();
 
-        void BeginDrawShadowPass();
-        void EndDrawShadowPass();
+        void BeginDrawGlobalShadowPass();
+        void EndDrawGlobalShadowPass();
+
+        void BeginDrawPointShadowPass();
+        void EndDrawPointShadowPass();
 
         void BeginDrawGeometryPass();
         void EndDrawGeometryPass();
 
-        void BeginDrawLightPass();
-        void EndDrawLightPass();
+        void BeginDrawGlobalLightPass();
+        void EndDrawGlobalLightPass();
+
+        void BeginDrawLocalLightPass();
+        void EndDrawLocalLightPass();
 
         void BeginDrawEditorPass();
         void EndDrawEditorPass();

@@ -54,12 +54,15 @@ namespace engine
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Static_VS.hlsl");
         m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Static_VS.hlsl");
+        m_pointShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Point_VS.hlsl");
 
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
         m_maskCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Mask_Cutout_PS.hlsl");
         m_pickingPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Picking_PS.hlsl");
+        m_pointShadowPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Point_PS.hlsl");
+        m_pointShadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Point_Cutout_PS.hlsl");
 
         m_inputLayout = m_vs->GetOrCreateInputLayout<CommonVertex>();
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
@@ -109,6 +112,16 @@ namespace engine
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
     }
 
+    void StaticMeshRenderer::SetCastShadow(bool cast)
+    {
+        m_castShadow = cast;
+    }
+
+    bool StaticMeshRenderer::IsCastShadow() const
+    {
+        return m_castShadow;
+    }
+
     void StaticMeshRenderer::OnGui()
     {
         ImGui::Text("Mesh: %s", m_meshFilePath.c_str());
@@ -118,6 +131,8 @@ namespace engine
         {
             SetMesh(selectedMesh);
         }
+
+        ImGui::Checkbox("Cast Shadow", &m_castShadow);
 
         ImGui::SeparatorText("Material");
 
@@ -201,6 +216,7 @@ namespace engine
         j["MaterialMetalness"] = m_materialMetalness;
         j["MaterialAmbientOcclusion"] = m_materialAmbientOcclusion;
         j["OverrideMaterial"] = m_overrideMaterial;
+        j["CastShadow"] = m_castShadow;
     }
 
     void StaticMeshRenderer::Load(const json& j)
@@ -218,6 +234,7 @@ namespace engine
         JsonGet(j, "MaterialMetalness", m_materialMetalness);
         JsonGet(j, "MaterialAmbientOcclusion", m_materialAmbientOcclusion);
         JsonGet(j, "OverrideMaterial", m_overrideMaterial);
+        JsonGet(j, "CastShadow", m_castShadow);
 
         Refresh();
     }
@@ -316,39 +333,6 @@ namespace engine
 
         switch (type)
         {
-        case RenderType::Shadow:
-        {
-            deviceContext->VSSetShader(m_shadowVS->GetRawShader(), nullptr, 0);
-
-            const auto& meshSections = m_staticMeshData->GetMeshSections();
-            const auto& materials = m_materialData->GetMaterials();
-
-            for (const auto& meshSection : meshSections)
-            {
-                switch (materials[meshSection.materialIndex].renderType)
-                {
-                case MaterialRenderType::Opaque:
-                    deviceContext->PSSetShader(nullptr, nullptr, 0);
-                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
-
-                    break;
-
-                case MaterialRenderType::Cutout:
-                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
-                    deviceContext->PSSetShaderResources(
-                        static_cast<UINT>(TextureSlot::BaseColor),
-                        1,
-                        m_textures[meshSection.materialIndex].baseColor->GetSRV().GetAddressOf());
-                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
-                    break;
-
-                default:
-                    continue;
-                }
-            }
-        }
-            break;
-
         case RenderType::Opaque:
         {
             deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
@@ -357,8 +341,6 @@ namespace engine
 
             const auto& meshSections = m_staticMeshData->GetMeshSections();
             const auto& materials = m_materialData->GetMaterials();
-
-
 
             for (const auto& meshSection : meshSections)
             {
@@ -434,6 +416,102 @@ namespace engine
         }
             break;
         }
+    }
+
+    void StaticMeshRenderer::DrawShadow(RenderType renderType, LightType lightType) const
+    {
+        if (!m_staticMeshData)
+        {
+            return;
+        }
+
+        const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
+
+        static const UINT s_vertexBufferOffset = 0;
+        const UINT s_vertexBufferStride = m_vertexBuffer->GetBufferStride();
+
+        deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
+        deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
+        deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+
+        CbObject cbObject{};
+        cbObject.world = GetTransform()->GetWorld().Transpose();
+        cbObject.worldInverseTranspose = GetTransform()->GetWorld().Invert();
+
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object),
+            1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
+        deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
+        deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
+
+        switch (lightType)
+        {
+        case LightType::Directional:
+            deviceContext->VSSetShader(m_shadowVS->GetRawShader(), nullptr, 0);
+            break;
+
+        case LightType::Point:
+            deviceContext->VSSetShader(m_pointShadowVS->GetRawShader(), nullptr, 0);
+            break;
+        }
+
+        const auto& meshSections = m_staticMeshData->GetMeshSections();
+        const auto& materials = m_materialData->GetMaterials();
+
+        for (const auto& meshSection : meshSections)
+        {
+            switch (materials[meshSection.materialIndex].renderType)
+            {
+            case MaterialRenderType::Opaque:
+                if (renderType != RenderType::Opaque)
+                {
+                    continue;
+                }
+
+                switch (lightType)
+                {
+                case LightType::Directional:
+                    deviceContext->PSSetShader(nullptr, nullptr, 0);
+                    break;
+
+                case LightType::Point:
+                    deviceContext->PSSetShader(m_pointShadowPS->GetRawShader(), nullptr, 0);
+                    break;
+                }
+
+                deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+
+                break;
+
+            case MaterialRenderType::Cutout:
+                if (renderType != RenderType::Cutout)
+                {
+                    continue;
+                }
+
+                switch (lightType)
+                {
+                case LightType::Directional:
+                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+                    break;
+
+                case LightType::Point:
+                    deviceContext->PSSetShader(m_pointShadowCutoutPS->GetRawShader(), nullptr, 0);
+                    break;
+                }
+
+                deviceContext->PSSetShaderResources(
+                    static_cast<UINT>(TextureSlot::BaseColor),
+                    1,
+                    m_textures[meshSection.materialIndex].baseColor->GetSRV().GetAddressOf());
+                deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                break;
+
+            default:
+                continue;
+            }
+        }
+
     }
 
     DirectX::BoundingBox StaticMeshRenderer::GetBounds() const

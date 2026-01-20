@@ -121,6 +121,9 @@ namespace engine
 
         m_gBuffer.Reset();
 
+        m_gameDepthReadOnlyDSV.Reset();
+        m_pointShadowDepthBuffer.reset();
+        m_pointShadowLinearBuffer.reset();
         m_shadowMapRSS.reset();
         m_shadowDepthBuffer.reset();
         m_gameDepthBuffer.reset();
@@ -215,7 +218,7 @@ namespace engine
         m_deviceContext->ClearRenderTargetView(m_aaBuffer->GetRawRTV(), clearColor);
     }
 
-    void GraphicsDevice::BeginDrawShadowPass()
+    void GraphicsDevice::BeginDrawGlobalShadowPass()
     {
         m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -226,8 +229,27 @@ namespace engine
         m_deviceContext->OMSetDepthStencilState(nullptr, 0);
     }
 
-    void GraphicsDevice::EndDrawShadowPass()
+    void GraphicsDevice::EndDrawGlobalShadowPass()
     {
+        m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+    }
+
+    void GraphicsDevice::BeginDrawPointShadowPass()
+    {
+        m_deviceContext->RSSetViewports(1, &m_pointShadowViewport);
+        m_deviceContext->RSSetState(m_shadowMapRSS->GetRawRasterizerState());
+
+        static constexpr float clearColor[4]{ FLT_MAX, 1.0f, 1.0f, 1.0f };
+        m_deviceContext->ClearRenderTargetView(m_pointShadowLinearBuffer->GetRawRTV(), clearColor);
+        m_deviceContext->ClearDepthStencilView(m_pointShadowDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+        m_deviceContext->OMSetRenderTargets(1, m_pointShadowLinearBuffer->GetRTV().GetAddressOf(), m_pointShadowDepthBuffer->GetRawDSV());
+        m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    }
+
+    void GraphicsDevice::EndDrawPointShadowPass()
+    {
+        m_deviceContext->RSSetState(nullptr);
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
     }
 
@@ -248,7 +270,7 @@ namespace engine
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
     }
 
-    void GraphicsDevice::BeginDrawLightPass()
+    void GraphicsDevice::BeginDrawGlobalLightPass()
     {
         m_deviceContext->RSSetState(nullptr);
 
@@ -263,14 +285,32 @@ namespace engine
         m_deviceContext->OMSetRenderTargets(1, m_hdrBuffer->GetRTV().GetAddressOf(), nullptr);
     }
 
-    void GraphicsDevice::EndDrawLightPass()
+    void GraphicsDevice::EndDrawGlobalLightPass()
+    {
+        m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+        ID3D11ShaderResourceView* nullSRV = nullptr;
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferDepth), 1, &nullSRV);
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::ShadowMap), 1, &nullSRV);
+    }
+
+    void GraphicsDevice::BeginDrawLocalLightPass()
+    {
+        m_deviceContext->RSSetState(nullptr);
+        m_deviceContext->OMSetRenderTargets(1, m_hdrBuffer->GetRTV().GetAddressOf(), m_gameDepthReadOnlyDSV.Get());
+        
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::PointShadowMap), 1, m_pointShadowLinearBuffer->GetSRV().GetAddressOf());
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferDepth), 1, m_gameDepthBuffer->GetSRV().GetAddressOf());
+    }
+
+    void GraphicsDevice::EndDrawLocalLightPass()
     {
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
 
         ID3D11ShaderResourceView* nullSRVs[m_gBuffer.count]{};
         m_deviceContext->PSSetShaderResources(m_gBuffer.startSlot, m_gBuffer.count, nullSRVs);
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::PointShadowMap), 1, nullSRVs);
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferDepth), 1, nullSRVs);
-        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::ShadowMap), 1, nullSRVs);
     }
 
     void GraphicsDevice::BeginDrawEditorPass()
@@ -929,6 +969,16 @@ namespace engine
 
             m_gameDepthBuffer = std::make_unique<Texture>();
             m_gameDepthBuffer->Create(desc, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_D24_UNORM_S8_UINT);
+
+            {
+                D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+                dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // 기존 DSV와 포맷 동일
+                dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+                dsvDesc.Flags = D3D11_DSV_READ_ONLY_DEPTH | D3D11_DSV_READ_ONLY_STENCIL; // 핵심: 읽기 전용 플래그
+
+                // Texture 클래스에 GetRawTexture()가 있다고 가정 (Picking Pass 코드에서 사용된 것 확인됨)
+                HR_CHECK(m_device->CreateDepthStencilView(m_gameDepthBuffer->GetRawTexture(), &dsvDesc, &m_gameDepthReadOnlyDSV));
+            }
         }
 
         // G-Buffer
@@ -1157,6 +1207,37 @@ namespace engine
         // outline ps
         {
             m_outlinePS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Outline_PS.hlsl");
+        }
+
+        // point light shadow
+        {
+            D3D11_TEXTURE2D_DESC desc{};
+            desc.Width = 1024;
+            desc.Height = 1024;
+            desc.MipLevels = 1;
+            desc.ArraySize = 6 * MAX_POINT_SHADOWS;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.Format = DXGI_FORMAT_R32_FLOAT;
+            desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+            desc.SampleDesc.Count = 1;
+            desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+            m_pointShadowLinearBuffer = std::make_unique<Texture>();
+            m_pointShadowLinearBuffer->Create(desc);
+
+            desc.Format = DXGI_FORMAT_D32_FLOAT;
+            desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+            desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+            m_pointShadowDepthBuffer = std::make_unique<Texture>();
+            m_pointShadowDepthBuffer->Create(desc);
+
+            m_pointShadowViewport.TopLeftX = 0.0f;
+            m_pointShadowViewport.TopLeftY = 0.0f;
+            m_pointShadowViewport.Width = 1024.0f;
+            m_pointShadowViewport.Height = 1024.0f;
+            m_pointShadowViewport.MinDepth = 0.0f;
+            m_pointShadowViewport.MaxDepth = 1.0f;
         }
 
         m_screenSizeCB = ResourceManager::Get().GetOrCreateConstantBuffer("ScreenSize", sizeof(CbScreenSize));
