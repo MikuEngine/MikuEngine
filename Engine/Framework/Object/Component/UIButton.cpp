@@ -58,9 +58,6 @@ namespace engine
 	{
 		if (m_state == State::Disabled) return;
 		if (mouseButton != 0) return;
-
-		m_state = State::Hovered;
-		ApplyVisual();
 	}
 
 	void UIButton::OnMouseDown(const Vector2&, int mouseButton)
@@ -75,8 +72,30 @@ namespace engine
 	{
 		if (m_state == State::Disabled) return;
 		if (mouseButton != 0) return;
-
+		m_state = State::Hovered;
+		ApplyVisual();
 		if (m_onClick) m_onClick();
+	}
+
+	void UIButton::OnMouseOver(const Vector2&)
+	{
+		if (m_state == State::Normal)
+		{
+			m_state = State::Hovered;
+			ApplyVisual();
+		}
+	}
+
+	void UIButton::OnMouseCancel(const Vector2& mousePos, int mouseButton)
+	{
+		if (m_state == State::Disabled) return;
+		if (mouseButton != 0) return;
+
+		if (m_state != State::Normal)
+		{
+			m_state = State::Normal;
+			ApplyVisual();
+		}
 	}
 
 	void UIButton::Initialize()

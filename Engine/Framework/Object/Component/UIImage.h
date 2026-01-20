@@ -40,7 +40,6 @@ namespace engine
 		Vector4 m_color = Vector4(1, 1, 1, 1);
 
 		bool m_useAlphaBlend = true;
-		bool m_drawOnlyWhenRectValid = true;
 
 	public:
 		UIImage() = default;

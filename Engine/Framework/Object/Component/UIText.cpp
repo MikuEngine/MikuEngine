@@ -355,7 +355,7 @@ namespace engine
 		ImGui::InputTextMultiline("Text", &m_text);
 		ImGui::ColorEdit4("Color", &m_color.x);
 
-		ImGui::Checkbox("Alpha Blend", &m_useAlphaBlend);
+		//ImGui::Checkbox("Alpha Blend", &m_useAlphaBlend);
 		
 		ImGui::SliderInt("Font Px", &m_fontPixelSize, 1, 256);
 		if (ImGui::Button("Rebuild Font"))
