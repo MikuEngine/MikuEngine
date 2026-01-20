@@ -353,6 +353,129 @@ namespace engine
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // 강제 Transform 설정
+    // ═══════════════════════════════════════════════════════════════
+
+    void Rigidbody::ForceSetPosition(const Vector3& position, bool resetVelocity)
+    {
+        if (!m_actor)
+        {
+            return;
+        }
+
+        physx::PxRigidDynamic* dynamic = m_actor->is<physx::PxRigidDynamic>();
+        if (dynamic)
+        {
+            physx::PxTransform currentPose = dynamic->getGlobalPose();
+            currentPose.p = PhysicsUtility::ToPxVec3(position);
+            dynamic->setGlobalPose(currentPose);
+
+            if (resetVelocity)
+            {
+                dynamic->setLinearVelocity(physx::PxVec3(0));
+            }
+
+            dynamic->wakeUp();
+        }
+
+        // Transform도 동기화 (World → Local 변환)
+        Transform* transform = GetTransform();
+        Transform* parent = transform->GetParent();
+        if (parent)
+        {
+            // 부모의 역변환 적용
+            Vector3 localPos = position - parent->GetWorldPosition();
+            // TODO: 부모 회전/스케일 고려 필요 시 추가 구현
+            transform->SetLocalPosition(localPos);
+        }
+        else
+        {
+            transform->SetLocalPosition(position);
+        }
+    }
+
+    void Rigidbody::ForceSetRotation(const Quaternion& rotation, bool resetAngularVelocity)
+    {
+        if (!m_actor)
+        {
+            return;
+        }
+
+        physx::PxRigidDynamic* dynamic = m_actor->is<physx::PxRigidDynamic>();
+        if (dynamic)
+        {
+            physx::PxTransform currentPose = dynamic->getGlobalPose();
+            currentPose.q = PhysicsUtility::ToPxQuat(rotation);
+            dynamic->setGlobalPose(currentPose);
+
+            if (resetAngularVelocity)
+            {
+                dynamic->setAngularVelocity(physx::PxVec3(0));
+            }
+
+            dynamic->wakeUp();
+        }
+
+        // Transform도 동기화 (World → Local 변환)
+        // 부모가 없으면 Local = World
+        Transform* transform = GetTransform();
+        Transform* parent = transform->GetParent();
+        if (parent)
+        {
+            // 부모의 역회전 적용
+            // TODO: 정확한 역변환 필요 시 추가 구현
+            transform->SetLocalRotation(rotation);
+        }
+        else
+        {
+            transform->SetLocalRotation(rotation);
+        }
+    }
+
+    void Rigidbody::ForceSetTransform(const Vector3& position, const Quaternion& rotation,
+                                       bool resetVelocity, bool resetAngularVelocity)
+    {
+        if (!m_actor)
+        {
+            return;
+        }
+
+        physx::PxRigidDynamic* dynamic = m_actor->is<physx::PxRigidDynamic>();
+        if (dynamic)
+        {
+            physx::PxTransform newPose = PhysicsUtility::ToPxTransform(position, rotation);
+            dynamic->setGlobalPose(newPose);
+
+            if (resetVelocity)
+            {
+                dynamic->setLinearVelocity(physx::PxVec3(0));
+            }
+
+            if (resetAngularVelocity)
+            {
+                dynamic->setAngularVelocity(physx::PxVec3(0));
+            }
+
+            dynamic->wakeUp();
+        }
+
+        // Transform도 동기화 (World → Local 변환)
+        Transform* transform = GetTransform();
+        Transform* parent = transform->GetParent();
+        if (parent)
+        {
+            Vector3 localPos = position - parent->GetWorldPosition();
+            transform->SetLocalPosition(localPos);
+            transform->SetLocalRotation(rotation);
+        }
+        else
+        {
+            transform->SetLocalPosition(position);
+            transform->SetLocalRotation(rotation);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // Sleep
     // ═══════════════════════════════════════════════════════════════
 
@@ -435,16 +558,16 @@ namespace engine
         }
         if (!isDynamic) ImGui::EndDisabled();
 
-        // Linear Damping
+        // Linear Damping (이동 감쇠: 0=없음, 100=빠른 감쇠)
         float linearDamping = m_linearDamping;
-        if (ImGui::DragFloat("Linear Damping", &linearDamping, 0.01f, 0.0f, 10.0f))
+        if (ImGui::DragFloat("Linear Damping", &linearDamping, 1.0f, 0.0f, 1000.0f))
         {
             SetLinearDamping(linearDamping);
         }
 
-        // Angular Damping
+        // Angular Damping (회전 감쇠: 0=없음, 100=빠른 감쇠)
         float angularDamping = m_angularDamping;
-        if (ImGui::DragFloat("Angular Damping", &angularDamping, 0.01f, 0.0f, 10.0f))
+        if (ImGui::DragFloat("Angular Damping", &angularDamping, 1.0f, 0.0f, 1000.0f))
         {
             SetAngularDamping(angularDamping);
         }

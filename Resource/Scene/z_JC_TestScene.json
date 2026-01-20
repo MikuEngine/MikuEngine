@@ -50,7 +50,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.4000000059604645,
+                        "x": 0.10000000149011612,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -93,10 +93,10 @@
                 {
                     "Type": "Rigidbody",
                     "Active": true,
-                    "type": 2,
+                    "type": 0,
                     "mass": 1.0,
-                    "linearDamping": 0.0,
-                    "angularDamping": 0.05000000074505806,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
                     "useGravity": false,
                     "constraints": 0
                 },
@@ -113,7 +113,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": true,
+                    "isTrigger": false,
                     "layer": 0,
                     "collisionMask": 4294967295,
                     "size": [
@@ -159,8 +159,8 @@
                     "Active": true,
                     "type": 1,
                     "mass": 1.0,
-                    "linearDamping": 0.0,
-                    "angularDamping": 0.05000000074505806,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 0
                 },
@@ -212,7 +212,7 @@
                 },
                 {
                     "Type": "Rotator",
-                    "Active": true,
+                    "Active": false,
                     "Speed": 1.0
                 }
             ]
