@@ -276,6 +276,7 @@ namespace engine
         GamePlayUpdate();
 #endif // _DEBUG
 
+        SoundSystem::Get().Update();
         Profiling::UpdateMemoryUsage();
     }
 
@@ -312,8 +313,6 @@ namespace engine
         SystemManager::Get().GetRenderSystem().Update();
 
         SystemManager::Get().GetUIEventSystem().Update();
-
-        SoundSystem::Get().Update();
 
     }
 

@@ -10,6 +10,8 @@
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/System/UIEventSystem.h"
+#include "Framework/System/SoundSystem.h"
+
 
 namespace engine
 {
@@ -22,7 +24,8 @@ namespace engine
         m_lightSystem{ std::make_unique<LightSystem>() },
         m_uiEventSystem{ std::make_unique<UIEventSystem>() }
     {
-        // PhysicsSystem과 CollisionSystem은 Singleton으로 자동 관리됨
+        // Singleton으로 자동관리 되는 System
+        // PhysicsSystem, CollisionSystem, SoundSystem
     }
 
     SystemManager::~SystemManager() = default;
@@ -37,8 +40,9 @@ namespace engine
         m_lightSystem.reset();
         m_uiEventSystem.reset();
         
-        // 물리 시스템 종료 (Singleton이므로 명시적 호출)
+        // Singleton
         PhysicsSystem::Get().Shutdown();
+        SoundSystem::Get().Shutdown();
     }
 
     ScriptSystem& SystemManager::GetScriptSystem() const
@@ -84,5 +88,9 @@ namespace engine
     UIEventSystem& SystemManager::GetUIEventSystem() const
     {
         return *m_uiEventSystem.get();
+    }
+    SoundSystem& SystemManager::GetSoundSystem() const
+    {
+        return SoundSystem::Get();
     }
 }
