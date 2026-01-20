@@ -62,6 +62,8 @@ namespace engine
 		void OnMouseUp(const Vector2&, int mouseButton) override;
 		void OnMouseDown(const Vector2&, int mouseButton) override;
 		void OnMouseClick(const Vector2&, int mouseButton) override;
+		void OnMouseOver(const Vector2&) override;
+		void OnMouseCancel(const Vector2& mousePos, int mouseButton) override;
 
 	public:
 		// Render

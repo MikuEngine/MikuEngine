@@ -8,6 +8,13 @@ namespace engine
 	class UIInteractable;
 	class Canvas;
 
+	enum class PointerPhase
+	{
+		None,              // 클릭 안 함
+		PressedInRect,
+		PressedOutRect,
+	};
+
 	struct MouseState
 	{
 		Vector2 position{ 0.0f, 0.0f };
@@ -39,12 +46,16 @@ namespace engine
 		void RebuildCacheIfDirty();
 		UIElement* HitTestTopmost(const Vector2& mousePos) const;
 
-		void HandleHover(const MouseState& mouse, UIElement* newHover);
-		void HandlePressDragRelease(const MouseState& mouse, UIElement* newHover);
+		void HandleHover(UIElement* target, const MouseState& mouse);
+
+		void HandlePressDragRelease(UIElement* target, const MouseState& mouse);
 
 	private:
 		bool m_dirty = true;
 		std::vector<UIElement*> m_sortedTopBottom;
+
+		PointerPhase m_phase = PointerPhase::None;
+
 
 		UIElement* m_hovered = nullptr;
 		UIElement* m_pressed = nullptr;
@@ -55,6 +66,9 @@ namespace engine
 
 		float m_dragThresholdPixels = 5.0f;
 		Vector2 m_prevMousePos{ 0.0f, 0.0f };
+
+		bool m_pressCanceled = false;
+		bool m_prevInsidePressed = false;
 
 	private:
 		friend class System<UIElement>;

@@ -12,9 +12,10 @@ namespace engine
 
 		virtual void OnMouseEnter(const Vector2& mousePos) {}
 		virtual void OnMouseExit(const Vector2& mousePos) {}
+		virtual void OnMouseOver(const Vector2& mousePos) {}
+		virtual void OnMouseCancel(const Vector2& mousePos, int mouseButton) {}
 		
 		// Hit
-		virtual void OnMouseOver(const Vector2& mousePos) {}
 		virtual void OnMouseDown(const Vector2& mousePos, int mouseButton) {}
 		virtual void OnMouseUp(const Vector2& mousePos, int mouseButton) {}
 		virtual void OnMouseClick(const Vector2& mousePos, int mouseButton) {}

@@ -43,8 +43,10 @@ namespace engine
 
 		UIElement* newHover = HitTestTopmost(mouse.position);
 
-		HandleHover(mouse, newHover);
-		HandlePressDragRelease(mouse, newHover);
+		if (!mouse.leftHeld)
+			HandleHover(newHover, mouse);
+
+		HandlePressDragRelease(newHover, mouse);
 
 		m_prevMousePos = mouse.position;
 	}
@@ -83,15 +85,18 @@ namespace engine
 		std::stable_sort(m_sortedTopBottom.begin(), m_sortedTopBottom.end(),
 			[](UIElement* a, UIElement* b)
 			{
-				Canvas* ca = a ? a->GetCanvasInParent() : nullptr;
-				Canvas* cb = b ? b->GetCanvasInParent() : nullptr;
+				if (a == nullptr) return false; // a는 b보다 앞이 아님
+				if (b == nullptr) return true;  // a는 b보다 앞임
+
+				Canvas* ca = a->GetCanvasInParent();
+				Canvas* cb = b->GetCanvasInParent();
 
 				const int sa = ca ? ca->GetSortingOrder() : 0;
 				const int sb = cb ? cb->GetSortingOrder() : 0;
 				if (sa != sb) return sa < sb;
 
-				if (a->m_orderInLayer != b->m_orderInLayer)
-					return a->m_orderInLayer < b->m_orderInLayer;
+				if (a->GetOrderInLayer() != b->GetOrderInLayer())
+					return a->GetOrderInLayer() < b->GetOrderInLayer();
 
 				return false;
 			});
@@ -122,9 +127,9 @@ namespace engine
 		return nullptr;
 	}
 
-	void UIEventSystem::HandleHover(const MouseState& mouse, UIElement* newHover)
+	void UIEventSystem::HandleHover(UIElement* target, const MouseState& mouse)
 	{
-		if (newHover == m_hovered) return;
+		if (target == m_hovered) return;
 
 		if (m_hovered)
 		{
@@ -134,7 +139,7 @@ namespace engine
 			}
 		}
 
-		m_hovered = newHover;
+		m_hovered = target;
 
 		if (m_hovered)
 		{
@@ -145,94 +150,77 @@ namespace engine
 		}
 	}
 
-	void UIEventSystem::HandlePressDragRelease(const MouseState& mouse, UIElement* newHover)
+	void UIEventSystem::HandlePressDragRelease(UIElement* target, const MouseState& mouse)
 	{
-		// Click
+		bool rectIn = false;
+
+		if (target)
+		{
+			if (RectTransform* rt = target->GetRectTransform())
+				rectIn = PointInRect(rt->GetWorldRect(), mouse.position);
+		}
+
+		// MouseDown
 		if (mouse.leftDown)
 		{
-			m_pressed = newHover;
-			m_pressStartPos = mouse.position;
-			m_isDragging = false;
-			m_dragTarget = nullptr;
+			m_pressed = rectIn ? target : nullptr;
+			m_phase = rectIn ? PointerPhase::PressedInRect : PointerPhase::PressedOutRect;
 
 			if (m_pressed)
 			{
 				if (UIInteractable* it = AsInteractable(m_pressed))
-				{
 					it->OnMouseDown(mouse.position, 0);
-				}
 			}
+
+			return;
 		}
 
-		// Hold
-		if (mouse.leftHeld)
+		// MouseHeld
+		if (mouse.leftHeld && m_pressed)
 		{
-			if (m_pressed)
+			if (rectIn)
 			{
-				if (UIInteractable* it = AsInteractable(m_pressed))
+				if (m_phase == PointerPhase::PressedOutRect)
 				{
-					it->OnMouseOver(mouse.position);
-				}
-			}
-
-			if (!m_isDragging && m_pressed && !m_dragTarget)
-			{
-				float dist = (mouse.position - m_pressStartPos).Length();
-
-				if (dist >= m_dragThresholdPixels)
-				{
-					m_isDragging = true;
-					m_dragTarget = m_pressed;
-
-					if (UIInteractable* it = AsInteractable(m_dragTarget))
-					{
-						it->OnBeginDrag(mouse.position, 0);
-					}
-				}
-			}
-
-			if (m_isDragging && m_dragTarget)
-			{
-				if (UIInteractable* it = AsInteractable(m_dragTarget))
-					it->OnDrag(mouse.position, mouse.delta, 0);
-			}
-		}
-		
-		// Release
-		if (mouse.leftUp)
-		{
-			if (m_pressed)
-			{
-				if (UIInteractable* it = AsInteractable(m_pressed))
-				{
-					it->OnMouseUp(mouse.position, 0);
-				}
-			}
-
-			if (m_isDragging)
-			{
-				if (m_dragTarget)
-				{
-					if (UIInteractable* it = AsInteractable(m_dragTarget))
-					{
-						it->OnEndDrag(mouse.position, 0);
-					}
+					// 밖 -> 안 : Pressed 복귀
+					m_phase = PointerPhase::PressedInRect;
+					if (UIInteractable* it = AsInteractable(m_pressed))
+						it->OnMouseDown(mouse.position, 0);
 				}
 			}
 			else
 			{
-				if (m_pressed && (m_pressed == newHover))
+				if (m_phase == PointerPhase::PressedInRect)
+				{
+					// 안 -> 밖 : Cancel
+					m_phase = PointerPhase::PressedOutRect;
+					if (UIInteractable* it = AsInteractable(m_pressed))
+						it->OnMouseCancel(mouse.position, 0);
+				}
+			}
+
+			return;
+		}
+
+		// MouseUp
+		if (mouse.leftUp)
+		{
+			if (m_pressed)
+			{
+				if (m_phase == PointerPhase::PressedInRect)
 				{
 					if (UIInteractable* it = AsInteractable(m_pressed))
-					{
 						it->OnMouseClick(mouse.position, 0);
-					}
+				}
+				else
+				{
+					if (UIInteractable* it = AsInteractable(m_pressed))
+						it->OnMouseCancel(mouse.position, 0);
 				}
 			}
 
 			m_pressed = nullptr;
-			m_dragTarget = nullptr;
-			m_isDragging = false;
+			m_phase = PointerPhase::None;
 		}
 	}
 }
