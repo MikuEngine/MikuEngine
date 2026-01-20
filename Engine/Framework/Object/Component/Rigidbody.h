@@ -73,9 +73,9 @@ namespace engine
         // 속성
         RigidbodyType m_type = RigidbodyType::Dynamic;
         float m_mass = 1.0f;
-        float m_linearDamping = 0.0f;
-        float m_angularDamping = 0.05f;
-        bool m_useGravity = false;  // 기본값: 중력 비활성화
+        float m_linearDamping = 100.0f;   // 기본값: 높은 댐핑 (탑뷰 게임용)
+        float m_angularDamping = 100.0f;  // 기본값: 높은 댐핑 (탑뷰 게임용)
+        bool m_useGravity = false;        // 기본값: 중력 비활성화
         RigidbodyConstraints m_constraints = RigidbodyConstraints::None;
 
         // 텔레포트 요청
@@ -150,7 +150,7 @@ namespace engine
         void MoveRotation(const Quaternion& rotation);
 
         // ═══════════════════════════════════════
-        // 텔레포트 (Dynamic용)
+        // 텔레포트 (Dynamic용, 다음 물리 스텝에 적용)
         // ═══════════════════════════════════════
         
         void Teleport(const Vector3& position, bool resetVelocity = true);
@@ -158,6 +158,18 @@ namespace engine
         
         bool HasPendingTeleport() const { return m_hasPendingTeleport; }
         void ApplyPendingTeleport();
+
+        // ═══════════════════════════════════════
+        // 강제 Transform 설정 (즉시 적용)
+        // - Dynamic/Kinematic 모두 사용 가능
+        // - 물리 시뮬레이션을 무시하고 즉시 위치/회전 설정
+        // - 주의: 물리 시뮬레이션이 불안정해질 수 있음
+        // ═══════════════════════════════════════
+        
+        void ForceSetPosition(const Vector3& position, bool resetVelocity = false);
+        void ForceSetRotation(const Quaternion& rotation, bool resetAngularVelocity = false);
+        void ForceSetTransform(const Vector3& position, const Quaternion& rotation, 
+                               bool resetVelocity = false, bool resetAngularVelocity = false);
 
         // ═══════════════════════════════════════
         // Sleep 상태
