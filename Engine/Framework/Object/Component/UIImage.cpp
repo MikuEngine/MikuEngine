@@ -71,11 +71,7 @@ namespace engine
 
 		const UIRect rect = rt->GetWorldRectResolved(rootRect);
 
-		if (m_drawOnlyWhenRectValid)
-		{
-			if (rect.w <= 0.0f || rect.h <= 0.0f)
-				return;
-		}
+		if (rect.w <= 0.0f || rect.h <= 0.0f) return;
 
 		if (!m_texture || !m_vertexBuffer || !m_indexBuffer) return;
 
@@ -228,7 +224,6 @@ namespace engine
 
 		ImGui::ColorEdit4("Color", &m_color.x);
 		ImGui::Checkbox("Alpha Blend", &m_useAlphaBlend);
-		ImGui::Checkbox("Draw Only When Rect Valid", &m_drawOnlyWhenRectValid);
 	}
 
 	void UIImage::Save(json& j) const
@@ -241,7 +236,6 @@ namespace engine
 
 		j["Color"] = m_color; 
 		j["AlphaBlend"] = m_useAlphaBlend;
-		j["SkipInvalidRect"] = m_drawOnlyWhenRectValid;
 	}
 
 	void UIImage::Load(const json& j)
@@ -254,7 +248,6 @@ namespace engine
 
 		JsonGet(j, "Color", m_color);
 		JsonGet(j, "AlphaBlend", m_useAlphaBlend);
-		JsonGet(j, "SkipInvalidRect", m_drawOnlyWhenRectValid);
 		Refresh();
 	}
 
