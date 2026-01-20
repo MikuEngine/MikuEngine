@@ -796,6 +796,15 @@ namespace engine
             }
         }
 
+        // Collider의 Transform 스케일 동기화
+        for (Collider* collider : data.colliders)
+        {
+            if (collider)
+            {
+                collider->CheckAndSyncTransformScale();
+            }
+        }
+
         // 독립 Collider 동기화 (Rigidbody 없는 Collider)
         for (Collider* col : data.colliders)
         {

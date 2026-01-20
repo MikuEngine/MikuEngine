@@ -25,6 +25,13 @@ namespace engine
         m_shape->setGeometry(sphere);
     }
 
+    void SphereCollider::ApplyScaleRatio(const Vector3& scaleRatio)
+    {
+        // 구체는 균일 스케일만 적용 (가장 큰 축 사용)
+        float maxScale = std::max({ scaleRatio.x, scaleRatio.y, scaleRatio.z });
+        m_radius *= maxScale;
+    }
+
     void SphereCollider::OnGui()
     {
         Collider::OnGui();
