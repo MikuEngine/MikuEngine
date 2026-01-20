@@ -18,6 +18,7 @@ namespace engine
     class PixelShader;
     class BlendState;
     class GameObject;
+    class GeometryShader;
 
     class RenderSystem :
         public System<Renderer>
@@ -58,9 +59,12 @@ namespace engine
         std::shared_ptr<PixelShader> m_pointLightPS;
         std::shared_ptr<PixelShader> m_spotLightPS;
         std::shared_ptr<InputLayout> m_lightVolumeInputLayout;
+        std::shared_ptr<GeometryShader> m_shadowPointGS;
+
         std::shared_ptr<ConstantBuffer> m_localLightCB;
         std::shared_ptr<ConstantBuffer> m_objectCB;
         std::shared_ptr<ConstantBuffer> m_pickingIdCB;
+        std::shared_ptr<ConstantBuffer> m_shadowPointCB;
 
         std::shared_ptr<BlendState> m_additiveBS;
         std::shared_ptr<RasterizerState> m_frontRSS;
@@ -99,6 +103,9 @@ namespace engine
     private:
         void AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type);
         void RemoveRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type);
+
+        void DrawGlobalLightShadow();
+        void DrawPointLightShadow();
 
         void DrawGlobalLight();
         void DrawLocalLight();

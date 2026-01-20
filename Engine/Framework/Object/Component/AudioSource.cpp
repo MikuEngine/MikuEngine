@@ -46,7 +46,6 @@ namespace engine
         else
         {
             m_soundResource->Play2D(m_isLoop, callback);
-            LOG_PRINT("play2d Start");
         }
 
         // 재생 시작 후 볼륨 적용 (FMOD 채널이 생성된 직 후여야 적용됨)
@@ -93,9 +92,14 @@ namespace engine
         {
             char buffer[256];
             strcpy_s(buffer, m_clipName.c_str());
+
             if (ImGui::InputText("Clip Name", buffer, sizeof(buffer)))
             {
-                SetClip(std::string(buffer));
+                m_clipName = buffer;
+            }
+            if (ImGui::IsItemDeactivatedAfterEdit())
+            {
+                SetClip(m_clipName);
             }
 
             if (ImGui::Button("Play")) Play();

@@ -279,6 +279,9 @@
     <ClCompile Include="Framework\Asset\FontData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Graphics\Resource\GeometryShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -599,6 +602,9 @@
     <ClInclude Include="Framework\Asset\FontData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Graphics\Resource\GeometryShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\FullscreenQuad_VS.hlsl" />
@@ -638,6 +644,12 @@
     <FxCompile Include="Shader\Pixel\Picking_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\UIQuad_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\UIQuad_VS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Shadow_Point_Cutout_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Shadow_Point_PS.hlsl" />
+    <FxCompile Include="Shader\Geometry\Shadow_Point_GS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Point_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Point_Rigid_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Point_Skinned_VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

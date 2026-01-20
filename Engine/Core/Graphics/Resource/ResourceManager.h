@@ -18,6 +18,7 @@ namespace engine
     class RasterizerState;
     class DepthStencilState;
     class BlendState;
+    class GeometryShader;
 
     template <typename T>
     concept IsVertex = requires { T::vertexFormat; };
@@ -32,6 +33,7 @@ namespace engine
         std::unordered_map<std::string, std::weak_ptr<ConstantBuffer>> m_constantBuffers;
         std::unordered_map<std::string, std::weak_ptr<VertexShader>> m_vertexShaders;
         std::unordered_map<std::string, std::weak_ptr<PixelShader>> m_pixelShaders;
+        std::unordered_map<std::string, std::weak_ptr<GeometryShader>> m_geometryShaders;
         std::unordered_map<std::string, std::weak_ptr<SamplerState>> m_samplerStates;
         std::unordered_map<std::string, std::weak_ptr<RasterizerState>> m_rasterizerStates;
         std::unordered_map<std::string, std::weak_ptr<DepthStencilState>> m_depthStencilStates;
@@ -117,6 +119,9 @@ namespace engine
             const std::string& filePath,
             LifeScope scope = LifeScope::Owning);
         std::shared_ptr<PixelShader> GetOrCreatePixelShader(
+            const std::string& filePath,
+            LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<GeometryShader> GetOrCreateGeometryShader(
             const std::string& filePath,
             LifeScope scope = LifeScope::Owning);
 

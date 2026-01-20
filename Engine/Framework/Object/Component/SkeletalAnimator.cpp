@@ -716,8 +716,20 @@ namespace engine
     {
         Object::Save(j);
 
+        // unordered_map을 vector로 옮겨서 이름순 정렬
+        std::vector<std::pair<std::string, AnimationResource>> sortedAnims(
+            m_animations.begin(), m_animations.end());
+
+        // 이름(first) 기준으로 오름차순 정렬
+        std::sort(sortedAnims.begin(), sortedAnims.end(),
+            [](const auto& a, const auto& b)
+            {
+                return a.first < b.first;
+            }
+        );
+
         std::vector<json> animList;
-        for (auto& [name, res] : m_animations)
+        for (auto& [name, res] : sortedAnims)
         {
             json node;
             node["Name"] = name;

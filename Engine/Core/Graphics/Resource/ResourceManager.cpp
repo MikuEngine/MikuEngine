@@ -10,6 +10,7 @@
 #include "Core/Graphics/Resource/RasterizerState.h"
 #include "Core/Graphics/Resource/DepthStencilState.h"
 #include "Core/Graphics/Resource/BlendState.h"
+#include "Core/Graphics/Resource/GeometryShader.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/StaticMeshData.h"
 #include "Framework/Asset/GeometryData.h"
@@ -227,6 +228,26 @@ namespace engine
         m_pixelShaders[filePath] = pixelShader;
 
         return pixelShader;
+    }
+
+    std::shared_ptr<GeometryShader> ResourceManager::GetOrCreateGeometryShader(const std::string& filePath, LifeScope scope)
+    {
+        if (auto find = m_geometryShaders.find(filePath); find != m_geometryShaders.end())
+        {
+            if (!find->second.expired())
+            {
+                return find->second.lock();
+            }
+        }
+
+        auto geometryShader = std::make_shared<GeometryShader>();
+        geometryShader->Create(filePath);
+
+        CacheResource(geometryShader, scope);
+
+        m_geometryShaders[filePath] = geometryShader;
+
+        return geometryShader;
     }
 
     std::shared_ptr<SamplerState> ResourceManager::GetOrCreateSamplerState(

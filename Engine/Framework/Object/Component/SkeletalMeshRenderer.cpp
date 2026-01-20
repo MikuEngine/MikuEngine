@@ -73,12 +73,15 @@ namespace engine
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Skinned_VS.hlsl"); // Skinned Shadow VS
         m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Skinned_VS.hlsl");
+        m_pointShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Point_Skinned_VS.hlsl");
 
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
         m_maskCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Mask_Cutout_PS.hlsl");
         m_pickingPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Picking_PS.hlsl");
+        m_pointShadowPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Point_PS.hlsl");
+        m_pointShadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Point_Cutout_PS.hlsl");
     }
 
     void SkeletalMeshRenderer::Awake()
@@ -106,6 +109,7 @@ namespace engine
                 m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
                 m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Rigid_VS.hlsl");
                 m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Rigid_VS.hlsl");
+                m_pointShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Point_Rigid_VS.hlsl");
 
                 m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<CommonVertex>(m_meshFilePath, m_meshData->GetVertices());
                 
@@ -118,6 +122,7 @@ namespace engine
                 m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
                 m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Skinned_VS.hlsl");
                 m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Skinned_VS.hlsl");
+                m_pointShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Point_Skinned_VS.hlsl");
 
                 m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<BoneWeightVertex>(m_meshFilePath, m_meshData->GetBoneWeightVertices());
                 
@@ -162,6 +167,16 @@ namespace engine
     {
         m_transparentPSFilePath = shaderFilePath;
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
+    }
+
+    void SkeletalMeshRenderer::SetCastShadow(bool cast)
+    {
+        m_castShadow = cast;
+    }
+
+    bool SkeletalMeshRenderer::IsCastShadow() const
+    {
+        return m_castShadow;
     }
 
     std::shared_ptr<SkeletonData> SkeletalMeshRenderer::GetSkeletonData() const
@@ -276,9 +291,6 @@ namespace engine
         // --- RenderType Switch ---
         switch (type)
         {
-        case RenderType::Shadow:
-            deviceContext->VSSetShader(m_shadowVS->GetRawShader(), nullptr, 0);
-            break;
         case RenderType::Opaque:
             deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
             deviceContext->PSSetShader(m_opaquePS->GetRawShader(), nullptr, 0);
@@ -302,36 +314,16 @@ namespace engine
             // 필터링
             MaterialRenderType matType = materials[section.materialIndex].renderType;
             
-            if (type == RenderType::Shadow)
-            {
-                if (matType == MaterialRenderType::Transparent) continue; // 투명은 그림자 X
+            MaterialRenderType targetType;
+            if (type == RenderType::Opaque) targetType = MaterialRenderType::Opaque;
+            else if (type == RenderType::Cutout) targetType = MaterialRenderType::Cutout;
+            else targetType = MaterialRenderType::Transparent;
 
-                // Shadow PS 설정 (섹션별)
-                if (matType == MaterialRenderType::Cutout)
-                {
-                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
-                    const auto textureSRVs = m_textures[section.materialIndex].AsRawArray();
-                    if (!textureSRVs.empty()) 
-                         deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &textureSRVs[0]); // BaseColor만
-                }
-                else // Opaque
-                {
-                    deviceContext->PSSetShader(nullptr, nullptr, 0);
-                }
-            }
-            else // 일반 패스 (Opaque, Cutout, Trans)
-            {
-                MaterialRenderType targetType;
-                if (type == RenderType::Opaque) targetType = MaterialRenderType::Opaque;
-                else if (type == RenderType::Cutout) targetType = MaterialRenderType::Cutout;
-                else targetType = MaterialRenderType::Transparent;
+            if (matType != targetType) continue;
 
-                if (matType != targetType) continue;
-
-                // 텍스처 바인딩
-                const auto textureSRVs = m_textures[section.materialIndex].AsRawArray();
-                deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), static_cast<UINT>(textureSRVs.size()), textureSRVs.data());
-            }
+            // 텍스처 바인딩
+            const auto textureSRVs = m_textures[section.materialIndex].AsRawArray();
+            deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), static_cast<UINT>(textureSRVs.size()), textureSRVs.data());
 
             // Rigid Mesh라면 boneIndex 업데이트
             if (m_meshData->IsRigid())
@@ -349,6 +341,117 @@ namespace engine
 
             // Draw
             deviceContext->DrawIndexed(section.indexCount, section.indexOffset, section.vertexOffset);
+        }
+    }
+
+    void SkeletalMeshRenderer::DrawShadow(RenderType renderType, LightType lightType) const
+    {
+        if (!m_meshData)
+        {
+            return;
+        }
+
+        const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
+
+        static const UINT s_vertexBufferOffset = 0;
+        const UINT s_vertexBufferStride = m_vertexBuffer->GetBufferStride(); // 자동 (Common or BoneWeight)
+
+        deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
+        deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
+        deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+
+        // Sampler
+        deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
+
+        deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Bone),
+            1, m_boneConstantBuffer->GetBuffer().GetAddressOf());
+        deviceContext->UpdateSubresource(m_boneConstantBuffer->GetRawBuffer(), 0, nullptr, &m_boneTransformData, 0, 0);
+
+        // CbObject 준비
+        CbObject cbObject{};
+        cbObject.world = GetTransform()->GetWorld().Transpose();
+        cbObject.worldInverseTranspose = GetTransform()->GetWorld().Invert();
+        cbObject.boneIndex = -1; // 기본값
+
+        switch (lightType)
+        {
+        case LightType::Directional:
+            deviceContext->VSSetShader(m_shadowVS->GetRawShader(), nullptr, 0);
+            break;
+
+        case LightType::Point:
+            deviceContext->VSSetShader(m_pointShadowVS->GetRawShader(), nullptr, 0);
+            break;
+        }
+
+        const auto& meshSections = m_meshData->GetMeshSections();
+        const auto& materials = m_materialData->GetMaterials();
+
+        for (const auto& meshSection : meshSections)
+        {
+            switch (materials[meshSection.materialIndex].renderType)
+            {
+            case MaterialRenderType::Opaque:
+                if (renderType != RenderType::Opaque)
+                {
+                    continue;
+                }
+
+                switch (lightType)
+                {
+                case LightType::Directional:
+                    deviceContext->PSSetShader(nullptr, nullptr, 0);
+                    break;
+
+                case LightType::Point:
+                    deviceContext->PSSetShader(m_pointShadowPS->GetRawShader(), nullptr, 0);
+                    break;
+                }
+
+                break;
+
+            case MaterialRenderType::Cutout:
+                if (renderType != RenderType::Cutout)
+                {
+                    continue;
+                }
+
+                switch (lightType)
+                {
+                case LightType::Directional:
+                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+                    break;
+
+                case LightType::Point:
+                    deviceContext->PSSetShader(m_pointShadowCutoutPS->GetRawShader(), nullptr, 0);
+                    break;
+                }
+
+                deviceContext->PSSetShaderResources(
+                    static_cast<UINT>(TextureSlot::BaseColor),
+                    1,
+                    m_textures[meshSection.materialIndex].baseColor->GetSRV().GetAddressOf());
+                break;
+
+            default:
+                continue;
+            }
+
+            if (m_meshData->IsRigid())
+            {
+                cbObject.boneIndex = meshSection.boneIndex;
+            }
+            else
+            {
+                cbObject.boneIndex = -1;
+            }
+
+            // Object Buffer 업데이트 (World + BoneIndex)
+            deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
+            deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object), 1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
+
+            deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
         }
     }
 
@@ -504,6 +607,7 @@ namespace engine
         j["MaterialMetalness"] = m_materialMetalness;
         j["MaterialAmbientOcclusion"] = m_materialAmbientOcclusion;
         j["OverrideMaterial"] = m_overrideMaterial;
+        j["CastShadow"] = m_castShadow;
     }
 
     void SkeletalMeshRenderer::Load(const json& j)
@@ -521,6 +625,7 @@ namespace engine
         JsonGet(j, "MaterialMetalness", m_materialMetalness);
         JsonGet(j, "MaterialAmbientOcclusion", m_materialAmbientOcclusion);
         JsonGet(j, "OverrideMaterial", m_overrideMaterial);
+        JsonGet(j, "CastShadow", m_castShadow);
 
         Refresh();
     }
@@ -534,6 +639,8 @@ namespace engine
         {
             SetMesh(selectedMesh);
         }
+
+        ImGui::Checkbox("Cast Shadow", &m_castShadow);
 
         ImGui::SeparatorText("Material");
 

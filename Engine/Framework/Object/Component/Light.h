@@ -26,6 +26,9 @@ namespace engine
         float m_lightHeightRatio = 0.9f;
         float m_range = 10.0f;
         float m_angle = 45.0f;
+        float m_shadowBias = 0.005f;
+        int m_shadowIndex = -1;
+        bool m_castShadows = false;
 
     public:
         ~Light();
@@ -42,6 +45,9 @@ namespace engine
         void SetLightFar(float lightFar);
         void SetForwardDist(float forwardDist);
         void SetHeightRatio(float heightRatio);
+        void SetShadowBias(float bias);
+        void SetCastShadows(bool castShadows);
+        void SetShadowIndex(int index);
 
         LightType GetLightType() const;
         const Vector3& GetColor() const;
@@ -52,6 +58,9 @@ namespace engine
         float GetLightFar() const;
         float GetForwardDist() const;
         float GetHeightRatio() const;
+        float GetShadowBias() const;
+        int GetShadowIndex() const;
+        bool IsCastShadows() const;
 
     public:
         void OnGui() override;

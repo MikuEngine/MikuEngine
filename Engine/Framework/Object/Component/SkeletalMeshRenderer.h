@@ -39,6 +39,7 @@ namespace engine
 
         std::shared_ptr<VertexShader> m_vs;
         std::shared_ptr<VertexShader> m_shadowVS;
+        std::shared_ptr<VertexShader> m_pointShadowVS;
         std::shared_ptr<VertexShader> m_simpleVS;
 
         std::shared_ptr<PixelShader> m_opaquePS;
@@ -46,6 +47,8 @@ namespace engine
         std::shared_ptr<PixelShader> m_transparentPS;
         std::shared_ptr<PixelShader> m_maskCutoutPS;
         std::shared_ptr<PixelShader> m_pickingPS;
+        std::shared_ptr<PixelShader> m_pointShadowPS;
+        std::shared_ptr<PixelShader> m_pointShadowCutoutPS;
 
         std::vector<Textures> m_textures;
         std::shared_ptr<InputLayout> m_inputLayout;
@@ -65,6 +68,7 @@ namespace engine
         float m_materialMetalness = 0.0f;
         float m_materialAmbientOcclusion = 1.0f;
         bool m_overrideMaterial = false;
+        bool m_castShadow = false;
 
 
     public:
@@ -83,6 +87,8 @@ namespace engine
         void SetOpaquePixelShader(const std::string& shaderFilePath);
         void SetCutoutPixelShader(const std::string& shaderFilePath);
         void SetTransparentPixelShader(const std::string& shaderFilePath);
+        void SetCastShadow(bool cast);
+        bool IsCastShadow() const override;
 
         std::shared_ptr<SkeletonData> GetSkeletonData() const;
         const std::string& GetMeshPath() const;
@@ -94,6 +100,7 @@ namespace engine
 
         bool HasRenderType(RenderType type) const override;
         void Draw(RenderType type) const override;
+        void DrawShadow(RenderType renderType, LightType lightType) const override;
         DirectX::BoundingBox GetBounds() const override;
         void DrawMask() const override;
         void DrawPickingID() const override;

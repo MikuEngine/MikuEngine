@@ -141,12 +141,47 @@ namespace engine
         m_desc = desc;
         HR_CHECK(device->CreateTexture2D(&desc, nullptr, &m_texture));
 
+        bool isCube = (desc.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE) != 0;
+        bool isCubeArray = isCube && (desc.ArraySize > 6); // 6장 초과면 큐브 배열
+        bool isArray = desc.ArraySize > 1;
+
         if (m_desc.BindFlags & D3D11_BIND_SHADER_RESOURCE)
         {
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
             srvDesc.Format = (srvFormat != DXGI_FORMAT_UNKNOWN) ? srvFormat : desc.Format;
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-            srvDesc.Texture2D.MipLevels = m_desc.MipLevels;
+
+            if (isCubeArray)
+            {
+                // [Cube Array]
+                srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
+                srvDesc.TextureCubeArray.MostDetailedMip = 0;
+                srvDesc.TextureCubeArray.MipLevels = m_desc.MipLevels;
+                srvDesc.TextureCubeArray.First2DArrayFace = 0;
+                srvDesc.TextureCubeArray.NumCubes = desc.ArraySize / 6; // 큐브 개수
+            }
+            else if (isCube)
+            {
+                // [Single Cube]
+                srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+                srvDesc.TextureCube.MostDetailedMip = 0;
+                srvDesc.TextureCube.MipLevels = m_desc.MipLevels;
+            }
+            else if (isArray)
+            {
+                // [Texture2D Array]
+                srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+                srvDesc.Texture2DArray.MostDetailedMip = 0;
+                srvDesc.Texture2DArray.MipLevels = m_desc.MipLevels;
+                srvDesc.Texture2DArray.FirstArraySlice = 0;
+                srvDesc.Texture2DArray.ArraySize = desc.ArraySize;
+            }
+            else
+            {
+                // [Texture2D]
+                srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+                srvDesc.Texture2D.MostDetailedMip = 0;
+                srvDesc.Texture2D.MipLevels = m_desc.MipLevels;
+            }
 
             HR_CHECK(device->CreateShaderResourceView(m_texture.Get(), &srvDesc, &m_srv));
         }
@@ -155,7 +190,19 @@ namespace engine
         {
             D3D11_RENDER_TARGET_VIEW_DESC rtvDesc{};
             rtvDesc.Format = (rtvFormat != DXGI_FORMAT_UNKNOWN) ? rtvFormat : desc.Format;
-            rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+
+            if (isArray || isCube)
+            {
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+                rtvDesc.Texture2DArray.MipSlice = 0;
+                rtvDesc.Texture2DArray.FirstArraySlice = 0;
+                rtvDesc.Texture2DArray.ArraySize = desc.ArraySize; // 전체 장수 (CubeArray면 6 * N)
+            }
+            else
+            {
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+                rtvDesc.Texture2D.MipSlice = 0;
+            }
 
             HR_CHECK(device->CreateRenderTargetView(m_texture.Get(), &rtvDesc, &m_rtv));
         }
@@ -164,7 +211,20 @@ namespace engine
         {
             D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
             dsvDesc.Format = (dsvFormat != DXGI_FORMAT_UNKNOWN) ? dsvFormat : desc.Format;
-            dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+
+            // Cube든 CubeArray든 Array든 전부 TEXTURE2DARRAY
+            if (isArray || isCube)
+            {
+                dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+                dsvDesc.Texture2DArray.MipSlice = 0;
+                dsvDesc.Texture2DArray.FirstArraySlice = 0;
+                dsvDesc.Texture2DArray.ArraySize = desc.ArraySize;
+            }
+            else
+            {
+                dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+                dsvDesc.Texture2D.MipSlice = 0;
+            }
 
             HR_CHECK(device->CreateDepthStencilView(m_texture.Get(), &dsvDesc, &m_dsv));
         }
