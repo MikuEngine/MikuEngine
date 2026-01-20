@@ -763,7 +763,7 @@ namespace engine
         {
             if (!rb || !rb->GetPxActor()) continue;
 
-            // Kinematic: 항상 동기화
+            // Kinematic: 항상 동기화 (위치 및 회전)
             if (rb->IsKinematic())
             {
                 physx::PxRigidDynamic* dynamic = rb->GetPxActor()->is<physx::PxRigidDynamic>();
@@ -772,13 +772,16 @@ namespace engine
                     physx::PxTransform target = PhysicsUtility::ToPxTransform(rb->GetTransform());
                     physx::PxTransform currentPose = dynamic->getGlobalPose();
                     
-                    // 위치가 변경되었는지 확인
+                    // 위치 또는 회전이 변경되었는지 확인
                     float distSq = (target.p - currentPose.p).magnitudeSquared();
-                    if (distSq > 0.0001f)  // 0.01cm 이상 이동
+                    float rotDot = target.q.dot(currentPose.q);
+                    bool posChanged = distSq > 0.0001f;  // 0.01cm 이상 이동
+                    bool rotChanged = rotDot < 0.9999f;  // 회전 변경 (거의 같지 않으면)
+                    
+                    if (posChanged || rotChanged)
                     {
-                        dynamic->setKinematicTarget(target);
-                        LOG_PRINT("[PhysicsSystem] Kinematic moved: pos=({:.2f}, {:.2f}, {:.2f}), shapes={}",
-                            target.p.x, target.p.y, target.p.z, dynamic->getNbShapes());
+                        // setGlobalPose를 사용하여 즉시 적용 (회전 동기화 포함)
+                        dynamic->setGlobalPose(target);
                     }
                 }
             }
@@ -790,6 +793,15 @@ namespace engine
                 {
                     rb->ApplyPendingTeleport();
                 }
+            }
+        }
+
+        // Collider의 Transform 스케일 동기화
+        for (Collider* collider : data.colliders)
+        {
+            if (collider)
+            {
+                collider->CheckAndSyncTransformScale();
             }
         }
 

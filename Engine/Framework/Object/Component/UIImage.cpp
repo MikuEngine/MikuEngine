@@ -213,6 +213,8 @@ namespace engine
 
 	void UIImage::OnGui()
 	{
+		UIElement::OnGui();
+
 		ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
 		std::string selectedTex;
 

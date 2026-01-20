@@ -230,10 +230,24 @@ namespace engine
         const void* constantBlock,
         physx::PxU32 constantBlockSize)
     {
-        // 필터 셰이더 호출 확인 (항상 로그 - 디버깅용)
+        // Kinematic 확인 (먼저 체크)
+        bool isKinematic0 = physx::PxFilterObjectIsKinematic(attributes0);
+        bool isKinematic1 = physx::PxFilterObjectIsKinematic(attributes1);
+        
+        // 필터 셰이더 호출 확인 (Kinematic 쌍은 항상 로그)
         static int totalCalls = 0;
+        static int kinematicPairCalls = 0;
         totalCalls++;
-        if (totalCalls <= 50)  // 처음 50번은 항상 로그
+        
+        // Kinematic 쌍은 항상 로그
+        if (isKinematic0 || isKinematic1)
+        {
+            kinematicPairCalls++;
+            LOG_PRINT("[PhysicsFilterShader] Called #{} (Kinematic pair #{}): layer0={}, mask0=0x{:X}, layer1={}, mask1=0x{:X}, K0={}, K1={}",
+                totalCalls, kinematicPairCalls, filterData0.word0, filterData0.word1, filterData1.word0, filterData1.word1,
+                isKinematic0, isKinematic1);
+        }
+        else if (totalCalls <= 10)  // 처음 10번은 로그
         {
             LOG_PRINT("[PhysicsFilterShader] Called #{}: layer0={}, mask0=0x{:X}, layer1={}, mask1=0x{:X}",
                 totalCalls, filterData0.word0, filterData0.word1, filterData1.word0, filterData1.word1);
@@ -250,38 +264,7 @@ namespace engine
             return physx::PxFilterFlag::eDEFAULT;
         }
 
-        // Kinematic 확인
-        bool isKinematic0 = physx::PxFilterObjectIsKinematic(attributes0);
-        bool isKinematic1 = physx::PxFilterObjectIsKinematic(attributes1);
-        
-        // 디버깅: Kinematic 쌍 로그 (너무 많이 출력되지 않도록 주의)
-        static int logCount = 0;
-        if (isKinematic0 || isKinematic1)
-        {
-            if (logCount++ % 100 == 0)  // 100번에 한 번만 로그
-            {
-                LOG_PRINT("[PhysicsFilterShader] Kinematic pair check: isKinematic0={}, isKinematic1={}, layer0={}, layer1={}",
-                    isKinematic0, isKinematic1, filterData0.word0, filterData1.word0);
-            }
-        }
-        
-        // Kinematic-Kinematic 쌍은 충돌 이벤트 생성 안 함 (PhysX 기본 동작)
-        if (isKinematic0 && isKinematic1)
-        {
-            return physx::PxFilterFlag::eSUPPRESS;
-        }
-        
-        // Kinematic-Static 쌍도 기본적으로 무시 (CharacterController 사용 권장)
-        // CharacterController는 자체 충돌 감지 시스템 사용
-        bool isKinematicStaticPair = (isKinematic0 && !isKinematic1) || (!isKinematic0 && isKinematic1);
-        if (isKinematicStaticPair)
-        {
-            // Kinematic-Static은 기본적으로 충돌 무시 (성능 최적화)
-            // 플레이어 캐릭터는 CharacterController 사용 권장
-            return physx::PxFilterFlag::eSUPPRESS;
-        }
-
-        // 레이어 마스크로 충돌 여부 결정
+        // 레이어 마스크로 충돌 여부 결정 (먼저 레이어 체크)
         // word0: 자신의 레이어 (비트 인덱스)
         // word1: 충돌할 레이어들 (비트 마스크)
         
@@ -294,12 +277,21 @@ namespace engine
         bool shouldCollide = ((mask0 & (1u << layer1)) != 0) &&
                              ((mask1 & (1u << layer0)) != 0);
 
+        // 레이어 마스크로 충돌하지 않으면 즉시 무시
         if (!shouldCollide)
         {
             return physx::PxFilterFlag::eSUPPRESS;
         }
 
-        // 일반 충돌 플래그 설정 (Dynamic-Dynamic, Dynamic-Static 등)
+        // ═══════════════════════════════════════════════════════════════
+        // 모든 충돌 쌍에 대해 기본 처리
+        // - Kinematic-Dynamic: PhysX가 Dynamic을 밀어냄 (물리 반응)
+        // - Kinematic-Static: PhysX가 기본적으로 무시 (여기까지 도달 안 함)
+        // - Dynamic-Dynamic: 서로 밀어냄 (물리 반응)
+        // - Dynamic-Static: Dynamic이 밀림 (물리 반응)
+        // ═══════════════════════════════════════════════════════════════
+        
+        // 모든 쌍에 대해 물리 반응 + 이벤트 알림
         pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT
                   | physx::PxPairFlag::eNOTIFY_TOUCH_FOUND
                   | physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS

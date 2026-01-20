@@ -1,6 +1,7 @@
 ﻿#include "EnginePCH.h"
 #include "UIElement.h"
 
+#include "Framework/System/RenderSystem.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/UIEventSystem.h"
 
@@ -8,6 +9,7 @@
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/Canvas.h"
+#include "Framework/Object/Component/Component.h"
 
 namespace engine
 {
@@ -78,6 +80,30 @@ namespace engine
 		return box;
 	}
 
+	void UIElement::SetLayer(int layer)
+	{
+		if (m_layer == layer) return;
+		m_layer = layer;
+		SystemManager::Get().GetRenderSystem().MarkScreenDirty();
+	}
+
+	void UIElement::SetOrderInLayer(int order)
+	{
+		if (m_orderInLayer == order) return;
+		m_orderInLayer = order;
+		SystemManager::Get().GetRenderSystem().MarkScreenDirty();
+	}
+
+	int UIElement::GetLayer()
+	{
+		return m_layer;
+	}
+
+	int UIElement::GetOrderInLayer()
+	{
+		return m_orderInLayer;
+	}
+
 	RectTransform* UIElement::GetRectTransform() const
 	{
 		GameObject* go = GetGameObject();
@@ -121,6 +147,41 @@ namespace engine
 		}
 
 		return nullptr;
+	}
+
+	void UIElement::OnGui()
+	{
+		int layer = m_layer;
+		if (ImGui::DragInt("Layer", &layer, 1.0f))
+		{
+			SetLayer(layer);
+		}
+
+		int order = m_orderInLayer;
+		if (ImGui::DragInt("Order In Layer", &order, 1.0f))
+		{
+			SetOrderInLayer(order);
+		}
+
+		ImGui::Checkbox("Raycast Target", &m_raycastTarget);
+	}
+
+	void UIElement::Save(json& j) const
+	{
+		Component::Save(j);
+
+		j["Layer"] = m_layer;
+		j["OrderInLayer"] = m_orderInLayer;
+		j["RaycastTarget"] = m_raycastTarget;
+	}
+
+	void UIElement::Load(const json& j)
+	{
+		Component::Load(j);
+
+		JsonGet(j, "Layer", m_layer);
+		JsonGet(j, "OrderInLayer", m_orderInLayer);
+		JsonGet(j, "RaycastTarget", m_raycastTarget);
 	}
 
 	bool UIElement::CanDraw() const

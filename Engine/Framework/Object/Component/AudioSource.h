@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Framework/Object/Component/Component.h"
+#include "Framework/Object/Component/ComponentFactory.h"
 
 namespace engine
 {
@@ -17,7 +18,7 @@ namespace engine
         
         bool m_playOnAwake = false;
         bool m_isLoop = false;
-        bool m_is3D = true;
+        bool m_is3D = false;
         
         float m_volume = 1.0f;
         float m_minDistance = 1.0f;
@@ -25,7 +26,7 @@ namespace engine
 
     public:
         AudioSource() = default;
-        ~AudioSource();
+        virtual ~AudioSource();
 
         void Initialize() override;
 

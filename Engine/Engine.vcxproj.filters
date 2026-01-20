@@ -276,6 +276,9 @@
     <ClCompile Include="Framework\Object\Component\AudioSource.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\Asset\FontData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Core\Graphics\Resource\GeometryShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -596,6 +599,9 @@
     <ClInclude Include="Framework\Object\Component\AudioSource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Framework\Asset\FontData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Core\Graphics\Resource\GeometryShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -636,6 +642,8 @@
     <FxCompile Include="Shader\Vertex\Grid_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\Grid_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\Picking_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\UIQuad_PS.hlsl" />
+    <FxCompile Include="Shader\Vertex\UIQuad_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\Shadow_Point_Cutout_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\Shadow_Point_PS.hlsl" />
     <FxCompile Include="Shader\Geometry\Shadow_Point_GS.hlsl" />

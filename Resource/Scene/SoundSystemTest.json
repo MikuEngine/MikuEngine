@@ -60,6 +60,21 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                },
+                {
+                    "Type": "SoundTest",
+                    "Active": false
+                },
+                {
+                    "Type": "AudioSource",
+                    "Active": true,
+                    "ClipName": "jaguar.wav",
+                    "IsLoop": false,
+                    "Is3D": false,
+                    "PlayOnAwake": false,
+                    "Volume": 1.0,
+                    "MinDist": 1.0,
+                    "MaxDist": 500.0
                 }
             ]
         }

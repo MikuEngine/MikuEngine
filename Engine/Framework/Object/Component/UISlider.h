@@ -23,11 +23,15 @@ namespace engine
 
 	private:
 		bool m_interactable = true;
-		bool m_woleNumbers = false;
+		bool m_wholeNumbers = false;
 
 		float m_minValue = 0.0f;
 		float m_maxValue = 1.0f;
 		float m_value = 0.5f;
+
+		bool   m_dragging = false;
+		bool   m_draggingHandle = false;
+		float  m_handleDragOffset = 0.0f;
 
 		Direction m_direction = Direction::LeftToRight;
 
@@ -45,14 +49,24 @@ namespace engine
 		Vector4 m_fillColor = Vector4(1, 1, 1, 1);
 		Vector4 m_handleColor = Vector4(1, 1, 1, 1);
 
+		Vector2 m_handlePivot = { 0.0f, 0.5f };
+
 	public:
 		void Initialize() override;
 		void DrawUI() const override {}
 
 	public:
-		// Setter
+		// Set
 		void SetOnValueChanged(ValueChangedCallback cb);
 		void SetRange(float minV, float maxV);
+		void SetWholeNumbers(bool v);
+		void SetValue(float v, bool notify = true);
+
+		float GetValue() const;
+
+		void SetSprites(const std::string& track,
+						const std::string& fill,
+						const std::string& handle);
 
 	public:
 		bool IsInteractable() const override;
@@ -72,6 +86,13 @@ namespace engine
 
 	private:
 		void ApplyVisual();
+		void CreateVisuals();
+		void UpdateGraphics();
 
+	private:
+		// Util / Helper
+		float Clamp(float v, float minV, float maxV);
+		void SetValueFromMouse(const Vector2& mousePos, bool notify = true);
+		bool IsMouseOnHandle(const Vector2& mousePos) const;
 	};
 }
