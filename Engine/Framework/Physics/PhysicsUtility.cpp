@@ -14,15 +14,12 @@ namespace engine
                 return physx::PxTransform(physx::PxIdentity);
             }
 
-            // 월드 위치와 회전 사용
-            // 주의: GetWorldPosition()은 월드 행렬 계산이 필요할 수 있음
-            Vector3 worldPos = const_cast<Transform*>(transform)->GetWorldPosition();
-            Quaternion localRot = transform->GetLocalRotation();
+            // 월드 위치와 월드 회전 사용
+            Transform* nonConstTransform = const_cast<Transform*>(transform);
+            Vector3 worldPos = nonConstTransform->GetWorldPosition();
+            Quaternion worldRot = nonConstTransform->GetWorldRotation();
 
-            // TODO: 부모가 있는 경우 월드 회전 계산 필요
-            // 현재는 로컬 회전 사용 (단순화)
-
-            return ToPxTransform(worldPos, localRot);
+            return ToPxTransform(worldPos, worldRot);
         }
 
         void ApplyPxTransformToTransform(const physx::PxTransform& pxTransform, Transform* transform)
@@ -32,15 +29,34 @@ namespace engine
                 return;
             }
 
-            Vector3 position = ToVector3(pxTransform.p);
-            Quaternion rotation = ToQuaternion(pxTransform.q);
+            Vector3 worldPosition = ToVector3(pxTransform.p);
+            Quaternion worldRotation = ToQuaternion(pxTransform.q);
 
-            // 부모가 있는 경우 로컬 좌표로 변환 필요
-            // TODO: 월드 → 로컬 변환 구현
-            // 현재는 부모가 없다고 가정
-
-            transform->SetLocalPosition(position);
-            transform->SetLocalRotation(rotation);
+            // 부모가 있는 경우 로컬 좌표로 변환
+            Transform* parent = transform->GetParent();
+            if (parent)
+            {
+                // 부모의 월드 역행렬 사용
+                Matrix parentWorldInverse = parent->GetWorld().Invert();
+                
+                // 월드 위치를 로컬로 변환
+                Vector3 localPosition = Vector3::Transform(worldPosition, parentWorldInverse);
+                transform->SetLocalPosition(localPosition);
+                
+                // 월드 회전을 로컬로 변환
+                Quaternion parentWorldRot = parent->GetWorldRotation();
+                Quaternion invParentRot = parentWorldRot;
+                invParentRot.Conjugate();
+                Quaternion localRotation = invParentRot * worldRotation;
+                localRotation.Normalize();
+                transform->SetLocalRotation(localRotation);
+            }
+            else
+            {
+                // 부모 없음: 월드 = 로컬
+                transform->SetLocalPosition(worldPosition);
+                transform->SetLocalRotation(worldRotation);
+            }
         }
     }
 }

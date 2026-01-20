@@ -163,6 +163,22 @@ namespace engine
         ImGui_ImplWin32_Init(m_hWnd);
         ImGui_ImplDX11_Init(GraphicsDevice::Get().GetDevice().Get(), GraphicsDevice::Get().GetDeviceContext().Get());
 
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+        io.Fonts->Clear();
+
+        ImFontConfig cfg{};
+        cfg.OversampleH = 2;
+        cfg.OversampleV = 2;
+
+        const ImWchar* ranges = io.Fonts->GetGlyphRangesKorean();
+
+        io.Fonts->AddFontFromFileTTF("Resource/Font/malgun.ttf", 18.0f, &cfg, ranges);
+
+        ImGui_ImplDX11_InvalidateDeviceObjects();
+        ImGui_ImplDX11_CreateDeviceObjects();
+
         AssetManager::Get().Initialize();
         ResourceManager::Get().Initialize();
 
@@ -260,6 +276,7 @@ namespace engine
         GamePlayUpdate();
 #endif // _DEBUG
 
+        SoundSystem::Get().Update();
         Profiling::UpdateMemoryUsage();
     }
 
@@ -296,8 +313,6 @@ namespace engine
         SystemManager::Get().GetRenderSystem().Update();
 
         SystemManager::Get().GetUIEventSystem().Update();
-
-        SoundSystem::Get().Update();
 
     }
 

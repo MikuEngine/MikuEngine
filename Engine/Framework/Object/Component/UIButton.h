@@ -30,8 +30,8 @@ namespace engine
 		State m_state = State::Normal;
 		ClickCallback m_onClick;
 
-		UIImage* m_background;
-		UIText* m_text;
+		UIImage* m_background = nullptr;
+		UIText* m_text = nullptr;
 
 		// ImagePath
 		std::string m_spriteNormal;
@@ -79,4 +79,3 @@ namespace engine
 		std::string GetType() const override;
 	};
 }
-

@@ -541,8 +541,8 @@ namespace engine
         pxDir.normalize();
 
         const physx::PxU32 maxHits = 256;
-        physx::PxRaycastHit hitBuffer[maxHits];
-        physx::PxRaycastBuffer hits(hitBuffer, maxHits);
+        std::vector<physx::PxRaycastHit> hitBuffer(maxHits);  // 힙에 동적 할당
+        physx::PxRaycastBuffer hits(hitBuffer.data(), maxHits);
 
         physx::PxQueryFilterData filterData;
         filterData.data.word1 = layerMask;
@@ -770,19 +770,7 @@ namespace engine
                 if (dynamic)
                 {
                     physx::PxTransform target = PhysicsUtility::ToPxTransform(rb->GetTransform());
-                    physx::PxTransform currentPose = dynamic->getGlobalPose();
-                    
-                    // 위치 또는 회전이 변경되었는지 확인
-                    float distSq = (target.p - currentPose.p).magnitudeSquared();
-                    float rotDot = target.q.dot(currentPose.q);
-                    bool posChanged = distSq > 0.0001f;  // 0.01cm 이상 이동
-                    bool rotChanged = rotDot < 0.9999f;  // 회전 변경 (거의 같지 않으면)
-                    
-                    if (posChanged || rotChanged)
-                    {
-                        // setGlobalPose를 사용하여 즉시 적용 (회전 동기화 포함)
-                        dynamic->setGlobalPose(target);
-                    }
+                    dynamic->setGlobalPose(target);
                 }
             }
             // Dynamic: Transform이 수정된 경우만 (텔레포트 등)

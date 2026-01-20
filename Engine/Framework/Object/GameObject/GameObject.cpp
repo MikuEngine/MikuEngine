@@ -66,9 +66,21 @@ namespace engine
             return;
         }
 
-        for (auto childTr : m_transform->GetChildren())
+        // 자식이 있으면 먼저 재귀적으로 삭제 (Leaf부터 삭제)
+        // 순회 중 리스트 변경을 방지하기 위해 복사본 사용
+        auto children = m_transform->GetChildren();  // 복사
+        for (auto* childTransform : children)
         {
-            childTr->GetGameObject()->Destroy();
+            if (childTransform && childTransform->GetGameObject())
+            {
+                childTransform->GetGameObject()->Destroy();  // 재귀 호출
+            }
+        }
+
+        // 부모에서 분리 (자식 리스트에서 제거)
+        if (m_transform->GetParent())
+        {
+            m_transform->SetParent(nullptr, false);
         }
 
         m_isPendingKill = true;

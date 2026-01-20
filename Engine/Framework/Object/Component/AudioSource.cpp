@@ -6,6 +6,10 @@
 
 namespace engine
 {
+    AudioSource::AudioSource()
+    {
+    }
+
     AudioSource::~AudioSource()
     {
         Stop();
@@ -13,15 +17,26 @@ namespace engine
 
     void AudioSource::Initialize()
     {
+        SoundSystem::Get().Register(this);
+
+        /*/
         if (!m_clipName.empty())
         {
             SetClip(m_clipName);
 
+            
             if (m_playOnAwake)
             {
                 Play();
             }
+            
         }
+        //*/
+    }
+
+    void AudioSource::OnDestroy()
+    {
+        SoundSystem::Get().Unregister(this);
     }
 
     void AudioSource::SetClip(std::string name)
@@ -41,15 +56,20 @@ namespace engine
             if (tr)
             {
                 m_soundResource->Play3D(tr->GetWorldPosition(), m_isLoop);
+                m_isPlaying = true;
             }
         }
         else
         {
             m_soundResource->Play2D(m_isLoop, callback);
+            m_isPlaying = true;
         }
 
         // 재생 시작 후 볼륨 적용 (FMOD 채널이 생성된 직 후여야 적용됨)
-        m_soundResource->SetVolume(m_volume);
+        if (m_currentChannel)
+        {
+            m_currentChannel->setVolume(m_volume);
+        }
     }
 
     void AudioSource::Stop()
@@ -58,6 +78,7 @@ namespace engine
         {
             m_soundResource->Stop();
         }
+        m_isPlaying = false;
     }
 
     void AudioSource::SetVolume(float vol)
@@ -86,6 +107,17 @@ namespace engine
         }
     }
 
+    void AudioSource::SetForceStopState()
+    {
+        m_isPlaying = false;
+        m_currentChannel = nullptr;
+    }
+
+    void AudioSource::OnSoundEnd()
+    {
+        m_isPlaying = false;
+    }
+
     void AudioSource::OnGui()
     {
         if (ImGui::TreeNodeEx("Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
@@ -102,9 +134,19 @@ namespace engine
                 SetClip(m_clipName);
             }
 
-            if (ImGui::Button("Play")) Play();
+            ImGui::BeginDisabled(m_isPlaying);
+            if (ImGui::Button("Play"))
+            {
+                Play();
+            }
+            ImGui::EndDisabled();
             ImGui::SameLine();
-            if (ImGui::Button("Stop")) Stop();
+            ImGui::BeginDisabled(!m_isPlaying);
+            if (ImGui::Button("Stop"))
+            {
+                Stop();
+            }
+            ImGui::EndDisabled();
 
             bool loop = m_isLoop;
             if (ImGui::Checkbox("Loop", &loop)) SetLoop(loop);

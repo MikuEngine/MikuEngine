@@ -42,7 +42,7 @@ namespace engine
 
         void Release();
 
-        void Play2D(bool bLoop = false, EventEndPlay callback = nullptr);
+        FMOD::Channel* Play2D(bool bLoop = false, EventEndPlay callback = nullptr);
 
         void Play3D(const Vector3& position, bool bLoop = false);
 
@@ -64,8 +64,8 @@ namespace engine
         friend class Sound;
 
     private:
-        SoundSystem();
-        virtual ~SoundSystem();
+        SoundSystem() = default;
+        virtual ~SoundSystem() = default;
 
     private:
         FMOD::System* m_pSystem = nullptr;
@@ -87,8 +87,6 @@ namespace engine
     public:
         bool Initialize();
         void Shutdown();
-
-        bool Release();
 
         void Register(AudioSource* source) override;
         void Unregister(AudioSource* source) override;

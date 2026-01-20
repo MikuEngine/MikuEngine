@@ -89,7 +89,7 @@ namespace engine
                     static_cast<int>(pos.x), static_cast<int>(pos.y));
                 if (gameObject != nullptr)
                 {
-                    m_selectedObject = gameObject;
+                    SetSelectedObject(gameObject);
                 }
             }
         }
@@ -128,6 +128,23 @@ namespace engine
     GameObject* EditorManager::GetSelectedObject() const
     {
         return m_selectedObject.Get();
+    }
+
+    void EditorManager::SetSelectedObject(GameObject* obj)
+    {
+        m_selectedObject = obj;
+        m_expandedNodes.clear();
+
+        if (obj)
+        {
+            // 선택된 오브젝트의 모든 조상을 펼침 목록에 추가
+            Transform* parent = obj->GetTransform()->GetParent();
+            while (parent)
+            {
+                m_expandedNodes.insert(parent->GetGameObject());
+                parent = parent->GetParent();
+            }
+        }
     }
 
     void EditorManager::DrawPlayController()
@@ -678,6 +695,13 @@ namespace engine
             flags |= ImGuiTreeNodeFlags_Leaf;
         }
         
+        // 선택된 오브젝트의 부모 계층이면 자동으로 펼침
+        if (m_expandedNodes.find(gameObject) != m_expandedNodes.end())
+        {
+            ImGui::SetNextItemOpen(true, ImGuiCond_Always);
+            m_expandedNodes.erase(gameObject);  // 한 번 펼친 후 제거
+        }
+
         // [추가] 비활성화 시 회색 처리 (Alpha 0.5)
         bool isHierarchyActive = gameObject->IsActive(); // IsActive()는 부모까지 체크함
         if (!isHierarchyActive)
@@ -704,6 +728,19 @@ namespace engine
             // 여기서 바로 삭제 (Delete 키 확인 로직 없이 심플하게 메뉴만)
             if (ImGui::MenuItem("Delete"))
             {
+                // 자식이 있는 오브젝트는 삭제 불가
+                if (!gameObject->GetTransform()->GetChildren().empty())
+                {
+                    LOG_INFO("[Editor] Cannot delete '{}': has {} children. Delete children first.",
+                        gameObject->GetName(), gameObject->GetTransform()->GetChildren().size());
+                    ImGui::EndPopup();
+                    if (opened)
+                    {
+                        ImGui::TreePop();
+                    }
+                    return;
+                }
+
                 if (m_selectedObject == gameObject)
                 {
                     m_selectedObject = nullptr;

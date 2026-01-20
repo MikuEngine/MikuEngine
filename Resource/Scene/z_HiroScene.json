@@ -146,7 +146,7 @@
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "Layer": 1,
+                    "Layer": 128,
                     "OrderInLayer": 50,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/Earth.png",
@@ -354,13 +354,13 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "한글 지원이 안됨\nImgui만 그런듯",
+                    "Text": "한글 지원이 안됨\nImgui만 그런듯\nㅁㄴㅇㄹ\nddddasdwasdwasd",
                     "FontPath": "Resource/Font/gulim.ttc",
                     "FontPx": 40,
                     "Color": {
-                        "x": 0.0,
+                        "x": 0.03474903106689453,
                         "y": 1.0,
-                        "z": 0.970587968826294,
+                        "z": 0.9716100096702576,
                         "w": 1.0
                     },
                     "AlphaBlend": true,

@@ -19,13 +19,15 @@ namespace engine
     void Collider::Initialize()
     {
         Component::Initialize();
+        // m_lastSyncedScale은 Awake()에서 설정됨
     }
 
     void Collider::Awake()
     {
         Component::Awake();
-
-        // Shape 생성
+        
+        // Shape 생성 (m_size 기반, 기본 스케일 1,1,1 상태)
+        m_lastSyncedScale = Vector3::One;
         CreateShape();
 
         if (!m_shape)
@@ -35,21 +37,40 @@ namespace engine
         }
 
         // 같은 GameObject에 Rigidbody가 있는지 확인
-        m_attachedRigidbody = GetGameObject()->GetComponent<Rigidbody>();
+        Rigidbody* rb = GetGameObject()->GetComponent<Rigidbody>();
 
-        if (m_attachedRigidbody)
+        if (rb && rb->GetPxActor())
         {
-            // Rigidbody의 Actor에 Shape 부착
+            // Rigidbody가 이미 초기화되어 있으면 바로 부착
+            m_attachedRigidbody = rb;
             AttachToRigidbody();
+        }
+        else if (rb)
+        {
+            // Rigidbody는 있지만 아직 PxActor가 없음 (Awake 순서 문제)
+            // Rigidbody::Awake()에서 NotifyCollidersAttached()가 호출될 때 처리됨
+            // 여기서는 m_attachedRigidbody를 설정하지 않음!
+            // 대신 독립 Static Actor를 임시로 생성
+            CreateOwnedStaticActor();
         }
         else
         {
-            // 독립 Static Actor 생성
+            // Rigidbody 없음 - 독립 Static Actor 생성
             CreateOwnedStaticActor();
         }
 
         // PhysicsSystem에 등록
         PhysicsSystem::Get().RegisterCollider(this);
+
+        // WorldScale 적용 (부모 스케일 포함)
+        if (m_syncWithTransform && m_shape && GetTransform())
+        {
+            Vector3 worldScale = GetTransform()->GetWorldScale();
+            // 기준 스케일(1,1,1)에서 WorldScale로 변환
+            ApplyScaleRatio(worldScale);
+            UpdateGeometry();
+            m_lastSyncedScale = worldScale;
+        }
     }
 
     void Collider::OnDestroy()
@@ -298,8 +319,8 @@ namespace engine
             SetSyncWithTransform(syncWithTransform);
             if (syncWithTransform)
             {
-                // 동기화 활성화 시 현재 스케일로 초기화
-                m_lastSyncedScale = GetTransform()->GetLocalScale();
+                // 동기화 활성화 시 현재 WorldScale로 초기화
+                m_lastSyncedScale = GetTransform()->GetWorldScale();
             }
         }
         if (ImGui::IsItemHovered())
@@ -369,7 +390,8 @@ namespace engine
             return;
         }
 
-        Vector3 currentScale = GetTransform()->GetLocalScale();
+        // WorldScale 사용 (부모 스케일 포함)
+        Vector3 currentScale = GetTransform()->GetWorldScale();
         
         // 스케일 변경 감지
         const float epsilon = 0.0001f;
