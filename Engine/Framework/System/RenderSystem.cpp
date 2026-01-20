@@ -459,8 +459,69 @@ namespace engine
         auto& graphics = GraphicsDevice::Get();
         const auto& context = graphics.GetDeviceContext();
 
+        Matrix view, projection;
+        Vector3 cameraPosition;
+
+#ifdef _DEBUG
+        switch (EditorManager::Get().GetEditorState())
+        {
+        case EditorState::Edit:
+        case EditorState::Pause:
+        {
+            auto* cam = EditorManager::Get().GetEditorCamera();
+            view = cam->GetView();
+            projection = cam->GetProjection();
+            cameraPosition = cam->GetPosition();
+        }
+            break;
+
+        case EditorState::Play:
+        {
+            auto* cam = SystemManager::Get().GetCameraSystem().GetMainCamera();
+            if (cam == nullptr)
+            {
+                return nullptr;
+            }
+
+            view = cam->GetView();
+            projection = cam->GetProjection();
+            cameraPosition = cam->GetPosition();
+        }
+            break;
+        }
+#else
+        auto* cam = SystemManager::Get().GetCameraSystem().GetMainCamera();
+        if (cam == nullptr)
+        {
+            return nullptr;
+        }
+
+        view = cam->GetView();
+        projection = cam->GetProjection();
+        cameraPosition = cam->GetPosition();
+#endif // _DEBUG
+
+        const Matrix viewProjection = view * projection;
+        CbFrame cbFrame{};
+        cbFrame.view = view.Transpose();
+        cbFrame.projection = projection.Transpose();
+        cbFrame.viewProjection = viewProjection.Transpose();
+        cbFrame.invViewProjection = viewProjection.Invert().Transpose();
+        cbFrame.cameraWorldPoistion = cameraPosition;
+        cbFrame.maxHDRNits = graphics.GetMaxHDRNits();
+
         graphics.BeginDrawPickingPass();
         {
+            context->VSSetConstantBuffers(
+                static_cast<UINT>(ConstantBufferSlot::Frame),
+                1,
+                m_frameCB->GetBuffer().GetAddressOf());
+            context->PSSetConstantBuffers(
+                static_cast<UINT>(ConstantBufferSlot::Frame),
+                1,
+                m_frameCB->GetBuffer().GetAddressOf());
+            context->UpdateSubresource(m_frameCB->GetRawBuffer(), 0, nullptr, &cbFrame, 0, 0);
+
             context->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::PickingId), 1, m_pickingIdCB->GetBuffer().GetAddressOf());
             
             for (unsigned int i = 0; i < m_components.size(); ++i)
