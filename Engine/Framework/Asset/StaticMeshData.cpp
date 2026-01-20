@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "StaticMeshData.h"
 
 #include <assimp/Importer.hpp>
@@ -20,11 +20,23 @@ namespace engine
 
         const aiScene* scene = importer.ReadFile(filePath, importFlags);
 
+        if (!scene)
+        {
+            LOG_ERROR("[StaticMeshData] Failed to load mesh: {}", filePath);
+            return;
+        }
+
         Create(scene);
     }
 
     void StaticMeshData::Create(const aiScene* scene)
     {
+        if (!scene)
+        {
+            LOG_ERROR("[StaticMeshData] scene is null");
+            return;
+        }
+
         m_meshSections.reserve(scene->mNumMeshes);
 
         // vertices, indices 각각 하나의 컨테이너만 사용하고

@@ -256,18 +256,9 @@ namespace engine
         // filterData.word0 = 자신의 레이어 인덱스
         // filterData.word1 = 충돌할 레이어 마스크
 
-        // 트리거 체크
-        if (physx::PxFilterObjectIsTrigger(attributes0) || 
-            physx::PxFilterObjectIsTrigger(attributes1))
-        {
-            pairFlags = physx::PxPairFlag::eTRIGGER_DEFAULT;
-            return physx::PxFilterFlag::eDEFAULT;
-        }
-
-        // 레이어 마스크로 충돌 여부 결정 (먼저 레이어 체크)
-        // word0: 자신의 레이어 (비트 인덱스)
-        // word1: 충돌할 레이어들 (비트 마스크)
-        
+        // ═══════════════════════════════════════════════════════════════
+        // 레이어 마스크 체크 (트리거/일반 충돌 모두에 적용)
+        // ═══════════════════════════════════════════════════════════════
         physx::PxU32 layer0 = filterData0.word0;
         physx::PxU32 mask0 = filterData0.word1;
         physx::PxU32 layer1 = filterData1.word0;
@@ -277,10 +268,20 @@ namespace engine
         bool shouldCollide = ((mask0 & (1u << layer1)) != 0) &&
                              ((mask1 & (1u << layer0)) != 0);
 
-        // 레이어 마스크로 충돌하지 않으면 즉시 무시
+        // 레이어 마스크로 충돌하지 않으면 즉시 무시 (트리거 포함)
         if (!shouldCollide)
         {
             return physx::PxFilterFlag::eSUPPRESS;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // 트리거 체크 (레이어 체크 통과 후)
+        // ═══════════════════════════════════════════════════════════════
+        if (physx::PxFilterObjectIsTrigger(attributes0) || 
+            physx::PxFilterObjectIsTrigger(attributes1))
+        {
+            pairFlags = physx::PxPairFlag::eTRIGGER_DEFAULT;
+            return physx::PxFilterFlag::eDEFAULT;
         }
 
         // ═══════════════════════════════════════════════════════════════

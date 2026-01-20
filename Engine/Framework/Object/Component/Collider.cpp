@@ -154,6 +154,8 @@ namespace engine
     void Collider::SetLayer(uint32_t layer)
     {
         m_layer = layer;
+        // PhysicsLayerMatrix에서 자동으로 충돌 마스크 가져오기
+        m_collisionMask = PhysicsSystem::Get().GetLayerMatrix().GetCollisionMask(layer);
         UpdateFilterData();
     }
 
@@ -350,7 +352,7 @@ namespace engine
         j["isTrigger"] = m_isTrigger;
         j["syncWithTransform"] = m_syncWithTransform;
         j["layer"] = m_layer;
-        j["collisionMask"] = m_collisionMask;
+        // collisionMask는 저장하지 않음 (PhysicsLayerMatrix에서 자동 설정)
     }
 
     void Collider::Load(const json& j)
@@ -376,11 +378,10 @@ namespace engine
         if (j.contains("layer"))
         {
             m_layer = j["layer"].get<uint32_t>();
+            // PhysicsLayerMatrix에서 자동으로 충돌 마스크 가져오기
+            m_collisionMask = PhysicsSystem::Get().GetLayerMatrix().GetCollisionMask(m_layer);
         }
-        if (j.contains("collisionMask"))
-        {
-            m_collisionMask = j["collisionMask"].get<uint32_t>();
-        }
+        // collisionMask는 더 이상 씬에서 로드하지 않음 (PhysicsLayerMatrix에서 자동 설정)
     }
 
     void Collider::CheckAndSyncTransformScale()

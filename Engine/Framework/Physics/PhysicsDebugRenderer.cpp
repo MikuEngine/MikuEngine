@@ -179,6 +179,7 @@ namespace engine
     {
         // 에디터 모드에서도 작동하도록 씬에서 직접 콜라이더를 찾음
         std::vector<Collider*> colliders;
+        std::unordered_set<Collider*> colliderSet;  // 중복 방지용
         
         // PhysicsSystem에 등록된 콜라이더 (Play 모드)
         const auto& registeredColliders = PhysicsSystem::Get().GetRegisteredColliders();
@@ -189,6 +190,20 @@ namespace engine
         if (!isEditMode)
         {
             colliders = registeredColliders;
+            for (Collider* col : registeredColliders)
+            {
+                colliderSet.insert(col);
+            }
+            
+            // 충돌 중인 Collider들도 추가 (Destroy 직후에도 렌더링되도록)
+            for (Collider* col : m_collidingColliders)
+            {
+                if (col && colliderSet.find(col) == colliderSet.end())
+                {
+                    colliders.push_back(col);
+                    colliderSet.insert(col);
+                }
+            }
         }
         else
         {
