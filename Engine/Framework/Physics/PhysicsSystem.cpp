@@ -541,8 +541,8 @@ namespace engine
         pxDir.normalize();
 
         const physx::PxU32 maxHits = 256;
-        physx::PxRaycastHit hitBuffer[maxHits];
-        physx::PxRaycastBuffer hits(hitBuffer, maxHits);
+        std::vector<physx::PxRaycastHit> hitBuffer(maxHits);  // 힙에 동적 할당
+        physx::PxRaycastBuffer hits(hitBuffer.data(), maxHits);
 
         physx::PxQueryFilterData filterData;
         filterData.data.word1 = layerMask;
