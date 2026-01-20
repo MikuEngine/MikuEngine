@@ -155,6 +155,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\Graphics\Resource\GeometryShader.cpp" />
     <ClCompile Include="Editor\EditorGrid.cpp" />
     <ClCompile Include="Framework\Object\Component\AudioSource.cpp" />
     <ClCompile Include="Framework\Object\Component\Canvas.cpp" />
@@ -247,6 +248,7 @@
     <ClCompile Include="Framework\Object\Component\UISlider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Graphics\Resource\GeometryShader.h" />
     <ClInclude Include="Editor\EditorGrid.h" />
     <ClInclude Include="Framework\Object\Component\AudioSource.h" />
     <ClInclude Include="Framework\Object\Component\Canvas.h" />
