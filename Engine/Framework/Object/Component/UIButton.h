@@ -10,7 +10,7 @@ namespace engine
 
 	class UIButton : public UIElement, public UIInteractable
 	{
-		REGISTER_COMPONENT(UIButton);
+		REGISTER_COMPONENT(UIButton)
 	public:
 		using ClickCallback = std::function<void()>;
 

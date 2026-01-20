@@ -9,7 +9,7 @@ namespace engine
 
 	class UISlider : public UIElement, public UIInteractable
 	{
-		REGISTER_COMPONENT(UISlider);
+		REGISTER_COMPONENT(UISlider)
 	public:
 		using ValueChangedCallback = std::function<void(float)>;
 

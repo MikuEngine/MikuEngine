@@ -17,7 +17,7 @@ namespace engine
 
 	class UIImage : public UIElement
 	{
-		REGISTER_COMPONENT(UIImage);
+		REGISTER_COMPONENT(UIImage)
 	private:
 		std::string m_textureFilePath;
 		std::string m_vsFilePath;

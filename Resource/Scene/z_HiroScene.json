@@ -331,10 +331,10 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 19.399999618530273
+                        "y": -93.30000305175781
                     },
                     "Width": 100.0,
-                    "Height": 100.0,
+                    "Height": 100.80000305175781,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
@@ -354,13 +354,13 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "UIText",
-                    "FontPath": "Resource/Font/consola.ttf",
-                    "FontPx": 113,
+                    "Text": "한글 지원이 안됨\nImgui만 그런듯",
+                    "FontPath": "Resource/Font/gulim.ttc",
+                    "FontPx": 40,
                     "Color": {
-                        "x": 0.5882352590560913,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.970587968826294,
                         "w": 1.0
                     },
                     "AlphaBlend": true,

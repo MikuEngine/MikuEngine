@@ -21,7 +21,7 @@ namespace engine
 
 	class UIText : public UIElement
 	{
-        REGISTER_COMPONENT(UIText);
+        REGISTER_COMPONENT(UIText)
         
     public:
         UIText() = default;

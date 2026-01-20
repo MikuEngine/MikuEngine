@@ -405,7 +405,7 @@ namespace engine
 		
 		if (reverse)
 		{
-			t = 1.0 - t;
+			t = 1.0f - t;
 		}
 
 		RectTransform* rtFill = m_fill->GetRectTransform();

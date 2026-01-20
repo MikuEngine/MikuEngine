@@ -71,6 +71,7 @@
 				if not exist "$(OutDir)Resource" mklink /J "$(OutDir)Resource" "$(SolutionDir)Resource"
 				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(SolutionDir)Resource\Shader\"
 				xcopy /y /d "$(FMOD)\lib\x64\*.dll" "$(OutDir)"
+				xcopy /y /d "$(FreeType)\lib\debug\*.dll" "$(OutDir)"
 			</Command>
 		</PostBuildEvent>
 	</ItemDefinitionGroup>
@@ -115,6 +116,7 @@
 				if not exist "$(OutDir)Resource" mklink /J "$(OutDir)Resource" "$(SolutionDir)Resource"
 				if exist "$(ProjectDir)Shader" xcopy /E /Y /D "$(ProjectDir)Shader" "$(SolutionDir)Resource\Shader\"
 				xcopy /y /d "$(FMOD)\lib\x64\*.dll" "$(OutDir)"
+				xcopy /y /d "$(FreeType)\lib\release\*.dll" "$(OutDir)"
 			</Command>
 		</PostBuildEvent>
     </ItemDefinitionGroup>
