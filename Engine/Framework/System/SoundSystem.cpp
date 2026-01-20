@@ -206,17 +206,51 @@ namespace engine
 
     Sound* SoundSystem::GetOrLoadSound(const std::string& filename, bool is3D)
     {
-        // 이미 로드된 리소스인지 확인
-        auto iter = m_soundResources.find(filename);
+        namespace fs = std::filesystem;
+
+        fs::path rootPath(m_soundPath);
+        fs::path targetPath = rootPath / filename;
+
+        std::string keyName = filename;
+
+        if (!targetPath.has_extension() && fs::exists(rootPath))
+        {
+            for (const auto& entry : fs::directory_iterator(rootPath))
+            {
+                if (entry.is_regular_file())
+                {
+                    if (entry.path().stem() == targetPath.stem())
+                    {
+                        std::string ext = entry.path().extension().string();
+
+                        if (ext == ".wav" || ext == ".mp3" || ext == ".ogg" || ext == ".flac")
+                        {
+                            targetPath = entry.path();
+                            keyName = targetPath.filename().string();
+                            break;
+                        }
+                        // if fsb
+                        // ...
+                    }
+                }
+            }
+        }
+
+        // 캐싱 확인해서 중복 로드 방지
+        auto iter = m_soundResources.find(keyName);
         if (iter != m_soundResources.end())
         {
             return iter->second;
         }
 
-        std::string fullPath = m_soundPath + filename;
+        if (!fs::exists(targetPath))
+        {
+            LOG_ERROR("[SoundSystem] File Not Found: {} (Input: {})",
+                targetPath.string().c_str(), filename.c_str());
+            return nullptr;
+        }
 
         // 사운드 객체 생성
-        // m_soundResources.size()를 ID로 사용하거나 별도 ID 관리
         Sound* sound = new Sound(m_pSystem, m_index++, filename);
 
         FMOD_MODE mode = FMOD_DEFAULT;
@@ -230,11 +264,11 @@ namespace engine
             mode = FMOD_2D;
         }
 
-        FMOD_RESULT ret = m_pSystem->createSound(fullPath.c_str(), mode, 0, &sound->m_pSound);
+        FMOD_RESULT ret = m_pSystem->createSound(targetPath.string().c_str(), mode, 0, &sound->m_pSound);
 
         if (ret != FMOD_OK)
         {
-            LOG_ERROR("SoundSystem::GetOrLoadSound error");
+            LOG_ERROR("SoundSystem::GetOrLoadSound error / Path: %s", targetPath.string().c_str());
             delete sound;
             return nullptr;
         }
@@ -247,6 +281,7 @@ namespace engine
 
         // 캐싱 맵에 추가
         m_soundResources.insert(make_pair(filename, sound));
+
         return sound;
     }
 
@@ -275,11 +310,12 @@ namespace engine
                 {
                     Sound* snd = GetOrLoadSound(label, false);
 
-                    // event
+                    /*// EndEvent
                     if (snd) snd->Play2D(false, []()
                     {
                         //std::cout << "play 끝!" << std::endl;
                     });
+                    //*/
                 }
 
                 if (ImGui::BeginDragDropSource())

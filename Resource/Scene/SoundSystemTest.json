@@ -68,7 +68,7 @@
                 {
                     "Type": "AudioSource",
                     "Active": true,
-                    "ClipName": "",
+                    "ClipName": "jaguar.wav",
                     "IsLoop": false,
                     "Is3D": false,
                     "PlayOnAwake": false,
