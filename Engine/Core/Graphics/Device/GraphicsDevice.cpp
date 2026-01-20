@@ -507,6 +507,7 @@ namespace engine
         m_deviceContext->OMSetRenderTargets(1, m_finalBuffer->GetRTV().GetAddressOf(), nullptr);
 
         ImGuiIO& io = ImGui::GetIO();
+
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
         io.DisplaySize = ImVec2((float)m_resolutionWidth, (float)m_resolutionHeight);
