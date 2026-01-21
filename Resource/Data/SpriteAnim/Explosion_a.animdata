@@ -1,7 +1,7 @@
 {
     "name": "Explosion_a",
     "isLoop": true,
-    "filePath": "Assets/Sprites/Explosion.png",
+    "filePath": "Assets/01_Sprites/Explosion.png",
     "duration": 1.0,
     "frames": [
         {

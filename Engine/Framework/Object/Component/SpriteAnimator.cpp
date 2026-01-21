@@ -242,7 +242,7 @@ namespace engine
 		std::string selectedSpriteData;
 		// .json 확장자 사용 가정 (SpriteData가 json으로 저장된다면)
 		// 보통 AssetData는 .json이거나 커스텀 확장자일 수 있음. 확인 필요하나 일단 .json으로 가정.
-		if (DrawFileSelector("Select SpriteData", "Resource/Data", ".sprite", selectedSpriteData))
+		if (DrawFileSelector("Select SpriteData", "Resource/Data", ".spritedata", selectedSpriteData))
 		{
 			SetSpriteData(selectedSpriteData);
 		}
@@ -253,7 +253,7 @@ namespace engine
 
 		// 추가 버튼
 		static std::string selectedAnimData; // static으로 선택 상태 유지 불필요하지만 DrawFileSelector 특성상 필요할수도
-		if (DrawFileSelector("Add Animation", "Resource/Data", ".anim", selectedAnimData))
+		if (DrawFileSelector("Add Animation", "Resource/Data", ".animdata", selectedAnimData))
 		{
 			AddAnimationData(selectedAnimData);
 			selectedAnimData.clear();
