@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "TempPlayer.h"
 #include "AimPointer.h"
 #include "TempBulletFactory.h"
@@ -91,12 +91,13 @@ namespace game
 
     void TempPlayer::HandleShooting()
     {
-        // 스페이스바로 발사
-        if (engine::Input::IsKeyHeld(engine::Keys::Space))
+        // 스페이스로 발사
+        if (engine::Input::IsMousePressed(engine::Buttons::LEFT))
         {
             if (m_bulletFactory && m_aimPointer)
             {
                 engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+                
                 engine::Vector3 direction = m_aimPointer->GetDirectionFrom(playerPos);
                 
                 m_bulletFactory->Fire(playerPos, direction);
