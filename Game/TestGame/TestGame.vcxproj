@@ -158,6 +158,8 @@
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
+    <ClCompile Include="Script\CharacterAnimationFSM.cpp" />
+    <ClCompile Include="Script\CharacterLogicFSM.cpp" />
     <ClCompile Include="Script\DontDestroyTest.cpp">
       <SubType>
       </SubType>
@@ -166,6 +168,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Script\InputBinding.cpp" />
+    <ClCompile Include="Script\PlayerFSM.cpp" />
     <ClCompile Include="Script\Rotator.cpp">
       <SubType>
       </SubType>
@@ -234,6 +238,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Script\CharacterAnimationFSM.h" />
+    <ClInclude Include="Script\CharacterLogicFSM.h" />
     <ClInclude Include="Script\DontDestroyTest.h">
       <SubType>
       </SubType>
@@ -242,6 +248,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Script\InputBinding.h" />
+    <ClInclude Include="Script\PlayerFSM.h" />
     <ClInclude Include="Script\Rotator.h">
       <SubType>
       </SubType>

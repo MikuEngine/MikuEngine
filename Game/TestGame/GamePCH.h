@@ -23,3 +23,9 @@
 // Sound Component
 #include <Engine/Framework/System/SoundSystem.h>
 #include <Engine/Framework/Object/Component/AudioSource.h>
+
+// Game Scripts
+#include "Script/InputBinding.h"
+#include "Script/CharacterLogicFSM.h"
+#include "Script/CharacterAnimationFSM.h"
+#include "Script/PlayerFSM.h"
