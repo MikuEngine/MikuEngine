@@ -45,7 +45,7 @@ namespace engine
 	private:
 		void CreateVisuals();
 		void UpdateVisuals();
-
+		bool RefreshVisuals();
 		float Clamp01(float v);
 
 	public:
@@ -70,5 +70,8 @@ namespace engine
 		FillMode m_fillMode = FillMode::PixelMask;
 
 		bool m_dirty = true;
+
+		float m_barWidth = 100.0f;
+		float m_barHeight = 100.0f;
 	};
 }

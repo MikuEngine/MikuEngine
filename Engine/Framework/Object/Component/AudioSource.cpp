@@ -4,15 +4,19 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Editor/EditorManager.h"
+#include "Common/Utility/EditorHelper.h"
+
+// "Audio Files\0*.wav;*.mp3;*.ogg;*.flac\0All Files\0*.*\0";
 
 namespace engine
-{
+{ 
     AudioSource::AudioSource()
     {
     }
 
     AudioSource::~AudioSource()
     {   
+        Stop();
         SoundSystem::Get().Unregister(this);
     }
 
@@ -31,11 +35,6 @@ namespace engine
         }
     }
 
-    void AudioSource::Awake()
-    {
-
-    }
-
     void AudioSource::OnDestroy()
     {
         Stop();
@@ -43,6 +42,8 @@ namespace engine
 
     void AudioSource::SetClip(std::string name)
     {
+        Stop();
+
         m_clipName = name;
 
         m_soundResource = SoundSystem::Get().GetOrLoadSound(name, m_is3D);
@@ -69,7 +70,6 @@ namespace engine
             m_isPlaying = true;
         }
 
-        // 재생 시작 후 볼륨 적용 (FMOD 채널이 생성된 직 후여야 적용됨)
         if (m_currentChannel)
         {
             m_currentChannel->setVolume(m_volume);
@@ -80,7 +80,6 @@ namespace engine
     {
         if (m_currentChannel)
         {
-            // FMOD 시스템이 살아있는지도 확인해야 안전
             bool isPlaying = false;
             m_currentChannel->isPlaying(&isPlaying);
             if (isPlaying)
@@ -94,6 +93,46 @@ namespace engine
 
         m_currentChannel = nullptr;
         m_isPlaying = false;
+    }
+
+    void AudioSource::LoadClipFromFile()
+    {
+        std::string selectedPath = OpenAudioFileDialog("Audio Files\0*.wav;*.mp3;*.ogg;*.flac\0All Files\0*.*\0");
+
+        if (selectedPath.empty()) return;
+
+        fs::path sourcePath(selectedPath);
+        fs::path destDir = SoundSystem::Get().GetSoundPath();
+        fs::path destPath = destDir / sourcePath.filename();
+
+        try
+        {
+            if (!fs::exists(destDir))
+            {
+                fs::create_directories(destDir);
+            }
+
+            std::error_code ec;
+            bool isSameFile = false;
+
+            if (fs::exists(destPath) && fs::equivalent(sourcePath, destPath, ec))
+            {
+                isSameFile = true;
+            }
+            if(!isSameFile)
+            {
+                fs::copy_file(sourcePath, destPath, fs::copy_options::overwrite_existing);
+            }
+
+            m_clipName = sourcePath.filename().string();
+            SetClip(m_clipName);
+
+            SoundSystem::Get().RefreshSoundList();
+        }
+        catch (fs::filesystem_error& e)
+        {
+            LOG_ERROR("AudioSource :: File Copy Failed! {}", e.what());
+        }
     }
 
     void AudioSource::SetVolume(float vol)
@@ -140,16 +179,26 @@ namespace engine
             char buffer[256];
             strcpy_s(buffer, m_clipName.c_str());
 
-            if (ImGui::InputText("Clip Name", buffer, sizeof(buffer)))
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 70.0f);
+            if (ImGui::InputText("##Clip Name", buffer, sizeof(buffer)))
             {
                 m_clipName = buffer;
             }
             if (ImGui::IsItemDeactivatedAfterEdit())
             {
                 SetClip(m_clipName);
+                Play();
             }
 
             EditorState currentState = EditorManager::Get().GetEditorState();
+            ImGui::BeginDisabled(currentState == EditorState::Play);
+            ImGui::SameLine();
+            if (ImGui::Button("Load"))
+            {
+                LoadClipFromFile();
+            }
+            ImGui::EndDisabled();
+            
 
             if (currentState == EditorState::Edit)
             {
@@ -172,7 +221,18 @@ namespace engine
             }
 
             bool loop = m_isLoop;
-            if (ImGui::Checkbox("Loop", &loop)) SetLoop(loop);
+            if (ImGui::Checkbox("Loop", &loop))
+            {
+                SetLoop(loop);
+                if (loop && currentState == EditorState::Play)
+                {
+                    Play();
+                }
+                else
+                {
+                    Stop();
+                }
+            }
 
             bool is3d = m_is3D;
             if (ImGui::Checkbox("Is 3D", &is3d)) Set3D(is3d);

@@ -96,6 +96,7 @@ namespace engine
         void OnGameStart();
 
         Sound* GetOrLoadSound(const std::string& filename, bool is3D);
+        const std::string& GetSoundPath() const { return m_soundPath; }
 
         void RefreshSoundList();
 
