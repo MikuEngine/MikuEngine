@@ -67,8 +67,7 @@ namespace engine
 	{
 		v = Clamp01(v);
 
-		if (std::fabs(m_value - v) < 1e-6f)
-			return;
+		if (std::fabs(v - m_value) < 1e-6f) return;
 
 		m_value = v;
 		m_dirty = true;
@@ -153,6 +152,7 @@ namespace engine
 				return go;
 			};
 
+		// Background
 		{
 			GameObject* bgGO = makeChild("Background");
 			if (bgGO)
@@ -167,7 +167,7 @@ namespace engine
 				rt->SetAnchorMax({ 1.0f, 1.0f });
 				rt->SetPivot({ 0.5f, 0.5f });
 				rt->SetAnchoredPosition({ 0.0f, 0.0f });
-				rt->SetSize(0.0f, 0.0f); // 스트레치 기반
+				rt->SetSize(0.0f, 0.0f);
 			}
 		}
 
@@ -191,21 +191,15 @@ namespace engine
 		}
 
 		bool horizontal = (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft);
-
 		if (horizontal) GetRectTransform()->SetSize(300, 50);
-		else GetRectTransform()->SetSize(50, 300);
+		else			GetRectTransform()->SetSize(50, 300);
+		m_dirty = true;
 	}
 
 	void UIProgressBar::UpdateVisuals()
 	{
-		if (!RefreshVisuals())
-			return;
-
-		m_barWidth = GetRectTransform()->GetSize().x;
-		m_barHeight = GetRectTransform()->GetSize().y;
-
-		if (!m_background || !m_fill)
-			return;
+		if (!RefreshVisuals())return;
+		if (!m_background || !m_fill) return;
 
 		if (!m_bgSprite.empty())  m_background->SetTexture(m_bgSprite);
 		if (!m_fillSprite.empty()) m_fill->SetTexture(m_fillSprite);
@@ -213,7 +207,9 @@ namespace engine
 		m_background->SetColor(m_bgColor);
 		m_fill->SetColor(m_fillColor);
 
-		// Direction에 따라 기본 크기 설정
+		// Direction에 따라 기본 크기 설정 - TODO : 이거 지워도 됨
+		m_barWidth = GetRectTransform()->GetSize().x;
+		m_barHeight = GetRectTransform()->GetSize().y;
 		if (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft)
 			GetRectTransform()->SetSize(m_barWidth, m_barHeight);
 		else
@@ -357,13 +353,6 @@ namespace engine
 		return true;
 	}
 
-	float UIProgressBar::Clamp01(float v)
-	{
-		if (v < 0.0f) return 0.0f;
-		if (v > 1.0f) return 1.0f;
-		return v;
-	}
-
 	void UIProgressBar::OnGui()
 	{
 		UIElement::OnGui();
@@ -439,6 +428,7 @@ namespace engine
 		JsonGet(j, "FillColor", m_fillColor);
 
 		CreateVisuals();
+		RefreshVisuals();
 		m_dirty = true;
 		UpdateVisuals();
 	}

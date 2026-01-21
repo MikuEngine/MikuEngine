@@ -59,5 +59,8 @@ namespace engine
 
 		virtual void DrawUI() const = 0;
 		bool CanDraw() const;
+
+		// helper
+		float Clamp01(float v);
 	};
 }

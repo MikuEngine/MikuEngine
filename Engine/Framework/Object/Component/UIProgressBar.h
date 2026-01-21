@@ -29,7 +29,6 @@ namespace engine
 
 		void Initialize() override;
 		void Update() override;
-
 		void DrawUI() const override;
 
 	public:
@@ -46,7 +45,6 @@ namespace engine
 		void CreateVisuals();
 		void UpdateVisuals();
 		bool RefreshVisuals();
-		float Clamp01(float v);
 
 	public:
 		void OnGui() override;

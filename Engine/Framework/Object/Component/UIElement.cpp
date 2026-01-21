@@ -206,4 +206,11 @@ namespace engine
 
 		return true;
 	}
+
+	float UIElement::Clamp01(float v)
+	{
+		if (v < 0.0f) return 0.0f;
+		if (v > 1.0f) return 1.0f;
+		return v;
+	}
 }
