@@ -1,9 +1,9 @@
 ﻿#include "GamePCH.h"
 #include "TestLogicFSM.h"
 #include "TestAnimationFSM.h"
-#include "InputBinding.h"
 
 #include <Framework/Object/GameObject/GameObject.h>
+#include <Engine/Core/System/Input.h>
 
 namespace game
 {
@@ -15,116 +15,87 @@ namespace game
     void TestLogicFSM::Start()
     {
         CharacterLogicFSM::Start();
-        LOG_PRINT("[TestLogicFSM] Started");
     }
 
-    void TestLogicFSM::Update()
+    void TestLogicFSM::ProcessInput()
     {
-        CharacterLogicFSM::Update();
-        
-        // 회전 처리
-        HandleRotation();
-    }
-
-    void TestLogicFSM::UpdateWalk()
-    {
-        // 정지
-        if (!IsMoving())
+        // 숫자키 1~4 입력으로 Test 상태 전환
+        if (engine::Input::IsKeyPressed(engine::Keys::D1))
         {
-            ChangeState(CharacterState::Idle);
-            return;
+            ChangeState(CharacterState::Test1);
         }
-
-        // 공격 (이동 중에도 공격 가능)
-        if (IsAttackPressed())
+        else if (engine::Input::IsKeyPressed(engine::Keys::D2))
         {
-            ChangeState(CharacterState::Attack);
-            return;
+            ChangeState(CharacterState::Test2);
         }
-
-        // 이동 적용
-        engine::Vector3 currentPos = GetTransform()->GetLocalPosition();
-        currentPos += m_context.moveDirection * m_moveSpeed * engine::Time::DeltaTime();
-        GetTransform()->SetLocalPosition(currentPos);
+        else if (engine::Input::IsKeyPressed(engine::Keys::D3))
+        {
+            ChangeState(CharacterState::Test3);
+        }
+        else if (engine::Input::IsKeyPressed(engine::Keys::D4))
+        {
+            ChangeState(CharacterState::Test4);
+        }
     }
 
-    void TestLogicFSM::OnEnterAttack()
+    void TestLogicFSM::UpdateCurrentState()
     {
-        CharacterLogicFSM::OnEnterAttack();
-        LOG_PRINT("[TestLogicFSM] Attack!");
+        switch (m_currentState)
+        {
+        case CharacterState::Idle:
+            // Idle에서는 Test 입력만 대기 (ProcessInput에서 처리)
+            break;
+            
+        case CharacterState::Test1:
+        case CharacterState::Test2:
+        case CharacterState::Test3:
+        case CharacterState::Test4:
+            // Test 상태는 애니메이션 FSM이 종료 알림을 보낼 때까지 대기
+            break;
+            
+        default:
+            // 기본 상태(Walk, Attack 등)는 부모 처리
+            CharacterLogicFSM::UpdateCurrentState();
+            break;
+        }
     }
 
-    void TestLogicFSM::UpdateAttack()
+    void TestLogicFSM::OnAnimationFinished(CharacterState finishedState)
     {
-        // 공격 상태는 애니메이션 종료까지 유지
-        // OnAnimationFinished()에서 Idle로 복귀
-        
-        // 이동 입력이 있으면 이동 방향으로 회전만 함 (위치는 이동 안함)
-    }
-
-    void TestLogicFSM::HandleRotation()
-    {
-        if (!m_rotateToMoveDirection)
+        // Test1~Test4 애니메이션 종료 시 Idle로 복귀
+        switch (finishedState)
         {
-            return;
+        case CharacterState::Test1:
+        case CharacterState::Test2:
+        case CharacterState::Test3:
+        case CharacterState::Test4:
+            if (m_currentState == finishedState)
+            {
+                ChangeState(CharacterState::Idle);
+            }
+            break;
+            
+        default:
+            CharacterLogicFSM::OnAnimationFinished(finishedState);
+            break;
         }
-
-        // 이동 방향이 있을 때만 회전
-        if (m_context.moveDirection.LengthSquared() < 0.001f)
-        {
-            return;
-        }
-
-        // 목표 회전 각도 계산 (Y축 기준)
-        float targetAngle = std::atan2(m_context.moveDirection.x, m_context.moveDirection.z);
-        targetAngle = DirectX::XMConvertToDegrees(targetAngle);
-
-        // 현재 회전 각도
-        engine::Quaternion currentRot = GetTransform()->GetLocalRotation();
-        engine::Vector3 euler = currentRot.ToEuler();
-        float currentAngle = DirectX::XMConvertToDegrees(euler.y);
-
-        // 부드러운 회전
-        float angleDiff = targetAngle - currentAngle;
-        
-        // -180 ~ 180 범위로 정규화
-        while (angleDiff > 180.0f) angleDiff -= 360.0f;
-        while (angleDiff < -180.0f) angleDiff += 360.0f;
-
-        float maxRotation = m_rotationSpeed * engine::Time::DeltaTime();
-        float rotation = std::clamp(angleDiff, -maxRotation, maxRotation);
-
-        float newAngle = currentAngle + rotation;
-        engine::Quaternion newRot = engine::Quaternion::CreateFromYawPitchRoll(
-            DirectX::XMConvertToRadians(newAngle), 0.0f, 0.0f);
-        GetTransform()->SetLocalRotation(newRot);
     }
 
     void TestLogicFSM::OnGui()
     {
-        CharacterLogicFSM::OnGui();
-
+        ImGui::Text("Current State: %s", CharacterStateToString(m_currentState));
         ImGui::Separator();
-        ImGui::Text("TestLogicFSM Settings");
-        
-        ImGui::Checkbox("Rotate To Move Direction", &m_rotateToMoveDirection);
-        ImGui::DragFloat("Rotation Speed", &m_rotationSpeed, 1.0f, 0.0f, 720.0f);
+        ImGui::Text("Press 1~4 for test animations");
     }
 
     void TestLogicFSM::Save(engine::json& j) const
     {
-        CharacterLogicFSM::Save(j);
-        
-        j["RotationSpeed"] = m_rotationSpeed;
-        j["RotateToMoveDirection"] = m_rotateToMoveDirection;
+        Object::Save(j);
     }
 
     void TestLogicFSM::Load(const engine::json& j)
     {
-        CharacterLogicFSM::Load(j);
-        
-        engine::JsonGet(j, "RotationSpeed", m_rotationSpeed);
-        engine::JsonGet(j, "RotateToMoveDirection", m_rotateToMoveDirection);
+        Object::Load(j);
     }
 
     std::string TestLogicFSM::GetType() const
