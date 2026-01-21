@@ -28,6 +28,8 @@ namespace engine
 		void OnEnable() override;
 		void OnDisable() override;
 
+		virtual bool HitTestPoint(const Vector2& screenPos) const;
+
 	public:
 		bool HasRenderType(RenderType type) const override;
 		void Draw(RenderType type) const override;

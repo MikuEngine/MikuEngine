@@ -36,6 +36,8 @@ namespace engine
 		void Update() override;
 		void DrawUI() const override {}
 
+		bool HitTestPoint(const Vector2& p) const override;
+
 	public:
 		float GetValue() const;
 		void SetValue(float v, bool notify = true);
@@ -75,7 +77,7 @@ namespace engine
 		std::string GetType() const override;
 
 	private:
-		//void SetValueFromMouse(const Vector2& mousePos, bool notify = true);
+		void SetValueFromMouse(const Vector2& mousePos);
 		bool IsMouseOnHandle(const Vector2& mousePos) const;
 
 	private:
@@ -88,9 +90,12 @@ namespace engine
 		Direction m_direction = Direction::LeftToRight;
 		FillMode m_fillMode = FillMode::PixelMask;
 
+		Vector2 m_mousePos = { 0.0f, 0.0f };
+
 		float m_value = 0.5f;
 
 		bool m_dragging = false;
+		bool m_dragFromHandle = false;
 		bool m_dirty = true;
 
 		std::string m_bgSprite;

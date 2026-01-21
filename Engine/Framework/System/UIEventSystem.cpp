@@ -41,6 +41,8 @@ namespace engine
 
 		RebuildCacheIfDirty();
 
+		
+
 		UIElement* newHover = HitTestTopmost(mouse.position);
 
 		if (!mouse.leftHeld)
@@ -114,8 +116,7 @@ namespace engine
 			RectTransform* rt = e->GetRectTransform();
 			if (!rt) continue;
 
-			const UIRect& r = rt->GetWorldRect();
-			if (!PointInRect(r, mousePos)) continue;
+			if (!e->HitTestPoint(mousePos)) continue;
 
 			UIInteractable* it = AsInteractable(e);
 			if (!it) continue;
@@ -152,18 +153,12 @@ namespace engine
 
 	void UIEventSystem::HandlePressDragRelease(UIElement* target, const MouseState& mouse)
 	{
-		bool rectIn = false;
-
-		if (target)
-		{
-			if (RectTransform* rt = target->GetRectTransform())
-				rectIn = PointInRect(rt->GetWorldRect(), mouse.position);
-		}
+		bool rectIn = (target != nullptr) && target->HitTestPoint(mouse.position);
 
 		// MouseDown
 		if (mouse.leftDown)
 		{
-			m_pressed = rectIn ? target : nullptr;
+			m_pressed = target;
 			m_phase = rectIn ? PointerPhase::PressedInRect : PointerPhase::PressedOutRect;
 
 			m_isDragging = false;

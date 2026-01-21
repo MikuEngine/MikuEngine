@@ -13,6 +13,15 @@
 
 namespace engine
 {
+	namespace
+	{
+		static bool PointInRect(const Vector2& p, const UIRect& r)
+		{
+			return (p.x >= r.x && p.x <= r.x + r.w &&
+				p.y >= r.y && p.y <= r.y + r.h);
+		}
+	}
+
 	UIElement::~UIElement()
 	{
 		SystemManager::Get().GetUIEventSystem().Unregister(this);
@@ -35,6 +44,13 @@ namespace engine
 	{
 		SystemManager::Get().GetUIEventSystem().Unregister(this);
 		SystemManager::Get().GetUIEventSystem().MarkDirty();
+	}
+
+	bool UIElement::HitTestPoint(const Vector2& screenPos) const
+	{
+		RectTransform* rt = GetRectTransform();
+		if (!rt) return false;
+		return PointInRect(screenPos, rt->GetWorldRect());
 	}
 
 	bool UIElement::HasRenderType(RenderType type) const
