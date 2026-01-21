@@ -1,5 +1,6 @@
 #include "GamePCH.h"
 #include "TempMonster.h"
+#include "TempBullet.h"
 
 #include <Framework/Object/Component/SpriteRenderer.h>
 
@@ -46,6 +47,31 @@ namespace game
             m_hitCount);
         
         ToggleHitIndicator();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Push 방식 충돌 콜백
+    // CollisionSystem에서 자동으로 호출됨
+    // ═══════════════════════════════════════════════════════════════
+    void TempMonster::OnTriggerEnter(const engine::CollisionInfo& info)
+    {
+        // 상대 오브젝트 확인
+        if (!info.gameObject) return;
+        
+        // 총알과 충돌했는지 확인
+        // 참고: TempBullet::OnTriggerEnter에서 이미 OnHit()을 호출하므로
+        //       여기서는 추가 처리가 필요한 경우에만 사용
+        //       중복 호출 방지를 위해 아래 코드는 주석 처리
+        /*
+        if (auto* bullet = info.gameObject->GetComponent<TempBullet>())
+        {
+            // OnHit();  // TempBullet에서 이미 호출함
+            LOG_PRINT("[TempMonster] Detected collision with bullet (via OnTriggerEnter)");
+        }
+        */
+        
+        // 향후 다른 종류의 충돌 처리 확장 가능
+        // 예: 다른 종류의 공격, 아이템 등
     }
 
     void TempMonster::ToggleHitIndicator()

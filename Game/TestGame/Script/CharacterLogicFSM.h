@@ -101,6 +101,17 @@ namespace game
         void Awake() override;
         void Start() override;
         void Update() override;
+        
+        // ═══════════════════════════════════════════════════════════════
+        // 충돌 콜백 (Push 방식)
+        // 파생 클래스에서 오버라이드하여 사용
+        // ═══════════════════════════════════════════════════════════════
+        void OnCollisionEnter(const engine::CollisionInfo& info) override;
+        void OnCollisionStay(const engine::CollisionInfo& info) override;
+        void OnCollisionExit(const engine::CollisionInfo& info) override;
+        void OnTriggerEnter(const engine::CollisionInfo& info) override;
+        void OnTriggerStay(const engine::CollisionInfo& info) override;
+        void OnTriggerExit(const engine::CollisionInfo& info) override;
 
         // 상태 변경
         virtual void ChangeState(CharacterState newState);

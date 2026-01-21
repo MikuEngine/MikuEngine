@@ -75,6 +75,15 @@
     <ClCompile Include="Script\InputBinding.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Script\PlayerFSM.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\TestAnimationFSM.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\TestLogicFSM.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl" />
@@ -136,6 +145,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\InputBinding.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\PlayerFSM.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\TestLogicFSM.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\TestAnimationFSM.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

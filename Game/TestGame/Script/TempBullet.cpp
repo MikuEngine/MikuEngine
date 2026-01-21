@@ -50,7 +50,11 @@ namespace game
             return;
         }
 
-        // 충돌 체크 (총알은 Trigger이므로 TriggerOverlap 사용)
+        // ═══════════════════════════════════════════════════════════════
+        // [PULL 방식 - 참고용 주석]
+        // 특수한 경우 직접 조회가 필요하면 아래 방식 사용 가능
+        // ═══════════════════════════════════════════════════════════════
+        /*
         auto* myCollider = GetGameObject()->GetComponent<engine::Collider>();
         if (myCollider)
         {
@@ -81,6 +85,7 @@ namespace game
                 }
             }
         }
+        */
 
         // 화면 밖 체크 (간단한 범위 체크)
         engine::Vector3 pos = GetTransform()->GetWorldPosition();
@@ -89,6 +94,35 @@ namespace game
         {
             GetGameObject()->Destroy();
             return;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Push 방식 충돌 콜백
+    // CollisionSystem에서 자동으로 호출됨
+    // ═══════════════════════════════════════════════════════════════
+    void TempBullet::OnTriggerEnter(const engine::CollisionInfo& info)
+    {
+        // 이미 죽는 중이면 무시
+        if (m_isDying) return;
+        
+        // 상대 오브젝트 확인
+        if (!info.gameObject) return;
+        
+        // 몬스터와 충돌했는지 확인
+        if (auto* monster = info.gameObject->GetComponent<TempMonster>())
+        {
+            monster->OnHit();
+            
+            // 즉시 삭제 대신, dying 상태로 전환하고 정지
+            m_isDying = true;
+            m_deathTimer = 0.0f;
+            
+            // 속도 정지
+            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+            {
+                rb->SetLinearVelocity(engine::Vector3::Zero);
+            }
         }
     }
 

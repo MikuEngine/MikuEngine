@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "CharacterLogicFSM.h"
@@ -93,6 +93,8 @@ namespace game
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
         std::string GetType() const override;
+
+        const CharacterState& GetCharacterState() const;
 
     private:
         void CacheComponents();

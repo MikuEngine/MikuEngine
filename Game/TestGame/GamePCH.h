@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Engine/EnginePCH.h>
 
@@ -29,3 +29,5 @@
 #include "Script/CharacterLogicFSM.h"
 #include "Script/CharacterAnimationFSM.h"
 #include "Script/PlayerFSM.h"
+#include "Script/TestLogicFSM.h"
+#include "Script/TestAnimationFSM.h"
