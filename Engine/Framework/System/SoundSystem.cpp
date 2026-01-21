@@ -101,6 +101,9 @@ namespace engine
 
     bool SoundSystem::Initialize()
     {
+        m_components.clear();
+        m_callbackList.clear();
+
         FMOD_RESULT ret;
         ret = FMOD::System_Create(&m_pSystem);
         if (ret != FMOD_OK) return false;
@@ -146,6 +149,12 @@ namespace engine
     void SoundSystem::Unregister(AudioSource* source)
     {
         System<AudioSource>::Unregister(source);
+    }
+
+    void SoundSystem::OnGameStart()
+    {
+        m_components.clear();
+        m_callbackList.clear();
     }
 
     void SoundSystem::Update()

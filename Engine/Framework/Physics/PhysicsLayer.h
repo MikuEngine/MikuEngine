@@ -98,12 +98,24 @@ namespace engine
             // 모든 레이어 초기화 (기본: 모두 충돌)
             m_matrix.fill(Mask::All);
             
-            // 커스텀 규칙 예시:
-            // - Projectile끼리는 충돌 안 함
+            // ═══════════════════════════════════════
+            // 탑다운 슈팅 게임용 충돌 규칙
+            // ═══════════════════════════════════════
+            
+            // Player ↔ Projectile: 충돌 안 함 (자기 총알에 안 맞음)
+            SetCollision(Player, Projectile, false);
+            
+            // Projectile ↔ Projectile: 충돌 안 함
             SetCollision(Projectile, Projectile, false);
             
-            // - Trigger는 물리 충돌 없음 (이벤트만)
-            // (Trigger는 Shape 플래그로 처리하므로 여기서는 유지)
+            // Player ↔ Enemy: 충돌함
+            // (기본값 All이므로 별도 설정 불필요)
+            
+            // Enemy ↔ Projectile: 충돌함
+            // (기본값 All이므로 별도 설정 불필요)
+            
+            // Enemy ↔ Enemy: 충돌 안 함 (적끼리 밀치지 않음)
+            SetCollision(Enemy, Enemy, false);
         }
 
         // 두 레이어 간 충돌 여부 설정

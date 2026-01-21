@@ -156,6 +156,14 @@ namespace engine
         void OnColliderDestroyed(Collider* collider);
 
         // ═══════════════════════════════════════
+        // 충돌 상태 조회 (Script에서 사용)
+        // ═══════════════════════════════════════
+        bool IsColliding(Collider* collider) const;
+        std::vector<Collider*> GetCollidingWith(Collider* collider) const;
+        bool IsTriggerOverlapping(Collider* trigger) const;
+        std::vector<Collider*> GetTriggerOverlaps(Collider* trigger) const;
+
+        // ═══════════════════════════════════════
         // 이벤트 큐 클리어
         // ═══════════════════════════════════════
         void ClearPendingEvents();

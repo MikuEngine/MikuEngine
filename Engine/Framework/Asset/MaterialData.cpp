@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "MaterialData.h"
 
 #include <filesystem>
@@ -25,12 +25,24 @@ namespace engine
 
         const aiScene* scene = importer.ReadFile(filePath, 0);
 
+        if (!scene)
+        {
+            LOG_ERROR("[MaterialData] Failed to load material: {}", filePath);
+            return;
+        }
+
         Create(scene);
     }
 
     void MaterialData::Create(const aiScene* scene)
     {
         namespace fs = std::filesystem;
+
+        if (!scene)
+        {
+            LOG_ERROR("[MaterialData] scene is null");
+            return;
+        }
 
         aiString path;
         aiColor4D color;

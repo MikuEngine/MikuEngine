@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "GameObject.h"
 
 #include "Common/Utility/JsonHelper.h"

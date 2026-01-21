@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "StaticMeshRenderer.h"
 
 #include <filesystem>
@@ -80,8 +80,38 @@ namespace engine
         m_staticMeshData = AssetManager::Get().GetOrCreateStaticMeshData(m_meshFilePath);
         m_materialData = AssetManager::Get().GetOrCreateMaterialData(m_meshFilePath);
 
+        // 메쉬 로드 실패 체크
+        if (!m_staticMeshData || m_staticMeshData->GetVertices().empty())
+        {
+            LOG_ERROR("[StaticMeshRenderer] Failed to load mesh: {}", meshFilePath);
+            return;
+        }
+
         m_vertexBuffer = ResourceManager::Get().GetOrCreateVertexBuffer<CommonVertex>(m_meshFilePath, m_staticMeshData->GetVertices());
         m_indexBuffer = ResourceManager::Get().GetOrCreateIndexBuffer(m_meshFilePath, m_staticMeshData->GetIndices());
+
+        // Initialize()가 아직 호출되지 않았다면 셰이더/InputLayout 초기화
+        if (!m_vs)
+        {
+            m_vsFilePath = "Resource/Shader/Vertex/Static_VS.hlsl";
+            m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
+        }
+        if (!m_inputLayout)
+        {
+            m_inputLayout = m_vs->GetOrCreateInputLayout<CommonVertex>();
+        }
+        if (!m_samplerState)
+        {
+            m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
+        }
+        if (!m_objectConstantBuffer)
+        {
+            m_objectConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
+        }
+        if (!m_materialConstantBuffer)
+        {
+            m_materialConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Material", sizeof(CbMaterial));
+        }
 
         SetupTextures(m_materialData, m_textures);
 
@@ -92,6 +122,10 @@ namespace engine
     {
         m_vsFilePath = shaderFilePath;
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
+        if (m_vs)
+        {
+            m_inputLayout = m_vs->GetOrCreateInputLayout<CommonVertex>();
+        }
     }
 
     void StaticMeshRenderer::SetOpaquePixelShader(const std::string& shaderFilePath)
@@ -293,7 +327,8 @@ namespace engine
 
     void StaticMeshRenderer::Draw(RenderType type) const
     {
-        if (!m_staticMeshData)
+        // 리소스가 로드되지 않았으면 스킵
+        if (!m_staticMeshData || !m_inputLayout || !m_vertexBuffer || !m_indexBuffer)
         {
             return;
         }
@@ -420,7 +455,7 @@ namespace engine
 
     void StaticMeshRenderer::DrawShadow(RenderType renderType, LightType lightType) const
     {
-        if (!m_staticMeshData)
+        if (!m_staticMeshData || !m_inputLayout || !m_vertexBuffer || !m_indexBuffer)
         {
             return;
         }
@@ -521,7 +556,7 @@ namespace engine
 
     void StaticMeshRenderer::DrawMask() const
     {
-        if (!m_staticMeshData)
+        if (!m_staticMeshData || !m_inputLayout || !m_vertexBuffer || !m_indexBuffer)
         {
             return;
         }
@@ -560,7 +595,7 @@ namespace engine
 
     void StaticMeshRenderer::DrawPickingID() const
     {
-        if (!m_staticMeshData)
+        if (!m_staticMeshData || !m_inputLayout || !m_vertexBuffer || !m_indexBuffer)
         {
             return;
         }
