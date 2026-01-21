@@ -293,7 +293,7 @@
         {
             "ID": 5,
             "ParentID": 4,
-            "Name": "StartGame",
+            "Name": "Button",
             "Active": true,
             "Components": [
                 {
@@ -320,11 +320,11 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -240.89999389648438,
-                        "y": 37.5
+                        "x": 0.0,
+                        "y": 0.0
                     },
-                    "Width": 150.0,
-                    "Height": 150.0,
+                    "Width": 100.0,
+                    "Height": 100.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
@@ -345,10 +345,10 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "State": 0,
-                    "SpriteNormal": "Resource/Texture/UI/Button/Button_Normal.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/Button_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/Button_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/Button_Normal.png",
+                    "SpriteNormal": "",
+                    "SpriteHover": "",
+                    "SpritePressed": "",
+                    "SpriteDisabled": "",
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -372,7 +372,8 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
+                    },
+                    "LabelText": "Button"
                 },
                 {
                     "Type": "UIImage",
@@ -380,7 +381,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/Button_Normal.png",
+                    "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
@@ -395,8 +396,8 @@
         },
         {
             "ID": 6,
-            "ParentID": 4,
-            "Name": "QuitGame",
+            "ParentID": 5,
+            "Name": "Label",
             "Active": true,
             "Components": [
                 {
@@ -423,76 +424,42 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 292.5,
-                        "y": 80.9000015258789
+                        "x": 0.0,
+                        "y": 0.0
                     },
-                    "Width": 150.0,
-                    "Height": 150.0,
+                    "Width": 0.0,
+                    "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.0,
+                        "y": 0.0
                     },
                     "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 1.0,
+                        "y": 1.0
                     }
                 },
                 {
-                    "Type": "UIButton",
+                    "Type": "UIText",
                     "Active": true,
                     "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "State": 0,
-                    "SpriteNormal": "Resource/Texture/UI/Button/Button_Normal.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/Button_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/Button_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/Button_Normal.png",
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
+                    "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/Button_Normal.png",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Text": "Buttonasdf",
+                    "FontPath": "Resource/Font/gulim.ttc",
+                    "FontPx": 32,
                     "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         }
