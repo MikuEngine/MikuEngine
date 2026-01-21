@@ -65,6 +65,10 @@ namespace engine
                 m_scene->Load();
 
                 m_sceneState = SceneState::Active;
+
+                m_isSceneStarted = false;
+
+                CallOnSceneLoaded();
             }
         }
     }
@@ -97,5 +101,44 @@ namespace engine
     SceneState SceneManager::GetSceneState() const
     {
         return m_sceneState;
+    }
+
+    void SceneManager::RegisterOnSceneLoaded(std::function<void()>&& callback)
+    {
+        m_onSceneLoadedCallbacks.push_back(std::move(callback));
+    }
+
+    void SceneManager::CallOnSceneLoaded()
+    {
+        for (auto& callback : m_onSceneLoadedCallbacks)
+        {
+            std::invoke(callback);
+        }
+
+        m_onSceneLoadedCallbacks.clear();
+
+        // 추가적으로 하고싶은 작업
+    }
+
+    void SceneManager::RegisterOnSceneStart(std::function<void()>&& callback)
+    {
+        m_onSceneStartCallbacks.push_back(std::move(callback));
+    }
+
+    void SceneManager::CallOnSceneStart()
+    {
+        if (!m_isSceneStarted)
+        {
+            for (auto& callback : m_onSceneStartCallbacks)
+            {
+                std::invoke(callback);
+            }
+
+            m_onSceneStartCallbacks.clear();
+
+            // 추가적으로 하고싶은 작업
+
+            m_isSceneStarted = true;
+        }
     }
 }

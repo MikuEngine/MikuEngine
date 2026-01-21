@@ -71,6 +71,15 @@ namespace engine
             }
         }
 
+        // 생성 직후/씬 로드 직후의 오브젝트도 탐색함.
+        for (const auto& gameObject : m_incubator)
+        {
+            if (gameObject->m_name == name)
+            {
+                return gameObject.get();
+            }
+        }
+
         return nullptr;
     }
 

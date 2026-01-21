@@ -63,9 +63,6 @@
     <ClCompile Include="Script\TempBullet.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\SceneChange.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Script\DontDestroyTest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -118,9 +115,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\TempBullet.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\SceneChange.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\DontDestroyTest.h">
