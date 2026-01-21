@@ -35,14 +35,16 @@ namespace engine
 	void UIProgressBar::Initialize()
 	{
 		UIElement::Initialize();
-
 		CreateVisuals();
+		UpdateVisuals();
 		m_dirty = true;
 	}
 
 	void UIProgressBar::Update()
 	{
 		UIElement::Update();
+
+		RefreshVisuals();
 
 		if (m_dirty)
 		{
@@ -64,7 +66,10 @@ namespace engine
 	void UIProgressBar::SetValue(float v)
 	{
 		v = Clamp01(v);
-		if (m_value == v) return;
+
+		if (std::fabs(m_value - v) < 1e-6f)
+			return;
+
 		m_value = v;
 		m_dirty = true;
 	}
@@ -184,19 +189,35 @@ namespace engine
 				rt->SetSize(0.0f, 0.0f);
 			}
 		}
+
+		bool horizontal = (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft);
+
+		if (horizontal) GetRectTransform()->SetSize(300, 50);
+		else GetRectTransform()->SetSize(50, 300);
 	}
 
 	void UIProgressBar::UpdateVisuals()
 	{
+		if (!RefreshVisuals())
+			return;
+
+		m_barWidth = GetRectTransform()->GetSize().x;
+		m_barHeight = GetRectTransform()->GetSize().y;
+
 		if (!m_background || !m_fill)
 			return;
 
-		// Sprite/Color 적용 (UIImage 쪽 API 이름은 주인님 프로젝트에 맞게 조정)
 		if (!m_bgSprite.empty())  m_background->SetTexture(m_bgSprite);
 		if (!m_fillSprite.empty()) m_fill->SetTexture(m_fillSprite);
 
 		m_background->SetColor(m_bgColor);
 		m_fill->SetColor(m_fillColor);
+
+		// Direction에 따라 기본 크기 설정
+		if (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft)
+			GetRectTransform()->SetSize(m_barWidth, m_barHeight);
+		else
+			GetRectTransform()->SetSize(m_barWidth, m_barHeight);
 
 		// Fill 처리
 		RectTransform* rootRT = GetRectTransform();
@@ -219,25 +240,25 @@ namespace engine
 			switch (m_direction)
 			{
 			case Direction::LeftToRight:
-				fillRT->SetPivot({ 0.0f, 0.5f });
+				fillRT->SetPivot({ 0.5f, 0.5f });
 				fillRT->SetAnchorMin({ 0.0f, 0.0f });
 				fillRT->SetAnchorMax({ v, 1.0f });
 				break;
 
 			case Direction::RightToLeft:
-				fillRT->SetPivot({ 1.0f, 0.5f });
+				fillRT->SetPivot({ 0.5f, 0.5f });
 				fillRT->SetAnchorMin({ 1.0f - v, 0.0f });
 				fillRT->SetAnchorMax({ 1.0f, 1.0f });
 				break;
 
 			case Direction::TopToBottom:
-				fillRT->SetPivot({ 0.5f, 0.0f });
+				fillRT->SetPivot({ 0.5f, 0.5f });
 				fillRT->SetAnchorMin({ 0.0f, 0.0f });
 				fillRT->SetAnchorMax({ 1.0f, v });
 				break;
 
 			case Direction::BottomToTop:
-				fillRT->SetPivot({ 0.5f, 1.0f });
+				fillRT->SetPivot({ 0.5f, 0.5f });
 				fillRT->SetAnchorMin({ 0.0f, 1.0f - v });
 				fillRT->SetAnchorMax({ 1.0f, 1.0f });
 				break;
@@ -250,6 +271,19 @@ namespace engine
 
 		if (m_fillMode == FillMode::PixelMask)
 		{
+			if (v <= 0.0f)
+			{
+				m_fill->SetMaskMode(MaskMode::None);
+
+				Vector4 c = m_fillColor;
+				c.w = 0.0f;
+				m_fill->SetColor(c);
+				return;
+			}
+			{
+				m_fill->SetColor(m_fillColor);
+			}
+
 			fillRT->SetPivot({ 0.5f, 0.5f });
 			fillRT->SetAnchorMin({ 0.0f, 0.0f });
 			fillRT->SetAnchorMax({ 1.0f, 1.0f });
@@ -284,6 +318,43 @@ namespace engine
 			m_fill->SetClipRect(Vector4(x0, y0, x1, y1));
 			return;
 		}
+	}
+
+	bool UIProgressBar::RefreshVisuals()
+	{
+		GameObject* parent = GetGameObject();
+		if (!parent) return false;
+
+		GameObject* bgGO = FindChildByName(parent, "Background");
+		GameObject* fillGO = FindChildByName(parent, "Fill");
+		if (!bgGO || !fillGO) return false;
+
+		UIImage* newBg = bgGO->GetComponent<UIImage>();
+		UIImage* newFill = fillGO->GetComponent<UIImage>();
+		if (!newBg || !newFill) return false;
+
+		const bool bgChanged = (newBg != m_background);
+		const bool fillChanged = (newFill != m_fill);
+
+		m_background = newBg;
+		m_fill = newFill;
+
+		if (bgChanged)
+		{
+			if (!m_bgSprite.empty()) m_background->SetTexture(m_bgSprite);
+			m_bgSprite = m_background->GetTexturePath();
+		}
+
+		if (fillChanged)
+		{
+			if (!m_fillSprite.empty()) m_fill->SetTexture(m_fillSprite);
+			m_fillSprite = m_fill->GetTexturePath();
+		}
+
+		if (bgChanged || fillChanged)
+			m_dirty = true;
+
+		return true;
 	}
 
 	float UIProgressBar::Clamp01(float v)
@@ -322,15 +393,11 @@ namespace engine
 			changed = true;
 		}
 
-		if (ImGui::InputText("BgSprite", &m_bgSprite)) { m_dirty = true; changed = true; }
-		if (ImGui::InputText("FillSprite", &m_fillSprite)) { m_dirty = true; changed = true; }
-
 		if (ImGui::ColorEdit4("BgColor", &m_bgColor.x)) { m_dirty = true; changed = true; }
 		if (ImGui::ColorEdit4("FillColor", &m_fillColor.x)) { m_dirty = true; changed = true; }
 
 		if (changed)
 		{
-			// Update()에서 처리되지만, 에디터 즉시 반영 원하면 여기서도 호출 가능
 			UpdateVisuals();
 		}
 	}
