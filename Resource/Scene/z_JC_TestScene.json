@@ -157,25 +157,28 @@
                 },
                 {
                     "Type": "AimPointer",
-                    "Active": true
+                    "Active": true,
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
+                    },
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
                 },
                 {
-                    "Type": "SpriteRenderer",
+                    "Type": "Canvas",
                     "Active": true,
-                    "TextureFilePath": "Resource/Texture/Earth.png",
-                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
-                    "RenderType": 0,
-                    "BillboardType": 0,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
+                    "LockRectTransform": true,
+                    "ReferenceResolution": {
+                        "x": 1920.0,
+                        "y": 1080.0
                     },
-                    "CullMode": 0
+                    "SortingOrder": 50
                 }
             ]
         },
