@@ -43,6 +43,52 @@ namespace engine
         Stop();
     }
 
+    void AudioSource::Update()
+    {
+        if (m_fadeState != FadeState::None)
+        {
+            if (!m_currentChannel)
+            {
+                m_fadeState = FadeState::None;
+                return;
+            }
+
+            m_fadeTimer += Time::DeltaTime();
+            float t = 0.0f;
+            if (m_fadeDuration > 0.0f)
+            {
+                t = std::clamp(m_fadeTimer / m_fadeDuration, 0.0f, 1.0f);
+            }
+            else
+            {
+                t = 1.0f;
+            }
+
+            float currentVol = std::lerp(m_startVolume, m_targetVolume, t);
+            m_currentChannel->setVolume(currentVol);
+
+            if (t >= 1.0f)
+            {
+                if (m_fadeState == FadeState::FadingOut)
+                {
+                    Stop();
+                }
+                
+                m_fadeState = FadeState::None;
+            }
+        }
+
+        if (m_isPlaying && m_isAutoStop && m_fadeState == FadeState::None)
+        {
+            m_sustainTimer += Time::DeltaTime();
+            if (m_sustainTimer >= m_sustainDuration)
+            {
+                Stop(m_scheduledFadeOutDuration);
+                m_isAutoStop = false;
+            }
+        }
+    }
+
     void AudioSource::SetClip(std::string name)
     {
         Stop();
@@ -52,8 +98,10 @@ namespace engine
         m_soundData = AssetManager::Get().GetOrCreateSoundData(name);
     }
 
-    void AudioSource::Play(EventEndPlay callback)
+    void AudioSource::Play(EventEndPlay callback, float fadeInDuration)
     {
+        m_isAutoStop = false;
+
         Sound* soundResource = GetSoundResource();
         if (!soundResource) return;
 
@@ -76,28 +124,87 @@ namespace engine
 
         if (m_currentChannel)
         {
-            m_currentChannel->setVolume(m_volume);
+            if (fadeInDuration > 0.0f)
+            {
+                m_fadeState = FadeState::FadingIn;
+                m_fadeDuration = fadeInDuration;
+                m_fadeTimer = 0.0f;
+                m_startVolume = 0.0f;
+                m_targetVolume = m_volume;
+
+                m_currentChannel->setVolume(0.0f);
+            }
+            else
+            {
+                m_fadeState = FadeState::None;
+                m_currentChannel->setVolume(m_volume);
+            }
         }
     }
 
-    void AudioSource::Stop()
+    void AudioSource::Play(float fadeIn, float duration, float fadeOut)
+    {
+        Play(nullptr, fadeIn);
+        
+        if (m_isPlaying)
+        {
+            m_isAutoStop = true;
+            m_sustainTimer = 0.0f;
+            m_sustainDuration = duration;
+            m_scheduledFadeOutDuration = fadeOut;
+        }
+    }
+
+    void AudioSource::Stop(float fadeOutDuration)
     {
         if (m_currentChannel)
         {
             bool isPlaying = false;
             m_currentChannel->isPlaying(&isPlaying);
+            
             if (isPlaying)
             {
-                Sound* soundResource = GetSoundResource();
-                if (soundResource)
+                if (fadeOutDuration > 0.0f)
                 {
-                    m_currentChannel->stop();
+                    m_isAutoStop = false;
+
+                    float currentVol = 0.0f;
+                    m_currentChannel->getVolume(&currentVol);
+
+                    m_fadeState = FadeState::FadingOut;
+                    m_fadeDuration = fadeOutDuration;
+                    m_fadeTimer = 0.0f;
+                    m_startVolume = currentVol;
+                    m_targetVolume = 0.0f;
+                }
+                else
+                {
+                    Sound* soundResource = GetSoundResource();
+                    if (soundResource)
+                    {
+                        m_currentChannel->stop();
+                    }
+                    m_currentChannel = nullptr;
+                    m_isPlaying = false;
+                    m_fadeState = FadeState::None;
+                    m_isAutoStop = false;
                 }
             }
+            else
+            {
+                m_currentChannel = nullptr;
+                m_isPlaying = false;
+                m_fadeState = FadeState::None;
+                m_isAutoStop = false;
+            }
         }
-
-        m_currentChannel = nullptr;
-        m_isPlaying = false;
+        else
+        {
+            m_currentChannel = nullptr;
+            m_isPlaying = false;
+            m_fadeState = FadeState::None;
+            m_isAutoStop = false;
+        }
     }
 
     void AudioSource::LoadClipFromFile()
@@ -205,7 +312,6 @@ namespace engine
             }
             ImGui::EndDisabled();
             
-
             if (currentState == EditorState::Edit)
             {
                 ImGui::TextColored(ImVec4(1, 1, 0, 1), "[Preview Control]");
@@ -213,14 +319,14 @@ namespace engine
                 ImGui::BeginDisabled(m_isPlaying);
                 if (ImGui::Button("Play"))
                 {
-                    Play();
+                    Play(nullptr, m_fadeInTime);
                 }
                 ImGui::EndDisabled();
                 ImGui::SameLine();
                 ImGui::BeginDisabled(!m_isPlaying);
                 if (ImGui::Button("Stop"))
                 {
-                    Stop();
+                    Stop(m_fadeOutTime);
                 }
                 ImGui::EndDisabled();
                 ImGui::Separator();
@@ -252,6 +358,9 @@ namespace engine
             {
                 SetVolume(vol);
             }
+
+            ImGui::DragFloat("Fade In (sec)", &m_fadeInTime, 0.1f, 0.0f, 10.0f, "%.1f s");
+            ImGui::DragFloat("Fade Out (sec)", &m_fadeOutTime, 0.1f, 0.0f, 10.0f, "%.1f s");
 
             if (m_is3D)
             {
