@@ -145,7 +145,6 @@ namespace engine
 				if (GameObject* exist = FindChildByName(parent, name))
 					return exist;
 
-				// UISlider에서 사용하신 패턴 그대로
 				Scene* scene = SceneManager::Get().GetScene();
 				if (!scene) return nullptr;
 
@@ -155,7 +154,6 @@ namespace engine
 				go->SetName(name);
 				go->GetTransform()->SetParent(parent->GetTransform());
 
-				// UI 자식은 RectTransform 강제
 				if (!go->GetComponent<RectTransform>())
 					go->AddComponent<RectTransform>();
 
@@ -349,6 +347,7 @@ namespace engine
 				c.w = 0.0f;
 				m_fill->SetColor(c);
 			}
+			else
 			{
 				m_fill->SetColor(m_fillColor);
 			}
