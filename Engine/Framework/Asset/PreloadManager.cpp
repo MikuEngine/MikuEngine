@@ -15,7 +15,7 @@ namespace engine
 			return;
 		}
 
-		std::string configPath{ "Resource/Setting/Preload.json" };
+		std::string configPath{ "Resource/Setting/Preload.setting" };
 		std::ifstream file{ configPath };
 
 		if (file.is_open())

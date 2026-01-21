@@ -55,7 +55,7 @@ namespace engine
 
         if (!m_projectSettings.sceneList.empty())
         {
-            std::string path = "Resource/Scene/" + m_projectSettings.sceneList[0] + ".json";
+            std::string path = "Resource/Scene/" + m_projectSettings.sceneList[0] + ".scene";
             if (std::filesystem::exists(path))
             {
                 SceneManager::Get().ChangeScene(m_projectSettings.sceneList[0]);
@@ -399,7 +399,7 @@ namespace engine
                     bool isToDeleteCurrent = (SceneManager::Get().GetScene()->GetName() == m_sceneToDelete);
                     // 2. 파일 삭제
                     namespace fs = std::filesystem;
-                    std::string path = "Resource/Scene/" + m_sceneToDelete + ".json";
+                    std::string path = "Resource/Scene/" + m_sceneToDelete + ".scene";
                     if (fs::exists(path))
                     {
                         fs::remove(path);
@@ -464,8 +464,8 @@ namespace engine
                 {
                     namespace fs = std::filesystem;
 
-                    std::string oldPath = "Resource/Scene/" + m_sceneToRename + ".json";
-                    std::string newPath = "Resource/Scene/" + std::string(renameBuf) + ".json";
+                    std::string oldPath = "Resource/Scene/" + m_sceneToRename + ".scene";
+                    std::string newPath = "Resource/Scene/" + std::string(renameBuf) + ".scene";
 
                     if (!fs::exists(newPath))
                     {
@@ -1041,7 +1041,7 @@ namespace engine
 
         for (auto it = list.begin(); it != list.end(); )
         {
-            std::string fullPath = "Resource/Scene/" + *it + ".json";
+            std::string fullPath = "Resource/Scene/" + *it + ".scene";
             if (!fs::exists(fullPath))
             {
                 it = list.erase(it);
@@ -1074,7 +1074,7 @@ namespace engine
 
         for (const auto& entry : fs::directory_iterator(dirPath))
         {
-            if (entry.path().extension() == ".json")
+            if (entry.path().extension() == ".scene")
             {
                 m_cachedSceneFiles.push_back(entry.path().filename().replace_extension().string());
             }
@@ -1090,7 +1090,7 @@ namespace engine
 
         std::string currentStr = currentJson.dump();
         // 디스크에 있는 파일 데이터 load
-        std::string path = "Resource/Scene/" + SceneManager::Get().GetScene()->GetName() + ".json";
+        std::string path = "Resource/Scene/" + SceneManager::Get().GetScene()->GetName() + ".scene";
 
         if (!std::filesystem::exists(path))
         {

@@ -354,7 +354,7 @@ namespace engine
         }
 
         std::filesystem::path path{ "Resource/Scene" };
-        path /= (m_name + ".json");
+        path /= (m_name + ".scene");
 
         if (path.has_parent_path())
         {
@@ -427,7 +427,7 @@ namespace engine
     void Scene::Load()
     {
         std::filesystem::path path{ "Resource/Scene" };
-        path /= (m_name + ".json");
+        path /= (m_name + ".scene");
 
         std::ifstream i(path);
         if (!i.is_open())

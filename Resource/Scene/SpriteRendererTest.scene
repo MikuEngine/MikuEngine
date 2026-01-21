@@ -464,9 +464,9 @@
                 {
                     "Type": "SpriteAnimator",
                     "Active": true,
-                    "SpriteDataPath": "Resource/Data/SpriteSheet/Explosion_sprites.json",
+                    "SpriteDataPath": "Resource/Data/SpriteSheet/Explosion_sprites.sprite",
                     "AnimationDataPaths": [
-                        "Resource/Data/SpriteAnim/Explosion_a_anim.json"
+                        "Resource/Data/SpriteAnim/Explosion_a_anim.anim"
                     ]
                 },
                 {
@@ -521,9 +521,9 @@
                 {
                     "Type": "SpriteAnimator",
                     "Active": true,
-                    "SpriteDataPath": "Resource/Data/SpriteSheet/Flame_sprites.json",
+                    "SpriteDataPath": "Resource/Data/SpriteSheet/Flame_sprites.sprite",
                     "AnimationDataPaths": [
-                        "Resource/Data/SpriteAnim/Flame_a_anim.json"
+                        "Resource/Data/SpriteAnim/Flame_a_anim.anim"
                     ]
                 },
                 {

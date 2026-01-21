@@ -11,7 +11,7 @@ namespace engine
 {
     namespace
     {
-        const char* g_settingPath = "Resource/Setting/ProjectSettings.json";
+        const char* g_settingPath = "Resource/Setting/Project.setting";
     }
 
     void ProjectSettings::Save()

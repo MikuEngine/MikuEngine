@@ -39,7 +39,7 @@ namespace engine
         int m_screenHeight = 0;
 
     protected:
-        WinApp(const std::filesystem::path& settingFilePath = "config.json", const WindowSettings& defaultSetting = {});
+        WinApp(const std::filesystem::path& settingFilePath = "Windows.config", const WindowSettings& defaultSetting = {});
         virtual ~WinApp();
 
     public:
