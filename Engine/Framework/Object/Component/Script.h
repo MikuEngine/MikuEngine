@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
+#include "Framework/Physics/CollisionTypes.h"
 
 namespace engine
 {
@@ -38,6 +39,21 @@ namespace engine
 
         GameObject* CreateGameObject(const std::string& name = "GameObject");
         GameObject* CreateGameObject(CreateObjectType type, const std::string& name);
+
+        // ═══════════════════════════════════════════════════════════════
+        // 충돌 콜백 (Push 방식)
+        // 필요한 함수만 오버라이드하여 사용
+        // ═══════════════════════════════════════════════════════════════
+        
+        // 물리 충돌 (IsTrigger = false)
+        virtual void OnCollisionEnter(const CollisionInfo& info) {}
+        virtual void OnCollisionStay(const CollisionInfo& info) {}
+        virtual void OnCollisionExit(const CollisionInfo& info) {}
+        
+        // 트리거 충돌 (IsTrigger = true)
+        virtual void OnTriggerEnter(const CollisionInfo& info) {}
+        virtual void OnTriggerStay(const CollisionInfo& info) {}
+        virtual void OnTriggerExit(const CollisionInfo& info) {}
 
     public:
         void OnGui() override {};

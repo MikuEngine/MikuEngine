@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "AimPointer.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>

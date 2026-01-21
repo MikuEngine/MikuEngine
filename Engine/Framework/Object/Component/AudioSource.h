@@ -8,6 +8,7 @@ namespace engine
 {
     class Sound;
     class SoundSystem;
+    class SoundData;
 
     class AudioSource :
         public Component
@@ -18,8 +19,8 @@ namespace engine
 
     private:
         std::string m_clipName;             // 재생할 사운드 파일 키값
-        Sound* m_soundResource = nullptr;   // 로드된 사운드 리소스 포인터
-        
+        std::shared_ptr<SoundData> m_soundData;   // 로드된 사운드 리소스 데이터
+
         bool m_playOnAwake = false;
         bool m_isLoop = false;
         bool m_is3D = false;
@@ -49,7 +50,7 @@ namespace engine
         void Set3D(bool enable);
         void SetForceStopState();
         
-        Sound* GetSoundResource() const { return m_soundResource; }
+        Sound* GetSoundResource() const;
         FMOD::Channel* GetChannel() const { return m_currentChannel; }
         bool Is3D() const { return m_is3D; }
         bool IsPlaying() const { return m_isPlaying; }

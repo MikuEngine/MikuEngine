@@ -202,6 +202,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Script\TestAnimationFSM.cpp" />
+    <ClCompile Include="Script\TestLogicFSM.cpp" />
     <ClCompile Include="Script\TestScript.cpp" />
     <ClCompile Include="GamePCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -279,6 +281,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Script\TestAnimationFSM.h" />
+    <ClInclude Include="Script\TestLogicFSM.h" />
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
     <ClInclude Include="Script\TestSound.h" />

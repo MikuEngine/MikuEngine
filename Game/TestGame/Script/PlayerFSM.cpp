@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerFSM.h"
 #include "AimPointer.h"
 #include "TempBulletFactory.h"
