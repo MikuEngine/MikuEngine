@@ -36,11 +36,12 @@ namespace engine
         virtual ~AudioSource();
 
         void Initialize() override;
-        void Awake() override;
+        //void Awake() override;
         void OnDestroy() override;
 
         void Play(EventEndPlay callback = nullptr);
         void Stop();
+        void LoadClipFromFile();
 
         void SetClip(std::string name); 
         void SetVolume(float vol);
