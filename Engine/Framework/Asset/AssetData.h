@@ -9,6 +9,7 @@ namespace engine
         Animation,
         Material,
         Skeleton,
+        Prefab,
         None
     };
 
