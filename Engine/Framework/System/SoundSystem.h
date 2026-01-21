@@ -91,6 +91,7 @@ namespace engine
         void Register(AudioSource* source) override;
         void Unregister(AudioSource* source) override;
 
+        void OnGameStart();
         void Update();
 
         Sound* GetOrLoadSound(const std::string& filename, bool is3D);

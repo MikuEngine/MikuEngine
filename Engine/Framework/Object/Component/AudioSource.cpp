@@ -11,32 +11,33 @@ namespace engine
     }
 
     AudioSource::~AudioSource()
-    {
-        Stop();
+    {   
+        SoundSystem::Get().Unregister(this);
     }
 
     void AudioSource::Initialize()
     {
         SoundSystem::Get().Register(this);
 
-        /*/
         if (!m_clipName.empty())
         {
             SetClip(m_clipName);
 
-            
             if (m_playOnAwake)
             {
                 Play();
             }
-            
         }
-        //*/
+    }
+
+    void AudioSource::Awake()
+    {
+
     }
 
     void AudioSource::OnDestroy()
     {
-        SoundSystem::Get().Unregister(this);
+        Stop();
     }
 
     void AudioSource::SetClip(std::string name)
@@ -74,10 +75,21 @@ namespace engine
 
     void AudioSource::Stop()
     {
-        if (m_soundResource)
+        if (m_currentChannel)
         {
-            m_soundResource->Stop();
+            // FMOD 시스템이 살아있는지도 확인해야 안전
+            bool isPlaying = false;
+            m_currentChannel->isPlaying(&isPlaying);
+            if (isPlaying)
+            {
+                if (m_soundResource)
+                {
+                    m_currentChannel->stop();
+                }
+            }
         }
+
+        m_currentChannel = nullptr;
         m_isPlaying = false;
     }
 
@@ -197,10 +209,5 @@ namespace engine
         if (j.contains("Volume")) m_volume = j["Volume"];
         if (j.contains("MinDist")) m_minDistance = j["MinDist"];
         if (j.contains("MaxDist")) m_maxDistance = j["MaxDist"];
-
-        if (!m_clipName.empty())
-        {
-            SetClip(m_clipName);
-        }
     }
 }
