@@ -21,6 +21,7 @@ namespace engine
     protected:
         std::string m_name;
         std::vector<std::unique_ptr<GameObject>> m_gameObjects;
+        std::vector<std::unique_ptr<GameObject>> m_dontDestroyGameObjects;
 
         // 생성 대기열
         std::vector<std::unique_ptr<GameObject>> m_incubator;
@@ -45,7 +46,7 @@ namespace engine
         GameObject* FindGameObject(const std::string& name);
 
         void ResetToDefaultScene();
-        void Clear();
+        void Clear(bool preservePersistent = false);
 
         void RegisterPendingAdd(GameObject* gameObject);
         void RegisterPendingAdd(Component* component);

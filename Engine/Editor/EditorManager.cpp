@@ -159,6 +159,9 @@ namespace engine
                 auto scene = SceneManager::Get().GetScene();
                 g_tempScene.clear();
                 scene->SaveToJson(g_tempScene);
+
+                scene->Clear(false);
+
                 scene->LoadFromJson(g_tempScene);
 
                 // 물리 씬 생성
@@ -180,6 +183,8 @@ namespace engine
                 
                 if (scene && !g_tempScene.empty())
                 {
+                    scene->Clear(false);
+
                     scene->LoadFromJson(g_tempScene);
                 }
                 m_editorState = EditorState::Edit;

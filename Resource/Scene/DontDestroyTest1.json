@@ -1,5 +1,5 @@
 {
-    "Name": "SoundSystemTest",
+    "Name": "DontDestroyTest1",
     "NumGameObjects": 2,
     "GameObjects": [
         {
@@ -38,7 +38,7 @@
         },
         {
             "ID": 1,
-            "Name": "SoundObject",
+            "Name": "DontDestroyGameObject",
             "Active": true,
             "Components": [
                 {
@@ -62,19 +62,8 @@
                     }
                 },
                 {
-                    "Type": "SoundTest",
-                    "Active": false
-                },
-                {
-                    "Type": "AudioSource",
-                    "Active": true,
-                    "ClipName": "singing.wav",
-                    "IsLoop": false,
-                    "Is3D": false,
-                    "PlayOnAwake": true,
-                    "Volume": 1.0,
-                    "MinDist": 1.0,
-                    "MaxDist": 500.0
+                    "Type": "DontDestroyTest",
+                    "Active": true
                 }
             ]
         }

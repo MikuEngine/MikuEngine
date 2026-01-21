@@ -158,6 +158,10 @@
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
+    <ClCompile Include="Script\DontDestroyTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Script\FreeCameraController.cpp">
       <SubType>
       </SubType>
@@ -227,6 +231,10 @@
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
     <ClInclude Include="Script\AimPointer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\DontDestroyTest.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -617,6 +617,9 @@
     <ClInclude Include="Framework\Object\Component\UIProgressBar.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Utility\EditorHelper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\FullscreenQuad_VS.hlsl" />

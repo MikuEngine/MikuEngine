@@ -332,6 +332,8 @@ namespace engine
         SceneManager::Get().ProcessPendingAdds(true);
         SceneManager::Get().ProcessPendingKills();
 
+        SceneManager::Get().CallOnSceneStart();
+
         SystemManager::Get().GetScriptSystem().CallStart();
         SystemManager::Get().GetScriptSystem().CallUpdate();
 
