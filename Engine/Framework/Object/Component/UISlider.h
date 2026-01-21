@@ -56,6 +56,7 @@ namespace engine
 
 	public:
 		bool IsInteractable() const override { return true; }
+		bool IsDragEnabled() const override { return true; }
 
 		void OnMouseDown(const Vector2& mousePos, int mouseButton) override;
 		void OnMouseUp(const Vector2& mousePos, int mouseButton) override;

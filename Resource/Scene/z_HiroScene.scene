@@ -596,7 +596,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Value": 0.32899999618530273,
+                    "Value": 0.5600000023841858,
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "",
@@ -676,7 +676,7 @@
                     "Active": true,
                     "Layer": 0,
                     "OrderInLayer": 0,
-                    "RaycastTarget": true,
+                    "RaycastTarget": false,
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
@@ -743,7 +743,7 @@
                     "Active": true,
                     "Layer": 0,
                     "OrderInLayer": 0,
-                    "RaycastTarget": true,
+                    "RaycastTarget": false,
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
@@ -797,11 +797,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.32899999618530273,
+                        "x": 0.5600000023841858,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.32899999618530273,
+                        "x": 0.5600000023841858,
                         "y": 0.5
                     }
                 },
@@ -810,7 +810,7 @@
                     "Active": true,
                     "Layer": 0,
                     "OrderInLayer": 0,
-                    "RaycastTarget": true,
+                    "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/Earth.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",

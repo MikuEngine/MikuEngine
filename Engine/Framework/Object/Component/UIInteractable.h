@@ -9,6 +9,7 @@ namespace engine
 		virtual ~UIInteractable() = default;
 
 		virtual bool IsInteractable() const { return true; }
+		virtual bool IsDragEnabled() const { return false; }
 
 		virtual void OnMouseEnter(const Vector2& mousePos) {}
 		virtual void OnMouseExit(const Vector2& mousePos) {}

@@ -62,7 +62,7 @@ namespace engine
 		bool m_isDragging = false;
 		Vector2 m_pressStartPos{ 0.0f, 0.0f };
 
-		float m_dragThresholdPixels = 5.0f;
+		float m_dragThresholdPixels = 3.0f;
 		Vector2 m_prevMousePos{ 0.0f, 0.0f };
 
 	private:

@@ -253,6 +253,10 @@ namespace engine
 
 	void UISlider::UpdateVisuals()
 	{
+		if (m_background) m_background->m_raycastTarget = false;
+		if (m_fill)       m_fill->m_raycastTarget = false;
+		if (m_handle)     m_handle->m_raycastTarget = false;
+
 		if (!RefreshVisuals()) return;
 		if (!m_background || !m_fill) return;
 
@@ -430,6 +434,7 @@ namespace engine
 			};
 
 		setValueFromMouse(mousePos);
+		UpdateVisuals();
 	}
 
 	void UISlider::OnMouseUp(const Vector2& mousePos, int mouseButton)
@@ -482,6 +487,7 @@ namespace engine
 			};
 
 		setValueFromMouse(mousePos);
+		UpdateVisuals();
 	}
 
 	void UISlider::OnEndDrag(const Vector2& mousePos, int mouseButton)
