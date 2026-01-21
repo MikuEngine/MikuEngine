@@ -158,6 +158,10 @@
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
+    <ClCompile Include="Script\DontDestroyTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Script\FreeCameraController.cpp">
       <SubType>
       </SubType>
@@ -167,6 +171,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Script\AimPointer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Script\SceneChange.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -230,11 +238,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Script\DontDestroyTest.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Script\FreeCameraController.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="Script\Rotator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\SceneChange.h">
       <SubType>
       </SubType>
     </ClInclude>

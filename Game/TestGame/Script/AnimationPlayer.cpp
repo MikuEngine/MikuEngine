@@ -100,7 +100,7 @@ namespace game
 
         if (engine::Input::IsKeyPressed(engine::Keys::B))
         {
-            engine::SceneManager::Get().ChangeScene("SpriteRendererTest");
+            engine::SceneManager::Get().ChangeScene("StaticMeshTest");
         }
     }
 

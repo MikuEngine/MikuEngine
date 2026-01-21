@@ -21,6 +21,7 @@ namespace engine
         bool m_hasAwoken = false;
         bool m_isPendingKill = false;
         bool m_activeInHierarchy = true;
+        bool m_isDontDestroyOnLoad = false;
 
     public:
         GameObject();
@@ -87,6 +88,8 @@ namespace engine
         void RemoveComponent(size_t index);
 
         RectTransform* ReplaceTransformWithRectTransform();
+        void DontDestroyOnLoad();
+        bool IsDontDestroyOnLoad();
 
     public:
         virtual void OnGui() {};

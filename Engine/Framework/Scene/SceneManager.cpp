@@ -38,17 +38,19 @@ namespace engine
             ResourceManager::Get().CleanupSceneScope();
             AssetManager::Get().CleanupSceneScope();
 
-            m_scene->Clear();
-
             m_isSceneChanged = false;
             m_sceneState = SceneState::Loading;
             
             if (isPlaying)
             {
+                m_scene->Clear(true);
+
                 PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName);
             }
             else
             {
+                m_scene->Clear(false);
+
                 PreloadManager::Get().LoadSceneResourceSync(m_nextSceneName);
             }
         }

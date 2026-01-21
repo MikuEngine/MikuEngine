@@ -17,15 +17,6 @@ namespace engine
 {
     GameObject* Scene::CreateGameObject(const std::string& name)
     {
-        //m_incubator.push_back(std::make_unique<GameObject>());
-
-        //GameObject* ptr = m_incubator.back().get();
-        //ptr->m_name = name;
-        //ptr->m_sceneIndex = static_cast<int32_t>(m_gameObjects.size() - 1);
-
-        //RegisterPendingAdd(ptr);
-
-        //return ptr;
         return CreateGameObject(CreateObjectType::Default, name);
     }
 
@@ -100,8 +91,19 @@ namespace engine
         gameObject->AddComponent<Camera>();
     }
 
-    void Scene::Clear()
+    void Scene::Clear(bool preservePersistent)
     {
+        if (preservePersistent)
+        {
+            for (auto& gameObject : m_gameObjects)
+            {
+                if (gameObject->IsDontDestroyOnLoad())
+                {
+                    m_dontDestroyGameObjects.push_back(std::move(gameObject));
+                }
+            }
+        }
+
         m_gameObjects.clear();
 
         m_gameObjectKillList.clear();
@@ -128,6 +130,16 @@ namespace engine
     {
         int safeGuard = 0;
         constexpr int MAX_ITERATIONS = 10;
+
+        if (!m_dontDestroyGameObjects.empty())
+        {
+            for (auto& gameObject : m_dontDestroyGameObjects)
+            {
+                m_gameObjects.push_back(std::move(gameObject));
+            }
+
+            m_dontDestroyGameObjects.clear();
+        }
 
         while (!m_componentAddList.empty() || !m_incubator.empty())
         {
@@ -418,8 +430,6 @@ namespace engine
         json root;
         i >> root;
 
-        Clear();
-
         JsonGet(root, "Name", m_name);
         size_t numGameObjects;
         JsonGet(root, "NumGameObjects", numGameObjects);
@@ -478,12 +488,9 @@ namespace engine
 
     void Scene::LoadFromJson(const json& inJson)
     {
-        Clear();
-
         JsonGet(inJson, "Name", m_name);
         size_t numGameObjects;
         JsonGet(inJson, "NumGameObjects", numGameObjects);
-
 
         std::vector<GameObject*> idToPtr(numGameObjects + 1);
         std::vector<std::pair<int, int>> parentLinks;

@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "GameObject.h"
 
 #include "Common/Utility/JsonHelper.h"
@@ -296,6 +296,16 @@ namespace engine
         }
 
         return rt;
+    }
+
+    void GameObject::DontDestroyOnLoad()
+    {
+        m_isDontDestroyOnLoad = true;
+    }
+
+    bool GameObject::IsDontDestroyOnLoad()
+    {
+        return m_isDontDestroyOnLoad;
     }
 
     void GameObject::Save(json& j) const
