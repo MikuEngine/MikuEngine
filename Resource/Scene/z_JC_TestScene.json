@@ -141,7 +141,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -3.0
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -150,9 +150,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.5,
-                        "y": 0.5,
-                        "z": 1.0
+                        "x": 0.004999999888241291,
+                        "y": 0.004999999888241291,
+                        "z": 0.004999999888241291
                     }
                 },
                 {
@@ -162,7 +162,7 @@
                 {
                     "Type": "SpriteRenderer",
                     "Active": true,
-                    "TextureFilePath": "None",
+                    "TextureFilePath": "Resource/Texture/Earth.png",
                     "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
