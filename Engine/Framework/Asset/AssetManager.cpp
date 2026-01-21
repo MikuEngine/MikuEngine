@@ -11,6 +11,7 @@
 #include "Framework/Asset/SpriteData.h"
 #include "Framework/Asset/SpriteAnimationData.h"
 #include "Framework/Asset/GeometryData.h"
+#include "Framework/Asset/SoundData.h"
 
 namespace engine
 {
@@ -20,6 +21,24 @@ namespace engine
         m_sceneCachedDatas.reserve(200);
         
         CreateGeometryData();
+    }
+
+    void AssetManager::Shutdown()
+    {
+        m_sceneCachedDatas.clear();
+        m_globalCachedDatas.clear();
+        m_tempAssets.fill(nullptr);
+        
+        m_soundDatas.clear();
+        m_staticMeshDatas.clear();
+        m_materialDatas.clear();
+        m_skeletonDatas.clear();
+        m_skeletalMeshDatas.clear();
+        m_animationDatas.clear();
+        m_simpleMeshDatas.clear();
+        m_spriteDatas.clear();
+        m_spriteAnimationDatas.clear();
+        m_geometryDatas.clear();
     }
 
     void AssetManager::CleanupSceneScope()
@@ -189,6 +208,27 @@ namespace engine
         CacheData(spriteData, scope);
 
         return spriteData;
+    }
+
+    std::shared_ptr<SoundData> AssetManager::GetOrCreateSoundData(const std::string& filePath, LifeScope scope)
+    {
+        if (auto find = m_soundDatas.find(filePath); find != m_soundDatas.end())
+        {
+            if (!find->second.expired())
+            {
+                return find->second.lock();
+            }
+        }
+
+        Sound* sound = SoundSystem::Get().CreateSound(filePath, false); // AudioSource decides 3D/2D, here we just load
+        if (!sound) return nullptr;
+
+        auto soundData = std::make_shared<SoundData>(sound);
+
+        m_soundDatas[filePath] = soundData;
+        CacheData(soundData, scope);
+
+        return soundData;
     }
 
     std::shared_ptr<SpriteAnimationData> AssetManager::GetOrCreateSpriteAnimationData(const std::string& filePath, LifeScope scope)

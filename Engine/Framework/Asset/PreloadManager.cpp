@@ -161,5 +161,9 @@ namespace engine
 		{
 			AssetManager::Get().GetOrCreateSpriteAnimationData(path, scope);
 		}
+		else if (type == "Sound")
+		{
+			AssetManager::Get().GetOrCreateSoundData(path, scope);
+		}
 	}
 }
