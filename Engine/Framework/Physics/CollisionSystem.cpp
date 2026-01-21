@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "CollisionSystem.h"
 
 #include "Framework/Object/Component/Collider.h"
@@ -72,6 +72,22 @@ namespace engine
             {
                 PhysicsDebugRenderer::Get().MarkColliding(colliderA);
                 PhysicsDebugRenderer::Get().MarkColliding(colliderB);
+            }
+        }
+
+        // 활성 트리거 쌍에 대해서도 MarkColliding 호출
+        for (const auto& pair : m_activeTriggerPairs)
+        {
+            Object* objTrigger = GetObjectFromHandle(pair.triggerHandle);
+            Object* objOther = GetObjectFromHandle(pair.otherHandle);
+            
+            Collider* trigger = dynamic_cast<Collider*>(objTrigger);
+            Collider* other = dynamic_cast<Collider*>(objOther);
+            
+            if (trigger && other)
+            {
+                PhysicsDebugRenderer::Get().MarkColliding(trigger);
+                PhysicsDebugRenderer::Get().MarkColliding(other);
             }
         }
     }
@@ -421,6 +437,9 @@ namespace engine
         if (!trigger || !other) return;
 
         // 디버그 렌더러에 충돌 상태 표시
+        LOG_PRINT("[CollisionSystem] TriggerEnter: {} <-> {}", 
+            trigger->GetGameObject()->GetName(),
+            other->GetGameObject()->GetName());
         PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
         PhysicsDebugRenderer::Get().MarkColliding(other.Get());
 
@@ -461,5 +480,105 @@ namespace engine
         if (trigger) pair.triggerHandle = trigger->GetHandle();
         if (other) pair.otherHandle = other->GetHandle();
         return pair;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 충돌 상태 조회
+    // ═══════════════════════════════════════════════════════════════
+
+    bool CollisionSystem::IsColliding(Collider* collider) const
+    {
+        if (!collider) return false;
+        
+        Handle handle = collider->GetHandle();
+        for (const auto& pair : m_activeCollisionPairs)
+        {
+            if (pair.colliderAHandle == handle || pair.colliderBHandle == handle)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    std::vector<Collider*> CollisionSystem::GetCollidingWith(Collider* collider) const
+    {
+        std::vector<Collider*> result;
+        if (!collider) return result;
+        
+        Handle handle = collider->GetHandle();
+        for (const auto& pair : m_activeCollisionPairs)
+        {
+            if (pair.colliderAHandle == handle)
+            {
+                // colliderB 찾기
+                if (Object* obj = GetObjectFromHandle(pair.colliderBHandle))
+                {
+                    if (Collider* other = dynamic_cast<Collider*>(obj))
+                    {
+                        result.push_back(other);
+                    }
+                }
+            }
+            else if (pair.colliderBHandle == handle)
+            {
+                // colliderA 찾기
+                if (Object* obj = GetObjectFromHandle(pair.colliderAHandle))
+                {
+                    if (Collider* other = dynamic_cast<Collider*>(obj))
+                    {
+                        result.push_back(other);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    bool CollisionSystem::IsTriggerOverlapping(Collider* trigger) const
+    {
+        if (!trigger) return false;
+        
+        Handle handle = trigger->GetHandle();
+        for (const auto& pair : m_activeTriggerPairs)
+        {
+            if (pair.triggerHandle == handle || pair.otherHandle == handle)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    std::vector<Collider*> CollisionSystem::GetTriggerOverlaps(Collider* trigger) const
+    {
+        std::vector<Collider*> result;
+        if (!trigger) return result;
+        
+        Handle handle = trigger->GetHandle();
+        for (const auto& pair : m_activeTriggerPairs)
+        {
+            if (pair.triggerHandle == handle)
+            {
+                if (Object* obj = GetObjectFromHandle(pair.otherHandle))
+                {
+                    if (Collider* other = dynamic_cast<Collider*>(obj))
+                    {
+                        result.push_back(other);
+                    }
+                }
+            }
+            else if (pair.otherHandle == handle)
+            {
+                if (Object* obj = GetObjectFromHandle(pair.triggerHandle))
+                {
+                    if (Collider* other = dynamic_cast<Collider*>(obj))
+                    {
+                        result.push_back(other);
+                    }
+                }
+            }
+        }
+        return result;
     }
 }
