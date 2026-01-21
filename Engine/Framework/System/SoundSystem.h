@@ -69,7 +69,6 @@ namespace engine
 
     private:
         FMOD::System* m_pSystem = nullptr;
-        std::map<std::string, Sound*> m_soundResources; // 리소스 캐싱
 
         // FMOD 리스너(듣는 사람) 정보
         Vector3 m_listenerPos = { 0, 0, 0 };
@@ -95,7 +94,7 @@ namespace engine
         void StopAll();
         void OnGameStart();
 
-        Sound* GetOrLoadSound(const std::string& filename, bool is3D);
+        Sound* CreateSound(const std::string& filename, bool is3D);
         const std::string& GetSoundPath() const { return m_soundPath; }
 
         void RefreshSoundList();

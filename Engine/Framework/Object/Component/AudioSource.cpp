@@ -1,6 +1,9 @@
 ﻿#include "EnginePCH.h"
 #include "AudioSource.h"
+
 #include "Framework/System/SoundSystem.h"
+#include "Framework/Asset/AssetManager.h"
+#include "Framework/Asset/SoundData.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Editor/EditorManager.h"
@@ -46,12 +49,13 @@ namespace engine
 
         m_clipName = name;
 
-        m_soundResource = SoundSystem::Get().GetOrLoadSound(name, m_is3D);
+        m_soundData = AssetManager::Get().GetOrCreateSoundData(name);
     }
 
     void AudioSource::Play(EventEndPlay callback)
     {
-        if (!m_soundResource) return;
+        Sound* soundResource = GetSoundResource();
+        if (!soundResource) return;
 
         Stop();
 
@@ -60,13 +64,13 @@ namespace engine
             Transform* tr = GetTransform();
             if (tr)
             {
-                m_currentChannel = m_soundResource->Play3D(tr->GetWorldPosition(), m_isLoop);
+                m_currentChannel = soundResource->Play3D(tr->GetWorldPosition(), m_isLoop);
                 m_isPlaying = true;
             }
         }
         else
         {
-            m_currentChannel = m_soundResource->Play2D(m_isLoop, callback);
+            m_currentChannel = soundResource->Play2D(m_isLoop, callback);
             m_isPlaying = true;
         }
 
@@ -84,7 +88,8 @@ namespace engine
             m_currentChannel->isPlaying(&isPlaying);
             if (isPlaying)
             {
-                if (m_soundResource)
+                Sound* soundResource = GetSoundResource();
+                if (soundResource)
                 {
                     m_currentChannel->stop();
                 }
@@ -138,9 +143,10 @@ namespace engine
     void AudioSource::SetVolume(float vol)
     {
         m_volume = vol;
-        if (m_soundResource)
+        Sound* soundResource = GetSoundResource();
+        if (soundResource)
         {
-            m_soundResource->SetVolume(vol);
+            soundResource->SetVolume(vol);
         }
     }
 
@@ -282,5 +288,10 @@ namespace engine
         if (j.contains("Volume")) m_volume = j["Volume"];
         if (j.contains("MinDist")) m_minDistance = j["MinDist"];
         if (j.contains("MaxDist")) m_maxDistance = j["MaxDist"];
+    }
+    
+    Sound* AudioSource::GetSoundResource() const
+    {
+        return m_soundData ? m_soundData->GetSound() : nullptr;
     }
 }

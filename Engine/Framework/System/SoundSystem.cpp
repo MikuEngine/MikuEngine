@@ -1,5 +1,6 @@
 ﻿#include "EnginePCH.h"
 #include "SoundSystem.h"
+#include "Framework/Asset/AssetManager.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
 
@@ -123,16 +124,6 @@ namespace engine
     {
         m_callbackList.clear();
 
-        for (auto& pair : m_soundResources)
-        {
-            if (pair.second)
-            {
-                pair.second->Release();
-                delete pair.second;
-            }
-        }
-        m_soundResources.clear();
-
         if (m_pSystem)
         {
             m_pSystem->close();
@@ -255,15 +246,15 @@ namespace engine
         m_pSystem->update();
     }
 
-    Sound* SoundSystem::GetOrLoadSound(const std::string& filename, bool is3D)
+    Sound* SoundSystem::CreateSound(const std::string& filename, bool is3D)
     {
         namespace fs = std::filesystem;
 
         fs::path rootPath(m_soundPath);
         fs::path targetPath = rootPath / filename;
 
-        std::string keyName = filename;
-
+        // Note: SoundData는 AssetManager에서 캐싱을 처리합니다
+        
         if (!targetPath.has_extension() && fs::exists(rootPath))
         {
             for (const auto& entry : fs::directory_iterator(rootPath))
@@ -277,21 +268,11 @@ namespace engine
                         if (ext == ".wav" || ext == ".mp3" || ext == ".ogg" || ext == ".flac")
                         {
                             targetPath = entry.path();
-                            keyName = targetPath.filename().string();
                             break;
                         }
-                        // if fsb
-                        // ...
                     }
                 }
             }
-        }
-
-        // 캐싱 확인해서 중복 로드 방지
-        auto iter = m_soundResources.find(keyName);
-        if (iter != m_soundResources.end())
-        {
-            return iter->second;
         }
 
         if (!fs::exists(targetPath))
@@ -319,7 +300,7 @@ namespace engine
 
         if (ret != FMOD_OK)
         {
-            LOG_ERROR("SoundSystem::GetOrLoadSound error / Path: %s", targetPath.string().c_str());
+            LOG_ERROR("SoundSystem::CreateSound error / Path: %s", targetPath.string().c_str());
             delete sound;
             return nullptr;
         }
@@ -329,9 +310,6 @@ namespace engine
             // 1미터부터 소리감쇄, 500미터 이후로는 안 들림
             sound->m_pSound->set3DMinMaxDistance(1.0f, 500.0f);
         }
-
-        // 캐싱 맵에 추가
-        m_soundResources.insert(make_pair(filename, sound));
 
         return sound;
     }
@@ -359,13 +337,13 @@ namespace engine
 
                 if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
                 {
-                    Sound* snd = GetOrLoadSound(label, false);
+                    auto soundData = AssetManager::Get().GetOrCreateSoundData(label, LifeScope::Global);
 
-                    /*// EndEvent
-                    if (snd) snd->Play2D(false, []()
-                    {
-                        //std::cout << "play 끝!" << std::endl;
-                    });
+                   /*// EndEvent
+                        if (snd) snd->Play2D(false, []()
+                        {
+                            //std::cout << "play 끝!" << std::endl;
+                        });
                     //*/
                 }
 

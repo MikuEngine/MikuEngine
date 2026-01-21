@@ -25,6 +25,11 @@ namespace engine
 
     GameObject* ScriptBase::CreateGameObject(const std::string& name)
     {
-        return SceneManager::Get().GetScene()->CreateGameObject(name);
+        return SceneManager::Get().GetScene()->CreateGameObject(CreateObjectType::Default, name);
+    }
+
+    GameObject* ScriptBase::CreateGameObject(CreateObjectType type, const std::string& name)
+    {
+        return SceneManager::Get().GetScene()->CreateGameObject(type, name);
     }
 }

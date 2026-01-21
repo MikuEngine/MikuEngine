@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "AimPointer.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
@@ -9,6 +9,7 @@
 #include <Framework/Object/Component/RectTransform.h>
 #include <Framework/Object/Component/UIImage.h>
 #include <Framework/Object/Component/SpriteRenderer.h>
+#include <Framework/Object/Component/Camera.h>
 
 namespace game
 {
@@ -114,15 +115,23 @@ namespace game
 
     void AimPointer::UpdateWorldPositionFromMouse(const engine::Vector2& mousePos)
     {
-        engine::Vector3 basePos{ 0.0f, 0.0f, 0.0f };
+        engine::Vector3 camPos{ 0.0f, 0.0f, -20.0f };
+        float fovDegrees = 50.0f;
 
         auto* scene = engine::SceneManager::Get().GetScene();
         if (scene)
         {
-            if (auto* camPos = scene->FindGameObject("MainCamera"))
+            if (auto* camGO = scene->FindGameObject("MainCamera"))
             {
-                basePos = camPos->GetTransform()->GetWorldPosition();
-                basePos.z += 0.2f;
+                camPos = camGO->GetTransform()->GetWorldPosition();
+                
+                // Camera 컴포넌트에서 FOV 가져오기
+                if (auto* camera = camGO->GetComponent<engine::Camera>())
+                {
+                    // Camera의 m_fov는 private이므로, 기본값 사용 또는 public getter 필요
+                    // 현재는 씬에 저장된 FOV 값(50.0)을 사용
+                    fovDegrees = 50.0f;
+                }
             }
         }
 
@@ -130,12 +139,23 @@ namespace game
         float screenWidth = (vp.Width > 0.0f) ? vp.Width : 1920.0f;
         float screenHeight = (vp.Height > 0.0f) ? vp.Height : 1080.0f;
 
-        float worldScaleX = 0.32f / screenWidth;
-        float worldScaleY = 0.18f / screenHeight;
+        // 카메라에서 Z=0 평면(게임 월드)까지의 거리
+        float distanceToWorld = std::abs(camPos.z);
+        
+        // FOV와 거리를 기반으로 월드 크기 계산
+        // 화면 절반의 세로 월드 크기 = tan(fov/2) * distance
+        float fovRadians = DirectX::XMConvertToRadians(fovDegrees);
+        float halfWorldHeight = std::tan(fovRadians * 0.5f) * distanceToWorld;
+        float halfWorldWidth = halfWorldHeight * (screenWidth / screenHeight);
 
-        m_worldPosition = basePos;
-        m_worldPosition.x += (mousePos.x - screenWidth * 0.5f) * worldScaleX;
-        m_worldPosition.y += -(mousePos.y - screenHeight * 0.5f) * worldScaleY;
+        // 스크린 좌표 -> 월드 좌표 스케일
+        float worldScaleX = (halfWorldWidth * 2.0f) / screenWidth;
+        float worldScaleY = (halfWorldHeight * 2.0f) / screenHeight;
+
+        // 카메라 위치를 기준으로 월드 좌표 계산
+        m_worldPosition.x = camPos.x + (mousePos.x - screenWidth * 0.5f) * worldScaleX;
+        m_worldPosition.y = camPos.y + -(mousePos.y - screenHeight * 0.5f) * worldScaleY;
+        m_worldPosition.z = 0.0f;  // 게임 월드는 Z=0 평면
     }
 
     engine::Vector3 AimPointer::GetDirectionFrom(const engine::Vector3& fromPosition) const

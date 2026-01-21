@@ -12,6 +12,7 @@ namespace engine
 {
     class Collider;
     class GameObject;
+    class ScriptBase;
 
     // ═══════════════════════════════════════════════════════════════
     // 공격 인스턴스 (우선순위 시스템용)
@@ -185,6 +186,10 @@ namespace engine
 
         // Handle로부터 TriggerPair 생성
         TriggerPair MakeTriggerPair(Collider* trigger, Collider* other);
+
+        // Script 콜백 헬퍼 (Push 방식)
+        void NotifyScriptsCollision(GameObject* go, const CollisionInfo& info, CollisionEventType eventType);
+        void NotifyScriptsTrigger(GameObject* go, const CollisionInfo& info, TriggerEventType eventType);
 
         friend class Singleton<CollisionSystem>;
     };

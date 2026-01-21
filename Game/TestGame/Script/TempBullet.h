@@ -24,6 +24,9 @@ namespace game
         
         void Start() override;
         void Update() override;
+        
+        // Push 방식 충돌 콜백
+        void OnTriggerEnter(const engine::CollisionInfo& info) override;
 
     public:
         void OnGui() override;

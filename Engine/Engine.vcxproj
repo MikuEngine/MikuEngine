@@ -260,6 +260,7 @@
     <ClInclude Include="Framework\Asset\Prefab.h" />
     <ClInclude Include="Framework\Asset\PrefabData.h" />
     <ClInclude Include="Framework\Asset\PreloadManager.h" />
+    <ClInclude Include="Framework\Asset\SoundData.h" />
     <ClInclude Include="Framework\Object\Component\AudioSource.h" />
     <ClInclude Include="Framework\Object\Component\Canvas.h" />
     <ClInclude Include="Common\Debug\Debug.h" />

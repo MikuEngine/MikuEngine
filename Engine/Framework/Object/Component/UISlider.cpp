@@ -66,6 +66,28 @@ namespace engine
 		}
 	}
 
+	bool UISlider::HitTestPoint(const Vector2& p) const
+	{
+		if (UIElement::HitTestPoint(p))
+			return true;
+
+		if (m_handle)
+		{
+			if (RectTransform* hrt = m_handle->GetRectTransform())
+			{
+				auto& gd = GraphicsDevice::Get();
+				const D3D11_VIEWPORT vp = gd.GetViewport();
+				UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+
+				const UIRect hr = hrt->GetWorldRectResolved(rootRect);
+				if (PointInRect(p, hr))
+					return true;
+			}
+		}
+
+		return false;
+	}
+
 	float UISlider::GetValue() const
 	{
 		return m_value;
@@ -123,7 +145,6 @@ namespace engine
 				if (GameObject* exist = FindChildByName(parent, name))
 					return exist;
 
-				// UISlider에서 사용하신 패턴 그대로
 				Scene* scene = SceneManager::Get().GetScene();
 				if (!scene) return nullptr;
 
@@ -133,7 +154,6 @@ namespace engine
 				go->SetName(name);
 				go->GetTransform()->SetParent(parent->GetTransform());
 
-				// UI 자식은 RectTransform 강제
 				if (!go->GetComponent<RectTransform>())
 					go->AddComponent<RectTransform>();
 
@@ -254,6 +274,11 @@ namespace engine
 	void UISlider::UpdateVisuals()
 	{
 		if (!RefreshVisuals()) return;
+
+		if (m_background) m_background->m_raycastTarget = false;
+		if (m_fill)       m_fill->m_raycastTarget = false;
+		if (m_handle)     m_handle->m_raycastTarget = false;
+
 		if (!m_background || !m_fill) return;
 
 		if (!m_bgSprite.empty())  m_background->SetTexture(m_bgSprite);
@@ -322,6 +347,7 @@ namespace engine
 				c.w = 0.0f;
 				m_fill->SetColor(c);
 			}
+			else
 			{
 				m_fill->SetColor(m_fillColor);
 			}
@@ -389,53 +415,23 @@ namespace engine
 		handleRT->SetAnchorMin({ ax, ay });
 		handleRT->SetAnchorMax({ ax, ay });
 		handleRT->SetAnchoredPosition({ 0.0f, 0.0f });
+		handleRT->SetSize(100.0f, 100.0f); // 테스트
 	}
 
 	void UISlider::OnMouseDown(const Vector2& mousePos, int mouseButton)
 	{
 		if (mouseButton != 0) return;
-
 		m_dragging = true;
-
-		auto setValueFromMouse = [&](const Vector2& mp)
-			{
-				RectTransform* rt = GetRectTransform();
-				if (!rt) return;
-
-				auto& gd = GraphicsDevice::Get();
-				const D3D11_VIEWPORT vp = gd.GetViewport();
-				UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
-
-				const UIRect barRect = rt->GetWorldRectResolved(rootRect);
-
-				float t = 0.0f;
-
-				switch (m_direction)
-				{
-				case Direction::LeftToRight:
-					t = (barRect.w > 1e-6f) ? (mp.x - barRect.x) / barRect.w : 0.0f;
-					break;
-				case Direction::RightToLeft:
-					t = (barRect.w > 1e-6f) ? 1.0f - (mp.x - barRect.x) / barRect.w : 0.0f;
-					break;
-				case Direction::BottomToTop:
-					t = (barRect.h > 1e-6f) ? (mp.y - barRect.y) / barRect.h : 0.0f;
-					break;
-				case Direction::TopToBottom:
-					t = (barRect.h > 1e-6f) ? 1.0f - (mp.y - barRect.y) / barRect.h : 0.0f;
-					break;
-				}
-
-				SetValue(Clamp01(t), true);
-			};
-
-		setValueFromMouse(mousePos);
+		m_dragFromHandle = IsMouseOnHandle(mousePos);
+		SetValueFromMouse(mousePos);
+		UpdateVisuals();
 	}
 
 	void UISlider::OnMouseUp(const Vector2& mousePos, int mouseButton)
 	{
 		if (mouseButton != 0) return;
 		m_dragging = false;
+		m_dragFromHandle = false;
 	}
 
 	void UISlider::OnBeginDrag(const Vector2& mousePos, int mouseButton)
@@ -449,51 +445,22 @@ namespace engine
 		if (mouseButton != 0) return;
 		if (!m_dragging) return;
 
-		auto setValueFromMouse = [&](const Vector2& mp)
-			{
-				RectTransform* rt = GetRectTransform();
-				if (!rt) return;
-
-				auto& gd = GraphicsDevice::Get();
-				const D3D11_VIEWPORT vp = gd.GetViewport();
-				UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
-
-				const UIRect barRect = rt->GetWorldRectResolved(rootRect);
-
-				float t = 0.0f;
-
-				switch (m_direction)
-				{
-				case Direction::LeftToRight:
-					t = (barRect.w > 1e-6f) ? (mp.x - barRect.x) / barRect.w : 0.0f;
-					break;
-				case Direction::RightToLeft:
-					t = (barRect.w > 1e-6f) ? 1.0f - (mp.x - barRect.x) / barRect.w : 0.0f;
-					break;
-				case Direction::BottomToTop:
-					t = (barRect.h > 1e-6f) ? (mp.y - barRect.y) / barRect.h : 0.0f;
-					break;
-				case Direction::TopToBottom:
-					t = (barRect.h > 1e-6f) ? 1.0f - (mp.y - barRect.y) / barRect.h : 0.0f;
-					break;
-				}
-
-				SetValue(Clamp01(t), true);
-			};
-
-		setValueFromMouse(mousePos);
+		SetValueFromMouse(mousePos);
+		UpdateVisuals();
 	}
 
 	void UISlider::OnEndDrag(const Vector2& mousePos, int mouseButton)
 	{
 		if (mouseButton != 0) return;
 		m_dragging = false;
+		m_dragFromHandle = false;
 	}
 
 	void UISlider::OnMouseCancel(const Vector2& mousePos, int mouseButton)
 	{
 		if (mouseButton != 0) return;
 		m_dragging = false;
+		m_dragFromHandle = false;
 	}
 
 	void UISlider::OnGui()
@@ -585,6 +552,38 @@ namespace engine
 		return "UISlider";
 	}
 
+	void UISlider::SetValueFromMouse(const Vector2& mousePos)
+	{
+		RectTransform* rt = GetRectTransform();
+		if (!rt) return;
+
+		auto& gd = GraphicsDevice::Get();
+		const D3D11_VIEWPORT vp = gd.GetViewport();
+		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+
+		const UIRect barRect = rt->GetWorldRectResolved(rootRect);
+
+		float t = 0.0f;
+
+		switch (m_direction)
+		{
+		case Direction::LeftToRight:
+			t = (barRect.w > 1e-6f) ? (mousePos.x - barRect.x) / barRect.w : 0.0f;
+			break;
+		case Direction::RightToLeft:
+			t = (barRect.w > 1e-6f) ? 1.0f - (mousePos.x - barRect.x) / barRect.w : 0.0f;
+			break;
+		case Direction::BottomToTop:
+			t = (barRect.h > 1e-6f) ? (mousePos.y - barRect.y) / barRect.h : 0.0f;
+			break;
+		case Direction::TopToBottom:
+			t = (barRect.h > 1e-6f) ? 1.0f - (mousePos.y - barRect.y) / barRect.h : 0.0f;
+			break;
+		}
+
+		SetValue(Clamp01(t), true);
+	}
+
 	bool UISlider::IsMouseOnHandle(const Vector2& mousePos) const
 	{
 		if (!m_handle) return false;
@@ -592,7 +591,12 @@ namespace engine
 		RectTransform* rtHandle = m_handle->GetRectTransform();
 		if (!rtHandle) return false;
 
-		const UIRect& hr = rtHandle->GetWorldRect();
+		auto& gd = GraphicsDevice::Get();
+
+		const D3D11_VIEWPORT vp = gd.GetViewport();
+		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+
+		const UIRect hr = rtHandle->GetWorldRectResolved(rootRect);
 		return PointInRect(mousePos, hr);
 	}
 }

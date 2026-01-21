@@ -220,8 +220,9 @@ namespace engine
 
         EditorManager::Get().Shutdown();
         PhysicsSystem::Get().Shutdown();
-        SoundSystem::Get().Shutdown();
         SceneManager::Get().Shutdown();
+        AssetManager::Get().Shutdown();
+        SoundSystem::Get().Shutdown();
         SystemManager::Get().Shutdown();
         ResourceManager::Get().Cleanup();
         GraphicsDevice::Get().Shutdown();

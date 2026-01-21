@@ -41,6 +41,8 @@ namespace engine
 
 		RebuildCacheIfDirty();
 
+		
+
 		UIElement* newHover = HitTestTopmost(mouse.position);
 
 		if (!mouse.leftHeld)
@@ -114,8 +116,7 @@ namespace engine
 			RectTransform* rt = e->GetRectTransform();
 			if (!rt) continue;
 
-			const UIRect& r = rt->GetWorldRect();
-			if (!PointInRect(r, mousePos)) continue;
+			if (!e->HitTestPoint(mousePos)) continue;
 
 			UIInteractable* it = AsInteractable(e);
 			if (!it) continue;
@@ -152,24 +153,26 @@ namespace engine
 
 	void UIEventSystem::HandlePressDragRelease(UIElement* target, const MouseState& mouse)
 	{
-		bool rectIn = false;
-
-		if (target)
-		{
-			if (RectTransform* rt = target->GetRectTransform())
-				rectIn = PointInRect(rt->GetWorldRect(), mouse.position);
-		}
+		bool rectIn = (target != nullptr) && target->HitTestPoint(mouse.position);
 
 		// MouseDown
 		if (mouse.leftDown)
 		{
-			m_pressed = rectIn ? target : nullptr;
+			m_pressed = target;
 			m_phase = rectIn ? PointerPhase::PressedInRect : PointerPhase::PressedOutRect;
+
+			m_isDragging = false;
+			m_pressStartPos = mouse.position;
 
 			if (m_pressed)
 			{
 				if (UIInteractable* it = AsInteractable(m_pressed))
+				{
+					if (it->IsDragEnabled())
+						m_dragTarget = m_pressed;
+
 					it->OnMouseDown(mouse.position, 0);
+				}
 			}
 
 			return;
@@ -178,6 +181,28 @@ namespace engine
 		// MouseHeld
 		if (mouse.leftHeld && m_pressed)
 		{
+			if (m_dragTarget)
+			{
+				const Vector2 d = mouse.position - m_pressStartPos;
+				const float distSq = d.x * d.x + d.y * d.y;
+				const float th = m_dragThresholdPixels;
+				const float thSq = th * th;
+
+				if (!m_isDragging && distSq >= thSq)
+				{
+					m_isDragging = true;
+					if (UIInteractable* it = AsInteractable(m_dragTarget))
+						it->OnBeginDrag(mouse.position, 0);
+				}
+
+				if (m_isDragging)
+				{
+					if (UIInteractable* it = AsInteractable(m_dragTarget))
+						it->OnDrag(mouse.position, mouse.delta, 0);
+					return;
+				}
+			}
+
 			if (rectIn)
 			{
 				if (m_phase == PointerPhase::PressedOutRect)
@@ -207,19 +232,32 @@ namespace engine
 		{
 			if (m_pressed)
 			{
-				if (m_phase == PointerPhase::PressedInRect)
+				if (UIInteractable* it = AsInteractable(m_pressed))
+					it->OnMouseUp(mouse.position, 0);
+
+				if (m_isDragging && m_dragTarget)
 				{
-					if (UIInteractable* it = AsInteractable(m_pressed))
-						it->OnMouseClick(mouse.position, 0);
+					if (UIInteractable* it = AsInteractable(m_dragTarget))
+						it->OnEndDrag(mouse.position, 0);
 				}
 				else
 				{
-					if (UIInteractable* it = AsInteractable(m_pressed))
-						it->OnMouseCancel(mouse.position, 0);
+					if (m_phase == PointerPhase::PressedInRect)
+					{
+						if (UIInteractable* it = AsInteractable(m_pressed))
+							it->OnMouseClick(mouse.position, 0);
+					}
+					else
+					{
+						if (UIInteractable* it = AsInteractable(m_pressed))
+							it->OnMouseCancel(mouse.position, 0);
+					}
 				}
 			}
 
 			m_pressed = nullptr;
+			m_dragTarget = nullptr;
+			m_isDragging = false;
 			m_phase = PointerPhase::None;
 		}
 	}

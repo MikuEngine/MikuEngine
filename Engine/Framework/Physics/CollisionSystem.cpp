@@ -340,6 +340,66 @@ namespace engine
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // Script 콜백 헬퍼
+    // ═══════════════════════════════════════════════════════════════
+
+    void CollisionSystem::NotifyScriptsCollision(
+        GameObject* go, const CollisionInfo& info, CollisionEventType eventType)
+    {
+        if (!go) return;
+
+        const auto& components = go->GetComponents();
+        for (const auto& comp : components)
+        {
+            if (ScriptBase* script = dynamic_cast<ScriptBase*>(comp.get()))
+            {
+                if (!script->IsActive()) continue;
+
+                switch (eventType)
+                {
+                case CollisionEventType::Enter:
+                    script->OnCollisionEnter(info);
+                    break;
+                case CollisionEventType::Stay:
+                    script->OnCollisionStay(info);
+                    break;
+                case CollisionEventType::Exit:
+                    script->OnCollisionExit(info);
+                    break;
+                }
+            }
+        }
+    }
+
+    void CollisionSystem::NotifyScriptsTrigger(
+        GameObject* go, const CollisionInfo& info, TriggerEventType eventType)
+    {
+        if (!go) return;
+
+        const auto& components = go->GetComponents();
+        for (const auto& comp : components)
+        {
+            if (ScriptBase* script = dynamic_cast<ScriptBase*>(comp.get()))
+            {
+                if (!script->IsActive()) continue;
+
+                switch (eventType)
+                {
+                case TriggerEventType::Enter:
+                    script->OnTriggerEnter(info);
+                    break;
+                case TriggerEventType::Stay:
+                    script->OnTriggerStay(info);
+                    break;
+                case TriggerEventType::Exit:
+                    script->OnTriggerExit(info);
+                    break;
+                }
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // 콜백 디스패치
     // ═══════════════════════════════════════════════════════════════
 
@@ -376,10 +436,10 @@ namespace engine
         infoForB.contacts = FlipContactNormals(contacts);
 
         // A의 모든 Script에 알림
-        // TODO: Script 시스템과 연동 필요
-        // 현재는 주석 처리된 OnCollisionEnter가 활성화되면 호출
+        NotifyScriptsCollision(goA, infoForA, CollisionEventType::Enter);
 
-        // B의 모든 Script에 알림
+        // B의 모든 Script에도 알림
+        NotifyScriptsCollision(goB, infoForB, CollisionEventType::Enter);
 
         // 활성 충돌 쌍에 추가
         CollisionPair pair;
@@ -395,13 +455,31 @@ namespace engine
         if (!a || !b) return;
 
         // 디버그 렌더러에 충돌 상태 표시
-        LOG_PRINT("[CollisionSystem] MarkColliding (Stay): {} <-> {}", 
-            a->GetGameObject()->GetName(), 
-            b->GetGameObject()->GetName());
         PhysicsDebugRenderer::Get().MarkColliding(a.Get());
         PhysicsDebugRenderer::Get().MarkColliding(b.Get());
 
-        // TODO: Script 콜백 구현
+        GameObject* goA = a->GetGameObject();
+        GameObject* goB = b->GetGameObject();
+
+        if (!goA || !goB) return;
+
+        // A에게 전달할 정보
+        CollisionInfo infoForA;
+        infoForA.collider = b;
+        infoForA.rigidbody = Ptr<Rigidbody>(b->GetAttachedRigidbody());
+        infoForA.gameObject = Ptr<GameObject>(goB);
+        infoForA.contacts = contacts;
+
+        // B에게 전달할 정보 (노말 반전)
+        CollisionInfo infoForB;
+        infoForB.collider = a;
+        infoForB.rigidbody = Ptr<Rigidbody>(a->GetAttachedRigidbody());
+        infoForB.gameObject = Ptr<GameObject>(goA);
+        infoForB.contacts = FlipContactNormals(contacts);
+
+        // Script에 알림
+        NotifyScriptsCollision(goA, infoForA, CollisionEventType::Stay);
+        NotifyScriptsCollision(goB, infoForB, CollisionEventType::Stay);
     }
 
     void CollisionSystem::DispatchCollisionExit(Ptr<Collider> a, Ptr<Collider> b)
@@ -424,6 +502,8 @@ namespace engine
         infoForB.gameObject = Ptr<GameObject>(goA);
 
         // Script 콜백 호출
+        NotifyScriptsCollision(goA, infoForA, CollisionEventType::Exit);
+        NotifyScriptsCollision(goB, infoForB, CollisionEventType::Exit);
 
         // 활성 충돌 쌍에서 제거
         CollisionPair pair;
@@ -443,8 +523,26 @@ namespace engine
         PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
         PhysicsDebugRenderer::Get().MarkColliding(other.Get());
 
-        // Trigger 측 Script들에 알림
-        // Other 측 Script들에도 알림
+        GameObject* goTrigger = trigger->GetGameObject();
+        GameObject* goOther = other->GetGameObject();
+
+        if (!goTrigger || !goOther) return;
+
+        // Trigger 측에 전달할 정보
+        CollisionInfo infoForTrigger;
+        infoForTrigger.collider = other;
+        infoForTrigger.rigidbody = Ptr<Rigidbody>(other->GetAttachedRigidbody());
+        infoForTrigger.gameObject = Ptr<GameObject>(goOther);
+
+        // Other 측에 전달할 정보
+        CollisionInfo infoForOther;
+        infoForOther.collider = trigger;
+        infoForOther.rigidbody = Ptr<Rigidbody>(trigger->GetAttachedRigidbody());
+        infoForOther.gameObject = Ptr<GameObject>(goTrigger);
+
+        // Script에 알림
+        NotifyScriptsTrigger(goTrigger, infoForTrigger, TriggerEventType::Enter);
+        NotifyScriptsTrigger(goOther, infoForOther, TriggerEventType::Enter);
     }
 
     void CollisionSystem::DispatchTriggerStay(Ptr<Collider> trigger, Ptr<Collider> other)
@@ -454,12 +552,53 @@ namespace engine
         // 디버그 렌더러에 충돌 상태 표시
         PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
         PhysicsDebugRenderer::Get().MarkColliding(other.Get());
+
+        GameObject* goTrigger = trigger->GetGameObject();
+        GameObject* goOther = other->GetGameObject();
+
+        if (!goTrigger || !goOther) return;
+
+        // Trigger 측에 전달할 정보
+        CollisionInfo infoForTrigger;
+        infoForTrigger.collider = other;
+        infoForTrigger.rigidbody = Ptr<Rigidbody>(other->GetAttachedRigidbody());
+        infoForTrigger.gameObject = Ptr<GameObject>(goOther);
+
+        // Other 측에 전달할 정보
+        CollisionInfo infoForOther;
+        infoForOther.collider = trigger;
+        infoForOther.rigidbody = Ptr<Rigidbody>(trigger->GetAttachedRigidbody());
+        infoForOther.gameObject = Ptr<GameObject>(goTrigger);
+
+        // Script에 알림
+        NotifyScriptsTrigger(goTrigger, infoForTrigger, TriggerEventType::Stay);
+        NotifyScriptsTrigger(goOther, infoForOther, TriggerEventType::Stay);
     }
 
     void CollisionSystem::DispatchTriggerExit(Ptr<Collider> trigger, Ptr<Collider> other)
     {
         if (!trigger || !other) return;
-        // Exit 시에는 MarkColliding 호출하지 않음 (자동으로 다음 프레임에 초기화됨)
+
+        GameObject* goTrigger = trigger->GetGameObject();
+        GameObject* goOther = other->GetGameObject();
+
+        if (!goTrigger || !goOther) return;
+
+        // Trigger 측에 전달할 정보
+        CollisionInfo infoForTrigger;
+        infoForTrigger.collider = other;
+        infoForTrigger.rigidbody = Ptr<Rigidbody>(other->GetAttachedRigidbody());
+        infoForTrigger.gameObject = Ptr<GameObject>(goOther);
+
+        // Other 측에 전달할 정보
+        CollisionInfo infoForOther;
+        infoForOther.collider = trigger;
+        infoForOther.rigidbody = Ptr<Rigidbody>(trigger->GetAttachedRigidbody());
+        infoForOther.gameObject = Ptr<GameObject>(goTrigger);
+
+        // Script에 알림
+        NotifyScriptsTrigger(goTrigger, infoForTrigger, TriggerEventType::Exit);
+        NotifyScriptsTrigger(goOther, infoForOther, TriggerEventType::Exit);
     }
 
     std::vector<ContactPoint> CollisionSystem::FlipContactNormals(

@@ -626,6 +626,9 @@
     <ClInclude Include="Common\Utility\EditorHelper.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Framework\Asset\SoundData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Framework\Asset\PrefabData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
