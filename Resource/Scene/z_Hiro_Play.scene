@@ -1,6 +1,6 @@
 {
-    "Name": "z_HiroScene",
-    "NumGameObjects": 16,
+    "Name": "z_Hiro_Play",
+    "NumGameObjects": 13,
     "GameObjects": [
         {
             "ID": 0,
@@ -38,7 +38,7 @@
         },
         {
             "ID": 1,
-            "Name": "Canvas",
+            "Name": "HUD",
             "Active": true,
             "Components": [
                 {
@@ -233,215 +233,7 @@
         },
         {
             "ID": 4,
-            "ParentID": 1,
-            "Name": "프로그래스 바",
-            "Active": false,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -261.1000061035156,
-                        "y": -48.900001525878906
-                    },
-                    "Width": 300.0,
-                    "Height": 50.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIProgressBar",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Value": 0.5460000038146973,
-                    "Direction": 0,
-                    "FillMode": 0,
-                    "BgSprite": "",
-                    "FillSprite": "",
-                    "BgColor": {
-                        "x": 0.4517374634742737,
-                        "y": 0.4517374634742737,
-                        "z": 0.4517374634742737,
-                        "w": 1.0
-                    },
-                    "FillColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 5,
-            "ParentID": 4,
-            "Name": "Background",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "TexturePath": "None",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "Color": {
-                        "x": 0.4517374634742737,
-                        "y": 0.4517374634742737,
-                        "z": 0.4517374634742737,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true
-                }
-            ]
-        },
-        {
-            "ID": 6,
-            "ParentID": 4,
-            "Name": "Fill",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/Miku.png",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true
-                }
-            ]
-        },
-        {
-            "ID": 7,
-            "Name": "Canvas",
+            "Name": "PopUp",
             "Active": true,
             "Components": [
                 {
@@ -499,10 +291,10 @@
             ]
         },
         {
-            "ID": 8,
-            "ParentID": 7,
+            "ID": 5,
+            "ParentID": 4,
             "Name": "Menu",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -566,8 +358,8 @@
             ]
         },
         {
-            "ID": 9,
-            "ParentID": 8,
+            "ID": 6,
+            "ParentID": 5,
             "Name": "슬라이더",
             "Active": true,
             "Components": [
@@ -647,8 +439,8 @@
             ]
         },
         {
-            "ID": 10,
-            "ParentID": 9,
+            "ID": 7,
+            "ParentID": 6,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -714,8 +506,8 @@
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 9,
+            "ID": 8,
+            "ParentID": 6,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -781,8 +573,8 @@
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 9,
+            "ID": 9,
+            "ParentID": 6,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -848,8 +640,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 8,
+            "ID": 10,
+            "ParentID": 5,
             "Name": "Button",
             "Active": true,
             "Components": [
@@ -951,8 +743,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 8,
+            "ID": 11,
+            "ParentID": 5,
             "Name": "MenuText-Volume",
             "Active": true,
             "Components": [
@@ -1020,8 +812,8 @@
             ]
         },
         {
-            "ID": 15,
-            "Name": "UIInput",
+            "ID": 12,
+            "Name": "Controller",
             "Active": true,
             "Components": [
                 {

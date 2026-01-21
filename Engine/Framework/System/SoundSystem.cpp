@@ -130,7 +130,6 @@ namespace engine
             m_pSystem->release();
             m_pSystem = nullptr;
         }
-
     }
 
     void SoundSystem::Register(AudioSource* source)
@@ -193,6 +192,8 @@ namespace engine
                 }
             }
 
+            source->Update();
+
             if (source->IsPlaying())
             {
                 FMOD::Channel* channel = source->GetChannel();
@@ -253,8 +254,7 @@ namespace engine
         fs::path rootPath(m_soundPath);
         fs::path targetPath = rootPath / filename;
 
-        // Note: SoundData는 AssetManager에서 캐싱을 처리합니다
-        
+        // SoundData는 AssetManager에서 캐싱 처리
         if (!targetPath.has_extension() && fs::exists(rootPath))
         {
             for (const auto& entry : fs::directory_iterator(rootPath))
@@ -380,14 +380,14 @@ namespace engine
                         break;
                     }
                     /*/ 파일 삭제 기능
-                    if (ImGui::MenuItem("Delete File (Warning!)"))
-                    {
-                        fs::remove(m_soundPath + label);
-                        m_playList.erase(m_playList.begin() + i);
-                        ImGui::EndPopup();
-                        break;
-                    }
-                    //*/
+                        if (ImGui::MenuItem("Delete File (Warning!)"))
+                        {
+                            fs::remove(m_soundPath + label);
+                            m_playList.erase(m_playList.begin() + i);
+                            ImGui::EndPopup();
+                            break;
+                        }
+                      //*/
                     ImGui::EndPopup();
                 }
             }

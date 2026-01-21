@@ -8,23 +8,23 @@ namespace game
 {
     void UIInputHandler::Awake()
     {
-        m_menuObj = engine::SceneManager::Get().GetScene()->FindGameObject("Menu");
+        m_menu = engine::SceneManager::Get().GetScene()->FindGameObject("Menu");
     }
 
     void UIInputHandler::Start()
     {
-        m_isMenuOpened = false;
-        m_menuObj->SetActive(m_isMenuOpened);
+        m_isMenuOpen = false;
+        m_menu->SetActive(m_isMenuOpen);
     }
 
     void UIInputHandler::Update()
     {
-        if (!m_menuObj) return;
+        if (!m_menu) return;
 
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
-            m_isMenuOpened = !m_isMenuOpened;
+            m_isMenuOpen = !m_isMenuOpen;
 
-        m_menuObj->SetActive(m_isMenuOpened);
+        m_menu->SetActive(m_isMenuOpen);
     }
 
     void UIInputHandler::OnGui()
@@ -36,14 +36,14 @@ namespace game
     {
         Object::Save(j);
 
-        j["Menu"] = m_isMenuOpened;
+        j["Menu"] = m_isMenuOpen;
     }
 
     void UIInputHandler::Load(const engine::json& j)
     {
         Object::Load(j);
 
-        engine::JsonGet(j, "Menu", m_isMenuOpened);
+        engine::JsonGet(j, "Menu", m_isMenuOpen);
     }
 
     std::string UIInputHandler::GetType() const

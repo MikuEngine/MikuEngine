@@ -9,8 +9,8 @@ namespace game
     {
         REGISTER_COMPONENT(UIInputHandler)
     private:
-        bool m_isMenuOpened = false;
-        engine::GameObject* m_menuObj = nullptr;
+        bool m_isMenuOpen = false;
+        engine::GameObject* m_menu = nullptr;
 
     public:
         void Awake() override;

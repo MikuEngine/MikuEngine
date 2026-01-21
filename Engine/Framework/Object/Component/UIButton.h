@@ -14,6 +14,23 @@ namespace engine
 	public:
 		using ClickCallback = std::function<void()>;
 
+		enum class ButtonAction
+		{
+			// 메인
+			StartGame,		// 게임 시작
+			OpenOption,		// 설정
+			OpenCredit,		// 크레딧
+			QuitGame,		// 게임 종료
+
+			// 메인->스타트게임
+			EnterPlay,		// 심연 진입
+			OpenUpgrade,	// 강화
+			//OpenOption,	// 설정
+			BackToMain,		// 메인화면으로
+
+			BackToSelect,	// 위 버튼 고르는 곳으로
+		};
+
 	private:
 		enum class State
 		{
