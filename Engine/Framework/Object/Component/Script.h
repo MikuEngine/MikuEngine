@@ -15,6 +15,8 @@ namespace engine
     };
 
     class GameObject;
+    class Scene;
+    enum class CreateObjectType;
 
     class ScriptBase :
         public Component
@@ -35,6 +37,7 @@ namespace engine
         virtual void Update() {};
 
         GameObject* CreateGameObject(const std::string& name = "GameObject");
+        GameObject* CreateGameObject(CreateObjectType type, const std::string& name);
 
     public:
         void OnGui() override {};
