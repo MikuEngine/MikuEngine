@@ -202,6 +202,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Script\TestAnimationFSM.cpp" />
+    <ClCompile Include="Script\TestLogicFSM.cpp" />
     <ClCompile Include="Script\TestScript.cpp" />
     <ClCompile Include="GamePCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -209,6 +211,7 @@
     </ClCompile>
     <ClCompile Include="App\TestGameApp.cpp" />
     <ClCompile Include="Script\TestSound.cpp" />
+    <ClCompile Include="Script\UIInputHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl">
@@ -278,9 +281,12 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Script\TestAnimationFSM.h" />
+    <ClInclude Include="Script\TestLogicFSM.h" />
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
     <ClInclude Include="Script\TestSound.h" />
+    <ClInclude Include="Script\UIInputHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">

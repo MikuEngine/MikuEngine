@@ -16,6 +16,7 @@ namespace engine
     class SpriteAnimationData;
     class GeometryData;
     class SoundData;
+    class PrefabData;
 
     class AssetManager :
         public Singleton<AssetManager>
@@ -38,6 +39,7 @@ namespace engine
         std::unordered_map<std::string, std::weak_ptr<SpriteAnimationData>> m_spriteAnimationDatas;
         std::unordered_map<std::string, std::weak_ptr<GeometryData>> m_geometryDatas;
         std::unordered_map<std::string, std::weak_ptr<SoundData>> m_soundDatas;
+        std::unordered_map<std::string, std::weak_ptr<PrefabData>> m_prefabDatas;
 
         std::vector<std::shared_ptr<AssetData>> m_globalCachedDatas;
         std::vector<std::shared_ptr<AssetData>> m_sceneCachedDatas;
@@ -61,6 +63,7 @@ namespace engine
         std::shared_ptr<SkeletalMeshData> GetOrCreateSkeletalMeshData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
         std::shared_ptr<SpriteData> GetOrCreateSpriteData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
         std::shared_ptr<SpriteAnimationData> GetOrCreateSpriteAnimationData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<PrefabData> GetOrCreatePrefabData(const std::string& name, LifeScope scope = LifeScope::Owning);
         std::shared_ptr<GeometryData> GetGeometryData(const std::string& name);
         std::shared_ptr<SoundData> GetOrCreateSoundData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
 

@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "CharacterAnimationFSM.h"
 
 #include <Framework/Object/Component/SkeletalAnimator.h>
@@ -40,7 +40,7 @@ namespace game
             }
         }
         
-        // === 확장용: Hit 상태 처리 (주석 해제하여 사용) ===
+        // === 확장용: Hit 상태 처리 (예시) ===
         // if (m_currentAnimState == CharacterState::Hit)
         // {
         //     if (m_animator->IsFinished(m_baseLayerIndex))
@@ -399,5 +399,9 @@ namespace game
     std::string CharacterAnimationFSM::GetType() const
     {
         return "CharacterAnimationFSM";
+    }
+    const CharacterState& CharacterAnimationFSM::GetCharacterState() const
+    {
+        return m_currentAnimState;
     }
 }

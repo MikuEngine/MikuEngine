@@ -158,6 +158,8 @@
     <ClCompile Include="Core\Graphics\Resource\GeometryShader.cpp" />
     <ClCompile Include="Editor\EditorGrid.cpp" />
     <ClCompile Include="Framework\Asset\FontData.cpp" />
+    <ClCompile Include="Framework\Asset\Prefab.cpp" />
+    <ClCompile Include="Framework\Asset\PrefabData.cpp" />
     <ClCompile Include="Framework\Asset\PreloadManager.cpp" />
     <ClCompile Include="Framework\Object\Component\AudioSource.cpp" />
     <ClCompile Include="Framework\Object\Component\Canvas.cpp" />
@@ -255,6 +257,8 @@
     <ClInclude Include="Core\Graphics\Resource\GeometryShader.h" />
     <ClInclude Include="Editor\EditorGrid.h" />
     <ClInclude Include="Framework\Asset\FontData.h" />
+    <ClInclude Include="Framework\Asset\Prefab.h" />
+    <ClInclude Include="Framework\Asset\PrefabData.h" />
     <ClInclude Include="Framework\Asset\PreloadManager.h" />
     <ClInclude Include="Framework\Asset\SoundData.h" />
     <ClInclude Include="Framework\Object\Component\AudioSource.h" />

@@ -12,6 +12,7 @@
 #include "Framework/Asset/SpriteAnimationData.h"
 #include "Framework/Asset/GeometryData.h"
 #include "Framework/Asset/SoundData.h"
+#include "Framework/Asset/PrefabData.h"
 
 namespace engine
 {
@@ -249,6 +250,28 @@ namespace engine
         CacheData(spriteAnimationData, scope);
 
         return spriteAnimationData;
+    }
+
+    std::shared_ptr<PrefabData> AssetManager::GetOrCreatePrefabData(const std::string& name, LifeScope scope)
+    {
+        if (auto find = m_prefabDatas.find(name); find != m_prefabDatas.end())
+        {
+            if (!find->second.expired())
+            {
+                return find->second.lock();
+            }
+        }
+
+        auto prefabData = std::make_shared<PrefabData>();
+
+        std::string fullPath = "Resource/Prefab/" + name + ".prefab";
+        prefabData->Load(fullPath);
+
+        m_prefabDatas[name] = prefabData;
+
+        CacheData(prefabData, scope);
+
+        return prefabData;
     }
 
     std::shared_ptr<GeometryData> AssetManager::GetGeometryData(const std::string& name)

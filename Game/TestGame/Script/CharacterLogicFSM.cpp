@@ -14,7 +14,8 @@ namespace game
         case CharacterState::Idle:   return "Idle";
         case CharacterState::Walk:   return "Walk";
         case CharacterState::Attack: return "Attack";
-        // === 확장용 상태 (주석 해제하여 사용) ===
+
+        // === 확장용 상태 (예시) ===
         // case CharacterState::Run:    return "Run";
         // case CharacterState::Jump:   return "Jump";
         // case CharacterState::Fall:   return "Fall";
@@ -206,7 +207,7 @@ namespace game
         case CharacterState::Idle:   UpdateIdle();   break;
         case CharacterState::Walk:   UpdateWalk();   break;
         case CharacterState::Attack: UpdateAttack(); break;
-        // === 확장용 상태 (주석 해제하여 사용) ===
+        // === 확장용 상태 (예시) ===
         // case CharacterState::Run:    UpdateRun();    break;
         // case CharacterState::Jump:   UpdateJump();   break;
         // case CharacterState::Fall:   UpdateFall();   break;
@@ -232,7 +233,7 @@ namespace game
         // 공격 시작
     }
 
-    // === 확장용 Enter 함수 (주석 해제하여 사용) ===
+    // ===함수 예시 ===
     /*
     void CharacterLogicFSM::OnEnterRun()
     {
@@ -258,15 +259,47 @@ namespace game
     void CharacterLogicFSM::OnExitIdle() {}
     void CharacterLogicFSM::OnExitWalk() {}
     void CharacterLogicFSM::OnExitAttack() {}
-    
-    // === 확장용 Exit 함수 (주석 해제하여 사용) ===
-    /*
-    void CharacterLogicFSM::OnExitRun() {}
-    void CharacterLogicFSM::OnExitJump() {}
-    void CharacterLogicFSM::OnExitFall() {}
-    void CharacterLogicFSM::OnExitHit() {}
-    void CharacterLogicFSM::OnExitDead() {}
-    */
+
+    // ═══════════════════════════════════════════════════════════════
+    // 충돌 콜백 (Push 방식)
+    // 파생 클래스에서 오버라이드하여 구체적인 처리 구현
+    // ═══════════════════════════════════════════════════════════════
+    void CharacterLogicFSM::OnCollisionEnter(const engine::CollisionInfo& info)
+    {
+        // 기본 구현: 로그만 출력 (파생 클래스에서 오버라이드)
+        LOG_PRINT("[CharacterLogicFSM] OnCollisionEnter: {} <-> {}", 
+            GetGameObject()->GetName(),
+            info.gameObject ? info.gameObject->GetName() : "null");
+    }
+
+    void CharacterLogicFSM::OnCollisionStay(const engine::CollisionInfo& info)
+    {
+        // 기본 구현: 아무것도 안 함
+    }
+
+    void CharacterLogicFSM::OnCollisionExit(const engine::CollisionInfo& info)
+    {
+        // 기본 구현: 아무것도 안 함
+    }
+
+    void CharacterLogicFSM::OnTriggerEnter(const engine::CollisionInfo& info)
+    {
+        // 기본 구현: 로그만 출력 (파생 클래스에서 오버라이드)
+        LOG_PRINT("[CharacterLogicFSM] OnTriggerEnter: {} <-> {}", 
+            GetGameObject()->GetName(),
+            info.gameObject ? info.gameObject->GetName() : "null");
+    }
+
+    void CharacterLogicFSM::OnTriggerStay(const engine::CollisionInfo& info)
+    {
+        // 기본 구현: 아무것도 안 함
+    }
+
+    void CharacterLogicFSM::OnTriggerExit(const engine::CollisionInfo& info)
+    {
+        // 기본 구현: 아무것도 안 함
+    }
+   
 
     // === State Update ===
     void CharacterLogicFSM::UpdateIdle()

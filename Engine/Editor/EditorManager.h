@@ -1,9 +1,9 @@
 ﻿#pragma once
 
+#include <unordered_set>
+
 #include "Core/System/ProjectSettings.h"
 #include "Framework/Object/Ptr.h"
-#include "Framework/Object/GameObject/GameObject.h"
-#include <unordered_set>
 
 namespace engine
 {
@@ -33,6 +33,11 @@ namespace engine
         std::string m_nextScenePending;
         std::string m_sceneToDelete;
         std::string m_sceneToRename;
+
+        // prefab
+        std::vector<std::string> m_cachedPrefabFiles;
+        std::string m_prefabOverwriteTarget;
+        Ptr<GameObject> m_prefabPendingCreateObj = nullptr;
 
         int m_selectedSceneIndex = -1;
         int m_selectedBuildSceneIndex = -1;
@@ -64,13 +69,15 @@ namespace engine
         void DrawEntityNode(GameObject* gameObject);
         void DrawInspector();
         void DrawDebugInfo();
+        void DrawPrefabManager();
 
         void ValidateSettingsList();
-        void RefreshFileCache();
+        void RefreshSceneFileCache();
         bool IsSceneDirty();
         void RequestSceneChange(const std::string& nextSceneName);
         void RequestNewScene();
         void CreateNewScene();
+        void RefreshPrefabCache();
 
     private:
         friend class Singleton<EditorManager>;
