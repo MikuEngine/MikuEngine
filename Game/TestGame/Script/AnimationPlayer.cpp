@@ -2,6 +2,7 @@
 #include "AnimationPlayer.h"
 
 #include "Framework/Object/Component/SkeletalAnimator.h"
+#include "Framework/Scene/SceneManager.h"
 
 namespace game
 {
@@ -95,6 +96,11 @@ namespace game
             {
                 animator->SetProceduralRotation("mixamorig:Spine", m_upperBodyRotation);
             }
+        }
+
+        if (engine::Input::IsKeyPressed(engine::Keys::B))
+        {
+            engine::SceneManager::Get().ChangeScene("SpriteRendererTest");
         }
     }
 

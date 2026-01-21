@@ -1106,7 +1106,6 @@ namespace engine
         if (IsSceneDirty())
         {
             m_nextScenePending = nextSceneName; // 가려던 곳 저장
-            //ImGui::OpenPopup("Unsaved Changes");
             m_shouldOpenUnsavedPopup = true;
         }
         else
@@ -1115,6 +1114,7 @@ namespace engine
             m_selectedObject = nullptr;
         }
     }
+
     void EditorManager::RequestNewScene()
     {
         // 변경사항이 있으면 팝업 띄우기

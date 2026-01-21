@@ -62,6 +62,22 @@ namespace engine
 		m_loadingFuture = std::async(std::launch::async, &PreloadManager::LoadSceneResourceWorker, this, sceneName);
 	}
 
+	void PreloadManager::LoadSceneResourceSync(const std::string& sceneName)
+	{
+		if (m_isLoading)
+		{
+			LOG_ERROR("이미 로딩중입니다 - PreloadManager");
+			return;
+		}
+
+		m_isLoading = true;
+		m_progress = 0.0f;
+		m_loadedAssetsCount = 0;
+		m_totalAssetsToLoad = 0;
+
+		LoadSceneResourceWorker(sceneName);
+	}
+
 	bool PreloadManager::IsLoading() const
 	{
 		return m_isLoading;

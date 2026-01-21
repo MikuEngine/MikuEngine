@@ -44,7 +44,7 @@ namespace engine
 
         FMOD::Channel* Play2D(bool bLoop = false, EventEndPlay callback = nullptr);
 
-        void Play3D(const Vector3& position, bool bLoop = false);
+        FMOD::Channel* Play3D(const Vector3& position, bool bLoop = false);
 
         void Update3DPosition(const Vector3& position);
 
@@ -92,6 +92,8 @@ namespace engine
         void Unregister(AudioSource* source) override;
 
         void Update();
+        void StopAll();
+        void OnGameStart();
 
         Sound* GetOrLoadSound(const std::string& filename, bool is3D);
 

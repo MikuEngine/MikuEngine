@@ -34,7 +34,7 @@ namespace engine
 
     public:
         void ChangeScene(const std::string& name);
-        void CheckSceneChanged();
+        void CheckSceneChanged(bool isPlaying);
         void ProcessResourceLoading();
         void RenderLoadingScreen();
         Scene* GetScene() const;

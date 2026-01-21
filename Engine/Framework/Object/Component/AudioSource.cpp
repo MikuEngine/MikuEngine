@@ -3,6 +3,7 @@
 #include "Framework/System/SoundSystem.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Editor/EditorManager.h"
 
 namespace engine
 {
@@ -11,32 +12,33 @@ namespace engine
     }
 
     AudioSource::~AudioSource()
-    {
-        Stop();
+    {   
+        SoundSystem::Get().Unregister(this);
     }
 
     void AudioSource::Initialize()
     {
         SoundSystem::Get().Register(this);
 
-        /*/
         if (!m_clipName.empty())
         {
             SetClip(m_clipName);
 
-            
-            if (m_playOnAwake)
+            if (m_playOnAwake && EditorManager::Get().GetEditorState() != EditorState::Edit)
             {
                 Play();
             }
-            
         }
-        //*/
+    }
+
+    void AudioSource::Awake()
+    {
+
     }
 
     void AudioSource::OnDestroy()
     {
-        SoundSystem::Get().Unregister(this);
+        Stop();
     }
 
     void AudioSource::SetClip(std::string name)
@@ -50,18 +52,20 @@ namespace engine
     {
         if (!m_soundResource) return;
 
+        Stop();
+
         if (m_is3D)
         {
             Transform* tr = GetTransform();
             if (tr)
             {
-                m_soundResource->Play3D(tr->GetWorldPosition(), m_isLoop);
+                m_currentChannel = m_soundResource->Play3D(tr->GetWorldPosition(), m_isLoop);
                 m_isPlaying = true;
             }
         }
         else
         {
-            m_soundResource->Play2D(m_isLoop, callback);
+            m_currentChannel = m_soundResource->Play2D(m_isLoop, callback);
             m_isPlaying = true;
         }
 
@@ -74,10 +78,21 @@ namespace engine
 
     void AudioSource::Stop()
     {
-        if (m_soundResource)
+        if (m_currentChannel)
         {
-            m_soundResource->Stop();
+            // FMOD 시스템이 살아있는지도 확인해야 안전
+            bool isPlaying = false;
+            m_currentChannel->isPlaying(&isPlaying);
+            if (isPlaying)
+            {
+                if (m_soundResource)
+                {
+                    m_currentChannel->stop();
+                }
+            }
         }
+
+        m_currentChannel = nullptr;
         m_isPlaying = false;
     }
 
@@ -134,19 +149,27 @@ namespace engine
                 SetClip(m_clipName);
             }
 
-            ImGui::BeginDisabled(m_isPlaying);
-            if (ImGui::Button("Play"))
+            EditorState currentState = EditorManager::Get().GetEditorState();
+
+            if (currentState == EditorState::Edit)
             {
-                Play();
+                ImGui::TextColored(ImVec4(1, 1, 0, 1), "[Preview Control]");
+
+                ImGui::BeginDisabled(m_isPlaying);
+                if (ImGui::Button("Play"))
+                {
+                    Play();
+                }
+                ImGui::EndDisabled();
+                ImGui::SameLine();
+                ImGui::BeginDisabled(!m_isPlaying);
+                if (ImGui::Button("Stop"))
+                {
+                    Stop();
+                }
+                ImGui::EndDisabled();
+                ImGui::Separator();
             }
-            ImGui::EndDisabled();
-            ImGui::SameLine();
-            ImGui::BeginDisabled(!m_isPlaying);
-            if (ImGui::Button("Stop"))
-            {
-                Stop();
-            }
-            ImGui::EndDisabled();
 
             bool loop = m_isLoop;
             if (ImGui::Checkbox("Loop", &loop)) SetLoop(loop);
@@ -154,8 +177,10 @@ namespace engine
             bool is3d = m_is3D;
             if (ImGui::Checkbox("Is 3D", &is3d)) Set3D(is3d);
 
+            ImGui::BeginDisabled(currentState == EditorState::Play);
             ImGui::Checkbox("Play On Awake", &m_playOnAwake);
-
+            ImGui::EndDisabled();
+            
             float vol = m_volume;
             if (ImGui::SliderFloat("Volume", &vol, 0.0f, 1.0f))
             {
@@ -197,10 +222,5 @@ namespace engine
         if (j.contains("Volume")) m_volume = j["Volume"];
         if (j.contains("MinDist")) m_minDistance = j["MinDist"];
         if (j.contains("MaxDist")) m_maxDistance = j["MaxDist"];
-
-        if (!m_clipName.empty())
-        {
-            SetClip(m_clipName);
-        }
     }
 }
