@@ -261,7 +261,7 @@ namespace engine
         switch (EditorManager::Get().GetEditorState())
         {
         case EditorState::Edit:
-            SceneManager::Get().CheckSceneChanged();
+            SceneManager::Get().CheckSceneChanged(false);
             if (SceneManager::Get().GetSceneState() == SceneState::Loading)
             {
                 SceneManager::Get().ProcessResourceLoading();
@@ -317,7 +317,7 @@ namespace engine
 
     void WinApp::GamePlayUpdate()
     {
-        SceneManager::Get().CheckSceneChanged();
+        SceneManager::Get().CheckSceneChanged(true);
 
         if (SceneManager::Get().GetSceneState() == SceneState::Loading)
         {

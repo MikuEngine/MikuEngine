@@ -29,7 +29,7 @@ namespace engine
         m_isSceneChanged = true;
     }
 
-    void SceneManager::CheckSceneChanged()
+    void SceneManager::CheckSceneChanged(bool isPlaying)
     {
         if (m_isSceneChanged && m_sceneState == SceneState::Active)
         {
@@ -42,8 +42,15 @@ namespace engine
 
             m_isSceneChanged = false;
             m_sceneState = SceneState::Loading;
-
-            PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName);
+            
+            if (isPlaying)
+            {
+                PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName);
+            }
+            else
+            {
+                PreloadManager::Get().LoadSceneResourceSync(m_nextSceneName);
+            }
         }
     }
 
