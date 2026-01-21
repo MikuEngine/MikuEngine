@@ -1,6 +1,6 @@
 {
     "Name": "SpriteRendererTest",
-    "NumGameObjects": 11,
+    "NumGameObjects": 17,
     "GameObjects": [
         {
             "ID": 0,
@@ -179,7 +179,7 @@
         {
             "ID": 4,
             "Name": "Sun",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -529,6 +529,310 @@
                 {
                     "Type": "SpritePlayer",
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "Name": "Sun",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 4.800000190734863,
+                        "z": 5.099999904632568
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "Resource/Texture/Sun.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 2,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
+                },
+                {
+                    "Type": "Rotator",
+                    "Active": true,
+                    "Speed": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "ParentID": 11,
+            "Name": "Earth",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 6.800000190734863,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "Resource/Texture/Earth.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 1,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
+                },
+                {
+                    "Type": "Rotator",
+                    "Active": true,
+                    "Speed": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "ParentID": 12,
+            "Name": "Moon",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 4.5,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "Resource/Texture/Moon.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 1,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
+                },
+                {
+                    "Type": "Rotator",
+                    "Active": true,
+                    "Speed": 0.699999988079071
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "Name": "Sun",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": -4.400000095367432,
+                        "z": 5.099999904632568
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "Resource/Texture/Sun.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 2,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
+                },
+                {
+                    "Type": "Rotator",
+                    "Active": true,
+                    "Speed": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 15,
+            "ParentID": 14,
+            "Name": "Earth",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 6.800000190734863,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "Resource/Texture/Earth.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 1,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
+                },
+                {
+                    "Type": "Rotator",
+                    "Active": true,
+                    "Speed": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 16,
+            "ParentID": 15,
+            "Name": "Moon",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 4.5,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "Resource/Texture/Moon.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 1,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
+                },
+                {
+                    "Type": "Rotator",
+                    "Active": true,
+                    "Speed": 0.699999988079071
                 }
             ]
         }

@@ -3,6 +3,8 @@
 
 #include <fstream>
 
+#include <imgui_internal.h>
+
 #include "Common/Utility/Profiling.h"
 #include "Common/Utility/StringHelper.h"
 #include "Core/Graphics/Device/GraphicsDevice.h"
@@ -29,6 +31,8 @@
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/CollisionSystem.h"
 
+#include "Framework/Asset/Prefab.h"
+
 namespace engine
 {
     namespace
@@ -48,7 +52,7 @@ namespace engine
 
         m_projectSettings.Load();
 
-        RefreshFileCache();
+        RefreshSceneFileCache();
         ValidateSettingsList();
 
         bool sceneLoaded = false;
@@ -72,8 +76,10 @@ namespace engine
         if (!sceneLoaded)
         {
             SceneManager::Get().GetScene()->Save();
-            RefreshFileCache();
+            RefreshSceneFileCache();
         }
+
+        RefreshPrefabCache();
     }
 
     void EditorManager::Update()
@@ -106,6 +112,7 @@ namespace engine
             DrawEditorController();
             DrawHierarchy();
             DrawInspector();
+            DrawPrefabManager();
             DrawDebugInfo();
         }
         graphics.EndDrawGUIPass();
@@ -312,7 +319,7 @@ namespace engine
                 if (ImGui::Button("Save Scene"))
                 {
                     currentScene->Save();
-                    RefreshFileCache();
+                    RefreshSceneFileCache();
                 }
             }
             else
@@ -375,7 +382,7 @@ namespace engine
 
             if (ImGui::Button("Refresh"))
             {
-                RefreshFileCache();
+                RefreshSceneFileCache();
             }
 
             if (!m_sceneToDelete.empty())
@@ -413,7 +420,7 @@ namespace engine
                         m_projectSettings.Save();
                     }
                     // 4. 캐시 갱신
-                    RefreshFileCache();
+                    RefreshSceneFileCache();
                     // 5. ★ 현재 씬을 삭제했다면? => 대안 씬 로드
                     if (isToDeleteCurrent)
                     {
@@ -506,7 +513,7 @@ namespace engine
                         {
                             m_projectSettings.Save();
                         }
-                        RefreshFileCache();
+                        RefreshSceneFileCache();
                         ImGui::CloseCurrentPopup();
                     }
                     m_sceneToRename.clear();
@@ -601,6 +608,22 @@ namespace engine
     void EditorManager::DrawHierarchy()
     {
         ImGui::Begin("Hierarchy");
+
+        ImVec2 winPos = ImGui::GetWindowPos();
+        ImVec2 winSize = ImGui::GetWindowSize();
+
+        ImRect windowRect(winPos, ImVec2(winPos.x + winSize.x, winPos.y + winSize.y));
+
+        if (ImGui::BeginDragDropTargetCustom(windowRect, ImGui::GetID("Hierarchy_PREFAB_DRAG")))
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_DRAG"))
+            {
+                const char* prefabName = (const char*)payload->Data;
+                Prefab::Instantiate(prefabName); // Root에 생성
+            }
+
+            ImGui::EndDragDropTarget();
+        }
 
         if (ImGui::Button("Create GameObject"))
         {
@@ -764,6 +787,24 @@ namespace engine
 
                 return;
             }
+
+            if (ImGui::MenuItem("Create Prefab"))
+            {
+                std::string name = gameObject->GetName();
+                std::string path = "Resource/Prefab/" + name + ".prefab";
+
+                if (std::filesystem::exists(path))
+                {
+                    m_prefabOverwriteTarget = name;
+                    m_prefabPendingCreateObj = gameObject;
+                }
+                else
+                {
+                    Prefab::Create(gameObject, name);
+                    RefreshPrefabCache();
+                }
+            }
+
             ImGui::EndPopup();
         }
 
@@ -1027,6 +1068,112 @@ namespace engine
         ImGui::End();
     }
 
+    void EditorManager::DrawPrefabManager()
+    {
+        ImGui::Begin("Prefab Manager");
+
+        ImVec2 winPos = ImGui::GetWindowPos();
+        ImVec2 winSize = ImGui::GetWindowSize();
+
+        ImRect windowRect(winPos, ImVec2(winPos.x + winSize.x, winPos.y + winSize.y));
+
+        if (ImGui::BeginDragDropTargetCustom(windowRect, ImGui::GetID("Hierarchy_HIERARCHY_DRAG")))
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAG"))
+            {
+                GameObject* droppedObj = *(GameObject**)payload->Data;
+                std::string name = droppedObj->GetName();
+                std::string path = "Resource/Prefab/" + name + ".prefab";
+                if (std::filesystem::exists(path))
+                {
+                    // 이미 존재함 -> 덮어쓰기 팝업 트리거
+                    m_prefabOverwriteTarget = name;
+                    m_prefabPendingCreateObj = droppedObj;
+                    ImGui::OpenPopup("Overwrite Prefab?");
+                }
+                else
+                {
+                    // 신규 생성
+                    Prefab::Create(droppedObj, name);
+                    RefreshPrefabCache();
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
+
+        if (ImGui::Button("Refresh"))
+        {
+            RefreshPrefabCache();
+        }
+
+        ImGui::Separator();
+
+        for (const auto& filename : m_cachedPrefabFiles)
+        {
+            ImGui::PushID(filename.c_str());
+
+            if (ImGui::Selectable(filename.c_str(), false))
+            {
+
+            }
+
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                ImGui::SetDragDropPayload("PREFAB_DRAG", filename.c_str(), filename.size() + 1);
+                ImGui::Text("Instantiate %s", filename.c_str());
+                ImGui::EndDragDropSource();
+            }
+
+            if (ImGui::BeginPopupContextItem())
+            {
+                if (ImGui::MenuItem("Delete"))
+                {
+                    std::filesystem::remove("Resource/Prefab/" + filename + ".prefab");
+                    RefreshPrefabCache();
+                }
+                ImGui::EndPopup();
+            }
+
+            ImGui::PopID();
+        }
+
+        if (!m_prefabOverwriteTarget.empty())
+        {
+            // 팝업이 아직 안 열렸다면 열기 (DrawEntityNode 등 다른 곳에서 트리거된 경우 대응)
+            if (!ImGui::IsPopupOpen("Overwrite Prefab?"))
+            {
+                ImGui::OpenPopup("Overwrite Prefab?");
+            }
+        }
+
+        if (ImGui::BeginPopupModal("Overwrite Prefab?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("Prefab '%s' already exists.\nOverwrite it?", m_prefabOverwriteTarget.c_str());
+            ImGui::Separator();
+            if (ImGui::Button("Yes", ImVec2(120, 0)))
+            {
+                if (m_prefabPendingCreateObj)
+                {
+                    Prefab::Create(m_prefabPendingCreateObj.Get(), m_prefabOverwriteTarget);
+                    RefreshPrefabCache();
+                }
+                m_prefabOverwriteTarget.clear();
+                m_prefabPendingCreateObj = nullptr;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("No", ImVec2(120, 0)))
+            {
+                m_prefabOverwriteTarget.clear();
+                m_prefabPendingCreateObj = nullptr;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
+        ImGui::End();
+    }
+
     void EditorManager::DrawEditorGrid()
     {
         m_editorGrid->Draw();
@@ -1059,7 +1206,7 @@ namespace engine
         }
     }
 
-    void EditorManager::RefreshFileCache()
+    void EditorManager::RefreshSceneFileCache()
     {
         namespace fs = std::filesystem;
 
@@ -1140,5 +1287,24 @@ namespace engine
         SceneManager::Get().GetScene()->SetName("Untitled"); // 저장 안 된 상태
         // 선택된 오브젝트 해제
         m_selectedObject = nullptr;
+    }
+    void EditorManager::RefreshPrefabCache()
+    {
+        m_cachedPrefabFiles.clear();
+        namespace fs = std::filesystem;
+        std::string path = "Resource/Prefab";
+
+        if (!fs::exists(path))
+        {
+            fs::create_directories(path);
+        }
+        for (const auto& entry : fs::directory_iterator(path))
+        {
+            if (entry.path().extension() == ".prefab")
+            {
+                // 확장자 뗀 이름만 저장
+                m_cachedPrefabFiles.push_back(entry.path().stem().string());
+            }
+        }
     }
 }
