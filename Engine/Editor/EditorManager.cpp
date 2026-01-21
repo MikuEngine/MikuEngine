@@ -1130,6 +1130,11 @@ namespace engine
                 {
                     std::filesystem::remove("Resource/Prefab/" + filename + ".prefab");
                     RefreshPrefabCache();
+
+                    ImGui::EndPopup();
+                    ImGui::PopID();
+
+                    break;
                 }
                 ImGui::EndPopup();
             }
