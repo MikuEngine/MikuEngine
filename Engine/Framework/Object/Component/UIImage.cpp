@@ -125,9 +125,16 @@ namespace engine
 			);
 
 			cbUI.color = m_color;
-			cbUI.uv = Vector4(0, 0, 1, 1);
-			cbUI.clipRect = Vector4(0, 0, vp.Width, vp.Height);
-			cbUI.maskMode = 1;	// rect
+			cbUI.uv = m_uv;
+
+			Vector4 cr = m_clipRect;
+			if (cr.z <= cr.x || cr.w <= cr.y)
+			{
+				cr = Vector4(0, 0, vp.Width, vp.Height);
+			}
+
+			cbUI.clipRect = cr;
+			cbUI.maskMode = static_cast<uint32_t>(m_maskMode);
 
 			dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 			dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());

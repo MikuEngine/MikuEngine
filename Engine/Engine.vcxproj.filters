@@ -285,6 +285,9 @@
     <ClCompile Include="Framework\Asset\PreloadManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\Object\Component\UIProgressBar.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -609,6 +612,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Asset\PreloadManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\UIProgressBar.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

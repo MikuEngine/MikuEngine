@@ -71,7 +71,7 @@
                     "ClipName": "jaguar.wav",
                     "IsLoop": false,
                     "Is3D": false,
-                    "PlayOnAwake": false,
+                    "PlayOnAwake": true,
                     "Volume": 1.0,
                     "MinDist": 1.0,
                     "MaxDist": 500.0

@@ -15,6 +15,15 @@ namespace engine
 	class BlendState;
 	class DepthStencilState;
 
+	enum class MaskMode
+	{
+		None,
+		Rect,
+		Circle,
+		Ring,
+		RectRing,
+	};
+
 	class UIImage : public UIElement
 	{
 		REGISTER_COMPONENT(UIImage)
@@ -38,8 +47,13 @@ namespace engine
 		std::shared_ptr<ConstantBuffer> m_uiCB;
 
 		Vector4 m_color = Vector4(1, 1, 1, 1);
+		Vector4 m_uv = Vector4(0, 0, 1, 1);
 
 		bool m_useAlphaBlend = true;
+		bool m_dirty = true;
+
+		MaskMode m_maskMode = MaskMode::Rect;
+		Vector4  m_clipRect = Vector4(0, 0, 0, 0);
 
 	public:
 		UIImage() = default;
@@ -58,6 +72,15 @@ namespace engine
 		
 		void SetColor(const Vector4& color);
 		const Vector4& GetColor() const;
+
+		void SetUV(const Vector4& uv) { m_uv = uv; m_dirty = true; }
+		const Vector4& GetUV() const { return m_uv; }
+
+		void SetMaskMode(MaskMode mode) { m_maskMode = mode; m_dirty = true; }
+		MaskMode GetMaskMode() const { return m_maskMode; }
+
+		void SetClipRect(const Vector4& r) { m_clipRect = r; m_dirty = true; }
+		const Vector4& GetClipRect() const { return m_clipRect; }
 
 	public:
 		bool HasRenderType(RenderType type) const override;

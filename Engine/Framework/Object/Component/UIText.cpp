@@ -1,8 +1,6 @@
 ﻿#include "EnginePCH.h"
 #include "UIText.h"
 
-#include <imgui_stdlib.h>
-
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Core/Graphics/Resource/Texture.h"
 #include "Core/Graphics/Resource/ConstantBuffer.h"
