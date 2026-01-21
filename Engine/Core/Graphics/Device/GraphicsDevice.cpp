@@ -1163,7 +1163,7 @@ namespace engine
             m_blitPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Blit_PS.hlsl");
             m_hdrPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/HDR_PS.hlsl");
             m_ldrPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/LDR_PS.hlsl");
-            m_globalLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredGlobalLight_PS.hlsl");
+            m_globalLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredGlobalLight_Toon_PS.hlsl");
             m_brightPassPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/BrightPass_PS.hlsl");
             m_blurPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Blur_PS.hlsl");
             m_fxaaPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/FXAA_PS.hlsl");
