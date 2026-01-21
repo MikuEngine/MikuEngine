@@ -28,6 +28,7 @@ namespace engine
 	public:
 		void Initialize();
 		void LoadSceneResourceAsync(const std::string& sceneName);
+		void LoadSceneResourceSync(const std::string& sceneName);
 		bool IsLoading() const;
 		float GetProgress() const;
 

@@ -39,7 +39,6 @@ namespace engine
 
         bool m_shouldOpenUnsavedPopup = false;
 
-
     private:
         EditorManager();
         ~EditorManager();
