@@ -248,6 +248,7 @@
     <ClCompile Include="Framework\Object\Component\UIInteractable.cpp" />
     <ClCompile Include="Framework\System\UIEventSystem.cpp" />
     <ClCompile Include="Framework\Object\Component\UISlider.cpp" />
+    <ClCompile Include="Framework\Object\Component\UIProgressBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Graphics\Resource\GeometryShader.h" />
@@ -358,6 +359,7 @@
     <ClInclude Include="Framework\Object\Component\UIInteractable.h" />
     <ClInclude Include="Framework\System\UIEventSystem.h" />
     <ClInclude Include="Framework\Object\Component\UISlider.h" />
+    <ClInclude Include="Framework\Object\Component\UIProgressBar.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Geometry\Shadow_Point_GS.hlsl">
