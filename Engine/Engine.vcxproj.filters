@@ -662,6 +662,9 @@
     <FxCompile Include="Shader\Vertex\Shadow_Point_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Shadow_Point_Rigid_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Shadow_Point_Skinned_VS.hlsl" />
+    <FxCompile Include="Shader\Pixel\DeferredGlobalLight_Toon_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\DeferredPointLight_Toon_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\DeferredSpotLight_Toon_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

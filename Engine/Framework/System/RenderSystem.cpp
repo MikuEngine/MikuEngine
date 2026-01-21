@@ -76,8 +76,8 @@ namespace engine
             m_coneIB = ResourceManager::Get().GetGeometryIndexBuffer("DefaultCone");
 
             m_lightVolumeVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/LightVolume_VS.hlsl");
-            m_pointLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredPointLight_PS.hlsl");
-            m_spotLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredSpotLight_PS.hlsl");
+            m_pointLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredPointLight_Toon_PS.hlsl");
+            m_spotLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredSpotLight_Toon_PS.hlsl");
             m_lightVolumeInputLayout = m_lightVolumeVS->GetOrCreateInputLayout<PositionVertex>();
             m_localLightCB = ResourceManager::Get().GetOrCreateConstantBuffer("LocalLight", sizeof(CbLocalLight));
             m_objectCB = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));

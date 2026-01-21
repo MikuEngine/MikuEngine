@@ -1,6 +1,6 @@
 {
     "Name": "MaterialTest",
-    "NumGameObjects": 38,
+    "NumGameObjects": 39,
     "GameObjects": [
         {
             "ID": 0,
@@ -45,15 +45,15 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -7.300000190734863,
+                        "y": 6.0,
+                        "z": -8.800000190734863
                     },
                     "Rotation": {
-                        "x": -0.3535534143447876,
-                        "y": 0.14644663035869598,
-                        "z": 0.3535534143447876,
-                        "w": 0.8535533547401428
+                        "x": -0.6231755614280701,
+                        "y": 0.33414381742477417,
+                        "z": 0.33414384722709656,
+                        "w": 0.6231756806373596
                     },
                     "Scale": {
                         "x": 1.0,
@@ -64,14 +64,14 @@
                 {
                     "Type": "Light",
                     "Active": true,
-                    "LightType": 0,
+                    "LightType": 1,
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0
                     },
-                    "Intensity": 1.0,
-                    "Range": 10.0,
+                    "Intensity": 4.5,
+                    "Range": 58.599998474121094,
                     "Angle": 45.0,
                     "Near": 90000.0,
                     "Far": 100000.0,
@@ -1980,6 +1980,58 @@
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
+                    "CastShadow": false
+                }
+            ]
+        },
+        {
+            "ID": 38,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.05000000074505806,
+                        "y": 0.05000000074505806,
+                        "z": 0.05000000074505806
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/zeldaPosed001.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
                     "CastShadow": false
                 }
             ]
