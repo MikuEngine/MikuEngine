@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CharacterLogicFSM.h"
 
@@ -10,9 +10,10 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // PlayerFSM - CharacterLogicFSM을 상속받은 플레이어 전용 FSM
     // 
-    // 추가 기능: 마우스 클릭으로 총알 발사
+    // 추가 기능: 
+    //   - 마우스 클릭으로 총알 발사
+    //   - AimPointer를 향해 발사
     // ═══════════════════════════════════════════════════════════════
-
     class PlayerFSM :
         public CharacterLogicFSM
     {
@@ -24,6 +25,7 @@ namespace game
         TempBulletFactory* m_bulletFactory = nullptr;
 
     public:
+        void Awake() override;
         void Start() override;
         void Update() override;
 
@@ -33,9 +35,9 @@ namespace game
         // Attack 상태를 마우스 클릭으로 오버라이드
         bool IsAttackPressed() const override;
         
-        // 공격 시 총알 발사
-        void OnEnterAttack() override;
-        void UpdateAttack() override;
+        // 상태 Enter/Exit/Update 오버라이드
+        void OnEnterState(CharacterState state) override;
+        void UpdateCurrentState() override;
 
     private:
         void HandleShooting();

@@ -7,7 +7,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // TestAnimationFSM - 스켈레탈 애니메이션 테스트용 애니메이션 FSM
     // 
-    // 기능: LogicFSM 상태에 따른 애니메이션 재생
+    // 기능:
+    // - Test1: 기본 재생 후 Idle 복귀
+    // - Test2: 70% 진행 시 조기 종료 후 Idle 복귀
+    // - Test3: 상체(펀치) + 하체(걷기) 분리 재생 후 Idle 복귀
+    // - Test4: 애니메이션 종료 후 1초 대기 후 Idle 복귀
     // ═══════════════════════════════════════════════════════════════
 
     class TestAnimationFSM :
@@ -16,9 +20,13 @@ namespace game
         REGISTER_COMPONENT(TestAnimationFSM)
 
     private:
-        // 공격 타이머 (애니메이션 종료 감지용)
-        float m_attackTimer = 0.0f;
-        float m_attackDuration = 0.5f;  // 공격 애니메이션 예상 길이
+        // Test4용 대기 타이머
+        bool m_isWaitingAfterTest4 = false;
+        float m_test4WaitTimer = 0.0f;
+        float m_test4WaitDuration = 1.0f;
+        
+        // Test3 재진입 방지용 (애니메이션 시작 확인)
+        bool m_test3Started = false;
 
     public:
         void Awake() override;
@@ -27,11 +35,15 @@ namespace game
 
         // ILogicFSMListener 오버라이드
         void OnStateEnter(const StateContext& context) override;
-        void OnStateUpdate(const StateContext& context) override;
-             
+        void OnStateExit(const StateContext& context) override;
 
     private:
         void SetupAnimationMappings();
+        void CheckTest2EarlyExit();
+        void CheckTest1Finished();
+        void CheckTest3Finished();
+        void CheckTest4Finished();
+        void UpdateTest4Wait();
 
     public:
         void OnGui() override;

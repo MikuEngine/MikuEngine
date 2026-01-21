@@ -7,31 +7,24 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // TestLogicFSM - 스켈레탈 애니메이션 테스트용 로직 FSM
     // 
-    // 기능: 키보드 입력으로 이동 + 공격
+    // 기능: 숫자키 1~4를 눌러 Test1~Test4 상태로 전환
+    //       애니메이션 종료 시 Idle로 복귀
     // ═══════════════════════════════════════════════════════════════
-
     class TestLogicFSM :
         public CharacterLogicFSM
     {
         REGISTER_COMPONENT(TestLogicFSM)
 
-    private:
-        // 테스트용 설정
-        float m_rotationSpeed = 180.0f;  // 회전 속도 (도/초)
-        bool m_rotateToMoveDirection = true;
-
     public:
         void Awake() override;
         void Start() override;
-        void Update() override;
+        
+        // 애니메이션 종료 시 Idle로 복귀
+        void OnAnimationFinished(CharacterState finishedState) override;
 
     protected:
-        void UpdateWalk() override;
-        void OnEnterAttack() override;
-        void UpdateAttack() override;
-
-    private:
-        void HandleRotation();
+        void ProcessInput() override;
+        void UpdateCurrentState() override;
 
     public:
         void OnGui() override;

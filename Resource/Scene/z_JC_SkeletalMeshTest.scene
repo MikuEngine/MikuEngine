@@ -202,83 +202,111 @@
                                 "mixamorig:LeftHandRing4_end",
                                 "mixamorig:LeftHandPinky4_end"
                             ]
+                        },
+                        {
+                            "Name": "Upper Body",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "mixamorig:Spine",
+                                "mixamorig:Spine1",
+                                "mixamorig:Spine2",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
                         }
                     ]
+                },
+                {
+                    "Type": "TestLogicFSM",
+                    "Active": true
+                },
+                {
+                    "Type": "TestAnimationFSM",
+                    "Active": true,
+                    "Test4WaitDuration": 1.0
                 },
                 {
                     "Type": "InputBinding",
                     "Active": true,
                     "Bindings": [
                         {
-                            "Name": "MoveUp",
-                            "Key": "W"
+                            "Name": "One",
+                            "Key": "1"
                         },
                         {
-                            "Name": "MoveDown",
-                            "Key": "S"
+                            "Name": "Two",
+                            "Key": "2"
                         },
                         {
-                            "Name": "MoveLeft",
-                            "Key": "A"
+                            "Name": "Three",
+                            "Key": "3"
                         },
                         {
-                            "Name": "MoveRight",
-                            "Key": "D"
-                        },
-                        {
-                            "Name": "Attack",
-                            "Key": "Space"
+                            "Name": "Four",
+                            "Key": "4"
                         }
                     ]
-                },
-                {
-                    "Type": "TestLogicFSM",
-                    "Active": true,
-                    "MoveSpeed": 3.0,
-                    "InputMoveUp": "MoveUp",
-                    "InputMoveDown": "MoveDown",
-                    "InputMoveLeft": "MoveLeft",
-                    "InputMoveRight": "MoveRight",
-                    "InputAttack": "Attack",
-                    "RotationSpeed": 360.0,
-                    "RotateToMoveDirection": true
-                },
-                {
-                    "Type": "TestAnimationFSM",
-                    "Active": true,
-                    "UseUpperBodyLayer": false,
-                    "BaseLayerIndex": 0,
-                    "UpperBodyLayerIndex": 1,
-                    "UpperBodyWeight": 1.0,
-                    "DefaultCrossFade": 0.20000000298023224,
-                    "StateAnimations": [
-                        {
-                            "State": 0,
-                            "AnimationName": "TestIdle",
-                            "CrossFadeDuration": 0.20000000298023224,
-                            "Loop": true,
-                            "LayerIndex": 0,
-                            "Speed": 1.0
-                        },
-                        {
-                            "State": 1,
-                            "AnimationName": "TestForward",
-                            "CrossFadeDuration": 0.20000000298023224,
-                            "Loop": true,
-                            "LayerIndex": 0,
-                            "Speed": 1.0
-                        },
-                        {
-                            "State": 2,
-                            "AnimationName": "TestPunch",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "Loop": false,
-                            "LayerIndex": 0,
-                            "Speed": 1.0
-                        }
-                    ],
-                    "ComboAttackAnims": [],
-                    "AttackDuration": 0.6000000238418579
                 }
             ]
         },

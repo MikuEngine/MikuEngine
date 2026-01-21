@@ -8,11 +8,14 @@
 
 namespace game
 {
+    void PlayerFSM::Awake()
+    {
+        CharacterLogicFSM::Awake();
+    }
+
     void PlayerFSM::Start()
     {
         CharacterLogicFSM::Start();
-        
-        LOG_PRINT("[PlayerFSM] Started");
     }
 
     void PlayerFSM::Update()
@@ -34,10 +37,6 @@ namespace game
             if (auto* aimGO = scene->FindGameObject("AimPointer"))
             {
                 m_aimPointer = aimGO->GetComponent<AimPointer>();
-                if (m_aimPointer)
-                {
-                    LOG_PRINT("[PlayerFSM] Found AimPointer");
-                }
             }
             
             // BulletFactory는 같은 오브젝트 또는 씬에서 찾기
@@ -49,20 +48,6 @@ namespace game
                     m_bulletFactory = factoryGO->GetComponent<TempBulletFactory>();
                 }
             }
-            
-            if (m_bulletFactory)
-            {
-                LOG_PRINT("[PlayerFSM] Found TempBulletFactory");
-            }
-        }
-
-        if (!m_aimPointer)
-        {
-            LOG_INFO("[PlayerFSM] Warning: AimPointer not found!");
-        }
-        if (!m_bulletFactory)
-        {
-            LOG_INFO("[PlayerFSM] Warning: TempBulletFactory not found!");
         }
     }
 
@@ -72,23 +57,37 @@ namespace game
         return engine::Input::IsMousePressed(engine::Input::Buttons::LEFT);
     }
 
-    void PlayerFSM::OnEnterAttack()
+    void PlayerFSM::OnEnterState(CharacterState state)
     {
-        CharacterLogicFSM::OnEnterAttack();
+        // 부모 처리 먼저
+        CharacterLogicFSM::OnEnterState(state);
         
-        // 공격 시 즉시 발사 (FSM 상태로 처리)
-        // HandleShooting()에서 처리하므로 여기서는 상태만 설정
+        // Attack 상태 진입 시 추가 처리 (필요시)
+        if (state == CharacterState::Attack)
+        {
+            // 공격 시작 - 총알 발사는 HandleShooting에서 처리
+        }
     }
 
-    void PlayerFSM::UpdateAttack()
+    void PlayerFSM::UpdateCurrentState()
     {
-        // 공격 상태는 즉시 Idle로 복귀 (총알 발사는 순간 동작)
-        ChangeState(CharacterState::Idle);
+        switch (m_currentState)
+        {
+        case CharacterState::Attack:
+            // 공격 상태는 즉시 Idle로 복귀 (총알 발사는 순간 동작)
+            ChangeState(CharacterState::Idle);
+            break;
+            
+        default:
+            // 나머지 상태는 부모 처리
+            CharacterLogicFSM::UpdateCurrentState();
+            break;
+        }
     }
 
     void PlayerFSM::HandleShooting()
     {
-        // 마우스 클릭 시 발사
+        // 마우스 홀드 시 연속 발사
         if (engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT))
         {
             if (m_bulletFactory && m_aimPointer)
@@ -114,13 +113,11 @@ namespace game
     void PlayerFSM::Save(engine::json& j) const
     {
         CharacterLogicFSM::Save(j);
-        // PlayerFSM 전용 데이터 저장 (필요시 추가)
     }
 
     void PlayerFSM::Load(const engine::json& j)
     {
         CharacterLogicFSM::Load(j);
-        // PlayerFSM 전용 데이터 로드 (필요시 추가)
     }
 
     std::string PlayerFSM::GetType() const

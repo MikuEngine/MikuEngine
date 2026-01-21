@@ -10,7 +10,9 @@ namespace engine
 
 namespace game
 {
-    // 애니메이션 전환 설정
+    // ═══════════════════════════════════════════════════════════════
+    // AnimationTransition - 애니메이션 전환 설정
+    // ═══════════════════════════════════════════════════════════════
     struct AnimationTransition
     {
         std::string animationName;          // 재생할 애니메이션 이름
@@ -20,20 +22,21 @@ namespace game
         float speed = 1.0f;                 // 재생 속도
     };
 
-    // 상태별 애니메이션 매핑
-    struct StateAnimationMapping
-    {
-        CharacterState state;
-        AnimationTransition transition;
-    };
-
+    // ═══════════════════════════════════════════════════════════════
+    // CharacterAnimationFSM - 캐릭터 애니메이션 FSM 베이스 클래스
+    // 
+    // 자식 클래스에서 구현해야 할 것:
+    //   - SetupAnimationMappings(): 상태별 애니메이션 매핑 설정
+    //   - Update(): 애니메이션 종료 체크 및 NotifyAnimationFinished 호출
+    //   - OnStateEnter(): 상태 진입 시 애니메이션 재생 (필요시 오버라이드)
+    // ═══════════════════════════════════════════════════════════════
     class CharacterAnimationFSM :
         public engine::Script<CharacterAnimationFSM>,
         public ILogicFSMListener
     {
         REGISTER_COMPONENT(CharacterAnimationFSM)
 
-    private:
+    protected:
         // 컴포넌트 캐싱
         engine::SkeletalAnimator* m_animator = nullptr;
         CharacterLogicFSM* m_logicFSM = nullptr;
@@ -50,10 +53,7 @@ namespace game
         int m_upperBodyLayerIndex = 1;
         float m_upperBodyWeight = 1.0f;
         
-        // 콤보 공격 애니메이션 목록
-        std::vector<std::string> m_comboAttackAnims;
-        
-        // 블렌딩 설정
+        // 기본 크로스페이드 시간
         float m_defaultCrossFade = 0.2f;
         
         // 조건부 전이용 데이터
@@ -64,7 +64,7 @@ namespace game
         void Start() override;
         void Update() override;
         
-        // ILogicFSMListener 구현
+        // ILogicFSMListener 구현 (자식에서 오버라이드)
         void OnStateEnter(const StateContext& context) override;
         void OnStateExit(const StateContext& context) override;
         void OnStateUpdate(const StateContext& context) override;
@@ -74,19 +74,19 @@ namespace game
         void SetStateAnimation(CharacterState state, const std::string& animName, 
             float crossFade = 0.2f, bool loop = true, float speed = 1.0f);
         
-        // 콤보 공격 설정
-        void SetComboAttackAnimations(const std::vector<std::string>& anims);
-        
         // 상체 분리 설정
         void SetUpperBodyLayer(bool enabled, int layerIndex = 1);
         void SetUpperBodyWeight(float weight);
         
-        // 직접 애니메이션 재생 (특수한 경우용)
+        // 직접 애니메이션 재생 (자식 클래스에서 사용)
         void PlayAnimation(const std::string& animName, float crossFade = 0.2f, 
             bool loop = true, int layerIndex = 0, float speed = 1.0f);
         
-        // 로직 FSM에 애니메이션 종료 알림
+        // 로직 FSM에 애니메이션 종료 알림 (자식 클래스에서 호출)
         void NotifyAnimationFinished(CharacterState state);
+        
+        // 현재 애니메이션 상태 조회
+        CharacterState GetCharacterState() const { return m_currentAnimState; }
         
     public:
         void OnGui() override;
@@ -94,16 +94,15 @@ namespace game
         void Load(const engine::json& j) override;
         std::string GetType() const override;
 
-        const CharacterState& GetCharacterState() const;
-
-    private:
-        void CacheComponents();
-        void SetupDefaultMappings();
-        void PlayStateAnimation(CharacterState state, const StateContext& context);
-        std::string GetAnimationForCombo(int comboCount) const;
+    protected:
+        virtual void CacheComponents();
+        virtual void SetupDefaultMappings();
         
-        // 조건부 전이 처리
-        void HandleConditionalTransition(const StateContext& context);
-        void UpdateMoveBlending(const StateContext& context);
+        // 매핑 테이블에서 애니메이션 재생
+        void PlayStateAnimation(CharacterState state);
+        
+        // 조건부 전이 처리 (자식에서 오버라이드 가능)
+        virtual void HandleConditionalTransition(const StateContext& context);
+        virtual void UpdateMoveBlending(const StateContext& context);
     };
 }
