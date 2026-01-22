@@ -1,10 +1,12 @@
 ﻿#pragma once
 
-#include "Framework/Object/Component/Renderer.h"
+#include "Framework/Object/Component/Renderer/Renderer.h"
+#include "Core/Graphics/Resource/Texture.h"
 
 namespace engine
 {
-    class SimpleMeshData;
+    class StaticMeshData;
+    class MaterialData;
 
     class VertexBuffer;
     class IndexBuffer;
@@ -14,72 +16,55 @@ namespace engine
     class Texture;
     class InputLayout;
     class SamplerState;
-    class RasterizerState;
 
-    enum class CullMode
-    {
-        None,
-        Back,
-        Front
-    };
-
-    enum class BillboardType
-    {
-        None,
-        Spherical,   // 모든 축에서 카메라 바라보기
-        Cylindrical, // Y축 회전만 (나무, 캐릭터 등)
-        ViewPlaneAligned,
-        ViewPlaneVertical
-    };
-
-    class SpriteRenderer :
+    class StaticMeshRenderer :
         public Renderer
     {
-        REGISTER_COMPONENT(SpriteRenderer, Renderer)
+        REGISTER_COMPONENT(StaticMeshRenderer, Renderer)
 
     private:
-        std::string m_textureFilePath;
-        std::string m_vsFilePath;
-        std::string m_opaquePSFilePath;
-        std::string m_cutoutPSFilePath;
-        std::string m_transparentPSFilePath;
+        std::shared_ptr<StaticMeshData> m_staticMeshData;
+        std::shared_ptr<MaterialData> m_materialData;
 
         std::shared_ptr<VertexBuffer> m_vertexBuffer;
         std::shared_ptr<IndexBuffer> m_indexBuffer;
-        
+
         std::shared_ptr<ConstantBuffer> m_materialConstantBuffer;
         std::shared_ptr<ConstantBuffer> m_objectConstantBuffer;
-        std::shared_ptr<ConstantBuffer> m_spriteConstantBuffer;
 
         std::shared_ptr<VertexShader> m_vs;
         std::shared_ptr<VertexShader> m_shadowVS;
+        std::shared_ptr<VertexShader> m_pointShadowVS;
+        std::shared_ptr<VertexShader> m_simpleVS;
 
         std::shared_ptr<PixelShader> m_opaquePS;
         std::shared_ptr<PixelShader> m_cutoutPS;
         std::shared_ptr<PixelShader> m_transparentPS;
         std::shared_ptr<PixelShader> m_maskCutoutPS;
         std::shared_ptr<PixelShader> m_pickingPS;
+        std::shared_ptr<PixelShader> m_pointShadowPS;
+        std::shared_ptr<PixelShader> m_pointShadowCutoutPS;
 
-        std::shared_ptr<Texture> m_texture;
+        std::vector<Textures> m_textures;
         std::shared_ptr<InputLayout> m_inputLayout;
         std::shared_ptr<SamplerState> m_samplerState;
 
-        std::shared_ptr<RasterizerState> m_rasterizerState;
+        std::string m_meshFilePath;
+        std::string m_vsFilePath;
+        std::string m_opaquePSFilePath;
+        std::string m_cutoutPSFilePath;
+        std::string m_transparentPSFilePath;
 
-        MaterialRenderType m_renderType = MaterialRenderType::Opaque;
-        CullMode m_cullMode = CullMode::None;
-        BillboardType m_billboardType = BillboardType::None;
-        float m_width = 100.0f;
-        float m_height = 100.0f;
-        Vector4 m_color{ 1.0f, 1.0f, 1.0f, 1.0f };
-        Vector2 m_uvOffset{ 0.0f, 0.0f };
-        Vector2 m_uvScale{ 1.0f, 1.0f };
-        Vector2 m_pivot{ 0.5f, 0.5f };
+        Vector4 m_materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        Vector3 m_materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
+        float m_materialRoughness = 0.0f;
+        float m_materialMetalness = 0.0f;
+        float m_materialAmbientOcclusion = 1.0f;
+        bool m_overrideMaterial = false;
         bool m_castShadow = false;
-        bool m_isLoaded = false;
 
     public:
-        ~SpriteRenderer();
+        ~StaticMeshRenderer();
 
         static void* operator new(size_t size);
         static void operator delete(void* ptr);
@@ -87,15 +72,13 @@ namespace engine
     public:
         void Initialize() override;
 
-        void SetTexture(const std::string& textureFilePath);
+        void SetMesh(const std::string& meshFilePath);
         void SetVertexShader(const std::string& shaderFilePath);
         void SetOpaquePixelShader(const std::string& shaderFilePath);
         void SetCutoutPixelShader(const std::string& shaderFilePath);
         void SetTransparentPixelShader(const std::string& shaderFilePath);
-        void SetCastShadow(bool castShadow);
-        void SetCullMode(CullMode cullMode);
-        void SetSpriteInfo(const Vector2& offset, const Vector2& scale, const Vector2 pivot);
-        void SetBillboardType(BillboardType type);
+        void SetCastShadow(bool cast);;
+        bool IsCastShadow() const override;
 
     public:
         void OnGui() override;
@@ -106,11 +89,11 @@ namespace engine
         bool HasRenderType(RenderType type) const override;
         void Draw(RenderType type) const override;
         DirectX::BoundingBox GetBounds() const override;
+        void DrawShadow(RenderType renderType, LightType lightType) const override;
         void DrawMask() const override;
         void DrawPickingID() const override;
 
     private:
         void Refresh();
-        void ReplaceRenderSystem();
     };
 }

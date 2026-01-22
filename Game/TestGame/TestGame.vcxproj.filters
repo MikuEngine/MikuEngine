@@ -162,5 +162,8 @@
     <ClInclude Include="Script\TestAnimationFSM.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="App\ComponentRegistry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

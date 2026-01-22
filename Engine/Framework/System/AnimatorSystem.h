@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Framework/System/System.h"
-#include "Framework/Object/Component/Animator.h"
+#include "Framework/Object/Component/Animator/Animator.h"
 
 namespace engine
 {

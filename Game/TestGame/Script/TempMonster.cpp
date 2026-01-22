@@ -2,7 +2,7 @@
 #include "TempMonster.h"
 #include "TempBullet.h"
 
-#include <Framework/Object/Component/SpriteRenderer.h>
+#include <Framework/Object/Component/Renderer/SpriteRenderer.h>
 
 namespace game
 {

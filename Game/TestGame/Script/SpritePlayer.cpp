@@ -1,7 +1,7 @@
 ﻿#include "GamePCH.h"
 #include "SpritePlayer.h"
 
-#include "Framework/Object/Component/SpriteAnimator.h"
+#include <Framework/Object/Component/Animator/SpriteAnimator.h>
 
 namespace game
 {

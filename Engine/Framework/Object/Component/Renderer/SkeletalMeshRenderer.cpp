@@ -19,7 +19,7 @@
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
-#include "Framework/Object/Component/SkeletalAnimator.h"
+#include "Framework/Object/Component/Animator/SkeletalAnimator.h"
 #include "Core/Graphics/Data/ShaderSlotTypes.h"
 #include "Common/Utility/StaticMemoryPool.h"
 

@@ -135,7 +135,7 @@
     <ClCompile Include="Framework\System\TransformSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\StaticMeshRenderer.cpp">
+    <ClCompile Include="Framework\Object\Component\Renderer\StaticMeshRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Graphics\Resource\MaterialHelper.cpp">
@@ -144,7 +144,7 @@
     <ClCompile Include="Framework\System\RenderSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\Renderer.cpp">
+    <ClCompile Include="Framework\Object\Component\Renderer\Renderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Object\Component\Light.cpp">
@@ -165,25 +165,25 @@
     <ClCompile Include="Core\System\ProjectSettings.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\SkeletalAnimator.cpp">
+    <ClCompile Include="Framework\Object\Component\Animator\SkeletalAnimator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\SkeletalMeshRenderer.cpp">
+    <ClCompile Include="Framework\Object\Component\Renderer\SkeletalMeshRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\Animator.cpp">
+    <ClCompile Include="Framework\Object\Component\Animator\Animator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\System\AnimatorSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\SpriteRenderer.cpp">
+    <ClCompile Include="Framework\Object\Component\Renderer\SpriteRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Asset\SimpleMeshData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\SpriteAnimator.cpp">
+    <ClCompile Include="Framework\Object\Component\Animator\SpriteAnimator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Asset\SpriteData.cpp">
@@ -294,7 +294,7 @@
     <ClCompile Include="Framework\Asset\Prefab.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\Module\ParticleEmitter.cpp">
+    <ClCompile Include="Framework\Object\Component\Particle\ParticleEmitter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Object\Component\UI\UIPanel.cpp">
@@ -452,7 +452,7 @@
     <ClInclude Include="Framework\System\TransformSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\StaticMeshRenderer.h">
+    <ClInclude Include="Framework\Object\Component\Renderer\StaticMeshRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Resource\MaterialHelper.h">
@@ -464,7 +464,7 @@
     <ClInclude Include="Framework\System\RenderSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\Renderer.h">
+    <ClInclude Include="Framework\Object\Component\Renderer\Renderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Asset\DefaultAssetTypes.h">
@@ -497,19 +497,19 @@
     <ClInclude Include="Core\System\ProjectSettings.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\SkeletalAnimator.h">
+    <ClInclude Include="Framework\Object\Component\Animator\SkeletalAnimator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\SkeletalMeshRenderer.h">
+    <ClInclude Include="Framework\Object\Component\Renderer\SkeletalMeshRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\Animator.h">
+    <ClInclude Include="Framework\Object\Component\Animator\Animator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\System\AnimatorSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\SpriteRenderer.h">
+    <ClInclude Include="Framework\Object\Component\Renderer\SpriteRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Common\Utility\TextureHelper.h">
@@ -518,7 +518,7 @@
     <ClInclude Include="Framework\Asset\SimpleMeshData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\SpriteAnimator.h">
+    <ClInclude Include="Framework\Object\Component\Animator\SpriteAnimator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Asset\SpriteData.h">
@@ -641,7 +641,7 @@
     <ClInclude Include="Framework\Asset\Prefab.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\Module\ParticleEmitter.h">
+    <ClInclude Include="Framework\Object\Component\Particle\ParticleEmitter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\UI\UIPanel.h">

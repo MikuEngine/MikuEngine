@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Framework/Object/Component/Animator.h"
+#include "Framework/Object/Component/Animator/Animator.h"
 
 namespace engine
 {
