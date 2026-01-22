@@ -294,6 +294,9 @@
     <ClCompile Include="Framework\Asset\Prefab.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\Object\Component\Module\ParticleEmitter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -633,6 +636,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Asset\Prefab.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\Module\ParticleEmitter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
