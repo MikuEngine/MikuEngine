@@ -159,7 +159,7 @@
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\PlayerScriptTest.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
-    <ClCompile Include="Script\ButtonCallbackTest.cpp">
+    <ClCompile Include="Script\ButtonController.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -254,7 +254,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Script\ButtonCallbackTest.h">
+    <ClInclude Include="Script\ButtonController.h">
       <SubType>
       </SubType>
     </ClInclude>

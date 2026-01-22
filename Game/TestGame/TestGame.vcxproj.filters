@@ -9,7 +9,7 @@
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\PlayerScriptTest.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
-    <ClCompile Include="Script\ButtonCallbackTest.cpp" />
+    <ClCompile Include="Script\ButtonController.cpp" />
     <ClCompile Include="Script\ButtonCallbackTest2.cpp" />
     <ClCompile Include="Script\BaseControllerScript.cpp" />
     <ClCompile Include="Script\CharacterAnimationFSM.cpp" />
@@ -41,7 +41,7 @@
     <ClInclude Include="App\TestGameApp.h" />
     <ClInclude Include="Script\PlayerScriptTest.h" />
     <ClInclude Include="Script\AimPointer.h" />
-    <ClInclude Include="Script\ButtonCallbackTest.h" />
+    <ClInclude Include="Script\ButtonController.h" />
     <ClInclude Include="Script\ButtonCallbackTest2.h" />
     <ClInclude Include="Script\BaseControllerScript.h" />
     <ClInclude Include="Script\CharacterAnimationFSM.h" />

@@ -1072,10 +1072,6 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                },
-                {
-                    "Type": "ButtonCallbackTest",
-                    "Active": true
                 }
             ]
         }

@@ -5,10 +5,10 @@
 
 namespace game
 {
-    class ButtonCallbackTest :
-        public engine::Script<ButtonCallbackTest>
+    class ButtonController :
+        public engine::Script<ButtonController>
     {
-        REGISTER_COMPONENT(ButtonCallbackTest, Script)
+        REGISTER_COMPONENT(ButtonController, Script)
 
     public:
         void Awake() override;
@@ -23,8 +23,6 @@ namespace game
     private:
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
         
-        void CallThis();
-
         void OnStart();
         void OnOption();
         void OnCredit();
