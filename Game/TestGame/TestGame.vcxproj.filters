@@ -1,201 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App\Main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\TestManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TestScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GamePCH.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="App\TestGameApp.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\AnimationPlayer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\FreeCameraController.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Rotator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\SpritePlayer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Test2.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TestSound.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\AimPointer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TempPlayer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TempMonster.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TempBulletFactory.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TempBullet.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\DontDestroyTest.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterAnimationFSM.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterLogicFSM.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\InputBinding.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\PlayerFSM.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\UIInputHandler.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TestAnimationFSM.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TestLogicFSM.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-
-    <ClCompile Include="Script\ButtonCallbackTest.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\ButtonCallbackTest2.cpp">
-
-    <ClCompile Include="Script\BaseControllerScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\PlayerScriptTest.cpp">
-
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\BaseControllerScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl" />
     <FxCompile Include="Shader\Pixel\TestPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\Include\TestHeader.hlsli" />
+    <ClCompile Include="App\Main.cpp" />
+    <ClCompile Include="Manager\TestManager.cpp" />
+    <ClCompile Include="Script\PlayerScriptTest.cpp" />
+    <ClCompile Include="Script\AnimationPlayer.cpp" />
+    <ClCompile Include="Script\ButtonCallbackTest.cpp" />
+    <ClCompile Include="Script\ButtonCallbackTest2.cpp" />
+    <ClCompile Include="Script\BaseControllerScript.cpp" />
+    <ClCompile Include="Script\CharacterAnimationFSM.cpp" />
+    <ClCompile Include="Script\CharacterLogicFSM.cpp" />
+    <ClCompile Include="Script\DontDestroyTest.cpp" />
+    <ClCompile Include="Script\FreeCameraController.cpp" />
+    <ClCompile Include="Script\InputBinding.cpp" />
+    <ClCompile Include="Script\PlayerFSM.cpp" />
+    <ClCompile Include="Script\Rotator.cpp" />
+    <ClCompile Include="Script\AimPointer.cpp" />
+    <ClCompile Include="Script\SpritePlayer.cpp" />
+    <ClCompile Include="Script\TempBullet.cpp" />
+    <ClCompile Include="Script\TempBulletFactory.cpp" />
+    <ClCompile Include="Script\TempMonster.cpp" />
+    <ClCompile Include="Script\TempPlayer.cpp" />
+    <ClCompile Include="Script\Test2.cpp" />
+    <ClCompile Include="Script\TestAnimationFSM.cpp" />
+    <ClCompile Include="Script\TestLogicFSM.cpp" />
+    <ClCompile Include="Script\TestScript.cpp" />
+    <ClCompile Include="GamePCH.cpp" />
+    <ClCompile Include="App\TestGameApp.cpp" />
+    <ClCompile Include="Script\TestSound.cpp" />
+    <ClCompile Include="Script\UIInputHandler.cpp" />
+    <ClCompile Include="Script\zJCTestPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GamePCH.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="App\TestGameApp.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TestScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\AnimationPlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\FreeCameraController.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Rotator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\SpritePlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Test2.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TestSound.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\AimPointer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TempPlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TempMonster.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TempBulletFactory.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TempBullet.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\DontDestroyTest.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterAnimationFSM.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterLogicFSM.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\InputBinding.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\PlayerFSM.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UIInputHandler.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TestLogicFSM.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TestAnimationFSM.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="App\ComponentRegistry.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-
-    <ClInclude Include="Script\ButtonCallbackTest.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\ButtonCallbackTest2.h">
-
-    <ClInclude Include="Script\BaseControllerScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\PlayerScriptTest.h">
-
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\BaseControllerScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
+    <ClInclude Include="App\ComponentRegistry.h" />
+    <ClInclude Include="GamePCH.h" />
+    <ClInclude Include="App\TestGameApp.h" />
+    <ClInclude Include="Script\PlayerScriptTest.h" />
+    <ClInclude Include="Script\AimPointer.h" />
+    <ClInclude Include="Script\ButtonCallbackTest.h" />
+    <ClInclude Include="Script\ButtonCallbackTest2.h" />
+    <ClInclude Include="Script\BaseControllerScript.h" />
+    <ClInclude Include="Script\CharacterAnimationFSM.h" />
+    <ClInclude Include="Script\CharacterLogicFSM.h" />
+    <ClInclude Include="Script\DontDestroyTest.h" />
+    <ClInclude Include="Script\FreeCameraController.h" />
+    <ClInclude Include="Script\InputBinding.h" />
+    <ClInclude Include="Script\PlayerFSM.h" />
+    <ClInclude Include="Script\Rotator.h" />
+    <ClInclude Include="Script\SpritePlayer.h" />
+    <ClInclude Include="Script\TempBullet.h" />
+    <ClInclude Include="Script\TempBulletFactory.h" />
+    <ClInclude Include="Script\TempMonster.h" />
+    <ClInclude Include="Script\TempPlayer.h" />
+    <ClInclude Include="Script\Test2.h" />
+    <ClInclude Include="Script\TestAnimationFSM.h" />
+    <ClInclude Include="Script\TestLogicFSM.h" />
+    <ClInclude Include="Script\TestScript.h" />
+    <ClInclude Include="Script\AnimationPlayer.h" />
+    <ClInclude Include="Script\TestSound.h" />
+    <ClInclude Include="Script\UIInputHandler.h" />
+    <ClInclude Include="Script\zJCTestPlayer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\Include\TestHeader.hlsli" />
   </ItemGroup>
 </Project>
