@@ -5,6 +5,7 @@
 #include "Framework/Asset/PreloadManager.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
+#include "Framework/System/SoundSystem.h"
 
 namespace engine
 {
@@ -43,6 +44,9 @@ namespace engine
             
             if (isPlaying)
             {
+                SoundSystem::Get().StopAll();
+                SoundSystem::Get().OnGameStart();
+
                 m_scene->Clear(true);
 
                 PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName);
