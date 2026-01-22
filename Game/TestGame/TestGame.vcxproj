@@ -235,6 +235,7 @@
     <None Include="Shader\Include\TestHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
     <ClInclude Include="Script\AimPointer.h">

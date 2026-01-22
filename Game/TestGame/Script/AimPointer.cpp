@@ -8,7 +8,7 @@
 #include <Framework/Object/Component/Canvas.h>
 #include <Framework/Object/Component/RectTransform.h>
 #include <Framework/Object/Component/UI/UIImage.h>
-#include <Framework/Object/Component/SpriteRenderer.h>
+#include <Framework/Object/Component/Renderer/SpriteRenderer.h>
 #include <Framework/Object/Component/Camera.h>
 
 namespace game

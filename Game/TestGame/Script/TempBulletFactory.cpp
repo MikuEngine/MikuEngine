@@ -2,7 +2,7 @@
 #include "TempBulletFactory.h"
 #include "TempBullet.h"
 
-#include <Framework/Object/Component/StaticMeshRenderer.h>
+#include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/SphereCollider.h>
 #include <Framework/Physics/PhysicsLayer.h>

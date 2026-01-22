@@ -5,7 +5,7 @@
 #include "Framework/Asset/SpriteData.h"
 #include "Framework/Asset/SpriteAnimationData.h"
 #include "Framework/Object/GameObject/GameObject.h"
-#include "Framework/Object/Component/SpriteRenderer.h"
+#include "Framework/Object/Component/Renderer/SpriteRenderer.h"
 
 namespace engine
 {

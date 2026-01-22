@@ -1,5 +1,6 @@
 ﻿#include "GamePCH.h"
 
+#include "App/ComponentRegistry.h"
 #include "App/TestGameApp.h"
 
 int APIENTRY wWinMain(

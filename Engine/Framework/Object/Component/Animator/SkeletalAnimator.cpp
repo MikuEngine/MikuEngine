@@ -4,7 +4,7 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/AnimationData.h"
 #include "Framework/Object/GameObject/GameObject.h"
-#include "Framework/Object/Component/SkeletalMeshRenderer.h"
+#include "Framework/Object/Component/Renderer/SkeletalMeshRenderer.h"
 
 void to_json(nlohmann::ordered_json& j, engine::AnimationBlendMode mode)
 {

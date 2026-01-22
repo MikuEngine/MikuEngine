@@ -79,8 +79,8 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\UIInputHandler.cpp">
-	  <Filter>소스 파일</Filter>
-	</ClCompile>
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Script\TestAnimationFSM.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -154,12 +154,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\UIInputHandler.h">
-	  <Filter>헤더 파일</Filter>
-	</ClInclude>
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Script\TestLogicFSM.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\TestAnimationFSM.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="App\ComponentRegistry.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
