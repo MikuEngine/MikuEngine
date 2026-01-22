@@ -275,6 +275,8 @@ namespace engine
     // ═══════════════════════════════════════════════════════════════
     // Kinematic 이동
     // ═══════════════════════════════════════════════════════════════
+    // 참고: PhysX에서 키네마틱 Rigidbody도 PxRigidDynamic을 사용합니다.
+    // setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true)로 키네마틱 모드로 설정됩니다.
 
     void Rigidbody::MovePosition(const Vector3& position)
     {
@@ -286,9 +288,19 @@ namespace engine
         physx::PxRigidDynamic* dynamic = m_actor->is<physx::PxRigidDynamic>();
         if (dynamic)
         {
+            // 현재 회전 유지하고 위치만 변경
             physx::PxTransform currentPose = dynamic->getGlobalPose();
             physx::PxTransform newPose(PhysicsUtility::ToPxVec3(position), currentPose.q);
+            
+            // setKinematicTarget은 다음 물리 시뮬레이션 스텝에서 적용됨
+            // Transform과의 동기화를 위해 Transform도 업데이트해야 할 수 있음
             dynamic->setKinematicTarget(newPose);
+            
+            // Transform도 즉시 업데이트 (시각적 피드백을 위해)
+            if (Transform* transform = GetGameObject()->GetTransform())
+            {
+                transform->SetLocalPosition(position);
+            }
         }
     }
 

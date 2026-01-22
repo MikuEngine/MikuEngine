@@ -7,7 +7,6 @@
   <ItemGroup>
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
-    <ClCompile Include="Script\PlayerScriptTest.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
     <ClCompile Include="Script\TitleButtonController.cpp" />
     <ClCompile Include="Script\ButtonCallbackTest2.cpp" />
@@ -40,7 +39,6 @@
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
-    <ClInclude Include="Script\PlayerScriptTest.h" />
     <ClInclude Include="Script\AimPointer.h" />
     <ClInclude Include="Script\TitleButtonController.h" />
     <ClInclude Include="Script\ButtonCallbackTest2.h" />
