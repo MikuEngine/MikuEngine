@@ -166,7 +166,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-
     <ClCompile Include="Script\BaseControllerScript.cpp" />
     <ClCompile Include="Script\CharacterAnimationFSM.cpp" />
     <ClCompile Include="Script\CharacterLogicFSM.cpp" />
@@ -252,7 +251,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-
     <ClInclude Include="Script\ButtonCallbackTest.h">
       <SubType>
       </SubType>
@@ -261,7 +259,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-
     <ClInclude Include="Script\BaseControllerScript.h" />
     <ClInclude Include="Script\CharacterAnimationFSM.h" />
     <ClInclude Include="Script\CharacterLogicFSM.h" />
