@@ -49,6 +49,9 @@ namespace engine
         void SetAlphaBlend(bool enable);
         bool IsAlphaBlend() const;
 
+        //void SetAlignment(UITextAlignH alineH);
+        //void SetAlignment(UITextAlignV alineV);
+
         // Spacing
         void SetLetterSpacing(float px);
         float GetLetterSpacing() const;

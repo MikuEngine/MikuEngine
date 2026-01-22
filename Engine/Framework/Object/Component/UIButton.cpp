@@ -1,13 +1,42 @@
 ﻿#include "EnginePCH.h"
 #include "UIButton.h"
 
-#include "Framework/Object/GameObject/GameObject.h"
+#include "Core/Graphics/Device/GraphicsDevice.h"
 
+#include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
+
+#include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/UIImage.h"
 #include "Framework/Object/Component/UIText.h"
 
 namespace engine
 {
+	namespace
+	{
+		static GameObject* FindChildByName(GameObject* parent, const char* name)
+		{
+			if (!parent) return nullptr;
+
+			Transform* pt = parent->GetTransform();
+			if (!pt) return nullptr;
+
+			for (Transform* ct : pt->GetChildren())
+			{
+				if (!ct) continue;
+
+				GameObject* child = ct->GetGameObject();
+				if (!child) continue;
+
+				if (child->GetName() == name)
+					return child;
+			}
+
+			return nullptr;
+		}
+	}
+
 	void UIButton::SetOnClick(ClickCallback cb)
 	{
 		m_onClick = std::move(cb);
@@ -20,7 +49,7 @@ namespace engine
 		m_spritePressed = pressed;
 		m_spriteDisabled = disabled;
 
-		ApplyVisual();
+		UpdateVisuals();
 	}
 
 	void UIButton::SetInteractable(bool v)
@@ -35,7 +64,7 @@ namespace engine
 			m_state = State::Disabled;
 		}
 
-		ApplyVisual();
+		UpdateVisuals();
 	}
 
 	void UIButton::OnMouseEnter(const Vector2& mousePos)
@@ -43,7 +72,7 @@ namespace engine
 		if (m_state == State::Disabled) return;
 		if (m_state == State::Pressed) return;
 		m_state = State::Hovered;
-		ApplyVisual();
+		UpdateVisuals();
 	}
 
 	void UIButton::OnMouseExit(const Vector2&)
@@ -51,7 +80,7 @@ namespace engine
 		if (m_state == State::Disabled) return;
 		if (m_state == State::Pressed) return;
 		m_state = State::Normal;
-		ApplyVisual();
+		UpdateVisuals();
 	}
 
 	void UIButton::OnMouseUp(const Vector2&, int mouseButton)
@@ -65,7 +94,7 @@ namespace engine
 		if (m_state == State::Disabled) return;
 		if (mouseButton != 0) return;
 		m_state = State::Pressed;
-		ApplyVisual();
+		UpdateVisuals();
 	}
 
 	void UIButton::OnMouseClick(const Vector2&, int mouseButton)
@@ -73,7 +102,7 @@ namespace engine
 		if (m_state == State::Disabled) return;
 		if (mouseButton != 0) return;
 		m_state = State::Hovered;
-		ApplyVisual();
+		UpdateVisuals();
 		if (m_onClick) m_onClick();
 	}
 
@@ -82,7 +111,7 @@ namespace engine
 		if (m_state == State::Normal)
 		{
 			m_state = State::Hovered;
-			ApplyVisual();
+			UpdateVisuals();
 		}
 	}
 
@@ -94,7 +123,7 @@ namespace engine
 		if (m_state != State::Normal)
 		{
 			m_state = State::Normal;
-			ApplyVisual();
+			UpdateVisuals();
 		}
 	}
 
@@ -102,6 +131,17 @@ namespace engine
 	{
 		UIElement::Initialize();
 
+		CreateVisuals();
+		UpdateVisuals();
+	}
+
+	void UIButton::DrawUI() const
+	{
+		// UIImage
+	}
+
+	void UIButton::CreateVisuals()
+	{
 		if (!m_background)
 		{
 			if (auto* go = GetGameObject())
@@ -118,16 +158,56 @@ namespace engine
 			m_tintNormal = m_background->GetColor();
 		}
 
-		ApplyVisual();
+		GameObject* parent = GetGameObject();
+		if (!parent) return;
+
+		auto makeChild = [&](const char* name) -> GameObject*
+			{
+				if (GameObject* exist = FindChildByName(parent, name))
+					return exist;
+
+				Scene* scene = SceneManager::Get().GetScene();
+				if (!scene) return nullptr;
+
+				GameObject* go = scene->CreateGameObject(CreateObjectType::UI);
+				if (!go) return nullptr;
+
+				go->SetName(name);
+				go->GetTransform()->SetParent(parent->GetTransform());
+
+				if (!go->GetComponent<RectTransform>())
+					go->AddComponent<RectTransform>();
+
+				return go;
+			};
+
+		// Label
+		{
+			GameObject* go = makeChild("Label");
+			if (go)
+			{
+				if (!go->GetComponent<UIText>())
+					go->AddComponent<UIText>();
+
+				m_label = go->GetComponent<UIText>();
+
+				RectTransform* rt = go->GetComponent<RectTransform>();
+				rt->SetAnchorMin({ 0.0f, 0.0f });
+				rt->SetAnchorMax({ 1.0f, 1.0f });
+				rt->SetPivot({ 0.5f, 0.5f });
+				rt->SetAnchoredPosition({ 0.0f, 0.0f });
+				rt->SetSize(0.0f, 0.0f);
+
+				m_label->SetText(m_labelText);
+				//m_label->SetAlignment(TextAlign::Center);
+			}
+		}
 	}
 
-	void UIButton::DrawUI() const
+	void UIButton::UpdateVisuals()
 	{
-		// UIImage
-	}
-
-	void UIButton::ApplyVisual()
-	{
+		if (m_label) m_label->m_raycastTarget = false;
+	
 		if (!m_background) return;
 
 		std::string sprite;
@@ -191,7 +271,7 @@ namespace engine
 		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteDisabled).filename().string().c_str());
 
 		if (changed)
-			ApplyVisual();
+			UpdateVisuals();
 
 		ImGui::Spacing();
 	}
@@ -211,6 +291,8 @@ namespace engine
 		j["TintHover"] = m_tintHover;
 		j["TintPressed"] = m_tintPressed;
 		j["TintDisabled"] = m_tintDisabled;
+
+		j["LabelText"] = m_labelText;
 	}
 
 	void UIButton::Load(const json& j)
@@ -231,7 +313,9 @@ namespace engine
 		JsonGet(j, "TintPressed", m_tintPressed);
 		JsonGet(j, "TintDisabled", m_tintDisabled);
 
-		ApplyVisual();
+		JsonGet(j, "LabelText", m_labelText);
+
+		UpdateVisuals();
 	}
 
 	std::string UIButton::GetType() const

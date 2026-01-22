@@ -48,7 +48,7 @@ namespace engine
 		ClickCallback m_onClick;
 
 		UIImage* m_background = nullptr;
-		UIText* m_text = nullptr;
+		UIText* m_label = nullptr;
 
 		// ImagePath
 		std::string m_spriteNormal;
@@ -61,6 +61,8 @@ namespace engine
 		Vector4 m_tintHover = Vector4(1, 1, 1, 1);
 		Vector4 m_tintPressed = Vector4(1, 1, 1, 1);
 		Vector4 m_tintDisabled = Vector4(1, 1, 1, 1);
+
+		std::string m_labelText = "Button";
 
 	public:
 		void SetOnClick(ClickCallback cb);
@@ -88,7 +90,8 @@ namespace engine
 		void DrawUI() const override;
 
 	private:
-		void ApplyVisual();
+		void CreateVisuals();
+		void UpdateVisuals();
 
 	public:
 		// Component
