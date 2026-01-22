@@ -222,6 +222,7 @@
     <ClCompile Include="App\TestGameApp.cpp" />
     <ClCompile Include="Script\TestSound.cpp" />
     <ClCompile Include="Script\UIInputHandler.cpp" />
+    <ClCompile Include="Script\zJCTestPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl">
@@ -308,6 +309,7 @@
     <ClInclude Include="Script\AnimationPlayer.h" />
     <ClInclude Include="Script\TestSound.h" />
     <ClInclude Include="Script\UIInputHandler.h" />
+    <ClInclude Include="Script\zJCTestPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">
