@@ -285,28 +285,6 @@
                     "Type": "TestAnimationFSM",
                     "Active": true,
                     "Test4WaitDuration": 1.0
-                },
-                {
-                    "Type": "InputBinding",
-                    "Active": true,
-                    "Bindings": [
-                        {
-                            "Name": "One",
-                            "Key": "1"
-                        },
-                        {
-                            "Name": "Two",
-                            "Key": "2"
-                        },
-                        {
-                            "Name": "Three",
-                            "Key": "3"
-                        },
-                        {
-                            "Name": "Four",
-                            "Key": "4"
-                        }
-                    ]
                 }
             ]
         },
