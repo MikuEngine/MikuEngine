@@ -109,9 +109,4 @@ namespace engine
 	{
 		UIElement::Load(j);
 	}
-
-	std::string UIPanel::GetType() const
-	{
-		return "UIPanel";
-	}
 }

@@ -17,7 +17,8 @@ namespace engine
 
 	class UIPanel : public UIElement
 	{
-		REGISTER_COMPONENT(UIPanel)
+		REGISTER_COMPONENT(UIPanel, UIElement)
+
 	private:
 		bool m_autoCreateBackground = true;
 		Vector4 m_padding = Vector4(0, 0, 0, 0);
@@ -72,6 +73,5 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
-		std::string GetType() const override;
 	};
 }
