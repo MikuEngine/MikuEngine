@@ -15,15 +15,6 @@ namespace engine
 	class BlendState;
 	class DepthStencilState;
 
-	enum class MaskMode
-	{
-		None,
-		Rect,
-		Circle,
-		Ring,
-		RectRing,
-	};
-
 	class UIImage : public UIElement
 	{
 		REGISTER_COMPONENT(UIImage)
