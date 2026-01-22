@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_TitleUITest",
-    "NumGameObjects": 7,
+    "NumGameObjects": 8,
     "GameObjects": [
         {
             "ID": 0,
@@ -344,7 +344,6 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "State": 0,
                     "SpriteNormal": "",
                     "SpriteHover": "",
                     "SpritePressed": "",
@@ -373,7 +372,8 @@
                         "z": 1.0,
                         "w": 1.0
                     },
-                    "LabelText": "Button"
+                    "Action": 0,
+                    "ActionParam": "z_Hiro_Play"
                 },
                 {
                     "Type": "UIImage",
@@ -448,7 +448,7 @@
                     "Layer": 0,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "Buttonasdf",
+                    "Text": "게임 시작",
                     "FontPath": "Resource/Font/gulim.ttc",
                     "FontPx": 32,
                     "Color": {
@@ -460,6 +460,33 @@
                     "AlphaBlend": true,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "Controller",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 }
             ]
         }
