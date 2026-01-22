@@ -5,10 +5,10 @@
 
 namespace game
 {
-    class ButtonController :
-        public engine::Script<ButtonController>
+    class MainMenuController :
+        public engine::Script<MainMenuController>
     {
-        REGISTER_COMPONENT(ButtonController, Script)
+        REGISTER_COMPONENT(MainMenuController, Script)
 
     public:
         void Awake() override;

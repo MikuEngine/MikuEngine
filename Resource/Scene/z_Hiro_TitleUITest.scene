@@ -1074,7 +1074,7 @@
                     }
                 },
                 {
-                    "Type": "ButtonController",
+                    "Type": "MainMenuController",
                     "Active": true
                 }
             ]
