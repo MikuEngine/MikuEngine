@@ -16,15 +16,6 @@ namespace engine
 		using ClickCallback = std::function<void()>;
 		using HoverCallback = std::function<void(bool)>;
 
-		enum class ButtonAction
-		{
-			// 메인
-			StartGame,		// 게임 시작
-			OpenOption,		// 설정
-			OpenCredit,		// 크레딧
-			QuitGame,		// 게임 종료
-		};
-
 	private:
 		enum class State
 		{
