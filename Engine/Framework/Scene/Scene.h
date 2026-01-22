@@ -43,7 +43,7 @@ namespace engine
 
         void SetName(std::string_view name);
 
-        GameObject* FindGameObject(const std::string& name);
+        GameObject* FindGameObject(std::string_view name);
 
         void ResetToDefaultScene();
         void Clear(bool preservePersistent = false);

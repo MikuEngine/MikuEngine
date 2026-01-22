@@ -7,6 +7,7 @@
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/ComponentFactory.h"
+#include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
 #include "Editor/EditorManager.h"
 
@@ -306,6 +307,11 @@ namespace engine
     bool GameObject::IsDontDestroyOnLoad()
     {
         return m_isDontDestroyOnLoad;
+    }
+
+    GameObject* GameObject::Find(std::string_view name)
+    {
+        return SceneManager::Get().GetScene()->FindGameObject(name);
     }
 
     void GameObject::Save(json& j) const

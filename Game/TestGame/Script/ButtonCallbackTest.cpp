@@ -1,6 +1,7 @@
 ﻿#include "GamePCH.h"
 #include "ButtonCallbackTest.h"
 
+#include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/UI/UIButton.h>
 

@@ -61,7 +61,7 @@ namespace engine
         m_name = name;
     }
 
-    GameObject* Scene::FindGameObject(const std::string& name)
+    GameObject* Scene::FindGameObject(std::string_view name)
     {
         for (const auto& gameObject : m_gameObjects)
         {
