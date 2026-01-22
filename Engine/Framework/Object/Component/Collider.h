@@ -43,7 +43,6 @@ namespace engine
         
         // 우선순위 (전투 시스템용)
         CollisionPriority m_collisionPriority = CollisionPriority::Default;
-        uint64_t m_attackSourceId = 0;
 
     public:
         Collider() = default;
@@ -85,9 +84,6 @@ namespace engine
         // 우선순위 (전투 시스템용)
         CollisionPriority GetCollisionPriority() const { return m_collisionPriority; }
         void SetCollisionPriority(CollisionPriority priority) { m_collisionPriority = priority; }
-        
-        uint64_t GetAttackSourceId() const { return m_attackSourceId; }
-        void SetAttackSourceId(uint64_t id) { m_attackSourceId = id; }
 
         // 월드 회전 무시 여부 (Sphere, Capsule은 true)
         virtual bool IgnoresWorldRotation() const { return false; }

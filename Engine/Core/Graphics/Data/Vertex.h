@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <d3d11.h>
-#include <directxtk/SimpleMath.h> 
+#include <directxtk/SimpleMath.h>
 #include <array>
 
 namespace engine

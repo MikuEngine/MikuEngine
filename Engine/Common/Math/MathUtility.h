@@ -2,6 +2,8 @@
 
 namespace engine
 {
+    inline constexpr float EPSILON = 0.00001f;
+
     constexpr float ToRadian(float degree)
     {
         return degree * (DirectX::XM_PI / 180.0f);
@@ -31,4 +33,19 @@ namespace engine
     {
         return Vector3(m._21, m._22, m._23);
     }
+
+    class Random
+    {
+    public:
+        static int Int(int min, int max);
+
+        static float Float(float min, float max);
+
+        // 0.0f ~ 1.0f -> 0% ~ 100%
+        static bool Chance(float probability);
+
+        static Vector2 InsideCircle();
+
+        static Vector2 Direction(float minDegree = 0.0f, float maxDegree = 360.0f);
+    };
 }

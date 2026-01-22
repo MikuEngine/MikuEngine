@@ -10,30 +10,6 @@
 namespace engine
 {
     // ═══════════════════════════════════════════════════════════════
-    // AttackInstance 구현
-    // ═══════════════════════════════════════════════════════════════
-
-    AttackInstance::AttackInstance(uint64_t id, GameObject* attacker)
-        : m_id(id)
-        , m_attacker(attacker)  // Ptr<GameObject>(GameObject*) - GameObject.h 필요
-    {
-    }
-
-    bool AttackInstance::HasHit(GameObject* target) const
-    {
-        if (!target) return false;
-        return m_hitTargets.find(target->GetHandle()) != m_hitTargets.end();
-    }
-
-    void AttackInstance::RecordHit(GameObject* target)
-    {
-        if (target)
-        {
-            m_hitTargets.insert(target->GetHandle());
-        }
-    }
-
-    // ═══════════════════════════════════════════════════════════════
     // 이벤트 큐잉
     // ═══════════════════════════════════════════════════════════════
 
@@ -62,32 +38,26 @@ namespace engine
         // 활성 충돌 쌍에 대해 매 프레임 MarkColliding 호출 (Stay 이벤트가 없어도 시각적 피드백 유지)
         for (const auto& pair : m_activeCollisionPairs)
         {
-            Object* objA = GetObjectFromHandle(pair.colliderAHandle);
-            Object* objB = GetObjectFromHandle(pair.colliderBHandle);
-            
-            Collider* colliderA = dynamic_cast<Collider*>(objA);
-            Collider* colliderB = dynamic_cast<Collider*>(objB);
+            Ptr<Collider> colliderA(pair.colliderAHandle);
+            Ptr<Collider> colliderB(pair.colliderBHandle);
             
             if (colliderA && colliderB)
             {
-                PhysicsDebugRenderer::Get().MarkColliding(colliderA);
-                PhysicsDebugRenderer::Get().MarkColliding(colliderB);
+                PhysicsDebugRenderer::Get().MarkColliding(colliderA.Get());
+                PhysicsDebugRenderer::Get().MarkColliding(colliderB.Get());
             }
         }
 
         // 활성 트리거 쌍에 대해서도 MarkColliding 호출
         for (const auto& pair : m_activeTriggerPairs)
         {
-            Object* objTrigger = GetObjectFromHandle(pair.triggerHandle);
-            Object* objOther = GetObjectFromHandle(pair.otherHandle);
-            
-            Collider* trigger = dynamic_cast<Collider*>(objTrigger);
-            Collider* other = dynamic_cast<Collider*>(objOther);
+            Ptr<Collider> trigger(pair.triggerHandle);
+            Ptr<Collider> other(pair.otherHandle);
             
             if (trigger && other)
             {
-                PhysicsDebugRenderer::Get().MarkColliding(trigger);
-                PhysicsDebugRenderer::Get().MarkColliding(other);
+                PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
+                PhysicsDebugRenderer::Get().MarkColliding(other.Get());
             }
         }
     }
@@ -98,8 +68,6 @@ namespace engine
         {
             return;
         }
-
-        LOG_PRINT("[CollisionSystem] Processing {} collision events", m_pendingCollisionEvents.size());
 
         // 우선순위로 정렬 (높은 것 먼저)
         std::sort(m_pendingCollisionEvents.begin(), m_pendingCollisionEvents.end(),
@@ -117,35 +85,7 @@ namespace engine
                 continue;
             }
 
-            // 우선순위 시스템: 공격 인스턴스 체크
-            if (event.sourceId != 0)
-            {
-                AttackInstance* attack = GetAttack(event.sourceId);
-                if (attack)
-                {
-                    // 이미 더 높은 우선순위에 의해 소비됨?
-                    if (!attack->CanProcessWith(event.priority))
-                    {
-                        continue;
-                    }
-
-                    // 이 대상을 이미 처리함?
-                    GameObject* targetA = event.colliderA->GetGameObject();
-                    GameObject* targetB = event.colliderB->GetGameObject();
-                    
-                    if (attack->HasHit(targetA) || attack->HasHit(targetB))
-                    {
-                        continue;
-                    }
-                }
-            }
-
             // 이벤트 타입에 따라 디스패치
-            LOG_PRINT("[CollisionSystem] Dispatching collision event: type={}, colliderA={}, colliderB={}",
-                static_cast<int>(event.type),
-                event.colliderA ? event.colliderA->GetGameObject()->GetName() : "null",
-                event.colliderB ? event.colliderB->GetGameObject()->GetName() : "null");
-            
             switch (event.type)
             {
             case CollisionEventType::Enter:
@@ -160,30 +100,6 @@ namespace engine
                 DispatchCollisionExit(event.colliderA, event.colliderB);
                 break;
             }
-
-            // 공격 인스턴스에 히트 기록
-            if (event.sourceId != 0)
-            {
-                AttackInstance* attack = GetAttack(event.sourceId);
-                if (attack)
-                {
-                    // 콜백 후 다시 유효성 검사 (콜백에서 파괴됐을 수 있음)
-                    if (event.colliderA)
-                    {
-                        attack->RecordHit(event.colliderA->GetGameObject());
-                    }
-                    if (event.colliderB)
-                    {
-                        attack->RecordHit(event.colliderB->GetGameObject());
-                    }
-
-                    // 높은 우선순위(패링 등)면 공격 소비
-                    if (event.priority >= CollisionPriority::Block)
-                    {
-                        attack->Consume(event.priority);
-                    }
-                }
-            }
         }
 
         m_pendingCollisionEvents.clear();
@@ -191,11 +107,6 @@ namespace engine
 
     void CollisionSystem::ProcessTriggerEvents()
     {
-        if (!m_pendingTriggerEvents.empty())
-        {
-            LOG_PRINT("[CollisionSystem] Processing {} trigger events", m_pendingTriggerEvents.size());
-        }
-        
         // Enter/Exit 이벤트 처리
         for (const TriggerEvent& event : m_pendingTriggerEvents)
         {
@@ -247,32 +158,6 @@ namespace engine
         {
             m_activeTriggerPairs.erase(pair);
         }
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // 공격 인스턴스 관리
-    // ═══════════════════════════════════════════════════════════════
-
-    uint64_t CollisionSystem::CreateAttack(GameObject* attacker)
-    {
-        uint64_t id = m_nextAttackId++;
-        m_activeAttacks.emplace(id, AttackInstance(id, attacker));
-        return id;
-    }
-
-    void CollisionSystem::EndAttack(uint64_t attackId)
-    {
-        m_activeAttacks.erase(attackId);
-    }
-
-    AttackInstance* CollisionSystem::GetAttack(uint64_t attackId)
-    {
-        auto it = m_activeAttacks.find(attackId);
-        if (it != m_activeAttacks.end())
-        {
-            return &it->second;
-        }
-        return nullptr;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -410,9 +295,6 @@ namespace engine
         if (!a || !b) return;
 
         // 디버그 렌더러에 충돌 상태 표시
-        LOG_PRINT("[CollisionSystem] MarkColliding: {} <-> {}", 
-            a->GetGameObject()->GetName(), 
-            b->GetGameObject()->GetName());
         PhysicsDebugRenderer::Get().MarkColliding(a.Get());
         PhysicsDebugRenderer::Get().MarkColliding(b.Get());
 
@@ -517,9 +399,6 @@ namespace engine
         if (!trigger || !other) return;
 
         // 디버그 렌더러에 충돌 상태 표시
-        LOG_PRINT("[CollisionSystem] TriggerEnter: {} <-> {}", 
-            trigger->GetGameObject()->GetName(),
-            other->GetGameObject()->GetName());
         PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
         PhysicsDebugRenderer::Get().MarkColliding(other.Get());
 
@@ -651,23 +530,19 @@ namespace engine
             if (pair.colliderAHandle == handle)
             {
                 // colliderB 찾기
-                if (Object* obj = GetObjectFromHandle(pair.colliderBHandle))
+                Ptr<Collider> other(pair.colliderBHandle);
+                if (other)
                 {
-                    if (Collider* other = dynamic_cast<Collider*>(obj))
-                    {
-                        result.push_back(other);
-                    }
+                    result.push_back(other.Get());
                 }
             }
             else if (pair.colliderBHandle == handle)
             {
                 // colliderA 찾기
-                if (Object* obj = GetObjectFromHandle(pair.colliderAHandle))
+                Ptr<Collider> other(pair.colliderAHandle);
+                if (other)
                 {
-                    if (Collider* other = dynamic_cast<Collider*>(obj))
-                    {
-                        result.push_back(other);
-                    }
+                    result.push_back(other.Get());
                 }
             }
         }
@@ -699,22 +574,18 @@ namespace engine
         {
             if (pair.triggerHandle == handle)
             {
-                if (Object* obj = GetObjectFromHandle(pair.otherHandle))
+                Ptr<Collider> other(pair.otherHandle);
+                if (other)
                 {
-                    if (Collider* other = dynamic_cast<Collider*>(obj))
-                    {
-                        result.push_back(other);
-                    }
+                    result.push_back(other.Get());
                 }
             }
             else if (pair.otherHandle == handle)
             {
-                if (Object* obj = GetObjectFromHandle(pair.triggerHandle))
+                Ptr<Collider> other(pair.triggerHandle);
+                if (other)
                 {
-                    if (Collider* other = dynamic_cast<Collider*>(obj))
-                    {
-                        result.push_back(other);
-                    }
+                    result.push_back(other.Get());
                 }
             }
         }

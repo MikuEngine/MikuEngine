@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
+    <ClCompile Include="Script\PlayerScriptTest.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
     <ClCompile Include="Script\ButtonCallbackTest.cpp">
       <SubType>
@@ -166,7 +167,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-
     <ClCompile Include="Script\BaseControllerScript.cpp" />
     <ClCompile Include="Script\CharacterAnimationFSM.cpp" />
     <ClCompile Include="Script\CharacterLogicFSM.cpp" />
@@ -248,11 +248,11 @@
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
+    <ClInclude Include="Script\PlayerScriptTest.h" />
     <ClInclude Include="Script\AimPointer.h">
       <SubType>
       </SubType>
     </ClInclude>
-
     <ClInclude Include="Script\ButtonCallbackTest.h">
       <SubType>
       </SubType>
@@ -261,7 +261,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-
     <ClInclude Include="Script\BaseControllerScript.h" />
     <ClInclude Include="Script\CharacterAnimationFSM.h" />
     <ClInclude Include="Script\CharacterLogicFSM.h" />
