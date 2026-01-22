@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "StaticMeshRenderer.h"
 
 #include <filesystem>
@@ -271,11 +271,6 @@ namespace engine
         JsonGet(j, "CastShadow", m_castShadow);
 
         Refresh();
-    }
-
-    std::string StaticMeshRenderer::GetType() const
-    {
-        return "StaticMeshRenderer";
     }
 
     bool StaticMeshRenderer::HasRenderType(RenderType type) const

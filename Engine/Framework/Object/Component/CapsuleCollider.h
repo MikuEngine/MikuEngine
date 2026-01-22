@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/ComponentFactory.h"
@@ -14,7 +14,7 @@ namespace engine
 
     class CapsuleCollider : public Collider
     {
-        REGISTER_COMPONENT(CapsuleCollider)
+        REGISTER_COMPONENT(CapsuleCollider, Collider)
 
     private:
         float m_radius = 0.5f;
@@ -49,6 +49,5 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override { return "CapsuleCollider"; }
     };
 }

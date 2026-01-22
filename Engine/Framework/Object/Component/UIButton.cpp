@@ -317,9 +317,4 @@ namespace engine
 
 		UpdateVisuals();
 	}
-
-	std::string UIButton::GetType() const
-	{
-		return "UIButton";
-	}
 }

@@ -374,9 +374,8 @@ namespace engine
 
     void AudioSource::Save(json& j) const
     {
-        Component::Save(j);
+        Object::Save(j);
 
-        j["Type"] = GetType();
         j["ClipName"] = m_clipName;
         j["IsLoop"] = m_isLoop;
         j["Is3D"] = m_is3D;
@@ -388,7 +387,7 @@ namespace engine
 
     void AudioSource::Load(const json& j)
     {
-        Component::Load(j);
+        Object::Load(j);
 
         if (j.contains("ClipName")) m_clipName = j["ClipName"];
         if (j.contains("IsLoop")) m_isLoop = j["IsLoop"];

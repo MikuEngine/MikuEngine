@@ -7,7 +7,7 @@ namespace game
     class UIInputHandler :
         public engine::Script<UIInputHandler>
     {
-        REGISTER_COMPONENT(UIInputHandler)
+        REGISTER_COMPONENT(UIInputHandler, Script)
     private:
         bool m_isMenuOpen = false;
         engine::GameObject* m_menu = nullptr;
@@ -21,6 +21,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

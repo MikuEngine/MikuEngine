@@ -13,7 +13,8 @@ namespace engine
     class Camera :
         public Component
     {
-        REGISTER_COMPONENT(Camera)
+        REGISTER_COMPONENT(Camera, Component)
+
     private:
         ProjectionType m_projectionType = ProjectionType::Perspective;
 
@@ -43,7 +44,6 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override;
 
     public:
         void SetProjectionType(ProjectionType type);

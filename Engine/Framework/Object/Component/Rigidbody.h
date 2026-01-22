@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/ComponentFactory.h"
@@ -65,7 +65,7 @@ namespace engine
 
     class Rigidbody : public Component
     {
-        REGISTER_COMPONENT(Rigidbody)
+        REGISTER_COMPONENT(Rigidbody, Component)
 
     private:
         physx::PxRigidActor* m_actor = nullptr;
@@ -192,7 +192,6 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override { return "Rigidbody"; }
 
     private:
         void CreatePxActor();

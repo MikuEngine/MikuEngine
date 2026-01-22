@@ -30,7 +30,7 @@ namespace engine
         virtual void OnGui() {}
         virtual void Save(json& j) const;
         virtual void Load(const json& j);
-        virtual std::string GetType() const = 0;
+        virtual const char* GetTypeName() const = 0;
 
     private:
         void RegisterObject(Object* object);

@@ -7,6 +7,8 @@ namespace engine
     class Transform :
         public Component
     {
+        REGISTER_COMPONENT(Transform, Component)
+
     private:
         Vector3 m_localPosition{ 0.0f, 0.0f, 0.0f };
         Quaternion m_localRotation = Quaternion::Identity;
@@ -72,7 +74,6 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override;
 
     private:
         void RecalculateWorldMatrix();

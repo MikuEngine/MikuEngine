@@ -245,9 +245,4 @@ namespace game
         Object::Load(j);
         engine::JsonGet(j, "Test4WaitDuration", m_test4WaitDuration);
     }
-
-    std::string TestAnimationFSM::GetType() const
-    {
-        return "TestAnimationFSM";
-    }
 }

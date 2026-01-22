@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -7,7 +7,7 @@ namespace game
     class TempBullet :
         public engine::Script<TempBullet>
     {
-        REGISTER_COMPONENT(TempBullet)
+        REGISTER_COMPONENT(TempBullet, Script)
 
     private:
         engine::Vector3 m_direction;
@@ -32,6 +32,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

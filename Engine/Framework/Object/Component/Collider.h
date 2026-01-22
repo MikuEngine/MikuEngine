@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Physics/PhysicsLayer.h"
@@ -19,6 +19,8 @@ namespace engine
 
     class Collider : public Component
     {
+        DEFINE_COMPONENT_TYPE(Collider, Component)
+
     protected:
         physx::PxShape* m_shape = nullptr;
         

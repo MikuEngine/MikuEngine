@@ -7,7 +7,7 @@ namespace game
     class AnimationPlayer :
         public engine::Script<AnimationPlayer>
     {
-        REGISTER_COMPONENT(AnimationPlayer)
+        REGISTER_COMPONENT(AnimationPlayer, Script)
 
     private:
         engine::Quaternion m_upperBodyRotation = engine::Quaternion::Identity;
@@ -21,6 +21,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

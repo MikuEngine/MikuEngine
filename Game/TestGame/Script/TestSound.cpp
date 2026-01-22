@@ -45,9 +45,4 @@ namespace game
     {
         Object::Load(j);
     }
-
-    std::string SoundTest::GetType() const
-    {
-        return "SoundTest";
-    }
 }

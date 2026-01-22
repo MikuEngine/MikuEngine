@@ -213,9 +213,4 @@ namespace engine
 		JsonGet(j, "ShadowBias", m_shadowBias);
 		JsonGet(j, "CastShadows", m_castShadows);
 	}
-
-	std::string Light::GetType() const
-	{
-		return "Light";
-	}
 }

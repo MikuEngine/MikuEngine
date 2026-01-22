@@ -97,9 +97,4 @@ namespace game
     {
         Object::Load(j);
     }
-
-    std::string TestLogicFSM::GetType() const
-    {
-        return "TestLogicFSM";
-    }
 }

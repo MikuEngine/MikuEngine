@@ -26,7 +26,8 @@ namespace engine
 
 	class UIImage : public UIElement
 	{
-		REGISTER_COMPONENT(UIImage)
+		REGISTER_COMPONENT(UIImage, UIElement)
+
 	private:
 		std::string m_textureFilePath;
 		std::string m_vsFilePath;
@@ -91,7 +92,6 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
-		std::string GetType() const override;
 
 	private:
 		void Refresh();

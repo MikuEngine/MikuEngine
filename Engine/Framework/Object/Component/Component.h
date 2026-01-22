@@ -4,6 +4,15 @@
 
 namespace engine
 {
+    namespace detail
+    {
+        inline int GetNextComponentTypeID()
+        {
+            static int s_nextID = 0;
+            return s_nextID++;
+        }
+    }
+
     class GameObject;
     class Transform;
 
@@ -32,6 +41,41 @@ namespace engine
         void Destroy();
         virtual void OnDestroy() {};
         bool IsPendingKill() const;
+
+    public: // 타입 체크 관련 함수들
+        static int GetStaticTypeID();
+
+        virtual int GetTypeID() const;
+        virtual const char* GetTypeName() const;
+        virtual bool IsA(int typeID) const;
+
+        template <typename T>
+        bool Is() const
+        {
+            return IsA(T::GetStaticTypeID());
+        }
+
+        template <typename T>
+        T* As()
+        {
+            if (Is<T>())
+            {
+                return static_cast<T*>(this);
+            }
+
+            return nullptr;
+        }
+
+        template <typename T>
+        const T* As() const
+        {
+            if (Is<T>())
+            {
+                return static_cast<const T*>(this);
+            }
+
+            return nullptr;
+        }
 
     private:
         template <typename T>

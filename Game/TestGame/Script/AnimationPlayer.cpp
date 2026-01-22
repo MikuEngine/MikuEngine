@@ -117,9 +117,4 @@ namespace game
     {
         Object::Load(j);
     }
-
-    std::string AnimationPlayer::GetType() const
-    {
-        return "AnimationPlayer";
-    }
 }

@@ -923,8 +923,8 @@ namespace engine
                 if (!a) return true;
                 if (!b) return false;
 
-                auto* ua = dynamic_cast<UIElement*>(a);
-                auto* ub = dynamic_cast<UIElement*>(b);
+                auto* ua = a->As<UIElement>();
+                auto* ub = b->As<UIElement>();
 
                 // Canvas Sort
                 int ca = 0, cb = 0;

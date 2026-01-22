@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Framework/Object/Object.h"
+#include "Framework/Object/Component/Component.h"
 #include "Framework/Scene/SceneManager.h"
 
 namespace engine
@@ -75,9 +76,9 @@ namespace engine
         {
             for (const auto& component : m_components)
             {
-                if (T* casted = dynamic_cast<T*>(component.get()); casted != nullptr)
+                if (component->Is<T>())
                 {
-                    return casted;
+                    return static_cast<T*>(component.get());
                 }
             }
 
@@ -95,7 +96,7 @@ namespace engine
         virtual void OnGui() {};
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override;
+        const char* GetTypeName() const override;
 
     private:
         friend class Scene;

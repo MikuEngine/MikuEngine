@@ -311,11 +311,6 @@ namespace engine
         Refresh();
     }
 
-    std::string SpriteRenderer::GetType() const
-    {
-        return "SpriteRenderer";
-    }
-
     bool SpriteRenderer::HasRenderType(RenderType type) const
     {
         if (type == RenderType::Shadow)

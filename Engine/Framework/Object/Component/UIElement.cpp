@@ -129,7 +129,7 @@ namespace engine
 			return nullptr;
 		}
 
-		if (auto* rt = dynamic_cast<RectTransform*>(go->GetTransform()))
+		if (auto* rt = go->GetTransform()->As<RectTransform>())
 		{
 			return rt;
 		}

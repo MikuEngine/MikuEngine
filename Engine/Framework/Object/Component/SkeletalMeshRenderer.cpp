@@ -189,11 +189,6 @@ namespace engine
         return m_meshFilePath;
     }
 
-    std::string SkeletalMeshRenderer::GetType() const
-    {
-        return "SkeletalMeshRenderer";
-    }
-
     void SkeletalMeshRenderer::Update()
     {
         // Animator에서 행렬 가져오기

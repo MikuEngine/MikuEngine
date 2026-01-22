@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -12,7 +12,7 @@ namespace game
     class TempMonster :
         public engine::Script<TempMonster>
     {
-        REGISTER_COMPONENT(TempMonster)
+        REGISTER_COMPONENT(TempMonster, Script)
 
     private:
         engine::SpriteRenderer* m_spriteRenderer = nullptr;
@@ -31,7 +31,6 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
 
     private:
         void ToggleHitIndicator();

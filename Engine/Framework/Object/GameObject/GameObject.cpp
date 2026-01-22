@@ -254,9 +254,9 @@ namespace engine
     RectTransform* GameObject::ReplaceTransformWithRectTransform()
     {
         // 이미 RectTransform이면 그대로 반환
-        if (auto* already = dynamic_cast<RectTransform*>(m_transform))
+        if (m_transform->Is<RectTransform>())
         {
-            return already;
+            return static_cast<RectTransform*>(m_transform);
         }
 
         Transform* old = m_transform;
@@ -377,7 +377,7 @@ namespace engine
             });
     }
 
-    std::string GameObject::GetType() const
+    const char* GameObject::GetTypeName() const
     {
         return "GameObject";
     }

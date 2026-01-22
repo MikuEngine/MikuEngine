@@ -7,7 +7,7 @@ namespace game
     class FreeCameraController :
         public engine::Script<FreeCameraController>
     {
-        REGISTER_COMPONENT(FreeCameraController)
+        REGISTER_COMPONENT(FreeCameraController, Script)
     private:
         float m_moveSpeed = 10.0f;
         float m_rotationSpeed = 0.1f;
@@ -21,6 +21,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

@@ -45,9 +45,4 @@ namespace game
 
         engine::JsonGet(j, "Menu", m_isMenuOpen);
     }
-
-    std::string UIInputHandler::GetType() const
-    {
-        return "UIInputHandler";
-    }
 }

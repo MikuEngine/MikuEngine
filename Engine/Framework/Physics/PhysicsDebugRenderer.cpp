@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PhysicsDebugRenderer.h"
 
 #include "Framework/Physics/PhysicsSystem.h"
@@ -259,7 +259,7 @@ namespace engine
             Quaternion localRot = Quaternion::CreateFromYawPitchRoll(radians.y, radians.x, radians.z);
 
             // 타입별 렌더링
-            if (BoxCollider* box = dynamic_cast<BoxCollider*>(collider))
+            if (BoxCollider* box = collider->As<BoxCollider>())
             {
                 // BoxCollider: 월드 회전 적용
                 Matrix world = transform->GetWorld();
@@ -285,7 +285,7 @@ namespace engine
 
                 DrawBox(finalPos, halfExtents, finalRot, color);
             }
-            else if (SphereCollider* sphere = dynamic_cast<SphereCollider*>(collider))
+            else if (SphereCollider* sphere = collider->As<SphereCollider>())
             {
                 // SphereCollider: 월드 회전 무시, 로컬 오프셋만 적용
                 Matrix world = transform->GetWorld();
@@ -303,7 +303,7 @@ namespace engine
                 }
                 DrawSphere(finalPos, radius, color);
             }
-            else if (CapsuleCollider* capsule = dynamic_cast<CapsuleCollider*>(collider))
+            else if (CapsuleCollider* capsule = collider->As<CapsuleCollider>())
             {
                 // CapsuleCollider
                 Vector3 finalPos = worldPos + center;

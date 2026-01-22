@@ -258,11 +258,6 @@ namespace engine
 		Refresh();
 	}
 
-	std::string UIImage::GetType() const
-	{
-		return "UIImage";
-	}
-
 	void UIImage::Refresh()
 	{
 		SetTexture(m_textureFilePath);

@@ -95,4 +95,25 @@ namespace engine
     {
         return m_isPendingKill;
     }
+
+    int Component::GetStaticTypeID()
+    {
+        static int s_typeID = detail::GetNextComponentTypeID();
+        return s_typeID;
+    }
+
+    int Component::GetTypeID() const
+    {
+        return GetStaticTypeID();
+    }
+
+    const char* Component::GetTypeName() const
+    {
+        return "Component";
+    }
+
+    bool Component::IsA(int typeID) const
+    {
+        return typeID == GetStaticTypeID();
+    }
 }

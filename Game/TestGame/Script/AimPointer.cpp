@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "AimPointer.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
@@ -221,11 +221,6 @@ namespace game
 
         EnsureUICursor();
         SetCursorTexture(m_useAlternateCursor);
-    }
-
-    std::string AimPointer::GetType() const
-    {      
-        return "AimPointer";
     }
 }
 

@@ -306,9 +306,4 @@ namespace engine
 		JsonGet(j, "SpriteDataPath", m_spriteDataPath);
 		JsonGet(j, "AnimationDataPaths", m_animDataPaths);
 	}
-
-	std::string SpriteAnimator::GetType() const
-	{
-		return "SpriteAnimator";
-	}
 }

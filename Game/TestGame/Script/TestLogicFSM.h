@@ -13,7 +13,7 @@ namespace game
     class TestLogicFSM :
         public CharacterLogicFSM
     {
-        REGISTER_COMPONENT(TestLogicFSM)
+        REGISTER_COMPONENT(TestLogicFSM, Script)
 
     public:
         void Awake() override;
@@ -30,6 +30,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

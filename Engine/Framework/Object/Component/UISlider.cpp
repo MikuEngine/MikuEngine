@@ -547,11 +547,6 @@ namespace engine
 		UpdateVisuals();
 	}
 
-	std::string UISlider::GetType() const
-	{
-		return "UISlider";
-	}
-
 	void UISlider::SetValueFromMouse(const Vector2& mousePos)
 	{
 		RectTransform* rt = GetRectTransform();

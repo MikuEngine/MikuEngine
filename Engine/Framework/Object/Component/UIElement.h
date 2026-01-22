@@ -19,6 +19,8 @@ namespace engine
 	// UIElement는 UI 컴포넌트들의 공통 베이스입니다.
 	class UIElement : public Renderer
 	{
+		DEFINE_COMPONENT_TYPE(UIElement, Renderer)
+
 	public:
 		UIElement() = default;
 		~UIElement() override;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -65,7 +65,7 @@ namespace game
     class CharacterLogicFSM :
         public engine::Script<CharacterLogicFSM>
     {
-        REGISTER_COMPONENT(CharacterLogicFSM)
+        REGISTER_COMPONENT(CharacterLogicFSM, Script)
 
     protected:
         // 현재 상태
@@ -128,7 +128,6 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
 
     protected:
         virtual void CacheComponents();

@@ -18,6 +18,8 @@ namespace engine
 	class RectTransform :
 		public Transform
 	{
+		REGISTER_COMPONENT(RectTransform, Transform)
+
 	private:
 		Vector2 m_anchoredPosition{ 0.0f, 0.0f };
 		
@@ -71,7 +73,6 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
-		std::string GetType() const override;
 	};
 
 }

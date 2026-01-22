@@ -100,9 +100,4 @@ namespace game
 
         engine::JsonGet(j, "MoveSpeed", m_moveSpeed);
     }
-
-    std::string FreeCameraController::GetType() const
-    {
-        return "FreeCameraController";
-    }
 }

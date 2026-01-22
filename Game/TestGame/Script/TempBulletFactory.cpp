@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "TempBulletFactory.h"
 #include "TempBullet.h"
 
@@ -93,10 +93,5 @@ namespace game
         engine::JsonGet(j, "BulletSpeed", m_bulletSpeed);
         engine::JsonGet(j, "FireRate", m_fireRate);
         engine::JsonGet(j, "BulletLifetime", m_bulletLifetime);
-    }
-
-    std::string TempBulletFactory::GetType() const
-    {
-        return "TempBulletFactory";
     }
 }

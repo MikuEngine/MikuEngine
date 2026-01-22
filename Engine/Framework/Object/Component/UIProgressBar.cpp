@@ -432,9 +432,4 @@ namespace engine
 		m_dirty = true;
 		UpdateVisuals();
 	}
-
-	std::string UIProgressBar::GetType() const
-	{
-		return "UIProgressBar";
-	}
 }

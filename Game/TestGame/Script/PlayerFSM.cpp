@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerFSM.h"
 #include "AimPointer.h"
 #include "TempBulletFactory.h"
@@ -118,10 +118,5 @@ namespace game
     void PlayerFSM::Load(const engine::json& j)
     {
         CharacterLogicFSM::Load(j);
-    }
-
-    std::string PlayerFSM::GetType() const
-    {
-        return "PlayerFSM";
     }
 }

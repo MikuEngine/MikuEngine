@@ -7,7 +7,7 @@ namespace game
     class SpritePlayer :
         public engine::Script<SpritePlayer>
     {
-        REGISTER_COMPONENT(SpritePlayer)
+        REGISTER_COMPONENT(SpritePlayer, Script)
 
     public:
         //void Awake() override;
@@ -18,6 +18,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

@@ -11,7 +11,7 @@ namespace engine
 	class SpriteAnimator :
 		public Animator
 	{
-		REGISTER_COMPONENT(SpriteAnimator)
+		REGISTER_COMPONENT(SpriteAnimator, Animator)
 
 	private:
 		std::string m_spriteDataPath;
@@ -47,6 +47,5 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
-		std::string GetType() const override;
 	};
 }

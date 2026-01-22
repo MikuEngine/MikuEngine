@@ -82,11 +82,6 @@ namespace game
         Object::Load(j);
     }
 
-    std::string DontDestroyTest::GetType() const
-    {
-        return "DontDestroyTest";
-    }
-
     void DontDestroyTest::OnStartFromScript()
     {
         LOG_PRINT("DontDestroyTest - OnStartFromScript");

@@ -24,9 +24,4 @@ namespace game
     {
         Object::Load(j);
     }
-
-    std::string Test2::GetType() const
-    {
-        return "Test2";
-    }
 }

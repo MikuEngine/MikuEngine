@@ -24,9 +24,4 @@ namespace game
     {
         Object::Load(j);
     }
-
-    std::string SpritePlayer::GetType() const
-    {
-        return "SpritePlayer";
-    }
 }

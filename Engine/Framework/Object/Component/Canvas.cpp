@@ -15,8 +15,10 @@ namespace engine
 
 			UIRect myRect = parentRect;
 
-			if (auto* rt = dynamic_cast<RectTransform*>(tr))
+			if (tr->Is<RectTransform>())
 			{
+				auto rt = static_cast<RectTransform*>(tr);
+
 				if (rt->IsUIDirty())
 					rt->Recalculate(parentRect);
 
@@ -98,10 +100,5 @@ namespace engine
 		JsonGet(j, "LockRectTransform", m_lockRectTransformInEditor);
 		JsonGet(j, "ReferenceResolution", m_referenceResolution);
 		JsonGet(j, "SortingOrder", m_sortingOrder);
-	}
-
-	std::string Canvas::GetType() const
-	{
-		return "Canvas";
 	}
 }

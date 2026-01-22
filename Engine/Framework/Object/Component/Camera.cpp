@@ -94,11 +94,6 @@ namespace engine
         JsonGet(j, "FOV", m_fov);
     }
 
-    std::string Camera::GetType() const
-    {
-        return "Camera";
-    }
-
     void Camera::SetProjectionType(ProjectionType type)
     {
         m_projectionType = type;

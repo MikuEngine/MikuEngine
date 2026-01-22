@@ -58,9 +58,4 @@ namespace game
 
         engine::JsonGet(j, "Speed", m_speed);
     }
-
-    std::string TestScript::GetType() const
-    {
-        return "TestScript";
-    }
 }

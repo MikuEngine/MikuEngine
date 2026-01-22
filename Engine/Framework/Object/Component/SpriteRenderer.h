@@ -35,7 +35,7 @@ namespace engine
     class SpriteRenderer :
         public Renderer
     {
-        REGISTER_COMPONENT(SpriteRenderer)
+        REGISTER_COMPONENT(SpriteRenderer, Renderer)
 
     private:
         std::string m_textureFilePath;
@@ -101,7 +101,6 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override;
 
     public:
         bool HasRenderType(RenderType type) const override;

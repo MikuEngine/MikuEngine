@@ -17,7 +17,7 @@ namespace game
     class PlayerFSM :
         public CharacterLogicFSM
     {
-        REGISTER_COMPONENT(PlayerFSM)
+        REGISTER_COMPONENT(PlayerFSM, Script)
 
     private:
         // 발사 관련
@@ -46,6 +46,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

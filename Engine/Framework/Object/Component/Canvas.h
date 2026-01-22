@@ -8,7 +8,8 @@ namespace engine
 {
 	class Canvas : public Component
 	{
-		REGISTER_COMPONENT(Canvas);
+		REGISTER_COMPONENT(Canvas, Component)
+
 	private:
 		Vector2 m_referenceResolution{ 1920.0f, 1080.0f };
 
@@ -37,7 +38,6 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
-		std::string GetType() const override;
 	};
 }
 

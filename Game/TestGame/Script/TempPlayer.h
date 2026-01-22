@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -10,7 +10,7 @@ namespace game
     class TempPlayer :
         public engine::Script<TempPlayer>
     {
-        REGISTER_COMPONENT(TempPlayer)
+        REGISTER_COMPONENT(TempPlayer, Script)
 
     private:
         float m_moveSpeed = 5.0f;
@@ -31,6 +31,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

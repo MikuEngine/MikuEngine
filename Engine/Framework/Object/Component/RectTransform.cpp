@@ -237,9 +237,4 @@ namespace engine
         JsonGet(j, "Width", m_width);
         JsonGet(j, "Height", m_height);
     }
-
-    std::string RectTransform::GetType() const
-    {
-        return "RectTransform";
-    }
 }

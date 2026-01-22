@@ -22,6 +22,8 @@ namespace engine
     class ScriptBase :
         public Component
     {
+        DEFINE_COMPONENT_TYPE(ScriptBase, Component)
+
     private:
         std::array<std::int32_t, static_cast<size_t>(ScriptEvent::Count)> m_systemIndices;
 
@@ -72,6 +74,8 @@ namespace engine
     class Script :
         public ScriptBase
     {
+        DEFINE_COMPONENT_TYPE(Script, ScriptBase)
+
     public:
         void Initialize() override
         {

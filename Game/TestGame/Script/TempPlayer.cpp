@@ -126,9 +126,4 @@ namespace game
         Object::Load(j);
         engine::JsonGet(j, "MoveSpeed", m_moveSpeed);
     }
-
-    std::string TempPlayer::GetType() const
-    {
-        return "TempPlayer";
-    }
 }

@@ -7,7 +7,7 @@ namespace game
     class Rotator :
         public engine::Script<Rotator>
     {
-        REGISTER_COMPONENT(Rotator)
+        REGISTER_COMPONENT(Rotator, Script)
 
     private:
         float m_speed = 0.0f;
@@ -21,6 +21,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

@@ -63,7 +63,7 @@ namespace engine
     class SkeletalAnimator :
         public Animator
     {
-        REGISTER_COMPONENT(SkeletalAnimator)
+        REGISTER_COMPONENT(SkeletalAnimator, Animator)
 
     private:
         std::unordered_map<std::string, AnimationResource> m_animations;
@@ -112,7 +112,6 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override;
 
     private:
         void InitializeSkeleton();

@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "TempMonster.h"
 #include "TempBullet.h"
 
@@ -106,10 +106,5 @@ namespace game
     {
         Object::Load(j);
         engine::JsonGet(j, "HitCount", m_hitCount);
-    }
-
-    std::string TempMonster::GetType() const
-    {
-        return "TempMonster";
     }
 }

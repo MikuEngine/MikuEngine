@@ -14,7 +14,7 @@ namespace game
     class AimPointer :
         public engine::Script<AimPointer>
     {
-        REGISTER_COMPONENT(AimPointer)
+        REGISTER_COMPONENT(AimPointer, Script)
 
     private:
         engine::Vector3 m_worldPosition;  // 마우스 월드 좌표
@@ -51,7 +51,6 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
 
     private:
         void EnsureUICursor();

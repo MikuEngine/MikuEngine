@@ -7,6 +7,8 @@ namespace engine
     class Animator :
         public Component
     {
+        DEFINE_COMPONENT_TYPE(Animator, Component)
+
     public:
         ~Animator();
 

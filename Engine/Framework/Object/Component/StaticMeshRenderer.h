@@ -20,7 +20,7 @@ namespace engine
     class StaticMeshRenderer :
         public Renderer
     {
-        REGISTER_COMPONENT(StaticMeshRenderer)
+        REGISTER_COMPONENT(StaticMeshRenderer, Renderer)
 
     private:
         std::shared_ptr<StaticMeshData> m_staticMeshData;
@@ -84,7 +84,6 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override;
 
     public:
         bool HasRenderType(RenderType type) const override;

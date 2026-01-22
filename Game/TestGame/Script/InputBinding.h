@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -32,7 +32,7 @@ namespace game
     class InputBinding :
         public engine::Script<InputBinding>
     {
-        REGISTER_COMPONENT(InputBinding)
+        REGISTER_COMPONENT(InputBinding, Script)
 
     private:
         std::vector<KeyBinding> m_bindings;
@@ -66,7 +66,6 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
 
     private:
         void RebuildNameIndex();

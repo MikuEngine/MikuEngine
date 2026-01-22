@@ -798,11 +798,6 @@ namespace engine
         }
     }
 
-    std::string SkeletalAnimator::GetType() const
-    {
-        return "SkeletalAnimator";
-    }
-
     void SkeletalAnimator::InitializeSkeleton()
     {
         if (m_skeleton.empty())

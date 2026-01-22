@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "Rigidbody.h"
 
 #include "Framework/Object/Component/Collider.h"
@@ -761,10 +761,9 @@ namespace engine
         const auto& components = GetGameObject()->GetComponents();
         for (const auto& comp : components)
         {
-            Collider* collider = dynamic_cast<Collider*>(comp.get());
-            if (collider && collider != nullptr)
+            if (comp->Is<Collider>())
             {
-                collider->OnRigidbodyAttached(this);
+                static_cast<Collider*>(comp.get())->OnRigidbodyAttached(this);
             }
         }
     }
@@ -774,10 +773,9 @@ namespace engine
         const auto& components = GetGameObject()->GetComponents();
         for (const auto& comp : components)
         {
-            Collider* collider = dynamic_cast<Collider*>(comp.get());
-            if (collider)
+            if (comp->Is<Collider>())
             {
-                collider->OnRigidbodyDetached();
+                static_cast<Collider*>(comp.get())->OnRigidbodyDetached();
             }
         }
     }

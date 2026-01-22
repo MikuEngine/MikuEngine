@@ -17,7 +17,7 @@ namespace game
     class TestAnimationFSM :
         public CharacterAnimationFSM
     {
-        REGISTER_COMPONENT(TestAnimationFSM)
+        REGISTER_COMPONENT(TestAnimationFSM, Script)
 
     private:
         // Test4용 대기 타이머
@@ -49,6 +49,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

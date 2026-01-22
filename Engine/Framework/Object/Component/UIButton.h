@@ -10,7 +10,8 @@ namespace engine
 
 	class UIButton : public UIElement, public UIInteractable
 	{
-		REGISTER_COMPONENT(UIButton)
+		REGISTER_COMPONENT(UIButton, UIElement)
+
 	public:
 		using ClickCallback = std::function<void()>;
 
@@ -98,6 +99,5 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
-		std::string GetType() const override;
 	};
 }

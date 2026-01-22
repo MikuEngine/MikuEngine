@@ -31,13 +31,47 @@ namespace engine
         friend class Singleton<ComponentFactory>;
     };
 
-#define REGISTER_COMPONENT(type)                                        \
+
+#define DEFINE_COMPONENT_TYPE(type, baseType)                                       \
+    public:                                                                        \
+        static int GetStaticTypeID()                                                \
+        {                                                                           \
+            static int s_typeID = engine::detail::GetNextComponentTypeID();         \
+                                                                                    \
+            return s_typeID;                                                        \
+        }                                                                           \
+                                                                                    \
+        virtual int GetTypeID() const override                                      \
+        {                                                                           \
+            return GetStaticTypeID();                                               \
+        }                                                                           \
+                                                                                    \
+        virtual const char* GetTypeName() const override                            \
+        {                                                                           \
+            return #type;                                                           \
+        }                                                                           \
+                                                                                    \
+        virtual bool IsA(int typeID) const override                                 \
+        {                                                                           \
+            if (typeID == GetStaticTypeID())                                        \
+            {                                                                       \
+                return true;                                                        \
+            }                                                                       \
+                                                                                    \
+            return baseType::IsA(typeID);                                           \
+        }                                                                           \
+                                                                                    \
+    private:
+
+
+#define REGISTER_COMPONENT(type, baseType)                              \
+        DEFINE_COMPONENT_TYPE(type, baseType)                           \
     private:                                                            \
         struct Registrar                                                \
         {                                                               \
             Registrar()                                                 \
             {                                                           \
-                LOG_PRINT(#type);                                       \
+                type::GetStaticTypeID();                                \
                 engine::ComponentFactory::Get().Register(#type, []()    \
                     {                                                   \
                         return std::make_unique<type>();                \

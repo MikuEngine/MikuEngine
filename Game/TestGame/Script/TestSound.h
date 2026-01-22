@@ -6,7 +6,7 @@ namespace game
     class SoundTest :
         public engine::Script<SoundTest>
     {
-        REGISTER_COMPONENT(SoundTest)
+        REGISTER_COMPONENT(SoundTest, Script)
 
     public:
         void Awake() override;
@@ -17,6 +17,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

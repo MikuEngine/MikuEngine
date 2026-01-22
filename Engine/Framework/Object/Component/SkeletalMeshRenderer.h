@@ -23,7 +23,7 @@ namespace engine
     class SkeletalMeshRenderer :
         public Renderer
     {
-        REGISTER_COMPONENT(SkeletalMeshRenderer)
+        REGISTER_COMPONENT(SkeletalMeshRenderer, Renderer)
 
     private:
         std::shared_ptr<SkeletalMeshData> m_meshData;
@@ -96,7 +96,6 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override;
 
         bool HasRenderType(RenderType type) const override;
         void Draw(RenderType type) const override;

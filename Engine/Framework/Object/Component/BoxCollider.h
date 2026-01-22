@@ -11,7 +11,7 @@ namespace engine
 
     class BoxCollider : public Collider
     {
-        REGISTER_COMPONENT(BoxCollider)
+        REGISTER_COMPONENT(BoxCollider, Collider)
 
     private:
         Vector3 m_size{ 1.0f, 1.0f, 1.0f };  // 전체 크기 (half extents × 2)
@@ -38,6 +38,5 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
-        std::string GetType() const override { return "BoxCollider"; }
     };
 }

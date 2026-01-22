@@ -270,9 +270,9 @@ namespace engine
         // 이 GameObject의 모든 Collider에 알림
         for (const auto& component : GetGameObject()->GetComponents())
         {
-            if (Collider* collider = dynamic_cast<Collider*>(component.get()))
+            if (component->Is<Collider>())
             {
-                collider->OnParentChanged();
+                static_cast<Collider*>(component.get())->OnParentChanged();
             }
         }
 
@@ -429,11 +429,6 @@ namespace engine
         JsonGet(j, "Rotation", m_localRotation);
         SetLocalRotation(m_localRotation);
         JsonGet(j, "Scale", m_localScale);
-    }
-
-    std::string Transform::GetType() const
-    {
-        return "Transform";
     }
 
     void Transform::RecalculateWorldMatrix()

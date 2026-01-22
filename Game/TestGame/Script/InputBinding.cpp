@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "InputBinding.h"
 
 namespace game
@@ -433,11 +433,6 @@ namespace game
                 AddBinding(name, key);
             }
         );
-    }
-
-    std::string InputBinding::GetType() const
-    {
-        return "InputBinding";
     }
 
     void InputBinding::RebuildNameIndex()

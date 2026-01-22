@@ -75,7 +75,7 @@ namespace engine
 
     void Object::Save(json& j) const
     {
-        j["Type"] = GetType();
+        j["Type"] = GetTypeName();
         j["Active"] = m_active;
     }
 

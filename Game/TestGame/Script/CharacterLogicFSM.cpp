@@ -323,9 +323,4 @@ namespace game
         engine::JsonGet(j, "InputMoveRight", m_inputMoveRight);
         engine::JsonGet(j, "InputAttack", m_inputAttack);
     }
-
-    std::string CharacterLogicFSM::GetType() const
-    {
-        return "CharacterLogicFSM";
-    }
 }

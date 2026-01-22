@@ -34,7 +34,7 @@ namespace game
         public engine::Script<CharacterAnimationFSM>,
         public ILogicFSMListener
     {
-        REGISTER_COMPONENT(CharacterAnimationFSM)
+        REGISTER_COMPONENT(CharacterAnimationFSM, Script)
 
     protected:
         // 컴포넌트 캐싱
@@ -92,7 +92,6 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
 
     protected:
         virtual void CacheComponents();

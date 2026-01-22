@@ -395,11 +395,6 @@ namespace engine
 		RefreshFont();
 	}
 
-	std::string UIText::GetType() const
-	{
-		return "UIText";
-	}
-
 	void UIText::RefreshFont()
 	{
 		if (m_fontPath.empty() || m_fontPath == "None")

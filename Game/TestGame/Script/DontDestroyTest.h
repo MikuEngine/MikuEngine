@@ -7,7 +7,7 @@ namespace game
     class DontDestroyTest :
         public engine::Script<DontDestroyTest>
     {
-        REGISTER_COMPONENT(DontDestroyTest)
+        REGISTER_COMPONENT(DontDestroyTest, Script)
 
     public:
         void Awake() override;
@@ -18,7 +18,6 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
 
     private:
         void OnStartFromScript();

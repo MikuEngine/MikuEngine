@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -7,7 +7,7 @@ namespace game
     class TempBulletFactory :
         public engine::Script<TempBulletFactory>
     {
-        REGISTER_COMPONENT(TempBulletFactory)
+        REGISTER_COMPONENT(TempBulletFactory, Script)
 
     private:
         float m_bulletSpeed = 15.0f;     // 총알 속도
@@ -36,6 +36,5 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-        std::string GetType() const override;
     };
 }

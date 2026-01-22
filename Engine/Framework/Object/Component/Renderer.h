@@ -19,6 +19,8 @@ namespace engine
 	class Renderer :
 		public Component
 	{
+		DEFINE_COMPONENT_TYPE(Renderer, Component)
+
 	private:
 		std::array<std::int32_t, static_cast<size_t>(RenderType::Count)> m_systemIndices;
 

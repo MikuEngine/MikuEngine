@@ -265,9 +265,4 @@ namespace game
             SetupDefaultMappings();
         }
     }
-
-    std::string CharacterAnimationFSM::GetType() const
-    {
-        return "CharacterAnimationFSM";
-    }
 }

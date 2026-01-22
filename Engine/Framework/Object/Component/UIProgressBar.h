@@ -7,7 +7,8 @@ namespace engine
 
 	class UIProgressBar : public UIElement
 	{
-		REGISTER_COMPONENT(UIProgressBar)
+		REGISTER_COMPONENT(UIProgressBar, UIElement)
+
 	public:
 		enum class Direction
 		{
@@ -50,7 +51,6 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
-		std::string GetType() const override;
 
 	private:
 		UIImage* m_background = nullptr;

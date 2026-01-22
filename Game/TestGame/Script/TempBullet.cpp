@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "TempBullet.h"
 #include "TempMonster.h"
 
@@ -151,10 +151,5 @@ namespace game
         }
         engine::JsonGet(j, "Speed", m_speed);
         engine::JsonGet(j, "Lifetime", m_lifetime);
-    }
-
-    std::string TempBullet::GetType() const
-    {
-        return "TempBullet";
     }
 }

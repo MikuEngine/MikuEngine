@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "CollisionSystem.h"
 
 #include "Framework/Object/Component/Collider.h"
@@ -351,7 +351,7 @@ namespace engine
         const auto& components = go->GetComponents();
         for (const auto& comp : components)
         {
-            if (ScriptBase* script = dynamic_cast<ScriptBase*>(comp.get()))
+            if (ScriptBase* script = comp->As<ScriptBase>())
             {
                 if (!script->IsActive()) continue;
 
@@ -379,7 +379,7 @@ namespace engine
         const auto& components = go->GetComponents();
         for (const auto& comp : components)
         {
-            if (ScriptBase* script = dynamic_cast<ScriptBase*>(comp.get()))
+            if (ScriptBase* script = comp->As<ScriptBase>())
             {
                 if (!script->IsActive()) continue;
 

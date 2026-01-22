@@ -12,6 +12,7 @@
 #include "Framework/Scene/Scene.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/ComponentFactory.h"
 #include "Framework/Object/Component/Canvas.h"
 
@@ -873,12 +874,11 @@ namespace engine
         ImGui::Separator();
 
         Transform* tr = m_selectedObject->GetTransform();
-        std::string trNameStr = tr ? tr->GetType() : "Transform";
 
         engine::Canvas* canvas = m_selectedObject->GetComponent<engine::Canvas>();
         bool lockRectTransform = canvas ? canvas->IsRectTransformLockedInEditor() : false;
 
-        if (ImGui::CollapsingHeader(trNameStr.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader(tr->GetTypeName(), ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (tr)
             {
@@ -906,7 +906,7 @@ namespace engine
             auto& comp = components[i];
             ImGui::PushID(comp.get());
 
-            if (comp->GetType() == "Transform" || comp->GetType() == "RectTransform")
+            if (comp->Is<Transform>() || comp->Is<RectTransform>())
             {
                 ImGui::PopID();
                 continue;
@@ -929,7 +929,7 @@ namespace engine
                 ImGui::PushStyleColor(ImGuiCol_Text, v4);
             }
 
-            bool open = ImGui::CollapsingHeader(comp->GetType().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+            bool open = ImGui::CollapsingHeader(comp->GetTypeName(), ImGuiTreeNodeFlags_DefaultOpen);
 
             if (!isCompActive)
             {
