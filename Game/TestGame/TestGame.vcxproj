@@ -158,6 +158,14 @@
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
+    <ClCompile Include="Script\ButtonCallbackTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Script\ButtonCallbackTest2.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Script\CharacterAnimationFSM.cpp" />
     <ClCompile Include="Script\CharacterLogicFSM.cpp" />
     <ClCompile Include="Script\DontDestroyTest.cpp">
@@ -239,6 +247,14 @@
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
     <ClInclude Include="Script\AimPointer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\ButtonCallbackTest.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\ButtonCallbackTest2.h">
       <SubType>
       </SubType>
     </ClInclude>
