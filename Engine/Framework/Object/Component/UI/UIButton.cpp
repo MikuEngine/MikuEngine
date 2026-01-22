@@ -8,8 +8,8 @@
 
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
-#include "Framework/Object/Component/UIImage.h"
-#include "Framework/Object/Component/UIText.h"
+#include "Framework/Object/Component/UI/UIImage.h"
+#include "Framework/Object/Component/UI/UIText.h"
 
 namespace engine
 {

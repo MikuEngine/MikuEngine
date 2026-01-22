@@ -25,7 +25,7 @@
 #include "Framework/Object/Component/Light.h"
 
 #include "Framework/Object/Component/Canvas.h"
-#include "Framework/Object/Component/UIElement.h"
+#include "Framework/Object/Component/UI/UIElement.h"
 
 #include "Editor/EditorManager.h"
 #include "Editor/EditorCamera.h"

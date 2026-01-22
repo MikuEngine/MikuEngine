@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "AimPointer.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
@@ -7,7 +7,7 @@
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/Canvas.h>
 #include <Framework/Object/Component/RectTransform.h>
-#include <Framework/Object/Component/UIImage.h>
+#include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/SpriteRenderer.h>
 #include <Framework/Object/Component/Camera.h>
 

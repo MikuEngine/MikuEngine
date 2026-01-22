@@ -244,14 +244,15 @@
     <ClCompile Include="Framework\Object\Component\Collider.cpp" />
     <ClCompile Include="Framework\Object\Component\Rigidbody.cpp" />
     <ClCompile Include="Framework\Object\Component\SphereCollider.cpp" />
-    <ClCompile Include="Framework\Object\Component\UIElement.cpp" />
-    <ClCompile Include="Framework\Object\Component\UIImage.cpp" />
-    <ClCompile Include="Framework\Object\Component\UIText.cpp" />
-    <ClCompile Include="Framework\Object\Component\UIButton.cpp" />
-    <ClCompile Include="Framework\Object\Component\UIInteractable.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UIElement.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UIImage.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UIText.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UIButton.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UIInteractable.cpp" />
     <ClCompile Include="Framework\System\UIEventSystem.cpp" />
-    <ClCompile Include="Framework\Object\Component\UISlider.cpp" />
-    <ClCompile Include="Framework\Object\Component\UIProgressBar.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UISlider.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UIProgressBar.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UIPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Utility\EditorHelper.h" />
@@ -360,14 +361,15 @@
     <ClInclude Include="Framework\Object\Component\Collider.h" />
     <ClInclude Include="Framework\Object\Component\Rigidbody.h" />
     <ClInclude Include="Framework\Object\Component\SphereCollider.h" />
-    <ClInclude Include="Framework\Object\Component\UIElement.h" />
-    <ClInclude Include="Framework\Object\Component\UIImage.h" />
-    <ClInclude Include="Framework\Object\Component\UIText.h" />
-    <ClInclude Include="Framework\Object\Component\UIButton.h" />
-    <ClInclude Include="Framework\Object\Component\UIInteractable.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UIElement.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UIImage.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UIText.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UIButton.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UIInteractable.h" />
     <ClInclude Include="Framework\System\UIEventSystem.h" />
-    <ClInclude Include="Framework\Object\Component\UISlider.h" />
-    <ClInclude Include="Framework\Object\Component\UIProgressBar.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UISlider.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UIProgressBar.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UIPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Geometry\Shadow_Point_GS.hlsl">

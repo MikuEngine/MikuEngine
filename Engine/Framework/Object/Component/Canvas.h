@@ -8,7 +8,7 @@ namespace engine
 {
 	class Canvas : public Component
 	{
-		REGISTER_COMPONENT(Canvas);
+		REGISTER_COMPONENT(Canvas)
 	private:
 		Vector2 m_referenceResolution{ 1920.0f, 1080.0f };
 

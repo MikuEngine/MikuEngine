@@ -3,10 +3,10 @@
 
 #include "Core/System/Input.h"
 
-#include "Framework/Object/Component/UIElement.h"
+#include "Framework/Object/Component/UI/UIElement.h"
+#include "Framework/Object/Component/UI/UIInteractable.h"
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/Canvas.h"
-#include "Framework/Object/Component/UIInteractable.h"
 
 namespace engine
 {

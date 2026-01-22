@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "Framework/Object/Component/UIElement.h"
-#include "Framework/Object/Component/UIInteractable.h"
+#include "Framework/Object/Component/UI/UIElement.h"
+#include "Framework/Object/Component/UI/UIInteractable.h"
 
 namespace engine
 {
