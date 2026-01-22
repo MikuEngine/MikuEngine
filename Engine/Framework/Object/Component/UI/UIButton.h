@@ -14,6 +14,7 @@ namespace engine
 
 	public:
 		using ClickCallback = std::function<void()>;
+		using HoverCallback = std::function<void(bool)>;
 
 		enum class ButtonAction
 		{
@@ -22,16 +23,6 @@ namespace engine
 			OpenOption,		// 설정
 			OpenCredit,		// 크레딧
 			QuitGame,		// 게임 종료
-
-			// 메인->스타트게임
-			EnterPlay,		// 심연 진입
-			OpenUpgrade,	// 강화
-			//OpenOption,	// 설정
-			BackToMain,		// 메인화면으로
-
-			BackToSelect,	// 위 버튼 고르는 곳으로
-
-			None,			// 상태 없음.
 		};
 
 	private:
@@ -49,6 +40,7 @@ namespace engine
 	private:
 		State m_state = State::Normal;
 		std::vector<ClickCallback> m_onClick;
+		std::vector<HoverCallback> m_onHover;
 
 		UIImage* m_background = nullptr;
 		UIText* m_label = nullptr;
@@ -67,11 +59,12 @@ namespace engine
 
 		std::string m_labelText = "Button";
 
-		ButtonAction m_action = ButtonAction::None;
-		std::string m_actionParam = "";
+	public:
+		// Callback
+		void AddOnClick(ClickCallback&& cb);
+		void AddOnHover(HoverCallback&& cb);
 
 	public:
-		void AddOnClick(ClickCallback&& cb);
 		void SetSprites(const std::string& normal,
 						const std::string& hover,
 						const std::string& pressed,

@@ -5,10 +5,10 @@
 
 namespace game
 {
-    class MainMenuController :
-        public engine::Script<MainMenuController>
+    class TitleButtonController :
+        public engine::Script<TitleButtonController>
     {
-        REGISTER_COMPONENT(MainMenuController, Script)
+        REGISTER_COMPONENT(TitleButtonController, Script)
 
     public:
         void Awake() override;
@@ -23,10 +23,10 @@ namespace game
     private:
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
         
-        void OnStart();
-        void OnOption();
-        void OnCredit();
-        void OnQuit();
+        void StartGame();
+        void OpenOption();
+        void OpenCredit();
+        void QuitGame();
 
         bool m_bound = false;
     };
