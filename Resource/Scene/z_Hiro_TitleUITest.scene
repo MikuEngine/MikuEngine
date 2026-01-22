@@ -293,7 +293,7 @@
         {
             "ID": 5,
             "ParentID": 4,
-            "Name": "UIObject",
+            "Name": "UI_StartButton",
             "Active": true,
             "Components": [
                 {
@@ -485,6 +485,10 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                },
+                {
+                    "Type": "ButtonCallbackTest",
+                    "Active": true
                 }
             ]
         }
