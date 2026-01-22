@@ -36,7 +36,7 @@
                 },
                 {
                     "Type": "FreeCameraController",
-                    "Active": true,
+                    "Active": false,
                     "MoveSpeed": 10.0
                 }
             ]
@@ -124,25 +124,10 @@
                     ]
                 },
                 {
-                    "Type": "InputBinding",
-                    "Active": true,
-                    "Bindings": [
-                        { "Name": "MoveUp", "Key": "Up" },
-                        { "Name": "MoveDown", "Key": "Down" },
-                        { "Name": "MoveLeft", "Key": "Left" },
-                        { "Name": "MoveRight", "Key": "Right" },
-                        { "Name": "Attack", "Key": "Space" }
-                    ]
-                },
-                {
                     "Type": "PlayerFSM",
                     "Active": true,
                     "MoveSpeed": 5.0,
-                    "InputMoveUp": "MoveUp",
-                    "InputMoveDown": "MoveDown",
-                    "InputMoveLeft": "MoveLeft",
-                    "InputMoveRight": "MoveRight",
-                    "InputAttack": "Attack"
+                    "EnableUpperBodyAim": true
                 }
             ]
         },

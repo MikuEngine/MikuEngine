@@ -23,10 +23,16 @@ namespace game
 
     void CharacterAnimationFSM::Update()
     {
-        // 베이스 클래스는 빈 구현
-        // 자식 클래스에서 애니메이션 종료 체크 등 구현
+        // 레이어 애니메이션 종료 체크
+        CheckLayerAnimationFinished();
+        
+        // Procedural 조준 업데이트
+        UpdateProceduralAim();
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // ILogicFSMListener 구현
+    // ═══════════════════════════════════════════════════════════════
     void CharacterAnimationFSM::OnStateEnter(const StateContext& context)
     {
         m_currentAnimState = context.currentState;
@@ -35,7 +41,9 @@ namespace game
 
     void CharacterAnimationFSM::OnStateExit(const StateContext& context)
     {
-        // 자식 클래스에서 필요시 오버라이드
+        // 레이어 상태 리셋
+        m_baseLayerState.Reset();
+        m_upperLayerState.Reset();
     }
 
     void CharacterAnimationFSM::OnStateUpdate(const StateContext& context)
@@ -45,24 +53,21 @@ namespace game
 
     void CharacterAnimationFSM::HandleConditionalTransition(const StateContext& context)
     {
-        // 조건부 전이: 이동 속도에 따른 Walk/Run 블렌딩 등
         UpdateMoveBlending(context);
     }
 
     void CharacterAnimationFSM::UpdateMoveBlending(const StateContext& context)
     {
-        // 현재 Walk 상태일 때만 블렌딩 처리
         if (context.currentState != CharacterState::Walk)
         {
             return;
         }
-
         // 속도 기반 블렌딩 (필요시 자식 클래스에서 구현)
-        // 예: 걷기 -> 달리기로 부드럽게 전환
-        // float normalizedSpeed = context.moveSpeed / m_logicFSM->GetRunSpeed();
-        // m_animator->SetBlendParameter("Speed", normalizedSpeed);
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // 애니메이션 매핑 설정
+    // ═══════════════════════════════════════════════════════════════
     void CharacterAnimationFSM::SetStateAnimation(CharacterState state, const AnimationTransition& transition)
     {
         m_stateAnimations[state] = transition;
@@ -81,6 +86,9 @@ namespace game
         m_stateAnimations[state] = transition;
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // 레이어 설정
+    // ═══════════════════════════════════════════════════════════════
     void CharacterAnimationFSM::SetUpperBodyLayer(bool enabled, int layerIndex)
     {
         m_useUpperBodyLayer = enabled;
@@ -96,6 +104,118 @@ namespace game
         }
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // 상하체 분리 재생
+    // ═══════════════════════════════════════════════════════════════
+    void CharacterAnimationFSM::PlaySplitAnimation(
+        const std::string& lowerAnim, bool lowerLoop,
+        const std::string& upperAnim, bool upperLoop,
+        float crossFade)
+    {
+        if (!m_animator) return;
+        
+        // 하체 (베이스 레이어)
+        m_animator->PlayCrossFade(lowerAnim, crossFade, lowerLoop, m_baseLayerIndex, 1.0f);
+        m_baseLayerState.animationName = lowerAnim;
+        m_baseLayerState.isPlaying = true;
+        m_baseLayerState.isLooping = lowerLoop;
+        m_baseLayerState.hasStarted = false;
+        
+        // 상체 (Upper Body 레이어)
+        m_animator->SetLayerWeight(m_upperBodyLayerIndex, 1.0f);
+        m_animator->Play(upperAnim, upperLoop, m_upperBodyLayerIndex, 1.0f);  // Play로 리셋
+        m_upperLayerState.animationName = upperAnim;
+        m_upperLayerState.isPlaying = true;
+        m_upperLayerState.isLooping = upperLoop;
+        m_upperLayerState.hasStarted = false;
+        
+        m_useUpperBodyLayer = true;
+    }
+
+    void CharacterAnimationFSM::SetBaseLayerExitCondition(float normalizedTime)
+    {
+        m_baseLayerState.exitNormalizedTime = normalizedTime;
+    }
+
+    void CharacterAnimationFSM::SetUpperLayerExitCondition(float normalizedTime)
+    {
+        m_upperLayerState.exitNormalizedTime = normalizedTime;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 상체 Procedural 회전 (조준)
+    // ═══════════════════════════════════════════════════════════════
+    void CharacterAnimationFSM::SetProceduralAimEnabled(bool enabled)
+    {
+        m_enableProceduralAim = enabled;
+        
+        // 비활성화 시 회전 리셋
+        if (!enabled && m_animator)
+        {
+            m_animator->SetProceduralRotation(m_spineBoneName, engine::Quaternion::Identity);
+        }
+    }
+
+    void CharacterAnimationFSM::SetUpperBodyYaw(float degrees)
+    {
+        m_upperBodyYaw = std::clamp(degrees, -m_maxYaw, m_maxYaw);
+    }
+
+    void CharacterAnimationFSM::SetUpperBodyPitch(float degrees)
+    {
+        m_upperBodyPitch = std::clamp(degrees, -m_maxPitch, m_maxPitch);
+    }
+
+    void CharacterAnimationFSM::SetUpperBodyAim(float yawDegrees, float pitchDegrees)
+    {
+        m_upperBodyYaw = std::clamp(yawDegrees, -m_maxYaw, m_maxYaw);
+        m_upperBodyPitch = std::clamp(pitchDegrees, -m_maxPitch, m_maxPitch);
+    }
+
+    void CharacterAnimationFSM::SetAimLimits(float maxYaw, float maxPitch)
+    {
+        m_maxYaw = maxYaw;
+        m_maxPitch = maxPitch;
+    }
+
+    void CharacterAnimationFSM::SetSpineBoneName(const std::string& boneName)
+    {
+        m_spineBoneName = boneName;
+    }
+
+    void CharacterAnimationFSM::UpdateProceduralAim()
+    {
+        if (!m_enableProceduralAim) return;
+        
+        float dt = engine::Time::DeltaTime();
+        
+        // 부드러운 보간
+        m_currentYaw = std::lerp(m_currentYaw, m_upperBodyYaw, m_aimLerpSpeed * dt);
+        m_currentPitch = std::lerp(m_currentPitch, m_upperBodyPitch, m_aimLerpSpeed * dt);
+        
+        ApplyProceduralRotation();
+    }
+
+    void CharacterAnimationFSM::ApplyProceduralRotation()
+    {
+        if (!m_animator) return;
+        
+        // degree → radian
+        float yawRad = engine::ToRadian(m_currentYaw);
+        float pitchRad = engine::ToRadian(m_currentPitch);
+        
+        // Quaternion 생성 (Y축 회전 * X축 회전)
+        engine::Quaternion yawRot = engine::Quaternion::CreateFromAxisAngle(engine::Vector3::UnitY, yawRad);
+        engine::Quaternion pitchRot = engine::Quaternion::CreateFromAxisAngle(engine::Vector3::UnitX, pitchRad);
+        engine::Quaternion finalRot = yawRot * pitchRot;
+        
+        // SkeletalAnimator에 적용
+        m_animator->SetProceduralRotation(m_spineBoneName, finalRot);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 애니메이션 재생 및 알림
+    // ═══════════════════════════════════════════════════════════════
     void CharacterAnimationFSM::PlayAnimation(const std::string& animName, float crossFade,
         bool loop, int layerIndex, float speed)
     {
@@ -121,8 +241,6 @@ namespace game
 
     void CharacterAnimationFSM::SetupDefaultMappings()
     {
-        // 베이스 클래스는 기본 매핑만 설정
-        // 자식 클래스에서 오버라이드하여 실제 애니메이션 이름 설정
         SetStateAnimation(CharacterState::Idle, "Idle", 0.2f, true);
         SetStateAnimation(CharacterState::Walk, "Walk", 0.2f, true);
         SetStateAnimation(CharacterState::Attack, "Attack", 0.1f, false);
@@ -130,10 +248,7 @@ namespace game
 
     void CharacterAnimationFSM::PlayStateAnimation(CharacterState state)
     {
-        if (!m_animator)
-        {
-            return;
-        }
+        if (!m_animator) return;
 
         auto it = m_stateAnimations.find(state);
         if (it != m_stateAnimations.end())
@@ -149,6 +264,70 @@ namespace game
         }
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // 레이어별 종료 콜백
+    // ═══════════════════════════════════════════════════════════════
+    void CharacterAnimationFSM::OnBaseLayerFinished()
+    {
+        // 자식 클래스에서 오버라이드
+    }
+
+    void CharacterAnimationFSM::OnUpperLayerFinished()
+    {
+        // 자식 클래스에서 오버라이드
+        // 기본: 상체 레이어 가중치 0으로 리셋
+        if (m_animator)
+        {
+            m_animator->SetLayerWeight(m_upperBodyLayerIndex, 0.0f);
+        }
+    }
+
+    void CharacterAnimationFSM::CheckLayerAnimationFinished()
+    {
+        if (!m_animator) return;
+        
+        // 베이스 레이어 종료 체크
+        if (m_baseLayerState.isPlaying && !m_baseLayerState.isLooping)
+        {
+            float time = m_animator->GetNormalizedTime(m_baseLayerIndex);
+            
+            // 시작 확인
+            if (!m_baseLayerState.hasStarted && time < 0.5f)
+            {
+                m_baseLayerState.hasStarted = true;
+            }
+            
+            // 종료 확인
+            if (m_baseLayerState.hasStarted && time >= m_baseLayerState.exitNormalizedTime)
+            {
+                m_baseLayerState.isPlaying = false;
+                OnBaseLayerFinished();
+            }
+        }
+        
+        // 상체 레이어 종료 체크
+        if (m_upperLayerState.isPlaying && !m_upperLayerState.isLooping)
+        {
+            float time = m_animator->GetNormalizedTime(m_upperBodyLayerIndex);
+            
+            // 시작 확인
+            if (!m_upperLayerState.hasStarted && time < 0.5f)
+            {
+                m_upperLayerState.hasStarted = true;
+            }
+            
+            // 종료 확인
+            if (m_upperLayerState.hasStarted && time >= m_upperLayerState.exitNormalizedTime)
+            {
+                m_upperLayerState.isPlaying = false;
+                OnUpperLayerFinished();
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // GUI / 직렬화
+    // ═══════════════════════════════════════════════════════════════
     void CharacterAnimationFSM::OnGui()
     {
         ImGui::Text("Current Anim State: %s", CharacterStateToString(m_currentAnimState));
@@ -166,8 +345,39 @@ namespace game
             }
         }
         
+        // Procedural 조준 설정
+        if (ImGui::CollapsingHeader("Procedural Aim"))
+        {
+            ImGui::Checkbox("Enable Procedural Aim", &m_enableProceduralAim);
+            ImGui::DragFloat("Aim Yaw", &m_upperBodyYaw, 1.0f, -m_maxYaw, m_maxYaw, "%.1f deg");
+            ImGui::DragFloat("Aim Pitch", &m_upperBodyPitch, 1.0f, -m_maxPitch, m_maxPitch, "%.1f deg");
+            ImGui::DragFloat("Max Yaw", &m_maxYaw, 1.0f, 0.0f, 180.0f, "%.1f deg");
+            ImGui::DragFloat("Max Pitch", &m_maxPitch, 1.0f, 0.0f, 90.0f, "%.1f deg");
+            ImGui::DragFloat("Aim Lerp Speed", &m_aimLerpSpeed, 0.5f, 1.0f, 30.0f);
+            
+            char boneBuf[64];
+            strcpy_s(boneBuf, m_spineBoneName.c_str());
+            if (ImGui::InputText("Spine Bone", boneBuf, 64))
+            {
+                m_spineBoneName = boneBuf;
+            }
+            
+            ImGui::Text("Current: Yaw=%.1f, Pitch=%.1f", m_currentYaw, m_currentPitch);
+        }
+        
+        // 레이어 상태
+        if (ImGui::CollapsingHeader("Layer States"))
+        {
+            ImGui::Text("Base Layer: %s %s", 
+                m_baseLayerState.animationName.c_str(),
+                m_baseLayerState.isPlaying ? "(playing)" : "");
+            ImGui::Text("Upper Layer: %s %s",
+                m_upperLayerState.animationName.c_str(),
+                m_upperLayerState.isPlaying ? "(playing)" : "");
+        }
+        
         // 상태별 애니메이션 매핑
-        if (ImGui::CollapsingHeader("State Animations", ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader("State Animations"))
         {
             for (int i = 0; i < static_cast<int>(CharacterState::Count); ++i)
             {
@@ -217,6 +427,13 @@ namespace game
         j["DefaultCrossFade"] = m_defaultCrossFade;
         j["MoveBlendThreshold"] = m_moveBlendThreshold;
         
+        // Procedural Aim
+        j["EnableProceduralAim"] = m_enableProceduralAim;
+        j["MaxYaw"] = m_maxYaw;
+        j["MaxPitch"] = m_maxPitch;
+        j["AimLerpSpeed"] = m_aimLerpSpeed;
+        j["SpineBoneName"] = m_spineBoneName;
+        
         // 상태별 애니메이션 매핑 저장
         std::vector<engine::json> mappings;
         for (const auto& [state, transition] : m_stateAnimations)
@@ -244,6 +461,13 @@ namespace game
         engine::JsonGet(j, "DefaultCrossFade", m_defaultCrossFade);
         engine::JsonGet(j, "MoveBlendThreshold", m_moveBlendThreshold);
         
+        // Procedural Aim
+        engine::JsonGet(j, "EnableProceduralAim", m_enableProceduralAim);
+        engine::JsonGet(j, "MaxYaw", m_maxYaw);
+        engine::JsonGet(j, "MaxPitch", m_maxPitch);
+        engine::JsonGet(j, "AimLerpSpeed", m_aimLerpSpeed);
+        engine::JsonGet(j, "SpineBoneName", m_spineBoneName);
+        
         // 상태별 애니메이션 매핑 로드
         m_stateAnimations.clear();
         engine::JsonArrayForEach(j, "StateAnimations", [&](const engine::json& node)
@@ -259,7 +483,6 @@ namespace game
             }
         );
         
-        // 로드 후 기본 매핑이 없으면 설정
         if (m_stateAnimations.empty())
         {
             SetupDefaultMappings();

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -9,7 +9,6 @@ namespace engine
 
 namespace game
 {
-    class InputBinding;
     class CharacterAnimationFSM;
 
     // ═══════════════════════════════════════════════════════════════
@@ -39,6 +38,19 @@ namespace game
         // 이동 관련
         engine::Vector3 moveDirection = engine::Vector3::Zero;
         float moveSpeed = 0.0f;
+        
+        // 입력 플래그 (ProcessInput에서 설정, UpdateState에서 사용)
+        bool attackPressed = false;     // 공격 버튼 눌림 (1회)
+        bool attackHeld = false;        // 공격 버튼 홀드 (연속)
+        bool interactPressed = false;   // 상호작용 버튼
+        
+        // 매 프레임 입력 플래그 리셋
+        void ResetInputFlags()
+        {
+            attackPressed = false;
+            attackHeld = false;
+            interactPressed = false;
+        }
     };
 
     // ═══════════════════════════════════════════════════════════════
@@ -73,7 +85,6 @@ namespace game
         StateContext m_context;
         
         // 컴포넌트 캐싱
-        InputBinding* m_inputBinding = nullptr;
         CharacterAnimationFSM* m_animFSM = nullptr;
         
         // 리스너 (AnimationFSM 등)
@@ -84,13 +95,6 @@ namespace game
         
         // 상태 타이머
         float m_stateTimer = 0.0f;
-        
-        // 입력 바인딩 이름
-        std::string m_inputMoveUp = "MoveUp";
-        std::string m_inputMoveDown = "MoveDown";
-        std::string m_inputMoveLeft = "MoveLeft";
-        std::string m_inputMoveRight = "MoveRight";
-        std::string m_inputAttack = "Attack";
 
     public:
         void Awake() override;
@@ -140,10 +144,8 @@ namespace game
         virtual void OnExitState(CharacterState state);
         virtual void UpdateCurrentState();
         
-        // 유틸리티
-        engine::Vector3 GetMoveInputDirection() const;
+        // 유틸리티 (context 기반)
         bool IsMoving() const;
-        virtual bool IsAttackPressed() const;
         
         // 리스너 알림
         void NotifyListenersEnter();
