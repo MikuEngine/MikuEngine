@@ -158,8 +158,7 @@
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
 
-    <ClCompile Include="Script\HubButtonController.cpp" />
-    <ClCompile Include="Script\PlayerScriptTest.cpp" />
+    <ClCompile Include="Script\HubButtonController.cpp" />   
 
     <ClCompile Include="Script\AnimationPlayer.cpp" />
     <ClCompile Include="Script\TitleButtonController.cpp">
@@ -252,8 +251,7 @@
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
 
-    <ClInclude Include="Script\HubButtonController.h" />
-    <ClInclude Include="Script\PlayerScriptTest.h" />
+    <ClInclude Include="Script\HubButtonController.h" />   
 
     <ClInclude Include="Script\AimPointer.h">
       <SubType>
