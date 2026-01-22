@@ -92,8 +92,6 @@ namespace engine
         
         // 우선순위 시스템용
         CollisionPriority priority = CollisionPriority::Default;
-        uint64_t sourceId = 0;      // 공격 인스턴스 ID (같은 공격 그룹화)
-        bool consumed = false;      // 처리 완료 플래그
     };
 
     struct TriggerEvent

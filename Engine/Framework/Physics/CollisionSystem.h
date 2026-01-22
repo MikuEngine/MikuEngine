@@ -15,46 +15,6 @@ namespace engine
     class ScriptBase;
 
     // ═══════════════════════════════════════════════════════════════
-    // 공격 인스턴스 (우선순위 시스템용)
-    // 하나의 "공격"에 의한 여러 충돌을 그룹화
-    // ═══════════════════════════════════════════════════════════════
-
-    class AttackInstance
-    {
-    private:
-        uint64_t m_id;
-        Ptr<GameObject> m_attacker;
-        std::unordered_set<Handle> m_hitTargets;  // Handle로 추적 (파괴된 오브젝트 안전)
-        
-        bool m_isConsumed = false;
-        CollisionPriority m_consumedBy = CollisionPriority::Default;
-
-    public:
-        // 생성자는 cpp에서 정의 (GameObject 완전한 정의 필요)
-        AttackInstance(uint64_t id, GameObject* attacker);
-
-        uint64_t GetId() const { return m_id; }
-        Ptr<GameObject> GetAttacker() const { return m_attacker; }
-
-        bool HasHit(GameObject* target) const;
-        void RecordHit(GameObject* target);
-
-        bool IsConsumed() const { return m_isConsumed; }
-
-        void Consume(CollisionPriority by)
-        {
-            m_isConsumed = true;
-            m_consumedBy = by;
-        }
-
-        bool CanProcessWith(CollisionPriority priority) const
-        {
-            if (!m_isConsumed) return true;
-            return static_cast<int32_t>(priority) >= static_cast<int32_t>(m_consumedBy);
-        }
-    };
-
-    // ═══════════════════════════════════════════════════════════════
     // CollisionSystem - 충돌 이벤트 처리 및 콜백 디스패치
     // ═══════════════════════════════════════════════════════════════
 
@@ -124,10 +84,6 @@ namespace engine
 
         std::unordered_set<CollisionPair, CollisionPairHash> m_activeCollisionPairs;
 
-        // 공격 인스턴스 관리 (우선순위 시스템)
-        std::unordered_map<uint64_t, AttackInstance> m_activeAttacks;
-        uint64_t m_nextAttackId = 1;
-
     private:
         CollisionSystem() = default;
         ~CollisionSystem() = default;
@@ -143,13 +99,6 @@ namespace engine
         // 이벤트 처리 (프레임 끝에서 호출)
         // ═══════════════════════════════════════
         void ProcessEvents();
-
-        // ═══════════════════════════════════════
-        // 공격 인스턴스 관리 (전투 시스템용)
-        // ═══════════════════════════════════════
-        uint64_t CreateAttack(GameObject* attacker);
-        void EndAttack(uint64_t attackId);
-        AttackInstance* GetAttack(uint64_t attackId);
 
         // ═══════════════════════════════════════
         // Collider 정리 (파괴 시)
