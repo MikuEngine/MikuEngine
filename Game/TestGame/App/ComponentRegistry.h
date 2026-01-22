@@ -17,3 +17,18 @@
 
 // Sound Component
 #include <Engine/Framework/Object/Component/AudioSource.h>
+
+// FSM Components
+#include <Engine/Framework/Object/Component/LogicFSM.h>
+#include <Engine/Framework/Object/Component/AnimFSM.h>
+
+//// Game Scripts
+//#include "Script/InputBinding.h"
+//#include "Script/CharacterLogicFSM.h"
+//#include "Script/CharacterAnimationFSM.h"
+//#include "Script/PlayerFSM.h"
+//#include "Script/TestLogicFSM.h"
+//#include "Script/TestAnimationFSM.h"
+//
+//// FSM Script Template
+//#include "Script/BaseControllerScript.h"

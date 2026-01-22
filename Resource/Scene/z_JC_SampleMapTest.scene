@@ -1,6 +1,6 @@
 {
-    "Name": "SampleMapTest",
-    "NumGameObjects": 10,
+    "Name": "z_JC_SampleMapTest",
+    "NumGameObjects": 9,
     "GameObjects": [
         {
             "ID": 0,
@@ -43,7 +43,7 @@
         },
         {
             "ID": 1,
-            "Name": "GameObject",
+            "Name": "Map",
             "Active": true,
             "Components": [
                 {
@@ -62,8 +62,8 @@
                     },
                     "Scale": {
                         "x": 60.0,
-                        "y": 40.0,
-                        "z": 1.0
+                        "y": 60.0,
+                        "z": 60.0
                     }
                 },
                 {
@@ -95,7 +95,8 @@
         },
         {
             "ID": 2,
-            "Name": "GameObject",
+            "ParentID": 1,
+            "Name": "Wall_N",
             "Active": true,
             "Components": [
                 {
@@ -103,19 +104,19 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 6.800000190734863,
-                        "z": 18.299999237060547
+                        "y": 0.30500003695487976,
+                        "z": -0.1133333370089531
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.7071068286895752,
                         "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
+                        "z": -0.0,
+                        "w": 0.7071068286895752
                     },
                     "Scale": {
-                        "x": 60.0,
-                        "y": 15.0,
-                        "z": 1.0
+                        "x": 1.0,
+                        "y": 0.2500000298023224,
+                        "z": 0.01666666939854622
                     }
                 },
                 {
@@ -147,27 +148,28 @@
         },
         {
             "ID": 3,
-            "Name": "GameObject",
+            "ParentID": 1,
+            "Name": "Wall_E",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 29.600000381469727,
-                        "y": 7.0,
-                        "z": 0.10000000149011612
+                        "x": 0.4933333694934845,
+                        "y": 0.0016666739247739315,
+                        "z": -0.11666668951511383
                     },
                     "Rotation": {
-                        "x": 0.0,
-                        "y": 0.7071067690849304,
-                        "z": 0.0,
-                        "w": 0.7071067094802856
+                        "x": -0.5000000596046448,
+                        "y": 0.5000000596046448,
+                        "z": -0.4999999701976776,
+                        "w": 0.5000000596046448
                     },
                     "Scale": {
-                        "x": 40.0,
-                        "y": 15.0,
-                        "z": 1.0
+                        "x": 0.6666666865348816,
+                        "y": 0.2500000298023224,
+                        "z": 0.01666666567325592
                     }
                 },
                 {
@@ -199,27 +201,28 @@
         },
         {
             "ID": 4,
-            "Name": "GameObject",
+            "ParentID": 1,
+            "Name": "Wall_W",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -30.200000762939453,
-                        "y": 7.300000190734863,
-                        "z": 0.10000000149011612
+                        "x": -0.5033333897590637,
+                        "y": 0.0016666741576045752,
+                        "z": -0.12166669219732285
                     },
                     "Rotation": {
-                        "x": 0.0,
-                        "y": -0.7071067690849304,
-                        "z": 0.0,
-                        "w": 0.7071067094802856
+                        "x": -0.5000000596046448,
+                        "y": -0.5000000596046448,
+                        "z": 0.4999999701976776,
+                        "w": 0.5000000596046448
                     },
                     "Scale": {
-                        "x": 40.0,
-                        "y": 15.0,
-                        "z": 1.0
+                        "x": 0.6666666865348816,
+                        "y": 0.2500000298023224,
+                        "z": 0.01666666567325592
                     }
                 },
                 {
@@ -251,7 +254,8 @@
         },
         {
             "ID": 5,
-            "Name": "GameObject",
+            "ParentID": 1,
+            "Name": "Wall_S",
             "Active": true,
             "Components": [
                 {
@@ -259,19 +263,19 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 5.199999809265137,
-                        "z": -19.299999237060547
+                        "y": -0.3216667175292969,
+                        "z": -0.08666670322418213
                     },
                     "Rotation": {
-                        "x": 0.0,
-                        "y": 1.0,
-                        "z": -0.0,
-                        "w": -4.371138828673793e-08
+                        "x": 3.090862676913275e-08,
+                        "y": 0.7071068286895752,
+                        "z": -0.7071068286895752,
+                        "w": -3.090862321641907e-08
                     },
                     "Scale": {
-                        "x": 60.0,
-                        "y": 15.0,
-                        "z": 1.0
+                        "x": 1.0,
+                        "y": 0.2500000298023224,
+                        "z": 0.01666666939854622
                     }
                 },
                 {
@@ -303,27 +307,28 @@
         },
         {
             "ID": 6,
-            "Name": "GameObject",
+            "ParentID": 1,
+            "Name": "Light_Magenta",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -24.5,
-                        "y": 2.5999999046325684,
-                        "z": 12.600000381469727
+                        "x": -0.40833336114883423,
+                        "y": 0.21000003814697266,
+                        "z": -0.043333329260349274
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.7071068286895752,
                         "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
+                        "z": -0.0,
+                        "w": 0.7071068286895752
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.01666666753590107,
+                        "y": 0.01666666939854622,
+                        "z": 0.01666666939854622
                     }
                 },
                 {
@@ -349,27 +354,28 @@
         },
         {
             "ID": 7,
-            "Name": "GameObject",
+            "ParentID": 1,
+            "Name": "Light_Green",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 24.399999618530273,
-                        "y": 4.300000190734863,
-                        "z": 13.399999618530273
+                        "x": 0.40666669607162476,
+                        "y": 0.22333335876464844,
+                        "z": -0.0716666653752327
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.7071068286895752,
                         "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
+                        "z": -0.0,
+                        "w": 0.7071068286895752
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.01666666753590107,
+                        "y": 0.01666666939854622,
+                        "z": 0.01666666939854622
                     }
                 },
                 {
@@ -395,7 +401,7 @@
         },
         {
             "ID": 8,
-            "Name": "GameObject",
+            "Name": "Player",
             "Active": true,
             "Components": [
                 {
@@ -403,7 +409,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.25,
+                        "y": 1.0,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -414,7 +420,7 @@
                     },
                     "Scale": {
                         "x": 1.0,
-                        "y": 2.5,
+                        "y": 1.0,
                         "z": 1.0
                     }
                 },
@@ -427,9 +433,9 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 0.5295387506484985,
+                        "y": 0.41698843240737915,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
@@ -442,33 +448,48 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false
-                }
-            ]
-        },
-        {
-            "ID": 9,
-            "Name": "GameObject",
-            "Active": true,
-            "Components": [
+                },
                 {
-                    "Type": "Transform",
+                    "Type": "Rigidbody",
                     "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 1,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "BaseControllerScript",
+                    "Active": true
                 }
             ]
         }

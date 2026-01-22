@@ -284,6 +284,43 @@
                 {
                     "Type": "TestAnimationFSM",
                     "Active": true,
+                    "UseUpperBodyLayer": false,
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "UpperBodyWeight": 1.0,
+                    "DefaultCrossFade": 0.20000000298023224,
+                    "MoveBlendThreshold": 0.10000000149011612,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 10.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "StateAnimations": [
+                        {
+                            "State": 0,
+                            "AnimationName": "Idle",
+                            "CrossFadeDuration": 0.20000000298023224,
+                            "Loop": true,
+                            "LayerIndex": 0,
+                            "Speed": 1.0
+                        },
+                        {
+                            "State": 1,
+                            "AnimationName": "Walk",
+                            "CrossFadeDuration": 0.20000000298023224,
+                            "Loop": true,
+                            "LayerIndex": 0,
+                            "Speed": 1.0
+                        },
+                        {
+                            "State": 2,
+                            "AnimationName": "Attack",
+                            "CrossFadeDuration": 0.10000000149011612,
+                            "Loop": false,
+                            "LayerIndex": 0,
+                            "Speed": 1.0
+                        }
+                    ],
                     "Test4WaitDuration": 1.0
                 }
             ]
