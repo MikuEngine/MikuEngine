@@ -41,8 +41,6 @@ namespace engine
 
 		RebuildCacheIfDirty();
 
-		
-
 		UIElement* newHover = HitTestTopmost(mouse.position);
 
 		if (!mouse.leftHeld)
@@ -117,10 +115,6 @@ namespace engine
 			if (!rt) continue;
 
 			if (!e->HitTestPoint(mousePos)) continue;
-
-			UIInteractable* it = AsInteractable(e);
-			if (!it) continue;
-			if (!it->IsInteractable()) continue;
 
 			return e;
 		}
