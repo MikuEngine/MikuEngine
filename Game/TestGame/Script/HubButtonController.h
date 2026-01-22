@@ -9,7 +9,6 @@ namespace game
         public engine::Script<HubButtonController>
     {
         REGISTER_COMPONENT(HubButtonController, Script)
-
     public:
         void Awake() override;
         //void Start() override;
@@ -22,13 +21,17 @@ namespace game
 
     private:
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
+        void BindButton(const std::string& name, engine::UIButton::HoverCallback cb);
 
+        // OnClick
         void EnterPlay();
         void OpenUpgrade();
         void OpenOption();
         void BackToMain();
-
         void BackToHub();
+
+        // OnHover
+        void SetGuide(const std::string& key);
 
         bool m_bound = false;
     };
