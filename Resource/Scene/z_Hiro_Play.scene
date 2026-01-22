@@ -1142,7 +1142,7 @@
             "ID": 16,
             "ParentID": 13,
             "Name": "Panel_Blocker",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -1169,7 +1169,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -200.0
+                        "y": 0.0
                     },
                     "Width": 1920.0,
                     "Height": 1080.0,
