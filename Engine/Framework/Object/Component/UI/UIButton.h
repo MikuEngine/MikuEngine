@@ -48,7 +48,7 @@ namespace engine
 
 	private:
 		State m_state = State::Normal;
-		ClickCallback m_onClick;
+		std::vector<ClickCallback> m_onClick;
 
 		UIImage* m_background = nullptr;
 		UIText* m_label = nullptr;
@@ -71,7 +71,7 @@ namespace engine
 		std::string m_actionParam = "";
 
 	public:
-		void SetOnClick(ClickCallback cb);
+		void AddOnClick(ClickCallback&& cb);
 		void SetSprites(const std::string& normal,
 						const std::string& hover,
 						const std::string& pressed,
@@ -79,6 +79,8 @@ namespace engine
 		
 		void SetInteractable(bool v);
 		State GetState() const { return m_state; }
+
+		UIImage* GetTargetGraphic() const { return m_background; }
 
 	public:
 		// Input

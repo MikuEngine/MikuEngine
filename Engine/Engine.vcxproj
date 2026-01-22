@@ -200,6 +200,8 @@
     <ClCompile Include="Framework\Asset\StaticMeshData.cpp" />
     <ClCompile Include="Framework\Asset\MaterialData.cpp" />
     <ClCompile Include="Framework\Object\Component\Animator\Animator.cpp" />
+    <ClCompile Include="Framework\Object\Component\AnimFSM.cpp" />
+    <ClCompile Include="Framework\Object\Component\LogicFSM.cpp" />
     <ClCompile Include="Framework\Object\Component\Particle\ParticleEmitter.cpp" />
     <ClCompile Include="Framework\Object\Component\RectTransform.cpp" />
     <ClCompile Include="Framework\Object\Component\Animator\SkeletalAnimator.cpp" />
@@ -320,6 +322,8 @@
     <ClInclude Include="Framework\Asset\SpriteData.h" />
     <ClInclude Include="Framework\Asset\StaticMeshData.h" />
     <ClInclude Include="Framework\Object\Component\Animator\Animator.h" />
+    <ClInclude Include="Framework\Object\Component\AnimFSM.h" />
+    <ClInclude Include="Framework\Object\Component\LogicFSM.h" />
     <ClInclude Include="Framework\Object\Component\Particle\ParticleEmitter.h" />
     <ClInclude Include="Framework\Object\Component\RectTransform.h" />
     <ClInclude Include="Framework\Object\Component\Animator\SkeletalAnimator.h" />

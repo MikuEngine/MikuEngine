@@ -37,9 +37,10 @@ namespace engine
 		}
 	}
 
-	void UIButton::SetOnClick(ClickCallback cb)
+	void UIButton::AddOnClick(ClickCallback&& cb)
 	{
-		m_onClick = std::move(cb);
+		if (!cb) return;
+		m_onClick.push_back(std::move(cb));
 	}
 
 	void UIButton::SetSprites(const std::string& normal, const std::string& hover, const std::string& pressed, const std::string& disabled)
@@ -79,7 +80,7 @@ namespace engine
 	{
 		if (m_state == State::Disabled) return;
 		if (m_state == State::Pressed) return;
-		m_state = State::Normal;
+		m_state = State::Normal;	
 		UpdateVisuals();
 	}
 
@@ -103,7 +104,13 @@ namespace engine
 		if (mouseButton != 0) return;
 		m_state = State::Hovered;
 		UpdateVisuals();
-		if (m_onClick) m_onClick();
+		
+		auto calls = m_onClick;
+
+		for (auto& call : calls)
+		{
+			if (call) call();
+		}
 	}
 
 	void UIButton::OnMouseOver(const Vector2&)
@@ -279,19 +286,6 @@ namespace engine
 		ImGui::SameLine();
 		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteDisabled).filename().string().c_str());
 
-		const char* items[] = { "StartGame","OpenOption","OpenCredit","QuitGame","EnterPlay","OpenUpgrade","BackToMain","BackToSelect" };
-		int cur = (int)m_action;
-		if (ImGui::Combo("Action", &cur, items, IM_ARRAYSIZE(items)))
-			m_action = (ButtonAction)cur;
-
-		if (m_action == ButtonAction::StartGame /* or LoadScene류 */)
-		{
-			char buf[256]{};
-			strncpy_s(buf, m_actionParam.c_str(), sizeof(buf) - 1);
-			if (ImGui::InputText("ActionParam", buf, sizeof(buf)))
-				m_actionParam = buf;
-		}
-
 		if (changed)
 			UpdateVisuals();
 
@@ -311,9 +305,6 @@ namespace engine
 		j["TintHover"] = m_tintHover;
 		j["TintPressed"] = m_tintPressed;
 		j["TintDisabled"] = m_tintDisabled;
-
-		j["Action"] = (int)m_action;
-		j["ActionParam"] = m_actionParam;
 	}
 
 	void UIButton::Load(const json& j)
@@ -329,9 +320,6 @@ namespace engine
 		JsonGet(j, "TintHover", m_tintHover);
 		JsonGet(j, "TintPressed", m_tintPressed);
 		JsonGet(j, "TintDisabled", m_tintDisabled);
-
-		JsonGet(j, "Action", m_action);
-		JsonGet(j, "ActionParam", m_actionParam);
 
 		UpdateVisuals();
 	}

@@ -19,8 +19,9 @@
 #include "Framework/Asset/MaterialData.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
-
+#include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
+#include "Framework/Object/Component/UI/UIButton.h"
 
 namespace engine
 {
@@ -217,6 +218,16 @@ namespace engine
 	void UIImage::OnGui()
 	{
 		UIElement::OnGui();
+
+		if (GameObject* go = GetGameObject())
+		{
+			if (auto* btn = go->GetComponent<UIButton>())
+			{
+				ImGui::Separator();
+				ImGui::TextDisabled("This Image is controlled by UIButton (SpriteSwap/ Tint).");
+				return;
+			}
+		}
 
 		ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
 		std::string selectedTex;

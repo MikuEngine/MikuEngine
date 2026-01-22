@@ -39,6 +39,9 @@ namespace engine
 	void UIPanel::Initialize()
 	{
 		UIElement::Initialize();
+
+		//if (GetGameObject()->GetComponent<UIImage>())
+		//	GetGameObject()->AddComponent<UIImage>();
 	}
 
 	void UIPanel::DrawUI() const

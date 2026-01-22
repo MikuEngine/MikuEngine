@@ -21,6 +21,7 @@
 #include "Framework/Object/Component/UI/UIButton.h"
 #include "Framework/Object/Component/UI/UISlider.h"
 #include "Framework/Object/Component/UI/UIProgressBar.h"
+#include "Framework/Object/Component/UI/UIPanel.h"
 
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"

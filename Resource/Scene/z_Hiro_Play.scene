@@ -312,9 +312,7 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    },
-                    "Action": 0,
-                    "ActionParam": "z_Hiro_Play"
+                    }
                 },
                 {
                     "Type": "UIImage",
@@ -893,9 +891,7 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    },
-                    "Action": 0,
-                    "ActionParam": ""
+                    }
                 },
                 {
                     "Type": "UIImage",
