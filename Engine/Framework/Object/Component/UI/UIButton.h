@@ -80,6 +80,8 @@ namespace engine
 		void SetInteractable(bool v);
 		State GetState() const { return m_state; }
 
+		UIImage* GetTargetGraphic() const { return m_background; }
+
 	public:
 		// Input
 		void OnMouseEnter(const Vector2& mousePos) override;
