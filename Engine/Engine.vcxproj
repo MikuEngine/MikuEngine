@@ -256,6 +256,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Utility\EditorHelper.h" />
+    <ClInclude Include="Core\Graphics\Data\ParticleInstanceData.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Core\Graphics\Resource\GeometryShader.h" />
     <ClInclude Include="Editor\EditorGrid.h" />
     <ClInclude Include="Framework\Asset\FontData.h" />
