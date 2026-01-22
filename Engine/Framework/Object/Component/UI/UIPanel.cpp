@@ -42,6 +42,29 @@ namespace engine
 
 		//if (GetGameObject()->GetComponent<UIImage>())
 		//	GetGameObject()->AddComponent<UIImage>();
+
+		CreateVisuals();
+	}
+
+	void UIPanel::CreateVisuals()
+	{
+		if (!m_background)
+		{
+			if (auto* go = GetGameObject())
+			{
+				m_background = go->GetComponent<UIImage>();
+				if (!m_background)
+					m_background = go->AddComponent<UIImage>();
+			}
+		}
+
+		if (m_background)
+		{
+			m_background->m_raycastTarget = false;
+			//m_tintNormal = m_background->GetColor();
+		}
+
+		m_dirty = true;
 	}
 
 	void UIPanel::DrawUI() const
@@ -90,7 +113,7 @@ namespace engine
 
 	void UIPanel::Draw(RenderType type) const
 	{
-		UIElement::Draw(type);
+		//
 	}
 
 	DirectX::BoundingBox UIPanel::GetBounds() const

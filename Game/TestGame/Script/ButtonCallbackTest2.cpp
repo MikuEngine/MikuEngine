@@ -1,15 +1,13 @@
 ﻿#include "GamePCH.h"
 #include "ButtonCallbackTest2.h"
 
-#include <Framework/Scene/SceneManager.h>
-#include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/UI/UIButton.h>
 
 namespace game
 {
     void ButtonCallbackTest2::Awake()
     {
-        auto go = engine::SceneManager::Get().GetScene()->FindGameObject("test button");
+        auto go = engine::GameObject::Find("test button");
 
         auto button = go->GetComponent<engine::UIButton>();
 

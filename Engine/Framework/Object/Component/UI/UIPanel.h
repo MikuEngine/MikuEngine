@@ -73,5 +73,8 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
+
+	private:
+		void CreateVisuals();
 	};
 }

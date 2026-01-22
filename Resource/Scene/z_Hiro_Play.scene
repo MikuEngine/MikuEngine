@@ -1079,6 +1079,10 @@
                     "Type": "UIInputHandler",
                     "Active": true,
                     "Menu": true
+                },
+                {
+                    "Type": "ButtonCallbackTest2",
+                    "Active": true
                 }
             ]
         }
