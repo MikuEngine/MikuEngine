@@ -87,14 +87,17 @@
     <ClCompile Include="Script\TestLogicFSM.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+
     <ClCompile Include="Script\ButtonCallbackTest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\ButtonCallbackTest2.cpp">
+
     <ClCompile Include="Script\BaseControllerScript.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\PlayerScriptTest.cpp">
+
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -175,14 +178,17 @@
     <ClInclude Include="App\ComponentRegistry.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+
     <ClInclude Include="Script\ButtonCallbackTest.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\ButtonCallbackTest2.h">
+
     <ClInclude Include="Script\BaseControllerScript.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\PlayerScriptTest.h">
+
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
