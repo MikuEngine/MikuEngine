@@ -80,7 +80,7 @@ namespace engine
 	{
 		if (m_state == State::Disabled) return;
 		if (m_state == State::Pressed) return;
-		m_state = State::Normal;
+		m_state = State::Normal;	
 		UpdateVisuals();
 	}
 
@@ -286,19 +286,6 @@ namespace engine
 		ImGui::SameLine();
 		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteDisabled).filename().string().c_str());
 
-		const char* items[] = { "StartGame","OpenOption","OpenCredit","QuitGame","EnterPlay","OpenUpgrade","BackToMain","BackToSelect" };
-		int cur = (int)m_action;
-		if (ImGui::Combo("Action", &cur, items, IM_ARRAYSIZE(items)))
-			m_action = (ButtonAction)cur;
-
-		if (m_action == ButtonAction::StartGame /* or LoadScene류 */)
-		{
-			char buf[256]{};
-			strncpy_s(buf, m_actionParam.c_str(), sizeof(buf) - 1);
-			if (ImGui::InputText("ActionParam", buf, sizeof(buf)))
-				m_actionParam = buf;
-		}
-
 		if (changed)
 			UpdateVisuals();
 
@@ -318,9 +305,6 @@ namespace engine
 		j["TintHover"] = m_tintHover;
 		j["TintPressed"] = m_tintPressed;
 		j["TintDisabled"] = m_tintDisabled;
-
-		j["Action"] = (int)m_action;
-		j["ActionParam"] = m_actionParam;
 	}
 
 	void UIButton::Load(const json& j)
@@ -336,9 +320,6 @@ namespace engine
 		JsonGet(j, "TintHover", m_tintHover);
 		JsonGet(j, "TintPressed", m_tintPressed);
 		JsonGet(j, "TintDisabled", m_tintDisabled);
-
-		JsonGet(j, "Action", m_action);
-		JsonGet(j, "ActionParam", m_actionParam);
 
 		UpdateVisuals();
 	}

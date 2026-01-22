@@ -33,6 +33,10 @@ namespace engine
 	{
 		System<UIElement>::Unregister(e);
 		MarkDirty();
+
+		if (m_hovered == e) m_hovered = nullptr;
+		if (m_pressed == e)   m_pressed = nullptr;
+		if (m_dragTarget == e)  m_dragTarget = nullptr;
 	}
 
 	void UIEventSystem::Update()
@@ -147,13 +151,16 @@ namespace engine
 
 	void UIEventSystem::HandlePressDragRelease(UIElement* target, const MouseState& mouse)
 	{
-		bool rectIn = (target != nullptr) && target->HitTestPoint(mouse.position);
+		//bool rectIn = (target != nullptr) && target->HitTestPoint(mouse.position);
+		bool pressedIn = (m_pressed != nullptr) && m_pressed->HitTestPoint(mouse.position);
 
 		// MouseDown
 		if (mouse.leftDown)
 		{
 			m_pressed = target;
-			m_phase = rectIn ? PointerPhase::PressedInRect : PointerPhase::PressedOutRect;
+
+			const bool downIn = (m_pressed != nullptr) && m_pressed->HitTestPoint(mouse.position);
+			m_phase = downIn ? PointerPhase::PressedInRect : PointerPhase::PressedOutRect;
 
 			m_isDragging = false;
 			m_pressStartPos = mouse.position;
@@ -197,7 +204,7 @@ namespace engine
 				}
 			}
 
-			if (rectIn)
+			if (pressedIn)
 			{
 				if (m_phase == PointerPhase::PressedOutRect)
 				{
