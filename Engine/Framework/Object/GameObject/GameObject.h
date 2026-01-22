@@ -2,7 +2,6 @@
 
 #include "Framework/Object/Object.h"
 #include "Framework/Object/Component/Component.h"
-#include "Framework/Scene/SceneManager.h"
 
 namespace engine
 {
@@ -91,6 +90,8 @@ namespace engine
         RectTransform* ReplaceTransformWithRectTransform();
         void DontDestroyOnLoad();
         bool IsDontDestroyOnLoad();
+
+        static GameObject* Find(std::string_view name);
 
     public:
         virtual void OnGui() {};
