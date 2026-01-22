@@ -19,8 +19,6 @@ namespace engine
         const physx::PxContactPair* pairs,
         physx::PxU32 nbPairs)
     {
-        LOG_PRINT("[PhysicsCallback] onContact called with {} pairs", nbPairs);
-        
         // 삭제된 Actor 스킵
         if (pairHeader.flags & (physx::PxContactPairHeaderFlag::eREMOVED_ACTOR_0 |
                                 physx::PxContactPairHeaderFlag::eREMOVED_ACTOR_1))
@@ -70,12 +68,8 @@ namespace engine
             }
             else
             {
-                LOG_PRINT("[PhysicsCallback] Unknown event flags: 0x{:X}", static_cast<unsigned int>(pair.events));
                 continue;
             }
-            
-            LOG_PRINT("[PhysicsCallback] Event type determined: {} (flags=0x{:X})", 
-                static_cast<int>(eventType), static_cast<unsigned int>(pair.events));
 
             // 충돌 이벤트 생성
             CollisionEvent event;
@@ -95,10 +89,6 @@ namespace engine
             event.priority = (priorityA > priorityB) ? priorityA : priorityB;
 
             // CollisionSystem에 큐잉
-            LOG_PRINT("[PhysicsCallback] Queuing collision event: {} <-> {}, type={}",
-                colliderA->GetGameObject()->GetName(),
-                colliderB->GetGameObject()->GetName(),
-                static_cast<int>(eventType));
             CollisionSystem::Get().QueueCollisionEvent(event);
         }
     }
@@ -107,8 +97,6 @@ namespace engine
         physx::PxTriggerPair* pairs,
         physx::PxU32 count)
     {
-        LOG_PRINT("[PhysicsCallback] onTrigger called with {} pairs", count);
-        
         for (physx::PxU32 i = 0; i < count; ++i)
         {
             const physx::PxTriggerPair& pair = pairs[i];
@@ -230,29 +218,6 @@ namespace engine
         const void* constantBlock,
         physx::PxU32 constantBlockSize)
     {
-        // Kinematic 확인 (먼저 체크)
-        bool isKinematic0 = physx::PxFilterObjectIsKinematic(attributes0);
-        bool isKinematic1 = physx::PxFilterObjectIsKinematic(attributes1);
-        
-        // 필터 셰이더 호출 확인 (Kinematic 쌍은 항상 로그)
-        static int totalCalls = 0;
-        static int kinematicPairCalls = 0;
-        totalCalls++;
-        
-        // Kinematic 쌍은 항상 로그
-        if (isKinematic0 || isKinematic1)
-        {
-            kinematicPairCalls++;
-            LOG_PRINT("[PhysicsFilterShader] Called #{} (Kinematic pair #{}): layer0={}, mask0=0x{:X}, layer1={}, mask1=0x{:X}, K0={}, K1={}",
-                totalCalls, kinematicPairCalls, filterData0.word0, filterData0.word1, filterData1.word0, filterData1.word1,
-                isKinematic0, isKinematic1);
-        }
-        else if (totalCalls <= 10)  // 처음 10번은 로그
-        {
-            LOG_PRINT("[PhysicsFilterShader] Called #{}: layer0={}, mask0=0x{:X}, layer1={}, mask1=0x{:X}",
-                totalCalls, filterData0.word0, filterData0.word1, filterData1.word0, filterData1.word1);
-        }
-
         // filterData.word0 = 자신의 레이어 인덱스
         // filterData.word1 = 충돌할 레이어 마스크
 
