@@ -33,6 +33,7 @@
     <ClCompile Include="Script\TestSound.cpp" />
     <ClCompile Include="Script\zJCTestPlayer.cpp" />
     <ClCompile Include="Script\HubButtonController.cpp" />
+    <ClCompile Include="Script\TestShootingPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="Script\TestSound.h" />
     <ClInclude Include="Script\zJCTestPlayer.h" />
     <ClInclude Include="Script\HubButtonController.h" />
+    <ClInclude Include="Script\TestShootingPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\TestHeader.hlsli" />

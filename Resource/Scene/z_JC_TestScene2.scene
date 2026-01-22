@@ -124,10 +124,17 @@
                     ]
                 },
                 {
-                    "Type": "PlayerFSM",
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "Idle",
+                    "States": []
+                },
+                {
+                    "Type": "TestShootingPlayer",
                     "Active": true,
                     "MoveSpeed": 5.0,
-                    "EnableUpperBodyAim": true
+                    "EnableUpperBodyAim": true,
+                    "FSMInitialized": false
                 }
             ]
         },
