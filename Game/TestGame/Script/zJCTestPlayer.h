@@ -1,71 +1,74 @@
 ﻿#pragma once
 
-#include <Framework/Object/Component/Script.h>
+#include "BaseControllerScript.h"
 
 namespace engine
 {
-    class LogicFSM;
-    class AnimFSM;
+    class Rigidbody;
 }
 
 namespace game
 {
-
     // ═══════════════════════════════════════════════════════════════
-    // BaseControllerScript - FSM과 연동하는 컨트롤러 스크립트 템플릿
+    // zJCTestPlayer - 4방향 이동 테스트용 플레이어 스크립트
     // 
-    // 사용법:
-    //   1. 이 클래스를 상속받아서 자식 클래스 생성
-    //   2. ProcessInput() 오버라이드하여 입력 처리
-    //   3. OnStateEntered(), OnStateExited() 오버라이드하여 상태별 로직
-    //   4. UpdateGameLogic() 오버라이드하여 게임 로직 처리
-    // 
-    // 예시:
-    //   class PlayerController : public BaseControllerScript
-    //   {
-    //       void ProcessInput() override
-    //       {
-    //           // WASD 입력 처리
-    //           m_logicFSM->SetParameter("MoveSpeed", speed);
-    //       }
-    //   };
+    // 기능:
+    //   - WASD로 상하좌우 이동
+    //   - 5개 스테이트: Idle, MoveUp, MoveDown, MoveLeft, MoveRight
+    //   - 스테이트 진입/나갈 때 디버그 로그 출력
     // ═══════════════════════════════════════════════════════════════
     class zJCTestPlayer :
-        public engine::Script<zJCTestPlayer>
+        public BaseControllerScript
     {
-        REGISTER_COMPONENT(zJCTestPlayer, Script)
+        REGISTER_COMPONENT(zJCTestPlayer, BaseControllerScript)
 
     protected:
-        // FSM 컴포넌트 참조
-        engine::LogicFSM* m_logicFSM = nullptr;
-        engine::AnimFSM* m_animFSM = nullptr;
+        // 추가 컴포넌트 참조
+        engine::Rigidbody* m_rigidbody = nullptr;
+
+        // 이동 속도
+        float m_moveSpeed = 5.0f;
+
+        // FSM 초기화 플래그
+        bool m_fsmInitialized = false;
+
+        // 씬 파일에서 로드된 FSM 정보 (에디터 표시용)
+        struct LoadedFSMInfo
+        {
+            std::string currentState;
+            bool hasStates = false;
+        };
+        LoadedFSMInfo m_loadedFSMInfo;
 
     public:
         void Awake() override;
         void Start() override;
         void Update() override;
+        void OnGui() override;
+        void Save(engine::json& j) const override;
+        void Load(const engine::json& j) override;
 
     protected:
         // ─────────────────────────────────────────────
-        // 오버라이드 가능한 함수들
+        // 입력 처리 및 게임 로직 (BaseControllerScript 오버라이드)
         // ─────────────────────────────────────────────
+        void ProcessInput() override;
+        void UpdateGameLogic() override;
 
-        // 입력 처리 (자식에서 오버라이드)
-        virtual void ProcessInput() {}
+        // ─────────────────────────────────────────────
+        // 상태 변화 콜백 (BaseControllerScript 오버라이드)
+        // ─────────────────────────────────────────────
+        void OnStateEntered(const std::string& state) override;
+        void OnStateExited(const std::string& state) override;
 
-        // 게임 로직 업데이트 (자식에서 오버라이드)
-        virtual void UpdateGameLogic() {}
-
-        // 상태 변화 콜백 (자식에서 오버라이드)
-        virtual void OnStateChanged(const std::string& oldState, const std::string& newState) {}
-        virtual void OnStateEntered(const std::string& state) {}
-        virtual void OnStateExited(const std::string& state) {}
+    protected:
+        // ─────────────────────────────────────────────
+        // 컴포넌트 캐싱 (BaseControllerScript 오버라이드)
+        // ─────────────────────────────────────────────
+        void CacheComponents() override;
 
     private:
-        // FSM 컴포넌트 찾기
-        void CacheFSMComponents();
-
-        // FSM 콜백 등록
-        void RegisterFSMCallbacks();
+        // FSM 초기화 (스테이트 및 전이 설정)
+        void InitializeFSM();
     };
 }

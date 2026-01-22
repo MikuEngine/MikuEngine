@@ -157,14 +157,15 @@
   <ItemGroup>
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
-    <ClCompile Include="Script\HubButtonController.cpp" />
-    <ClCompile Include="Script\PlayerScriptTest.cpp" />
+
+    <ClCompile Include="Script\HubButtonController.cpp" />   
+
     <ClCompile Include="Script\AnimationPlayer.cpp" />
     <ClCompile Include="Script\TitleButtonController.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Script\ButtonCallbackTest2.cpp">
+    <ClCompile Include="Script\PlayButtonController.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -222,7 +223,6 @@
     </ClCompile>
     <ClCompile Include="App\TestGameApp.cpp" />
     <ClCompile Include="Script\TestSound.cpp" />
-    <ClCompile Include="Script\UIInputHandler.cpp" />
     <ClCompile Include="Script\zJCTestPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -250,8 +250,9 @@
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
-    <ClInclude Include="Script\HubButtonController.h" />
-    <ClInclude Include="Script\PlayerScriptTest.h" />
+
+    <ClInclude Include="Script\HubButtonController.h" />   
+
     <ClInclude Include="Script\AimPointer.h">
       <SubType>
       </SubType>
@@ -260,7 +261,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Script\ButtonCallbackTest2.h">
+    <ClInclude Include="Script\PlayButtonController.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -310,7 +311,6 @@
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
     <ClInclude Include="Script\TestSound.h" />
-    <ClInclude Include="Script\UIInputHandler.h" />
     <ClInclude Include="Script\zJCTestPlayer.h" />
   </ItemGroup>
   <ItemGroup>

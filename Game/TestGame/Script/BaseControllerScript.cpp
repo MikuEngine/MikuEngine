@@ -9,7 +9,7 @@ namespace game
 {
     void BaseControllerScript::Awake()
     {
-        CacheFSMComponents();
+        CacheComponents();
     }
 
     void BaseControllerScript::Start()
@@ -37,10 +37,25 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // 컴포넌트 캐싱
+    // ═══════════════════════════════════════════════════════════════
+    void BaseControllerScript::CacheComponents()
+    {
+        // FSM 컴포넌트 찾기
+        CacheFSMComponents();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // FSM 컴포넌트 찾기
     // ═══════════════════════════════════════════════════════════════
     void BaseControllerScript::CacheFSMComponents()
     {
+        // GetGameObject()가 유효한지 확인
+        if (!GetGameObject())
+        {
+            return;
+        }
+        
         m_logicFSM = GetGameObject()->GetComponent<engine::LogicFSM>();
         m_animFSM = GetGameObject()->GetComponent<engine::AnimFSM>();
     }
@@ -69,5 +84,35 @@ namespace game
         {
             OnStateExited(state);
         });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // FSM 초기화 헬퍼 함수들
+    // ═══════════════════════════════════════════════════════════════
+    void BaseControllerScript::AddFSMState(const std::string& stateName, bool isDefault)
+    {
+        if (!m_logicFSM) return;
+
+        engine::FSMState state;
+        state.name = stateName;
+        state.isDefault = isDefault;
+        m_logicFSM->AddState(state);
+    }
+
+    void BaseControllerScript::AddFSMTransition(
+        const std::string& fromState,
+        const std::string& toState,
+        const std::string& parameterName,
+        FSMTransitionType conditionType)
+    {
+        if (!m_logicFSM) return;
+
+        engine::FSMTransition transition;
+        transition.fromState = fromState;
+        transition.toState = toState;
+        transition.conditionParameter = parameterName;
+        transition.conditionType = conditionType;
+        
+        m_logicFSM->AddTransition(fromState, transition);
     }
 }

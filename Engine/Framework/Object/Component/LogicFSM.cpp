@@ -9,7 +9,8 @@ namespace engine
 {
     void LogicFSM::Initialize()
     {
-        // 초기화
+        // 상태 맵 업데이트 (씬 파일에서 로드된 상태가 있을 수 있음)
+        UpdateStateMap();
     }
 
     void LogicFSM::Awake()
@@ -157,15 +158,28 @@ namespace engine
     void LogicFSM::AddState(const FSMState& state)
     {
         m_states.push_back(state);
-        m_stateMap[state.name] = &m_states.back();
+        // 포인터는 나중에 UpdateStateMap()에서 업데이트
+        // 여기서는 이름만 저장하여 재할당 문제 방지
+    }
+
+    void LogicFSM::UpdateStateMap()
+    {
+        m_stateMap.clear();
+        for (auto& state : m_states)
+        {
+            m_stateMap[state.name] = &state;
+        }
     }
 
     void LogicFSM::AddTransition(const std::string& fromState, const FSMTransition& transition)
     {
         auto it = m_stateMap.find(fromState);
-        if (it != m_stateMap.end())
+        if (it != m_stateMap.end() && it->second)
         {
-            it->second->transitions.push_back(transition);
+            // transition 객체를 복사하고 fromState를 설정
+            FSMTransition newTransition = transition;
+            newTransition.fromState = fromState;
+            it->second->transitions.push_back(newTransition);
         }
     }
 
@@ -174,6 +188,33 @@ namespace engine
         for (auto& state : m_states)
         {
             state.isDefault = (state.name == stateName);
+        }
+    }
+
+    void LogicFSM::InitializeCurrentState()
+    {
+        // 현재 상태가 비어있을 때만 초기화
+        if (!m_currentState.empty())
+        {
+            return;
+        }
+
+        // 기본 상태 찾기
+        for (const auto& state : m_states)
+        {
+            if (state.isDefault)
+            {
+                m_currentState = state.name;
+                m_stateTimer = 0.0f;
+                return;
+            }
+        }
+
+        // 기본 상태가 없으면 첫 번째 상태
+        if (!m_states.empty())
+        {
+            m_currentState = m_states[0].name;
+            m_stateTimer = 0.0f;
         }
     }
 
@@ -288,8 +329,14 @@ namespace engine
 
     void LogicFSM::UpdateTransitions()
     {
+        // 현재 상태가 비어있으면 전이 체크 불가
+        if (m_currentState.empty())
+        {
+            return;
+        }
+        
         auto it = m_stateMap.find(m_currentState);
-        if (it == m_stateMap.end())
+        if (it == m_stateMap.end() || !it->second)
         {
             return;
         }
@@ -335,62 +382,106 @@ namespace engine
     void LogicFSM::OnGui()
     {
         ImGui::Text("LogicFSM Component");
-        ImGui::Text("Current State: %s", m_currentState.c_str());
+        ImGui::Text("Current State: %s", m_currentState.empty() ? "(None)" : m_currentState.c_str());
         ImGui::Text("State Timer: %.2f", m_stateTimer);
 
         ImGui::Separator();
 
-        // Parameters 표시
-        if (ImGui::CollapsingHeader("Parameters"))
+        // States 표시 (에디터에서도 보이도록)
+        if (ImGui::CollapsingHeader("States", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            for (const auto& [name, param] : m_parameters)
+            if (m_states.empty())
             {
-                ImGui::PushID(name.c_str());
-                
-                switch (param.type)
+                ImGui::TextColored(ImVec4(1, 1, 0, 1), "No states defined");
+                ImGui::Text("(States will be initialized at runtime)");
+                ImGui::Text("(Play the scene once and save to persist states)");
+            }
+            else
+            {
+                for (const auto& state : m_states)
                 {
-                case FSMParameter::Type::Float:
-                    ImGui::Text("%s (Float): %.2f", name.c_str(), param.floatValue);
-                    break;
-                case FSMParameter::Type::Bool:
-                    ImGui::Text("%s (Bool): %s", name.c_str(), param.boolValue ? "true" : "false");
-                    break;
-                case FSMParameter::Type::Int:
-                    ImGui::Text("%s (Int): %d", name.c_str(), param.intValue);
-                    break;
-                case FSMParameter::Type::Trigger:
-                    ImGui::Text("%s (Trigger): %s", name.c_str(), param.triggerValue ? "true" : "false");
-                    break;
+                    bool isCurrent = (state.name == m_currentState);
+                    bool isDefault = state.isDefault;
+                    
+                    if (isCurrent)
+                    {
+                        ImGui::TextColored(ImVec4(0, 1, 0, 1), "> %s", state.name.c_str());
+                        if (isDefault)
+                        {
+                            ImGui::SameLine();
+                            ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "(Current, Default)");
+                        }
+                        else
+                        {
+                            ImGui::SameLine();
+                            ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "(Current)");
+                        }
+                    }
+                    else
+                    {
+                        if (isDefault)
+                        {
+                            ImGui::Text("  %s", state.name.c_str());
+                            ImGui::SameLine();
+                            ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "(Default)");
+                        }
+                        else
+                        {
+                            ImGui::Text("  %s", state.name.c_str());
+                        }
+                    }
+                    
+                    // 전이 정보 표시
+                    if (!state.transitions.empty())
+                    {
+                        ImGui::Indent();
+                        for (const auto& trans : state.transitions)
+                        {
+                            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "  -> %s", trans.toState.c_str());
+                            
+                            // 전이 조건 표시
+                            ImGui::SameLine();
+                            ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "[%s]", trans.conditionParameter.c_str());
+                        }
+                        ImGui::Unindent();
+                    }
                 }
-                
-                ImGui::PopID();
             }
         }
 
-        // States 표시
-        if (ImGui::CollapsingHeader("States"))
+        ImGui::Separator();
+
+        // Parameters 표시 (에디터에서도 보이도록)
+        if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            for (const auto& state : m_states)
+            if (m_parameters.empty())
             {
-                bool isCurrent = (state.name == m_currentState);
-                if (isCurrent)
+                ImGui::TextColored(ImVec4(1, 1, 0, 1), "No parameters defined");
+                ImGui::Text("(Parameters will be set at runtime)");
+            }
+            else
+            {
+                for (const auto& [name, param] : m_parameters)
                 {
-                    ImGui::TextColored(ImVec4(0, 1, 0, 1), "> %s (Current)", state.name.c_str());
-                }
-                else
-                {
-                    ImGui::Text("  %s", state.name.c_str());
-                }
-                
-                if (ImGui::IsItemHovered() && !state.transitions.empty())
-                {
-                    ImGui::BeginTooltip();
-                    ImGui::Text("Transitions:");
-                    for (const auto& trans : state.transitions)
+                    ImGui::PushID(name.c_str());
+                    
+                    switch (param.type)
                     {
-                        ImGui::Text("  -> %s", trans.toState.c_str());
+                    case FSMParameter::Type::Float:
+                        ImGui::Text("%s (Float): %.2f", name.c_str(), param.floatValue);
+                        break;
+                    case FSMParameter::Type::Bool:
+                        ImGui::Text("%s (Bool): %s", name.c_str(), param.boolValue ? "true" : "false");
+                        break;
+                    case FSMParameter::Type::Int:
+                        ImGui::Text("%s (Int): %d", name.c_str(), param.intValue);
+                        break;
+                    case FSMParameter::Type::Trigger:
+                        ImGui::Text("%s (Trigger): %s", name.c_str(), param.triggerValue ? "true" : "false");
+                        break;
                     }
-                    ImGui::EndTooltip();
+                    
+                    ImGui::PopID();
                 }
             }
         }
@@ -464,10 +555,9 @@ namespace engine
             
             AddState(state);
         });
-    }
-
-    //std::string LogicFSM::GetType() const
-    //{
-    //    return "LogicFSM";
-    //}
+        
+        // 모든 상태 추가 후 m_stateMap 업데이트
+        // (Initialize()에서도 호출되지만, Load 직후에는 여기서 호출)
+        UpdateStateMap();
+    }   
 }
