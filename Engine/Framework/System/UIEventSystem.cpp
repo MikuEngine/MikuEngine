@@ -3,10 +3,10 @@
 
 #include "Core/System/Input.h"
 
-#include "Framework/Object/Component/UIElement.h"
+#include "Framework/Object/Component/UI/UIElement.h"
+#include "Framework/Object/Component/UI/UIInteractable.h"
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/Canvas.h"
-#include "Framework/Object/Component/UIInteractable.h"
 
 namespace engine
 {
@@ -40,8 +40,6 @@ namespace engine
 		MouseState mouse = BuildMouseStateFromInput();
 
 		RebuildCacheIfDirty();
-
-		
 
 		UIElement* newHover = HitTestTopmost(mouse.position);
 
@@ -117,10 +115,6 @@ namespace engine
 			if (!rt) continue;
 
 			if (!e->HitTestPoint(mousePos)) continue;
-
-			UIInteractable* it = AsInteractable(e);
-			if (!it) continue;
-			if (!it->IsInteractable()) continue;
 
 			return e;
 		}

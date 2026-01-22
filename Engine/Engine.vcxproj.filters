@@ -246,22 +246,22 @@
     <ClCompile Include="Framework\Object\Component\Canvas.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\UIElement.cpp">
+    <ClCompile Include="Framework\Object\Component\UI\UIElement.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\UIImage.cpp">
+    <ClCompile Include="Framework\Object\Component\UI\UIImage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Editor\EditorGrid.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\UIText.cpp">
+    <ClCompile Include="Framework\Object\Component\UI\UIText.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\UIButton.cpp">
+    <ClCompile Include="Framework\Object\Component\UI\UIButton.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\UIInteractable.cpp">
+    <ClCompile Include="Framework\Object\Component\UI\UIInteractable.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\System\UIEventSystem.cpp">
@@ -270,7 +270,7 @@
     <ClCompile Include="Framework\System\SoundSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\UISlider.cpp">
+    <ClCompile Include="Framework\Object\Component\UI\UISlider.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Object\Component\AudioSource.cpp">
@@ -285,7 +285,7 @@
     <ClCompile Include="Framework\Asset\PreloadManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\UIProgressBar.cpp">
+    <ClCompile Include="Framework\Object\Component\UI\UIProgressBar.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Asset\PrefabData.cpp">
@@ -295,6 +295,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Framework\Object\Component\Module\ParticleEmitter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\UI\UIPanel.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -584,31 +587,31 @@
     <ClInclude Include="Framework\Object\Component\Canvas.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\UIElement.h">
+    <ClInclude Include="Framework\Object\Component\UI\UIElement.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\UIImage.h">
+    <ClInclude Include="Framework\Object\Component\UI\UIImage.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Editor\EditorGrid.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\UIText.h">
+    <ClInclude Include="Framework\Object\Component\UI\UIText.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\System\SoundSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\UIButton.h">
+    <ClInclude Include="Framework\Object\Component\UI\UIButton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\UIInteractable.h">
+    <ClInclude Include="Framework\Object\Component\UI\UIInteractable.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\System\UIEventSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\UISlider.h">
+    <ClInclude Include="Framework\Object\Component\UI\UISlider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\AudioSource.h">
@@ -623,7 +626,7 @@
     <ClInclude Include="Framework\Asset\PreloadManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\UIProgressBar.h">
+    <ClInclude Include="Framework\Object\Component\UI\UIProgressBar.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Common\Utility\EditorHelper.h">
@@ -639,6 +642,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\Module\ParticleEmitter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\UI\UIPanel.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -24,9 +24,6 @@ namespace game
         bool m_isWaitingAfterTest4 = false;
         float m_test4WaitTimer = 0.0f;
         float m_test4WaitDuration = 1.0f;
-        
-        // Test3 재진입 방지용 (애니메이션 시작 확인)
-        bool m_test3Started = false;
 
     public:
         void Awake() override;
@@ -36,12 +33,15 @@ namespace game
         // ILogicFSMListener 오버라이드
         void OnStateEnter(const StateContext& context) override;
         void OnStateExit(const StateContext& context) override;
+        
+    protected:
+        // 레이어별 종료 콜백 오버라이드
+        void OnUpperLayerFinished() override;
 
     private:
         void SetupAnimationMappings();
-        void CheckTest2EarlyExit();
         void CheckTest1Finished();
-        void CheckTest3Finished();
+        void CheckTest2EarlyExit();
         void CheckTest4Finished();
         void UpdateTest4Wait();
 

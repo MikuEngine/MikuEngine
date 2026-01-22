@@ -1,8 +1,12 @@
 ﻿#pragma once
-#include "fmod.hpp"
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/ComponentFactory.h"
+
+namespace FMOD
+{
+    class Channel;
+}
 
 namespace engine
 {

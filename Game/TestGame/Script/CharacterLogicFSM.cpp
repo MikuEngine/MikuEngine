@@ -1,9 +1,9 @@
 ﻿#include "GamePCH.h"
 #include "CharacterLogicFSM.h"
 #include "CharacterAnimationFSM.h"
-#include "InputBinding.h"
 
 #include <Framework/Object/GameObject/GameObject.h>
+#include <Engine/Core/System/Input.h>
 
 namespace game
 {
@@ -39,7 +39,10 @@ namespace game
     {
         m_stateTimer += engine::Time::DeltaTime();
         
+        // 입력 플래그 리셋 후 자식이 채움
+        m_context.ResetInputFlags();
         ProcessInput();
+        
         UpdateState();
         NotifyListenersUpdate();
     }
@@ -95,7 +98,6 @@ namespace game
 
     void CharacterLogicFSM::CacheComponents()
     {
-        m_inputBinding = GetGameObject()->GetComponent<game::InputBinding>();
         m_animFSM = GetGameObject()->GetComponent<CharacterAnimationFSM>();
         
         if (m_animFSM)
@@ -106,13 +108,12 @@ namespace game
 
     void CharacterLogicFSM::ProcessInput()
     {
-        if (!m_inputBinding)
-        {
-            return;
-        }
-        
-        m_context.moveDirection = GetMoveInputDirection();
-        m_context.moveSpeed = m_moveSpeed;
+        // 베이스: 빈 구현
+        // 자식 클래스에서 오버라이드하여 m_context에 입력 데이터 설정
+        // 예:
+        //   m_context.moveDirection = GetMoveInputDirection();
+        //   m_context.attackPressed = Input::IsMousePressed(LEFT);
+        //   m_context.attackHeld = Input::IsMouseHeld(LEFT);
     }
 
     void CharacterLogicFSM::UpdateState()
@@ -148,7 +149,7 @@ namespace game
 
     void CharacterLogicFSM::UpdateCurrentState()
     {
-        // 베이스: 기본 상태별 업데이트
+        // 베이스: 기본 상태별 업데이트 (context 기반)
         switch (m_currentState)
         {
         case CharacterState::Idle:
@@ -158,8 +159,8 @@ namespace game
                 ChangeState(CharacterState::Walk);
                 return;
             }
-            // 공격 입력 -> Attack
-            if (IsAttackPressed())
+            // 공격 입력 -> Attack (context 기반)
+            if (m_context.attackPressed)
             {
                 ChangeState(CharacterState::Attack);
                 return;
@@ -173,8 +174,8 @@ namespace game
                 ChangeState(CharacterState::Idle);
                 return;
             }
-            // 공격 -> Attack
-            if (IsAttackPressed())
+            // 공격 -> Attack (context 기반)
+            if (m_context.attackPressed)
             {
                 ChangeState(CharacterState::Attack);
                 return;
@@ -208,38 +209,11 @@ namespace game
     void CharacterLogicFSM::OnTriggerExit(const engine::CollisionInfo& info) {}
 
     // ═══════════════════════════════════════════════════════════════
-    // 유틸리티
+    // 유틸리티 (context 기반)
     // ═══════════════════════════════════════════════════════════════
-    engine::Vector3 CharacterLogicFSM::GetMoveInputDirection() const
-    {
-        if (!m_inputBinding)
-        {
-            return engine::Vector3::Zero;
-        }
-
-        engine::Vector3 direction = engine::Vector3::Zero;
-
-        if (m_inputBinding->IsHeld(m_inputMoveUp))    direction.y += 1.0f;
-        if (m_inputBinding->IsHeld(m_inputMoveDown))  direction.y -= 1.0f;
-        if (m_inputBinding->IsHeld(m_inputMoveLeft))  direction.x -= 1.0f;
-        if (m_inputBinding->IsHeld(m_inputMoveRight)) direction.x += 1.0f;
-
-        if (direction.LengthSquared() > 0.0f)
-        {
-            direction.Normalize();
-        }
-
-        return direction;
-    }
-
     bool CharacterLogicFSM::IsMoving() const
     {
         return m_context.moveDirection.LengthSquared() > 0.001f;
-    }
-
-    bool CharacterLogicFSM::IsAttackPressed() const
-    {
-        return m_inputBinding && m_inputBinding->IsPressed(m_inputAttack);
     }
 
     void CharacterLogicFSM::NotifyListenersEnter()
@@ -278,49 +252,17 @@ namespace game
         
         ImGui::Separator();
         ImGui::DragFloat("Move Speed", &m_moveSpeed, 0.1f, 0.0f, 20.0f);
-        
-        if (ImGui::CollapsingHeader("Input Binding Names"))
-        {
-            char buf[64];
-            
-            strcpy_s(buf, m_inputMoveUp.c_str());
-            if (ImGui::InputText("Move Up", buf, 64)) m_inputMoveUp = buf;
-            
-            strcpy_s(buf, m_inputMoveDown.c_str());
-            if (ImGui::InputText("Move Down", buf, 64)) m_inputMoveDown = buf;
-            
-            strcpy_s(buf, m_inputMoveLeft.c_str());
-            if (ImGui::InputText("Move Left", buf, 64)) m_inputMoveLeft = buf;
-            
-            strcpy_s(buf, m_inputMoveRight.c_str());
-            if (ImGui::InputText("Move Right", buf, 64)) m_inputMoveRight = buf;
-            
-            strcpy_s(buf, m_inputAttack.c_str());
-            if (ImGui::InputText("Attack", buf, 64)) m_inputAttack = buf;
-        }
     }
 
     void CharacterLogicFSM::Save(engine::json& j) const
     {
         Object::Save(j);
-        
         j["MoveSpeed"] = m_moveSpeed;
-        j["InputMoveUp"] = m_inputMoveUp;
-        j["InputMoveDown"] = m_inputMoveDown;
-        j["InputMoveLeft"] = m_inputMoveLeft;
-        j["InputMoveRight"] = m_inputMoveRight;
-        j["InputAttack"] = m_inputAttack;
     }
 
     void CharacterLogicFSM::Load(const engine::json& j)
     {
         Object::Load(j);
-        
         engine::JsonGet(j, "MoveSpeed", m_moveSpeed);
-        engine::JsonGet(j, "InputMoveUp", m_inputMoveUp);
-        engine::JsonGet(j, "InputMoveDown", m_inputMoveDown);
-        engine::JsonGet(j, "InputMoveLeft", m_inputMoveLeft);
-        engine::JsonGet(j, "InputMoveRight", m_inputMoveRight);
-        engine::JsonGet(j, "InputAttack", m_inputAttack);
     }
 }

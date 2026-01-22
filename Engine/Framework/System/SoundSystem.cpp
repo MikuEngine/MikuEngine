@@ -3,6 +3,8 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
+#include "fmod_errors.h"
+#include "fmod.hpp"
 
 namespace engine
 {
@@ -404,6 +406,8 @@ namespace engine
 
     void SoundSystem::RefreshSoundList()
     {
+        namespace fs = std::filesystem;
+
         m_PlayUIList.clear();
 
         if (fs::exists(m_soundPath) && fs::is_directory(m_soundPath))

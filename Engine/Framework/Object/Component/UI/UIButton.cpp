@@ -8,8 +8,8 @@
 
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
-#include "Framework/Object/Component/UIImage.h"
-#include "Framework/Object/Component/UIText.h"
+#include "Framework/Object/Component/UI/UIImage.h"
+#include "Framework/Object/Component/UI/UIText.h"
 
 namespace engine
 {
@@ -142,6 +142,8 @@ namespace engine
 
 	void UIButton::CreateVisuals()
 	{
+		if (m_label && m_background) return;
+
 		if (!m_background)
 		{
 			if (auto* go = GetGameObject())
@@ -161,8 +163,10 @@ namespace engine
 		GameObject* parent = GetGameObject();
 		if (!parent) return;
 
-		auto makeChild = [&](const char* name) -> GameObject*
+		auto makeChild = [&](const char* name, bool& outCreated) -> GameObject*
 			{
+				outCreated = false;
+
 				if (GameObject* exist = FindChildByName(parent, name))
 					return exist;
 
@@ -171,6 +175,8 @@ namespace engine
 
 				GameObject* go = scene->CreateGameObject(CreateObjectType::UI);
 				if (!go) return nullptr;
+
+				outCreated = true;
 
 				go->SetName(name);
 				go->GetTransform()->SetParent(parent->GetTransform());
@@ -183,7 +189,8 @@ namespace engine
 
 		// Label
 		{
-			GameObject* go = makeChild("Label");
+			bool created = false;
+			GameObject* go = makeChild("Label", created);
 			if (go)
 			{
 				if (!go->GetComponent<UIText>())
@@ -191,15 +198,17 @@ namespace engine
 
 				m_label = go->GetComponent<UIText>();
 
-				RectTransform* rt = go->GetComponent<RectTransform>();
-				rt->SetAnchorMin({ 0.0f, 0.0f });
-				rt->SetAnchorMax({ 1.0f, 1.0f });
-				rt->SetPivot({ 0.5f, 0.5f });
-				rt->SetAnchoredPosition({ 0.0f, 0.0f });
-				rt->SetSize(0.0f, 0.0f);
-
-				m_label->SetText(m_labelText);
-				//m_label->SetAlignment(TextAlign::Center);
+				if (created)
+				{
+					RectTransform* rt = go->GetComponent<RectTransform>();
+					rt->SetAnchorMin({ 0.0f, 0.0f });
+					rt->SetAnchorMax({ 1.0f, 1.0f });
+					rt->SetPivot({ 0.5f, 0.5f });
+					rt->SetAnchoredPosition({ 0.0f, 0.0f });
+					rt->SetSize(0.0f, 0.0f);
+					m_label->SetText(m_labelText);
+					//m_label->SetAlignment(TextAlign::Center);
+				}
 			}
 		}
 	}
@@ -270,6 +279,19 @@ namespace engine
 		ImGui::SameLine();
 		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteDisabled).filename().string().c_str());
 
+		const char* items[] = { "StartGame","OpenOption","OpenCredit","QuitGame","EnterPlay","OpenUpgrade","BackToMain","BackToSelect" };
+		int cur = (int)m_action;
+		if (ImGui::Combo("Action", &cur, items, IM_ARRAYSIZE(items)))
+			m_action = (ButtonAction)cur;
+
+		if (m_action == ButtonAction::StartGame /* or LoadScene류 */)
+		{
+			char buf[256]{};
+			strncpy_s(buf, m_actionParam.c_str(), sizeof(buf) - 1);
+			if (ImGui::InputText("ActionParam", buf, sizeof(buf)))
+				m_actionParam = buf;
+		}
+
 		if (changed)
 			UpdateVisuals();
 
@@ -279,8 +301,6 @@ namespace engine
 	void UIButton::Save(json& j) const
 	{
 		UIElement::Save(j);
-
-		j["State"] = (int)m_state;
 
 		j["SpriteNormal"] = m_spriteNormal;
 		j["SpriteHover"] = m_spriteHovered;
@@ -292,16 +312,13 @@ namespace engine
 		j["TintPressed"] = m_tintPressed;
 		j["TintDisabled"] = m_tintDisabled;
 
-		j["LabelText"] = m_labelText;
+		j["Action"] = (int)m_action;
+		j["ActionParam"] = m_actionParam;
 	}
 
 	void UIButton::Load(const json& j)
 	{
 		UIElement::Load(j);
-
-		int s = 0;
-		JsonGet(j, "State", s);
-		m_state = (State)s;
 
 		JsonGet(j, "SpriteNormal", m_spriteNormal);
 		JsonGet(j, "SpriteHover", m_spriteHovered);
@@ -313,7 +330,8 @@ namespace engine
 		JsonGet(j, "TintPressed", m_tintPressed);
 		JsonGet(j, "TintDisabled", m_tintDisabled);
 
-		JsonGet(j, "LabelText", m_labelText);
+		JsonGet(j, "Action", m_action);
+		JsonGet(j, "ActionParam", m_actionParam);
 
 		UpdateVisuals();
 	}

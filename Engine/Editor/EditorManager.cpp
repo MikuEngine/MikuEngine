@@ -16,11 +16,11 @@
 #include "Framework/Object/Component/ComponentFactory.h"
 #include "Framework/Object/Component/Canvas.h"
 
-#include "Framework/Object/Component/UIImage.h"
-#include "Framework/Object/Component/UIText.h"
-#include "Framework/Object/Component/UIButton.h"
-#include "Framework/Object/Component/UISlider.h"
-#include "Framework/Object/Component/UIProgressBar.h"
+#include "Framework/Object/Component/UI/UIImage.h"
+#include "Framework/Object/Component/UI/UIText.h"
+#include "Framework/Object/Component/UI/UIButton.h"
+#include "Framework/Object/Component/UI/UISlider.h"
+#include "Framework/Object/Component/UI/UIProgressBar.h"
 
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"

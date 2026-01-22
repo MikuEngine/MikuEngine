@@ -6,7 +6,7 @@
 #include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
-#include "Framework/Object/Component/UIImage.h"
+#include "Framework/Object/Component/UI/UIImage.h"
 
 namespace engine
 {

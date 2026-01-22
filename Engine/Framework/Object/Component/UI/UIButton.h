@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "Framework/Object/Component/UIElement.h"
-#include "Framework/Object/Component/UIInteractable.h"
+#include "Framework/Object/Component/UI/UIElement.h"
+#include "Framework/Object/Component/UI/UIInteractable.h"
 
 namespace engine
 {
@@ -30,6 +30,8 @@ namespace engine
 			BackToMain,		// 메인화면으로
 
 			BackToSelect,	// 위 버튼 고르는 곳으로
+
+			None,			// 상태 없음.
 		};
 
 	private:
@@ -64,6 +66,9 @@ namespace engine
 		Vector4 m_tintDisabled = Vector4(1, 1, 1, 1);
 
 		std::string m_labelText = "Button";
+
+		ButtonAction m_action = ButtonAction::None;
+		std::string m_actionParam = "";
 
 	public:
 		void SetOnClick(ClickCallback cb);

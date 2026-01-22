@@ -18,17 +18,17 @@ namespace game
         CharacterAnimationFSM::Start();
         
         // 초기 Idle 애니메이션 즉시 재생 (T포즈 방지)
-        auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
-        if (animator)
+        if (m_animator)
         {
-            animator->SetLayerWeight(1, 0.0f);
-            animator->Play("TestIdle", true, 0, 1.0f);
+            m_animator->SetLayerWeight(1, 0.0f);
+            m_animator->Play("TestIdle", true, 0, 1.0f);
         }
     }
 
     void TestAnimationFSM::Update()
     {
-        // 부모 Update 호출하지 않음 (자체 처리)
+        // 부모 Update 호출 (레이어 체크 및 Procedural Aim)
+        CharacterAnimationFSM::Update();
         
         CharacterState currentState = GetCharacterState();
         
@@ -39,7 +39,7 @@ namespace game
             return;
         }
         
-        // 각 테스트 상태별 종료 체크
+        // 각 테스트 상태별 종료 체크 (Test3은 OnUpperLayerFinished에서 처리)
         switch (currentState)
         {
         case CharacterState::Test1:
@@ -49,7 +49,8 @@ namespace game
             CheckTest2EarlyExit();
             break;
         case CharacterState::Test3:
-            CheckTest3Finished();
+            // Test3: 부모 클래스의 CheckLayerAnimationFinished()에서 체크
+            // OnUpperLayerFinished() 콜백에서 처리
             break;
         case CharacterState::Test4:
             CheckTest4Finished();
@@ -67,46 +68,44 @@ namespace game
         m_isWaitingAfterTest4 = false;
         m_test4WaitTimer = 0.0f;
         
-        auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
-        if (!animator) return;
+        if (!m_animator) return;
         
         switch (context.currentState)
         {
         case CharacterState::Idle:
             // Idle: 상체 레이어 가중치 0으로, 기본 레이어에서 Idle 재생
-            animator->SetLayerWeight(1, 0.0f);
-            animator->PlayCrossFade("TestIdle", 0.2f, true, 0, 1.0f);
+            m_animator->SetLayerWeight(1, 0.0f);
+            m_animator->PlayCrossFade("TestIdle", 0.2f, true, 0, 1.0f);
+            m_baseLayerState.Reset();
+            m_upperLayerState.Reset();
             break;
             
         case CharacterState::Test1:
             // Test1: 기본 재생
-            animator->SetLayerWeight(1, 0.0f);
-            animator->PlayCrossFade("TestForward", 0.1f, false, 0, 1.0f);
+            m_animator->SetLayerWeight(1, 0.0f);
+            m_animator->PlayCrossFade("TestForward", 0.1f, false, 0, 1.0f);
             break;
             
         case CharacterState::Test2:
             // Test2: 70%까지만 재생
-            animator->SetLayerWeight(1, 0.0f);
-            animator->PlayCrossFade("TestBackward", 0.1f, false, 0, 1.0f);
+            m_animator->SetLayerWeight(1, 0.0f);
+            m_animator->PlayCrossFade("TestBackward", 0.1f, false, 0, 1.0f);
             break;
             
         case CharacterState::Test3:
-            // Test3: 상체(펀치) + 하체(걷기) 분리
-            // 레이어 0: 걷기 (전신, 상체 레이어가 덮어씌움)
-            // 레이어 1: 펀치 (상체만, 마스크 적용 필요)
-            m_test3Started = false;  // 애니메이션 시작 확인 플래그 리셋
-            
-            SetUpperBodyLayer(true, 1);
-
-            animator->PlayCrossFade("TestForward", 0.1f, true, 0, 1.0f);  // 하체: 걷기 (루프)
-            animator->SetLayerWeight(1, 1.0f);
-            animator->PlayCrossFade("TestPunch", 0.1f, false, 1, 1.0f);   // 상체: 펀치 (루프 없음)
+            // Test3: 상체(펀치) + 하체(걷기) 분리 - 새 인터페이스 사용
+            PlaySplitAnimation(
+                "TestForward", true,   // 하체: 걷기 (루프)
+                "TestPunch", false,    // 상체: 펀치 (비루프)
+                0.1f
+            );
+            SetUpperLayerExitCondition(0.95f);  // 상체 95%에서 종료 판정
             break;
             
         case CharacterState::Test4:
             // Test4: 애니메이션 후 1초 대기
-            animator->SetLayerWeight(1, 0.0f);
-            animator->PlayCrossFade("TestElbow", 0.1f, false, 0, 1.0f);
+            m_animator->SetLayerWeight(1, 0.0f);
+            m_animator->PlayCrossFade("TestElbow", 0.1f, false, 0, 1.0f);
             break;
             
         default:
@@ -116,14 +115,33 @@ namespace game
 
     void TestAnimationFSM::OnStateExit(const StateContext& context)
     {
-        auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
-        if (!animator) return;
+        // 부모 호출 (레이어 상태 리셋)
+        CharacterAnimationFSM::OnStateExit(context);
         
-        // Test3 종료 시 상체 레이어 가중치 리셋
-        //if (context.currentState == CharacterState::Test3)
-        //{
-        //    animator->SetLayerWeight(1, 0.0f);
-        //}
+        if (!m_animator) return;
+        
+        // Test3 종료 시 상체 레이어 완전 리셋
+        if (context.currentState == CharacterState::Test3)
+        {
+            m_animator->SetLayerWeight(1, 0.0f);
+            m_animator->Play("TestIdle", true, 1, 1.0f);
+        }
+    }
+
+    void TestAnimationFSM::OnUpperLayerFinished()
+    {
+        // Test3 상체 애니메이션 종료 시 콜백
+        if (GetCharacterState() == CharacterState::Test3)
+        {
+            // 상체 레이어 비활성화
+            if (m_animator)
+            {
+                m_animator->SetLayerWeight(m_upperBodyLayerIndex, 0.0f);
+            }
+            
+            // 로직 FSM에 종료 알림
+            NotifyAnimationFinished(CharacterState::Test3);
+        }
     }
 
     void TestAnimationFSM::SetupAnimationMappings()
@@ -141,11 +159,9 @@ namespace game
 
     void TestAnimationFSM::CheckTest1Finished()
     {
-        auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
-        if (!animator) return;
+        if (!m_animator) return;
         
-        // 레이어 0에서 애니메이션 종료 체크 (NormalizedTime >= 0.9 사용)
-        if (animator->GetNormalizedTime(0) >= 0.9f)
+        if (m_animator->GetNormalizedTime(0) >= 0.9f)
         {
             NotifyAnimationFinished(CharacterState::Test1);
         }
@@ -153,48 +169,21 @@ namespace game
 
     void TestAnimationFSM::CheckTest2EarlyExit()
     {
-        auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
-        if (!animator) return;
+        if (!m_animator) return;
         
         // 70% 진행 시 조기 종료
-        if (animator->GetNormalizedTime(0) >= 0.7f)
+        if (m_animator->GetNormalizedTime(0) >= 0.7f)
         {
             NotifyAnimationFinished(CharacterState::Test2);
         }
     }
 
-    void TestAnimationFSM::CheckTest3Finished()
-    {
-        auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
-        if (!animator) return;
-        
-        float normalizedTime = animator->GetNormalizedTime(1);
-        
-        // 애니메이션이 실제로 시작되었는지 확인 (이전 값이 남아있는 경우 방지)
-        if (!m_test3Started)
-        {
-            // NormalizedTime이 0.1 미만이면 새로 시작된 것으로 판단
-            if (normalizedTime < 0.1f)
-            {
-                m_test3Started = true;
-            }
-            return;  // 아직 시작 안됨, 체크 건너뛰기
-        }
-        
-        // 애니메이션 종료 체크
-        if (normalizedTime >= 0.9f)
-        {
-            NotifyAnimationFinished(CharacterState::Test3);
-        }
-    }
-
     void TestAnimationFSM::CheckTest4Finished()
     {
-        auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
-        if (!animator) return;
+        if (!m_animator) return;
         
-        // 애니메이션 종료 후 대기 모드 진입 (NormalizedTime >= 0.9 사용)
-        if (animator->GetNormalizedTime(0) >= 0.9f)
+        // 애니메이션 종료 후 대기 모드 진입
+        if (m_animator->GetNormalizedTime(0) >= 0.9f)
         {
             m_isWaitingAfterTest4 = true;
             m_test4WaitTimer = 0.0f;
@@ -232,17 +221,21 @@ namespace game
         
         ImGui::Separator();
         ImGui::DragFloat("Test4 Wait Duration", &m_test4WaitDuration, 0.1f, 0.0f, 5.0f);
+        
+        // 부모 GUI도 표시
+        ImGui::Separator();
+        CharacterAnimationFSM::OnGui();
     }
 
     void TestAnimationFSM::Save(engine::json& j) const
     {
-        Object::Save(j);
+        CharacterAnimationFSM::Save(j);
         j["Test4WaitDuration"] = m_test4WaitDuration;
     }
 
     void TestAnimationFSM::Load(const engine::json& j)
     {
-        Object::Load(j);
+        CharacterAnimationFSM::Load(j);
         engine::JsonGet(j, "Test4WaitDuration", m_test4WaitDuration);
     }
 }

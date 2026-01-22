@@ -16,6 +16,15 @@ namespace engine
 		Debug,
 	};
 
+	enum class MaskMode
+	{
+		None,
+		Rect,
+		Circle,
+		Ring,
+		RectRing,
+	};
+
 	// UIElement는 UI 컴포넌트들의 공통 베이스입니다.
 	class UIElement : public Renderer
 	{

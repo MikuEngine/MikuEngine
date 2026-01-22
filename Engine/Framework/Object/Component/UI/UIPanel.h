@@ -1,64 +1,44 @@
 ﻿#pragma once
 
-#include "Framework/Object/Component/UIElement.h"
+#include "Framework/Object/Component/UI/UIElement.h"
 
 namespace engine
 {
-	class Texture;
-	class ConstantBuffer;
-	class VertexShader;
-	class PixelShader;
-	class InputLayout;
-	class VertexBuffer;
-	class IndexBuffer;
-	class SamplerState;
-	class BlendState;
-	class DepthStencilState;
+	class UIImage;
+	class RectTransform;
+	class GameObject;
 
-	enum class MaskMode
+	enum class PanelBackgroundMode
 	{
 		None,
-		Rect,
-		Circle,
-		Ring,
-		RectRing,
+		Color,
+		Texture,
 	};
 
-	class UIImage : public UIElement
+	class UIPanel : public UIElement
 	{
-		REGISTER_COMPONENT(UIImage, UIElement)
-
+		REGISTER_COMPONENT(UIPanel)
 	private:
-		std::string m_textureFilePath;
-		std::string m_vsFilePath;
-		std::string m_psFilePath;
-		std::shared_ptr<Texture> m_texture;
+		bool m_autoCreateBackground = true;
+		Vector4 m_padding = Vector4(0, 0, 0, 0);
 
-		std::shared_ptr<VertexShader> m_vs;
-		std::shared_ptr<PixelShader>  m_ps;
-		std::shared_ptr<InputLayout> m_inputLayout;
-
-		std::shared_ptr<VertexBuffer> m_vertexBuffer;
-		std::shared_ptr<IndexBuffer> m_indexBuffer;
-
-		std::shared_ptr<SamplerState> m_sampler;
-		std::shared_ptr<BlendState> m_blend;
-		std::shared_ptr<DepthStencilState> m_depthNone;
-
-		std::shared_ptr<ConstantBuffer> m_uiCB;
-
+		PanelBackgroundMode m_bgMode = PanelBackgroundMode::Color;
 		Vector4 m_color = Vector4(1, 1, 1, 1);
 		Vector4 m_uv = Vector4(0, 0, 1, 1);
+		std::string m_bgTexturePath;
 
 		bool m_useAlphaBlend = true;
-		bool m_dirty = true;
 
-		MaskMode m_maskMode = MaskMode::Rect;
+		MaskMode m_maskMode = MaskMode::None;
 		Vector4  m_clipRect = Vector4(0, 0, 0, 0);
 
+		UIImage* m_background = nullptr;
+
+		bool m_dirty = true;
+
 	public:
-		UIImage() = default;
-		~UIImage() override = default;
+		UIPanel() = default;
+		~UIPanel() override = default;
 
 	public:
 		void Initialize() override;
@@ -70,7 +50,7 @@ namespace engine
 
 		void SetAlphaBlend(bool enable);
 		bool IsAlphaBlend() const;
-		
+
 		void SetColor(const Vector4& color);
 		const Vector4& GetColor() const;
 
@@ -92,8 +72,6 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
-
-	private:
-		void Refresh();
+		std::string GetType() const override;
 	};
 }

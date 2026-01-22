@@ -4,10 +4,10 @@
 #include "Framework/System/SoundSystem.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/SoundData.h"
-#include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Editor/EditorManager.h"
 #include "Common/Utility/EditorHelper.h"
+#include "fmod.hpp"
 
 // "Audio Files\0*.wav;*.mp3;*.ogg;*.flac\0All Files\0*.*\0";
 

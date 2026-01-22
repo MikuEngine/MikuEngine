@@ -1,17 +1,10 @@
 ﻿#pragma once
 
-#include "fmod.hpp"
-#include "fmod_errors.h"
 #include <map>
-#include <string>
-#include <vector>
 #include <list>
-#include <DirectXMath.h>
 #include "Framework/Object/Component/AudioSource.h"
 #include "Framework/System/System.h"
-
-using namespace DirectX;
-namespace fs = std::filesystem;
+#include "fmod.hpp"
 
 namespace engine
 {
@@ -19,7 +12,7 @@ namespace engine
     // Sound Class Implementation
     // ==============================================================
 
-	inline FMOD_VECTOR ToFmodVector(const XMFLOAT3& v) { return { v.x, v.y, v.z }; }
+	inline FMOD_VECTOR ToFmodVector(const Vector3& v) { return { v.x, v.y, v.z }; }
 
 	struct SoundCallbackInfo
 	{
