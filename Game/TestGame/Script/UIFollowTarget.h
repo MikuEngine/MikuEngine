@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include <Framework/Object/Component/RectTransform.h>
 
 namespace engine
 {
@@ -37,7 +38,7 @@ namespace game
         engine::Camera*             m_camera = nullptr;
 
         engine::RectTransform*      m_parentRT = nullptr;
-
+        engine::UIRect              m_cachedParentRect{};
         float                       m_cachedVpW = -1.f;
         float                       m_cachedVpH = -1.f;
         bool                        m_cachedVisible = true;

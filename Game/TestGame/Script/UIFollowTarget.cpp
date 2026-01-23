@@ -5,7 +5,6 @@
 
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/UI/UIImage.h>
-#include <Framework/Object/Component/RectTransform.h>
 
 #include <Framework/Object/Component/Camera.h>
 
@@ -30,12 +29,21 @@ namespace game
         if (m_rt)
             m_parentRT = m_rt->FindPrentRectTransform();
 
+        m_cachedVpW = -1.f;
+        m_cachedVpH = -1.f;
         m_cachedVisible = true;
     }
 
     void UIFollowTarget::Update()
     {
+
         if (!m_rt || !m_cameraCached || !m_target)
+        {
+            SetVisible(false);
+            return;
+        }
+
+        if (!m_visible)
         {
             SetVisible(false);
             return;
@@ -63,21 +71,37 @@ namespace game
         const float ndcX = clip.x * invW;
         const float ndcY = clip.y * invW;
 
-        const auto& vp = engine::GraphicsDevice::Get().GetViewport();
-
-        engine::Vector2 screen;
-        screen.x = (ndcX * 0.5f + 0.5f) * vp.Width;
-        screen.y = (-ndcY * 0.5f + 0.5f) * vp.Height;
-
-        engine::UIRect rootRect{ 0.f, 0.f, vp.Width, vp.Height };
-
-        engine::UIRect parentRect = rootRect;
-        if (engine::RectTransform* prt = m_rt->FindPrentRectTransform())
+        if (m_hideWhenOffscreen &&
+            (ndcX < -1.f || ndcX > 1.f || ndcY < -1.f || ndcY > 1.f))
         {
-            parentRect = prt->GetWorldRectResolved(rootRect);
+            SetVisible(false);
+            return;
         }
 
-        const engine::Vector2 finalPos(screen.x - parentRect.x, screen.y - parentRect.y);
+        const auto& vp = engine::GraphicsDevice::Get().GetViewport();
+        const float vpW = vp.Width;
+        const float vpH = vp.Height;
+
+        // NDC -> Screen(px)
+        engine::Vector2 screen;
+        screen.x = (ndcX * 0.5f + 0.5f) * vpW;
+        screen.y = (-ndcY * 0.5f + 0.5f) * vpH;
+
+        if (vpW != m_cachedVpW || vpH != m_cachedVpH)
+        {
+            m_cachedVpW = vpW;
+            m_cachedVpH = vpH;
+
+            const engine::UIRect rootRect{ 0.f, 0.f, vpW, vpH };
+            m_cachedParentRect = (m_parentRT)
+                ? m_parentRT->GetWorldRectResolved(rootRect)
+                : rootRect;
+        }
+
+        const engine::Vector2 finalPos(
+            screen.x - m_cachedParentRect.x,
+            screen.y - m_cachedParentRect.y
+        );
 
         SetVisible(true);
         m_rt->SetAnchoredPosition(finalPos);
@@ -92,6 +116,7 @@ namespace game
         }
 
         ImGui::DragFloat3("Offset", &m_offset.x);
+        ImGui::Checkbox("Hide When Offscreen", &m_hideWhenOffscreen);
         ImGui::Checkbox("Visible", &m_visible);
     }
 
@@ -100,6 +125,7 @@ namespace game
         Object::Save(j);
         j["TargetName"] = m_targetName;
         j["Offset"] = m_offset;
+        j["HideWhenOffscreen"] = m_hideWhenOffscreen;
     }
 
     void UIFollowTarget::Load(const engine::json& j)
@@ -107,19 +133,22 @@ namespace game
         Object::Load(j);
         engine::JsonGet(j, "TargetName", m_targetName);
         engine::JsonGet(j, "Offset", m_offset);
+        engine::JsonGet(j, "HideWhenOffscreen", m_hideWhenOffscreen);
+
+        m_target = nullptr;
+        m_lastBoundName.clear();
+        RebindTarget();
     }
 
     void UIFollowTarget::RebindTarget()
     {
-        if (m_lastBoundName == m_targetName && m_target != nullptr)
-            return;
-
+        if (m_lastBoundName == m_targetName && m_target != nullptr) return;
+            
         m_target = nullptr;
         m_lastBoundName = m_targetName;
 
-        if (m_targetName.empty())
-            return;
-
+        if (m_targetName.empty()) return;
+            
         m_target = engine::GameObject::Find(m_targetName);
     }
 
@@ -138,10 +167,12 @@ namespace game
     {
         if (!m_img) return;
 
-        m_visible = v;
+        if (m_cachedVisible == v) return;
+
+        m_cachedVisible = v;
 
         engine::Vector4 c = m_img->GetColor();
-        c.w = m_visible ? 1.f : 0.f;
+        c.w = v ? 1.f : 0.f;
         m_img->SetColor(c);
     }
 }
