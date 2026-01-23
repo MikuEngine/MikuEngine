@@ -133,11 +133,7 @@ namespace engine
 
 	void UIButton::OnMouseOver(const Vector2&)
 	{
-		if (m_state == State::Normal)
-		{
-			m_state = State::Hovered;
-			UpdateVisuals();
-		}
+
 	}
 
 	void UIButton::OnMouseCancel(const Vector2& mousePos, int mouseButton)

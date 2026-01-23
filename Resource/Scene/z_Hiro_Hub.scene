@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Hub",
-    "NumGameObjects": 16,
+    "NumGameObjects": 18,
     "GameObjects": [
         {
             "ID": 0,
@@ -856,7 +856,7 @@
         {
             "ID": 11,
             "ParentID": 2,
-            "Name": "Guide",
+            "Name": "Panel_GuidBase",
             "Active": true,
             "Components": [
                 {
@@ -929,6 +929,142 @@
         },
         {
             "ID": 12,
+            "ParentID": 11,
+            "Name": "UI_GuideImage",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -70.0
+                    },
+                    "Width": 400.0,
+                    "Height": 400.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/Image/guide_play.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "ParentID": 11,
+            "Name": "UI_GuideText",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -85.0,
+                        "y": 170.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "어둠 속으로 모험을\n떠나세요.",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 14,
             "ParentID": 1,
             "Name": "UIGroop_Upgrade",
             "Active": false,
@@ -1002,8 +1138,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 12,
+            "ID": 15,
+            "ParentID": 14,
             "Name": "UI_BackToHub",
             "Active": true,
             "Components": [
@@ -1104,8 +1240,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 13,
+            "ID": 16,
+            "ParentID": 15,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -1173,7 +1309,7 @@
             ]
         },
         {
-            "ID": 15,
+            "ID": 17,
             "Name": "ScriptController",
             "Active": true,
             "Components": [

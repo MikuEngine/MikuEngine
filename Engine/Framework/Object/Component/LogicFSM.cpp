@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Framework/Object/Component/LogicFSM.h"
 #include "Framework/Object/Component/AnimFSM.h"
 
@@ -52,11 +52,11 @@ namespace engine
     {
         m_stateTimer += Time::DeltaTime();
         
-        // Trigger 파라미터 리셋 (한 프레임만 유효)
-        ResetTriggerParameters();
-        
-        // 전이 체크
+        // 전이 체크 (트리거 리셋 전에 체크해야 함)
         UpdateTransitions();
+        
+        // Trigger 파라미터 리셋 (한 프레임만 유효, 전이 체크 후)
+        ResetTriggerParameters();
     }
 
     // ═══════════════════════════════════════════════════════════════

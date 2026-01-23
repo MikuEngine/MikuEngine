@@ -166,13 +166,24 @@ namespace engine
 
 	void UIImage::SetTexture(const std::string& textureFilePath)
 	{
-		if (textureFilePath.empty() || textureFilePath == "None")
+		if (textureFilePath.empty()) return;
+
+		m_textureFilePath = textureFilePath;
+
+		if (textureFilePath == "None")
 		{
+			m_texture = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
 			return;
 		}
 
-		m_textureFilePath = textureFilePath;
-		m_texture = ResourceManager::Get().GetOrCreateTexture(textureFilePath);
+		std::shared_ptr<engine::Texture> tex = ResourceManager::Get().GetOrCreateTexture(textureFilePath);
+		if (!tex)
+		{
+			LOG_PRINT("FATAL: Texture not found: %s", textureFilePath.c_str());
+			return;
+		}
+
+		m_texture = tex;
 	}
 
 	const std::string& UIImage::GetTexturePath() const

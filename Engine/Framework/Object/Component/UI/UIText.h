@@ -74,7 +74,7 @@ namespace engine
 
     private:
         std::string m_text = "UIText";
-        std::string m_fontPath = "None";
+        std::string m_fontPath = "Resource/Font/malgun.ttf";
         int m_fontPixelSize = 32;
 
         std::shared_ptr<FontData> m_font;
