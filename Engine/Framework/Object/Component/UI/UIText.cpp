@@ -20,6 +20,7 @@
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/Component/RectTransform.h"
+#include "Framework/Object/Component/Canvas.h"
 
 namespace engine
 {
@@ -105,10 +106,30 @@ namespace engine
 		auto dc = gd.GetDeviceContext();
 		const D3D11_VIEWPORT vp = gd.GetViewport();
 
-		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+		Canvas* c = GetCanvasInParent();
+		if (!c) return;
+		
+		const Vector2 ref = c->GetReferenceResolution();
+		
+		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 		const UIRect rect = rt->GetWorldRectResolved(rootRect);
-
 		if (rect.w <= 0.0f || rect.h <= 0.0f) return;
+
+		const Vector2 s = c->GetUIScale();
+		const Vector2 o = c->GetUIOffset();
+
+		const auto& fd = m_font->GetDesc();
+		const float atlasW = static_cast<float>(fd.atlasWidth);
+		const float atlasH = static_cast<float>(fd.atlasHeight);
+
+		const float asc = m_font->GetAscenderPx();
+		const float lineH = m_font->GetLineHeightPx() * m_lineSpacingMul;
+
+		float penX = rect.x;
+		float baseLineY = rect.y + asc;
+
+		const char* p = m_text.data();
+		const char* end = p + m_text.size();
 
 		// IA
 		dc->IASetInputLayout(m_inputLayout->GetRawInputLayout());
@@ -147,19 +168,6 @@ namespace engine
 		dc->RSSetState(nullptr);
 		dc->RSSetViewports(1, &vp);
 
-		const auto& fd = m_font->GetDesc();
-		const float atlasW = static_cast<float>(fd.atlasWidth);
-		const float atlasH = static_cast<float>(fd.atlasHeight);
-
-		const float asc = m_font->GetAscenderPx();
-		const float lineH = m_font->GetLineHeightPx() * m_lineSpacingMul;
-
-		float penX = rect.x;
-		float baseLineY = rect.y + asc;
-
-		const char* p = m_text.data();
-		const char* end = p + m_text.size();
-
 		while (p < end)
 		{
 			uint32_t cp = 0;
@@ -180,7 +188,6 @@ namespace engine
 			}
 
 			const FontGlyph& g = m_font->EnsureGlyph(dc.Get(), cp);
-
 			const float adv = g.advance + m_letterSpacingPx;
 
 			if (g.IsEmptyBitmap())
@@ -189,23 +196,27 @@ namespace engine
 				continue;
 			}
 
-			// Pixel
-			const float gx = penX + g.bearingX;
-			const float gy = baseLineY - g.bearingY;
+			const float gxL = penX + g.bearingX;
+			const float gyL = baseLineY - g.bearingY;
+			const float gwL = g.width;
+			const float ghL = g.height;
 
-			const float gw = g.width;
-			const float gh = g.height;
+			const float gx = o.x + gxL * s.x;
+			const float gy = o.y + gyL * s.y;
+			const float gw = gwL * s.x;
+			const float gh = ghL * s.y;
+
+			// 픽셀 기준으로 NDC 변환
+			const float cx = gx + gw * 0.5f;
+			const float cy = gy + gh * 0.5f;
+
+			const float tx = (cx / vp.Width) * 2.0f - 1.0f;
+			const float ty = 1.0f - (cy / vp.Height) * 2.0f;
+
+			const float sx = (gw / vp.Width) * 2.0f;
+			const float sy = (gh / vp.Height) * 2.0f;
 
 			{
-				const float cx = gx + gw * 0.5f;
-				const float cy = gy + gh * 0.5f;
-
-				const float tx = (cx / vp.Width) * 2.0f - 1.0f;
-				const float ty = 1.0f - (cy / vp.Height) * 2.0f;
-
-				const float sx = (gw / vp.Width) * 2.0f;
-				const float sy = (gh / vp.Height) * 2.0f;
-
 				CbUIElement cbUI{};
 				cbUI.clip = DirectX::XMMatrixTranspose(
 					DirectX::XMMatrixScaling(sx, sy, 1.0f) *
@@ -214,13 +225,10 @@ namespace engine
 
 				cbUI.color = m_color;
 
-				// UV: (x,y,w,h) -> (u0,v0,u1,v1)
 				const float u0 = g.x / atlasW;
 				const float v0 = g.y / atlasH;
-
 				const float su = (g.w / atlasW);
 				const float sv = (g.h / atlasH);
-
 				cbUI.uv = Vector4(u0, v0, su, sv);
 
 				// 클리핑은 일단 뷰포트 전체로. (원하면 rect 기반 clipRect로 바꾸면 됨)

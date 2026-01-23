@@ -236,5 +236,7 @@ namespace engine
         JsonGet(j, "AnchorMax", m_anchorMax);
         JsonGet(j, "Width", m_width);
         JsonGet(j, "Height", m_height);
+
+        MarkUIDirty(true);
     }
 }

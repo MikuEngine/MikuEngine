@@ -50,7 +50,18 @@ namespace engine
 	{
 		RectTransform* rt = GetRectTransform();
 		if (!rt) return false;
-		return PointInRect(screenPos, rt->GetWorldRect());
+
+		Canvas* c = GetCanvasInParent();
+		if (!c) return false;
+
+		const Vector2 scale = c->GetUIScale();
+		const Vector2 offset = c->GetUIOffset();
+
+		Vector2 p;
+		p.x = (screenPos.x - offset.x) / scale.x;
+		p.y = (screenPos.y - offset.y) / scale.y;
+
+		return PointInRect(p, rt->GetWorldRect());
 	}
 
 	bool UIElement::HasRenderType(RenderType type) const

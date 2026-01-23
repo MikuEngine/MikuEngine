@@ -23,6 +23,8 @@
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/UI/UIButton.h"
 
+#include "Framework/Object/Component/Canvas.h"
+
 namespace engine
 {
 	void UIImage::Initialize()
@@ -68,9 +70,45 @@ namespace engine
 
 		const D3D11_VIEWPORT vp = gd.GetViewport();
 
-		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+		//UIRect rootRect{0.0f, 0.0f, vp.Width, vp.Height};
 
+		//const UIRect rect = rt->GetWorldRectResolved(rootRect);
+
+		//const float cx = rect.x + rect.w * 0.5f;
+		//const float cy = rect.y + rect.h * 0.5f;
+
+		//const float tx = (cx / vp.Width) * 2.0f - 1.0f;
+		//const float ty = 1.0f - (cy / vp.Height) * 2.0f;
+
+		//// 픽셀 크기 -> NDC 크기
+		//const float sx = (rect.w / vp.Width) * 2.0f;
+		//const float sy = (rect.h / vp.Height) * 2.0f;
+
+		Canvas* c = GetCanvasInParent();
+		if (!c) return;
+
+		const Vector2 ref = c->GetReferenceResolution();
+
+		UIRect rootRect = { 0.0f, 0.0f, ref.x, ref.y };
 		const UIRect rect = rt->GetWorldRectResolved(rootRect);
+		
+		const Vector2 scale = c->GetUIScale();
+		const Vector2 offset = c->GetUIOffset();
+
+		const float pxX = offset.x + rect.x * scale.x;
+		const float pxY = offset.y + rect.y * scale.y;
+		const float pxW = rect.w * scale.x;
+		const float pxH = rect.h * scale.y;
+
+		const float cx = pxX + pxW * 0.5f;
+		const float cy = pxY + pxH * 0.5f;
+
+		const float tx = (cx / vp.Width) * 2.0f - 1.0f;
+		const float ty = 1.0f - (cy / vp.Height) * 2.0f;
+
+		const float sx = (pxW / vp.Width) * 2.0f;
+		const float sy = (pxH / vp.Height) * 2.0f;
+		
 
 		if (rect.w <= 0.0f || rect.h <= 0.0f) return;
 
@@ -109,16 +147,6 @@ namespace engine
 
 		// ConstantBuffer
 		{
-			const float cx = rect.x + rect.w * 0.5f;
-			const float cy = rect.y + rect.h * 0.5f;
-
-			const float tx = (cx / vp.Width) * 2.0f - 1.0f;
-			const float ty = 1.0f - (cy / vp.Height) * 2.0f;
-
-			// 픽셀 크기 -> NDC 크기
-			const float sx = (rect.w / vp.Width) * 2.0f;
-			const float sy = (rect.h / vp.Height) * 2.0f;
-
 			CbUIElement cbUI{};
 			cbUI.clip = DirectX::XMMatrixTranspose(
 				DirectX::XMMatrixScaling(sx, sy, 1.0f) *
