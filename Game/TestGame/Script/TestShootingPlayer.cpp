@@ -6,10 +6,12 @@
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
+#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 #include <Engine/Core/System/Input.h>
 #include <Engine/Core/System/MyTime.h>
+
 
 namespace game
 {
@@ -25,17 +27,33 @@ namespace game
 	{
 		BaseControllerScript::Start();
 
-		// FSM 초기화 (한 번만)
+		// LogicFSM 초기화 (한 번만)
 		if (!m_fsmInitialized && m_logicFSM)
 		{
 			InitializeFSM();
 			m_fsmInitialized = true;
 		}
 
-		// Procedural Aim 활성화
-		if (m_animFSM && m_enableUpperBodyAim)
+		// AnimFSM 초기화 (상/하체 분리 상태 매핑)
+		if (m_animFSM)
 		{
-			m_animFSM->SetProceduralAimEnabled(true);
+			InitializeAnimFSM();
+			
+			// Procedural Aim 활성화
+			if (m_enableUpperBodyAim)
+			{
+				m_animFSM->SetProceduralAimEnabled(true);
+			}
+		}
+
+		// 초기 회전 설정 (-Z 방향)
+		if (GetTransform())
+		{
+			engine::Quaternion initialRot = engine::Quaternion::CreateFromAxisAngle(
+				engine::Vector3::UnitY, 
+				atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z)
+			);
+			GetTransform()->SetLocalRotation(initialRot);
 		}
 	}
 
@@ -49,6 +67,7 @@ namespace game
 		if (!GetGameObject()) return;
 
 		m_rigidbody = GetGameObject()->GetComponent<engine::Rigidbody>();
+		m_skeletalAnimator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
 		m_aimPointer = GetGameObject()->GetComponent<AimPointer>();
 
 		// BulletFactory: 같은 오브젝트 또는 씬에서 검색
@@ -134,6 +153,11 @@ namespace game
 		// 행동 실행 (제한 함수로 허용 여부 확인)
 		if (CanMove())    HandleMovement(deltaTime);
 		if (CanAttack())  HandleShooting(deltaTime);
+
+		// 애니메이션 업데이트
+		UpdateAnimation();
+		UpdateLowerBodyRotation();  // 매 프레임 호출 (이동 방향에 따라 회전)
+		UpdateUpperBodyAim();
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -186,6 +210,31 @@ namespace game
 		AddFSMTransition("WalkShoot", "Walk", "IsShooting", BoolFalse());
 	}
 
+	void TestShootingPlayer::InitializeAnimFSM()
+	{
+		if (!m_animFSM) return;
+
+		// 기존 상태 클리어
+		m_animFSM->ClearStates();
+
+		// ─────────────────────────────────────────────
+		// 상/하체 분리 애니메이션 상태 등록
+		// AddSplitState(상태명, 하체애니, 하체루프, 상체애니, 상체루프, 상체웨이트, 크로스페이드)
+		// 상체웨이트가 0이면 상체 레이어 비활성화 (하체가 전체에 적용)
+		// ─────────────────────────────────────────────
+
+		// 비공격 상태: 상체 레이어 비활성화 (하체 애니메이션이 전체에 적용)
+		m_animFSM->AddSplitState("Idle",           "Idle",         true,  "",      false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("WalkForward",    "WalkForward",  true,  "",      false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("WalkBackward",   "WalkBackward", true,  "",      false, 0.0f, 0.1f);
+
+		// 공격 상태: 상체 레이어 비활성화 (Fire할 때 직접 Punch 재생)
+		// 상체 웨이트 0 → Fire 시 PlayUpperBodyAnimation으로 활성화
+		m_animFSM->AddSplitState("IdleShoot",          "Idle",         true,  "",      false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("WalkForwardShoot",   "WalkForward",  true,  "",      false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("WalkBackwardShoot",  "WalkBackward", true,  "",      false, 0.0f, 0.1f);
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 입력 유틸리티
 	// ═══════════════════════════════════════════════════════════════
@@ -213,6 +262,11 @@ namespace game
 	{
 		engine::Vector3 moveDir = GetMoveInputDirection();
 		if (moveDir.LengthSquared() < 0.001f) return;
+
+		// 이동 방향 저장 (정규화)
+		moveDir.y = 0.0f;
+		moveDir.Normalize();
+		m_lastMoveDirection = moveDir;
 
 		engine::Transform* transform = GetGameObject()->GetTransform();
 		if (!transform) return;
@@ -254,6 +308,12 @@ namespace game
 
 				m_bulletFactory->Fire(playerPos, direction, params);
 
+				// 펀치 애니메이션 재생 (발사할 때마다)
+				if (m_animFSM)
+				{
+					m_animFSM->PlayUpperBodyAnimation("Punch", false);
+				}
+
 				// 쿨다운 재설정 (단순 대입으로 확실하게)
 				m_fireTimer = m_fireRate;
 			}
@@ -279,7 +339,7 @@ namespace game
 		if (!m_aimPointer) return 0.0f;
 
 		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-		engine::Vector3 aimPos = m_aimPointer->GetTransform()->GetWorldPosition();
+		engine::Vector3 aimPos = m_aimPointer->GetWorldPosition();
 
 		engine::Vector3 toAim = aimPos - playerPos;
 		toAim.y = 0.0f;
@@ -303,6 +363,190 @@ namespace game
 		float angleDeg = engine::ToDegree(angleRad);
 
 		return angleDeg;
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 애니메이션 제어
+	// ═══════════════════════════════════════════════════════════════
+	bool TestShootingPlayer::IsMovingBackward() const
+	{
+		if (!m_aimPointer) return false;
+
+		engine::Vector3 moveDir = GetMoveInputDirection();
+		if (moveDir.LengthSquared() < 0.001f) return false;
+
+		// 에임포인터 방향 벡터 (플레이어 기준)
+		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+		engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
+		aimDir.y = 0.0f;
+		aimDir.Normalize();
+
+		// 이동 방향 벡터
+		moveDir.y = 0.0f;
+		moveDir.Normalize();
+
+		// 내적을 이용한 각도 계산
+		float dot = aimDir.Dot(moveDir);
+		float angleRad = acosf(std::clamp(dot, -1.0f, 1.0f));
+		float angleDeg = engine::ToDegree(angleRad);
+
+		// ±90도 이상 차이나면 뒤로 걷기
+		return angleDeg >= 90.0f;
+	}
+
+	std::string TestShootingPlayer::GetAnimationState() const
+	{
+		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.001f;
+		bool isShooting = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
+		bool isBackward = IsMovingBackward();
+
+		if (!isMoving && !isShooting)
+			return "Idle";
+		if (!isMoving && isShooting)
+			return "IdleFire";
+		if (isMoving && !isShooting && !isBackward)
+			return "MoveForward";
+		if (isMoving && !isShooting && isBackward)
+			return "MoveBackward";
+		if (isMoving && isShooting && !isBackward)
+			return "MoveForwardFire";
+		if (isMoving && isShooting && isBackward)
+			return "MoveBackwardFire";
+
+		return "Idle";
+	}
+
+	void TestShootingPlayer::UpdateAnimation()
+	{
+		if (!m_animFSM) return;
+
+		// ─────────────────────────────────────────────
+		// LogicFSM 상태 + 방향 정보 → AnimFSM 상태 결정
+		// ─────────────────────────────────────────────
+		std::string logicState = m_logicFSM ? m_logicFSM->GetCurrentState() : "Idle";
+		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.001f;
+		bool isShooting = (logicState == "IdleShoot" || logicState == "WalkShoot");
+		bool isBackward = IsMovingBackward();
+
+		// AnimFSM 상태 결정 (InitializeAnimFSM에서 등록한 상태명과 일치해야 함)
+		std::string animState;
+
+		if (isShooting)
+		{
+			// 공격 상태
+			if (!isMoving)
+			{
+				animState = "IdleShoot";
+			}
+			else if (isBackward)
+			{
+				animState = "WalkBackwardShoot";
+			}
+			else
+			{
+				animState = "WalkForwardShoot";
+			}
+		}
+		else
+		{
+			// 비공격 상태
+			if (!isMoving)
+			{
+				animState = "Idle";
+			}
+			else if (isBackward)
+			{
+				animState = "WalkBackward";
+			}
+			else
+			{
+				animState = "WalkForward";
+			}
+		}
+
+		// AnimFSM에 상태 전달 (AnimFSM이 PlayStateAnimation 호출)
+		m_animFSM->SetAnimState(animState);
+	}
+
+	void TestShootingPlayer::UpdateLowerBodyRotation()
+	{
+		if (!GetGameObject() || !GetTransform() || !m_aimPointer) return;
+
+		engine::Vector3 moveDir = GetMoveInputDirection();
+		bool isMoving = moveDir.LengthSquared() > 0.001f;
+		
+		engine::Vector3 targetDir;
+		
+		if (isMoving)
+		{
+			// 이동 중: 이동 방향 기준으로 회전
+			moveDir.y = 0.0f;
+			moveDir.Normalize();
+
+			bool isBackward = IsMovingBackward();
+			
+			if (isBackward)
+			{
+				// 뒤로 걷기: 이동 방향 180도 반대
+				targetDir = -moveDir;
+			}
+			else
+			{
+				// 앞으로 걷기: 이동 방향과 일치
+				targetDir = moveDir;
+			}
+		}
+		else
+		{
+			// Idle: 에임 방향과 마지막 이동 방향 비교
+			engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+			engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
+			aimDir.y = 0.0f;
+			aimDir.Normalize();
+
+			// 마지막 이동 방향과 에임 방향의 각도 차이 계산 (방향 고려)
+			// atan2를 사용하여 -180~180도 범위의 각도 계산
+			float lastAngle = atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z);
+			float aimAngle = atan2f(aimDir.x, aimDir.z);
+			
+			// 각도 차이 계산 (-180~180도 범위로 정규화)
+			float angleDiff = aimAngle - lastAngle;
+			
+			// -180~180도 범위로 정규화
+			const float PI = 3.14159265359f;
+			while (angleDiff > PI)
+				angleDiff -= 2.0f * PI;
+			while (angleDiff < -PI)
+				angleDiff += 2.0f * PI;
+			
+			float angleDeg = engine::ToDegree(angleDiff);
+			float absAngleDeg = std::abs(angleDeg);
+
+			// 좌우 절대값 90도 이상 차이나면 뒤로 서기, 아니면 앞으로 서기
+			// +방향과 -방향 중 더 가까운 방향으로 회전
+			if (absAngleDeg >= 90.0f)
+			{
+				// 뒤로 서기: 마지막 이동 방향 180도 반대
+				targetDir = -m_lastMoveDirection;
+			}
+			else
+			{
+				// 앞으로 서기: 마지막 이동 방향과 일치
+				targetDir = m_lastMoveDirection;
+			}
+		}
+
+		// 목표 회전 계산
+		float angleRad = atan2f(targetDir.x, targetDir.z);
+		engine::Quaternion targetRot = engine::Quaternion::CreateFromAxisAngle(engine::Vector3::UnitY, angleRad);
+
+		// 부드러운 회전 적용
+		engine::Quaternion currentRot = GetTransform()->GetLocalRotation();
+		float deltaTime = engine::Time::DeltaTime();
+		float rotationSpeed = 10.0f;  // 회전 속도
+		
+		engine::Quaternion newRot = engine::Quaternion::Slerp(currentRot, targetRot, rotationSpeed * deltaTime);
+		GetTransform()->SetLocalRotation(newRot);
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -334,7 +578,12 @@ namespace game
 		ImGui::Text("  AimPointer: %s", m_aimPointer ? "Found" : "NOT FOUND");
 		ImGui::Text("  BulletFactory: %s", m_bulletFactory ? "Found" : "NOT FOUND");
 		ImGui::Text("  AnimFSM: %s", m_animFSM ? "Found" : "NOT FOUND");
+		ImGui::Text("  SkeletalAnimator: %s", m_skeletalAnimator ? "Found" : "NOT FOUND");
 		ImGui::Text("  Rigidbody: %s", m_rigidbody ? "Found" : "NOT FOUND");
+
+		ImGui::Separator();
+		ImGui::Text("Animation State: %s", GetAnimationState().c_str());
+		ImGui::Text("Is Moving Backward: %s", IsMovingBackward() ? "Yes" : "No");
 
 		if (m_aimPointer)
 		{
