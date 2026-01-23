@@ -340,6 +340,11 @@ namespace engine
 
     void GraphicsDevice::ProcessBloom()
     {
+        static constexpr float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
+        m_deviceContext->RSSetState(nullptr);
+        m_deviceContext->OMSetDepthStencilState(nullptr, 0);
+        m_deviceContext->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
+
         m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         // 모든 단계에서 Linear Sampler 사용 (부드러운 다운샘플링)
         m_deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerLinear->GetSamplerState().GetAddressOf());

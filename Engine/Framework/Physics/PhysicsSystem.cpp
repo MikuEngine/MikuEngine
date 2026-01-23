@@ -376,9 +376,9 @@ namespace engine
         if (actor && data->pxScene)
         {
             data->pxScene->addActor(*actor);
-            LOG_PRINT("[PhysicsSystem] Rigidbody Actor added to scene: type={}, shapes={}",
-                rb->IsDynamic() ? "Dynamic" : (rb->IsKinematic() ? "Kinematic" : "Static"),
-                actor->getNbShapes());
+            // LOG_PRINT("[PhysicsSystem] Rigidbody Actor added to scene: type={}, shapes={}",
+            //     rb->IsDynamic() ? "Dynamic" : (rb->IsKinematic() ? "Kinematic" : "Static"),
+            //     actor->getNbShapes());
         }
         else
         {

@@ -12,6 +12,8 @@
 #include "Core/Graphics/Resource/InputLayout.h"
 #include "Core/Graphics/Resource/SamplerState.h"
 #include "Core/Graphics/Resource/MaterialHelper.h"
+#include "Core/Graphics/Resource/BlendState.h"
+#include "Core/Graphics/Resource/DepthStencilState.h"
 #include "Core/Graphics/Data/ConstantBufferTypes.h"
 #include "Core/Graphics/Data/ShaderSlotTypes.h"
 #include "Framework/Asset/AssetManager.h"
@@ -420,6 +422,13 @@ namespace engine
 
         case RenderType::Transparent:
         {
+            // 투명 렌더링을 위한 state 설정
+            auto blendState = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlend);
+            auto depthState = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::DepthRead);
+            static constexpr float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
+            deviceContext->OMSetBlendState(blendState->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
+            deviceContext->OMSetDepthStencilState(depthState->GetRawDepthStencilState(), 0);
+
             deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
             deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
             deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
@@ -443,6 +452,9 @@ namespace engine
 
                 deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
             }
+
+            deviceContext->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFFF);
+            deviceContext->OMSetDepthStencilState(nullptr, 0);
         }
             break;
         }

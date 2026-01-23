@@ -1,6 +1,5 @@
 ﻿#include "GamePCH.h"
 #include "TempMonster.h"
-#include "TempBullet.h"
 
 #include <Framework/Object/Component/Renderer/SpriteRenderer.h>
 

@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ParticleEffect.h"
 
 #include "Framework/System/SystemManager.h"
@@ -60,6 +60,14 @@ namespace engine
 	const std::vector<ParticleEmitter>& ParticleEffect::GetEmitters() const
 	{
 		return m_emitters;
+	}
+
+	void ParticleEffect::SortParticles()
+	{
+		for (auto& emitter : m_emitters)
+		{
+			emitter.SortParticlesByDistance();
+		}
 	}
 
 	void ParticleEffect::Play()
