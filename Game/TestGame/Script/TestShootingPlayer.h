@@ -54,6 +54,11 @@ namespace game
         float m_bulletLifetime = 3.0f;   // 총알 수명 (초)
 
         // ─────────────────────────────────────────────
+        // 참조 설정
+        // ─────────────────────────────────────────────
+        std::string m_aimPointerObjectName = "AimPointer";  // 씬에서 찾을 AimPointer 오브젝트 이름
+
+        // ─────────────────────────────────────────────
         // 기타 설정
         // ─────────────────────────────────────────────
         bool m_enableUpperBodyAim = true;
@@ -67,6 +72,16 @@ namespace game
         // 마지막 이동 방향 (캐릭터가 서있는 방향)
         // 초기값: -Z 방향 (아래쪽)
         engine::Vector3 m_lastMoveDirection = engine::Vector3(0.0f, 0.0f, -1.0f);
+        
+        // 현재 캐릭터 하체 회전 각도 (라디안)
+        float m_currentRotationAngle = 0.0f;
+        
+        // ─────────────────────────────────────────────
+        // 에임 방향 추적 (벡터 기반 - 각도 래핑 문제 회피)
+        // ─────────────────────────────────────────────
+        engine::Vector3 m_prevAimDirection = engine::Vector3(0.0f, 0.0f, 1.0f);  // 이전 에임 방향 (정규화)
+        float m_aimCrossProductSmoothed = 0.0f;       // 스무딩된 외적 값 (양수: 반시계, 음수: 시계)
+        bool m_aimTrackingInitialized = false;
 
     public:
         void Awake() override;
@@ -114,6 +129,12 @@ namespace game
         void UpdateLowerBodyRotation();
         bool IsMovingBackward() const;
         std::string GetAnimationState() const;
+        
+        // ─────────────────────────────────────────────
+        // 에임 추적 유틸리티
+        // ─────────────────────────────────────────────
+        void UpdateAimTracking();             // 에임 각속도 업데이트
+        float GetAimRotationDirection() const; // 에임 회전 방향 (양수: 시계, 음수: 반시계)
 
     public:
         void OnGui() override;

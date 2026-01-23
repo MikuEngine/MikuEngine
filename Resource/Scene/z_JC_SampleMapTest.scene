@@ -1,6 +1,6 @@
 {
     "Name": "z_JC_SampleMapTest",
-    "NumGameObjects": 10,
+    "NumGameObjects": 11,
     "GameObjects": [
         {
             "ID": 0,
@@ -463,6 +463,7 @@
                     "FireRate": 0.30000001192092896,
                     "BulletSpeed": 1.0,
                     "BulletLifetime": 3.0,
+                    "AimPointerObjectName": "AimPointer",
                     "EnableUpperBodyAim": true,
                     "FSMInitialized": false
                 },
@@ -471,22 +472,6 @@
                     "Active": true,
                     "CurrentState": "",
                     "States": []
-                },
-                {
-                    "Type": "AimPointer",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
-                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
-                    "UseAlternateCursor": false,
-                    "CursorSize": {
-                        "x": 32.0,
-                        "y": 32.0
-                    },
-                    "CursorPivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
                 },
                 {
                     "Type": "BulletFactory",
@@ -523,19 +508,23 @@
                     "Animations": [
                         {
                             "Name": "Idle",
-                            "Path": "Resource/Animation/TestIdle.fbx"
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
                         },
                         {
                             "Name": "Punch",
-                            "Path": "Resource/Animation/TestPunch.fbx"
+                            "Path": "Resource/Animation/TestPunch.fbx",
+                            "Notifies": []
                         },
                         {
                             "Name": "WalkBackward",
-                            "Path": "Resource/Animation/TestBackward.fbx"
+                            "Path": "Resource/Animation/TestBackward.fbx",
+                            "Notifies": []
                         },
                         {
                             "Name": "WalkForward",
-                            "Path": "Resource/Animation/TestForward.fbx"
+                            "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
                         }
                     ],
                     "Layers": [
@@ -765,6 +754,49 @@
                     "Active": true,
                     "LockRectTransform": true,
                     "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "AimPointer",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "AimPointer",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
+                    },
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
                 }
             ]
         }
