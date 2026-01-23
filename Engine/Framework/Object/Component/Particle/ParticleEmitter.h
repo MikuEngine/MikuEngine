@@ -12,24 +12,36 @@ namespace engine
 	struct Particle
 	{
 		Vector3 position;
+		float age;
+		float lifeTime;
+		float distanceToCamera;
+
 		Vector3 velocity;
+		float size;
+
 		Vector4 color;
 		Vector4 startColor;
 		Vector4 endColor;
 
-		Vector2 uvOffset;
-		Vector2 uvScale;
-
-		float size;
-		float startSize;
-		float endSize;
-
 		float rotation;
 		float rotationSpeed;
 
-		float age;
-		float lifeTime;
-		float distanceToCamera;
+		Vector2 uvOffset;
+		Vector2 uvScale;
+
+		float startSize;
+		float endSize;
+	};
+
+	struct Burst
+	{
+		float time = 0.0f;
+		std::uint32_t count = 10;
+		std::uint32_t cycles = 1;
+		float interval = 0.0f;
+
+		std::uint32_t currentCycle = 0;
+		float nextBurstTime = 0.0f;
 	};
 
 	struct EmitterProps
@@ -39,15 +51,19 @@ namespace engine
 		Vector3 velocity{ 0.0f, 5.0f, 0.0f };
 		Vector3 velocityVariation{ 1.0f, 1.0f, 1.0f };
 
-		Vector4 colorBegin{ 1.0f, 1.0f, 1.0f, 1.0f };
-		Vector4 colorEnd{ 1.0f, 1.0f, 1.0f, 1.0f };
+		Vector3 gravity{ 0.0f, -9.8f, 0.0f };
+
+		Vector4 startColor{ 1.0f, 1.0f, 1.0f, 1.0f };
+		Vector4 endColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 		float sizeBegin = 1.0f;
 		float sizeEnd = 1.0f;
 		float sizeVariation = 0.1f;
 		float lifeTime = 2.0f;
 
 		float emissionRate = 10.0f;
-		std::uint32_t maxParticle = 1000;
+		std::uint32_t maxParticles = 1000;
+
+		std::vector<Burst> bursts;
 
 		EmitterShape shape = EmitterShape::Cone;
 		float radius = 1.0f;
@@ -70,19 +86,25 @@ namespace engine
 		std::vector<Particle> m_particles;
 		EmitterProps m_props;
 		std::shared_ptr<Texture> m_texture;
+		std::string m_textureFilePath;
 
 		float m_emissionTimer = 0.0f;
+		float m_emitterAge = 0.0f;
 
 	public:
 		void Initialize(const std::shared_ptr<Texture>& texture, const EmitterProps& props);
 		void Update(float dt, const Vector3& emitterPosition, const Vector3& cameraPosition);
+		void Reset();
 
 		const std::vector<Particle>& GetParticles() const;
 		const std::shared_ptr<Texture>& GetTexture() const;
 		const EmitterProps& GetProps() const;
 		void SetProps(const EmitterProps& props);
 
+		void SortParticlesByDistance();
+
 	private:
 		void Emit(const Vector3& emitterPosition);
+		void ProcessBurst(Burst& burst, float emitterAge, const Vector3& emitterPosition);
 	};
 }

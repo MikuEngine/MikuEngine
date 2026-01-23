@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/System/System.h"
 #include "Framework/Object/Component/Renderer/Renderer.h"
@@ -19,6 +19,28 @@ namespace engine
     class BlendState;
     class GameObject;
     class GeometryShader;
+    class ParticleEffect;
+    class ParticleEmitter;
+
+    // 투명 렌더링 아이템 (Renderer와 ParticleEmitter 통합)
+    struct TransparentRenderItem
+    {
+        enum class Type { Renderer, ParticleEmitter };
+        Type type;
+        float distanceSq;
+
+        union
+        {
+            Renderer* renderer;
+            struct
+            {
+                ParticleEffect* effect;
+                const ParticleEmitter* emitter;
+            } particle;
+        };
+
+        void Render() const;
+    };
 
     class RenderSystem :
         public System<Renderer>

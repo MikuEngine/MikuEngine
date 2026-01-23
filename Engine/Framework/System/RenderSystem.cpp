@@ -368,40 +368,48 @@ namespace engine
                 }
 #endif // _DEBUG
 
-                context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
-                context->OMSetDepthStencilState(m_transparentDSState->GetRawDepthStencilState(), 0);
-
-                static std::vector<std::pair<float, Renderer*>> sortList;
+                // 투명 오브젝트와 파티클을 함께 정렬
+                // State는 각 Renderer와 ParticleSystem에서 개별적으로 설정
+                static std::vector<TransparentRenderItem> sortList;
                 sortList.clear();
-                if (sortList.capacity() < m_transparentList.size())
+                size_t estimatedSize = m_transparentList.size() + 100; // 파티클 여유 공간
+                if (sortList.capacity() < estimatedSize)
                 {
-                    sortList.reserve(static_cast<size_t>(m_transparentList.size() * 1.5f));
+                    sortList.reserve(static_cast<size_t>(estimatedSize * 1.5f));
                 }
+                
                 Vector3 camPos = cameraPosition;
                 
+                // 투명 오브젝트 추가
                 for (auto* renderer : m_transparentList)
                 {
                     if (renderer->IsActive())
                     {
                         float distSq = Vector3::DistanceSquared(camPos, renderer->GetTransform()->GetWorld().Translation());
-                        sortList.emplace_back(distSq, renderer);
+                        TransparentRenderItem item;
+                        item.type = TransparentRenderItem::Type::Renderer;
+                        item.distanceSq = distSq;
+                        item.renderer = renderer;
+                        sortList.push_back(item);
                     }
                 }
                 
+                // 파티클 추가
+                auto& particleSystem = SystemManager::Get().GetParticleSystem();
+                particleSystem.CollectTransparentItems(sortList, camPos);
+                
+                // 거리 기준 정렬 (멀리 있는 것부터)
                 std::sort(sortList.begin(), sortList.end(),
-                    [](const auto& a, const auto& b) {
-                        return a.first > b.first;
+                    [](const TransparentRenderItem& a, const TransparentRenderItem& b) {
+                        return a.distanceSq > b.distanceSq;
                     });
 
-                for (auto pair : sortList)
+                // 정렬된 순서로 렌더링
+                // 각 Renderer와 ParticleSystem에서 필요한 state를 설정함
+                for (const auto& item : sortList)
                 {
-                    pair.second->Draw(RenderType::Transparent);
+                    item.Render();
                 }
-
-                SystemManager::Get().GetParticleSystem().Render(view, projection);
-
-                context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-                context->OMSetDepthStencilState(nullptr, 0);
             }
             graphics.EndDrawForwardPass();
         }
@@ -410,9 +418,7 @@ namespace engine
 
         graphics.BeginDrawScreenPass();
         {
-            context->OMSetBlendState(m_transparentBlendState->GetRawBlendState(), nullptr, 0xFFFFFFFF);
-            context->OMSetDepthStencilState(nullptr, 0); // UI는 보통 depth off
-
+            // Screen 렌더링은 각 Renderer에서 필요한 state를 설정함
             auto drawList = RebuildScreenDrawList(m_screenList);
 
             for (auto renderer : drawList)
@@ -420,10 +426,6 @@ namespace engine
                 if (renderer->IsActive())
                     renderer->Draw(RenderType::Screen);
             }
-
-            // 복구
-            context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-            context->OMSetDepthStencilState(nullptr, 0);
         }
         graphics.EndDrawScreenPass();
 
@@ -963,5 +965,17 @@ namespace engine
             });
 
         return drawList;
+    }
+
+    void TransparentRenderItem::Render() const
+    {
+        if (type == Type::Renderer)
+        {
+            renderer->Draw(RenderType::Transparent);
+        }
+        else
+        {
+            SystemManager::Get().GetParticleSystem().RenderEmitter(particle.effect, particle.emitter);
+        }
     }
 }
