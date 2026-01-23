@@ -24,6 +24,7 @@
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/System/UIEventSystem.h"
 #include "Framework/System/SoundSystem.h"
+#include "Framework/System/ParticleSystem.h"
 #include "Editor/EditorManager.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -180,6 +181,7 @@ namespace engine
         ImGui_ImplDX11_InvalidateDeviceObjects();
         ImGui_ImplDX11_CreateDeviceObjects();
 
+        SoundSystem::Get().Initialize();
         AssetManager::Get().Initialize();
         ResourceManager::Get().Initialize();
 
@@ -192,7 +194,6 @@ namespace engine
         // Physics 시스템 초기화
         PhysicsSystem::Get().Initialize();
 
-        SoundSystem::Get().Initialize();
 
 #ifdef _DEBUG
         EditorManager::Get().Initialize();
@@ -337,6 +338,8 @@ namespace engine
 
         SystemManager::Get().GetScriptSystem().CallStart();
         SystemManager::Get().GetScriptSystem().CallUpdate();
+
+        SystemManager::Get().GetParticleSystem().Update();
 
         // Physics 시뮬레이션
         PhysicsSystem::Get().Update(Time::FixedDeltaTime());

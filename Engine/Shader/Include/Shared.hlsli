@@ -40,6 +40,8 @@ cbuffer Frame : register(b0) // 프레임 당 한번만 갱신되는 버퍼
 {
     matrix g_view;
     
+    matrix g_invView;
+    
     matrix g_projection;
     
     matrix g_viewProjection;
@@ -254,9 +256,36 @@ struct PS_INPUT_RT_INDEX
 
 struct GS_INPUT_POSITION
 {
-    float4 position : SV_Position; // world
-    float2 texCoord : TEXCOORD0;
+    float4 position : SV_Position;
+    float4 worldPos : TEXCOORD0;
+    float2 texCoord : TEXCOORD1;
+    uint rtIndex : RTINDEX;
 };
+
+struct PS_INPUT_PARTICLE
+{
+    float4 position : SV_Position;
+    float2 texCoord : TEXCOORD0;
+    float4 color : COLOR;
+};
+
+// structured data
+
+struct PARTICLE_DATA
+{
+    float3 position;
+    float size;
+    
+    float4 color;
+    
+    float2 uvOffset;
+    float2 uvScale;
+    
+    float rotation;
+    float3 __pad_particle_data;
+};
+
+StructuredBuffer<PARTICLE_DATA> g_sbParticleData : register(t50);
 
 static const float PI = 3.141592f;
 static const float EPSILON = 0.00001f;

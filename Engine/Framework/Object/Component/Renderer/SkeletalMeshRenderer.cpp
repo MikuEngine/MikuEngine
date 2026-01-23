@@ -385,54 +385,6 @@ namespace engine
 
         for (const auto& meshSection : meshSections)
         {
-            switch (materials[meshSection.materialIndex].renderType)
-            {
-            case MaterialRenderType::Opaque:
-                if (renderType != RenderType::Opaque)
-                {
-                    continue;
-                }
-
-                switch (lightType)
-                {
-                case LightType::Directional:
-                    deviceContext->PSSetShader(nullptr, nullptr, 0);
-                    break;
-
-                case LightType::Point:
-                    deviceContext->PSSetShader(m_pointShadowPS->GetRawShader(), nullptr, 0);
-                    break;
-                }
-
-                break;
-
-            case MaterialRenderType::Cutout:
-                if (renderType != RenderType::Cutout)
-                {
-                    continue;
-                }
-
-                switch (lightType)
-                {
-                case LightType::Directional:
-                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
-                    break;
-
-                case LightType::Point:
-                    deviceContext->PSSetShader(m_pointShadowCutoutPS->GetRawShader(), nullptr, 0);
-                    break;
-                }
-
-                deviceContext->PSSetShaderResources(
-                    static_cast<UINT>(TextureSlot::BaseColor),
-                    1,
-                    m_textures[meshSection.materialIndex].baseColor->GetSRV().GetAddressOf());
-                break;
-
-            default:
-                continue;
-            }
-
             if (m_meshData->IsRigid())
             {
                 cbObject.boneIndex = meshSection.boneIndex;
@@ -446,7 +398,58 @@ namespace engine
             deviceContext->UpdateSubresource(m_objectConstantBuffer->GetRawBuffer(), 0, nullptr, &cbObject, 0, 0);
             deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object), 1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
 
-            deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+            switch (materials[meshSection.materialIndex].renderType)
+            {
+            case MaterialRenderType::Opaque:
+                if (renderType != RenderType::Opaque)
+                {
+                    continue;
+                }
+
+                switch (lightType)
+                {
+                case LightType::Directional:
+                    deviceContext->PSSetShader(nullptr, nullptr, 0);
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                    break;
+
+                case LightType::Point:
+                    deviceContext->PSSetShader(m_pointShadowPS->GetRawShader(), nullptr, 0);
+                    deviceContext->DrawIndexedInstanced(meshSection.indexCount, 6, meshSection.indexOffset, meshSection.vertexOffset, 0);
+                    break;
+                }
+
+                break;
+
+            case MaterialRenderType::Cutout:
+                if (renderType != RenderType::Cutout)
+                {
+                    continue;
+                }
+
+                deviceContext->PSSetShaderResources(
+                    static_cast<UINT>(TextureSlot::BaseColor),
+                    1,
+                    m_textures[meshSection.materialIndex].baseColor->GetSRV().GetAddressOf());
+
+                switch (lightType)
+                {
+                case LightType::Directional:
+                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                    break;
+
+                case LightType::Point:
+                    deviceContext->PSSetShader(m_pointShadowCutoutPS->GetRawShader(), nullptr, 0);
+                    deviceContext->DrawIndexedInstanced(meshSection.indexCount, 6, meshSection.indexOffset, meshSection.vertexOffset, 0);
+                    break;
+                }
+
+                break;
+
+            default:
+                continue;
+            }
         }
     }
 

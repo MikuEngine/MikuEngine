@@ -17,7 +17,8 @@ namespace engine
         PositionNormal,
         PositionColor,
         PositionTexCoord,
-        BoneWeight
+        BoneWeight,
+        Particle
     };
 
     struct CommonVertex

@@ -22,6 +22,7 @@
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/CameraSystem.h"
 #include "Framework/System/LightSystem.h"
+#include "Framework/System/ParticleSystem.h"
 #include "Framework/Object/Component/Light.h"
 
 #include "Framework/Object/Component/Canvas.h"
@@ -256,6 +257,7 @@ namespace engine
 
         CbFrame cbFrame;
         cbFrame.view = view.Transpose();
+        cbFrame.invView = view.Invert().Transpose();
         cbFrame.projection = projection.Transpose();
         cbFrame.viewProjection = viewProjection.Transpose();
         cbFrame.invViewProjection = viewProjection.Invert().Transpose();
@@ -395,6 +397,8 @@ namespace engine
                 {
                     pair.second->Draw(RenderType::Transparent);
                 }
+
+                SystemManager::Get().GetParticleSystem().Render(view, projection);
 
                 context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
                 context->OMSetDepthStencilState(nullptr, 0);
@@ -635,7 +639,7 @@ namespace engine
         {
 
             context->GSSetShader(m_shadowPointGS->GetRawShader(), nullptr, 0);
-            context->GSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::ShadowPoint), 1, m_shadowPointCB->GetBuffer().GetAddressOf());
+            context->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::ShadowPoint), 1, m_shadowPointCB->GetBuffer().GetAddressOf());
             context->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::ShadowPoint), 1, m_shadowPointCB->GetBuffer().GetAddressOf());
 
             int shadowIndex = 0;

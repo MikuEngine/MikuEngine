@@ -15,6 +15,7 @@ namespace engine
 	struct CbFrame
 	{
 		Matrix view;
+		Matrix invView;
 
 		Matrix projection;
 

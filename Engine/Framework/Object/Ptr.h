@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <type_traits>
+#include <cassert>
 #include "Framework/Object/Handle.h"
 
 namespace engine
@@ -31,6 +32,10 @@ namespace engine
         // 기본 생성자
         Ptr() = default;
 
+        // 복사/이동 생성자
+        Ptr(const Ptr&) = default;
+        Ptr(Ptr&&) noexcept = default;
+
         // nullptr 대입 허용
         Ptr(std::nullptr_t) : m_handle{} {}
 
@@ -50,6 +55,55 @@ namespace engine
             }
         }
 
+        // 타입 변환 생성자 (Ptr<U> -> Ptr<T>, U는 T의 파생 클래스)
+        // 예: Ptr<Derived> -> Ptr<Base>
+        template <typename U>
+        requires std::is_base_of_v<T, U>
+        Ptr(const Ptr<U>& other) : m_handle{ other.GetHandle() } {}
+
+        // 복사/이동 대입 연산자
+        Ptr& operator=(const Ptr&) = default;
+        Ptr& operator=(Ptr&&) noexcept = default;
+
+        // 대입 연산자들
+        Ptr& operator=(std::nullptr_t)
+        {
+            m_handle = {};
+            return *this;
+        }
+
+        Ptr& operator=(Handle handle)
+        {
+            m_handle = handle;
+            return *this;
+        }
+
+        // ⚠️ 이 연산자를 사용하는 cpp에서 T의 헤더를 include해야 함
+        Ptr& operator=(T* object)
+        {
+            static_assert(std::is_base_of_v<Object, T>, 
+                "Ptr<T>: T must inherit from Object");
+            
+            if (object != nullptr)
+            {
+                m_handle = object->GetHandle();
+            }
+            else
+            {
+                m_handle = {};
+            }
+            return *this;
+        }
+
+        // 타입 변환 대입 연산자 (Ptr<U> -> Ptr<T>, U는 T의 파생 클래스)
+        template <typename U>
+        requires std::is_base_of_v<T, U>
+        Ptr& operator=(const Ptr<U>& other)
+        {
+            m_handle = other.GetHandle();
+            return *this;
+        }
+
         // Handle 접근
         Handle GetHandle() const { return m_handle; }
 
@@ -58,6 +112,15 @@ namespace engine
         T* operator->() const
         {
             return Get();
+        }
+
+        // 역참조 연산자 (참조 반환)
+        // ⚠️ 이 연산자를 사용하는 cpp에서 T의 헤더를 include해야 함
+        T& operator*() const
+        {
+            T* ptr = Get();
+            assert(ptr != nullptr && "Ptr<T>::operator*(): Attempting to dereference null pointer");
+            return *ptr;
         }
 
         // 포인터 얻기
@@ -75,14 +138,10 @@ namespace engine
             return static_cast<T*>(object);
         }
 
-        // bool 변환 (유효성 검사)
+        // bool 변환 (유효성 검사) - 최적화: Handle만 체크
         operator bool() const
         {
-            if (!m_handle.IsValid())
-            {
-                return false;
-            }
-            return GetObjectFromHandle(m_handle) != nullptr;
+            return m_handle.IsValid();
         }
 
         // 비교 연산자
@@ -99,12 +158,12 @@ namespace engine
         // nullptr 비교
         bool operator==(std::nullptr_t) const
         {
-            return !static_cast<bool>(*this);
+            return !m_handle.IsValid();
         }
 
         bool operator!=(std::nullptr_t) const
         {
-            return static_cast<bool>(*this);
+            return m_handle.IsValid();
         }
     };
 }

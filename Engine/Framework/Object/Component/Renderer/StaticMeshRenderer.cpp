@@ -502,14 +502,14 @@ namespace engine
                 {
                 case LightType::Directional:
                     deviceContext->PSSetShader(nullptr, nullptr, 0);
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
                     break;
 
                 case LightType::Point:
                     deviceContext->PSSetShader(m_pointShadowPS->GetRawShader(), nullptr, 0);
+                    deviceContext->DrawIndexedInstanced(meshSection.indexCount, 6, meshSection.indexOffset, meshSection.vertexOffset, 0);
                     break;
                 }
-
-                deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
 
                 break;
 
@@ -519,22 +519,24 @@ namespace engine
                     continue;
                 }
 
-                switch (lightType)
-                {
-                case LightType::Directional:
-                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
-                    break;
-
-                case LightType::Point:
-                    deviceContext->PSSetShader(m_pointShadowCutoutPS->GetRawShader(), nullptr, 0);
-                    break;
-                }
-
                 deviceContext->PSSetShaderResources(
                     static_cast<UINT>(TextureSlot::BaseColor),
                     1,
                     m_textures[meshSection.materialIndex].baseColor->GetSRV().GetAddressOf());
-                deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+
+                switch (lightType)
+                {
+                case LightType::Directional:
+                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                    break;
+
+                case LightType::Point:
+                    deviceContext->PSSetShader(m_pointShadowCutoutPS->GetRawShader(), nullptr, 0);
+                    deviceContext->DrawIndexedInstanced(meshSection.indexCount, 6, meshSection.indexOffset, meshSection.vertexOffset, 0);
+                    break;
+                }
+
                 break;
 
             default:
