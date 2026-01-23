@@ -2,7 +2,7 @@
 #include "TestShootingPlayer.h"
 
 #include "AimPointer.h"
-#include "TempBulletFactory.h"
+#include "BulletFactory.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
@@ -13,346 +13,362 @@
 
 namespace game
 {
-    void TestShootingPlayer::Awake()
-    {
-        BaseControllerScript::Awake();
-    }
+	// ═══════════════════════════════════════════════════════════════
+	// 생명주기
+	// ═══════════════════════════════════════════════════════════════
+	void TestShootingPlayer::Awake()
+	{
+		BaseControllerScript::Awake();
+	}
 
-    void TestShootingPlayer::Start()
-    {
-        BaseControllerScript::Start();
+	void TestShootingPlayer::Start()
+	{
+		BaseControllerScript::Start();
 
-        // FSM 초기화 (한 번만)
-        if (!m_fsmInitialized && m_logicFSM)
-        {
-            InitializeFSM();
-            m_fsmInitialized = true;
-        }
+		// FSM 초기화 (한 번만)
+		if (!m_fsmInitialized && m_logicFSM)
+		{
+			InitializeFSM();
+			m_fsmInitialized = true;
+		}
 
-        // Procedural Aim 활성화
-        if (m_animFSM && m_enableUpperBodyAim)
-        {
-            m_animFSM->SetProceduralAimEnabled(true);
-        }
-    }
+		// Procedural Aim 활성화
+		if (m_animFSM && m_enableUpperBodyAim)
+		{
+			m_animFSM->SetProceduralAimEnabled(true);
+		}
+	}
 
-    // ═══════════════════════════════════════════════════════════════
-    // 컴포넌트 캐싱
-    // ═══════════════════════════════════════════════════════════════
-    void TestShootingPlayer::CacheComponents()
-    {
-        // 부모 클래스의 CacheComponents() 호출 (FSM 컴포넌트 찾기)
-        BaseControllerScript::CacheComponents();
+	// ═══════════════════════════════════════════════════════════════
+	// 컴포넌트 캐싱
+	// ═══════════════════════════════════════════════════════════════
+	void TestShootingPlayer::CacheComponents()
+	{
+		BaseControllerScript::CacheComponents();
 
-        // 추가 컴포넌트 찾기
-        if (!GetGameObject()) return;
+		if (!GetGameObject()) return;
 
-        m_rigidbody = GetGameObject()->GetComponent<engine::Rigidbody>();
+		m_rigidbody = GetGameObject()->GetComponent<engine::Rigidbody>();
+		m_aimPointer = GetGameObject()->GetComponent<AimPointer>();
 
-        // AimPointer와 BulletFactory 찾기
-        auto* scene = engine::SceneManager::Get().GetScene();
-        if (scene)
-        {
-            
-            m_aimPointer = GetGameObject()->GetComponent<AimPointer>();
+		// BulletFactory: 같은 오브젝트 또는 씬에서 검색
+		m_bulletFactory = GetGameObject()->GetComponent<BulletFactory>();
+		if (!m_bulletFactory)
+		{
+			auto* scene = engine::SceneManager::Get().GetScene();
+			if (scene)
+			{
+				if (auto* factoryGO = scene->FindGameObject("BulletFactory"))
+				{
+					m_bulletFactory = factoryGO->GetComponent<BulletFactory>();
+				}
+			}
+		}
+		// 참고: m_fireRate, m_bulletSpeed 등 파라미터 값은 
+		// 여기서 설정하지 않음. Load()에서 읽어온 값 또는 
+		// 헤더의 초기값이 사용됨.
+	}
 
-            m_bulletFactory = GetGameObject()->GetComponent<TempBulletFactory>();
-            if (!m_bulletFactory)
-            {
-                if (auto* factoryGO = scene->FindGameObject("BulletFactory"))
-                {
-                    m_bulletFactory = factoryGO->GetComponent<TempBulletFactory>();
-                }
-            }
-        }
-    }
+	// ═══════════════════════════════════════════════════════════════
+	// 행동 제한 (하이브리드 패턴 핵심)
+	// ═══════════════════════════════════════════════════════════════
+	bool TestShootingPlayer::CanMove() const
+	{
+		// 현재 구현: 모든 상태에서 이동 가능
+		// 필요시 특정 상태에서 이동 제한 가능
+		// 예: return !IsInAnyState({"Stunned", "Dead", "Casting"});
+		return true;
+	}
 
-    // ═══════════════════════════════════════════════════════════════
-    // 입력 처리
-    // ═══════════════════════════════════════════════════════════════
-    void TestShootingPlayer::ProcessInput()
-    {
-        if (!m_logicFSM) return;
+	bool TestShootingPlayer::CanAttack() const
+	{
+		// 현재 구현: 모든 상태에서 공격 가능
+		// 필요시 특정 상태에서 공격 제한 가능
+		// 예: return !IsInAnyState({"Stunned", "Dead", "Reloading"});
+		return true;
+	}
 
-        // 1. 이동 입력 → Parameters
-        engine::Vector3 moveDir = GetMoveInputDirection();
-        bool isMoving = moveDir.LengthSquared() > 0.001f;
-        
-        m_logicFSM->SetParameter("IsMoving", isMoving);
-        if (isMoving)
-        {
-            m_logicFSM->SetParameter("MoveX", moveDir.x);
-            m_logicFSM->SetParameter("MoveZ", moveDir.z);
-        }
+	// ═══════════════════════════════════════════════════════════════
+	// 입력 처리 (입력 → FSM 파라미터)
+	// ═══════════════════════════════════════════════════════════════
+	void TestShootingPlayer::ProcessInput()
+	{
+		if (!m_logicFSM) return;
 
-        // 2. 공격 입력 처리
-        bool isMousePressed = engine::Input::IsMousePressed(engine::Input::Buttons::LEFT);
-        bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
-        bool isMouseReleased = engine::Input::IsMouseReleased(engine::Input::Buttons::LEFT);
+		// ─────────────────────────────────────────────
+		// 1. 이동 입력 → FSM 파라미터
+		// ─────────────────────────────────────────────
+		engine::Vector3 moveDir = GetMoveInputDirection();
+		bool isMoving = moveDir.LengthSquared() > 0.001f;
 
-        // 마우스 Pressed → 트리거 설정 (Idle/Walk → IdleShoot/WalkShoot 전이용)
-        if (isMousePressed)
-        {
-            m_logicFSM->SetTrigger("Attack");
-        }
+		m_logicFSM->SetParameter("IsMoving", isMoving);
+		if (isMoving)
+		{
+			m_logicFSM->SetParameter("MoveX", moveDir.x);
+			m_logicFSM->SetParameter("MoveZ", moveDir.z);
+		}
 
-        // 마우스 Held/Released → IsShooting 파라미터 설정 (Shoot 상태 유지/해제용)
-        m_logicFSM->SetParameter("IsShooting", isMouseHeld);
+		// ─────────────────────────────────────────────
+		// 2. 공격 입력 → FSM 파라미터
+		// ─────────────────────────────────────────────
+		bool isMousePressed = engine::Input::IsMousePressed(engine::Input::Buttons::LEFT);
+		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
 
-        // 3. 상체 조준 업데이트 (매 프레임)
-        //UpdateUpperBodyAim();
-    }
+		// Pressed → 트리거 (상태 전이용)
+		if (isMousePressed)
+		{
+			m_logicFSM->SetTrigger("Attack");
+		}
 
-    // ═══════════════════════════════════════════════════════════════
-    // 게임 로직 업데이트
-    // ═══════════════════════════════════════════════════════════════
-    void TestShootingPlayer::UpdateGameLogic()
-    {
-        if (!m_rigidbody || !m_logicFSM) return;
+		// Held → 파라미터 (상태 유지용)
+		m_logicFSM->SetParameter("IsShooting", isMouseHeld);
+	}
 
-        std::string currentState = m_logicFSM->GetCurrentState();
+	// ═══════════════════════════════════════════════════════════════
+	// 게임 로직 (상태 확인 후 행동 실행)
+	// ═══════════════════════════════════════════════════════════════
+	void TestShootingPlayer::UpdateGameLogic()
+	{
+		float deltaTime = engine::Time::DeltaTime();
 
-        // 이동 처리 (Walk, WalkShoot 상태에서)
-        if (currentState == "Walk" || currentState == "WalkShoot")
-        {
-            engine::Vector3 moveDir = GetMoveInputDirection();
-            if (moveDir.LengthSquared() > 0.001f)
-            {
-                engine::Transform* transform = GetGameObject()->GetTransform();
-                if (transform)
-                {
-                    engine::Vector3 currentPos = transform->GetLocalPosition();
-                    float deltaTime = engine::Time::DeltaTime();
-                    engine::Vector3 newPos = currentPos + moveDir * m_moveSpeed * deltaTime;
-                    transform->SetLocalPosition(newPos);
-                }
-            }
-        }
+		// 행동 실행 (제한 함수로 허용 여부 확인)
+		if (CanMove())    HandleMovement(deltaTime);
+		if (CanAttack())  HandleShooting(deltaTime);
+	}
 
-        // 공격 상태에서 연사속도에 맞춰 총알 발사 (IdleShoot, WalkShoot)
-        if (currentState == "IdleShoot" || currentState == "WalkShoot")
-        {
-            m_fireTimer += engine::Time::DeltaTime();
-            
-            // 연사속도에 맞춰 발사
-            if (m_fireTimer >= m_fireRate)
-            {
-                HandleShooting();
-                m_fireTimer = 0.0f;
-            }
-        }
-        else
-        {
-            // Shoot 상태가 아니면 타이머 리셋
-            //m_fireTimer = 0.0f;
-        }
-    }
+	// ═══════════════════════════════════════════════════════════════
+	// 상태 변화 콜백
+	// ═══════════════════════════════════════════════════════════════
+	void TestShootingPlayer::OnStateEntered(const std::string& state)
+	{
+		// 하이브리드 패턴에서는 FSM 상태를 주로 애니메이션 트리거로 사용
+		// 필요시 상태별 초기화 로직 추가
+	}
 
-    // ═══════════════════════════════════════════════════════════════
-    // 상태 변화 콜백
-    // ═══════════════════════════════════════════════════════════════
-    void TestShootingPlayer::OnStateEntered(const std::string& state)
-    {
-        // Shoot 상태 진입 시 발사 타이머 리셋 (즉시 첫 발사)
-        if (state == "IdleShoot" || state == "WalkShoot")
-        {
-            m_fireTimer = m_fireRate;  // 즉시 발사되도록 타이머를 최대값으로 설정
-        }
-    }
+	// ═══════════════════════════════════════════════════════════════
+	// FSM 초기화
+	// ═══════════════════════════════════════════════════════════════
+	void TestShootingPlayer::InitializeFSM()
+	{
+		if (!m_logicFSM || m_fsmInitialized) return;
 
-    // ═══════════════════════════════════════════════════════════════
-    // FSM 초기화
-    // ═══════════════════════════════════════════════════════════════
-    void TestShootingPlayer::InitializeFSM()
-    {
-        if (!m_logicFSM) return;
-        if (m_fsmInitialized) return;
+		m_logicFSM->ClearStates();
 
-        // 기존 상태 초기화
-        m_logicFSM->ClearStates();
+		// ─────────────────────────────────────────────
+		// 상태 정의
+		// ─────────────────────────────────────────────
+		AddFSMState("Idle", true);   // 기본 상태
+		AddFSMState("Walk");
+		AddFSMState("IdleShoot");
+		AddFSMState("WalkShoot");
 
-        // ─────────────────────────────────────────────
-        // 1. 상태 추가
-        // ─────────────────────────────────────────────
-        AddFSMState("Idle", true);      // 기본 상태
-        AddFSMState("IdleShoot");
-        AddFSMState("Walk");
-        AddFSMState("WalkShoot");
+		m_logicFSM->UpdateStateMap();
+		m_logicFSM->SetDefaultState("Idle");
+		m_logicFSM->InitializeCurrentState();
 
-        // 모든 상태 추가 후 m_stateMap 업데이트
-        m_logicFSM->UpdateStateMap();
+		// ─────────────────────────────────────────────
+		// 전이 정의
+		// ─────────────────────────────────────────────
+		// Idle <-> Walk (이동 입력)
+		AddFSMTransition("Idle", "Walk", "IsMoving", BoolTrue());
+		AddFSMTransition("Walk", "Idle", "IsMoving", BoolFalse());
 
-        // 기본 상태 설정 및 초기화
-        m_logicFSM->SetDefaultState("Idle");
-        m_logicFSM->InitializeCurrentState();
+		// Idle/Walk -> Shoot (공격 트리거)
+		AddFSMTransition("Idle", "IdleShoot", "Attack", Trigger());
+		AddFSMTransition("Walk", "WalkShoot", "Attack", Trigger());
 
-        // ─────────────────────────────────────────────
-        // 2. 전이 추가: Idle <-> Walk (이동 입력)
-        // ─────────────────────────────────────────────
-        AddFSMTransition("Idle", "Walk", "IsMoving", BoolTrue());
-        AddFSMTransition("Walk", "Idle", "IsMoving", BoolFalse());
+		// IdleShoot <-> WalkShoot (이동 입력)
+		AddFSMTransition("IdleShoot", "WalkShoot", "IsMoving", BoolTrue());
+		AddFSMTransition("WalkShoot", "IdleShoot", "IsMoving", BoolFalse());
 
-        // ─────────────────────────────────────────────
-        // 3. 전이 추가: Idle -> IdleShoot (공격 트리거)
-        // ─────────────────────────────────────────────
-        AddFSMTransition("Idle", "IdleShoot", "Attack", Trigger());
+		// Shoot -> 비Shoot (마우스 Released)
+		AddFSMTransition("IdleShoot", "Idle", "IsShooting", BoolFalse());
+		AddFSMTransition("WalkShoot", "Walk", "IsShooting", BoolFalse());
+	}
 
-        // ─────────────────────────────────────────────
-        // 4. 전이 추가: Walk -> WalkShoot (공격 트리거)
-        // ─────────────────────────────────────────────
-        AddFSMTransition("Walk", "WalkShoot", "Attack", Trigger());
+	// ═══════════════════════════════════════════════════════════════
+	// 입력 유틸리티
+	// ═══════════════════════════════════════════════════════════════
+	engine::Vector3 TestShootingPlayer::GetMoveInputDirection() const
+	{
+		engine::Vector3 dir = engine::Vector3::Zero;
 
-        // ─────────────────────────────────────────────
-        // 5. 전이 추가: IdleShoot <-> WalkShoot (이동 입력, Shoot 상태 유지)
-        // ─────────────────────────────────────────────
-        // Shoot 상태에서도 이동 입력에 따라 전이 가능
-        AddFSMTransition("IdleShoot", "WalkShoot", "IsMoving", BoolTrue());
-        AddFSMTransition("WalkShoot", "IdleShoot", "IsMoving", BoolFalse());
+		if (engine::Input::IsKeyHeld(engine::Keys::W)) dir.z += 1.0f;
+		if (engine::Input::IsKeyHeld(engine::Keys::S)) dir.z -= 1.0f;
+		if (engine::Input::IsKeyHeld(engine::Keys::A)) dir.x -= 1.0f;
+		if (engine::Input::IsKeyHeld(engine::Keys::D)) dir.x += 1.0f;
 
-        // ─────────────────────────────────────────────
-        // 6. 전이 추가: IdleShoot -> Idle (마우스 Released)
-        // ─────────────────────────────────────────────
-        // 마우스를 떼면 Idle로 복귀
-        AddFSMTransition("IdleShoot", "Idle", "IsShooting", BoolFalse());
+		if (dir.LengthSquared() > 0.0f)
+		{
+			dir.Normalize();
+		}
 
-        // ─────────────────────────────────────────────
-        // 7. 전이 추가: WalkShoot -> Walk (마우스 Released)
-        // ─────────────────────────────────────────────
-        // 마우스를 떼면 일단 Walk로 가고, 다음 프레임에 IsMoving에 따라 Idle로 전이됨
-        AddFSMTransition("WalkShoot", "Walk", "IsShooting", BoolFalse());
-    }
+		return dir;
+	}
 
-    // ═══════════════════════════════════════════════════════════════
-    // 플레이어 전용 입력 함수
-    // ═══════════════════════════════════════════════════════════════
-    engine::Vector3 TestShootingPlayer::GetMoveInputDirection() const
-    {
-        engine::Vector3 direction = engine::Vector3::Zero;
+	// ═══════════════════════════════════════════════════════════════
+	// 액션 함수
+	// ═══════════════════════════════════════════════════════════════
+	void TestShootingPlayer::HandleMovement(float deltaTime)
+	{
+		engine::Vector3 moveDir = GetMoveInputDirection();
+		if (moveDir.LengthSquared() < 0.001f) return;
 
-        if (engine::Input::IsKeyHeld(engine::Keys::W)) direction.z += 1.0f;
-        if (engine::Input::IsKeyHeld(engine::Keys::S)) direction.z -= 1.0f;
-        if (engine::Input::IsKeyHeld(engine::Keys::A)) direction.x -= 1.0f;
-        if (engine::Input::IsKeyHeld(engine::Keys::D)) direction.x += 1.0f;
+		engine::Transform* transform = GetGameObject()->GetTransform();
+		if (!transform) return;
 
-        if (direction.LengthSquared() > 0.0f)
-        {
-            direction.Normalize();
-        }
+		engine::Vector3 currentPos = transform->GetLocalPosition();
+		engine::Vector3 newPos = currentPos + moveDir * m_moveSpeed * deltaTime;
+		transform->SetLocalPosition(newPos);
+	}
 
-        return direction;
-    }
+	void TestShootingPlayer::HandleShooting(float deltaTime)
+	{
+		// ─────────────────────────────────────────────
+		// 쿨다운 타이머 감소 (항상 실행)
+		// ─────────────────────────────────────────────
+		if (m_fireTimer > 0.0f)
+		{
+			m_fireTimer -= deltaTime;
+		}
 
-    // ═══════════════════════════════════════════════════════════════
-    // 플레이어 전용 액션
-    // ═══════════════════════════════════════════════════════════════
-    void TestShootingPlayer::HandleShooting()
-    {
-        if (m_bulletFactory && m_aimPointer)
-        {
-            engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-            engine::Vector3 direction = m_aimPointer->GetDirectionFrom(playerPos);
+		// ─────────────────────────────────────────────
+		// 발사 조건: 마우스 누름 + 쿨다운 완료
+		// ─────────────────────────────────────────────
+		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
 
-            m_bulletFactory->Fire(playerPos, direction);
-        }
-    }
+		if (isMouseHeld && m_fireTimer <= 0.0f)
+		{
+			// 발사!
+			if (m_bulletFactory && m_aimPointer)
+			{
+				engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+				engine::Vector3 direction = m_aimPointer->GetDirectionFrom(playerPos);
 
-    void TestShootingPlayer::UpdateUpperBodyAim()
-    {
-        if (!m_enableUpperBodyAim || !m_animFSM || !m_aimPointer)
-        {
-            return;
-        }
+				// BulletParams로 발사
+				BulletParams params;
+				params.type = BulletType::Linear;
+				params.speed = m_bulletSpeed;
+				params.lifetime = m_bulletLifetime;
+				params.damage = 10;  // TODO: 멤버 변수로 관리
 
-        float yaw = CalculateAimYaw();
-        m_animFSM->SetUpperBodyYaw(yaw);
-    }
+				m_bulletFactory->Fire(playerPos, direction, params);
 
-    float TestShootingPlayer::CalculateAimYaw() const
-    {
-        if (!m_aimPointer)
-        {
-            return 0.0f;
-        }
+				// 쿨다운 재설정 (단순 대입으로 확실하게)
+				m_fireTimer = m_fireRate;
+			}
+		}
 
-        engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-        engine::Vector3 aimPos = m_aimPointer->GetTransform()->GetWorldPosition();
+		// 참고: 마우스를 떼도 타이머를 초기화하지 않음
+		// 연타로 쿨다운을 우회하는 것을 방지
+	}
 
-        engine::Vector3 toAim = aimPos - playerPos;
-        toAim.y = 0.0f;
+	void TestShootingPlayer::UpdateUpperBodyAim()
+	{
+		if (!m_enableUpperBodyAim || !m_animFSM || !m_aimPointer)
+		{
+			return;
+		}
 
-        if (toAim.LengthSquared() < 0.001f)
-        {
-            return 0.0f;
-        }
+		float yaw = CalculateAimYaw();
+		m_animFSM->SetUpperBodyYaw(yaw);
+	}
 
-        toAim.Normalize();
+	float TestShootingPlayer::CalculateAimYaw() const
+	{
+		if (!m_aimPointer) return 0.0f;
 
-        // 플레이어 전방 (+Z)
-        engine::Vector3 forward = engine::Vector3::UnitZ;
-        engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
-        forward = engine::Vector3::Transform(forward, playerRot);
-        forward.y = 0.0f;
-        forward.Normalize();
+		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+		engine::Vector3 aimPos = m_aimPointer->GetTransform()->GetWorldPosition();
 
-        // 상대 각도 계산
-        float dotProduct = forward.Dot(toAim);
-        engine::Vector3 crossProduct = forward.Cross(toAim);
+		engine::Vector3 toAim = aimPos - playerPos;
+		toAim.y = 0.0f;
 
-        float angleRad = atan2f(crossProduct.y, dotProduct);
-        float angleDeg = engine::ToDegree(angleRad);
+		if (toAim.LengthSquared() < 0.001f) return 0.0f;
 
-        return angleDeg;
-    }
+		toAim.Normalize();
 
-    // ═══════════════════════════════════════════════════════════════
-    // GUI / 직렬화
-    // ═══════════════════════════════════════════════════════════════
-    void TestShootingPlayer::OnGui()
-    {
-        BaseControllerScript::OnGui();
+		// 플레이어 전방 (+Z)
+		engine::Vector3 forward = engine::Vector3::UnitZ;
+		engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
+		forward = engine::Vector3::Transform(forward, playerRot);
+		forward.y = 0.0f;
+		forward.Normalize();
 
-        ImGui::Separator();
-        ImGui::Text("TestShootingPlayer:");
-        ImGui::DragFloat("Move Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
-        ImGui::Checkbox("Enable Upper Body Aim", &m_enableUpperBodyAim);
+		// 상대 각도 계산
+		float dotProduct = forward.Dot(toAim);
+		engine::Vector3 crossProduct = forward.Cross(toAim);
 
-        ImGui::Separator();
-        ImGui::Text("References:");
-        ImGui::Text("  AimPointer: %s", m_aimPointer ? "Found" : "NOT FOUND");
-        ImGui::Text("  BulletFactory: %s", m_bulletFactory ? "Found" : "NOT FOUND");
-        ImGui::Text("  AnimFSM: %s", m_animFSM ? "Found" : "NOT FOUND");
-        ImGui::Text("  Rigidbody: %s", m_rigidbody ? "Found" : "NOT FOUND");
+		float angleRad = atan2f(crossProduct.y, dotProduct);
+		float angleDeg = engine::ToDegree(angleRad);
 
-        if (m_aimPointer)
-        {
-            float yaw = CalculateAimYaw();
-            ImGui::Text("  Aim Yaw: %.1f deg", yaw);
-        }
-    }
+		return angleDeg;
+	}
 
-    void TestShootingPlayer::Save(engine::json& j) const
-    {
-        BaseControllerScript::Save(j);
-        j["MoveSpeed"] = m_moveSpeed;
-        j["EnableUpperBodyAim"] = m_enableUpperBodyAim;
-        j["FSMInitialized"] = m_fsmInitialized;
-    }
+	// ═══════════════════════════════════════════════════════════════
+	// GUI / 직렬화
+	// ═══════════════════════════════════════════════════════════════
+	void TestShootingPlayer::OnGui()
+	{
+		BaseControllerScript::OnGui();
 
-    void TestShootingPlayer::Load(const engine::json& j)
-    {
-        BaseControllerScript::Load(j);
+		ImGui::Separator();
+		ImGui::Text("TestShootingPlayer:");
 
-        if (j.contains("MoveSpeed"))
-        {
-            m_moveSpeed = j["MoveSpeed"].get<float>();
-        }
-        if (j.contains("EnableUpperBodyAim"))
-        {
-            m_enableUpperBodyAim = j["EnableUpperBodyAim"].get<bool>();
-        }
-        if (j.contains("FSMInitialized"))
-        {
-            m_fsmInitialized = j["FSMInitialized"].get<bool>();
-        }
-    }
+		// 이동
+		ImGui::DragFloat("Move Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
+
+		// 발사 설정
+		ImGui::Separator();
+		ImGui::Text("Shooting:");
+		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.2, 0.01f, 2.0f);
+		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 1.0f, 1.0f, 100.0f);
+		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 3.0, 0.5f, 10.0f);
+
+		// 기타
+		ImGui::Separator();
+		ImGui::Checkbox("Enable Upper Body Aim", &m_enableUpperBodyAim);
+
+		ImGui::Separator();
+		ImGui::Text("References:");
+		ImGui::Text("  AimPointer: %s", m_aimPointer ? "Found" : "NOT FOUND");
+		ImGui::Text("  BulletFactory: %s", m_bulletFactory ? "Found" : "NOT FOUND");
+		ImGui::Text("  AnimFSM: %s", m_animFSM ? "Found" : "NOT FOUND");
+		ImGui::Text("  Rigidbody: %s", m_rigidbody ? "Found" : "NOT FOUND");
+
+		if (m_aimPointer)
+		{
+			float yaw = CalculateAimYaw();
+			ImGui::Text("  Aim Yaw: %.1f deg", yaw);
+		}
+	}
+
+	void TestShootingPlayer::Save(engine::json& j) const
+	{
+		BaseControllerScript::Save(j);
+		j["MoveSpeed"] = m_moveSpeed;
+		j["FireRate"] = m_fireRate;
+		j["BulletSpeed"] = m_bulletSpeed;
+		j["BulletLifetime"] = m_bulletLifetime;
+		j["EnableUpperBodyAim"] = m_enableUpperBodyAim;
+		j["FSMInitialized"] = m_fsmInitialized;
+	}
+
+	void TestShootingPlayer::Load(const engine::json& j)
+	{
+		BaseControllerScript::Load(j);
+
+		if (j.contains("MoveSpeed"))
+			m_moveSpeed = j["MoveSpeed"].get<float>();
+		if (j.contains("FireRate"))
+			m_fireRate = j["FireRate"].get<float>();
+		if (j.contains("BulletSpeed"))
+			m_bulletSpeed = j["BulletSpeed"].get<float>();
+		if (j.contains("BulletLifetime"))
+			m_bulletLifetime = j["BulletLifetime"].get<float>();
+		if (j.contains("EnableUpperBodyAim"))
+			m_enableUpperBodyAim = j["EnableUpperBodyAim"].get<bool>();
+		if (j.contains("FSMInitialized"))
+			m_fsmInitialized = j["FSMInitialized"].get<bool>();
+	}
 }

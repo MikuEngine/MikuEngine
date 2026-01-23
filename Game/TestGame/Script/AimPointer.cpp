@@ -115,53 +115,97 @@ namespace game
 
     void AimPointer::UpdateWorldPositionFromMouse(const engine::Vector2& mousePos)
     {
-        engine::Vector3 camPos{ 0.0f, 0.0f, -20.0f };
-        float fovDegrees = 50.0f;
-
+        // 카메라 찾기
+        engine::Camera* camera = nullptr;
         auto* scene = engine::SceneManager::Get().GetScene();
         if (scene)
         {
             if (auto* camGO = scene->FindGameObject("MainCamera"))
             {
-                camPos = camGO->GetTransform()->GetWorldPosition();
-                
-                // Camera 컴포넌트에서 FOV 가져오기
-                if (auto* camera = camGO->GetComponent<engine::Camera>())
-                {
-                    // Camera의 m_fov는 private이므로, 기본값 사용 또는 public getter 필요
-                    // 현재는 씬에 저장된 FOV 값(50.0)을 사용
-                    fovDegrees = 50.0f;
-                }
+                camera = camGO->GetComponent<engine::Camera>();
             }
         }
 
+        if (!camera)
+        {
+            m_worldPosition = engine::Vector3::Zero;
+            return;
+        }
+
+        // 뷰포트 크기
         const auto& vp = engine::GraphicsDevice::Get().GetViewport();
         float screenWidth = (vp.Width > 0.0f) ? vp.Width : 1920.0f;
         float screenHeight = (vp.Height > 0.0f) ? vp.Height : 1080.0f;
 
-        // 카메라에서 Z=0 평면(게임 월드)까지의 거리
-        float distanceToWorld = std::abs(camPos.z);
-        
-        // FOV와 거리를 기반으로 월드 크기 계산
-        // 화면 절반의 세로 월드 크기 = tan(fov/2) * distance
-        float fovRadians = DirectX::XMConvertToRadians(fovDegrees);
-        float halfWorldHeight = std::tan(fovRadians * 0.5f) * distanceToWorld;
-        float halfWorldWidth = halfWorldHeight * (screenWidth / screenHeight);
+        // 화면 좌표를 NDC로 변환 (-1 ~ 1)
+        float ndcX = (2.0f * mousePos.x / screenWidth) - 1.0f;
+        float ndcY = 1.0f - (2.0f * mousePos.y / screenHeight);
 
-        // 스크린 좌표 -> 월드 좌표 스케일
-        float worldScaleX = (halfWorldWidth * 2.0f) / screenWidth;
-        float worldScaleY = (halfWorldHeight * 2.0f) / screenHeight;
+        // 역투영 행렬과 역뷰 행렬 계산
+        engine::Matrix invProj = camera->GetProjection().Invert();
+        engine::Matrix invView = camera->GetView().Invert();
 
-        // 카메라 위치를 기준으로 월드 좌표 계산
-        m_worldPosition.x = camPos.x + (mousePos.x - screenWidth * 0.5f) * worldScaleX;
-        m_worldPosition.y = camPos.y + -(mousePos.y - screenHeight * 0.5f) * worldScaleY;
-        m_worldPosition.z = 0.0f;  // 게임 월드는 Z=0 평면
+        // NDC에서 뷰 공간으로 변환 (near plane과 far plane 포인트)
+        engine::Vector4 nearPointNDC(ndcX, ndcY, 0.0f, 1.0f);
+        engine::Vector4 farPointNDC(ndcX, ndcY, 1.0f, 1.0f);
+
+        // 뷰 공간으로 변환
+        engine::Vector4 nearPointView = engine::Vector4::Transform(nearPointNDC, invProj);
+        engine::Vector4 farPointView = engine::Vector4::Transform(farPointNDC, invProj);
+
+        // w로 나누어 동차 좌표 정규화
+        if (std::abs(nearPointView.w) > 0.0001f)
+        {
+            nearPointView /= nearPointView.w;
+        }
+        if (std::abs(farPointView.w) > 0.0001f)
+        {
+            farPointView /= farPointView.w;
+        }
+
+        // 월드 공간으로 변환
+        engine::Vector4 nearPointWorld = engine::Vector4::Transform(nearPointView, invView);
+        engine::Vector4 farPointWorld = engine::Vector4::Transform(farPointView, invView);
+
+        // 레이 원점과 방향 계산
+        engine::Vector3 rayOrigin(nearPointWorld.x, nearPointWorld.y, nearPointWorld.z);
+        engine::Vector3 rayEnd(farPointWorld.x, farPointWorld.y, farPointWorld.z);
+        engine::Vector3 rayDir = rayEnd - rayOrigin;
+        rayDir.Normalize();
+
+        // Y=0 평면(XZ 바닥면)과의 교점 계산
+        // 레이: P = rayOrigin + t * rayDir
+        // 평면: Y = 0
+        // rayOrigin.y + t * rayDir.y = 0
+        // t = -rayOrigin.y / rayDir.y
+
+        if (std::abs(rayDir.y) > 0.0001f)
+        {
+            float t = -rayOrigin.y / rayDir.y;
+
+            // t > 0 이면 카메라 앞쪽에 교점이 있음
+            if (t > 0.0f)
+            {
+                m_worldPosition = rayOrigin + rayDir * t;
+                m_worldPosition.y = 0.0f; // 정확히 Y=0으로 설정
+            }
+            else
+            {
+                // 카메라 뒤쪽이면 기본값
+                m_worldPosition = engine::Vector3::Zero;
+            }
+        }
+        else
+        {
+            // 레이가 Y=0 평면과 평행한 경우 (거의 발생하지 않음)
+            m_worldPosition = engine::Vector3::Zero;
+        }
     }
 
     engine::Vector3 AimPointer::GetDirectionFrom(const engine::Vector3& fromPosition) const
-    {      
+    {
         engine::Vector3 direction = m_worldPosition - fromPosition;
-        direction.z = 0.0f;  // 2D 평면에서의 방향
+        direction.y = 0.0f;  // XZ 평면에서의 방향 (Y축 무시)
         direction.Normalize();
         return direction;
     }
