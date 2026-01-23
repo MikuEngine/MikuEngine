@@ -1,12 +1,15 @@
 #include "EnginePCH.h"
 #include "PhysicsCallback.h"
 
+#include "Framework/System/SystemManager.h"
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/Physics/PhysicsLayer.h"
 #include "Framework/Physics/PhysicsUtility.h"
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/Rigidbody.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
 
 namespace engine
 {
@@ -88,8 +91,11 @@ namespace engine
             CollisionPriority priorityB = colliderB->GetCollisionPriority();
             event.priority = (priorityA > priorityB) ? priorityA : priorityB;
 
-            // CollisionSystem에 큐잉
-            CollisionSystem::Get().QueueCollisionEvent(event);
+            // Scene의 이벤트 큐에 추가
+            if (Scene* scene = SceneManager::Get().GetScene())
+            {
+                scene->QueueCollisionEvent(event);
+            }
         }
     }
 
@@ -150,8 +156,11 @@ namespace engine
             event.trigger = Ptr<Collider>(trigger);
             event.other = Ptr<Collider>(other);
 
-            // CollisionSystem에 큐잉
-            CollisionSystem::Get().QueueTriggerEvent(event);
+            // Scene의 이벤트 큐에 추가
+            if (Scene* scene = SceneManager::Get().GetScene())
+            {
+                scene->QueueTriggerEvent(event);
+            }
         }
     }
 

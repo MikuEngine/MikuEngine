@@ -192,7 +192,7 @@ namespace engine
         SceneManager::Get().Initialize();
         
         // Physics 시스템 초기화
-        PhysicsSystem::Get().Initialize();
+        SystemManager::Get().GetPhysicsSystem().Initialize();
 
 
 #ifdef _DEBUG
@@ -219,8 +219,7 @@ namespace engine
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
 
-        EditorManager::Get().Shutdown();
-        PhysicsSystem::Get().Shutdown();
+        EditorManager::Get().Shutdown();       
         SceneManager::Get().Shutdown();
         AssetManager::Get().Shutdown();
         SoundSystem::Get().Shutdown();
@@ -342,8 +341,8 @@ namespace engine
         SystemManager::Get().GetParticleSystem().Update();
 
         // Physics 시뮬레이션
-        PhysicsSystem::Get().Update(Time::FixedDeltaTime());
-        CollisionSystem::Get().ProcessEvents();
+        SystemManager::Get().GetPhysicsSystem().Update(Time::FixedDeltaTime());
+        SystemManager::Get().GetCollisionSystem().ProcessEvents();
 
         SystemManager::Get().GetCameraSystem().Update();
 

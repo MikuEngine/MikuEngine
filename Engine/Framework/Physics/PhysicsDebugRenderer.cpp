@@ -1,6 +1,7 @@
 ﻿#include "EnginePCH.h"
 #include "PhysicsDebugRenderer.h"
 
+#include "Framework/System/SystemManager.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/BoxCollider.h"
@@ -182,7 +183,7 @@ namespace engine
         std::unordered_set<Collider*> colliderSet;  // 중복 방지용
         
         // PhysicsSystem에 등록된 콜라이더 (Play 모드)
-        const auto& registeredColliders = PhysicsSystem::Get().GetRegisteredColliders();
+        const auto& registeredColliders = SystemManager::Get().GetPhysicsSystem().GetRegisteredColliders();
         
         // 에디터 모드 체크 (등록된 콜라이더가 없으면 에디터 모드)
         bool isEditMode = registeredColliders.empty();
@@ -339,7 +340,7 @@ namespace engine
         // 에디터 모드에서도 작동하도록 씬에서 직접 컨트롤러를 찾음
         std::vector<CharacterController*> controllers;
         
-        const auto& registeredControllers = PhysicsSystem::Get().GetRegisteredControllers();
+        const auto& registeredControllers = SystemManager::Get().GetPhysicsSystem().GetRegisteredControllers();
         if (!registeredControllers.empty())
         {
             controllers = registeredControllers;

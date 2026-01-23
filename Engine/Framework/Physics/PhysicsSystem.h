@@ -1,13 +1,10 @@
 #pragma once
 
 #include <PxPhysicsAPI.h>
-#include <unordered_map>
 #include <vector>
 #include <memory>
 
-#include "Common/Utility/Singleton.h"
 #include "Framework/Physics/PhysicsLayer.h"
-#include "Framework/Physics/PhysicsCallback.h"
 #include "Framework/Physics/CollisionTypes.h"
 
 namespace engine
@@ -52,10 +49,26 @@ namespace engine
 
     // ═══════════════════════════════════════════════════════════════
     // PhysicsSystem - PhysX 래핑 및 물리 시뮬레이션 관리
+    // 
+    // 설계:
+    //   - Scene이 물리 컴포넌트 참조와 이벤트 큐를 소유
+    //   - PhysicsSystem은 PhysX 코어만 관리하고, Scene의 데이터 참조
+    //   - 씬 전환 시 Scene::Clear()에서 자동 정리
+    //   - 소멸자에서 PhysX 코어 리소스만 해제
     // ═══════════════════════════════════════════════════════════════
 
-    class PhysicsSystem : public Singleton<PhysicsSystem>
+    class PhysicsSystem
     {
+    public:
+        PhysicsSystem() = default;
+        ~PhysicsSystem();  // 소멸자에서 PhysX 코어 리소스 정리
+        
+        // 복사/이동 금지
+        PhysicsSystem(const PhysicsSystem&) = delete;
+        PhysicsSystem& operator=(const PhysicsSystem&) = delete;
+        PhysicsSystem(PhysicsSystem&&) = delete;
+        PhysicsSystem& operator=(PhysicsSystem&&) = delete;
+
     private:
         // ═══════════════════════════════════════
         // PhysX 코어 (전역, 1개)
@@ -74,27 +87,6 @@ namespace engine
         
         // 레이어 매트릭스
         PhysicsLayerMatrix m_layerMatrix;
-
-        // ═══════════════════════════════════════
-        // Scene별 데이터
-        // ═══════════════════════════════════════
-        struct PxSceneData
-        {
-            physx::PxScene* pxScene = nullptr;
-            physx::PxControllerManager* controllerManager = nullptr;
-            PhysicsEventCallback eventCallback;
-            
-            // 컴포넌트 컨테이너
-            std::vector<Rigidbody*> rigidbodies;
-            std::vector<Collider*> colliders;
-            std::vector<CharacterController*> controllers;
-            
-            // 시뮬레이션 상태
-            float accumulator = 0.0f;
-            bool isSimulating = false;
-        };
-        
-        std::unordered_map<Scene*, PxSceneData> m_sceneDataMap;
         
         // ═══════════════════════════════════════
         // 설정
@@ -102,46 +94,42 @@ namespace engine
         PhysicsSettings m_settings;
         bool m_isInitialized = false;
 
-    private:
-        PhysicsSystem() = default;
-        ~PhysicsSystem() = default;
-
     public:
         // ═══════════════════════════════════════
         // 생명주기
         // ═══════════════════════════════════════
         void Initialize(const PhysicsSettings& settings = {});
-        void Shutdown();
+        
+        // Shutdown()은 더 이상 필요 없음 - 소멸자에서 처리
+        // 하위 호환성을 위해 빈 함수로 유지
+        void Shutdown() {}
         
         bool IsInitialized() const { return m_isInitialized; }
 
         // ═══════════════════════════════════════
-        // Scene 관리
+        // 씬 물리 관리
+        // Scene에 PxScene과 ControllerManager 생성하여 전달
         // ═══════════════════════════════════════
-        void CreateScenePhysics(Scene* scene, const PhysicsSceneSettings& settings = {});
-        void DestroyScenePhysics(Scene* scene);
+        void CreateScenePhysics(const PhysicsSceneSettings& settings = {});
+        void ClearScenePhysics();  // 씬 전환 시 호출
+        
+        // 하위 호환성 (Scene* 파라미터 무시)
+        void CreateScenePhysics(Scene* /*scene*/, const PhysicsSceneSettings& settings = {}) 
+        { 
+            CreateScenePhysics(settings); 
+        }
+        void DestroyScenePhysics(Scene* /*scene*/) 
+        { 
+            ClearScenePhysics(); 
+        }
         
         // ═══════════════════════════════════════
         // 업데이트
         // ═══════════════════════════════════════
-        
-        // 현재 활성 Scene의 물리 업데이트
         void Update(float deltaTime);
         
-        // 특정 Scene 업데이트
-        void Update(Scene* scene, float deltaTime);
-
-        // ═══════════════════════════════════════
-        // 컴포넌트 등록/해제
-        // ═══════════════════════════════════════
-        void RegisterRigidbody(Rigidbody* rb);
-        void UnregisterRigidbody(Rigidbody* rb);
-        
-        void RegisterCollider(Collider* collider);
-        void UnregisterCollider(Collider* collider);
-        
-        void RegisterController(CharacterController* controller);
-        void UnregisterController(CharacterController* controller);
+        // 하위 호환성 (Scene* 파라미터 무시)
+        void Update(Scene* /*scene*/, float deltaTime) { Update(deltaTime); }
 
         // ═══════════════════════════════════════
         // 쿼리 (Raycast, Overlap 등)
@@ -190,10 +178,17 @@ namespace engine
         // 접근자
         // ═══════════════════════════════════════
         physx::PxPhysics* GetPxPhysics() const { return m_physics; }
-        physx::PxScene* GetPxScene(Scene* scene) const;
-        physx::PxScene* GetActivePxScene() const;
-        physx::PxControllerManager* GetControllerManager(Scene* scene) const;
         physx::PxMaterial* GetDefaultMaterial() const { return m_defaultMaterial; }
+        
+        // Scene에서 PxScene 접근 (Scene을 통해)
+        physx::PxScene* GetActivePxScene() const;
+        physx::PxControllerManager* GetActiveControllerManager() const;
+        
+        // 하위 호환성
+        physx::PxScene* GetPxScene() const { return GetActivePxScene(); }
+        physx::PxScene* GetPxScene(Scene* /*scene*/) const { return GetActivePxScene(); }
+        physx::PxControllerManager* GetControllerManager() const { return GetActiveControllerManager(); }
+        physx::PxControllerManager* GetControllerManager(Scene* /*scene*/) const { return GetActiveControllerManager(); }
         
         const PhysicsSettings& GetSettings() const { return m_settings; }
         PhysicsLayerMatrix& GetLayerMatrix() { return m_layerMatrix; }
@@ -203,23 +198,20 @@ namespace engine
         void SetDebugRenderEnabled(bool enabled) { m_settings.enableDebugRender = enabled; }
         bool IsDebugRenderEnabled() const { return m_settings.enableDebugRender; }
 
-        // 등록된 컴포넌트 접근 (디버그 렌더링용)
+        // 등록된 컴포넌트 접근 (디버그 렌더링용, Scene에서 가져옴)
         const std::vector<Collider*>& GetRegisteredColliders() const;
         const std::vector<CharacterController*>& GetRegisteredControllers() const;
 
     private:
         // 시뮬레이션 헬퍼
-        void SyncTransformsToPhysics(PxSceneData& data);
-        void Simulate(PxSceneData& data, float timeStep);
-        void SyncPhysicsToTransforms(PxSceneData& data);
+        void SyncTransformsToPhysics(Scene* scene);
+        void Simulate(Scene* scene, float timeStep);
+        void SyncPhysicsToTransforms(Scene* scene);
         
-        // Scene 데이터 접근
-        PxSceneData* GetSceneData(Scene* scene);
-        PxSceneData* GetActiveSceneData();
+        // PhysX 리소스 정리 (소멸자에서 호출)
+        void ReleasePhysXResources();
         
         // 기존 물리 컴포넌트 등록 (씬 로드 후)
         void RegisterExistingPhysicsComponents(Scene* scene);
-
-        friend class Singleton<PhysicsSystem>;
     };
 }
