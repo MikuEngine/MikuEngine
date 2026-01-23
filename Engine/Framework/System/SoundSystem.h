@@ -16,7 +16,7 @@ namespace engine
 	struct SoundCallbackInfo
 	{
 		FMOD::Channel* pChannel = nullptr;
-		EventEndPlay callback = nullptr;
+        EventCallBack callback = nullptr;
 	};
 
     class Sound
@@ -35,7 +35,7 @@ namespace engine
 
         void Release();
 
-        FMOD::Channel* Play2D(bool bLoop = false, EventEndPlay callback = nullptr);
+        FMOD::Channel* Play2D(bool bLoop = false, EventCallBack callback = nullptr);
 
         FMOD::Channel* Play3D(const Vector3& position, bool bLoop = false);
 

@@ -30,7 +30,7 @@ namespace engine
         }
     }
 
-    FMOD::Channel* Sound::Play2D(bool bLoop, EventEndPlay callback)
+    FMOD::Channel* Sound::Play2D(bool bLoop, EventCallBack callback)
     {
         if (m_pSystem)
         {

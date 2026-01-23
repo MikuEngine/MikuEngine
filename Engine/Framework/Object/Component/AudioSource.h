@@ -70,7 +70,7 @@ namespace engine
         //void Awake() override;
         void OnDestroy() override;
 
-        void Play(EventEndPlay callback = nullptr, float fadeInDuration = 0.0f);
+        void Play(EventCallBack callback = nullptr, float fadeInDuration = 0.0f);
         void Play(float fadeIn, float duration, float fadeOut);
         void Stop(float fadeOutDuration = 0.0f);
         void LoadClipFromFile();

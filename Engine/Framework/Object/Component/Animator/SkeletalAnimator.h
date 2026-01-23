@@ -13,10 +13,17 @@ namespace engine
         Additive
     };
 
+    struct AnimationNotify
+    {
+        std::string name;
+        float time;
+    };
+
     struct AnimationResource
     {
         std::shared_ptr<AnimationData> data;
         std::string path;
+        std::vector<AnimationNotify> notifies;
     };
 
     struct AnimationState
