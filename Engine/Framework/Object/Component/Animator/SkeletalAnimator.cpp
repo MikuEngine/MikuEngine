@@ -95,6 +95,28 @@ namespace engine
         }
     }
 
+    void SkeletalAnimator::AddNotify(const std::string& animName, const std::string& notifyName, float time)
+    {
+        auto it = m_animations.find(animName);
+        if (it != m_animations.end())
+        {
+            AnimationNotify newNotify;
+            newNotify.name = notifyName;
+            newNotify.time = time;
+            it->second.notifies.push_back(newNotify);
+        }
+    }
+
+    void SkeletalAnimator::BindNotify(const std::string& notifyName, EventCallBack callback)
+    {
+        m_notifyCallbacks[notifyName] = callback;
+    }
+
+    void SkeletalAnimator::UnbindNotify(const std::string& notifyName)
+    {
+        m_notifyCallbacks.erase(notifyName);
+    }
+
     void SkeletalAnimator::SetLayerMask(int layerIndex, const std::vector<std::string>& boneNames, bool active, bool isRecursive)
     {
         if (layerIndex < 0 || layerIndex >= m_layers.size())
@@ -379,6 +401,8 @@ namespace engine
                 continue;
             }
 
+            float prevTime = layer.current.time; 
+
             // 1 fbx = 1 anim 이므로 항상 0번 인덱스
             float duration = layer.current.data->GetAnimations()[0].duration;
 
@@ -396,10 +420,14 @@ namespace engine
                 }
             }
 
+            float currTime = layer.current.time;
+            CheckNotifies(layer.current, prevTime, currTime);
+
             if (layer.next.active)
             {
                 layer.transitionTime += dt;
 
+                float nextPrevTime = layer.next.time;
                 float nextDuration = layer.next.data->GetAnimations()[0].duration;
                 layer.next.time += dt * layer.next.speed;
                 if (layer.next.time >= nextDuration)
@@ -413,6 +441,9 @@ namespace engine
                         layer.next.time = nextDuration;
                     }
                 }
+
+                float nextCurrTime = layer.next.time;
+                CheckNotifies(layer.next, nextPrevTime, nextCurrTime);
 
                 if (layer.transitionTime >= layer.transitionDuration)
                 {
@@ -734,6 +765,17 @@ namespace engine
             json node;
             node["Name"] = name;
             node["Path"] = res.path;
+
+            std::vector<json> notifyList;
+            for (const auto& notify : res.notifies)
+            {
+                json notifyNode;
+                notifyNode["Name"] = notify.name;
+                notifyNode["Time"] = notify.time;
+                notifyList.push_back(notifyNode);
+            }
+            node["Notifies"] = notifyList;
+
             animList.push_back(node);
         }
 
@@ -764,6 +806,7 @@ namespace engine
         }
 
         j["Layers"] = layerList;
+
     }
 
     void SkeletalAnimator::Load(const json& j)
@@ -772,7 +815,21 @@ namespace engine
 
         JsonArrayForEach(j, "Animations", [&](const json& node)
             {
-                RegisterAnimation(node.value("Name", ""), node.value("Path", ""));
+                std::string name = node.value("Name", "");
+                std::string path = node.value("Path", "");
+
+                RegisterAnimation(name, path);
+
+                if (node.contains("Notifies"))
+                {
+                    for (const auto& notifyNode : node["Notifies"])
+                    {
+                        std::string notifyName = notifyNode.value("Name", "");
+                        float time = notifyNode.value("Time", 0.0f);
+
+                        AddNotify(name, notifyName, time);
+                    }
+                }
             }
         );
 
@@ -945,6 +1002,53 @@ namespace engine
                     layer.mask[bone.index] = 1;
 
                     break;
+                }
+            }
+        }
+    }
+    void SkeletalAnimator::CheckNotifies(const AnimationState& state, float prevTime, float currTime)
+    {
+        auto find = m_animations.find(state.name);
+        if (find == m_animations.end()) return;
+
+        const auto& notifies = find->second.notifies;
+        if (notifies.empty()) return;
+
+        float duration = 0.0f;
+        if (state.data && !state.data->GetAnimations().empty())
+        {
+            duration = state.data->GetAnimations()[0].duration;
+        }
+
+        for (const auto& notify : notifies)
+        {
+            bool fired = false;
+
+            if (prevTime < notify.time && notify.time <= currTime)
+            {
+                fired = true;
+            }
+            else if (currTime < prevTime)
+            {
+                if (prevTime < notify.time && notify.time <= duration)
+                {
+                    fired = true;
+                }
+                else if (0.0f <= notify.time && notify.time <= currTime)
+                {
+                    fired = true;
+                }
+            }
+
+            if (fired)
+            {
+                auto iter = m_notifyCallbacks.find(notify.name);
+                if (iter != m_notifyCallbacks.end())
+                {
+                    if (iter->second)
+                    {
+                        iter->second();
+                    }
                 }
             }
         }
