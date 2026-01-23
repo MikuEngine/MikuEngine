@@ -63,23 +63,61 @@ namespace game
 
     void AimPointer::EnsureUICursor()
     {
-        engine::GameObject* go = GetGameObject();
-        if (!go)
-            return;
-
-        m_canvas = go->GetComponent<engine::Canvas>();
-        FATAL_CHECK(m_canvas != nullptr, "AimPointer 오브젝트에 Canvas가 필요합니다.");
-
+        // 이미 초기화되어 있으면 스킵
         if (m_cursorImage && m_cursorRect && m_canvas)
         {
             return;
         }
 
+        // 씬에서 Canvas 오브젝트 찾기
+        auto* scene = engine::SceneManager::Get().GetScene();
+        if (!scene)
+            return;
+
+        engine::GameObject* canvasGO = scene->FindGameObject(m_canvasObjectName);
+        if (!canvasGO)
+        {
+            // Canvas 오브젝트가 없으면 생성
+            canvasGO = scene->CreateGameObject(m_canvasObjectName);
+            canvasGO->AddComponent<engine::Canvas>();
+            LOG_PRINT("[AimPointer] Created Canvas object: %s", m_canvasObjectName.c_str());
+        }
+
+        m_canvas = canvasGO->GetComponent<engine::Canvas>();
+        if (!m_canvas)
+        {
+            m_canvas = canvasGO->AddComponent<engine::Canvas>();
+        }
+
+        // 커서 자식 오브젝트 찾기/생성
+        if (!m_cursorObject)
+        {
+            // Canvas 자식 중에서 "AimCursor" 찾기
+            auto* canvasTransform = canvasGO->GetTransform();
+            for (auto* child : canvasTransform->GetChildren())
+            {
+                if (child->GetGameObject()->GetName() == "AimCursor")
+                {
+                    m_cursorObject = child->GetGameObject();
+                    break;
+                }
+            }
+
+            // 없으면 생성
+            if (!m_cursorObject)
+            {
+                m_cursorObject = scene->CreateGameObject("AimCursor");
+                m_cursorObject->GetTransform()->SetParent(canvasTransform);
+                LOG_PRINT("[AimPointer] Created cursor object: AimCursor");
+            }
+        }
+
+        // UIImage 설정
         if (!m_cursorImage)
         {
-            m_cursorImage = go->GetComponent<engine::UIImage>();
+            m_cursorImage = m_cursorObject->GetComponent<engine::UIImage>();
             if (!m_cursorImage)
-                m_cursorImage = go->AddComponent<engine::UIImage>();
+                m_cursorImage = m_cursorObject->AddComponent<engine::UIImage>();
         }
 
         if (m_cursorImage)
@@ -88,14 +126,15 @@ namespace game
             m_cursorImage->SetAlphaBlend(true);
         }
 
+        // RectTransform 설정
         if (!m_cursorRect)
         {
             m_cursorRect = m_cursorImage ? m_cursorImage->GetRectTransform() : nullptr;
             if (!m_cursorRect)
             {
-                m_cursorRect = go->GetComponent<engine::RectTransform>();
+                m_cursorRect = m_cursorObject->GetComponent<engine::RectTransform>();
                 if (!m_cursorRect)
-                    m_cursorRect = go->AddComponent<engine::RectTransform>();
+                    m_cursorRect = m_cursorObject->AddComponent<engine::RectTransform>();
             }
         }
 
@@ -105,11 +144,6 @@ namespace game
             m_cursorRect->SetAnchorMax({ 0.0f, 0.0f });
             m_cursorRect->SetPivot(m_cursorPivot);
             m_cursorRect->SetSize(m_cursorSize.x, m_cursorSize.y);
-        }
-
-        if (auto* sprite = go->GetComponent<engine::SpriteRenderer>())
-        {
-            sprite->SetActive(false);
         }
     }
 
@@ -216,6 +250,11 @@ namespace game
             m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
 
         ImGui::Separator();
+        ImGui::Text("Canvas Settings");
+        ImGui::InputText("Canvas Object Name", &m_canvasObjectName);
+        ImGui::Text("Canvas: %s", m_canvas ? "Found" : "NOT FOUND");
+
+        ImGui::Separator();
         ImGui::Text("UI Cursor");
         ImGui::Text("Press P to swap cursor image.");
 
@@ -247,6 +286,7 @@ namespace game
     void AimPointer::Save(engine::json& j) const
     {        
         Object::Save(j);
+        j["CanvasObjectName"] = m_canvasObjectName;
         j["CursorTexturePrimary"] = m_cursorTexturePrimary;
         j["CursorTextureAlternate"] = m_cursorTextureAlternate;
         j["UseAlternateCursor"] = m_useAlternateCursor;
@@ -257,14 +297,12 @@ namespace game
     void AimPointer::Load(const engine::json& j)
     {      
         Object::Load(j);
+        engine::JsonGet(j, "CanvasObjectName", m_canvasObjectName);
         engine::JsonGet(j, "CursorTexturePrimary", m_cursorTexturePrimary);
         engine::JsonGet(j, "CursorTextureAlternate", m_cursorTextureAlternate);
         engine::JsonGet(j, "UseAlternateCursor", m_useAlternateCursor);
         engine::JsonGet(j, "CursorSize", m_cursorSize);
         engine::JsonGet(j, "CursorPivot", m_cursorPivot);
-
-        EnsureUICursor();
-        SetCursorTexture(m_useAlternateCursor);
     }
 }
 
