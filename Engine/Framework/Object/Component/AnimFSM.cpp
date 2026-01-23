@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "Framework/Object/Component/AnimFSM.h"
 #include "Framework/Object/Component/LogicFSM.h"
 #include "Framework/Object/Component/Animator/SkeletalAnimator.h"
@@ -51,70 +51,89 @@ namespace engine
 
     void AnimFSM::OnLogicStateChanged(const std::string& oldState, const std::string& newState)
     {
-        // 상태 변경 시 애니메이션 재생
-        PlayStateAnimation(newState);
+        // 상태 변경 시 애니메이션 재생 (자동 연동 모드)
+        // 해당 상태가 등록되어 있을 때만 재생 (스크립트에서 직접 제어하는 경우를 위해)
+        if (m_states.find(newState) != m_states.end())
+        {
+            PlayStateAnimation(newState);
+        }
     }
 
     void AnimFSM::OnLogicStateEntered(const std::string& state)
     {
         // 상태 진입 시 애니메이션 재생
-        PlayStateAnimation(state);
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // 애니메이션 매핑 설정
-    // ═══════════════════════════════════════════════════════════════
-    void AnimFSM::AddAnimationMapping(const AnimationMapping& mapping)
-    {
-        m_animations[mapping.stateName] = mapping;
-    }
-
-    void AnimFSM::RemoveAnimationMapping(const std::string& stateName)
-    {
-        m_animations.erase(stateName);
-    }
-
-    void AnimFSM::ClearMappings()
-    {
-        m_animations.clear();
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // 상하체 분리 설정
-    // ═══════════════════════════════════════════════════════════════
-    void AnimFSM::SetUpperBodyLayer(bool enabled, int layerIndex)
-    {
-        m_useUpperBodyLayer = enabled;
-        m_upperBodyLayerIndex = layerIndex;
-    }
-
-    void AnimFSM::SetUpperBodyWeight(float weight)
-    {
-        m_upperBodyWeight = weight;
-        if (m_animator && m_useUpperBodyLayer)
+        // 해당 상태가 등록되어 있을 때만 재생
+        if (m_states.find(state) != m_states.end())
         {
-            m_animator->SetLayerWeight(m_upperBodyLayerIndex, weight);
+            PlayStateAnimation(state);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 상하체 분리 재생
+    // 애니메이션 상태 등록 (통합 API)
     // ═══════════════════════════════════════════════════════════════
-    void AnimFSM::PlaySplitAnimation(
+    void AnimFSM::AddState(const AnimState& state)
+    {
+        m_states[state.stateName] = state;
+    }
+
+    void AnimFSM::RemoveState(const std::string& stateName)
+    {
+        m_states.erase(stateName);
+    }
+
+    void AnimFSM::ClearStates()
+    {
+        m_states.clear();
+    }
+
+    void AnimFSM::AddDefaultState(
+        const std::string& stateName,
+        const std::string& animationName,
+        bool loop,
+        float crossFade,
+        int layerIndex,
+        float speed)
+    {
+        AnimState state;
+        state.stateName = stateName;
+        state.useSplitAnimation = false;
+        state.animationName = animationName;
+        state.loop = loop;
+        state.layerIndex = layerIndex;
+        state.speed = speed;
+        state.crossFadeDuration = crossFade;
+        
+        m_states[stateName] = state;
+    }
+
+    void AnimFSM::AddSplitState(
+        const std::string& stateName,
         const std::string& lowerAnim, bool lowerLoop,
         const std::string& upperAnim, bool upperLoop,
+        float upperWeight,
         float crossFade)
     {
-        if (!m_animator) return;
+        AnimState state;
+        state.stateName = stateName;
+        state.useSplitAnimation = true;
+        state.lowerAnimation = lowerAnim;
+        state.lowerLoop = lowerLoop;
+        state.upperAnimation = upperAnim;
+        state.upperLoop = upperLoop;
+        state.upperBodyWeight = upperWeight;
+        state.crossFadeDuration = crossFade;
         
-        // 하체 (베이스 레이어)
-        m_animator->PlayCrossFade(lowerAnim, crossFade, lowerLoop, m_baseLayerIndex, 1.0f);
-        
-        // 상체 (Upper Body 레이어)
-        m_animator->SetLayerWeight(m_upperBodyLayerIndex, 1.0f);
-        m_animator->Play(upperAnim, upperLoop, m_upperBodyLayerIndex, 1.0f);
-        
-        m_useUpperBodyLayer = true;
+        m_states[stateName] = state;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 레이어 설정
+    // ═══════════════════════════════════════════════════════════════
+    void AnimFSM::SetLayerIndices(int baseLayer, int upperBodyLayer)
+    {
+        m_baseLayerIndex = baseLayer;
+        m_upperBodyLayerIndex = upperBodyLayer;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -188,8 +207,25 @@ namespace engine
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 애니메이션 정보 조회
+    // 상태 조회 및 제어
     // ═══════════════════════════════════════════════════════════════
+    void AnimFSM::SetAnimState(const std::string& stateName)
+    {
+        // 이전 상태와 같으면 스킵
+        if (stateName == m_currentState) return;
+        
+        PlayStateAnimation(stateName);
+    }
+
+    void AnimFSM::PlayUpperBodyAnimation(const std::string& animName, bool loop)
+    {
+        if (!m_animator) return;
+        
+        // 상체 레이어 활성화 및 애니메이션 재생
+        m_animator->SetLayerWeight(m_upperBodyLayerIndex, 1.0f);
+        m_animator->Play(animName, loop, m_upperBodyLayerIndex, 1.0f);
+    }
+
     float AnimFSM::GetCurrentAnimationNormalizedTime() const
     {
         if (!m_animator) return 0.0f;
@@ -211,142 +247,292 @@ namespace engine
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 내부 로직
+    // 내부 로직 - 애니메이션 재생
     // ═══════════════════════════════════════════════════════════════
     void AnimFSM::PlayStateAnimation(const std::string& stateName)
     {
         if (!m_animator) return;
         
-        auto it = m_animations.find(stateName);
-        if (it != m_animations.end())
+        auto it = m_states.find(stateName);
+        if (it == m_states.end())
         {
-            const auto& mapping = it->second;
-            m_currentState = stateName;
-            
-            m_animator->PlayCrossFade(
-                mapping.animationName,
-                mapping.crossFadeDuration,
-                mapping.loop,
-                mapping.layerIndex,
-                mapping.speed
-            );
+            // 스크립트에서 직접 제어하는 경우 LogicFSM 상태와 AnimFSM 상태가 다를 수 있음
+            // 로그를 경고 수준으로 낮춤
+            // LOG_PRINT("[AnimFSM] State not found: {}", stateName);
+            return;
+        }
+        
+        const AnimState& state = it->second;
+        m_currentState = stateName;
+        
+        if (state.useSplitAnimation)
+        {
+            PlaySplitAnimation(state);
+        }
+        else
+        {
+            PlayDefaultAnimation(state);
+        }
+    }
+
+    void AnimFSM::PlayDefaultAnimation(const AnimState& state)
+    {
+        m_animator->PlayCrossFade(
+            state.animationName,
+            state.crossFadeDuration,
+            state.loop,
+            state.layerIndex,
+            state.speed
+        );
+    }
+
+    void AnimFSM::PlaySplitAnimation(const AnimState& state)
+    {
+        // 하체 (Base Layer) - 항상 재생
+        m_animator->SetLayerWeight(m_baseLayerIndex, 1.0f);
+        m_animator->PlayCrossFade(
+            state.lowerAnimation,
+            state.crossFadeDuration,
+            state.lowerLoop,
+            m_baseLayerIndex,
+            1.0f
+        );
+        
+        // 상체 (Upper Body Layer) - 웨이트에 따라 활성화
+        if (state.upperBodyWeight > 0.0f && !state.upperAnimation.empty())
+        {
+            m_animator->SetLayerWeight(m_upperBodyLayerIndex, state.upperBodyWeight);
+            m_animator->Play(state.upperAnimation, state.upperLoop, m_upperBodyLayerIndex, 1.0f);
+        }
+        else
+        {
+            // 상체 레이어 비활성화 (하체 애니메이션이 전체에 적용)
+            m_animator->SetLayerWeight(m_upperBodyLayerIndex, 0.0f);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // GUI / 직렬화
+    // GUI
     // ═══════════════════════════════════════════════════════════════
     void AnimFSM::OnGui()
     {
-        ImGui::Text("AnimFSM Component");
-        ImGui::Text("Current State: %s", m_currentState.c_str());
-        
-        if (m_animator)
+        if (ImGui::CollapsingHeader("AnimFSM Component", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            float normalizedTime = GetCurrentAnimationNormalizedTime();
-            ImGui::Text("Animation Time: %.2f", normalizedTime);
-        }
-
-        ImGui::Separator();
-
-        // 상체 분리 설정
-        if (ImGui::CollapsingHeader("Upper Body Layer"))
-        {
-            ImGui::Checkbox("Use Upper Body Layer", &m_useUpperBodyLayer);
-            ImGui::DragInt("Upper Body Layer Index", &m_upperBodyLayerIndex, 1, 0, 10);
-            if (ImGui::DragFloat("Upper Body Weight", &m_upperBodyWeight, 0.01f, 0.0f, 1.0f))
-            {
-                SetUpperBodyWeight(m_upperBodyWeight);
-            }
-        }
-
-        // Procedural 조준 설정
-        if (ImGui::CollapsingHeader("Procedural Aim"))
-        {
-            ImGui::Checkbox("Enable Procedural Aim", &m_enableProceduralAim);
-            ImGui::DragFloat("Aim Yaw", &m_upperBodyYaw, 1.0f, -m_maxYaw, m_maxYaw, "%.1f deg");
-            ImGui::DragFloat("Aim Pitch", &m_upperBodyPitch, 1.0f, -m_maxPitch, m_maxPitch, "%.1f deg");
-            ImGui::DragFloat("Max Yaw", &m_maxYaw, 1.0f, 0.0f, 180.0f, "%.1f deg");
-            ImGui::DragFloat("Max Pitch", &m_maxPitch, 1.0f, 0.0f, 90.0f, "%.1f deg");
-            ImGui::DragFloat("Aim Lerp Speed", &m_aimLerpSpeed, 0.5f, 1.0f, 30.0f);
+            // ─────────────────────────────────────────────
+            // 현재 상태
+            // ─────────────────────────────────────────────
+            ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), "Current State: %s", 
+                m_currentState.empty() ? "(none)" : m_currentState.c_str());
             
-            char boneBuf[64];
-            strcpy_s(boneBuf, m_spineBoneName.c_str());
-            if (ImGui::InputText("Spine Bone", boneBuf, 64))
+            if (m_animator)
             {
-                m_spineBoneName = boneBuf;
+                float normalizedTime = GetCurrentAnimationNormalizedTime();
+                ImGui::Text("Animation Time: %.2f", normalizedTime);
             }
-        }
-
-        // 애니메이션 매핑 표시
-        if (ImGui::CollapsingHeader("Animation Mappings"))
-        {
-            for (const auto& [stateName, mapping] : m_animations)
+            else
             {
-                ImGui::Text("%s -> %s", stateName.c_str(), mapping.animationName.c_str());
+                ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.5f, 1.0f), "SkeletalAnimator: NOT FOUND");
+            }
+
+            ImGui::Separator();
+
+            // ─────────────────────────────────────────────
+            // 레이어 설정
+            // ─────────────────────────────────────────────
+            ImGui::Text("Layer Settings:");
+            ImGui::DragInt("Base Layer", &m_baseLayerIndex, 1, 0, 10);
+            ImGui::DragInt("Upper Body Layer", &m_upperBodyLayerIndex, 1, 0, 10);
+
+            ImGui::Separator();
+
+            // ─────────────────────────────────────────────
+            // Procedural 조준 설정
+            // ─────────────────────────────────────────────
+            ImGui::Text("Procedural Aim:");
+            ImGui::Checkbox("Enable", &m_enableProceduralAim);
+            if (m_enableProceduralAim)
+            {
+                ImGui::DragFloat("Yaw", &m_upperBodyYaw, 1.0f, -m_maxYaw, m_maxYaw, "%.1f deg");
+                ImGui::DragFloat("Pitch", &m_upperBodyPitch, 1.0f, -m_maxPitch, m_maxPitch, "%.1f deg");
+                ImGui::DragFloat("Max Yaw", &m_maxYaw, 1.0f, 0.0f, 180.0f, "%.1f deg");
+                ImGui::DragFloat("Max Pitch", &m_maxPitch, 1.0f, 0.0f, 90.0f, "%.1f deg");
+                ImGui::DragFloat("Lerp Speed", &m_aimLerpSpeed, 0.5f, 1.0f, 50.0f);
+                
+                char boneBuf[64];
+                strcpy_s(boneBuf, m_spineBoneName.c_str());
+                if (ImGui::InputText("Spine Bone", boneBuf, 64))
+                {
+                    m_spineBoneName = boneBuf;
+                }
+            }
+
+            ImGui::Separator();
+
+            // ─────────────────────────────────────────────
+            // 등록된 애니메이션 상태 표시
+            // ─────────────────────────────────────────────
+            ImGui::Text("Registered States: (%zu)", m_states.size());
+            
+            if (m_states.empty())
+            {
+                ImGui::TextDisabled("  (No states registered)");
+            }
+            else
+            {
+                for (const auto& [stateName, state] : m_states)
+                {
+                    bool isCurrent = (stateName == m_currentState);
+                    
+                    if (isCurrent)
+                    {
+                        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.4f, 1.0f, 0.4f, 1.0f));
+                    }
+                    
+                    if (state.useSplitAnimation)
+                    {
+                        // Split 타입
+                        ImGui::BulletText("[Split] %s", stateName.c_str());
+                        ImGui::Text("    Lower: %s", state.lowerAnimation.c_str());
+                        if (!state.upperAnimation.empty())
+                        {
+                            ImGui::Text("    Upper: %s (weight=%.1f)", 
+                                state.upperAnimation.c_str(), state.upperBodyWeight);
+                        }
+                        else
+                        {
+                            ImGui::TextDisabled("    Upper: (disabled)");
+                        }
+                    }
+                    else
+                    {
+                        // Default 타입
+                        ImGui::BulletText("[Default] %s -> %s", 
+                            stateName.c_str(), state.animationName.c_str());
+                    }
+                    
+                    if (isCurrent)
+                    {
+                        ImGui::PopStyleColor();
+                    }
+                }
             }
         }
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // 직렬화
+    // ═══════════════════════════════════════════════════════════════
     void AnimFSM::Save(json& j) const
     {
         Object::Save(j);
         
-        j["UseUpperBodyLayer"] = m_useUpperBodyLayer;
+        // 레이어 설정
         j["BaseLayerIndex"] = m_baseLayerIndex;
         j["UpperBodyLayerIndex"] = m_upperBodyLayerIndex;
-        j["UpperBodyWeight"] = m_upperBodyWeight;
         
+        // Procedural Aim 설정
         j["EnableProceduralAim"] = m_enableProceduralAim;
         j["MaxYaw"] = m_maxYaw;
         j["MaxPitch"] = m_maxPitch;
         j["AimLerpSpeed"] = m_aimLerpSpeed;
         j["SpineBoneName"] = m_spineBoneName;
         
-        // 애니메이션 매핑 저장
-        std::vector<json> mappingsJson;
-        for (const auto& [stateName, mapping] : m_animations)
+        // 애니메이션 상태 저장 (통합)
+        std::vector<json> statesJson;
+        for (const auto& [stateName, state] : m_states)
         {
-            json mappingNode;
-            mappingNode["StateName"] = mapping.stateName;
-            mappingNode["AnimationName"] = mapping.animationName;
-            mappingNode["CrossFadeDuration"] = mapping.crossFadeDuration;
-            mappingNode["Loop"] = mapping.loop;
-            mappingNode["LayerIndex"] = mapping.layerIndex;
-            mappingNode["Speed"] = mapping.speed;
-            mappingsJson.push_back(mappingNode);
+            json stateNode;
+            stateNode["StateName"] = state.stateName;
+            stateNode["CrossFadeDuration"] = state.crossFadeDuration;
+            stateNode["UseSplitAnimation"] = state.useSplitAnimation;
+            
+            if (state.useSplitAnimation)
+            {
+                // Split 타입
+                stateNode["LowerAnimation"] = state.lowerAnimation;
+                stateNode["LowerLoop"] = state.lowerLoop;
+                stateNode["UpperAnimation"] = state.upperAnimation;
+                stateNode["UpperLoop"] = state.upperLoop;
+                stateNode["UpperBodyWeight"] = state.upperBodyWeight;
+            }
+            else
+            {
+                // Default 타입
+                stateNode["AnimationName"] = state.animationName;
+                stateNode["Loop"] = state.loop;
+                stateNode["LayerIndex"] = state.layerIndex;
+                stateNode["Speed"] = state.speed;
+            }
+            
+            statesJson.push_back(stateNode);
         }
-        j["AnimationMappings"] = mappingsJson;
+        j["AnimStates"] = statesJson;
     }
 
     void AnimFSM::Load(const json& j)
     {
         Object::Load(j);
         
-        JsonGet(j, "UseUpperBodyLayer", m_useUpperBodyLayer);
+        // 레이어 설정
         JsonGet(j, "BaseLayerIndex", m_baseLayerIndex);
         JsonGet(j, "UpperBodyLayerIndex", m_upperBodyLayerIndex);
-        JsonGet(j, "UpperBodyWeight", m_upperBodyWeight);
         
+        // Procedural Aim 설정
         JsonGet(j, "EnableProceduralAim", m_enableProceduralAim);
         JsonGet(j, "MaxYaw", m_maxYaw);
         JsonGet(j, "MaxPitch", m_maxPitch);
         JsonGet(j, "AimLerpSpeed", m_aimLerpSpeed);
         JsonGet(j, "SpineBoneName", m_spineBoneName);
         
-        // 애니메이션 매핑 로드
-        m_animations.clear();
-        JsonArrayForEach(j, "AnimationMappings", [&](const json& mappingNode)
+        // 애니메이션 상태 로드 (통합)
+        m_states.clear();
+        JsonArrayForEach(j, "AnimStates", [&](const json& stateNode)
         {
-            AnimationMapping mapping;
-            mapping.stateName = mappingNode.value("StateName", "");
-            mapping.animationName = mappingNode.value("AnimationName", "");
-            mapping.crossFadeDuration = mappingNode.value("CrossFadeDuration", 0.2f);
-            mapping.loop = mappingNode.value("Loop", true);
-            mapping.layerIndex = mappingNode.value("LayerIndex", 0);
-            mapping.speed = mappingNode.value("Speed", 1.0f);
+            AnimState state;
+            state.stateName = stateNode.value("StateName", "");
+            state.crossFadeDuration = stateNode.value("CrossFadeDuration", 0.1f);
+            state.useSplitAnimation = stateNode.value("UseSplitAnimation", false);
             
-            m_animations[mapping.stateName] = mapping;
+            if (state.useSplitAnimation)
+            {
+                // Split 타입
+                state.lowerAnimation = stateNode.value("LowerAnimation", "");
+                state.lowerLoop = stateNode.value("LowerLoop", true);
+                state.upperAnimation = stateNode.value("UpperAnimation", "");
+                state.upperLoop = stateNode.value("UpperLoop", true);
+                state.upperBodyWeight = stateNode.value("UpperBodyWeight", 0.0f);
+            }
+            else
+            {
+                // Default 타입
+                state.animationName = stateNode.value("AnimationName", "");
+                state.loop = stateNode.value("Loop", true);
+                state.layerIndex = stateNode.value("LayerIndex", 0);
+                state.speed = stateNode.value("Speed", 1.0f);
+            }
+            
+            if (!state.stateName.empty())
+            {
+                m_states[state.stateName] = state;
+            }
         });
+        
+        //// 하위 호환성: 기존 AnimationMappings 로드
+        //JsonArrayForEach(j, "AnimationMappings", [&](const json& mappingNode)
+        //{
+        //    AnimState state;
+        //    state.stateName = mappingNode.value("StateName", "");
+        //    state.useSplitAnimation = false;
+        //    state.animationName = mappingNode.value("AnimationName", "");
+        //    state.crossFadeDuration = mappingNode.value("CrossFadeDuration", 0.2f);
+        //    state.loop = mappingNode.value("Loop", true);
+        //    state.layerIndex = mappingNode.value("LayerIndex", 0);
+        //    state.speed = mappingNode.value("Speed", 1.0f);
+        //    
+        //    if (!state.stateName.empty())
+        //    {
+        //        m_states[state.stateName] = state;
+        //    }
+        //});
     }
 }

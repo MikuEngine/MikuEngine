@@ -6,6 +6,7 @@
 namespace engine
 {
     class Rigidbody;
+    class SkeletalAnimator;
 }
 
 namespace game
@@ -36,6 +37,7 @@ namespace game
         // 컴포넌트 참조
         // ─────────────────────────────────────────────
         engine::Rigidbody* m_rigidbody = nullptr;
+        engine::SkeletalAnimator* m_skeletalAnimator = nullptr;
         AimPointer* m_aimPointer = nullptr;
         BulletFactory* m_bulletFactory = nullptr;
 
@@ -61,6 +63,10 @@ namespace game
         // ─────────────────────────────────────────────
         float m_fireTimer = 0.0f;
         bool m_fsmInitialized = false;
+        
+        // 마지막 이동 방향 (캐릭터가 서있는 방향)
+        // 초기값: -Z 방향 (아래쪽)
+        engine::Vector3 m_lastMoveDirection = engine::Vector3(0.0f, 0.0f, -1.0f);
 
     public:
         void Awake() override;
@@ -86,6 +92,7 @@ namespace game
         // 초기화
         // ─────────────────────────────────────────────
         void InitializeFSM();
+        void InitializeAnimFSM();  // AnimFSM 상태 매핑 등록
 
         // ─────────────────────────────────────────────
         // 입력 유틸리티
@@ -99,6 +106,14 @@ namespace game
         void HandleShooting(float deltaTime);
         void UpdateUpperBodyAim();
         float CalculateAimYaw() const;
+
+        // ─────────────────────────────────────────────
+        // 애니메이션 제어
+        // ─────────────────────────────────────────────
+        void UpdateAnimation();
+        void UpdateLowerBodyRotation();
+        bool IsMovingBackward() const;
+        std::string GetAnimationState() const;
 
     public:
         void OnGui() override;

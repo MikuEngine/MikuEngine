@@ -23,8 +23,10 @@ namespace game
         void Close();
 
     private:
-        engine::Vector2 m_openPos{ 0.0f, 0.0f };
-        engine::Vector2 m_closedPos{ 0.0f, -300.0f };
+        engine::RectTransform* m_rt = nullptr;
+
+        engine::Vector2 m_visible{ 0.0f, 200.0f };
+        engine::Vector2 m_hidden{ 0.0f, 900.0f };
 
         float m_time = 0.0f;
         float m_duration = 0.25f;
@@ -32,5 +34,7 @@ namespace game
         bool m_isOpen = false;
         bool m_animating = false;
         bool m_opening = false;
+
+        bool m_inited = false;
     };
 }

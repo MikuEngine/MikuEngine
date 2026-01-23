@@ -3,6 +3,7 @@
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIButton.h>
+#include "UIPopUpAnimator.h"
 
 namespace game
 {
@@ -104,14 +105,28 @@ namespace game
     void TitleButtonController::SetOptionOpen(bool open)
     {
         m_isOptionOpen = open;
-        if (m_optionPopUp) m_optionPopUp->SetActive(open);
+        if (m_optionPopUp)
+        {
+            if (auto* anim = m_optionPopUp->GetComponent<game::UIPopUpAnimator>())
+            {
+                open ? anim->Open() : anim->Close();
+            }
+        }
+
         UpdateBlocker();
     }
 
     void TitleButtonController::SetCreditOpen(bool open)
     {
         m_isCreditOpen = open;
-        if (m_creditPopUp) m_creditPopUp->SetActive(open);
+        if (m_creditPopUp)
+        {
+            if (auto* anim = m_creditPopUp->GetComponent<game::UIPopUpAnimator>())
+            {
+                open ? anim->Open() : anim->Close();
+            }
+        }
+
         UpdateBlocker();
     }
 

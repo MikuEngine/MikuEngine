@@ -74,7 +74,15 @@
                     "PlayOnAwake": true,
                     "Volume": 1.0,
                     "MinDist": 1.0,
-                    "MaxDist": 500.0
+                    "MaxDist": 500.0,
+                    "UseRandom": true,
+                    "RandomClips": [
+                        "test_click_1.wav",
+                        "test_click_2.wav",
+                        "test_click_3.wav",
+                        "test_click_4.wav",
+                        "test_click_5.wav"
+                    ]
                 }
             ]
         }
