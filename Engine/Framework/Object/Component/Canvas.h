@@ -13,8 +13,6 @@ namespace engine
 	private:
 		Vector2 m_referenceResolution{ 1920.0f, 1080.0f };
 
-		int m_resolutionPreset = 1;
-
 		Vector2 m_uiScale{ 1.0f, 1.0f };   // 보통 {scale, scale}
 		Vector2 m_uiOffset{ 0.0f, 0.0f };  // 레터박스 오프셋(픽셀)
 

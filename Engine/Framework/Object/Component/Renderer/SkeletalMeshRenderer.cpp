@@ -15,6 +15,8 @@
 #include "Core/Graphics/Resource/InputLayout.h"
 #include "Core/Graphics/Resource/SamplerState.h"
 #include "Core/Graphics/Resource/MaterialHelper.h"
+#include "Core/Graphics/Resource/BlendState.h"
+#include "Core/Graphics/Resource/DepthStencilState.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/GameObject/GameObject.h"
@@ -261,6 +263,7 @@ namespace engine
         deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Bone),
             1, m_boneConstantBuffer->GetBuffer().GetAddressOf());
         deviceContext->UpdateSubresource(m_boneConstantBuffer->GetRawBuffer(), 0, nullptr, &m_boneTransformData, 0, 0);
+        static constexpr float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
 
         // CbObject 준비
         CbObject cbObject{};
@@ -295,9 +298,17 @@ namespace engine
             deviceContext->PSSetShader(m_cutoutPS->GetRawShader(), nullptr, 0);
             break;
         case RenderType::Transparent:
+        {
+            // 투명 렌더링을 위한 state 설정
+            auto blendState = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlend);
+            auto depthState = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::DepthRead);
+            deviceContext->OMSetBlendState(blendState->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
+            deviceContext->OMSetDepthStencilState(depthState->GetRawDepthStencilState(), 0);
+
             deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
             deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
             break;
+        }
         }
 
         // --- Sections Loop ---
@@ -337,6 +348,9 @@ namespace engine
             // Draw
             deviceContext->DrawIndexed(section.indexCount, section.indexOffset, section.vertexOffset);
         }
+
+        deviceContext->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFFF);
+        deviceContext->OMSetDepthStencilState(nullptr, 0);
     }
 
     void SkeletalMeshRenderer::DrawShadow(RenderType renderType, LightType lightType) const

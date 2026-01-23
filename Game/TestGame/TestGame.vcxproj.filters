@@ -17,9 +17,6 @@
     <ClCompile Include="Script\Rotator.cpp" />
     <ClCompile Include="Script\AimPointer.cpp" />
     <ClCompile Include="Script\SpritePlayer.cpp" />
-    <ClCompile Include="Script\TempBullet.cpp" />
-    <ClCompile Include="Script\TempBulletFactory.cpp" />
-    <ClCompile Include="Script\TempMonster.cpp" />
     <ClCompile Include="Script\Test2.cpp" />
     <ClCompile Include="Script\TestScript.cpp" />
     <ClCompile Include="GamePCH.cpp" />
@@ -27,6 +24,9 @@
     <ClCompile Include="Script\TestSound.cpp" />
     <ClCompile Include="Script\HubButtonController.cpp" />
     <ClCompile Include="Script\TestShootingPlayer.cpp" />
+    <ClCompile Include="Script\BulletPlayer.cpp" />
+    <ClCompile Include="Script\BulletFactory.cpp" />
+    <ClCompile Include="Script\TempMonster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -41,15 +41,17 @@
     <ClInclude Include="Script\InputBinding.h" />
     <ClInclude Include="Script\Rotator.h" />
     <ClInclude Include="Script\SpritePlayer.h" />
-    <ClInclude Include="Script\TempBullet.h" />
-    <ClInclude Include="Script\TempBulletFactory.h" />
-    <ClInclude Include="Script\TempMonster.h" />
     <ClInclude Include="Script\Test2.h" />
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
     <ClInclude Include="Script\TestSound.h" />
     <ClInclude Include="Script\HubButtonController.h" />
     <ClInclude Include="Script\TestShootingPlayer.h" />
+    <ClInclude Include="Script\BulletPlayer.h" />
+    <ClInclude Include="Script\BulletFactory.h" />
+    <ClInclude Include="Script\BulletMovement.h" />
+    <ClInclude Include="Script\BulletParams.h" />
+    <ClInclude Include="Script\TempMonster.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\TestHeader.hlsli" />

@@ -506,14 +506,14 @@ namespace engine
             bool isSimAfter = flagsAfter.isSet(physx::PxShapeFlag::eSIMULATION_SHAPE);
             bool isTriggerAfter = flagsAfter.isSet(physx::PxShapeFlag::eTRIGGER_SHAPE);
             
-            const char* rbType = m_attachedRigidbody->IsDynamic() ? "Dynamic" : 
-                (m_attachedRigidbody->IsKinematic() ? "Kinematic" : "Static");
-            const char* triggerStr = m_isTrigger ? "true" : "false";
-            LOG_PRINT("[Collider] Shape attached to {} Rigidbody (trigger={}, layer={}, mask=0x{:X})", 
-                rbType, triggerStr, m_layer, m_collisionMask);
-            LOG_PRINT("[Collider] Shape flags: SIMULATION={}->{}, TRIGGER={}->{}, flags=0x{:X}", 
-                isSimBefore, isSimAfter, isTriggerBefore, isTriggerAfter, 
-                static_cast<unsigned int>(flagsAfter));
+            // const char* rbType = m_attachedRigidbody->IsDynamic() ? "Dynamic" : 
+            //     (m_attachedRigidbody->IsKinematic() ? "Kinematic" : "Static");
+            // const char* triggerStr = m_isTrigger ? "true" : "false";
+            // LOG_PRINT("[Collider] Shape attached to {} Rigidbody (trigger={}, layer={}, mask=0x{:X})", 
+            //     rbType, triggerStr, m_layer, m_collisionMask);
+            // LOG_PRINT("[Collider] Shape flags: SIMULATION={}->{}, TRIGGER={}->{}, flags=0x{:X}", 
+            //     isSimBefore, isSimAfter, isTriggerBefore, isTriggerAfter, 
+            //     static_cast<unsigned int>(flagsAfter));
             
             // Actor가 이미 씬에 등록되어 있으면 Shape 부착을 반영하기 위해 다시 등록
             physx::PxScene* scene = actor->getScene();
@@ -522,8 +522,8 @@ namespace engine
                 // Actor를 씬에서 제거했다가 다시 추가하여 Shape 변경사항 반영
                 scene->removeActor(*actor);
                 scene->addActor(*actor);
-                LOG_PRINT("[Collider] Actor re-added to scene after shape attachment: shapes={}", 
-                    actor->getNbShapes());
+                // LOG_PRINT("[Collider] Actor re-added to scene after shape attachment: shapes={}", 
+                //     actor->getNbShapes());
             }
         }
         else

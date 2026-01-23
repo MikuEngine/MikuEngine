@@ -358,7 +358,11 @@ namespace engine
                 dynamic->setAngularVelocity(physx::PxVec3(0));
             }
 
-            dynamic->wakeUp();
+            // 씬에 있을 때만 wakeUp 호출
+            if (dynamic->getScene())
+            {
+                dynamic->wakeUp();
+            }
         }
 
         m_hasPendingTeleport = false;
@@ -387,7 +391,11 @@ namespace engine
                 dynamic->setLinearVelocity(physx::PxVec3(0));
             }
 
-            dynamic->wakeUp();
+            // 씬에 있을 때만 wakeUp 호출
+            if (dynamic->getScene())
+            {
+                dynamic->wakeUp();
+            }
         }
 
         // Transform도 동기화 (World → Local 변환)
@@ -425,7 +433,11 @@ namespace engine
                 dynamic->setAngularVelocity(physx::PxVec3(0));
             }
 
-            dynamic->wakeUp();
+            // 씬에 있을 때만 wakeUp 호출
+            if (dynamic->getScene())
+            {
+                dynamic->wakeUp();
+            }
         }
 
         // Transform도 동기화 (World → Local 변환)
@@ -468,7 +480,11 @@ namespace engine
                 dynamic->setAngularVelocity(physx::PxVec3(0));
             }
 
-            dynamic->wakeUp();
+            // 씬에 있을 때만 wakeUp 호출
+            if (dynamic->getScene())
+            {
+                dynamic->wakeUp();
+            }
         }
 
         // Transform도 동기화 (World → Local 변환)
@@ -515,7 +531,7 @@ namespace engine
         }
 
         physx::PxRigidDynamic* dynamic = m_actor->is<physx::PxRigidDynamic>();
-        if (dynamic)
+        if (dynamic && dynamic->getScene())
         {
             dynamic->wakeUp();
         }
@@ -709,9 +725,9 @@ namespace engine
                 }
                 else
                 {
-                    // Dynamic: Sleep 비활성화 (항상 충돌 감지)
-                    dynamic->wakeUp();
-                    dynamic->setSleepThreshold(0.0f);  // Sleep하지 않음
+                    // Dynamic: Sleep threshold를 0으로 설정 (항상 깨어있음)
+                    // 주의: wakeUp()은 씬에 추가된 후에만 호출 가능
+                    dynamic->setSleepThreshold(0.0f);
                 }
 
                 dynamic->setMass(m_mass);

@@ -7,11 +7,18 @@ namespace engine
 	{
 		m_texture = texture;
 		m_props = props;
-		m_particles.reserve(props.maxParticle);
+		m_particles.reserve(props.maxParticles);
 	}
 
 	void ParticleEmitter::Update(float dt, const Vector3& emitterPosition, const Vector3& cameraPosition) 
 	{
+		m_emitterAge += dt;
+
+		for (auto& burst : m_props.bursts)
+		{
+			ProcessBurst(burst, m_emitterAge, emitterPosition);
+		}
+
 		m_emissionTimer += dt;
 		float emissionInterval = 1.0f / std::max(EPSILON, m_props.emissionRate);
 
@@ -29,7 +36,7 @@ namespace engine
 				continue;
 			}
 
-			p.velocity += Vector3(0.0f, -9.8f, 0.0f) * /*0.0f **/ dt;
+			p.velocity += m_props.gravity * dt;
 			p.position += p.velocity * dt;
 			p.rotation += p.rotationSpeed * dt;
 
@@ -41,21 +48,17 @@ namespace engine
 
 			if (m_props.textureTilesX > 1 || m_props.textureTilesY > 1)
 			{
-				float totalTiles = (float)(m_props.textureTilesX * m_props.textureTilesY);
+				float totalTiles = static_cast<float>(m_props.textureTileCount > 0 ? 
+					m_props.textureTileCount :
+					(m_props.textureTilesX * m_props.textureTilesY));
 
-				// 정규화된 시간 (0.0 ~ 1.0)
 				float t = p.age / p.lifeTime;
 
-				// 애니메이션 속도 반영 (반복 등)
 				t *= m_props.animationSpeed;
-
-				if (m_props.isRandomFrame) {
-					// 랜덤 프레임 로직 (필요시 구현)
-				}
 
 				// 현재 인덱스
 				int index = static_cast<int>(t * totalTiles);
-				index %= static_cast<int>(totalTiles); // Wrap around
+				index %= static_cast<int>(totalTiles);
 
 				// Row / Col 계산
 				int col = index % m_props.textureTilesX;
@@ -73,9 +76,36 @@ namespace engine
 			}
 		}
 
-		auto iter = std::remove_if(m_particles.begin(), m_particles.end(),
-			[](const Particle& p) { return p.age > p.lifeTime; });
-		m_particles.erase(iter, m_particles.end());
+		size_t aliveCount = m_particles.size();
+		for (size_t i = 0; i < aliveCount; )
+		{
+			if (m_particles[i].age > m_particles[i].lifeTime)
+			{
+				--aliveCount;
+				if (i < aliveCount)
+				{
+					std::swap(m_particles[i], m_particles[aliveCount]);
+				}
+			}
+			else
+			{
+				++i;
+			}
+		}
+		m_particles.resize(aliveCount);
+	}
+
+	void ParticleEmitter::Reset()
+	{
+		m_particles.clear();
+		m_emissionTimer = 0.0f;
+		m_emitterAge = 0.0f;
+
+		for (auto& burst : m_props.bursts)
+		{
+			burst.currentCycle = 0;
+			burst.nextBurstTime = 0.0f;
+		}
 	}
 
 	const std::vector<Particle>& ParticleEmitter::GetParticles() const 
@@ -96,11 +126,25 @@ namespace engine
 	void ParticleEmitter::SetProps(const EmitterProps& props) 
 	{
 		m_props = props;
+
+		if (m_particles.capacity() < props.maxParticles)
+		{
+			m_particles.reserve(props.maxParticles);
+		}
+	}
+
+	void ParticleEmitter::SortParticlesByDistance()
+	{
+		std::sort(m_particles.begin(), m_particles.end(),
+			[](const Particle& a, const Particle& b)
+			{
+				return a.distanceToCamera > b.distanceToCamera;
+			});
 	}
 
 	void ParticleEmitter::Emit(const Vector3& emitterPosition) 
 	{
-		if (m_particles.size() >= m_props.maxParticle)
+		if (m_particles.size() >= m_props.maxParticles)
 		{
 			return;
 		}
@@ -163,15 +207,37 @@ namespace engine
 		p.position = emitterPosition + m_props.positionOffset + spawnPos;
 
 		p.velocity = m_props.velocity;
+
+		if (m_props.shape != EmitterShape::Box || m_props.randomDirection)
+		{
+			float speed = p.velocity.Length();
+			p.velocity = direction * speed;  // 방향 적용
+		}
+
 		p.velocity.x += Random::Float(-m_props.velocityVariation.x, m_props.velocityVariation.x);
 		p.velocity.y += Random::Float(-m_props.velocityVariation.y, m_props.velocityVariation.y);
 		p.velocity.z += Random::Float(-m_props.velocityVariation.z, m_props.velocityVariation.z);
 
-		p.uvOffset = Vector2(0.0f, 0.0f);
-		p.uvScale = Vector2(1.0f / m_props.textureTilesX, 1.0f / m_props.textureTilesY);
+		if (m_props.isRandomFrame && (m_props.textureTilesX > 1 || m_props.textureTilesY > 1))
+		{
+			int maxFrame = m_props.textureTileCount > 0 ?
+				static_cast<int>(m_props.textureTileCount) :
+				static_cast<int>(m_props.textureTilesX * m_props.textureTilesY);
 
-		p.startColor = m_props.colorBegin;
-		p.endColor = m_props.colorEnd;
+			int randomFrame = Random::Int(0, maxFrame - 1);
+			int col = randomFrame % m_props.textureTilesX;
+			int row = randomFrame / m_props.textureTilesX;
+			p.uvScale = Vector2(1.0f / m_props.textureTilesX, 1.0f / m_props.textureTilesY);
+			p.uvOffset = Vector2(col * p.uvScale.x, row * p.uvScale.y);
+		}
+		else
+		{
+			p.uvOffset = Vector2(0.0f, 0.0f);
+			p.uvScale = Vector2(1.0f / m_props.textureTilesX, 1.0f / m_props.textureTilesY);
+		}
+
+		p.startColor = m_props.startColor;
+		p.endColor = m_props.endColor;
 
 		p.rotation = Random::Float(0.0f, 360.0f);
 		p.rotationSpeed = Random::Float(-45.0f, 45.0f);
@@ -184,5 +250,40 @@ namespace engine
 		p.lifeTime = m_props.lifeTime;
 
 		m_particles.push_back(p);
+	}
+
+	void ParticleEmitter::ProcessBurst(Burst& burst, float emitterAge, const Vector3& emitterPosition)
+	{
+		bool shouldEmit = false;
+
+		if (burst.currentCycle == 0 && emitterAge >= burst.time)
+		{
+			shouldEmit = true;
+			burst.currentCycle = 1;
+			burst.nextBurstTime = emitterAge + burst.interval;
+		}
+		else if (burst.currentCycle > 0 &&
+			burst.currentCycle < burst.cycles &&
+			emitterAge >= burst.nextBurstTime)
+		{
+			shouldEmit = true;
+			burst.currentCycle++;
+			burst.nextBurstTime = emitterAge + burst.interval;
+		}
+		else if (burst.cycles == 0 &&
+			burst.currentCycle > 0 &&
+			emitterAge >= burst.nextBurstTime)
+		{
+			shouldEmit = true;
+			burst.nextBurstTime = emitterAge + burst.interval;
+		}
+
+		if (shouldEmit)
+		{
+			for (std::uint32_t i = 0; i < burst.count; ++i)
+			{
+				Emit(emitterPosition + m_props.positionOffset);
+			}
+		}
 	}
 }

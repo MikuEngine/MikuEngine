@@ -28,6 +28,21 @@ namespace game
         void OpenCredit();
         void QuitGame();
 
+        void Back();
+
+        void SetOptionOpen(bool open);
+        void SetCreditOpen(bool open);
+        void UpdateBlocker();
+
         bool m_bound = false;
+
+        bool m_isOptionOpen = false;
+        bool m_isCreditOpen = false;
+
+    private:
+        // GameObject
+        engine::GameObject* m_optionPopUp = nullptr;
+        engine::GameObject* m_creditPopUp = nullptr;
+        engine::GameObject* m_blocker = nullptr;
     };
 }

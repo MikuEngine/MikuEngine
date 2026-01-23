@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Play",
-    "NumGameObjects": 17,
+    "NumGameObjects": 15,
     "GameObjects": [
         {
             "ID": 0,
@@ -87,11 +87,6 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "ReferenceResolution": {
-                        "x": 1920.0,
-                        "y": 1080.0
-                    },
-                    "ResolutionPreset": 1,
                     "SortingOrder": 0
                 }
             ]
@@ -283,11 +278,6 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "ReferenceResolution": {
-                        "x": 1920.0,
-                        "y": 1080.0
-                    },
-                    "ResolutionPreset": 1,
                     "SortingOrder": 1
                 }
             ]
@@ -296,7 +286,7 @@
             "ID": 5,
             "ParentID": 4,
             "Name": "Panel_Menu",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -961,11 +951,6 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "ReferenceResolution": {
-                        "x": 1920.0,
-                        "y": 1080.0
-                    },
-                    "ResolutionPreset": 1,
                     "SortingOrder": 0
                 }
             ]
@@ -973,179 +958,8 @@
         {
             "ID": 14,
             "ParentID": 13,
-            "Name": "UI_OpenMenu",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -890.0,
-                        "y": -470.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/Button_Normal.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/Button_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/Button_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/Button_Normal.png",
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/Button_Normal.png",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true
-                }
-            ]
-        },
-        {
-            "ID": 15,
-            "ParentID": 14,
-            "Name": "Label",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "Button",
-                    "FontPath": "None",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 16,
-            "ParentID": 13,
             "Name": "Panel_Blocker",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -1200,7 +1014,7 @@
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 1,
-                    "OrderInLayer": 0,
+                    "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",

@@ -23,6 +23,8 @@ namespace engine
 		void AddEmitter();
 		const std::vector<ParticleEmitter>& GetEmitters() const;
 
+		void SortParticles();
+
 		void Play();
 		void Stop();
 	};
