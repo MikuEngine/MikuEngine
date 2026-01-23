@@ -23,16 +23,14 @@ namespace game
         RebindTarget();
 
         if (auto* camGO = engine::GameObject::Find("MainCamera"))
-        {
             m_camera = camGO->GetComponent<engine::Camera>();
-        }
+        
+        m_cameraCached = (m_camera != nullptr);
 
-        if (m_camera)
-        {
-            m_view = m_camera->GetView();
-            m_proj = m_camera->GetProjection();
-            m_cameraCached = true;
-        }
+        if (m_rt)
+            m_parentRT = m_rt->FindPrentRectTransform();
+
+        m_cachedVisible = true;
     }
 
     void UIFollowTarget::Update()

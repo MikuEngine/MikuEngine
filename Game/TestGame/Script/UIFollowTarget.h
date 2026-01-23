@@ -26,28 +26,29 @@ namespace game
         void Load(const engine::json& j) override;
 
     private:
-        std::string m_targetName;
-        engine::Vector3 m_offset{ -5.0f, 0.0f, 0.0f };
-        bool m_hideWhenOffscreen = true;
+        std::string                 m_targetName;
+        engine::Vector3             m_offset{ -5.0f, 0.0f, 0.0f };
+        bool                        m_hideWhenOffscreen = true;
+        bool                        m_visible = true;
 
-        bool m_visible = true;
+        engine::GameObject*         m_target = nullptr;
+        engine::RectTransform*      m_rt = nullptr;
+        engine::UIImage*            m_img = nullptr;
+        engine::Camera*             m_camera = nullptr;
 
-        engine::GameObject* m_target = nullptr;
-        engine::RectTransform* m_rt = nullptr;
-        engine::UIImage* m_img = nullptr;
+        engine::RectTransform*      m_parentRT = nullptr;
+        engine::UIRect              m_cachedParentRect{ 0.0f, 0.0f, 0.0f, 0.0f };
+        float                       m_cachedVpW = -1.f;
+        float                       m_cachedVpH = -1.f;
+        bool                        m_cachedVisible = true;
 
-        engine::Camera* m_camera = nullptr;
-        engine::Matrix m_view;
-        engine::Matrix m_proj;
-        bool m_cameraCached = false;
+        bool                        m_cameraCached = false;
+        bool                        m_anchorsPrepared = false;
+        std::string                 m_lastBoundName;
 
     private:
         void RebindTarget();
         void PrepareAnchorOnce();
         void SetVisible(bool v);
-
-    private:
-        bool m_anchorsPrepared = false;
-        std::string m_lastBoundName = "";
     };
 }
