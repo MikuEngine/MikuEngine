@@ -8,162 +8,163 @@
 
 namespace engine
 {
-	void PreloadManager::Initialize()
-	{
-		if (m_isInitialized)
-		{
-			return;
-		}
+    void PreloadManager::Initialize()
+    {
+        if (m_isInitialized)
+        {
+            return;
+        }
 
-		std::string configPath{ "Resource/Setting/Preload.setting" };
-		std::ifstream file{ configPath };
+        std::string configPath{ "Resource/Setting/Preload.setting" };
+        std::ifstream file{ configPath };
 
-		if (file.is_open())
-		{
-			try
-			{
-				m_preloadData = json::parse(file);
-			}
-			catch (json::parse_error& e)
-			{
-				LOG_ERROR("Preload.json 파일 파싱 실패: {} - PreloadManager", e.what());
+        if (file.is_open())
+        {
+            try
+            {
+                m_preloadData = json::parse(file);
+            }
+            catch (json::parse_error& e)
+            {
+                LOG_ERROR("Preload.json 파일 파싱 실패: {} - PreloadManager", e.what());
 
-				return;
-			}
-		}
-		else
-		{
-			LOG_ERROR("Preload.json 파일 열기 실패 - PreloadManager");
-		}
+                return;
+            }
+        }
+        else
+        {
+            LOG_ERROR("Preload.json 파일 열기 실패 - PreloadManager");
+        }
 
-		JsonArrayForEach(m_preloadData, "Global",
-			[&](const json& asset)
-			{
-				this->LoadAsset(asset.value("Type", ""), asset.value("Path", ""), true);
-			}
-		);
+        JsonArrayForEach(m_preloadData, "Global",
+            [&](const json& asset)
+            {
+                this->LoadAsset(asset, true);
+            }
+        );
 
-		m_isInitialized = true;
-	}
+        m_isInitialized = true;
+    }
 
-	void PreloadManager::LoadSceneResourceAsync(const std::string& sceneName)
-	{
-		if (m_isLoading)
-		{
-			LOG_ERROR("이미 로딩중입니다 - PreloadManager");
-			return;
-		}
+    void PreloadManager::LoadSceneResourceAsync(const std::string& sceneName)
+    {
+        if (m_isLoading)
+        {
+            LOG_ERROR("이미 로딩중입니다 - PreloadManager");
+            return;
+        }
 
-		m_isLoading = true;
-		m_progress = 0.0f;
-		m_loadedAssetsCount = 0;
-		m_totalAssetsToLoad = 0;
+        m_isLoading = true;
+        m_progress = 0.0f;
+        m_loadedAssetsCount = 0;
+        m_totalAssetsToLoad = 0;
 
-		m_loadingFuture = std::async(std::launch::async, &PreloadManager::LoadSceneResourceWorker, this, sceneName);
-	}
+        m_loadingFuture = std::async(std::launch::async, &PreloadManager::LoadSceneResourceWorker, this, sceneName);
+    }
 
-	void PreloadManager::LoadSceneResourceSync(const std::string& sceneName)
-	{
-		if (m_isLoading)
-		{
-			LOG_ERROR("이미 로딩중입니다 - PreloadManager");
-			return;
-		}
+    void PreloadManager::LoadSceneResourceSync(const std::string& sceneName)
+    {
+        if (m_isLoading)
+        {
+            LOG_ERROR("이미 로딩중입니다 - PreloadManager");
+            return;
+        }
 
-		m_isLoading = true;
-		m_progress = 0.0f;
-		m_loadedAssetsCount = 0;
-		m_totalAssetsToLoad = 0;
+        m_isLoading = true;
+        m_progress = 0.0f;
+        m_loadedAssetsCount = 0;
+        m_totalAssetsToLoad = 0;
 
-		LoadSceneResourceWorker(sceneName);
-	}
+        LoadSceneResourceWorker(sceneName);
+    }
 
-	bool PreloadManager::IsLoading() const
-	{
-		return m_isLoading;
-	}
+    bool PreloadManager::IsLoading() const
+    {
+        return m_isLoading;
+    }
 
-	float PreloadManager::GetProgress() const
-	{
-		return m_progress;
-	}
+    float PreloadManager::GetProgress() const
+    {
+        return m_progress;
+    }
 
-	void PreloadManager::LoadSceneResourceWorker(const std::string& sceneName)
-	{
-		if (!m_isInitialized || !m_preloadData.contains("Scenes"))
-		{
-			m_progress = 1.0f;
-			m_isLoading = false;
-			return;
-		}
+    void PreloadManager::LoadSceneResourceWorker(const std::string& sceneName)
+    {
+        if (!m_isInitialized || !m_preloadData.contains("Scenes"))
+        {
+            m_progress = 1.0f;
+            m_isLoading = false;
+            return;
+        }
 
-		const auto& scenes = m_preloadData["Scenes"];
-		if (!scenes.contains(sceneName))
-		{
-			m_progress = 1.0f;
-			m_isLoading = false;
-			return;
-		}
+        const auto& scenes = m_preloadData["Scenes"];
+        if (!scenes.contains(sceneName))
+        {
+            m_progress = 1.0f;
+            m_isLoading = false;
+            return;
+        }
 
-		const auto& sceneAssets = scenes[sceneName];
-		m_totalAssetsToLoad = static_cast<int>(sceneAssets.size());
+        const auto& sceneAssets = scenes[sceneName];
+        m_totalAssetsToLoad = static_cast<int>(sceneAssets.size());
 
-		if (m_totalAssetsToLoad == 0)
-		{
-			m_progress = 1.0f;
-			m_isLoading = false;
-			return;
-		}
+        if (m_totalAssetsToLoad == 0)
+        {
+            m_progress = 1.0f;
+            m_isLoading = false;
+            return;
+        }
 
-		for (const auto& asset : sceneAssets)
-		{
-			std::string type = asset.value("Type", "");
-			std::string path = asset.value("Path", "");
+        for (const auto& asset : sceneAssets)
+        {
+            LoadAsset(asset, false);
 
-			if (!type.empty() && !path.empty())
-			{
-				LoadAsset(type, path, false);
-			}
+            ++m_loadedAssetsCount;
+            m_progress = m_loadedAssetsCount / static_cast<float>(m_totalAssetsToLoad);
+        }
 
-			++m_loadedAssetsCount;
-			m_progress = m_loadedAssetsCount / static_cast<float>(m_totalAssetsToLoad);
-		}
+        m_progress = 1.0f;
+        m_isLoading = false;
+    }
 
-		m_progress = 1.0f;
-		m_isLoading = false;
-	}
+    void PreloadManager::LoadAsset(const json& assetData, bool isGlobal)
+    {
+        std::string type = assetData.value("Type", "");
+        std::string path = assetData.value("Path", "");
 
-	void PreloadManager::LoadAsset(const std::string& type, const std::string& path, bool isGlobal)
-	{
-		LifeScope scope = isGlobal ? LifeScope::Global : LifeScope::Scene;
+        if (type.empty() || path.empty())
+            return;
 
-		if (type == "Texture")
-		{
-			ResourceManager::Get().GetOrCreateTexture(path, scope);
-		}
-		else if (type == "StaticMesh")
-		{
-			AssetManager::Get().GetOrCreateStaticMeshData(path, scope);
-		}
-		else if (type == "SkeletalMesh")
-		{
-			AssetManager::Get().GetOrCreateSkeletalMeshData(path, scope);
-		}
-		else if (type == "Animation")
-		{
-			AssetManager::Get().GetOrCreateAnimationData(path, scope);
-		}
-		else if (type == "SpriteData")
-		{
-			AssetManager::Get().GetOrCreateSpriteData(path, scope);
-		}
-		else if (type == "SpriteAnimation")
-		{
-			AssetManager::Get().GetOrCreateSpriteAnimationData(path, scope);
-		}
-		else if (type == "Sound")
-		{
-			AssetManager::Get().GetOrCreateSoundData(path, scope);
-		}
-	}
+        LifeScope scope = isGlobal ? LifeScope::Global : LifeScope::Scene;
+
+        if (type == "Texture")
+        {
+            ResourceManager::Get().GetOrCreateTexture(path, scope);
+        }
+        else if (type == "StaticMesh")
+        {
+            AssetManager::Get().GetOrCreateStaticMeshData(path, scope);
+        }
+        else if (type == "SkeletalMesh")
+        {
+            AssetManager::Get().GetOrCreateSkeletalMeshData(path, scope);
+        }
+        else if (type == "Animation")
+        {
+            AssetManager::Get().GetOrCreateAnimationData(path, scope);
+        }
+        else if (type == "SpriteData")
+        {
+            AssetManager::Get().GetOrCreateSpriteData(path, scope);
+        }
+        else if (type == "SpriteAnimation")
+        {
+            AssetManager::Get().GetOrCreateSpriteAnimationData(path, scope);
+        }
+        else if (type == "Sound")
+        {
+            std::string option = assetData.value("Option", "SFX");
+            AssetManager::Get().GetOrCreateSoundData(path, scope, option);
+        }
+    }
 }

@@ -8,16 +8,15 @@
 
 namespace engine
 {
-    // ==============================================================
-    // Sound Class Implementation
-    // ==============================================================
-
+// ==============================================================
+// Sound Class Implementation
+// ==============================================================
 	inline FMOD_VECTOR ToFmodVector(const Vector3& v) { return { v.x, v.y, v.z }; }
 
 	struct SoundCallbackInfo
 	{
 		FMOD::Channel* pChannel = nullptr;
-        EventEndPlay callback = nullptr;
+		EventEndPlay callback = nullptr;
 	};
 
     class Sound
@@ -26,11 +25,12 @@ namespace engine
         FMOD::System* m_pSystem = nullptr;
         FMOD::Sound* m_pSound = nullptr;
         FMOD::Channel* m_pChannel = nullptr;
-        std::string    m_name;
-        int            m_id;
+        FMOD::ChannelGroup* m_pChannelGroup = nullptr;
+        std::string m_name;
+        int m_id;
 
     public:
-        Sound(FMOD::System* system, int index, std::string name);
+        Sound(FMOD::System* system, int index, std::string name, FMOD::ChannelGroup* channelGroup);
         ~Sound();
 
         void Release();
@@ -63,6 +63,8 @@ namespace engine
     private:
         FMOD::System* m_pSystem = nullptr;
 
+        std::map<std::string, FMOD::ChannelGroup *> m_channelGroups;
+
         // FMOD 리스너(듣는 사람) 정보
         Vector3 m_listenerPos = { 0, 0, 0 };
         Vector3 m_listenerForward = { 0, 0, 1 };
@@ -87,7 +89,7 @@ namespace engine
         void StopAll();
         void OnGameStart();
 
-        Sound* CreateSound(const std::string& filename, bool is3D);
+        Sound* CreateSound(const std::string& filename, const std::string& option);
         const std::string& GetSoundPath() const { return m_soundPath; }
 
         void RefreshSoundList();
@@ -96,8 +98,10 @@ namespace engine
         void SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up);
 
         void DrawImgui();
-    };
 
+    private:
+        FMOD::ChannelGroup *GetOrCreateChannelGroup(const std::string &groupName);
+    };
 }
 
 /*// sound event 사용 예시
