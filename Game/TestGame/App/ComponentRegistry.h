@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Engine/Framework/Object/Component/Renderer/SpriteRenderer.h>
 #include <Engine/Framework/Object/Component/Renderer/StaticMeshRenderer.h>
@@ -7,6 +7,7 @@
 #include <Engine/Framework/Object/Component/Animator/SpriteAnimator.h>
 #include <Engine/Framework/Object/Component/Camera.h>
 #include <Engine/Framework/Object/Component/Light.h>
+#include <Engine/Framework/Object/Component/Particle/ParticleEffect.h>
 
 // Physics Components
 #include <Engine/Framework/Object/Component/Rigidbody.h>
@@ -24,11 +25,6 @@
 
 //// Game Scripts
 //#include "Script/InputBinding.h"
-//#include "Script/CharacterLogicFSM.h"
-//#include "Script/CharacterAnimationFSM.h"
-//#include "Script/PlayerFSM.h"
-//#include "Script/TestLogicFSM.h"
-//#include "Script/TestAnimationFSM.h"
-//
+
 //// FSM Script Template
 //#include "Script/BaseControllerScript.h"

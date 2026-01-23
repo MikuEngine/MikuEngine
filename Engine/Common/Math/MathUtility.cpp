@@ -5,6 +5,9 @@
 
 namespace engine
 {
+    constexpr float PI = 3.1415926535f;
+    constexpr float TWO_PI = PI * 2.0f;
+
 	namespace
 	{
 		std::mt19937 gen{ std::random_device{}() };
@@ -27,23 +30,50 @@ namespace engine
 		return std::uniform_real_distribution<float>(0.0f, 1.0f)(gen) <= probability;
 	}
 
-	Vector2 Random::InsideCircle()
-	{
-		Vector2 result;
+    // x z
+    Vector3 Random::InsideUnitCircle()
+    {
+        float theta = std::uniform_real_distribution<float>(0.0f, TWO_PI)(gen);
 
-		while (true)
-		{
-			result.x = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
-			result.y = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
+        float u = std::uniform_real_distribution<float>(0.0f, 1.0f)(gen);
+        float r = std::sqrt(u);
 
-			if (result.LengthSquared() <= 1.0f)
-			{
-				break;
-			}
-		}
+        float x = r * std::cos(theta);
+        float z = r * std::sin(theta);
 
-		return result;
-	}
+        return Vector3(x, 0.0f, z); // Y-Up 기준 바닥
+    }
+
+    Vector3 Random::OnUnitSphere()
+    {
+        float z = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
+        float theta = std::uniform_real_distribution<float>(0.0f, TWO_PI)(gen);
+
+        float planar_r = std::sqrt(1.0f - z * z);
+
+        float x = planar_r * std::cos(theta);
+        float y = planar_r * std::sin(theta);
+
+        return Vector3(x, z, y);
+    }
+
+    Vector3 Random::InsideUnitSphere()
+    {
+        Vector3 v;
+        while (true)
+        {
+            v.x = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
+            v.y = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
+            v.z = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
+
+            // LengthSquared()는 sqrt를 안 쓰므로 매우 빠름.
+            // 반지름 1.0 이내인지 체크
+            if (v.LengthSquared() <= 1.0f)
+            {
+                return v;
+            }
+        }
+    }
 
 	Vector2 Random::Direction(float minDegree, float maxDegree)
 	{

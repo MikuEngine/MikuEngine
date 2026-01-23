@@ -11,6 +11,7 @@
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/System/UIEventSystem.h"
 #include "Framework/System/SoundSystem.h"
+#include "Framework/System/ParticleSystem.h"
 
 
 namespace engine
@@ -22,7 +23,8 @@ namespace engine
         m_cameraSystem{ std::make_unique<CameraSystem>() },
         m_animatorSystem{ std::make_unique<AnimatorSystem>() },
         m_lightSystem{ std::make_unique<LightSystem>() },
-        m_uiEventSystem{ std::make_unique<UIEventSystem>() }
+        m_uiEventSystem{ std::make_unique<UIEventSystem>() },
+        m_particleSystem{ std::make_unique<ParticleSystem>() }
     {
         // Singleton으로 자동관리 되는 System
         // PhysicsSystem, CollisionSystem, SoundSystem
@@ -39,6 +41,7 @@ namespace engine
         m_animatorSystem.reset();
         m_lightSystem.reset();
         m_uiEventSystem.reset();
+        m_particleSystem.reset();
         
         // Singleton
         PhysicsSystem::Get().Shutdown();
@@ -73,6 +76,11 @@ namespace engine
     LightSystem& SystemManager::GetLightSystem() const
     {
         return *m_lightSystem.get();
+    }
+
+    ParticleSystem& SystemManager::GetParticleSystem() const
+    {
+        return *m_particleSystem.get();
     }
 
     PhysicsSystem& SystemManager::GetPhysicsSystem() const

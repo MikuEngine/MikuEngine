@@ -25,6 +25,9 @@ enum class TextureSlot
     Blit                    = 30,
     HDR                     = 31,
     StencilMap              = 32,
+
+
+    ParticleStructured      = 50
 };
 
 enum class SamplerSlot
