@@ -21,10 +21,14 @@ namespace game
     private:
         engine::Vector3 m_worldPosition;  // 마우스 월드 좌표
 
-        // UI 커서 컴포넌트
+        // UI 커서 컴포넌트 (씬의 Canvas 오브젝트에서 관리)
+        engine::GameObject* m_cursorObject = nullptr;
         engine::UIImage* m_cursorImage = nullptr;
         engine::RectTransform* m_cursorRect = nullptr;
         engine::Canvas* m_canvas = nullptr;
+
+        // Canvas 설정
+        std::string m_canvasObjectName = "AimPointerCanvas";  // 씬에서 찾을 Canvas 오브젝트 이름
 
         // 커서 설정
         std::string m_cursorTexturePrimary = "Resource/Texture/Earth.png";
