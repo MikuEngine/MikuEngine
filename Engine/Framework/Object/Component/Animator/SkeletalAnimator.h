@@ -73,6 +73,7 @@ namespace engine
         REGISTER_COMPONENT(SkeletalAnimator, Animator)
 
     private:
+        std::string m_selectedAnimName = "";
         std::unordered_map<std::string, AnimationResource> m_animations;
         std::vector<AnimationLayer> m_layers;
         std::shared_ptr<SkeletonData> m_skeletonData;
@@ -117,7 +118,7 @@ namespace engine
             int layerIndex = 0,
             float speed = 1.0f);
         void Update() override;
-
+        void DrawTimeline(const std::string& animName);
 
         const BoneMatrixArray& GetFinalBoneMatrices() const;
 

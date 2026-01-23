@@ -33,9 +33,11 @@
 
 
 // ext
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <json.hpp>
+#include <imgui_internal.h>
 
 // PhysX
 #include <PxPhysicsAPI.h>
