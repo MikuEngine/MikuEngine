@@ -29,17 +29,20 @@ namespace engine
         friend class SoundSystem;
 
     private:
-        std::string m_clipName;                 // 재생할 사운드 파일 키값
-        std::shared_ptr<SoundData> m_soundData;  // 로드된 사운드 리소스 데이터
+        std::string m_clipName;                     // 재생할 사운드 파일 키값
+        std::shared_ptr<SoundData> m_soundData;     // 로드된 사운드 리소스 데이터
+		std::vector<std::string> m_randomClipNames; // 랜덤 후보 리스트
 
         bool m_playOnAwake = false;
         bool m_isLoop = false;
         bool m_is3D = false;
         bool m_isPlaying = false;
+        bool m_useRandom = false;                   // 랜덤 모드 켜기/끄기
         
         float m_volume = 1.0f;
         float m_minDistance = 1.0f;
         float m_maxDistance = 500.0f;
+		int m_lastRandomIndex = -1;                 // 방금 재생한 인덱스 (중복 방지용)
 
         // Fade In / Out
         FadeState m_fadeState = FadeState::None;
@@ -84,6 +87,13 @@ namespace engine
         FMOD::Channel* GetChannel() const { return m_currentChannel; }
         bool Is3D() const { return m_is3D; }
         bool IsPlaying() const { return m_isPlaying; }
+
+        void AddRandomClip(const std::string& path) { m_randomClipNames.push_back(path); }
+        void RemoveRandomClip(int index)
+        {
+            if (index >= 0 && index < m_randomClipNames.size())
+                m_randomClipNames.erase(m_randomClipNames.begin() + index);
+        }
 
         void OnSoundEnd();
 
