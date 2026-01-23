@@ -83,6 +83,19 @@ namespace engine
         }
     }
 
+    template <typename T>
+    inline void JsonGet(const nlohmann::ordered_json& j, const std::string& key, T& outValue, const T& defaultValue)
+    {
+        if (auto iter = j.find(key); iter != j.end())
+        {
+            outValue = iter.value();
+
+            return;
+        }
+
+        outValue = defaultValue;
+    }
+
     template <typename Func>
     inline void JsonArrayForEach(const nlohmann::ordered_json& j, const std::string& key, Func func)
     {

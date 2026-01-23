@@ -92,16 +92,23 @@ namespace engine
 		float m_emitterAge = 0.0f;
 
 	public:
-		void Initialize(const std::shared_ptr<Texture>& texture, const EmitterProps& props);
+		void Initialize(const EmitterProps& props);
 		void Update(float dt, const Vector3& emitterPosition, const Vector3& cameraPosition);
 		void Reset();
 
 		const std::vector<Particle>& GetParticles() const;
 		const std::shared_ptr<Texture>& GetTexture() const;
 		const EmitterProps& GetProps() const;
+		const std::string& GetTexturePath() const;
+
 		void SetProps(const EmitterProps& props);
+		void SetTexturePath(const std::string& filePath);
 
 		void SortParticlesByDistance();
+
+	public: // 직렬화
+		void Save(json& j) const;
+		void Load(const json& j);
 
 	private:
 		void Emit(const Vector3& emitterPosition);

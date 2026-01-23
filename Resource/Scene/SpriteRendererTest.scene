@@ -11,7 +11,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
+                        "x": 5.099999904632568,
                         "y": 0.0,
                         "z": -7.0
                     },
@@ -845,7 +845,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
+                        "x": 5.800000190734863,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -863,7 +863,73 @@
                 },
                 {
                     "Type": "ParticleEffect",
-                    "Active": true
+                    "Active": true,
+                    "IsPlaying": true,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/DefaultParticle.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 5.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 1.0,
+                                "y": 0.9729729294776917,
+                                "z": 0.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "SizeBegin": 0.10000000149011612,
+                            "SizeEnd": 0.10000000149011612,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.5,
+                            "EmissionRate": 10.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 200,
+                                    "Cycles": 0,
+                                    "Interval": 0.0
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }

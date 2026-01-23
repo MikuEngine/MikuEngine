@@ -27,5 +27,13 @@ namespace engine
 
 		void Play();
 		void Stop();
+
+	public:
+		void OnGui() override;
+		void Save(json& j) const override;
+		void Load(const json& j) override;
+
+	private:
+        void DrawEmitterGui(ParticleEmitter& emitter, int index);
 	};
 }

@@ -1,11 +1,14 @@
 ﻿#include "EnginePCH.h"
 #include "ParticleEmitter.h"
 
+#include "Core/Graphics/Resource/ResourceManager.h"
+
 namespace engine
 {
-	void ParticleEmitter::Initialize(const std::shared_ptr<Texture>& texture, const EmitterProps& props) 
+	void ParticleEmitter::Initialize(const EmitterProps& props) 
 	{
-		m_texture = texture;
+		m_textureFilePath = "Resource/Texture/DefaultParticle.png";
+		m_texture = ResourceManager::Get().GetOrCreateTexture(m_textureFilePath);
 		m_props = props;
 		m_particles.reserve(props.maxParticles);
 	}
@@ -123,6 +126,11 @@ namespace engine
 		return m_props;
 	}
 
+	const std::string& ParticleEmitter::GetTexturePath() const
+	{
+		return m_textureFilePath;
+	}
+
 	void ParticleEmitter::SetProps(const EmitterProps& props) 
 	{
 		m_props = props;
@@ -133,6 +141,16 @@ namespace engine
 		}
 	}
 
+	void ParticleEmitter::SetTexturePath(const std::string& filePath)
+	{
+		m_textureFilePath = filePath;
+
+		if (!filePath.empty())
+		{
+			m_texture = ResourceManager::Get().GetOrCreateTexture(filePath);
+		}
+	}
+
 	void ParticleEmitter::SortParticlesByDistance()
 	{
 		std::sort(m_particles.begin(), m_particles.end(),
@@ -140,6 +158,112 @@ namespace engine
 			{
 				return a.distanceToCamera > b.distanceToCamera;
 			});
+	}
+
+	void ParticleEmitter::Save(json& j) const
+	{
+		// Texture 경로
+		j["TexturePath"] = m_textureFilePath;
+
+		// EmitterProps 저장
+		const auto& p = m_props;
+
+		j["PositionOffset"] = p.positionOffset;
+		j["Velocity"] = p.velocity;
+		j["VelocityVariation"] = p.velocityVariation;
+		j["Gravity"] = p.gravity;
+
+		j["StartColor"] = p.startColor;
+		j["EndColor"] = p.endColor;
+		j["SizeBegin"] = p.sizeBegin;
+		j["SizeEnd"] = p.sizeEnd;
+		j["SizeVariation"] = p.sizeVariation;
+		j["LifeTime"] = p.lifeTime;
+
+		j["EmissionRate"] = p.emissionRate;
+		j["MaxParticles"] = p.maxParticles;
+
+		j["Shape"] = static_cast<int>(p.shape);
+		j["Radius"] = p.radius;
+		j["Angle"] = p.angle;
+		j["BoxSize"] = p.boxSize;
+		j["RandomDirection"] = p.randomDirection;
+
+		j["TextureTilesX"] = p.textureTilesX;
+		j["TextureTilesY"] = p.textureTilesY;
+		j["TextureTileCount"] = p.textureTileCount;
+		j["AnimationSpeed"] = p.animationSpeed;
+		j["IsRandomFrame"] = p.isRandomFrame;
+
+		// Burst 배열 저장 (currentCycle, nextBurstTime 제외)
+		j["Bursts"] = json::array();
+		for (const auto& burst : p.bursts)
+		{
+			json burstJson;
+			burstJson["Time"] = burst.time;
+			burstJson["Count"] = burst.count;
+			burstJson["Cycles"] = burst.cycles;
+			burstJson["Interval"] = burst.interval;
+			j["Bursts"].push_back(burstJson);
+		}
+	}
+
+	void ParticleEmitter::Load(const json& j)
+	{
+		// Texture 경로 로드
+		std::string texturePath;
+		JsonGet(j, "TexturePath", texturePath);
+		SetTexturePath(texturePath);
+
+		// EmitterProps 로드
+		auto& p = m_props;
+
+		JsonGet(j, "PositionOffset", p.positionOffset);
+		JsonGet(j, "Velocity", p.velocity);
+		JsonGet(j, "VelocityVariation", p.velocityVariation);
+		JsonGet(j, "Gravity", p.gravity);
+
+		JsonGet(j, "StartColor", p.startColor);
+		JsonGet(j, "EndColor", p.endColor);
+		JsonGet(j, "SizeBegin", p.sizeBegin);
+		JsonGet(j, "SizeEnd", p.sizeEnd);
+		JsonGet(j, "SizeVariation", p.sizeVariation);
+		JsonGet(j, "LifeTime", p.lifeTime);
+
+		JsonGet(j, "EmissionRate", p.emissionRate);
+		JsonGet(j, "MaxParticles", p.maxParticles);
+
+		int shapeInt = static_cast<int>(p.shape);
+		JsonGet(j, "Shape", shapeInt);
+		p.shape = static_cast<EmitterShape>(shapeInt);
+
+		JsonGet(j, "Radius", p.radius);
+		JsonGet(j, "Angle", p.angle);
+		JsonGet(j, "BoxSize", p.boxSize);
+		JsonGet(j, "RandomDirection", p.randomDirection);
+
+		JsonGet(j, "TextureTilesX", p.textureTilesX);
+		JsonGet(j, "TextureTilesY", p.textureTilesY);
+		JsonGet(j, "TextureTileCount", p.textureTileCount);
+		JsonGet(j, "AnimationSpeed", p.animationSpeed);
+		JsonGet(j, "IsRandomFrame", p.isRandomFrame);
+
+		// Burst 배열 로드
+		p.bursts.clear();
+		JsonArrayForEach(j, "Bursts", [&](const json& burstJson)
+			{
+				Burst burst;
+				JsonGet(burstJson, "Time", burst.time);
+				JsonGet(burstJson, "Count", burst.count);
+				JsonGet(burstJson, "Cycles", burst.cycles);
+				JsonGet(burstJson, "Interval", burst.interval);
+				burst.currentCycle = 0;
+				burst.nextBurstTime = 0.0f;
+				p.bursts.push_back(burst);
+			});
+
+		// 파티클 풀 크기 조정
+		m_particles.reserve(p.maxParticles);
 	}
 
 	void ParticleEmitter::Emit(const Vector3& emitterPosition) 
