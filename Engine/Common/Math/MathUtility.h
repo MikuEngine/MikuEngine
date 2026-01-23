@@ -44,7 +44,11 @@ namespace engine
         // 0.0f ~ 1.0f -> 0% ~ 100%
         static bool Chance(float probability);
 
-        static Vector2 InsideCircle();
+        static Vector3 InsideUnitCircle();
+
+        static Vector3 OnUnitSphere();
+
+        static Vector3 InsideUnitSphere();
 
         static Vector2 Direction(float minDegree = 0.0f, float maxDegree = 360.0f);
     };

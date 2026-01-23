@@ -7,6 +7,7 @@
 #include <Engine/Framework/Object/Component/Animator/SpriteAnimator.h>
 #include <Engine/Framework/Object/Component/Camera.h>
 #include <Engine/Framework/Object/Component/Light.h>
+#include <Engine/Framework/Object/Component/Particle/ParticleEffect.h>
 
 // Physics Components
 #include <Engine/Framework/Object/Component/Rigidbody.h>

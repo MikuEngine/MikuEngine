@@ -300,6 +300,18 @@
     <ClCompile Include="Framework\Object\Component\UI\UIPanel.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\Object\Component\AnimFSM.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\LogicFSM.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\Particle\ParticleEffect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\System\ParticleSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -647,7 +659,19 @@
     <ClInclude Include="Framework\Object\Component\UI\UIPanel.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Data\ParticleInstanceData.h">
+    <ClInclude Include="Framework\Object\Component\AnimFSM.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\LogicFSM.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\Particle\ParticleEffect.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\System\ParticleSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Data\ParticleStructuredData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -698,6 +722,8 @@
     <FxCompile Include="Shader\Pixel\DeferredGlobalLight_Toon_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\DeferredPointLight_Toon_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\DeferredSpotLight_Toon_PS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Particle_VS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Particle_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

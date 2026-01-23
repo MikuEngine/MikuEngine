@@ -24,6 +24,7 @@
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/System/UIEventSystem.h"
 #include "Framework/System/SoundSystem.h"
+#include "Framework/System/ParticleSystem.h"
 #include "Editor/EditorManager.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -337,6 +338,8 @@ namespace engine
 
         SystemManager::Get().GetScriptSystem().CallStart();
         SystemManager::Get().GetScriptSystem().CallUpdate();
+
+        SystemManager::Get().GetParticleSystem().Update();
 
         // Physics 시뮬레이션
         PhysicsSystem::Get().Update(Time::FixedDeltaTime());

@@ -202,6 +202,7 @@
     <ClCompile Include="Framework\Object\Component\Animator\Animator.cpp" />
     <ClCompile Include="Framework\Object\Component\AnimFSM.cpp" />
     <ClCompile Include="Framework\Object\Component\LogicFSM.cpp" />
+    <ClCompile Include="Framework\Object\Component\Particle\ParticleEffect.cpp" />
     <ClCompile Include="Framework\Object\Component\Particle\ParticleEmitter.cpp" />
     <ClCompile Include="Framework\Object\Component\RectTransform.cpp" />
     <ClCompile Include="Framework\Object\Component\Animator\SkeletalAnimator.cpp" />
@@ -224,6 +225,7 @@
     <ClCompile Include="Framework\System\AnimatorSystem.cpp" />
     <ClCompile Include="Framework\System\CameraSystem.cpp" />
     <ClCompile Include="Framework\System\LightSystem.cpp" />
+    <ClCompile Include="Framework\System\ParticleSystem.cpp" />
     <ClCompile Include="Framework\System\RenderSystem.cpp" />
     <ClCompile Include="Framework\System\SoundSystem.cpp" />
     <ClCompile Include="Framework\System\SystemManager.cpp" />
@@ -258,10 +260,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Utility\EditorHelper.h" />
-    <ClInclude Include="Core\Graphics\Data\ParticleInstanceData.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="Core\Graphics\Data\ParticleStructuredData.h" />
     <ClInclude Include="Core\Graphics\Resource\GeometryShader.h" />
     <ClInclude Include="Editor\EditorGrid.h" />
     <ClInclude Include="Framework\Asset\FontData.h" />
@@ -324,6 +323,7 @@
     <ClInclude Include="Framework\Object\Component\Animator\Animator.h" />
     <ClInclude Include="Framework\Object\Component\AnimFSM.h" />
     <ClInclude Include="Framework\Object\Component\LogicFSM.h" />
+    <ClInclude Include="Framework\Object\Component\Particle\ParticleEffect.h" />
     <ClInclude Include="Framework\Object\Component\Particle\ParticleEmitter.h" />
     <ClInclude Include="Framework\Object\Component\RectTransform.h" />
     <ClInclude Include="Framework\Object\Component\Animator\SkeletalAnimator.h" />
@@ -346,6 +346,7 @@
     <ClInclude Include="Framework\Scene\SceneManager.h" />
     <ClInclude Include="Framework\System\CameraSystem.h" />
     <ClInclude Include="Framework\System\LightSystem.h" />
+    <ClInclude Include="Framework\System\ParticleSystem.h" />
     <ClInclude Include="Framework\System\RenderSystem.h" />
     <ClInclude Include="Framework\System\SoundSystem.h" />
     <ClInclude Include="Framework\System\SystemManager.h" />
@@ -421,6 +422,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\Pixel\Outline_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Pixel\Particle_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -552,6 +559,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\Vertex\NormalQuad_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Vertex\Particle_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

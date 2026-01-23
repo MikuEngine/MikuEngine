@@ -1,6 +1,6 @@
 {
     "Name": "SpriteRendererTest",
-    "NumGameObjects": 17,
+    "NumGameObjects": 18,
     "GameObjects": [
         {
             "ID": 0,
@@ -833,6 +833,37 @@
                     "Type": "Rotator",
                     "Active": true,
                     "Speed": 0.699999988079071
+                }
+            ]
+        },
+        {
+            "ID": 17,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true
                 }
             ]
         }
