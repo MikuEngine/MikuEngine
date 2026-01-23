@@ -65,7 +65,7 @@ namespace engine
         std::shared_ptr<SpriteAnimationData> GetOrCreateSpriteAnimationData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
         std::shared_ptr<PrefabData> GetOrCreatePrefabData(const std::string& name, LifeScope scope = LifeScope::Owning);
         std::shared_ptr<GeometryData> GetGeometryData(const std::string& name);
-        std::shared_ptr<SoundData> GetOrCreateSoundData(const std::string& filePath, LifeScope scope = LifeScope::Owning, const std::string& option = "SFX");
+        std::shared_ptr<SoundData> GetOrCreateSoundData(const std::string& filePath, const std::string& option = "SFX", LifeScope scope = LifeScope::Owning);
 
     private:
         void CreateGeometryData();

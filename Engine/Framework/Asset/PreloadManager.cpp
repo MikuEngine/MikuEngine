@@ -164,7 +164,7 @@ namespace engine
         else if (type == "Sound")
         {
             std::string option = assetData.value("Option", "SFX");
-            AssetManager::Get().GetOrCreateSoundData(path, scope, option);
+            AssetManager::Get().GetOrCreateSoundData(path, option, scope);
         }
     }
 }

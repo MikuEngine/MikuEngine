@@ -100,7 +100,7 @@ namespace engine
         void DrawImgui();
 
     private:
-        FMOD::ChannelGroup *GetOrCreateChannelGroup(const std::string &groupName);
+        FMOD::ChannelGroup* GetOrCreateChannelGroup(const std::string &groupName);
     };
 }
 
