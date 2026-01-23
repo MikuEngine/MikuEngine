@@ -3,7 +3,6 @@
 
 #include "AimPointer.h"
 #include "TempBulletFactory.h"
-#include "CharacterAnimationFSM.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
@@ -31,9 +30,9 @@ namespace game
         }
 
         // Procedural Aim 활성화
-        if (m_charAnimFSM && m_enableUpperBodyAim)
+        if (m_animFSM && m_enableUpperBodyAim)
         {
-            m_charAnimFSM->SetProceduralAimEnabled(true);
+            m_animFSM->SetProceduralAimEnabled(true);
         }
     }
 
@@ -49,16 +48,13 @@ namespace game
         if (!GetGameObject()) return;
 
         m_rigidbody = GetGameObject()->GetComponent<engine::Rigidbody>();
-        m_charAnimFSM = GetGameObject()->GetComponent<CharacterAnimationFSM>();
 
         // AimPointer와 BulletFactory 찾기
         auto* scene = engine::SceneManager::Get().GetScene();
         if (scene)
         {
-            if (auto* aimGO = scene->FindGameObject("AimPointer"))
-            {
-                m_aimPointer = aimGO->GetComponent<AimPointer>();
-            }
+            
+            m_aimPointer = GetGameObject()->GetComponent<AimPointer>();
 
             m_bulletFactory = GetGameObject()->GetComponent<TempBulletFactory>();
             if (!m_bulletFactory)
@@ -86,7 +82,7 @@ namespace game
         if (isMoving)
         {
             m_logicFSM->SetParameter("MoveX", moveDir.x);
-            m_logicFSM->SetParameter("MoveY", moveDir.y);
+            m_logicFSM->SetParameter("MoveZ", moveDir.z);
         }
 
         // 2. 공격 입력 처리
@@ -233,8 +229,8 @@ namespace game
     {
         engine::Vector3 direction = engine::Vector3::Zero;
 
-        if (engine::Input::IsKeyHeld(engine::Keys::W)) direction.y += 1.0f;
-        if (engine::Input::IsKeyHeld(engine::Keys::S)) direction.y -= 1.0f;
+        if (engine::Input::IsKeyHeld(engine::Keys::W)) direction.z += 1.0f;
+        if (engine::Input::IsKeyHeld(engine::Keys::S)) direction.z -= 1.0f;
         if (engine::Input::IsKeyHeld(engine::Keys::A)) direction.x -= 1.0f;
         if (engine::Input::IsKeyHeld(engine::Keys::D)) direction.x += 1.0f;
 
@@ -262,13 +258,13 @@ namespace game
 
     void TestShootingPlayer::UpdateUpperBodyAim()
     {
-        if (!m_enableUpperBodyAim || !m_charAnimFSM || !m_aimPointer)
+        if (!m_enableUpperBodyAim || !m_animFSM || !m_aimPointer)
         {
             return;
         }
 
         float yaw = CalculateAimYaw();
-        m_charAnimFSM->SetUpperBodyYaw(yaw);
+        m_animFSM->SetUpperBodyYaw(yaw);
     }
 
     float TestShootingPlayer::CalculateAimYaw() const
@@ -324,7 +320,7 @@ namespace game
         ImGui::Text("References:");
         ImGui::Text("  AimPointer: %s", m_aimPointer ? "Found" : "NOT FOUND");
         ImGui::Text("  BulletFactory: %s", m_bulletFactory ? "Found" : "NOT FOUND");
-        ImGui::Text("  AnimFSM: %s", m_charAnimFSM ? "Found" : "NOT FOUND");
+        ImGui::Text("  AnimFSM: %s", m_animFSM ? "Found" : "NOT FOUND");
         ImGui::Text("  Rigidbody: %s", m_rigidbody ? "Found" : "NOT FOUND");
 
         if (m_aimPointer)

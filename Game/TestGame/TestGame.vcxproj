@@ -169,8 +169,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Script\BaseControllerScript.cpp" />
-    <ClCompile Include="Script\CharacterAnimationFSM.cpp" />
-    <ClCompile Include="Script\CharacterLogicFSM.cpp" />
     <ClCompile Include="Script\DontDestroyTest.cpp">
       <SubType>
       </SubType>
@@ -180,7 +178,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Script\InputBinding.cpp" />
-    <ClCompile Include="Script\PlayerFSM.cpp" />
     <ClCompile Include="Script\Rotator.cpp">
       <SubType>
       </SubType>
@@ -205,16 +202,10 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Script\TempPlayer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Script\Test2.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Script\TestAnimationFSM.cpp" />
-    <ClCompile Include="Script\TestLogicFSM.cpp" />
     <ClCompile Include="Script\TestScript.cpp" />
     <ClCompile Include="GamePCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -222,7 +213,6 @@
     </ClCompile>
     <ClCompile Include="App\TestGameApp.cpp" />
     <ClCompile Include="Script\TestSound.cpp" />
-    <ClCompile Include="Script\zJCTestPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl">
@@ -264,8 +254,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Script\BaseControllerScript.h" />
-    <ClInclude Include="Script\CharacterAnimationFSM.h" />
-    <ClInclude Include="Script\CharacterLogicFSM.h" />
     <ClInclude Include="Script\DontDestroyTest.h">
       <SubType>
       </SubType>
@@ -275,7 +263,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Script\InputBinding.h" />
-    <ClInclude Include="Script\PlayerFSM.h" />
     <ClInclude Include="Script\Rotator.h">
       <SubType>
       </SubType>
@@ -296,20 +283,13 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Script\TempPlayer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Script\Test2.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Script\TestAnimationFSM.h" />
-    <ClInclude Include="Script\TestLogicFSM.h" />
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
     <ClInclude Include="Script\TestSound.h" />
-    <ClInclude Include="Script\zJCTestPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">
