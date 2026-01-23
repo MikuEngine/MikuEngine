@@ -6,6 +6,8 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Renderer/SkeletalMeshRenderer.h"
 
+#include <imgui_internal.h>
+
 void to_json(nlohmann::ordered_json& j, engine::AnimationBlendMode mode)
 {
     j = nlohmann::ordered_json{ "BlendMode", static_cast<int>(mode) };
@@ -582,6 +584,84 @@ namespace engine
         }
     }
 
+    void SkeletalAnimator::DrawTimeline(const std::string& animName)
+    {
+        auto iter = m_animations.find(animName);
+        if (iter == m_animations.end()) return;
+
+        auto& res = iter->second;
+        auto& notifies = res.notifies;
+
+        if (!res.data || res.data->GetAnimations().empty()) return;
+        float duration = res.data->GetAnimations()[0].duration;
+
+        static float previewTime = 0.0f;
+
+        ImGui::Text("Timeline (Duration: %.2fs)", duration);
+
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+        float width = ImGui::GetContentRegionAvail().x;
+        float height = 50.0f;
+
+        drawList->AddRectFilled(cursorPos, ImVec2(cursorPos.x + width, cursorPos.y + height), IM_COL32(40, 40, 40, 255));
+        drawList->AddRect(cursorPos, ImVec2(cursorPos.x + width, cursorPos.y + height), IM_COL32(100, 100, 100, 255));
+
+        ImGui::InvisibleButton("##TimelineArea", ImVec2(width, height));
+
+        if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.0f))
+        {
+            float mouseRatio = (ImGui::GetMousePos().x - cursorPos.x) / width;
+            previewTime = std::clamp(mouseRatio, 0.0f, 1.0f) * duration;
+        }
+
+        static float rightClickTime = 0.0f;
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+            float mouseRatio = (ImGui::GetMousePos().x - cursorPos.x) / width;
+            rightClickTime = std::clamp(mouseRatio, 0.0f, 1.0f) * duration;
+            ImGui::OpenPopup("TimelineContextMenu");
+        }
+
+        for (int i = 0; i <= 10; ++i)
+        {
+            float ratio = (float)i / 10.0f;
+            float x = cursorPos.x + width * ratio;
+            drawList->AddLine(ImVec2(x, cursorPos.y), ImVec2(x, cursorPos.y + height), IM_COL32(80, 80, 80, 255));
+        }
+
+        for (auto& notify : notifies)
+        {
+            float ratio = notify.time / duration;
+            float x = cursorPos.x + width * ratio;
+            float y = cursorPos.y + height * 0.5f;
+
+            drawList->AddQuadFilled(
+                ImVec2(x, y - 6), ImVec2(x + 6, y), ImVec2(x, y + 6), ImVec2(x - 6, y),
+                IM_COL32(0, 255, 0, 255)
+            );
+
+            drawList->AddText(ImVec2(x - 10, y - 20), IM_COL32(200, 255, 200, 255), notify.name.c_str());
+        }
+
+        float playheadX = cursorPos.x + (previewTime / duration) * width;
+        drawList->AddLine(ImVec2(playheadX, cursorPos.y), ImVec2(playheadX, cursorPos.y + height), IM_COL32(255, 50, 50, 255), 2.0f);
+
+        if (ImGui::BeginPopup("TimelineContextMenu"))
+        {
+            ImGui::Text("Time: %.2f", rightClickTime);
+            static char notifyNameBuf[64] = "Event";
+            ImGui::InputText("Notify Name", notifyNameBuf, 64);
+
+            if (ImGui::Button("Add Notify"))
+            {
+                AddNotify(animName, notifyNameBuf, rightClickTime);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+    }
+
     const BoneMatrixArray& SkeletalAnimator::GetFinalBoneMatrices() const
     {
         return m_finalBoneMatrices;
@@ -595,7 +675,7 @@ namespace engine
             static std::string selectedPath = "";
             static char nameBuf[128]{};
 
-            ImGui::InputText("Name", nameBuf, 128);
+            ImGui::InputText("##Name", nameBuf, 128);
 
             std::string tempPath;
             if (DrawFileSelector("Select FBX", "Resource/Animation", ".fbx", tempPath))
@@ -624,8 +704,7 @@ namespace engine
 
         if (ImGui::CollapsingHeader("Registered List", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            std::vector<std::string> oldNames;
-            std::vector<std::string> newNames;
+            ImGui::BeginChild("AnimList", ImVec2(0, 150), true);
 
             std::string removeTarget = "";
 
@@ -633,40 +712,67 @@ namespace engine
             {
                 ImGui::PushID(name.c_str());
 
-                char editName[128];
-                strcpy_s(editName, name.c_str());
-                ImGui::SetNextItemWidth(120);
-                if (ImGui::InputText("##EditName", editName, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+                bool isSelected = (m_selectedAnimName == name);
+                if (ImGui::Selectable(name.c_str(), isSelected, ImGuiSelectableFlags_AllowItemOverlap))
                 {
-                    if (strcmp(editName, name.c_str()) != 0)
-                    {
-                        oldNames.push_back(name);
-                        newNames.push_back(editName);
-                    }
+                    m_selectedAnimName = name;
                 }
 
-                ImGui::SameLine();
-                ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "%s", res.path.c_str());
-
-                ImGui::SameLine();
+                // 우측에 삭제 버튼 배치
+                ImGui::SameLine(ImGui::GetContentRegionAvail().x - 30);
                 if (ImGui::Button("X"))
                 {
                     removeTarget = name;
+                    if (m_selectedAnimName == name) m_selectedAnimName = "";
                 }
 
                 ImGui::PopID();
             }
 
-            for (size_t i = 0; i < oldNames.size(); ++i)
-            {
-                RenameAnimation(oldNames[i], newNames[i]);
-            }
+            ImGui::EndChild();
 
             if (!removeTarget.empty())
             {
                 UnregisterAnimation(removeTarget);
             }
+
+            if (!m_selectedAnimName.empty())
+            {
+                if (m_animations.find(m_selectedAnimName) != m_animations.end())
+                {
+                    ImGui::Spacing();
+                    ImGui::Separator();
+                    ImGui::TextColored(ImVec4(0.2f, 0.8f, 1.0f, 1.0f), "Timeline Editor : %s", m_selectedAnimName.c_str());
+
+                    static char nameBuf[128] = "";
+                    if (strcmp(nameBuf, m_selectedAnimName.c_str()) != 0 && !ImGui::IsAnyItemActive())
+                    {
+                        strcpy_s(nameBuf, m_selectedAnimName.c_str());
+                    }
+
+                    if (ImGui::InputText("Rename", nameBuf, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+                    {
+                        if (strcmp(nameBuf, m_selectedAnimName.c_str()) != 0)
+                        {
+                            RenameAnimation(m_selectedAnimName, nameBuf);
+                            m_selectedAnimName = nameBuf;
+                        }
+                    }
+
+                    ImGui::Spacing();
+
+                    DrawTimeline(m_selectedAnimName);
+
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                }
+                else
+                {
+                    m_selectedAnimName = "";
+                }
+            }
         }
+
         // layer
         if (ImGui::CollapsingHeader("Layers", ImGuiTreeNodeFlags_DefaultOpen))
         {
