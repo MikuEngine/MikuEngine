@@ -1,6 +1,6 @@
 {
     "Name": "SampleMapTest",
-    "NumGameObjects": 10,
+    "NumGameObjects": 43,
     "GameObjects": [
         {
             "ID": 0,
@@ -395,7 +395,7 @@
         },
         {
             "ID": 8,
-            "Name": "GameObject",
+            "Name": "Player",
             "Active": true,
             "Components": [
                 {
@@ -469,6 +469,2377 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "Canvas_HUD",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "ParentID": 10,
+            "Name": "HUD",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -800.0,
+                        "y": 400.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "ParentID": 11,
+            "Name": "Profile",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 150.0,
+                    "Height": 150.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/Miku.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "Canvas_Blocker",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "ParentID": 13,
+            "Name": "Panel_Blocker",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 1920.0,
+                    "Height": 1080.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.1764705926179886
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 15,
+            "Name": "Canvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 1
+                }
+            ]
+        },
+        {
+            "ID": 16,
+            "ParentID": 15,
+            "Name": "Panel_Menu",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 200.0
+                    },
+                    "Width": 600.0,
+                    "Height": 400.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 17,
+            "ParentID": 16,
+            "Name": "UI_OpenOption",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -130.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 18,
+            "ParentID": 17,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 65.80000305175781,
+                        "y": 27.600000381469727
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "Text": "설정",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "ParentID": 16,
+            "Name": "UI_BackToPlay",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 20,
+            "ParentID": 19,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 30.799999237060547,
+                        "y": 27.399999618530273
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "Text": "게임 재개",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 21,
+            "ParentID": 16,
+            "Name": "UI_BackToMain",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 130.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 22,
+            "ParentID": 21,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 37.400001525878906,
+                        "y": 27.100000381469727
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "Text": "메인으로",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 23,
+            "ParentID": 15,
+            "Name": "UI_OptionPopUp",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 200.0
+                    },
+                    "Width": 1000.0,
+                    "Height": 700.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                },
+                {
+                    "Type": "UIPopUpAnimator",
+                    "Active": true,
+                    "Duration": 0.25,
+                    "ClosedOffsetY": -700.0
+                }
+            ]
+        },
+        {
+            "ID": 24,
+            "ParentID": 23,
+            "Name": "UI_CloseButton_Option",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 250.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 25,
+            "ParentID": 24,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 66.0,
+                        "y": 25.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "Text": "뒤로\n",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 26,
+            "ParentID": 23,
+            "Name": "Text",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -300.0
+                    },
+                    "Width": 150.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "설정\n",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 70,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 27,
+            "ParentID": 23,
+            "Name": "UI_SoundSlider",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": -160.0
+                    },
+                    "Width": 300.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UISlider",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Value": 1.0,
+                    "Direction": 0,
+                    "FillMode": 0,
+                    "TrackSprite": "",
+                    "FillSprite": "",
+                    "HandleSprite": "",
+                    "TrackColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "FillColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "HandleColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 28,
+            "ParentID": 27,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 29,
+            "ParentID": 27,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 30,
+            "ParentID": 27,
+            "Name": "Handle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 1.0,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 31,
+            "ParentID": 23,
+            "Name": "UI_EffectSlider",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": -30.0
+                    },
+                    "Width": 300.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UISlider",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Value": 1.0,
+                    "Direction": 0,
+                    "FillMode": 0,
+                    "TrackSprite": "",
+                    "FillSprite": "",
+                    "HandleSprite": "",
+                    "TrackColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "FillColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "HandleColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 32,
+            "ParentID": 31,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 33,
+            "ParentID": 31,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 34,
+            "ParentID": 31,
+            "Name": "Handle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 1.0,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 35,
+            "ParentID": 23,
+            "Name": "UI_MouseSlider",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 100.0
+                    },
+                    "Width": 300.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UISlider",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Value": 1.0,
+                    "Direction": 0,
+                    "FillMode": 0,
+                    "TrackSprite": "",
+                    "FillSprite": "",
+                    "HandleSprite": "",
+                    "TrackColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "FillColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "HandleColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 36,
+            "ParentID": 35,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 37,
+            "ParentID": 35,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 38,
+            "ParentID": 35,
+            "Name": "Handle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 1.0,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 39,
+            "ParentID": 23,
+            "Name": "Text_Sound",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -250.0,
+                        "y": -130.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "사운드",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 40,
+            "ParentID": 23,
+            "Name": "Text_Effect",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -250.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "이펙트",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 41,
+            "ParentID": 23,
+            "Name": "Text_Sound",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -250.0,
+                        "y": 130.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "마우스 감도",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 42,
+            "Name": "Script_Controller",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "PlayButtonController",
+                    "Active": true
                 }
             ]
         }

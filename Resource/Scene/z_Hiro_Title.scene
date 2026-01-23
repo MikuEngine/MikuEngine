@@ -2415,7 +2415,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "이펙트",
+                    "Text": "효과음",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 32,
                     "Color": {
