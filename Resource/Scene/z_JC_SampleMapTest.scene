@@ -1,6 +1,6 @@
 {
     "Name": "z_JC_SampleMapTest",
-    "NumGameObjects": 9,
+    "NumGameObjects": 10,
     "GameObjects": [
         {
             "ID": 0,
@@ -419,35 +419,10 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.02500000037252903,
+                        "y": 0.02500000037252903,
+                        "z": 0.02500000037252903
                     }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 0.5295387506484985,
-                        "y": 0.41698843240737915,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true,
-                    "CastShadow": false
                 },
                 {
                     "Type": "Rigidbody",
@@ -500,6 +475,7 @@
                 {
                     "Type": "AimPointer",
                     "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
                     "CursorTexturePrimary": "Resource/Texture/Earth.png",
                     "CursorTextureAlternate": "Resource/Texture/Moon.png",
                     "UseAlternateCursor": false,
@@ -517,6 +493,80 @@
                     "Active": true
                 },
                 {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "AimPointerCanvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
@@ -524,6 +574,7 @@
                         "x": 1920.0,
                         "y": 1080.0
                     },
+                    "ResolutionPreset": 1,
                     "SortingOrder": 0
                 }
             ]

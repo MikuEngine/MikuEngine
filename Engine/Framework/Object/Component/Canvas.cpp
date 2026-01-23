@@ -97,34 +97,6 @@ namespace engine
 
 	void Canvas::OnGui()
 	{
-		static const Vector2 kResolutions[] =
-		{
-			{1280.0f,  720.0f},
-			{1920.0f, 1080.0f},
-			{2560.0f, 1440.0f},
-			{3840.0f, 2160.0f},
-		};
-
-		const char* labels[] =
-		{
-			"1280 x 720",
-			"1920 x 1080",
-			"2560 x 1440",
-			"3840 x 2160",
-		};
-
-		for (int i = 0; i < 4; ++i)
-		{
-			if (ImGui::RadioButton(labels[i], m_resolutionPreset == i))
-			{
-				m_resolutionPreset = i;
-				m_referenceResolution = kResolutions[i];
-
-				// 화면 비율 즉시 반영되게
-				SystemManager::Get().GetRenderSystem().MarkScreenDirty();
-			}
-		}
-
 		ImGui::DragInt("Sorting Order", &m_sortingOrder, 1.0f);
 	}
 
@@ -133,8 +105,6 @@ namespace engine
 		Component::Save(j);
 
 		j["LockRectTransform"] = m_lockRectTransformInEditor;
-		j["ReferenceResolution"] = m_referenceResolution;
-		j["ResolutionPreset"] = m_resolutionPreset;
 		j["SortingOrder"] = m_sortingOrder;
 	}
 
@@ -143,8 +113,6 @@ namespace engine
 		Component::Load(j);
 
 		JsonGet(j, "LockRectTransform", m_lockRectTransformInEditor);
-		JsonGet(j, "ReferenceResolution", m_referenceResolution);
-		JsonGet(j, "ResolutionPreset", m_resolutionPreset);
 		JsonGet(j, "SortingOrder", m_sortingOrder);
 
 		SystemManager::Get().GetRenderSystem().MarkScreenDirty();
