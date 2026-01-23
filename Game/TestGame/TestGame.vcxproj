@@ -159,6 +159,7 @@
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\HubButtonController.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
+    <ClCompile Include="Script\TempMonster.cpp" />
     <ClCompile Include="Script\TestShootingPlayer.cpp" />
     <ClCompile Include="Script\TitleButtonController.cpp">
       <SubType>
@@ -190,15 +191,11 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Script\TempBullet.cpp">
+    <ClCompile Include="Script\BulletPlayer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Script\TempBulletFactory.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Script\TempMonster.cpp">
+    <ClCompile Include="Script\BulletFactory.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -244,6 +241,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Script\TempMonster.h" />
     <ClInclude Include="Script\TestShootingPlayer.h" />
     <ClInclude Include="Script\TitleButtonController.h">
       <SubType>
@@ -271,15 +269,19 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Script\TempBullet.h">
+    <ClInclude Include="Script\BulletPlayer.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Script\TempBulletFactory.h">
+    <ClInclude Include="Script\BulletFactory.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Script\TempMonster.h">
+    <ClInclude Include="Script\BulletMovement.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Script\BulletParams.h">
       <SubType>
       </SubType>
     </ClInclude>

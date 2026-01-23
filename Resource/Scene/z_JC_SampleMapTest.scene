@@ -485,6 +485,9 @@
                     "Type": "TestShootingPlayer",
                     "Active": true,
                     "MoveSpeed": 5.0,
+                    "FireRate": 0.30000001192092896,
+                    "BulletSpeed": 1.0,
+                    "BulletLifetime": 3.0,
                     "EnableUpperBodyAim": true,
                     "FSMInitialized": false
                 },
@@ -510,11 +513,8 @@
                     }
                 },
                 {
-                    "Type": "TempBulletFactory",
-                    "Active": true,
-                    "BulletSpeed": 15.0,
-                    "FireRate": 0.20000000298023224,
-                    "BulletLifetime": 3.0
+                    "Type": "BulletFactory",
+                    "Active": true
                 },
                 {
                     "Type": "Canvas",
