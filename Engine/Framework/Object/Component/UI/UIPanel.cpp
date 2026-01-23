@@ -39,14 +39,43 @@ namespace engine
 	void UIPanel::Initialize()
 	{
 		UIElement::Initialize();
+		CreateVisuals();
+	}
 
-		//if (GetGameObject()->GetComponent<UIImage>())
-		//	GetGameObject()->AddComponent<UIImage>();
+	void UIPanel::CreateVisuals()
+	{
+		if (!m_background)
+		{
+			if (auto* go = GetGameObject())
+			{
+				m_background = go->GetComponent<UIImage>();
+				if (!m_background)
+					m_background = go->AddComponent<UIImage>();
+			}
+		}
+
+		if (m_background)
+		{
+			m_background->m_raycastTarget = false;
+			m_color = m_background->GetColor();
+		}
+
+		m_dirty = true;
+	}
+
+	void UIPanel::UpdateVisuals()
+	{
+
 	}
 
 	void UIPanel::DrawUI() const
 	{
 		//
+	}
+
+	void UIPanel::Update()
+	{
+		UpdateVisuals();
 	}
 
 	void UIPanel::SetTexture(const std::string& textureFilePath)
@@ -90,17 +119,17 @@ namespace engine
 
 	void UIPanel::Draw(RenderType type) const
 	{
-		UIElement::Draw(type);
+		//
 	}
 
 	DirectX::BoundingBox UIPanel::GetBounds() const
 	{
-		return DirectX::BoundingBox();
+		return UIElement::GetBounds();
 	}
 
 	void UIPanel::OnGui()
 	{
-		UIElement::OnGui();
+		// Only Image
 	}
 
 	void UIPanel::Save(json& j) const

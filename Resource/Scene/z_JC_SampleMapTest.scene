@@ -36,7 +36,7 @@
                 },
                 {
                     "Type": "FreeCameraController",
-                    "Active": true,
+                    "Active": false,
                     "MoveSpeed": 10.0
                 }
             ]
@@ -484,12 +484,117 @@
                 {
                     "Type": "LogicFSM",
                     "Active": true,
-                    "CurrentState": "",
-                    "States": []
+                    "CurrentState": "Idle",
+                    "States": [
+                        {
+                            "Name": "Idle",
+                            "IsDefault": true,
+                            "Transitions": [
+                                {
+                                    "ToState": "MoveUp",
+                                    "ConditionParameter": "MoveUp",
+                                    "ConditionType": 4,
+                                    "FloatThreshold": 0.0,
+                                    "IntThreshold": 0,
+                                    "HasExitTime": false,
+                                    "ExitTime": 0.0
+                                },
+                                {
+                                    "ToState": "MoveDown",
+                                    "ConditionParameter": "MoveDown",
+                                    "ConditionType": 4,
+                                    "FloatThreshold": 0.0,
+                                    "IntThreshold": 0,
+                                    "HasExitTime": false,
+                                    "ExitTime": 0.0
+                                },
+                                {
+                                    "ToState": "MoveLeft",
+                                    "ConditionParameter": "MoveLeft",
+                                    "ConditionType": 4,
+                                    "FloatThreshold": 0.0,
+                                    "IntThreshold": 0,
+                                    "HasExitTime": false,
+                                    "ExitTime": 0.0
+                                },
+                                {
+                                    "ToState": "MoveRight",
+                                    "ConditionParameter": "MoveRight",
+                                    "ConditionType": 4,
+                                    "FloatThreshold": 0.0,
+                                    "IntThreshold": 0,
+                                    "HasExitTime": false,
+                                    "ExitTime": 0.0
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "MoveUp",
+                            "IsDefault": false,
+                            "Transitions": [
+                                {
+                                    "ToState": "Idle",
+                                    "ConditionParameter": "MoveUp",
+                                    "ConditionType": 5,
+                                    "FloatThreshold": 0.0,
+                                    "IntThreshold": 0,
+                                    "HasExitTime": false,
+                                    "ExitTime": 0.0
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "MoveDown",
+                            "IsDefault": false,
+                            "Transitions": [
+                                {
+                                    "ToState": "Idle",
+                                    "ConditionParameter": "MoveDown",
+                                    "ConditionType": 5,
+                                    "FloatThreshold": 0.0,
+                                    "IntThreshold": 0,
+                                    "HasExitTime": false,
+                                    "ExitTime": 0.0
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "MoveLeft",
+                            "IsDefault": false,
+                            "Transitions": [
+                                {
+                                    "ToState": "Idle",
+                                    "ConditionParameter": "MoveLeft",
+                                    "ConditionType": 5,
+                                    "FloatThreshold": 0.0,
+                                    "IntThreshold": 0,
+                                    "HasExitTime": false,
+                                    "ExitTime": 0.0
+                                }
+                            ]
+                        },
+                        {
+                            "Name": "MoveRight",
+                            "IsDefault": false,
+                            "Transitions": [
+                                {
+                                    "ToState": "Idle",
+                                    "ConditionParameter": "MoveRight",
+                                    "ConditionType": 5,
+                                    "FloatThreshold": 0.0,
+                                    "IntThreshold": 0,
+                                    "HasExitTime": false,
+                                    "ExitTime": 0.0
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
-                    "Type": "BaseControllerScript",
-                    "Active": true
+                    "Type": "zJCTestPlayer",
+                    "Active": true,
+                    "MoveSpeed": 5.0,
+                    "FSMInitialized": true
                 }
             ]
         }

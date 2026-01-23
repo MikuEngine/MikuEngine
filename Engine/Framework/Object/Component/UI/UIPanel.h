@@ -44,6 +44,7 @@ namespace engine
 	public:
 		void Initialize() override;
 		void DrawUI() const override;
+		void Update() override;
 
 	public:
 		void SetTexture(const std::string& textureFilePath);
@@ -73,5 +74,9 @@ namespace engine
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
+
+	private:
+		void CreateVisuals();
+		void UpdateVisuals();
 	};
 }

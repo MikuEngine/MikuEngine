@@ -1,6 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include <Framework/Object/Component/LogicFSM.h>
+#include <Framework/Object/Component/AnimFSM.h>
 
 namespace engine
 {
@@ -40,6 +42,20 @@ namespace game
         engine::LogicFSM* m_logicFSM = nullptr;
         engine::AnimFSM* m_animFSM = nullptr;
 
+        // ─────────────────────────────────────────────
+        // FSM 타입 별칭 (가독성 향상)
+        // ─────────────────────────────────────────────
+        using FSMTransitionType = engine::FSMTransition::ConditionType;
+        
+        // 전이 조건 타입 헬퍼 함수 (가독성 향상)
+        static constexpr FSMTransitionType BoolTrue() { return FSMTransitionType::BoolTrue; }
+        static constexpr FSMTransitionType BoolFalse() { return FSMTransitionType::BoolFalse; }
+        static constexpr FSMTransitionType Trigger() { return FSMTransitionType::Trigger; }
+        static constexpr FSMTransitionType Greater() { return FSMTransitionType::Greater; }
+        static constexpr FSMTransitionType Less() { return FSMTransitionType::Less; }
+        static constexpr FSMTransitionType Equals() { return FSMTransitionType::Equals; }
+        static constexpr FSMTransitionType NotEquals() { return FSMTransitionType::NotEquals; }
+
     public:
         void Awake() override;
         void Start() override;
@@ -61,8 +77,30 @@ namespace game
         virtual void OnStateEntered(const std::string& state) {}
         virtual void OnStateExited(const std::string& state) {}
 
-    private:
-        // FSM 컴포넌트 찾기
+    protected:
+        // ─────────────────────────────────────────────
+        // FSM 초기화 헬퍼 함수들 (자식 클래스에서 사용)
+        // ─────────────────────────────────────────────
+        
+        // 상태 추가 헬퍼
+        void AddFSMState(const std::string& stateName, bool isDefault = false);
+        
+        // 전이 추가 헬퍼
+        void AddFSMTransition(
+            const std::string& fromState,
+            const std::string& toState,
+            const std::string& parameterName,
+            FSMTransitionType conditionType);
+
+    protected:
+        // ─────────────────────────────────────────────
+        // 컴포넌트 캐싱 (자식 클래스에서 오버라이드 가능)
+        // ─────────────────────────────────────────────
+        
+        // 모든 컴포넌트 캐싱 (자식에서 오버라이드하여 추가 컴포넌트 찾기)
+        virtual void CacheComponents();
+        
+        // FSM 컴포넌트 찾기 (CacheComponents() 내부에서 호출)
         void CacheFSMComponents();
         
         // FSM 콜백 등록

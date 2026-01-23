@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include <Framework/Object/Component/LogicFSM.h>
+#include <Framework/Object/Component/AnimFSM.h>
 
 namespace engine
 {

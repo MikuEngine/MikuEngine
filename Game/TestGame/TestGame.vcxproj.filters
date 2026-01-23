@@ -7,10 +7,9 @@
   <ItemGroup>
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
-    <ClCompile Include="Script\PlayerScriptTest.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
-    <ClCompile Include="Script\ButtonCallbackTest.cpp" />
-    <ClCompile Include="Script\ButtonCallbackTest2.cpp" />
+    <ClCompile Include="Script\TitleButtonController.cpp" />
+    <ClCompile Include="Script\PlayButtonController.cpp" />
     <ClCompile Include="Script\BaseControllerScript.cpp" />
     <ClCompile Include="Script\CharacterAnimationFSM.cpp" />
     <ClCompile Include="Script\CharacterLogicFSM.cpp" />
@@ -32,17 +31,17 @@
     <ClCompile Include="GamePCH.cpp" />
     <ClCompile Include="App\TestGameApp.cpp" />
     <ClCompile Include="Script\TestSound.cpp" />
-    <ClCompile Include="Script\UIInputHandler.cpp" />
     <ClCompile Include="Script\zJCTestPlayer.cpp" />
+    <ClCompile Include="Script\HubButtonController.cpp" />
+    <ClCompile Include="Script\TestShootingPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
-    <ClInclude Include="Script\PlayerScriptTest.h" />
     <ClInclude Include="Script\AimPointer.h" />
-    <ClInclude Include="Script\ButtonCallbackTest.h" />
-    <ClInclude Include="Script\ButtonCallbackTest2.h" />
+    <ClInclude Include="Script\TitleButtonController.h" />
+    <ClInclude Include="Script\PlayButtonController.h" />
     <ClInclude Include="Script\BaseControllerScript.h" />
     <ClInclude Include="Script\CharacterAnimationFSM.h" />
     <ClInclude Include="Script\CharacterLogicFSM.h" />
@@ -62,8 +61,9 @@
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
     <ClInclude Include="Script\TestSound.h" />
-    <ClInclude Include="Script\UIInputHandler.h" />
     <ClInclude Include="Script\zJCTestPlayer.h" />
+    <ClInclude Include="Script\HubButtonController.h" />
+    <ClInclude Include="Script\TestShootingPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\TestHeader.hlsli" />

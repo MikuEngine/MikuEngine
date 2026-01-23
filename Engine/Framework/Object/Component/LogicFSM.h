@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -117,8 +117,7 @@ namespace engine
         void Initialize() override;
         void Awake() override;
         
-        // Update는 가상 함수가 아니므로 개별 함수로 제공
-        // BaseControllerScript나 다른 Script에서 호출해야 함
+        
         void UpdateFSM();
 
         // ─────────────────────────────────────────────
@@ -156,6 +155,8 @@ namespace engine
         void AddTransition(const std::string& fromState, const FSMTransition& transition);
         void SetDefaultState(const std::string& stateName);
         void ClearStates();
+        void UpdateStateMap();  // 모든 상태 추가 후 m_stateMap 업데이트
+        void InitializeCurrentState();  // 기본 상태로 현재 상태 초기화 (상태 추가 후 호출)
         
         // ─────────────────────────────────────────────
         // AnimFSM 연동

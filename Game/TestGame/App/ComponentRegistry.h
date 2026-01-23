@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Engine/Framework/Object/Component/Renderer/SpriteRenderer.h>
 #include <Engine/Framework/Object/Component/Renderer/StaticMeshRenderer.h>

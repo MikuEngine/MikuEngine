@@ -43,6 +43,12 @@ namespace engine
 		m_onClick.push_back(std::move(cb));
 	}
 
+	void UIButton::AddOnHover(HoverCallback&& cb)
+	{
+		if (!cb) return;
+		m_onHover.push_back(std::move(cb));
+	}
+
 	void UIButton::SetSprites(const std::string& normal, const std::string& hover, const std::string& pressed, const std::string& disabled)
 	{
 		m_spriteNormal = normal;
@@ -74,6 +80,12 @@ namespace engine
 		if (m_state == State::Pressed) return;
 		m_state = State::Hovered;
 		UpdateVisuals();
+
+		auto hover = m_onHover;
+		for (auto& call : hover)
+		{
+			if (call) call(true);
+		}
 	}
 
 	void UIButton::OnMouseExit(const Vector2&)
@@ -82,6 +94,12 @@ namespace engine
 		if (m_state == State::Pressed) return;
 		m_state = State::Normal;	
 		UpdateVisuals();
+
+		auto hover = m_onHover;
+		for (auto& call : hover)
+		{
+			if (call) call(false);
+		}
 	}
 
 	void UIButton::OnMouseUp(const Vector2&, int mouseButton)
@@ -115,11 +133,7 @@ namespace engine
 
 	void UIButton::OnMouseOver(const Vector2&)
 	{
-		if (m_state == State::Normal)
-		{
-			m_state = State::Hovered;
-			UpdateVisuals();
-		}
+
 	}
 
 	void UIButton::OnMouseCancel(const Vector2& mousePos, int mouseButton)
