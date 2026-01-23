@@ -321,9 +321,9 @@ namespace game
 		// 발사 설정
 		ImGui::Separator();
 		ImGui::Text("Shooting:");
-		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.2, 0.01f, 2.0f);
+		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.2f, 0.01f, 2.0f);
 		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 1.0f, 1.0f, 100.0f);
-		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 3.0, 0.5f, 10.0f);
+		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 3.0f, 0.5f, 10.0f);
 
 		// 기타
 		ImGui::Separator();
