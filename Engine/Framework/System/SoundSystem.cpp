@@ -437,7 +437,7 @@ namespace engine
 
                 if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
                 {
-                    auto soundData = AssetManager::Get().GetOrCreateSoundData(label, LifeScope::Global);
+                    //auto soundData = AssetManager::Get().GetOrCreateSoundData(label, LifeScope::Global);
 
                     /*// EndEvent
                          if (snd) snd->Play2D(false, []()
