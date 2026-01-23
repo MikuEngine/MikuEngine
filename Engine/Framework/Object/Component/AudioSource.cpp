@@ -102,7 +102,31 @@ namespace engine
     {
         m_isAutoStop = false;
 
-        Sound* soundResource = GetSoundResource();
+        std::string clipToPlay = m_clipName;
+        
+        if (m_useRandom && !m_randomClipNames.empty())
+        {
+            int randomIndex = 0;
+
+            if (m_randomClipNames.size() > 1)
+            {
+                int loopCount = 0;
+                do
+                {
+                    randomIndex = rand() % m_randomClipNames.size();
+                    loopCount++;
+                } while (randomIndex == m_lastRandomIndex && loopCount < 10);
+            }
+
+            m_lastRandomIndex = randomIndex;
+            clipToPlay = m_randomClipNames[randomIndex];
+        }
+
+        std::string option = m_is3D ? "3D" : "2D";
+        auto soundData = AssetManager::Get().GetOrCreateSoundData(clipToPlay, option);
+        if (!soundData) return;
+        m_soundData = soundData;
+        Sound* soundResource = soundData->GetSound();
         if (!soundResource) return;
 
         Stop();
@@ -124,6 +148,23 @@ namespace engine
 
         if (m_currentChannel)
         {
+            // 그룹 할당
+            if (soundResource->m_pChannelGroup)
+            {
+                m_currentChannel->setChannelGroup(soundResource->m_pChannelGroup);
+            }
+
+            if (m_useRandom)
+            {
+                float randomPitch = 0.95f + (static_cast<float>(rand()) / RAND_MAX) * 0.1f;
+                m_currentChannel->setPitch(randomPitch);
+            }
+            else
+            {
+                m_currentChannel->setPitch(1.0f);
+            }
+
+			// fade in 처리
             if (fadeInDuration > 0.0f)
             {
                 m_fadeState = FadeState::FadingIn;
@@ -131,7 +172,6 @@ namespace engine
                 m_fadeTimer = 0.0f;
                 m_startVolume = 0.0f;
                 m_targetVolume = m_volume;
-
                 m_currentChannel->setVolume(0.0f);
             }
             else
@@ -292,26 +332,97 @@ namespace engine
             char buffer[256];
             strcpy_s(buffer, m_clipName.c_str());
 
-            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 70.0f);
-            if (ImGui::InputText("##Clip Name", buffer, sizeof(buffer)))
+            EditorState currentState = EditorManager::Get().GetEditorState();
+
+            ImGui::Spacing();
+            ImGui::Checkbox("Use Random Clips", &m_useRandom);
+
+            if (m_useRandom)
             {
-                m_clipName = buffer;
+                ImGui::Indent(10.0f);
+
+                for (int i = 0; i < m_randomClipNames.size(); ++i)
+                {
+                    ImGui::PushID(i);
+
+                    char buffer[256];
+                    strcpy_s(buffer, m_randomClipNames[i].c_str());
+
+                    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 40.0f);
+                    if (ImGui::InputText("##Clip", buffer, sizeof(buffer)))
+                    {
+                        m_randomClipNames[i] = buffer;
+                    }
+
+                    ImGui::SameLine();
+
+                    if (ImGui::Button("X"))
+                    {
+                        RemoveRandomClip(i);
+                        ImGui::PopID();
+                        break;
+                    }
+
+                    ImGui::PopID();
+                }
+
+                if (ImGui::Button("+ Add Clip", ImVec2(ImGui::GetContentRegionAvail().x, 0)))
+                {
+                    std::vector<std::string> selectedPaths = engine::OpenAudioFilesDialog("Audio Files\0*.wav;*.mp3;*.ogg;*.flac\0All Files\0*.*\0");
+
+                    if (!selectedPaths.empty())
+                    {
+                        for (const std::string& pathStr : selectedPaths)
+                        {
+                            fs::path sourcePath(pathStr);
+                            fs::path destDir = SoundSystem::Get().GetSoundPath();
+                            fs::path destPath = destDir / sourcePath.filename();
+
+                            try
+                            {
+                                if (!fs::exists(destDir)) fs::create_directories(destDir);
+
+                                if (!fs::exists(destPath) || !fs::equivalent(sourcePath, destPath))
+                                {
+                                    fs::copy_file(sourcePath, destPath, fs::copy_options::overwrite_existing);
+                                }
+
+                                AddRandomClip(sourcePath.filename().string());
+                            }
+                            catch (const std::exception& e)
+                            {
+                                LOG_ERROR("Clip Import Failed: {}", e.what());
+                            }
+                        }
+                    }
+                }
+
+                ImGui::Unindent(10.0f);
             }
-            if (ImGui::IsItemDeactivatedAfterEdit())
+            else
             {
-                SetClip(m_clipName);
-                Play();
+                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 70.0f);
+                if (ImGui::InputText("##Clip Name", buffer, sizeof(buffer)))
+                {
+                    m_clipName = buffer;
+                }
+                if (ImGui::IsItemDeactivatedAfterEdit())
+                {
+                    SetClip(m_clipName);
+                    Play();
+                }
+
+
+                ImGui::BeginDisabled(currentState == EditorState::Play);
+                ImGui::SameLine();
+                if (ImGui::Button("Load"))
+                {
+                    LoadClipFromFile();
+                }
+                ImGui::EndDisabled();
+
             }
 
-            EditorState currentState = EditorManager::Get().GetEditorState();
-            ImGui::BeginDisabled(currentState == EditorState::Play);
-            ImGui::SameLine();
-            if (ImGui::Button("Load"))
-            {
-                LoadClipFromFile();
-            }
-            ImGui::EndDisabled();
-            
             if (currentState == EditorState::Edit)
             {
                 ImGui::TextColored(ImVec4(1, 1, 0, 1), "[Preview Control]");
@@ -353,19 +464,58 @@ namespace engine
             ImGui::Checkbox("Play On Awake", &m_playOnAwake);
             ImGui::EndDisabled();
             
+
             float vol = m_volume;
-            if (ImGui::SliderFloat("Volume", &vol, 0.0f, 1.0f))
+            float inputWidth = 50.0f;
+            float sliderWidth = ImGui::GetContentRegionAvail().x - inputWidth - ImGui::GetStyle().ItemSpacing.x - 90.0f;
+            ImGui::SetNextItemWidth(sliderWidth);
+            bool sliderChanged = ImGui::SliderFloat("##VolumeSlider", &vol, 0.0f, 1.0f, "");
+
+            ImGui::SameLine();
+
+            ImGui::SetNextItemWidth(inputWidth);
+            bool inputChanged = ImGui::InputFloat("Volume", &vol, 0.0f, 0.0f, "%.2f");
+
+            if (sliderChanged || inputChanged)
             {
+                if (vol < 0.0f) vol = 0.0f;
+                if (vol > 1.0f) vol = 1.0f;
+
                 SetVolume(vol);
             }
 
-            ImGui::DragFloat("Fade In (sec)", &m_fadeInTime, 0.1f, 0.0f, 10.0f, "%.1f s");
-            ImGui::DragFloat("Fade Out (sec)", &m_fadeOutTime, 0.1f, 0.0f, 10.0f, "%.1f s");
+            ImGui::SetNextItemWidth(sliderWidth);
+            sliderChanged = ImGui::SliderFloat("##FadeInSlider", &m_fadeInTime, 0.0f, 5.0f, "");
+            ImGui::SameLine();
+            ImGui::SetNextItemWidth(inputWidth);
+            inputChanged = ImGui::InputFloat("Fade In (sec)", &m_fadeInTime, 0.0f, 0.0f, "%.1f");
+
+            if (sliderChanged || inputChanged)
+            {
+                if (m_fadeInTime < 0.0f) m_fadeInTime = 0.0f;
+            }
+
+            ImGui::SetNextItemWidth(sliderWidth);
+            sliderChanged = ImGui::SliderFloat("##FadeOutSlider", &m_fadeOutTime, 0.0f, 5.0f, "");
+
+            ImGui::SameLine();
+            ImGui::SetNextItemWidth(inputWidth);
+            inputChanged = ImGui::InputFloat("Fade Out (sec)", &m_fadeOutTime, 0.0f, 0.0f, "%.1f");
+
+            if (sliderChanged || inputChanged)
+            {
+                if (m_fadeOutTime < 0.0f) m_fadeOutTime = 0.0f;
+            }
 
             if (m_is3D)
             {
+                ImGui::Spacing();
+                ImGui::Indent(10.0f);
+
                 ImGui::DragFloat("Min Distance", &m_minDistance);
                 ImGui::DragFloat("Max Distance", &m_maxDistance);
+
+                ImGui::Unindent(10.0f);
             }
 
             ImGui::TreePop();
@@ -383,6 +533,9 @@ namespace engine
         j["Volume"] = m_volume;
         j["MinDist"] = m_minDistance;
         j["MaxDist"] = m_maxDistance;
+
+        j["UseRandom"] = m_useRandom;
+        j["RandomClips"] = m_randomClipNames;
     }
 
     void AudioSource::Load(const json& j)
@@ -396,6 +549,13 @@ namespace engine
         if (j.contains("Volume")) m_volume = j["Volume"];
         if (j.contains("MinDist")) m_minDistance = j["MinDist"];
         if (j.contains("MaxDist")) m_maxDistance = j["MaxDist"];
+
+        if (j.contains("UseRandom")) m_useRandom = j["UseRandom"];
+
+        if (j.contains("RandomClips"))
+        {
+            m_randomClipNames = j["RandomClips"].get<std::vector<std::string>>();
+        }
     }
     
     Sound* AudioSource::GetSoundResource() const
