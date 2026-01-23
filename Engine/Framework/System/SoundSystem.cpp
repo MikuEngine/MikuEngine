@@ -1,10 +1,11 @@
 ﻿#include "EnginePCH.h"
 #include "SoundSystem.h"
+
 #include "Framework/Asset/AssetManager.h"
-#include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Transform.h"
-#include "fmod_errors.h"
+#include "Framework/Object/GameObject/GameObject.h"
 #include "fmod.hpp"
+#include "fmod_errors.h"
 
 namespace engine
 {
@@ -12,9 +13,8 @@ namespace engine
     // Sound Class Implementation
     // ==============================================================
 
-    Sound::Sound(FMOD::System* system, int index, std::string name)
-        : m_pSystem(system), m_id(index), m_name(name) {
-    }
+    Sound::Sound(FMOD::System *system, int index, std::string name, FMOD::ChannelGroup *channelGroup)
+        : m_pSystem(system), m_id(index), m_name(name), m_pChannelGroup(channelGroup) {}
 
     Sound::~Sound()
     {
@@ -23,14 +23,18 @@ namespace engine
 
     void Sound::Release()
     {
-        if (m_pSound) { m_pSound->release(); m_pSound = nullptr; }
+        if (m_pSound)
+        { 
+            m_pSound->release(); 
+            m_pSound = nullptr;
+        }
     }
 
     FMOD::Channel* Sound::Play2D(bool bLoop, EventEndPlay callback)
     {
         if (m_pSystem)
         {
-            m_pSystem->playSound(m_pSound, nullptr, false, &m_pChannel);
+            m_pSystem->playSound(m_pSound, m_pChannelGroup, false, &m_pChannel);
             if (m_pChannel)
             {
                 m_pChannel->setMode(bLoop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
@@ -55,7 +59,7 @@ namespace engine
     {
         if (m_pSystem)
         {
-            m_pSystem->playSound(m_pSound, nullptr, true, &m_pChannel);
+            m_pSystem->playSound(m_pSound, m_pChannelGroup, true, &m_pChannel);
 
             if (m_pChannel)
             {
@@ -124,6 +128,7 @@ namespace engine
 
     void SoundSystem::Shutdown()
     {
+        m_channelGroups.clear();
         m_callbackList.clear();
 
         if (m_pSystem)
@@ -166,7 +171,8 @@ namespace engine
 
     void SoundSystem::Update()
     {
-        if (!m_pSystem) return;
+        if (!m_pSystem)
+            return;
 
         FMOD_VECTOR pos = ToFmodVector(m_listenerPos);
         FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
@@ -180,8 +186,7 @@ namespace engine
         for (AudioSource* source : m_components)
         {
             // 컴포넌트가 활성화 상태이고, 3D 사운드인 경우에만 위치 갱신
-            if (source->IsActive() &&
-                source->Is3D())
+            if (source->IsActive() && source->Is3D())
             {
                 Sound* sound = source->GetSoundResource();
 
@@ -194,32 +199,32 @@ namespace engine
                 }
             }
 
-            source->Update();
+        source->Update();
 
-            if (source->IsPlaying())
+        if (source->IsPlaying())
+        {
+            FMOD::Channel* channel = source->GetChannel();
+
+            if (channel == nullptr)
             {
-                FMOD::Channel* channel = source->GetChannel();
-                
-                if (channel == nullptr)
-                {
-                    source->SetForceStopState();
-                    continue;
-                }
-
-                bool isFmodPlaying = false;
-                FMOD_RESULT res = channel->isPlaying(&isFmodPlaying);
-
-                // 채널 소멸 후 핸들 유효하지 않음
-                if (res == FMOD_ERR_INVALID_HANDLE)
-                {
-                    source->SetForceStopState();
-                }
-                // 일시정지거나 막 끝난 직후
-                else if (res == FMOD_OK && !isFmodPlaying)
-                {
-                    source->SetForceStopState();
-                }
+                source->SetForceStopState();
+                continue;
             }
+
+            bool isFmodPlaying = false;
+            FMOD_RESULT res = channel->isPlaying(&isFmodPlaying);
+
+            // 채널 소멸 후 핸들 유효하지 않음
+            if (res == FMOD_ERR_INVALID_HANDLE)
+            {
+                source->SetForceStopState();
+            }
+            // 일시정지거나 막 끝난 직후
+            else if (res == FMOD_OK && !isFmodPlaying)
+            {
+                source->SetForceStopState();
+            }
+        }
         }
 
         // 콜백 리스트 처리 (재생 끝난 사운드 콜백 호출)
@@ -249,28 +254,125 @@ namespace engine
         m_pSystem->update();
     }
 
-    Sound* SoundSystem::CreateSound(const std::string& filename, bool is3D)
+    FMOD::ChannelGroup* SoundSystem::GetOrCreateChannelGroup(const std::string &groupName)
     {
-        namespace fs = std::filesystem;
-
-        fs::path rootPath(m_soundPath);
-        fs::path targetPath = rootPath / filename;
-
-        // SoundData는 AssetManager에서 캐싱 처리
-        if (!targetPath.has_extension() && fs::exists(rootPath))
+        if (m_channelGroups.contains(groupName))
         {
-            for (const auto& entry : fs::directory_iterator(rootPath))
-            {
-                if (entry.is_regular_file())
-                {
-                    if (entry.path().stem() == targetPath.stem())
-                    {
-                        std::string ext = entry.path().extension().string();
+            return m_channelGroups[groupName];
+        }
 
-                        if (ext == ".wav" || ext == ".mp3" || ext == ".ogg" || ext == ".flac")
+        FMOD::ChannelGroup *parentGroup = nullptr;
+        m_pSystem->getMasterChannelGroup(&parentGroup);
+
+        std::string currentPath;
+        std::string remainingPath = groupName;
+        size_t pos = 0;
+
+        while ((pos = remainingPath.find('/')) != std::string::npos)
+        {
+            std::string token = remainingPath.substr(0, pos);
+            if (!currentPath.empty())
+            {
+                currentPath += "/";
+            }
+            currentPath += token;
+
+            if (!m_channelGroups.contains(currentPath))
+            {
+                FMOD::ChannelGroup *newGroup = nullptr;
+                m_pSystem->createChannelGroup(token.c_str(), &newGroup);
+                parentGroup->addGroup(newGroup);
+                m_channelGroups[currentPath] = newGroup;
+            }
+
+            parentGroup = m_channelGroups[currentPath];
+            remainingPath.erase(0, pos + 1);
+        }
+
+
+        if (!remainingPath.empty())
+        {
+            if (!currentPath.empty())
+            {
+                currentPath += "/";
+            }
+        }
+        currentPath += remainingPath;
+
+        if (!m_channelGroups.contains(currentPath))
+        {
+            FMOD::ChannelGroup *newGroup = nullptr;
+            m_pSystem->createChannelGroup(remainingPath.c_str(), &newGroup);
+            parentGroup->addGroup(newGroup);
+            m_channelGroups[currentPath] = newGroup;
+        }
+        parentGroup = m_channelGroups[currentPath];
+        
+        return parentGroup;
+    }
+
+    Sound* SoundSystem::CreateSound(const std::string &filename, const std::string &option)
+    {
+        bool is3D = false;
+        std::string groupName = option;
+
+        if (option.find("BGM") != std::string::npos)
+        {
+            is3D = false;
+        } 
+        else if (option.find("UI") != std::string::npos)
+        {
+            is3D = false;
+        }
+        else if (option == "2D")
+        {
+            is3D = false;
+            groupName = "Master";
+        }
+
+        FMOD::ChannelGroup* targetGroup = GetOrCreateChannelGroup(groupName);
+
+        namespace fs = std::filesystem;
+        fs::path rootPath(m_soundPath);
+        fs::path inputPath(filename);
+        fs::path targetPath;
+
+        std::string inputStr = inputPath.generic_string();
+        std::string rootStr = rootPath.generic_string();
+
+        if (fs::exists(inputPath) || inputStr.find(rootStr) == 0)
+        {
+            targetPath = inputPath;
+        }
+        else
+        {
+            targetPath = rootPath / inputPath;
+        }
+
+        if (!targetPath.has_extension() || !fs::exists(targetPath))
+        {
+            fs::path searchDir = targetPath.parent_path();
+
+            if (searchDir.empty() || !fs::exists(searchDir))
+            {
+                searchDir = rootPath;
+            }
+
+            if (fs::exists(searchDir))
+            {
+                for (const auto& entry : fs::directory_iterator(searchDir))
+                {
+                    if (entry.is_regular_file())
+                    {
+                        if (entry.path().stem() == targetPath.stem())
                         {
-                            targetPath = entry.path();
-                            break;
+                            std::string ext = entry.path().extension().string();
+
+                            if (ext == ".wav" || ext == ".mp3" || ext == ".ogg" || ext == ".flac")
+                            {
+                                targetPath = entry.path();
+                                break;
+                            }
                         }
                     }
                 }
@@ -279,30 +381,26 @@ namespace engine
 
         if (!fs::exists(targetPath))
         {
-            LOG_ERROR("[SoundSystem] File Not Found: {} (Input: {})",
-                targetPath.string().c_str(), filename.c_str());
+            LOG_ERROR("[SoundSystem] File Not Found: {} (Original Input: {})", targetPath.string(), filename);
             return nullptr;
         }
 
         // 사운드 객체 생성
-        Sound* sound = new Sound(m_pSystem, m_index++, filename);
+        Sound *sound = new Sound(m_pSystem, m_index++, filename, targetGroup);
 
         FMOD_MODE mode = FMOD_DEFAULT;
-        if (is3D)
-        {
-            // 3D 사운드: 거리 감쇠(RollOff) 적용
-            mode = FMOD_3D | FMOD_3D_LINEARROLLOFF;
-        }
-        else
-        {
-            mode = FMOD_2D;
-        }
+        if (is3D) mode = FMOD_3D | FMOD_3D_LINEARROLLOFF;
+        else      mode = FMOD_2D;
 
-        FMOD_RESULT ret = m_pSystem->createSound(targetPath.string().c_str(), mode, 0, &sound->m_pSound);
+        std::string absPathStr = fs::absolute(targetPath).string();
+
+        FMOD_RESULT ret = m_pSystem->createSound(absPathStr.c_str(), mode, 0, &sound->m_pSound);
 
         if (ret != FMOD_OK)
         {
-            LOG_ERROR("SoundSystem::CreateSound error / Path: %s", targetPath.string().c_str());
+            LOG_ERROR("SoundSystem::CreateSound FAILED / Path: {}", absPathStr);
+            LOG_ERROR("FMOD Error: {} ({})", FMOD_ErrorString(ret), static_cast<int>(ret));
+
             delete sound;
             return nullptr;
         }
@@ -341,12 +439,12 @@ namespace engine
                 {
                     auto soundData = AssetManager::Get().GetOrCreateSoundData(label, LifeScope::Global);
 
-                   /*// EndEvent
-                        if (snd) snd->Play2D(false, []()
-                        {
-                            //std::cout << "play 끝!" << std::endl;
-                        });
-                    //*/
+                    /*// EndEvent
+                         if (snd) snd->Play2D(false, []()
+                         {
+                             //std::cout << "play 끝!" << std::endl;
+                         });
+                     //*/
                 }
 
                 if (ImGui::BeginDragDropSource())

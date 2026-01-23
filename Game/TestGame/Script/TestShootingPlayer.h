@@ -11,7 +11,6 @@ namespace game
 {
     class AimPointer;
     class TempBulletFactory;
-    class CharacterAnimationFSM;
 
     // ═══════════════════════════════════════════════════════════════
     // TestShootingPlayer - BaseControllerScript를 상속받은 슈팅 플레이어
@@ -32,7 +31,6 @@ namespace game
         engine::Rigidbody* m_rigidbody = nullptr;
         AimPointer* m_aimPointer = nullptr;
         TempBulletFactory* m_bulletFactory = nullptr;
-        CharacterAnimationFSM* m_charAnimFSM = nullptr;
 
         // 이동 속도
         float m_moveSpeed = 5.0f;

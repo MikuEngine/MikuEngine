@@ -20,33 +20,33 @@ namespace engine
     {
         m_globalCachedDatas.reserve(100);
         m_sceneCachedDatas.reserve(200);
-        
+
         CreateGeometryData();
     }
 
     void AssetManager::Shutdown()
     {
-        m_sceneCachedDatas.clear();
-        m_globalCachedDatas.clear();
-        m_tempAssets.fill(nullptr);
-        
-        m_soundDatas.clear();
-        m_staticMeshDatas.clear();
-        m_materialDatas.clear();
-        m_skeletonDatas.clear();
-        m_skeletalMeshDatas.clear();
-        m_animationDatas.clear();
-        m_simpleMeshDatas.clear();
-        m_spriteDatas.clear();
-        m_spriteAnimationDatas.clear();
-        m_geometryDatas.clear();
+      m_sceneCachedDatas.clear();
+      m_globalCachedDatas.clear();
+      m_tempAssets.fill(nullptr);
+
+      m_soundDatas.clear();
+      m_staticMeshDatas.clear();
+      m_materialDatas.clear();
+      m_skeletonDatas.clear();
+      m_skeletalMeshDatas.clear();
+      m_animationDatas.clear();
+      m_simpleMeshDatas.clear();
+      m_spriteDatas.clear();
+      m_spriteAnimationDatas.clear();
+      m_geometryDatas.clear();
     }
 
     void AssetManager::CleanupSceneScope()
     {
-        m_sceneCachedDatas.clear();
+      m_sceneCachedDatas.clear();
 
-        m_tempAssets.fill(nullptr);
+      m_tempAssets.fill(nullptr);
     }
 
     std::shared_ptr<StaticMeshData> AssetManager::GetOrCreateStaticMeshData(const std::string& filePath, LifeScope scope)
@@ -211,7 +211,7 @@ namespace engine
         return spriteData;
     }
 
-    std::shared_ptr<SoundData> AssetManager::GetOrCreateSoundData(const std::string& filePath, LifeScope scope)
+    std::shared_ptr<SoundData> AssetManager::GetOrCreateSoundData(const std::string &filePath, LifeScope scope, const std::string &option)
     {
         if (auto find = m_soundDatas.find(filePath); find != m_soundDatas.end())
         {
@@ -221,7 +221,7 @@ namespace engine
             }
         }
 
-        Sound* sound = SoundSystem::Get().CreateSound(filePath, false); // AudioSource decides 3D/2D, here we just load
+        Sound *sound = SoundSystem::Get().CreateSound(filePath, option);
         if (!sound) return nullptr;
 
         auto soundData = std::make_shared<SoundData>(sound);
@@ -284,9 +284,9 @@ namespace engine
             }
         }
 
-        assert(false && "없는 기본 도형. Initialize에 추가 필요");
+          assert(false && "없는 기본 도형. Initialize에 추가 필요");
 
-        return nullptr;
+          return nullptr;
     }
 
     void AssetManager::CreateGeometryData()

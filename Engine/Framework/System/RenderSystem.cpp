@@ -150,7 +150,7 @@ namespace engine
         if (renderer->HasRenderType(RenderType::Screen))
         {
             m_screenDirty = true;
-
+            m_screenLayoutDirty = true;
             AddRenderer(m_screenList, renderer, RenderType::Screen);
         }
     }
@@ -421,11 +421,19 @@ namespace engine
             // Screen 렌더링은 각 Renderer에서 필요한 state를 설정함
             auto drawList = RebuildScreenDrawList(m_screenList);
 
+            UpdateCanvasLayout();
+
             for (auto renderer : drawList)
             {
                 if (renderer->IsActive())
+                {
                     renderer->Draw(RenderType::Screen);
+                }
             }
+
+            // 복구
+            context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+            context->OMSetDepthStencilState(nullptr, 0);
         }
         graphics.EndDrawScreenPass();
 
@@ -564,6 +572,7 @@ namespace engine
     void RenderSystem::MarkScreenDirty()
     {
         m_screenDirty = true;
+        m_screenLayoutDirty = true;
     }
 
     void RenderSystem::AddRenderer(std::vector<Renderer*>& v, Renderer* renderer, RenderType type)
@@ -965,6 +974,47 @@ namespace engine
             });
 
         return drawList;
+    }
+
+    void RenderSystem::UpdateCanvasLayout()
+    {
+        auto vp = GraphicsDevice::Get().GetViewport();
+        const float vw = vp.Width;
+        const float vh = vp.Height;
+
+        const bool viewportChanged = (vw != m_prevViewportW || vh != m_prevViewportH);
+        if (!m_screenLayoutDirty && !viewportChanged) return;
+
+        std::unordered_set<Canvas*> canvases;
+        canvases.reserve(m_screenList.size());
+
+        for (auto* renderer : m_screenList)
+        {
+            if (!renderer) continue;
+
+            auto* ui = dynamic_cast<UIElement*>(renderer);
+            if (!ui) continue;
+
+            Canvas* c = ui->GetCanvasInParent();
+            if (!c) continue;
+
+            canvases.insert(c);
+        }
+
+        if (canvases.empty())
+        {
+            m_screenLayoutDirty = true;
+            return;
+        }
+
+        m_prevViewportW = vw;
+        m_prevViewportH = vh;
+        m_screenLayoutDirty = false;
+
+        for (Canvas* c : canvases)
+        {
+            c->ReclaulateLayout(vw, vh);
+        }
     }
 
     void TransparentRenderItem::Render() const

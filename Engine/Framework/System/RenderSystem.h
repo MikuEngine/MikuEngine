@@ -104,6 +104,10 @@ namespace engine
         bool m_screenDirty = true;
         std::uint64_t m_screenSerialCounter = 0;
 
+        float m_prevViewportW = -1.0f;
+        float m_prevViewportH = -1.0f;
+        bool  m_screenLayoutDirty = true;
+
     public:
         RenderSystem();
 
@@ -134,7 +138,7 @@ namespace engine
         void DrawSkybox();
         void DrawTransparents(const Vector3& cameraPosition);
 
-        //void RebuildScreenDrawList();
         std::vector<Renderer*> RebuildScreenDrawList(const std::vector<Renderer*>& v);
+        void UpdateCanvasLayout();
     };
 }

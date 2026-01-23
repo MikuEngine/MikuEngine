@@ -41,7 +41,7 @@ namespace game
         // 총알 GameObject 생성
         auto* bulletGO = CreateGameObject("Bullet");
         bulletGO->GetTransform()->SetLocalPosition(position);
-        bulletGO->GetTransform()->SetLocalScale(engine::Vector3(0.2f, 0.2f, 0.2f));
+        bulletGO->GetTransform()->SetLocalScale(engine::Vector3(1.2f, 1.2f, 1.2f));
 
         // StaticMeshRenderer 추가 (Sphere)
         auto* renderer = bulletGO->AddComponent<engine::StaticMeshRenderer>();

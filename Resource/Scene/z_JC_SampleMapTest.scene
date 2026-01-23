@@ -482,119 +482,49 @@
                     ]
                 },
                 {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "Idle",
-                    "States": [
-                        {
-                            "Name": "Idle",
-                            "IsDefault": true,
-                            "Transitions": [
-                                {
-                                    "ToState": "MoveUp",
-                                    "ConditionParameter": "MoveUp",
-                                    "ConditionType": 4,
-                                    "FloatThreshold": 0.0,
-                                    "IntThreshold": 0,
-                                    "HasExitTime": false,
-                                    "ExitTime": 0.0
-                                },
-                                {
-                                    "ToState": "MoveDown",
-                                    "ConditionParameter": "MoveDown",
-                                    "ConditionType": 4,
-                                    "FloatThreshold": 0.0,
-                                    "IntThreshold": 0,
-                                    "HasExitTime": false,
-                                    "ExitTime": 0.0
-                                },
-                                {
-                                    "ToState": "MoveLeft",
-                                    "ConditionParameter": "MoveLeft",
-                                    "ConditionType": 4,
-                                    "FloatThreshold": 0.0,
-                                    "IntThreshold": 0,
-                                    "HasExitTime": false,
-                                    "ExitTime": 0.0
-                                },
-                                {
-                                    "ToState": "MoveRight",
-                                    "ConditionParameter": "MoveRight",
-                                    "ConditionType": 4,
-                                    "FloatThreshold": 0.0,
-                                    "IntThreshold": 0,
-                                    "HasExitTime": false,
-                                    "ExitTime": 0.0
-                                }
-                            ]
-                        },
-                        {
-                            "Name": "MoveUp",
-                            "IsDefault": false,
-                            "Transitions": [
-                                {
-                                    "ToState": "Idle",
-                                    "ConditionParameter": "MoveUp",
-                                    "ConditionType": 5,
-                                    "FloatThreshold": 0.0,
-                                    "IntThreshold": 0,
-                                    "HasExitTime": false,
-                                    "ExitTime": 0.0
-                                }
-                            ]
-                        },
-                        {
-                            "Name": "MoveDown",
-                            "IsDefault": false,
-                            "Transitions": [
-                                {
-                                    "ToState": "Idle",
-                                    "ConditionParameter": "MoveDown",
-                                    "ConditionType": 5,
-                                    "FloatThreshold": 0.0,
-                                    "IntThreshold": 0,
-                                    "HasExitTime": false,
-                                    "ExitTime": 0.0
-                                }
-                            ]
-                        },
-                        {
-                            "Name": "MoveLeft",
-                            "IsDefault": false,
-                            "Transitions": [
-                                {
-                                    "ToState": "Idle",
-                                    "ConditionParameter": "MoveLeft",
-                                    "ConditionType": 5,
-                                    "FloatThreshold": 0.0,
-                                    "IntThreshold": 0,
-                                    "HasExitTime": false,
-                                    "ExitTime": 0.0
-                                }
-                            ]
-                        },
-                        {
-                            "Name": "MoveRight",
-                            "IsDefault": false,
-                            "Transitions": [
-                                {
-                                    "ToState": "Idle",
-                                    "ConditionParameter": "MoveRight",
-                                    "ConditionType": 5,
-                                    "FloatThreshold": 0.0,
-                                    "IntThreshold": 0,
-                                    "HasExitTime": false,
-                                    "ExitTime": 0.0
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Type": "zJCTestPlayer",
+                    "Type": "TestShootingPlayer",
                     "Active": true,
                     "MoveSpeed": 5.0,
-                    "FSMInitialized": true
+                    "EnableUpperBodyAim": true,
+                    "FSMInitialized": false
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "AimPointer",
+                    "Active": true,
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
+                    },
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "TempBulletFactory",
+                    "Active": true,
+                    "BulletSpeed": 15.0,
+                    "FireRate": 0.20000000298023224,
+                    "BulletLifetime": 3.0
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "ReferenceResolution": {
+                        "x": 1920.0,
+                        "y": 1080.0
+                    },
+                    "SortingOrder": 0
                 }
             ]
         }

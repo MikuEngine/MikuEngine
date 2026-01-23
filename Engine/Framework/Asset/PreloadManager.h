@@ -34,7 +34,7 @@ namespace engine
 
 	private:
 		void LoadSceneResourceWorker(const std::string& sceneName);
-		void LoadAsset(const std::string& type, const std::string& path, bool isGlobal);
+		void LoadAsset(const json& assetData, bool isGlobal);
 
 	private:
 		friend class Singleton<PreloadManager>;

@@ -181,6 +181,7 @@ namespace engine
         ImGui_ImplDX11_InvalidateDeviceObjects();
         ImGui_ImplDX11_CreateDeviceObjects();
 
+        SoundSystem::Get().Initialize();
         AssetManager::Get().Initialize();
         ResourceManager::Get().Initialize();
 
@@ -193,7 +194,6 @@ namespace engine
         // Physics 시스템 초기화
         PhysicsSystem::Get().Initialize();
 
-        SoundSystem::Get().Initialize();
 
 #ifdef _DEBUG
         EditorManager::Get().Initialize();
