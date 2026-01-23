@@ -36,7 +36,7 @@
                 },
                 {
                     "Type": "FreeCameraController",
-                    "Active": true,
+                    "Active": false,
                     "MoveSpeed": 10.0
                 }
             ]
@@ -303,7 +303,7 @@
         },
         {
             "ID": 6,
-            "Name": "GameObject",
+            "Name": "Light_Test1",
             "Active": true,
             "Components": [
                 {
@@ -349,7 +349,7 @@
         },
         {
             "ID": 7,
-            "Name": "GameObject",
+            "Name": "Light_Test2",
             "Active": true,
             "Components": [
                 {
