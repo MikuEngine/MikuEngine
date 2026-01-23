@@ -1,12 +1,7 @@
 #include "EnginePCH.h"
 #include "PhysicsMaterial.h"
 
-// PhysicsSystem 전방 선언 (순환 참조 방지)
-namespace engine
-{
-    class PhysicsSystem;
-}
-
+#include "Framework/System/SystemManager.h"
 #include "Framework/Physics/PhysicsSystem.h"
 
 namespace engine
@@ -31,7 +26,7 @@ namespace engine
 
         m_desc = desc;
 
-        physx::PxPhysics* physics = PhysicsSystem::Get().GetPxPhysics();
+        physx::PxPhysics* physics = SystemManager::Get().GetPhysicsSystem().GetPxPhysics();
         if (!physics)
         {
             return false;

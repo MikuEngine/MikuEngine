@@ -6,6 +6,9 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Framework/System/SoundSystem.h"
+#include "Framework/System/SystemManager.h"
+#include "Framework/Physics/PhysicsSystem.h"
+#include "Framework/Physics/CollisionSystem.h"
 
 namespace engine
 {
@@ -42,6 +45,12 @@ namespace engine
             m_isSceneChanged = false;
             m_sceneState = SceneState::Loading;
             
+            // CollisionSystem의 활성 쌍 클리어
+            SystemManager::Get().GetCollisionSystem().ClearActivePairs();
+            
+            // PhysX 씬 먼저 정리 (GameObject 파괴 전에 PxActor 해제)          
+            m_scene->ClearPhysicsScene();
+
             if (isPlaying)
             {
                 SoundSystem::Get().StopAll();
@@ -67,6 +76,9 @@ namespace engine
             if (!PreloadManager::Get().IsLoading())
             {
                 m_scene->Load();
+
+                // 물리 씬 생성 (씬 로드 후)
+                SystemManager::Get().GetPhysicsSystem().CreateScenePhysics();
 
                 m_sceneState = SceneState::Active;
 

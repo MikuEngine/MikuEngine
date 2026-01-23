@@ -4,8 +4,11 @@
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/System/SystemManager.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/PhysicsUtility.h"
+#include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
 
 namespace engine
 {
@@ -32,8 +35,11 @@ namespace engine
             return;
         }
 
-        // PhysicsSystem에 등록
-        PhysicsSystem::Get().RegisterRigidbody(this);
+        // Scene에 등록
+        if (Scene* scene = SceneManager::Get().GetScene())
+        {
+            scene->RegisterRigidbody(this);
+        }
 
         // Collider들에게 알림
         NotifyCollidersAttached();
@@ -44,13 +50,23 @@ namespace engine
         // Collider들에게 분리 알림
         NotifyCollidersDetached();
 
-        // PhysicsSystem에서 해제
-        PhysicsSystem::Get().UnregisterRigidbody(this);
+        // Scene에서 해제
+        Scene* scene = SceneManager::Get().GetScene();
+        if (scene)
+        {
+            scene->UnregisterRigidbody(this);
+        }
 
         // PxActor 해제
+        // 주의: PxScene이 release되면 내부 Actor들도 자동 해제됨
+        // PxScene이 이미 해제된 경우 m_actor->release() 호출하면 안됨
         if (m_actor)
         {
-            m_actor->release();
+            // PxScene이 아직 존재하면 Actor를 수동으로 해제
+            if (scene && scene->GetPxScene())
+            {
+                m_actor->release();
+            }
             m_actor = nullptr;
         }
 
@@ -74,7 +90,10 @@ namespace engine
         if (m_actor)
         {
             // 기존 Actor 해제
-            PhysicsSystem::Get().UnregisterRigidbody(this);
+            if (Scene* scene = SceneManager::Get().GetScene())
+            {
+                scene->UnregisterRigidbody(this);
+            }
             NotifyCollidersDetached();
             m_actor->release();
             m_actor = nullptr;
@@ -83,7 +102,10 @@ namespace engine
             CreatePxActor();
             if (m_actor)
             {
-                PhysicsSystem::Get().RegisterRigidbody(this);
+                if (Scene* scene = SceneManager::Get().GetScene())
+                {
+                    scene->RegisterRigidbody(this);
+                }
                 NotifyCollidersAttached();
             }
         }
@@ -700,7 +722,7 @@ namespace engine
 
     void Rigidbody::CreatePxActor()
     {
-        physx::PxPhysics* physics = PhysicsSystem::Get().GetPxPhysics();
+        physx::PxPhysics* physics = SystemManager::Get().GetPhysicsSystem().GetPxPhysics();
         if (!physics)
         {
             return;

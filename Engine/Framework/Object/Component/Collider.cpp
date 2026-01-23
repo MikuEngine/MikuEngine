@@ -4,10 +4,12 @@
 #include "Framework/Object/Component/Rigidbody.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/System/SystemManager.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/PhysicsUtility.h"
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
 
 namespace engine
 {
@@ -59,8 +61,11 @@ namespace engine
             CreateOwnedStaticActor();
         }
 
-        // PhysicsSystem에 등록
-        PhysicsSystem::Get().RegisterCollider(this);
+        // Scene에 등록
+        if (Scene* scene = SceneManager::Get().GetScene())
+        {
+            scene->RegisterCollider(this);
+        }
 
         // WorldScale 적용 (부모 스케일 포함)
         if (m_syncWithTransform && m_shape && GetTransform())
@@ -75,43 +80,54 @@ namespace engine
 
     void Collider::OnDestroy()
     {
-        // CollisionSystem에서 정리
-        CollisionSystem::Get().OnColliderDestroyed(this);
-
-        // PhysicsSystem에서 해제
-        PhysicsSystem::Get().UnregisterCollider(this);
-
-        // Shape 정리
-        if (m_shape)
+        // Scene 및 PxScene 존재 여부 확인
+        Scene* scene = SceneManager::Get().GetScene();
+        physx::PxScene* pxScene = scene ? scene->GetPxScene() : nullptr;
+        
+        // Scene에서 정리 (이벤트 큐 및 Collider 컨테이너)
+        if (scene)
         {
-            if (m_attachedRigidbody)
-            {
-                physx::PxRigidActor* actor = m_attachedRigidbody->GetPxActor();
-                if (actor)
-                {
-                    actor->detachShape(*m_shape);
-                }
-            }
-            else if (m_ownedStaticActor)
-            {
-                m_ownedStaticActor->detachShape(*m_shape);
-            }
-
-            m_shape->release();
-            m_shape = nullptr;
+            scene->OnColliderDestroyed(this);
         }
+        
+        // CollisionSystem에서 활성 쌍 정리
+        SystemManager::Get().GetCollisionSystem().OnColliderDestroyed(this);
 
-        // Static Actor 정리
-        if (m_ownedStaticActor)
+        // PhysX 리소스 정리
+        // 주의: PxScene이 release되면 내부 Shape/Actor들도 자동 해제됨
+        // PxScene이 이미 해제된 경우에는 수동 해제하면 안됨
+        if (pxScene)
         {
-            physx::PxScene* pxScene = PhysicsSystem::Get().GetActivePxScene();
-            if (pxScene)
+            // Shape 정리
+            if (m_shape)
+            {
+                if (m_attachedRigidbody)
+                {
+                    physx::PxRigidActor* actor = m_attachedRigidbody->GetPxActor();
+                    if (actor)
+                    {
+                        actor->detachShape(*m_shape);
+                    }
+                }
+                else if (m_ownedStaticActor)
+                {
+                    m_ownedStaticActor->detachShape(*m_shape);
+                }
+
+                m_shape->release();
+            }
+
+            // Static Actor 정리
+            if (m_ownedStaticActor)
             {
                 pxScene->removeActor(*m_ownedStaticActor);
+                m_ownedStaticActor->release();
             }
-            m_ownedStaticActor->release();
-            m_ownedStaticActor = nullptr;
         }
+        
+        // 포인터 초기화 (PxScene 존재 여부와 무관)
+        m_shape = nullptr;
+        m_ownedStaticActor = nullptr;
 
         Component::OnDestroy();
     }
@@ -155,7 +171,7 @@ namespace engine
     {
         m_layer = layer;
         // PhysicsLayerMatrix에서 자동으로 충돌 마스크 가져오기
-        m_collisionMask = PhysicsSystem::Get().GetLayerMatrix().GetCollisionMask(layer);
+        m_collisionMask = SystemManager::Get().GetPhysicsSystem().GetLayerMatrix().GetCollisionMask(layer);
         UpdateFilterData();
     }
 
@@ -189,7 +205,7 @@ namespace engine
             m_ownedStaticActor->detachShape(*m_shape);
 
             // Scene에서 제거 후 해제
-            physx::PxScene* pxScene = PhysicsSystem::Get().GetActivePxScene();
+            physx::PxScene* pxScene = SystemManager::Get().GetPhysicsSystem().GetActivePxScene();
             if (pxScene)
             {
                 pxScene->removeActor(*m_ownedStaticActor);
@@ -243,7 +259,7 @@ namespace engine
         {
             // 독립 Static Actor 정리
             m_ownedStaticActor->detachShape(*m_shape);
-            physx::PxScene* pxScene = PhysicsSystem::Get().GetActivePxScene();
+            physx::PxScene* pxScene = SystemManager::Get().GetPhysicsSystem().GetActivePxScene();
             if (pxScene)
             {
                 pxScene->removeActor(*m_ownedStaticActor);
@@ -379,7 +395,7 @@ namespace engine
         {
             m_layer = j["layer"].get<uint32_t>();
             // PhysicsLayerMatrix에서 자동으로 충돌 마스크 가져오기
-            m_collisionMask = PhysicsSystem::Get().GetLayerMatrix().GetCollisionMask(m_layer);
+            m_collisionMask = SystemManager::Get().GetPhysicsSystem().GetLayerMatrix().GetCollisionMask(m_layer);
         }
         // collisionMask는 더 이상 씬에서 로드하지 않음 (PhysicsLayerMatrix에서 자동 설정)
     }
@@ -427,7 +443,7 @@ namespace engine
 
     void Collider::CreateShape()
     {
-        physx::PxPhysics* physics = PhysicsSystem::Get().GetPxPhysics();
+        physx::PxPhysics* physics = SystemManager::Get().GetPhysicsSystem().GetPxPhysics();
         if (!physics)
         {
             return;
@@ -441,7 +457,7 @@ namespace engine
         }
 
         // 기본 재질 사용
-        physx::PxMaterial* material = PhysicsSystem::Get().GetDefaultMaterial();
+        physx::PxMaterial* material = SystemManager::Get().GetPhysicsSystem().GetDefaultMaterial();
         if (!material)
         {
             return;
@@ -539,7 +555,7 @@ namespace engine
             return;
         }
 
-        physx::PxPhysics* physics = PhysicsSystem::Get().GetPxPhysics();
+        physx::PxPhysics* physics = SystemManager::Get().GetPhysicsSystem().GetPxPhysics();
         if (!physics)
         {
             return;
@@ -579,7 +595,7 @@ namespace engine
             isSim, isTrigger, static_cast<unsigned int>(flags));
 
         // Scene에 추가
-        physx::PxScene* pxScene = PhysicsSystem::Get().GetActivePxScene();
+        physx::PxScene* pxScene = SystemManager::Get().GetPhysicsSystem().GetActivePxScene();
         if (pxScene)
         {
             pxScene->addActor(*m_ownedStaticActor);

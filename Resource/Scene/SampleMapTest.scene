@@ -1,6 +1,6 @@
 {
     "Name": "SampleMapTest",
-    "NumGameObjects": 43,
+    "NumGameObjects": 45,
     "GameObjects": [
         {
             "ID": 0,
@@ -442,6 +442,16 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false
+                },
+                {
+                    "Type": "TestShootingPlayer",
+                    "Active": true,
+                    "MoveSpeed": 5.0,
+                    "FireRate": 0.20000000298023224,
+                    "BulletSpeed": 1.0,
+                    "BulletLifetime": 3.0,
+                    "EnableUpperBodyAim": true,
+                    "FSMInitialized": false
                 }
             ]
         },
@@ -2840,6 +2850,138 @@
                 {
                     "Type": "PlayButtonController",
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 43,
+            "Name": "Canvas_UI",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 44,
+            "ParentID": 43,
+            "Name": "UI_DashCool",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/Miku.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                },
+                {
+                    "Type": "UIFollowTarget",
+                    "Active": true,
+                    "TargetName": "Player",
+                    "Offset": {
+                        "x": -5.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    }
                 }
             ]
         }

@@ -1,8 +1,6 @@
 ﻿#pragma once
 
 #include "Common/Utility/Singleton.h"
-#include "Framework/Physics/PhysicsSystem.h"
-#include "Framework/Physics/CollisionSystem.h"
 #include "Framework/System/SoundSystem.h"
 
 namespace engine
@@ -15,11 +13,14 @@ namespace engine
     class LightSystem;
     class UIEventSystem;
     class ParticleSystem;
+    class PhysicsSystem;
+    class CollisionSystem;
 
     class SystemManager :
         public Singleton<SystemManager>
     {
     private:
+        // 시스템 (unique_ptr로 관리)
         std::unique_ptr<ScriptSystem> m_scriptSystem;
         std::unique_ptr<TransformSystem> m_transformSystem;
         std::unique_ptr<RenderSystem> m_renderSystem;
@@ -28,8 +29,10 @@ namespace engine
         std::unique_ptr<LightSystem> m_lightSystem;
         std::unique_ptr<UIEventSystem> m_uiEventSystem;
         std::unique_ptr<ParticleSystem> m_particleSystem;
-
-        // PhysicsSystem과 CollisionSystem은 Singleton이므로 별도 멤버 불필요
+        
+        // 물리 시스템 (unique_ptr로 관리)
+        std::unique_ptr<PhysicsSystem> m_physicsSystem;
+        std::unique_ptr<CollisionSystem> m_collisionSystem;
 
     private:
         SystemManager();
@@ -47,7 +50,7 @@ namespace engine
         LightSystem& GetLightSystem() const;
         ParticleSystem& GetParticleSystem() const;
 
-        // 물리 시스템 접근 (Singleton 래핑)
+        // 물리 시스템 접근
         PhysicsSystem& GetPhysicsSystem() const;
         CollisionSystem& GetCollisionSystem() const;
 

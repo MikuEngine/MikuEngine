@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "PhysicsSystem.h"
 
+#include "Framework/System/SystemManager.h"
 #include "Framework/Physics/PhysicsUtility.h"
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/Object/Component/Rigidbody.h"
@@ -11,11 +12,78 @@
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
 #include "Framework/Physics/PhysicsDebugRenderer.h"
+#include "Framework/Physics/PhysicsCallback.h"
 
 namespace engine
 {
     // ═══════════════════════════════════════════════════════════════
-    // 생명주기
+    // 소멸자 - PhysX 코어 리소스만 정리
+    // ═══════════════════════════════════════════════════════════════
+
+    PhysicsSystem::~PhysicsSystem()
+    {
+        ReleasePhysXResources();
+    }
+
+    void PhysicsSystem::ReleasePhysXResources()
+    {
+        if (!m_isInitialized)
+        {
+            return;
+        }
+
+        // 디버그 렌더러 정리
+        PhysicsDebugRenderer::Get().Shutdown();
+
+        // 기본 재질 해제
+        if (m_defaultMaterial)
+        {
+            m_defaultMaterial->release();
+            m_defaultMaterial = nullptr;
+        }
+
+        // Extensions 종료
+        PxCloseExtensions();
+
+        // CPU Dispatcher 해제
+        if (m_cpuDispatcher)
+        {
+            m_cpuDispatcher->release();
+            m_cpuDispatcher = nullptr;
+        }
+
+        // Physics 해제
+        if (m_physics)
+        {
+            m_physics->release();
+            m_physics = nullptr;
+        }
+
+        // PVD 해제
+        if (m_pvd)
+        {
+            physx::PxPvdTransport* transport = m_pvd->getTransport();
+            m_pvd->release();
+            m_pvd = nullptr;
+            if (transport)
+            {
+                transport->release();
+            }
+        }
+
+        // Foundation 해제
+        if (m_foundation)
+        {
+            m_foundation->release();
+            m_foundation = nullptr;
+        }
+
+        m_isInitialized = false;
+        LOG_PRINT("[PhysicsSystem] Shutdown complete");
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 초기화
     // ═══════════════════════════════════════════════════════════════
 
     void PhysicsSystem::Initialize(const PhysicsSettings& settings)
@@ -96,90 +164,25 @@ namespace engine
         LOG_PRINT("[PhysicsSystem] Initialized successfully");
     }
 
-    void PhysicsSystem::Shutdown()
+    // ═══════════════════════════════════════════════════════════════
+    // 씬 물리 관리
+    // ═══════════════════════════════════════════════════════════════
+
+    void PhysicsSystem::CreateScenePhysics(const PhysicsSceneSettings& settings)
     {
         if (!m_isInitialized)
         {
             return;
         }
 
-        // 디버그 렌더러 정리
-        PhysicsDebugRenderer::Get().Shutdown();
-
-        // Scene 데이터 정리
-        for (auto& [scene, data] : m_sceneDataMap)
-        {
-            if (data.controllerManager)
-            {
-                data.controllerManager->release();
-            }
-            if (data.pxScene)
-            {
-                data.pxScene->release();
-            }
-        }
-        m_sceneDataMap.clear();
-
-        // 기본 재질 해제
-        if (m_defaultMaterial)
-        {
-            m_defaultMaterial->release();
-            m_defaultMaterial = nullptr;
-        }
-
-        // Extensions 종료
-        PxCloseExtensions();
-
-        // CPU Dispatcher 해제
-        if (m_cpuDispatcher)
-        {
-            m_cpuDispatcher->release();
-            m_cpuDispatcher = nullptr;
-        }
-
-        // Physics 해제
-        if (m_physics)
-        {
-            m_physics->release();
-            m_physics = nullptr;
-        }
-
-        // PVD 해제
-        if (m_pvd)
-        {
-            physx::PxPvdTransport* transport = m_pvd->getTransport();
-            m_pvd->release();
-            m_pvd = nullptr;
-            if (transport)
-            {
-                transport->release();
-            }
-        }
-
-        // Foundation 해제
-        if (m_foundation)
-        {
-            m_foundation->release();
-            m_foundation = nullptr;
-        }
-
-        m_isInitialized = false;
-        LOG_PRINT("[PhysicsSystem] Shutdown complete");
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // Scene 관리
-    // ═══════════════════════════════════════════════════════════════
-
-    void PhysicsSystem::CreateScenePhysics(Scene* scene, const PhysicsSceneSettings& settings)
-    {
-        if (!m_isInitialized || !scene)
+        Scene* scene = SceneManager::Get().GetScene();
+        if (!scene)
         {
             return;
         }
 
-        // 이미 존재하면 스킵
-        if (m_sceneDataMap.find(scene) != m_sceneDataMap.end())
+        // 이미 PxScene이 있으면 스킵
+        if (scene->GetPxScene())
         {
             return;
         }
@@ -191,30 +194,25 @@ namespace engine
         sceneDesc.filterShader = PhysicsFilterShader;
         sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS;
         
-        // Kinematic-Static 충돌 감지 활성화
-        // PhysX 5.x에서는 필터 셰이더에서만 처리 가능
-        // (staticKinematicFilteringMode는 PhysX 4.x용)
-        
         // 솔버 설정
         sceneDesc.solverType = physx::PxSolverType::ePGS;
 
         // PxScene 생성
-        PxSceneData data;
-        data.pxScene = m_physics->createScene(sceneDesc);
+        physx::PxScene* pxScene = m_physics->createScene(sceneDesc);
         
-        if (!data.pxScene)
+        if (!pxScene)
         {
             LOG_ERROR("[PhysicsSystem] Failed to create PxScene");
             return;
         }
 
         // CharacterController Manager 생성
-        data.controllerManager = PxCreateControllerManager(*data.pxScene);
+        physx::PxControllerManager* controllerManager = PxCreateControllerManager(*pxScene);
 
         // PVD 클라이언트 설정
         if (m_pvd && m_pvd->isConnected())
         {
-            physx::PxPvdSceneClient* pvdClient = data.pxScene->getScenePvdClient();
+            physx::PxPvdSceneClient* pvdClient = pxScene->getScenePvdClient();
             if (pvdClient)
             {
                 pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
@@ -223,17 +221,22 @@ namespace engine
             }
         }
 
-        // 먼저 map에 저장 (이동 후 주소가 변경되므로)
-        m_sceneDataMap[scene] = std::move(data);
-        
-        // map에 저장된 후의 콜백 주소로 설정 (중요!)
-        PxSceneData& storedData = m_sceneDataMap[scene];
-        storedData.pxScene->setSimulationEventCallback(&storedData.eventCallback);
+        // Scene에 물리 데이터 전달
+        scene->CreatePhysicsScene(pxScene, controllerManager);
         
         LOG_PRINT("[PhysicsSystem] Created physics scene");
 
         // 이미 씬에 존재하는 물리 컴포넌트들을 등록
         RegisterExistingPhysicsComponents(scene);
+    }
+
+    void PhysicsSystem::ClearScenePhysics()
+    {
+        Scene* scene = SceneManager::Get().GetScene();
+        if (scene)
+        {
+            scene->ClearPhysicsScene();
+        }
     }
 
     void PhysicsSystem::RegisterExistingPhysicsComponents(Scene* scene)
@@ -253,7 +256,7 @@ namespace engine
                 {
                     rb->Awake();  // Actor 생성
                 }
-                RegisterRigidbody(rb);
+                scene->RegisterRigidbody(rb);
             }
 
             // Collider 등록 및 초기화
@@ -263,7 +266,7 @@ namespace engine
                 {
                     collider->Awake();  // Shape 생성
                 }
-                RegisterCollider(collider);
+                scene->RegisterCollider(collider);
             }
 
             // CharacterController 등록 및 초기화
@@ -273,42 +276,9 @@ namespace engine
                 {
                     controller->Awake();  // Controller 생성
                 }
-                RegisterController(controller);
+                scene->RegisterController(controller);
             }
         }
-    }
-
-    void PhysicsSystem::DestroyScenePhysics(Scene* scene)
-    {
-        auto it = m_sceneDataMap.find(scene);
-        if (it == m_sceneDataMap.end())
-        {
-            return;
-        }
-
-        PxSceneData& data = it->second;
-
-        // 컴포넌트 정리
-        data.rigidbodies.clear();
-        data.colliders.clear();
-        data.controllers.clear();
-
-        // CharacterController Manager 해제
-        if (data.controllerManager)
-        {
-            data.controllerManager->release();
-            data.controllerManager = nullptr;
-        }
-
-        // PxScene 해제
-        if (data.pxScene)
-        {
-            data.pxScene->release();
-            data.pxScene = nullptr;
-        }
-
-        m_sceneDataMap.erase(it);
-        LOG_PRINT("[PhysicsSystem] Destroyed physics scene");
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -317,155 +287,33 @@ namespace engine
 
     void PhysicsSystem::Update(float deltaTime)
     {
-        Scene* activeScene = SceneManager::Get().GetScene();
-        if (activeScene)
-        {
-            Update(activeScene, deltaTime);
-        }
-    }
-
-    void PhysicsSystem::Update(Scene* scene, float deltaTime)
-    {
-        PxSceneData* data = GetSceneData(scene);
-        if (!data || !data->pxScene)
+        Scene* scene = SceneManager::Get().GetScene();
+        if (!scene || !scene->GetPxScene())
         {
             return;
         }
 
         // 1. Transform → PhysX 동기화 (Kinematic, 수동 이동)
-        SyncTransformsToPhysics(*data);
+        SyncTransformsToPhysics(scene);
 
         // 2. Fixed Timestep 시뮬레이션
-        data->accumulator += deltaTime;
+        float& accumulator = scene->GetPhysicsAccumulator();
+        accumulator += deltaTime;
         
         uint32_t steps = 0;
-        while (data->accumulator >= m_settings.fixedTimeStep && 
+        while (accumulator >= m_settings.fixedTimeStep && 
                steps < m_settings.maxSubSteps)
         {
-            Simulate(*data, m_settings.fixedTimeStep);
-            data->accumulator -= m_settings.fixedTimeStep;
+            Simulate(scene, m_settings.fixedTimeStep);
+            accumulator -= m_settings.fixedTimeStep;
             steps++;
         }
 
         // 3. PhysX → Transform 동기화 (Dynamic)
-        SyncPhysicsToTransforms(*data);
+        SyncPhysicsToTransforms(scene);
 
         // 4. 충돌 이벤트 처리
-        CollisionSystem::Get().ProcessEvents();
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // 컴포넌트 등록/해제
-    // ═══════════════════════════════════════════════════════════════
-
-    void PhysicsSystem::RegisterRigidbody(Rigidbody* rb)
-    {
-        if (!rb) return;
-
-        PxSceneData* data = GetActiveSceneData();
-        if (!data) return;
-
-        // 중복 체크
-        auto it = std::find(data->rigidbodies.begin(), data->rigidbodies.end(), rb);
-        if (it != data->rigidbodies.end()) return;
-
-        data->rigidbodies.push_back(rb);
-
-        // PxActor를 Scene에 추가
-        physx::PxRigidActor* actor = rb->GetPxActor();
-        if (actor && data->pxScene)
-        {
-            data->pxScene->addActor(*actor);
-            // LOG_PRINT("[PhysicsSystem] Rigidbody Actor added to scene: type={}, shapes={}",
-            //     rb->IsDynamic() ? "Dynamic" : (rb->IsKinematic() ? "Kinematic" : "Static"),
-            //     actor->getNbShapes());
-        }
-        else
-        {
-            LOG_ERROR("[PhysicsSystem] Failed to add Rigidbody Actor to scene: actor={}, scene={}",
-                actor != nullptr, data->pxScene != nullptr);
-        }
-    }
-
-    void PhysicsSystem::UnregisterRigidbody(Rigidbody* rb)
-    {
-        if (!rb) return;
-
-        PxSceneData* data = GetActiveSceneData();
-        if (!data) return;
-
-        // PxActor를 Scene에서 제거
-        physx::PxRigidActor* actor = rb->GetPxActor();
-        if (actor && data->pxScene)
-        {
-            data->pxScene->removeActor(*actor);
-        }
-
-        // 컨테이너에서 제거 (swap and pop)
-        auto it = std::find(data->rigidbodies.begin(), data->rigidbodies.end(), rb);
-        if (it != data->rigidbodies.end())
-        {
-            *it = data->rigidbodies.back();
-            data->rigidbodies.pop_back();
-        }
-    }
-
-    void PhysicsSystem::RegisterCollider(Collider* collider)
-    {
-        if (!collider) return;
-
-        PxSceneData* data = GetActiveSceneData();
-        if (!data) return;
-
-        // 중복 체크
-        auto it = std::find(data->colliders.begin(), data->colliders.end(), collider);
-        if (it != data->colliders.end()) return;
-
-        data->colliders.push_back(collider);
-    }
-
-    void PhysicsSystem::UnregisterCollider(Collider* collider)
-    {
-        if (!collider) return;
-
-        PxSceneData* data = GetActiveSceneData();
-        if (!data) return;
-
-        // 컨테이너에서 제거
-        auto it = std::find(data->colliders.begin(), data->colliders.end(), collider);
-        if (it != data->colliders.end())
-        {
-            *it = data->colliders.back();
-            data->colliders.pop_back();
-        }
-    }
-
-    void PhysicsSystem::RegisterController(CharacterController* controller)
-    {
-        if (!controller) return;
-
-        PxSceneData* data = GetActiveSceneData();
-        if (!data) return;
-
-        auto it = std::find(data->controllers.begin(), data->controllers.end(), controller);
-        if (it != data->controllers.end()) return;
-
-        data->controllers.push_back(controller);
-    }
-
-    void PhysicsSystem::UnregisterController(CharacterController* controller)
-    {
-        if (!controller) return;
-
-        PxSceneData* data = GetActiveSceneData();
-        if (!data) return;
-
-        auto it = std::find(data->controllers.begin(), data->controllers.end(), controller);
-        if (it != data->controllers.end())
-        {
-            *it = data->controllers.back();
-            data->controllers.pop_back();
-        }
+        SystemManager::Get().GetCollisionSystem().ProcessEvents();
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -541,7 +389,7 @@ namespace engine
         pxDir.normalize();
 
         const physx::PxU32 maxHits = 256;
-        std::vector<physx::PxRaycastHit> hitBuffer(maxHits);  // 힙에 동적 할당
+        std::vector<physx::PxRaycastHit> hitBuffer(maxHits);
         physx::PxRaycastBuffer hits(hitBuffer.data(), maxHits);
 
         physx::PxQueryFilterData filterData;
@@ -726,40 +574,45 @@ namespace engine
     // 접근자
     // ═══════════════════════════════════════════════════════════════
 
-    physx::PxScene* PhysicsSystem::GetPxScene(Scene* scene) const
-    {
-        auto it = m_sceneDataMap.find(scene);
-        if (it != m_sceneDataMap.end())
-        {
-            return it->second.pxScene;
-        }
-        return nullptr;
-    }
-
     physx::PxScene* PhysicsSystem::GetActivePxScene() const
     {
-        Scene* activeScene = SceneManager::Get().GetScene();
-        return GetPxScene(activeScene);
+        Scene* scene = SceneManager::Get().GetScene();
+        return scene ? scene->GetPxScene() : nullptr;
     }
 
-    physx::PxControllerManager* PhysicsSystem::GetControllerManager(Scene* scene) const
+    physx::PxControllerManager* PhysicsSystem::GetActiveControllerManager() const
     {
-        auto it = m_sceneDataMap.find(scene);
-        if (it != m_sceneDataMap.end())
-        {
-            return it->second.controllerManager;
-        }
-        return nullptr;
+        Scene* scene = SceneManager::Get().GetScene();
+        return scene ? scene->GetControllerManager() : nullptr;
+    }
+
+    const std::vector<Collider*>& PhysicsSystem::GetRegisteredColliders() const
+    {
+        static const std::vector<Collider*> empty;
+        Scene* scene = SceneManager::Get().GetScene();
+        return scene ? scene->GetColliders() : empty;
+    }
+
+    const std::vector<CharacterController*>& PhysicsSystem::GetRegisteredControllers() const
+    {
+        static const std::vector<CharacterController*> empty;
+        Scene* scene = SceneManager::Get().GetScene();
+        return scene ? scene->GetControllers() : empty;
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // Private 헬퍼
+    // 시뮬레이션 헬퍼
     // ═══════════════════════════════════════════════════════════════
 
-    void PhysicsSystem::SyncTransformsToPhysics(PxSceneData& data)
+    void PhysicsSystem::SyncTransformsToPhysics(Scene* scene)
     {
+        if (!scene) return;
+
+        const auto& rigidbodies = scene->GetRigidbodies();
+        const auto& colliders = scene->GetColliders();
+
         // Rigidbody 동기화
-        for (Rigidbody* rb : data.rigidbodies)
+        for (Rigidbody* rb : rigidbodies)
         {
             if (!rb || !rb->GetPxActor()) continue;
 
@@ -785,7 +638,7 @@ namespace engine
         }
 
         // Collider의 Transform 스케일 동기화
-        for (Collider* collider : data.colliders)
+        for (Collider* collider : colliders)
         {
             if (collider)
             {
@@ -794,7 +647,7 @@ namespace engine
         }
 
         // 독립 Collider 동기화 (Rigidbody 없는 Collider)
-        for (Collider* col : data.colliders)
+        for (Collider* col : colliders)
         {
             if (!col || col->HasRigidbody()) continue;
 
@@ -811,21 +664,29 @@ namespace engine
         }
     }
 
-    void PhysicsSystem::Simulate(PxSceneData& data, float timeStep)
+    void PhysicsSystem::Simulate(Scene* scene, float timeStep)
     {
-        if (!data.pxScene) return;
+        if (!scene) return;
+        
+        physx::PxScene* pxScene = scene->GetPxScene();
+        if (!pxScene) return;
 
-        data.isSimulating = true;
-        data.pxScene->simulate(timeStep);
-        data.pxScene->fetchResults(true);
-        data.isSimulating = false;
+        scene->SetSimulating(true);
+        pxScene->simulate(timeStep);
+        pxScene->fetchResults(true);
+        scene->SetSimulating(false);
     }
 
-    void PhysicsSystem::SyncPhysicsToTransforms(PxSceneData& data)
+    void PhysicsSystem::SyncPhysicsToTransforms(Scene* scene)
     {
+        if (!scene) return;
+        
+        physx::PxScene* pxScene = scene->GetPxScene();
+        if (!pxScene) return;
+
         // Active Actors만 처리 (최적화)
         physx::PxU32 nbActiveActors = 0;
-        physx::PxActor** activeActors = data.pxScene->getActiveActors(nbActiveActors);
+        physx::PxActor** activeActors = pxScene->getActiveActors(nbActiveActors);
 
         for (physx::PxU32 i = 0; i < nbActiveActors; ++i)
         {
@@ -846,47 +707,5 @@ namespace engine
             physx::PxTransform pxTransform = dynamic->getGlobalPose();
             PhysicsUtility::ApplyPxTransformToTransform(pxTransform, rb->GetTransform());
         }
-    }
-
-    PhysicsSystem::PxSceneData* PhysicsSystem::GetSceneData(Scene* scene)
-    {
-        auto it = m_sceneDataMap.find(scene);
-        if (it != m_sceneDataMap.end())
-        {
-            return &it->second;
-        }
-        return nullptr;
-    }
-
-    PhysicsSystem::PxSceneData* PhysicsSystem::GetActiveSceneData()
-    {
-        Scene* activeScene = SceneManager::Get().GetScene();
-        return GetSceneData(activeScene);
-    }
-
-    const std::vector<Collider*>& PhysicsSystem::GetRegisteredColliders() const
-    {
-        static const std::vector<Collider*> empty;
-        
-        Scene* activeScene = SceneManager::Get().GetScene();
-        auto it = m_sceneDataMap.find(activeScene);
-        if (it != m_sceneDataMap.end())
-        {
-            return it->second.colliders;
-        }
-        return empty;
-    }
-
-    const std::vector<CharacterController*>& PhysicsSystem::GetRegisteredControllers() const
-    {
-        static const std::vector<CharacterController*> empty;
-        
-        Scene* activeScene = SceneManager::Get().GetScene();
-        auto it = m_sceneDataMap.find(activeScene);
-        if (it != m_sceneDataMap.end())
-        {
-            return it->second.controllers;
-        }
-        return empty;
     }
 }

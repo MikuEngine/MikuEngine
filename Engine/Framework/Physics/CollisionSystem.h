@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <functional>
 
-#include "Common/Utility/Singleton.h"
 #include "Framework/Physics/CollisionTypes.h"
 
 namespace engine
@@ -13,18 +12,30 @@ namespace engine
     class Collider;
     class GameObject;
     class ScriptBase;
+    class Scene;
 
     // ═══════════════════════════════════════════════════════════════
     // CollisionSystem - 충돌 이벤트 처리 및 콜백 디스패치
+    // 
+    // 설계:
+    //   - 이벤트 큐는 Scene이 소유
+    //   - CollisionSystem은 이벤트 처리 로직만 담당
+    //   - 활성 충돌/트리거 쌍만 자체 관리 (Stay 이벤트 추적용)
     // ═══════════════════════════════════════════════════════════════
 
-    class CollisionSystem : public Singleton<CollisionSystem>
+    class CollisionSystem
     {
-    private:
-        // 이벤트 큐
-        std::vector<CollisionEvent> m_pendingCollisionEvents;
-        std::vector<TriggerEvent> m_pendingTriggerEvents;
+    public:
+        CollisionSystem() = default;
+        ~CollisionSystem() = default;
+        
+        // 복사/이동 금지
+        CollisionSystem(const CollisionSystem&) = delete;
+        CollisionSystem& operator=(const CollisionSystem&) = delete;
+        CollisionSystem(CollisionSystem&&) = delete;
+        CollisionSystem& operator=(CollisionSystem&&) = delete;
 
+    private:
         // Trigger Stay 추적 (PhysX가 제공하지 않음)
         // Handle 기반으로 추적하여 댕글링 방지
         struct TriggerPair
@@ -42,7 +53,6 @@ namespace engine
         {
             size_t operator()(const TriggerPair& p) const
             {
-                // index와 generation을 조합하여 해시 생성
                 size_t h1 = std::hash<uint64_t>()(
                     (static_cast<uint64_t>(p.triggerHandle.index) << 32) | p.triggerHandle.generation);
                 size_t h2 = std::hash<uint64_t>()(
@@ -53,8 +63,7 @@ namespace engine
 
         std::unordered_set<TriggerPair, TriggerPairHash> m_activeTriggerPairs;
 
-        // Collision Stay 추적 (PhysX가 매 프레임 Stay 이벤트를 보내지 않을 수 있음)
-        // Handle 기반으로 추적하여 댕글링 방지
+        // Collision Stay 추적
         struct CollisionPair
         {
             Handle colliderAHandle;
@@ -62,7 +71,6 @@ namespace engine
 
             bool operator==(const CollisionPair& rhs) const
             {
-                // 순서 무관하게 비교 (A-B == B-A)
                 return (colliderAHandle == rhs.colliderAHandle && colliderBHandle == rhs.colliderBHandle) ||
                        (colliderAHandle == rhs.colliderBHandle && colliderBHandle == rhs.colliderAHandle);
             }
@@ -72,31 +80,20 @@ namespace engine
         {
             size_t operator()(const CollisionPair& p) const
             {
-                // 순서 무관하게 해시 생성 (A-B == B-A)
                 size_t h1 = std::hash<uint64_t>()(
                     (static_cast<uint64_t>(p.colliderAHandle.index) << 32) | p.colliderAHandle.generation);
                 size_t h2 = std::hash<uint64_t>()(
                     (static_cast<uint64_t>(p.colliderBHandle.index) << 32) | p.colliderBHandle.generation);
-                // 순서 무관하게 하기 위해 작은 값과 큰 값을 조합
                 return h1 < h2 ? (h1 ^ (h2 << 1)) : (h2 ^ (h1 << 1));
             }
         };
 
         std::unordered_set<CollisionPair, CollisionPairHash> m_activeCollisionPairs;
 
-    private:
-        CollisionSystem() = default;
-        ~CollisionSystem() = default;
-
     public:
         // ═══════════════════════════════════════
-        // 이벤트 큐잉 (PhysicsCallback에서 호출)
-        // ═══════════════════════════════════════
-        void QueueCollisionEvent(const CollisionEvent& event);
-        void QueueTriggerEvent(const TriggerEvent& event);
-
-        // ═══════════════════════════════════════
         // 이벤트 처리 (프레임 끝에서 호출)
+        // Scene의 이벤트 큐를 처리
         // ═══════════════════════════════════════
         void ProcessEvents();
 
@@ -114,13 +111,19 @@ namespace engine
         std::vector<Collider*> GetTriggerOverlaps(Collider* trigger) const;
 
         // ═══════════════════════════════════════
-        // 이벤트 큐 클리어
+        // 이벤트 큐 클리어 (하위 호환성)
+        // Scene::ClearPendingEvents()로 대체됨
         // ═══════════════════════════════════════
         void ClearPendingEvents();
+        
+        // ═══════════════════════════════════════
+        // 씬 전환 시 활성 쌍 클리어
+        // ═══════════════════════════════════════
+        void ClearActivePairs();
 
     private:
-        void ProcessCollisionEvents();
-        void ProcessTriggerEvents();
+        void ProcessCollisionEvents(Scene* scene);
+        void ProcessTriggerEvents(Scene* scene);
 
         void DispatchCollisionEnter(Ptr<Collider> a, Ptr<Collider> b, const std::vector<ContactPoint>& contacts);
         void DispatchCollisionStay(Ptr<Collider> a, Ptr<Collider> b, const std::vector<ContactPoint>& contacts);
@@ -130,16 +133,10 @@ namespace engine
         void DispatchTriggerStay(Ptr<Collider> trigger, Ptr<Collider> other);
         void DispatchTriggerExit(Ptr<Collider> trigger, Ptr<Collider> other);
 
-        // 접촉점 노말 반전 (상대방에게 전달할 때)
         std::vector<ContactPoint> FlipContactNormals(const std::vector<ContactPoint>& contacts);
-
-        // Handle로부터 TriggerPair 생성
         TriggerPair MakeTriggerPair(Collider* trigger, Collider* other);
 
-        // Script 콜백 헬퍼 (Push 방식)
         void NotifyScriptsCollision(GameObject* go, const CollisionInfo& info, CollisionEventType eventType);
         void NotifyScriptsTrigger(GameObject* go, const CollisionInfo& info, TriggerEventType eventType);
-
-        friend class Singleton<CollisionSystem>;
     };
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -52,9 +52,10 @@ namespace engine
             NotEquals,    // Float/Int != value
             BoolTrue,     // Bool == true
             BoolFalse,    // Bool == false
-            Trigger       // Trigger == true
+            Trigger,       // Trigger == true
+            Default         // 변수 초기화용
         };
-        ConditionType conditionType;
+        ConditionType conditionType = FSMTransition::ConditionType::Default;
         
         float floatThreshold = 0.0f;
         int intThreshold = 0;
