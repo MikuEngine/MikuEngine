@@ -51,6 +51,6 @@ namespace game
         engine::GameObject* m_optionPopUp = nullptr;
         engine::GameObject* m_blocker = nullptr;
         engine::GameObject* m_groupSelect = nullptr;
-        engine::GameObject* m_groupUpgrade = nullptr;
+        engine::GameObject* m_upgradePopUp = nullptr;
     };
 }

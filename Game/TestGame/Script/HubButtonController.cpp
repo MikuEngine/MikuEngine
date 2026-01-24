@@ -33,7 +33,7 @@ namespace game
         if (m_blocker) m_blocker->SetActive(false);
 
         m_groupSelect = engine::GameObject::Find("UIGroup_Select");
-        m_groupUpgrade = engine::GameObject::Find("UIGroup_Upgrade");
+        m_upgradePopUp = engine::GameObject::Find("UI_UpgradePopUp");
 
         m_isOptionOpen = false;
         m_isUpgradeOpen = false;
@@ -126,9 +126,8 @@ namespace game
         if (m_blocker)
             m_blocker->SetActive(open);
 
-        if (!m_optionPopUp)
-            return;
-
+        if (!m_optionPopUp) return;
+           
         if (auto* anim = m_optionPopUp->GetComponent<game::UIPopUpAnimator>())
         {
             open ? anim->Open() : anim->Close();
@@ -143,11 +142,25 @@ namespace game
     {
         m_isUpgradeOpen = open;
 
+        if (m_blocker)
+            m_blocker->SetActive(open);
+
+        if (m_upgradePopUp)
+            m_upgradePopUp->SetActive(open);
+
+        if (!m_upgradePopUp) return;
+
+        if (auto* anim = m_upgradePopUp->GetComponent<game::UIPopUpAnimator>())
+        {
+            open ? anim->Open() : anim->Close();
+        }
+        else
+        {
+            m_upgradePopUp->SetActive(open);
+        }
+
         if (m_groupSelect)
             m_groupSelect->SetActive(!open);
-
-        if (m_groupUpgrade)
-            m_groupUpgrade->SetActive(open);
     }
 
     void HubButtonController::HandleEscape()

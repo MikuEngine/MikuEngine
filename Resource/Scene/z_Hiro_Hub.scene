@@ -2442,7 +2442,7 @@
         {
             "ID": 34,
             "ParentID": 14,
-            "Name": "UIGroup_Upgrade",
+            "Name": "UI_UpgradePopUp",
             "Active": false,
             "Components": [
                 {
@@ -2510,6 +2510,12 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true
+                },
+                {
+                    "Type": "UIPopUpAnimator",
+                    "Active": true,
+                    "Duration": 0.15000000596046448,
+                    "ClosedOffsetY": -700.0
                 }
             ]
         },
