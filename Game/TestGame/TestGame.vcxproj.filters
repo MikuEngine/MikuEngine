@@ -30,6 +30,8 @@
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
     <ClCompile Include="Script\UIFollowTarget.cpp" />
     <ClCompile Include="Script\UpgradeSystem.cpp" />
+    <ClCompile Include="Script\MonsterScript.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -58,6 +60,7 @@
     <ClInclude Include="Script\UIPopUpAnimator.h" />
     <ClInclude Include="Script\UIFollowTarget.h" />
     <ClInclude Include="Script\UpgradeSystem.h" />
+    <ClInclude Include="Script\MonsterScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\TestHeader.hlsli" />

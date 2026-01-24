@@ -3,6 +3,7 @@
 
 #include "AimPointer.h"
 #include "BulletFactory.h"
+#include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
@@ -339,6 +340,8 @@ namespace game
 				params.damage = 10;  // TODO: 멤버 변수로 관리
 
 				m_bulletFactory->Fire(playerPos, direction, params);
+
+
 
 				// 펀치 애니메이션 재생 (발사할 때마다)
 				if (m_animFSM)

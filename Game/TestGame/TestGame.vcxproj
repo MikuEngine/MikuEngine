@@ -159,6 +159,7 @@
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\HubButtonController.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
+    <ClCompile Include="Script\MonsterScript.cpp" />
     <ClCompile Include="Script\TempMonster.cpp" />
     <ClCompile Include="Script\TestShootingPlayer.cpp" />
     <ClCompile Include="Script\TitleButtonController.cpp">
@@ -244,6 +245,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Script\MonsterScript.h" />
     <ClInclude Include="Script\TempMonster.h" />
     <ClInclude Include="Script\TestShootingPlayer.h" />
     <ClInclude Include="Script\TitleButtonController.h">

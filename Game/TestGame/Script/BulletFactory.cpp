@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BulletFactory.h"
 #include "BulletPlayer.h"
 
@@ -6,6 +6,7 @@
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/SphereCollider.h>
 #include <Framework/Physics/PhysicsLayer.h>
+#include <Framework/Asset/Prefab.h>
 
 namespace game
 {
@@ -16,37 +17,40 @@ namespace game
                               const engine::Vector3& direction,
                               const BulletParams& params)
     {
-        // ─────────────────────────────────────────────
-        // 1. GameObject 생성
-        // ─────────────────────────────────────────────
-        auto* bulletGO = CreateGameObject("Bullet");
-        bulletGO->GetTransform()->SetLocalPosition(position);
-        bulletGO->GetTransform()->SetLocalScale(engine::Vector3(1.2f, 1.2f, 1.2f));
+        //// ─────────────────────────────────────────────
+        //// 1. GameObject 생성
+        //// ─────────────────────────────────────────────
+        //auto* bulletGO = CreateGameObject("Bullet");
+        //bulletGO->GetTransform()->SetLocalPosition(position);
+        //bulletGO->GetTransform()->SetLocalScale(engine::Vector3(1.2f, 1.2f, 1.2f));
 
-        // ─────────────────────────────────────────────
-        // 2. StaticMeshRenderer 추가
-        // ─────────────────────────────────────────────
-        auto* renderer = bulletGO->AddComponent<engine::StaticMeshRenderer>();
-        renderer->SetMesh("Resource/Model/Sphere.fbx");
-        renderer->SetVertexShader("Resource/Shader/Vertex/Static_VS.hlsl");
-        renderer->SetOpaquePixelShader("Resource/Shader/Pixel/GBuffer_PS.hlsl");
+        //// ─────────────────────────────────────────────
+        //// 2. StaticMeshRenderer 추가
+        //// ─────────────────────────────────────────────
+        //auto* renderer = bulletGO->AddComponent<engine::StaticMeshRenderer>();
+        //renderer->SetMesh("Resource/Model/Sphere.fbx");
+        //renderer->SetVertexShader("Resource/Shader/Vertex/Static_VS.hlsl");
+        //renderer->SetOpaquePixelShader("Resource/Shader/Pixel/GBuffer_PS.hlsl");
 
-        // ─────────────────────────────────────────────
-        // 3. Rigidbody 추가 (Dynamic)
-        // ─────────────────────────────────────────────
-        auto* rb = bulletGO->AddComponent<engine::Rigidbody>();
-        rb->SetRigidbodyType(engine::RigidbodyType::Dynamic);
-        rb->SetUseGravity(false);
-        rb->SetLinearDamping(0.0f);
+        //// ─────────────────────────────────────────────
+        //// 3. Rigidbody 추가 (Dynamic)
+        //// ─────────────────────────────────────────────
+        //auto* rb = bulletGO->AddComponent<engine::Rigidbody>();
+        //rb->SetRigidbodyType(engine::RigidbodyType::Dynamic);
+        //rb->SetUseGravity(false);
+        //rb->SetLinearDamping(0.0f);
 
-        // ─────────────────────────────────────────────
-        // 4. SphereCollider 추가 (Trigger)
-        // ─────────────────────────────────────────────
-        auto* collider = bulletGO->AddComponent<engine::SphereCollider>();
-        collider->SetIsTrigger(true);
-        collider->SetRadius(1.1f);
-        collider->SetLayer(engine::PhysicsLayer::Projectile);
-        collider->SetCollisionMask(engine::PhysicsLayer::EnemyMask);
+        //// ─────────────────────────────────────────────
+        //// 4. SphereCollider 추가 (Trigger)
+        //// ─────────────────────────────────────────────
+        //auto* collider = bulletGO->AddComponent<engine::SphereCollider>();
+        //collider->SetIsTrigger(true);
+        //collider->SetRadius(1.1f);
+        //collider->SetLayer(engine::PhysicsLayer::Projectile);
+        //collider->SetCollisionMask(engine::PhysicsLayer::EnemyMask);
+
+        auto go = engine::Prefab::Instantiate("Bullet");
+        go->GetTransform()->SetLocalPosition(position);
 
         // ─────────────────────────────────────────────
         // 5. Movement 생성 및 초기화
@@ -57,7 +61,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 6. BulletPlayer 컴포넌트 추가 및 설정
         // ─────────────────────────────────────────────
-        auto* bullet = bulletGO->AddComponent<BulletPlayer>();
+        auto* bullet = go->GetComponent<BulletPlayer>();
         bullet->Setup(std::move(movement), params.lifetime);
     }
 
