@@ -145,9 +145,6 @@ namespace game
         if (m_blocker)
             m_blocker->SetActive(open);
 
-        if (m_upgradePopUp)
-            m_upgradePopUp->SetActive(open);
-
         if (!m_upgradePopUp) return;
 
         if (auto* anim = m_upgradePopUp->GetComponent<game::UIPopUpAnimator>())
