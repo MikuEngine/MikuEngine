@@ -212,6 +212,7 @@
     <ClCompile Include="Script\TestSound.cpp" />
     <ClCompile Include="Script\UIFollowTarget.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
+    <ClCompile Include="Script\UpgradeSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\TestVertexShader.hlsl">
@@ -296,6 +297,7 @@
     <ClInclude Include="Script\TestSound.h" />
     <ClInclude Include="Script\UIFollowTarget.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />
+    <ClInclude Include="Script\UpgradeSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">
