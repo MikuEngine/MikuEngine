@@ -1,4 +1,6 @@
-﻿#pragma once
+#pragma once
+
+#include <filesystem>
 
 namespace engine
 {
@@ -7,6 +9,9 @@ namespace engine
 
     // wstring/const wchar_t* -> string
     std::string ToMultibyte(std::wstring_view wideCharStr);
+
+    // std::filesystem::path -> UTF-8 string (for cross-platform file path handling)
+    std::string PathToUTF8(const std::filesystem::path& path);
 
     std::string FormatBytes(UINT64 bytes);
 }
