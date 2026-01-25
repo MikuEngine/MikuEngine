@@ -3,9 +3,11 @@
 
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/System/SystemManager.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/PhysicsUtility.h"
 #include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
 
 namespace engine
 {
@@ -31,19 +33,33 @@ namespace engine
             return;
         }
 
-        // PhysicsSystem에 등록
-        PhysicsSystem::Get().RegisterController(this);
+        // Scene에 등록
+        if (Scene* scene = SceneManager::Get().GetScene())
+        {
+            scene->RegisterController(this);
+        }
     }
 
     void CharacterController::OnDestroy()
     {
-        // PhysicsSystem에서 해제
-        PhysicsSystem::Get().UnregisterController(this);
+        // Scene 및 PxScene 존재 여부 확인
+        Scene* scene = SceneManager::Get().GetScene();
+        
+        // Scene에서 해제
+        if (scene)
+        {
+            scene->UnregisterController(this);
+        }
 
         // Controller 해제
+        // 주의: PxScene이 release되면 ControllerManager와 Controller도 자동 해제됨
+        // PxScene이 이미 해제된 경우에는 수동 해제하면 안됨
         if (m_controller)
         {
-            m_controller->release();
+            if (scene && scene->GetPxScene())
+            {
+                m_controller->release();
+            }
             m_controller = nullptr;
         }
 
@@ -390,13 +406,13 @@ namespace engine
             return;
         }
 
-        physx::PxControllerManager* manager = PhysicsSystem::Get().GetControllerManager(scene);
+        physx::PxControllerManager* manager = SystemManager::Get().GetPhysicsSystem().GetControllerManager(scene);
         if (!manager)
         {
             return;
         }
 
-        physx::PxMaterial* material = PhysicsSystem::Get().GetDefaultMaterial();
+        physx::PxMaterial* material = SystemManager::Get().GetPhysicsSystem().GetDefaultMaterial();
         if (!material)
         {
             return;

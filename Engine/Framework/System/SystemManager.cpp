@@ -25,16 +25,23 @@ namespace engine
         m_lightSystem{ std::make_unique<LightSystem>() },
         m_uiEventSystem{ std::make_unique<UIEventSystem>() },
         m_particleSystem{ std::make_unique<ParticleSystem>() },
+        m_physicsSystem{ std::make_unique<PhysicsSystem>() },
+        m_collisionSystem{ std::make_unique<CollisionSystem>() },
         m_pathfindingSystem{ std::make_unique<PathfindingSystem>() }
     {
-        // Singleton으로 자동관리 되는 System
-        // PhysicsSystem, CollisionSystem, SoundSystem
+        // SoundSystem만 Singleton으로 남아있음
     }
 
     SystemManager::~SystemManager() = default;
 
     void SystemManager::Shutdown()
     {
+        // 물리 시스템 먼저 종료 (다른 시스템에서 참조할 수 있으므로)
+        // 소멸자에서 자동으로 리소스 해제됨
+        m_collisionSystem.reset();  // STL 컨테이너만 있으므로 자동 정리
+        m_physicsSystem.reset();    // 소멸자에서 PhysX 리소스 해제
+        
+        // 나머지 시스템 종료
         m_scriptSystem.reset();
         m_transformSystem.reset();
         m_renderSystem.reset();
@@ -46,7 +53,6 @@ namespace engine
         m_pathfindingSystem.reset();
 
         // Singleton
-        PhysicsSystem::Get().Shutdown();
         SoundSystem::Get().Shutdown();
     }
 
@@ -92,18 +98,19 @@ namespace engine
 
     PhysicsSystem& SystemManager::GetPhysicsSystem() const
     {
-        return PhysicsSystem::Get();
+        return *m_physicsSystem.get();
     }
 
     CollisionSystem& SystemManager::GetCollisionSystem() const
     {
-        return CollisionSystem::Get();
+        return *m_collisionSystem.get();
     }
 
     UIEventSystem& SystemManager::GetUIEventSystem() const
     {
         return *m_uiEventSystem.get();
     }
+
     SoundSystem& SystemManager::GetSoundSystem() const
     {
         return SoundSystem::Get();

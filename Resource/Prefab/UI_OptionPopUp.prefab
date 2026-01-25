@@ -76,7 +76,7 @@
                 {
                     "Type": "UIPopUpAnimator",
                     "Active": true,
-                    "Duration": 0.25,
+                    "Duration": 0.15000000596046448,
                     "ClosedOffsetY": -700.0
                 }
             ]
@@ -1290,7 +1290,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "이펙트",
+                    "Text": "효과음",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 32,
                     "Color": {

@@ -262,6 +262,8 @@ namespace engine
 
 	void UIButton::OnGui()
 	{
+		UIElement::OnGui();
+
 		std::string selectedTex[4] = {};
 		static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga" };
 		static std::string hlslExtension{ ".hlsl" };

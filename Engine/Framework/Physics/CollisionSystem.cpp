@@ -6,36 +6,27 @@
 #include "Framework/Object/Component/Script.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Physics/PhysicsDebugRenderer.h"
+#include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
 
 namespace engine
 {
-    // ═══════════════════════════════════════════════════════════════
-    // 이벤트 큐잉
-    // ═══════════════════════════════════════════════════════════════
-
-    void CollisionSystem::QueueCollisionEvent(const CollisionEvent& event)
-    {
-        m_pendingCollisionEvents.push_back(event);
-    }
-
-    void CollisionSystem::QueueTriggerEvent(const TriggerEvent& event)
-    {
-        m_pendingTriggerEvents.push_back(event);
-    }
-
     // ═══════════════════════════════════════════════════════════════
     // 이벤트 처리
     // ═══════════════════════════════════════════════════════════════
 
     void CollisionSystem::ProcessEvents()
     {
+        Scene* scene = SceneManager::Get().GetScene();
+        if (!scene) return;
+
         // 디버그 렌더러 충돌 상태 초기화
         PhysicsDebugRenderer::Get().ClearCollidingState();
 
-        ProcessCollisionEvents();
-        ProcessTriggerEvents();
+        ProcessCollisionEvents(scene);
+        ProcessTriggerEvents(scene);
 
-        // 활성 충돌 쌍에 대해 매 프레임 MarkColliding 호출 (Stay 이벤트가 없어도 시각적 피드백 유지)
+        // 활성 충돌 쌍에 대해 매 프레임 MarkColliding 호출
         for (const auto& pair : m_activeCollisionPairs)
         {
             Ptr<Collider> colliderA(pair.colliderAHandle);
@@ -62,30 +53,31 @@ namespace engine
         }
     }
 
-    void CollisionSystem::ProcessCollisionEvents()
+    void CollisionSystem::ProcessCollisionEvents(Scene* scene)
     {
-        if (m_pendingCollisionEvents.empty())
+        auto& pendingEvents = scene->GetPendingCollisionEvents();
+        
+        if (pendingEvents.empty())
         {
             return;
         }
 
         // 우선순위로 정렬 (높은 것 먼저)
-        std::sort(m_pendingCollisionEvents.begin(), m_pendingCollisionEvents.end(),
+        std::sort(pendingEvents.begin(), pendingEvents.end(),
             [](const CollisionEvent& a, const CollisionEvent& b)
             {
                 return static_cast<int32_t>(a.priority) > static_cast<int32_t>(b.priority);
             });
 
         // 순서대로 처리
-        for (CollisionEvent& event : m_pendingCollisionEvents)
+        for (CollisionEvent& event : pendingEvents)
         {
-            // Ptr 유효성 검사 - 파괴된 오브젝트는 건너뜀
+            // Ptr 유효성 검사
             if (!event.colliderA || !event.colliderB)
             {
                 continue;
             }
 
-            // 이벤트 타입에 따라 디스패치
             switch (event.type)
             {
             case CollisionEventType::Enter:
@@ -102,15 +94,16 @@ namespace engine
             }
         }
 
-        m_pendingCollisionEvents.clear();
+        pendingEvents.clear();
     }
 
-    void CollisionSystem::ProcessTriggerEvents()
+    void CollisionSystem::ProcessTriggerEvents(Scene* scene)
     {
+        auto& pendingEvents = scene->GetPendingTriggerEvents();
+        
         // Enter/Exit 이벤트 처리
-        for (const TriggerEvent& event : m_pendingTriggerEvents)
+        for (const TriggerEvent& event : pendingEvents)
         {
-            // Ptr 유효성 검사
             if (!event.trigger || !event.other)
             {
                 continue;
@@ -130,15 +123,13 @@ namespace engine
             }
         }
 
-        m_pendingTriggerEvents.clear();
+        pendingEvents.clear();
 
         // Stay 이벤트 발생 (매 프레임 활성 쌍에 대해)
-        // 유효하지 않은 쌍은 제거
         std::vector<TriggerPair> invalidPairs;
 
         for (const TriggerPair& pair : m_activeTriggerPairs)
         {
-            // Handle로부터 Collider 복원 (Ptr 사용)
             Ptr<Collider> trigger(pair.triggerHandle);
             Ptr<Collider> other(pair.otherHandle);
 
@@ -148,7 +139,6 @@ namespace engine
             }
             else
             {
-                // 파괴된 오브젝트가 있으면 나중에 제거
                 invalidPairs.push_back(pair);
             }
         }
@@ -195,33 +185,21 @@ namespace engine
                 ++it;
             }
         }
-
-        // 대기 중인 이벤트에서 제거
-        // Ptr은 자동으로 무효화되므로 명시적 제거는 선택사항이지만,
-        // 메모리 절약을 위해 미리 제거
-        m_pendingCollisionEvents.erase(
-            std::remove_if(m_pendingCollisionEvents.begin(), m_pendingCollisionEvents.end(),
-                [collider](const CollisionEvent& e)
-                {
-                    return e.colliderA.Get() == collider || e.colliderB.Get() == collider;
-                }),
-            m_pendingCollisionEvents.end()
-        );
-
-        m_pendingTriggerEvents.erase(
-            std::remove_if(m_pendingTriggerEvents.begin(), m_pendingTriggerEvents.end(),
-                [collider](const TriggerEvent& e)
-                {
-                    return e.trigger.Get() == collider || e.other.Get() == collider;
-                }),
-            m_pendingTriggerEvents.end()
-        );
     }
 
     void CollisionSystem::ClearPendingEvents()
     {
-        m_pendingCollisionEvents.clear();
-        m_pendingTriggerEvents.clear();
+        Scene* scene = SceneManager::Get().GetScene();
+        if (scene)
+        {
+            scene->ClearPendingEvents();
+        }
+    }
+
+    void CollisionSystem::ClearActivePairs()
+    {
+        m_activeTriggerPairs.clear();
+        m_activeCollisionPairs.clear();
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -291,10 +269,8 @@ namespace engine
     void CollisionSystem::DispatchCollisionEnter(
         Ptr<Collider> a, Ptr<Collider> b, const std::vector<ContactPoint>& contacts)
     {
-        // 디스패치 시점에 다시 유효성 검사
         if (!a || !b) return;
 
-        // 디버그 렌더러에 충돌 상태 표시
         PhysicsDebugRenderer::Get().MarkColliding(a.Get());
         PhysicsDebugRenderer::Get().MarkColliding(b.Get());
 
@@ -317,10 +293,7 @@ namespace engine
         infoForB.gameObject = Ptr<GameObject>(goA);
         infoForB.contacts = FlipContactNormals(contacts);
 
-        // A의 모든 Script에 알림
         NotifyScriptsCollision(goA, infoForA, CollisionEventType::Enter);
-
-        // B의 모든 Script에도 알림
         NotifyScriptsCollision(goB, infoForB, CollisionEventType::Enter);
 
         // 활성 충돌 쌍에 추가
@@ -333,10 +306,8 @@ namespace engine
     void CollisionSystem::DispatchCollisionStay(
         Ptr<Collider> a, Ptr<Collider> b, const std::vector<ContactPoint>& contacts)
     {
-        // Enter와 유사하게 구현
         if (!a || !b) return;
 
-        // 디버그 렌더러에 충돌 상태 표시
         PhysicsDebugRenderer::Get().MarkColliding(a.Get());
         PhysicsDebugRenderer::Get().MarkColliding(b.Get());
 
@@ -345,21 +316,18 @@ namespace engine
 
         if (!goA || !goB) return;
 
-        // A에게 전달할 정보
         CollisionInfo infoForA;
         infoForA.collider = b;
         infoForA.rigidbody = Ptr<Rigidbody>(b->GetAttachedRigidbody());
         infoForA.gameObject = Ptr<GameObject>(goB);
         infoForA.contacts = contacts;
 
-        // B에게 전달할 정보 (노말 반전)
         CollisionInfo infoForB;
         infoForB.collider = a;
         infoForB.rigidbody = Ptr<Rigidbody>(a->GetAttachedRigidbody());
         infoForB.gameObject = Ptr<GameObject>(goA);
         infoForB.contacts = FlipContactNormals(contacts);
 
-        // Script에 알림
         NotifyScriptsCollision(goA, infoForA, CollisionEventType::Stay);
         NotifyScriptsCollision(goB, infoForB, CollisionEventType::Stay);
     }
@@ -383,7 +351,6 @@ namespace engine
         infoForB.rigidbody = Ptr<Rigidbody>(a->GetAttachedRigidbody());
         infoForB.gameObject = Ptr<GameObject>(goA);
 
-        // Script 콜백 호출
         NotifyScriptsCollision(goA, infoForA, CollisionEventType::Exit);
         NotifyScriptsCollision(goB, infoForB, CollisionEventType::Exit);
 
@@ -398,7 +365,6 @@ namespace engine
     {
         if (!trigger || !other) return;
 
-        // 디버그 렌더러에 충돌 상태 표시
         PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
         PhysicsDebugRenderer::Get().MarkColliding(other.Get());
 
@@ -407,19 +373,16 @@ namespace engine
 
         if (!goTrigger || !goOther) return;
 
-        // Trigger 측에 전달할 정보
         CollisionInfo infoForTrigger;
         infoForTrigger.collider = other;
         infoForTrigger.rigidbody = Ptr<Rigidbody>(other->GetAttachedRigidbody());
         infoForTrigger.gameObject = Ptr<GameObject>(goOther);
 
-        // Other 측에 전달할 정보
         CollisionInfo infoForOther;
         infoForOther.collider = trigger;
         infoForOther.rigidbody = Ptr<Rigidbody>(trigger->GetAttachedRigidbody());
         infoForOther.gameObject = Ptr<GameObject>(goTrigger);
 
-        // Script에 알림
         NotifyScriptsTrigger(goTrigger, infoForTrigger, TriggerEventType::Enter);
         NotifyScriptsTrigger(goOther, infoForOther, TriggerEventType::Enter);
     }
@@ -428,7 +391,6 @@ namespace engine
     {
         if (!trigger || !other) return;
 
-        // 디버그 렌더러에 충돌 상태 표시
         PhysicsDebugRenderer::Get().MarkColliding(trigger.Get());
         PhysicsDebugRenderer::Get().MarkColliding(other.Get());
 
@@ -437,19 +399,16 @@ namespace engine
 
         if (!goTrigger || !goOther) return;
 
-        // Trigger 측에 전달할 정보
         CollisionInfo infoForTrigger;
         infoForTrigger.collider = other;
         infoForTrigger.rigidbody = Ptr<Rigidbody>(other->GetAttachedRigidbody());
         infoForTrigger.gameObject = Ptr<GameObject>(goOther);
 
-        // Other 측에 전달할 정보
         CollisionInfo infoForOther;
         infoForOther.collider = trigger;
         infoForOther.rigidbody = Ptr<Rigidbody>(trigger->GetAttachedRigidbody());
         infoForOther.gameObject = Ptr<GameObject>(goTrigger);
 
-        // Script에 알림
         NotifyScriptsTrigger(goTrigger, infoForTrigger, TriggerEventType::Stay);
         NotifyScriptsTrigger(goOther, infoForOther, TriggerEventType::Stay);
     }
@@ -463,19 +422,16 @@ namespace engine
 
         if (!goTrigger || !goOther) return;
 
-        // Trigger 측에 전달할 정보
         CollisionInfo infoForTrigger;
         infoForTrigger.collider = other;
         infoForTrigger.rigidbody = Ptr<Rigidbody>(other->GetAttachedRigidbody());
         infoForTrigger.gameObject = Ptr<GameObject>(goOther);
 
-        // Other 측에 전달할 정보
         CollisionInfo infoForOther;
         infoForOther.collider = trigger;
         infoForOther.rigidbody = Ptr<Rigidbody>(trigger->GetAttachedRigidbody());
         infoForOther.gameObject = Ptr<GameObject>(goTrigger);
 
-        // Script에 알림
         NotifyScriptsTrigger(goTrigger, infoForTrigger, TriggerEventType::Exit);
         NotifyScriptsTrigger(goOther, infoForOther, TriggerEventType::Exit);
     }
@@ -491,7 +447,6 @@ namespace engine
         return flipped;
     }
 
-    //TriggerPair구조체 내부에서 Handle 멤버 사용함. 
     CollisionSystem::TriggerPair CollisionSystem::MakeTriggerPair(Collider* trigger, Collider* other)
     {
         TriggerPair pair;
@@ -529,7 +484,6 @@ namespace engine
         {
             if (pair.colliderAHandle == handle)
             {
-                // colliderB 찾기
                 Ptr<Collider> other(pair.colliderBHandle);
                 if (other)
                 {
@@ -538,7 +492,6 @@ namespace engine
             }
             else if (pair.colliderBHandle == handle)
             {
-                // colliderA 찾기
                 Ptr<Collider> other(pair.colliderAHandle);
                 if (other)
                 {

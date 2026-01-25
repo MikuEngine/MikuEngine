@@ -98,7 +98,7 @@ namespace engine
         m_soundData = AssetManager::Get().GetOrCreateSoundData(name);
     }
 
-    void AudioSource::Play(EventEndPlay callback, float fadeInDuration)
+    void AudioSource::Play(EventCallBack callback, float fadeInDuration)
     {
         m_isAutoStop = false;
 

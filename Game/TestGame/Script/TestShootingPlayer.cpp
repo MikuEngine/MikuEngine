@@ -3,6 +3,7 @@
 
 #include "AimPointer.h"
 #include "BulletFactory.h"
+#include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
@@ -49,9 +50,10 @@ namespace game
 		// 초기 회전 설정 (-Z 방향)
 		if (GetTransform())
 		{
+			m_currentRotationAngle = atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z);
 			engine::Quaternion initialRot = engine::Quaternion::CreateFromAxisAngle(
 				engine::Vector3::UnitY, 
-				atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z)
+				m_currentRotationAngle
 			);
 			GetTransform()->SetLocalRotation(initialRot);
 		}
@@ -68,9 +70,40 @@ namespace game
 
 		m_rigidbody = GetGameObject()->GetComponent<engine::Rigidbody>();
 		m_skeletalAnimator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
-		m_aimPointer = GetGameObject()->GetComponent<AimPointer>();
 
+		// ─────────────────────────────────────────────
+		// AimPointer: 씬에서 검색 (UI 팀과 공유 가능)
+		// ─────────────────────────────────────────────
+		// 먼저 같은 오브젝트에서 찾기 (하위 호환성)
+		m_aimPointer = GetGameObject()->GetComponent<AimPointer>();
+		if (!m_aimPointer)
+		{
+			auto* scene = engine::SceneManager::Get().GetScene();
+			if (scene)
+			{
+				// 설정된 이름의 오브젝트에서 검색
+				if (auto* aimGO = scene->FindGameObject(m_aimPointerObjectName))
+				{
+					m_aimPointer = aimGO->GetComponent<AimPointer>();
+				}
+				// 이름에 "AimPointer"가 포함된 오브젝트 검색 (폴백)
+				if (!m_aimPointer)
+				{
+					for (const auto& go : scene->GetGameObjects())
+					{
+						if (go && go->GetName().find("AimPointer") != std::string::npos)
+						{
+							m_aimPointer = go->GetComponent<AimPointer>();
+							if (m_aimPointer) break;
+						}
+					}
+				}
+			}
+		}
+
+		// ─────────────────────────────────────────────
 		// BulletFactory: 같은 오브젝트 또는 씬에서 검색
+		// ─────────────────────────────────────────────
 		m_bulletFactory = GetGameObject()->GetComponent<BulletFactory>();
 		if (!m_bulletFactory)
 		{
@@ -308,6 +341,8 @@ namespace game
 
 				m_bulletFactory->Fire(playerPos, direction, params);
 
+
+
 				// 펀치 애니메이션 재생 (발사할 때마다)
 				if (m_animFSM)
 				{
@@ -472,6 +507,24 @@ namespace game
 	{
 		if (!GetGameObject() || !GetTransform() || !m_aimPointer) return;
 
+		// ═══════════════════════════════════════════════════════════════
+		// 완전 벡터 기반 회전 (각도 정규화 없음, 조건 분기 최소화)
+		// ═══════════════════════════════════════════════════════════════
+		
+		UpdateAimTracking();
+
+		// ─────────────────────────────────────────────
+		// 1. 현재 캐릭터 방향 벡터 (각도에서 계산)
+		// ─────────────────────────────────────────────
+		engine::Vector3 currentDir(
+			sinf(m_currentRotationAngle),
+			0.0f,
+			cosf(m_currentRotationAngle)
+		);
+
+		// ─────────────────────────────────────────────
+		// 2. 목표 방향 벡터 결정
+		// ─────────────────────────────────────────────
 		engine::Vector3 moveDir = GetMoveInputDirection();
 		bool isMoving = moveDir.LengthSquared() > 0.001f;
 		
@@ -479,74 +532,127 @@ namespace game
 		
 		if (isMoving)
 		{
-			// 이동 중: 이동 방향 기준으로 회전
 			moveDir.y = 0.0f;
 			moveDir.Normalize();
-
-			bool isBackward = IsMovingBackward();
-			
-			if (isBackward)
-			{
-				// 뒤로 걷기: 이동 방향 180도 반대
-				targetDir = -moveDir;
-			}
-			else
-			{
-				// 앞으로 걷기: 이동 방향과 일치
-				targetDir = moveDir;
-			}
+			targetDir = IsMovingBackward() ? -moveDir : moveDir;
 		}
 		else
 		{
-			// Idle: 에임 방향과 마지막 이동 방향 비교
+			// Idle: 에임 방향과 마지막 이동 방향 비교 (벡터 내적 사용)
 			engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
 			engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
 			aimDir.y = 0.0f;
 			aimDir.Normalize();
 
-			// 마지막 이동 방향과 에임 방향의 각도 차이 계산 (방향 고려)
-			// atan2를 사용하여 -180~180도 범위의 각도 계산
-			float lastAngle = atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z);
-			float aimAngle = atan2f(aimDir.x, aimDir.z);
+			// 마지막 이동 방향과 에임 방향의 내적
+			float dotWithLast = m_lastMoveDirection.x * aimDir.x + m_lastMoveDirection.z * aimDir.z;
 			
-			// 각도 차이 계산 (-180~180도 범위로 정규화)
-			float angleDiff = aimAngle - lastAngle;
-			
-			// -180~180도 범위로 정규화
-			const float PI = 3.14159265359f;
-			while (angleDiff > PI)
-				angleDiff -= 2.0f * PI;
-			while (angleDiff < -PI)
-				angleDiff += 2.0f * PI;
-			
-			float angleDeg = engine::ToDegree(angleDiff);
-			float absAngleDeg = std::abs(angleDeg);
+			// 내적 < 0 이면 에임이 뒤쪽 (90도 이상) → 반대 방향으로 서기
+			targetDir = (dotWithLast < 0.0f) ? -m_lastMoveDirection : m_lastMoveDirection;
+		}
+		
+		targetDir.Normalize();
 
-			// 좌우 절대값 90도 이상 차이나면 뒤로 서기, 아니면 앞으로 서기
-			// +방향과 -방향 중 더 가까운 방향으로 회전
-			if (absAngleDeg >= 90.0f)
-			{
-				// 뒤로 서기: 마지막 이동 방향 180도 반대
-				targetDir = -m_lastMoveDirection;
-			}
-			else
-			{
-				// 앞으로 서기: 마지막 이동 방향과 일치
-				targetDir = m_lastMoveDirection;
-			}
+		// ─────────────────────────────────────────────
+		// 3. 목표 도달 확인 (내적으로)
+		// ─────────────────────────────────────────────
+		float dotToTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
+		
+		// 거의 같은 방향이면 회전 불필요
+		if (dotToTarget > 0.9999f)
+		{
+			return;
 		}
 
-		// 목표 회전 계산
-		float angleRad = atan2f(targetDir.x, targetDir.z);
-		engine::Quaternion targetRot = engine::Quaternion::CreateFromAxisAngle(engine::Vector3::UnitY, angleRad);
-
-		// 부드러운 회전 적용
-		engine::Quaternion currentRot = GetTransform()->GetLocalRotation();
-		float deltaTime = engine::Time::DeltaTime();
-		float rotationSpeed = 10.0f;  // 회전 속도
+		// ─────────────────────────────────────────────
+		// 4. 회전 방향 결정 (외적 기반, 조건 분기 없음)
+		// ─────────────────────────────────────────────
 		
-		engine::Quaternion newRot = engine::Quaternion::Slerp(currentRot, targetRot, rotationSpeed * deltaTime);
+		// 에임 이동 방향 (외적으로 계산됨)
+		float aimCross = GetAimRotationDirection();
+		
+		// 현재→목표 외적 (최단 경로 방향)
+		float targetCross = currentDir.z * targetDir.x - currentDir.x * targetDir.z;
+		
+		// 회전 방향 결정:
+		// - 에임이 움직이고 있으면 → 에임 방향 따라감
+		// - 에임이 멈춰있으면 → 최단 경로 (현재→목표 외적)
+		float rotationSign;
+		if (std::abs(aimCross) > 0.001f)
+		{
+			// 에임이 움직이는 방향으로
+			rotationSign = (aimCross > 0.0f) ? 1.0f : -1.0f;
+		}
+		else
+		{
+			// 에임이 멈춰있으면 최단 경로
+			rotationSign = (targetCross > 0.0f) ? 1.0f : -1.0f;
+		}
+
+		// ─────────────────────────────────────────────
+		// 5. 회전 적용
+		// ─────────────────────────────────────────────
+		float deltaTime = engine::Time::DeltaTime();
+		float rotationSpeed = 10.0f;
+		float rotationAmount = rotationSpeed * deltaTime;
+		
+		// 각도 업데이트 (정규화 없음 - 값이 커져도 sin/cos는 동일하게 동작)
+		m_currentRotationAngle += rotationSign * rotationAmount;
+		
+		// 쿼터니언 적용
+		engine::Quaternion newRot = engine::Quaternion::CreateFromAxisAngle(
+			engine::Vector3::UnitY, m_currentRotationAngle);
 		GetTransform()->SetLocalRotation(newRot);
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 에임 추적 유틸리티
+	// ═══════════════════════════════════════════════════════════════
+	
+	void TestShootingPlayer::UpdateAimTracking()
+	{
+		if (!m_aimPointer || !GetTransform()) return;
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 벡터 기반 에임 추적 (각도 래핑 문제 회피)
+		// 외적(Cross Product)을 사용하여 회전 방향 결정
+		// ═══════════════════════════════════════════════════════════════
+		
+		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+		engine::Vector3 currentAimDir = m_aimPointer->GetDirectionFrom(playerPos);
+		currentAimDir.y = 0.0f;
+		
+		if (currentAimDir.LengthSquared() < 0.001f) return;
+		currentAimDir.Normalize();
+		
+		if (!m_aimTrackingInitialized)
+		{
+			m_prevAimDirection = currentAimDir;
+			m_aimCrossProductSmoothed = 0.0f;
+			m_aimTrackingInitialized = true;
+			return;
+		}
+		
+		// ─────────────────────────────────────────────
+		// 외적으로 회전 방향 계산 (Y 성분만 사용)
+		// 정확한 외적 공식: (prev × current).y = prev.z * curr.x - prev.x * curr.z
+		//   양수 = current가 prev의 시계 방향 (오른쪽으로 회전)
+		//   음수 = current가 prev의 반시계 방향 (왼쪽으로 회전)
+		// ─────────────────────────────────────────────
+		float crossY = m_prevAimDirection.z * currentAimDir.x - m_prevAimDirection.x * currentAimDir.z;
+		
+		// 스무딩 적용 (빠른 반응을 위해 높은 값)
+		constexpr float SMOOTHING = 0.4f;
+		m_aimCrossProductSmoothed = m_aimCrossProductSmoothed * (1.0f - SMOOTHING) + crossY * SMOOTHING;
+		
+		m_prevAimDirection = currentAimDir;
+	}
+
+	float TestShootingPlayer::GetAimRotationDirection() const
+	{
+		// 양수: 에임이 시계 방향으로 이동 중 (CW, 오른쪽, 각도 증가)
+		// 음수: 에임이 반시계 방향으로 이동 중 (CCW, 왼쪽, 각도 감소)
+		return m_aimCrossProductSmoothed;
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -569,12 +675,17 @@ namespace game
 		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 1.0f, 1.0f, 100.0f);
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 3.0f, 0.5f, 10.0f);
 
+		// 참조 설정
+		ImGui::Separator();
+		ImGui::Text("References:");
+		ImGui::InputText("AimPointer Object", &m_aimPointerObjectName);
+		
 		// 기타
 		ImGui::Separator();
 		ImGui::Checkbox("Enable Upper Body Aim", &m_enableUpperBodyAim);
 
 		ImGui::Separator();
-		ImGui::Text("References:");
+		ImGui::Text("Cached References:");
 		ImGui::Text("  AimPointer: %s", m_aimPointer ? "Found" : "NOT FOUND");
 		ImGui::Text("  BulletFactory: %s", m_bulletFactory ? "Found" : "NOT FOUND");
 		ImGui::Text("  AnimFSM: %s", m_animFSM ? "Found" : "NOT FOUND");
@@ -587,8 +698,26 @@ namespace game
 
 		if (m_aimPointer)
 		{
-			float yaw = CalculateAimYaw();
-			ImGui::Text("  Aim Yaw: %.1f deg", yaw);
+			ImGui::Separator();
+			ImGui::Text("=== Rotation Debug ===");
+			
+			// 에임 외적 (회전 방향 결정에 사용)
+			float aimCross = GetAimRotationDirection();
+			
+			// 큰 글씨로 현재 상태 표시
+			if (std::abs(aimCross) > 0.001f)
+			{
+				if (aimCross > 0.0f)
+					ImGui::TextColored(ImVec4(0,1,0,1), ">>> CW (시계방향) >>>");
+				else
+					ImGui::TextColored(ImVec4(1,1,0,1), "<<< CCW (반시계) <<<");
+			}
+			else
+			{
+				ImGui::TextColored(ImVec4(0.5f,0.5f,0.5f,1), "--- NEUTRAL ---");
+			}
+			
+			ImGui::Text("Aim Cross: %.4f", aimCross);
 		}
 	}
 
@@ -599,6 +728,7 @@ namespace game
 		j["FireRate"] = m_fireRate;
 		j["BulletSpeed"] = m_bulletSpeed;
 		j["BulletLifetime"] = m_bulletLifetime;
+		j["AimPointerObjectName"] = m_aimPointerObjectName;
 		j["EnableUpperBodyAim"] = m_enableUpperBodyAim;
 		j["FSMInitialized"] = m_fsmInitialized;
 	}
@@ -615,6 +745,8 @@ namespace game
 			m_bulletSpeed = j["BulletSpeed"].get<float>();
 		if (j.contains("BulletLifetime"))
 			m_bulletLifetime = j["BulletLifetime"].get<float>();
+		if (j.contains("AimPointerObjectName"))
+			m_aimPointerObjectName = j["AimPointerObjectName"].get<std::string>();
 		if (j.contains("EnableUpperBodyAim"))
 			m_enableUpperBodyAim = j["EnableUpperBodyAim"].get<bool>();
 		if (j.contains("FSMInitialized"))

@@ -1201,7 +1201,7 @@
                 {
                     "Type": "UIPopUpAnimator",
                     "Active": true,
-                    "Duration": 0.25,
+                    "Duration": 0.15000000596046448,
                     "ClosedOffsetY": -700.0
                 }
             ]
@@ -2574,7 +2574,7 @@
                 {
                     "Type": "UIPopUpAnimator",
                     "Active": true,
-                    "Duration": 0.25,
+                    "Duration": 0.15000000596046448,
                     "ClosedOffsetY": -700.0
                 }
             ]

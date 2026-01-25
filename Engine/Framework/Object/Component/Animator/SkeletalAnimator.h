@@ -13,10 +13,17 @@ namespace engine
         Additive
     };
 
+    struct AnimationNotify
+    {
+        std::string name;
+        float time;
+    };
+
     struct AnimationResource
     {
         std::shared_ptr<AnimationData> data;
         std::string path;
+        std::vector<AnimationNotify> notifies;
     };
 
     struct AnimationState
@@ -66,12 +73,14 @@ namespace engine
         REGISTER_COMPONENT(SkeletalAnimator, Animator)
 
     private:
+        std::string m_selectedAnimName = "";
         std::unordered_map<std::string, AnimationResource> m_animations;
         std::vector<AnimationLayer> m_layers;
         std::shared_ptr<SkeletonData> m_skeletonData;
         std::vector<Bone> m_skeleton;
         BoneMatrixArray m_finalBoneMatrices;
         std::unordered_map<int, Quaternion> m_proceduralRotations;
+        std::unordered_map<std::string, EventCallBack> m_notifyCallbacks;
 
     public:
         void Initialize() override;
@@ -83,6 +92,10 @@ namespace engine
 
         void AddLayer(const std::string& layerName, float weight = 1.0f);
         void RemoveLayer(int layerIndex);
+
+        void AddNotify(const std::string& animName, const std::string& notifyName, float time = 0.0f);
+        void BindNotify(const std::string& notifyName, EventCallBack callback);
+        void UnbindNotify(const std::string& notifyName);
 
         void SetLayerMask(int layerIndex, const std::vector<std::string>& boneNames, bool active, bool isRecursive = true);
         void SetLayerWeight(int layerIndex, float weight);
@@ -105,7 +118,7 @@ namespace engine
             int layerIndex = 0,
             float speed = 1.0f);
         void Update() override;
-
+        void DrawTimeline(const std::string& animName);
 
         const BoneMatrixArray& GetFinalBoneMatrices() const;
 
@@ -125,5 +138,6 @@ namespace engine
             Vector3& outScale);
         void RenderBoneTree(int boneIndex, std::vector<std::uint8_t>& mask);
         void SetLayerMaskInternal(AnimationLayer& layer, const std::vector<std::string>& boneNames);
+        void CheckNotifies(const AnimationState& state, float prevTime, float currTime);
     };
 }

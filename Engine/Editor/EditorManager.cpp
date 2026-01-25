@@ -22,6 +22,7 @@
 #include "Framework/Object/Component/UI/UISlider.h"
 #include "Framework/Object/Component/UI/UIProgressBar.h"
 #include "Framework/Object/Component/UI/UIPanel.h"
+#include "Framework/Object/Component/UI/UIClickArea.h"
 #include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
 
 #include "Framework/System/SystemManager.h"
@@ -175,7 +176,7 @@ namespace engine
                 scene->LoadFromJson(g_tempScene);
 
                 // 물리 씬 생성
-                PhysicsSystem::Get().CreateScenePhysics(scene);
+                SystemManager::Get().GetPhysicsSystem().CreateScenePhysics();
 
                 m_editorState = EditorState::Play;
 
@@ -188,8 +189,8 @@ namespace engine
             {
                 auto scene = SceneManager::Get().GetScene();
                 
-                // 물리 씬 파괴
-                PhysicsSystem::Get().DestroyScenePhysics(scene);
+                // 물리 씬 정리
+                SystemManager::Get().GetPhysicsSystem().ClearScenePhysics();
                 
                 if (scene && !g_tempScene.empty())
                 {

@@ -141,7 +141,7 @@ namespace engine
         // bool 변환 (유효성 검사) - 최적화: Handle만 체크
         operator bool() const
         {
-            return m_handle.IsValid();
+            return m_handle.IsValid() && (GetObjectFromHandle(m_handle) != nullptr);
         }
 
         // 비교 연산자
@@ -158,12 +158,12 @@ namespace engine
         // nullptr 비교
         bool operator==(std::nullptr_t) const
         {
-            return !m_handle.IsValid();
+            return !m_handle.IsValid() || (GetObjectFromHandle(m_handle) == nullptr);
         }
 
         bool operator!=(std::nullptr_t) const
         {
-            return m_handle.IsValid();
+            return m_handle.IsValid() && (GetObjectFromHandle(m_handle) != nullptr);
         }
     };
 }

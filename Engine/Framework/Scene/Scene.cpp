@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <fstream>
+#include <algorithm>
 
 #include "Common/Utility/JsonHelper.h"
 #include "Framework/Object/GameObject/GameObject.h"
@@ -10,11 +11,29 @@
 #include "Framework/Object/Component/Camera.h"
 #include "Framework/Object/Component/Transform.h"
 #include <Framework/Object/Component/RectTransform.h>
+#include "Framework/Object/Component/Rigidbody.h"
+#include "Framework/Object/Component/Collider.h"
+#include "Framework/Object/Component/CharacterController.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/CameraSystem.h"
+#include "Framework/Physics/PhysicsCallback.h"
+
+#include <PxPhysicsAPI.h>
 
 namespace engine
 {
+    // unique_ptr<PhysicsEventCallback>이 완전한 타입을 알아야 하므로 .cpp에서 정의
+    Scene::Scene() = default;
+    
+    Scene::~Scene()
+    {
+        // PhysX 리소스 정리 (애플리케이션 종료 시 누수 방지)
+        ClearPhysicsScene();
+    }
+    
+    Scene::Scene(Scene&&) noexcept = default;
+    Scene& Scene::operator=(Scene&&) noexcept = default;
+
     GameObject* Scene::CreateGameObject(const std::string& name)
     {
         return CreateGameObject(CreateObjectType::Default, name);
@@ -102,12 +121,31 @@ namespace engine
 
     void Scene::Clear(bool preservePersistent)
     {
+        // DontDestroyOnLoad 객체의 물리 컴포넌트 참조 보존
+        std::vector<Rigidbody*> preservedRigidbodies;
+        std::vector<Collider*> preservedColliders;
+        std::vector<CharacterController*> preservedControllers;
+
         if (preservePersistent)
         {
             for (auto& gameObject : m_gameObjects)
             {
                 if (gameObject->IsDontDestroyOnLoad())
                 {
+                    // 물리 컴포넌트 참조 보존
+                    if (Rigidbody* rb = gameObject->GetComponent<Rigidbody>())
+                    {
+                        preservedRigidbodies.push_back(rb);
+                    }
+                    if (Collider* col = gameObject->GetComponent<Collider>())
+                    {
+                        preservedColliders.push_back(col);
+                    }
+                    if (CharacterController* ctrl = gameObject->GetComponent<CharacterController>())
+                    {
+                        preservedControllers.push_back(ctrl);
+                    }
+                    
                     m_dontDestroyGameObjects.push_back(std::move(gameObject));
                 }
             }
@@ -123,6 +161,19 @@ namespace engine
         m_gameObjectAddList.clear();
         m_componentAddList.clear();
         m_componentAddProcList.clear();
+
+        // 물리 데이터 정리 (DontDestroyOnLoad 객체 제외)
+        m_rigidbodies = std::move(preservedRigidbodies);
+        m_colliders = std::move(preservedColliders);
+        m_controllers = std::move(preservedControllers);
+        
+        // 이벤트 큐 클리어
+        m_pendingCollisionEvents.clear();
+        m_pendingTriggerEvents.clear();
+        
+        // 시뮬레이션 상태 초기화
+        m_physicsAccumulator = 0.0f;
+        m_isSimulating = false;
     }
 
     void Scene::RegisterPendingAdd(GameObject* gameObject)
@@ -550,5 +601,183 @@ namespace engine
                 go->UpdateActiveInHierarchy(go->IsActiveSelf());
             }
         }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 물리 시스템 인터페이스
+    // ═══════════════════════════════════════════════════════════════
+
+    void Scene::CreatePhysicsScene(physx::PxScene* pxScene, physx::PxControllerManager* controllerManager)
+    {
+        m_pxScene = pxScene;
+        m_controllerManager = controllerManager;
+        
+        if (m_pxScene && !m_physicsEventCallback)
+        {
+            m_physicsEventCallback = std::make_unique<PhysicsEventCallback>();
+            m_pxScene->setSimulationEventCallback(m_physicsEventCallback.get());
+        }
+    }
+
+    void Scene::ClearPhysicsScene()
+    {
+        // 물리 컴포넌트 컨테이너 정리
+        m_rigidbodies.clear();
+        m_colliders.clear();
+        m_controllers.clear();
+
+        // 이벤트 큐 정리
+        m_pendingCollisionEvents.clear();
+        m_pendingTriggerEvents.clear();
+
+        // PhysX 리소스 해제
+        if (m_controllerManager)
+        {
+            m_controllerManager->release();
+            m_controllerManager = nullptr;
+        }
+
+        if (m_pxScene)
+        {
+            m_pxScene->release();
+            m_pxScene = nullptr;
+        }
+        
+        m_physicsEventCallback.reset();
+
+        // 시뮬레이션 상태 초기화
+        m_physicsAccumulator = 0.0f;
+        m_isSimulating = false;
+
+        LOG_PRINT("[Scene] Cleared physics scene");
+    }
+
+    void Scene::RegisterRigidbody(Rigidbody* rb)
+    {
+        if (!rb) return;
+
+        // 중복 체크
+        auto it = std::find(m_rigidbodies.begin(), m_rigidbodies.end(), rb);
+        if (it != m_rigidbodies.end()) return;
+
+        m_rigidbodies.push_back(rb);
+
+        // PxActor를 Scene에 추가
+        physx::PxRigidActor* actor = rb->GetPxActor();
+        if (actor && m_pxScene)
+        {
+            m_pxScene->addActor(*actor);
+        }
+    }
+
+    void Scene::UnregisterRigidbody(Rigidbody* rb)
+    {
+        if (!rb) return;
+
+        // PxActor를 Scene에서 제거
+        physx::PxRigidActor* actor = rb->GetPxActor();
+        if (actor && m_pxScene)
+        {
+            m_pxScene->removeActor(*actor);
+        }
+
+        // 컨테이너에서 제거 (swap and pop)
+        auto it = std::find(m_rigidbodies.begin(), m_rigidbodies.end(), rb);
+        if (it != m_rigidbodies.end())
+        {
+            *it = m_rigidbodies.back();
+            m_rigidbodies.pop_back();
+        }
+    }
+
+    void Scene::RegisterCollider(Collider* collider)
+    {
+        if (!collider) return;
+
+        // 중복 체크
+        auto it = std::find(m_colliders.begin(), m_colliders.end(), collider);
+        if (it != m_colliders.end()) return;
+
+        m_colliders.push_back(collider);
+    }
+
+    void Scene::UnregisterCollider(Collider* collider)
+    {
+        if (!collider) return;
+
+        // 컨테이너에서 제거
+        auto it = std::find(m_colliders.begin(), m_colliders.end(), collider);
+        if (it != m_colliders.end())
+        {
+            *it = m_colliders.back();
+            m_colliders.pop_back();
+        }
+    }
+
+    void Scene::RegisterController(CharacterController* controller)
+    {
+        if (!controller) return;
+
+        auto it = std::find(m_controllers.begin(), m_controllers.end(), controller);
+        if (it != m_controllers.end()) return;
+
+        m_controllers.push_back(controller);
+    }
+
+    void Scene::UnregisterController(CharacterController* controller)
+    {
+        if (!controller) return;
+
+        auto it = std::find(m_controllers.begin(), m_controllers.end(), controller);
+        if (it != m_controllers.end())
+        {
+            *it = m_controllers.back();
+            m_controllers.pop_back();
+        }
+    }
+
+    void Scene::QueueCollisionEvent(const CollisionEvent& event)
+    {
+        m_pendingCollisionEvents.push_back(event);
+    }
+
+    void Scene::QueueTriggerEvent(const TriggerEvent& event)
+    {
+        m_pendingTriggerEvents.push_back(event);
+    }
+
+    void Scene::ClearPendingEvents()
+    {
+        m_pendingCollisionEvents.clear();
+        m_pendingTriggerEvents.clear();
+    }
+
+    void Scene::OnColliderDestroyed(Collider* collider)
+    {
+        if (!collider) return;
+
+        Handle colliderHandle = collider->GetHandle();
+
+        // 대기 중인 이벤트에서 제거
+        m_pendingCollisionEvents.erase(
+            std::remove_if(m_pendingCollisionEvents.begin(), m_pendingCollisionEvents.end(),
+                [collider](const CollisionEvent& e)
+                {
+                    return e.colliderA.Get() == collider || e.colliderB.Get() == collider;
+                }),
+            m_pendingCollisionEvents.end()
+        );
+
+        m_pendingTriggerEvents.erase(
+            std::remove_if(m_pendingTriggerEvents.begin(), m_pendingTriggerEvents.end(),
+                [collider](const TriggerEvent& e)
+                {
+                    return e.trigger.Get() == collider || e.other.Get() == collider;
+                }),
+            m_pendingTriggerEvents.end()
+        );
+
+        // Collider 컨테이너에서 제거
+        UnregisterCollider(collider);
     }
 }

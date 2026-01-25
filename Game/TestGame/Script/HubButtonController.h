@@ -11,8 +11,8 @@ namespace game
         REGISTER_COMPONENT(HubButtonController, Script)
     public:
         void Awake() override;
-        //void Start() override;
-        //void Update() override;
+        void Start() override;
+        void Update() override;
 
     public:
         void OnGui() override;
@@ -30,9 +30,27 @@ namespace game
         void BackToMain();
         void BackToHub();
 
-        // OnHover
-        void SetGuide(const std::string& key);
+        void Back();
 
+        // OnHover
+        void ShowEffect();
+
+        // State / UI Control
+        void SetOptionOpen(bool open);
+        void SetUpgradeOpen(bool open);
+        void HandleEscape();
+
+    private:
         bool m_bound = false;
+
+        bool m_isOptionOpen = false;
+        bool m_isUpgradeOpen = false;
+
+    private:
+        // GameObject
+        engine::GameObject* m_optionPopUp = nullptr;
+        engine::GameObject* m_blocker = nullptr;
+        engine::GameObject* m_groupSelect = nullptr;
+        engine::GameObject* m_upgradePopUp = nullptr;
     };
 }

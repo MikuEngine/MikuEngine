@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "StringHelper.h"
 
 namespace engine
@@ -47,6 +47,13 @@ namespace engine
         WideCharToMultiByte(CP_UTF8, 0, wideCharStr.data(), length, &str[0], count, nullptr, nullptr);
 
         return str;
+    }
+
+    std::string PathToUTF8(const std::filesystem::path& path)
+    {
+        // Convert filesystem path to UTF-8 string
+        // This handles non-ASCII characters (Korean, Japanese, Chinese, etc.) correctly
+        return ToMultibyte(path.wstring());
     }
 
     std::string FormatBytes(UINT64 bytes)

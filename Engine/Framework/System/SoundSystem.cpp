@@ -1,6 +1,7 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SoundSystem.h"
 
+#include "Common/Utility/StringHelper.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
@@ -30,7 +31,7 @@ namespace engine
         }
     }
 
-    FMOD::Channel* Sound::Play2D(bool bLoop, EventEndPlay callback)
+    FMOD::Channel* Sound::Play2D(bool bLoop, EventCallBack callback)
     {
         if (m_pSystem)
         {
@@ -391,8 +392,10 @@ namespace engine
         FMOD_MODE mode = FMOD_DEFAULT;
         if (is3D) mode = FMOD_3D | FMOD_3D_LINEARROLLOFF;
         else      mode = FMOD_2D;
-
-        std::string absPathStr = fs::absolute(targetPath).string();
+		
+		//std::string absPathStr = fs::absolute(targetPath).string();
+        // Convert path to UTF-8 for proper handling of non-ASCII characters (Korean, etc.)
+        std::string absPathStr = PathToUTF8(fs::absolute(targetPath));
 
         FMOD_RESULT ret = m_pSystem->createSound(absPathStr.c_str(), mode, 0, &sound->m_pSound);
 

@@ -6,6 +6,8 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Renderer/SkeletalMeshRenderer.h"
 
+#include <imgui_internal.h>
+
 void to_json(nlohmann::ordered_json& j, engine::AnimationBlendMode mode)
 {
     j = nlohmann::ordered_json{ "BlendMode", static_cast<int>(mode) };
@@ -93,6 +95,28 @@ namespace engine
         {
             m_layers.erase(m_layers.begin() + layerIndex);
         }
+    }
+
+    void SkeletalAnimator::AddNotify(const std::string& animName, const std::string& notifyName, float time)
+    {
+        auto it = m_animations.find(animName);
+        if (it != m_animations.end())
+        {
+            AnimationNotify newNotify;
+            newNotify.name = notifyName;
+            newNotify.time = time;
+            it->second.notifies.push_back(newNotify);
+        }
+    }
+
+    void SkeletalAnimator::BindNotify(const std::string& notifyName, EventCallBack callback)
+    {
+        m_notifyCallbacks[notifyName] = callback;
+    }
+
+    void SkeletalAnimator::UnbindNotify(const std::string& notifyName)
+    {
+        m_notifyCallbacks.erase(notifyName);
     }
 
     void SkeletalAnimator::SetLayerMask(int layerIndex, const std::vector<std::string>& boneNames, bool active, bool isRecursive)
@@ -379,6 +403,8 @@ namespace engine
                 continue;
             }
 
+            float prevTime = layer.current.time; 
+
             // 1 fbx = 1 anim 이므로 항상 0번 인덱스
             float duration = layer.current.data->GetAnimations()[0].duration;
 
@@ -396,10 +422,14 @@ namespace engine
                 }
             }
 
+            float currTime = layer.current.time;
+            CheckNotifies(layer.current, prevTime, currTime);
+
             if (layer.next.active)
             {
                 layer.transitionTime += dt;
 
+                float nextPrevTime = layer.next.time;
                 float nextDuration = layer.next.data->GetAnimations()[0].duration;
                 layer.next.time += dt * layer.next.speed;
                 if (layer.next.time >= nextDuration)
@@ -413,6 +443,9 @@ namespace engine
                         layer.next.time = nextDuration;
                     }
                 }
+
+                float nextCurrTime = layer.next.time;
+                CheckNotifies(layer.next, nextPrevTime, nextCurrTime);
 
                 if (layer.transitionTime >= layer.transitionDuration)
                 {
@@ -551,6 +584,84 @@ namespace engine
         }
     }
 
+    void SkeletalAnimator::DrawTimeline(const std::string& animName)
+    {
+        auto iter = m_animations.find(animName);
+        if (iter == m_animations.end()) return;
+
+        auto& res = iter->second;
+        auto& notifies = res.notifies;
+
+        if (!res.data || res.data->GetAnimations().empty()) return;
+        float duration = res.data->GetAnimations()[0].duration;
+
+        static float previewTime = 0.0f;
+
+        ImGui::Text("Timeline (Duration: %.2fs)", duration);
+
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+        float width = ImGui::GetContentRegionAvail().x;
+        float height = 50.0f;
+
+        drawList->AddRectFilled(cursorPos, ImVec2(cursorPos.x + width, cursorPos.y + height), IM_COL32(40, 40, 40, 255));
+        drawList->AddRect(cursorPos, ImVec2(cursorPos.x + width, cursorPos.y + height), IM_COL32(100, 100, 100, 255));
+
+        ImGui::InvisibleButton("##TimelineArea", ImVec2(width, height));
+
+        if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.0f))
+        {
+            float mouseRatio = (ImGui::GetMousePos().x - cursorPos.x) / width;
+            previewTime = std::clamp(mouseRatio, 0.0f, 1.0f) * duration;
+        }
+
+        static float rightClickTime = 0.0f;
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+            float mouseRatio = (ImGui::GetMousePos().x - cursorPos.x) / width;
+            rightClickTime = std::clamp(mouseRatio, 0.0f, 1.0f) * duration;
+            ImGui::OpenPopup("TimelineContextMenu");
+        }
+
+        for (int i = 0; i <= 10; ++i)
+        {
+            float ratio = (float)i / 10.0f;
+            float x = cursorPos.x + width * ratio;
+            drawList->AddLine(ImVec2(x, cursorPos.y), ImVec2(x, cursorPos.y + height), IM_COL32(80, 80, 80, 255));
+        }
+
+        for (auto& notify : notifies)
+        {
+            float ratio = notify.time / duration;
+            float x = cursorPos.x + width * ratio;
+            float y = cursorPos.y + height * 0.5f;
+
+            drawList->AddQuadFilled(
+                ImVec2(x, y - 6), ImVec2(x + 6, y), ImVec2(x, y + 6), ImVec2(x - 6, y),
+                IM_COL32(0, 255, 0, 255)
+            );
+
+            drawList->AddText(ImVec2(x - 10, y - 20), IM_COL32(200, 255, 200, 255), notify.name.c_str());
+        }
+
+        float playheadX = cursorPos.x + (previewTime / duration) * width;
+        drawList->AddLine(ImVec2(playheadX, cursorPos.y), ImVec2(playheadX, cursorPos.y + height), IM_COL32(255, 50, 50, 255), 2.0f);
+
+        if (ImGui::BeginPopup("TimelineContextMenu"))
+        {
+            ImGui::Text("Time: %.2f", rightClickTime);
+            static char notifyNameBuf[64] = "Event";
+            ImGui::InputText("Notify Name", notifyNameBuf, 64);
+
+            if (ImGui::Button("Add Notify"))
+            {
+                AddNotify(animName, notifyNameBuf, rightClickTime);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+    }
+
     const BoneMatrixArray& SkeletalAnimator::GetFinalBoneMatrices() const
     {
         return m_finalBoneMatrices;
@@ -564,7 +675,7 @@ namespace engine
             static std::string selectedPath = "";
             static char nameBuf[128]{};
 
-            ImGui::InputText("Name", nameBuf, 128);
+            ImGui::InputText("##Name", nameBuf, 128);
 
             std::string tempPath;
             if (DrawFileSelector("Select FBX", "Resource/Animation", ".fbx", tempPath))
@@ -593,8 +704,7 @@ namespace engine
 
         if (ImGui::CollapsingHeader("Registered List", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            std::vector<std::string> oldNames;
-            std::vector<std::string> newNames;
+            ImGui::BeginChild("AnimList", ImVec2(0, 150), true);
 
             std::string removeTarget = "";
 
@@ -602,40 +712,67 @@ namespace engine
             {
                 ImGui::PushID(name.c_str());
 
-                char editName[128];
-                strcpy_s(editName, name.c_str());
-                ImGui::SetNextItemWidth(120);
-                if (ImGui::InputText("##EditName", editName, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+                bool isSelected = (m_selectedAnimName == name);
+                if (ImGui::Selectable(name.c_str(), isSelected, ImGuiSelectableFlags_AllowItemOverlap))
                 {
-                    if (strcmp(editName, name.c_str()) != 0)
-                    {
-                        oldNames.push_back(name);
-                        newNames.push_back(editName);
-                    }
+                    m_selectedAnimName = name;
                 }
 
-                ImGui::SameLine();
-                ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "%s", res.path.c_str());
-
-                ImGui::SameLine();
+                // 우측에 삭제 버튼 배치
+                ImGui::SameLine(ImGui::GetContentRegionAvail().x - 30);
                 if (ImGui::Button("X"))
                 {
                     removeTarget = name;
+                    if (m_selectedAnimName == name) m_selectedAnimName = "";
                 }
 
                 ImGui::PopID();
             }
 
-            for (size_t i = 0; i < oldNames.size(); ++i)
-            {
-                RenameAnimation(oldNames[i], newNames[i]);
-            }
+            ImGui::EndChild();
 
             if (!removeTarget.empty())
             {
                 UnregisterAnimation(removeTarget);
             }
+
+            if (!m_selectedAnimName.empty())
+            {
+                if (m_animations.find(m_selectedAnimName) != m_animations.end())
+                {
+                    ImGui::Spacing();
+                    ImGui::Separator();
+                    ImGui::TextColored(ImVec4(0.2f, 0.8f, 1.0f, 1.0f), "Timeline Editor : %s", m_selectedAnimName.c_str());
+
+                    static char nameBuf[128] = "";
+                    if (strcmp(nameBuf, m_selectedAnimName.c_str()) != 0 && !ImGui::IsAnyItemActive())
+                    {
+                        strcpy_s(nameBuf, m_selectedAnimName.c_str());
+                    }
+
+                    if (ImGui::InputText("Rename", nameBuf, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+                    {
+                        if (strcmp(nameBuf, m_selectedAnimName.c_str()) != 0)
+                        {
+                            RenameAnimation(m_selectedAnimName, nameBuf);
+                            m_selectedAnimName = nameBuf;
+                        }
+                    }
+
+                    ImGui::Spacing();
+
+                    DrawTimeline(m_selectedAnimName);
+
+                    ImGui::Spacing();
+                    ImGui::Spacing();
+                }
+                else
+                {
+                    m_selectedAnimName = "";
+                }
+            }
         }
+
         // layer
         if (ImGui::CollapsingHeader("Layers", ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -734,6 +871,17 @@ namespace engine
             json node;
             node["Name"] = name;
             node["Path"] = res.path;
+
+            std::vector<json> notifyList;
+            for (const auto& notify : res.notifies)
+            {
+                json notifyNode;
+                notifyNode["Name"] = notify.name;
+                notifyNode["Time"] = notify.time;
+                notifyList.push_back(notifyNode);
+            }
+            node["Notifies"] = notifyList;
+
             animList.push_back(node);
         }
 
@@ -764,6 +912,7 @@ namespace engine
         }
 
         j["Layers"] = layerList;
+
     }
 
     void SkeletalAnimator::Load(const json& j)
@@ -772,7 +921,21 @@ namespace engine
 
         JsonArrayForEach(j, "Animations", [&](const json& node)
             {
-                RegisterAnimation(node.value("Name", ""), node.value("Path", ""));
+                std::string name = node.value("Name", "");
+                std::string path = node.value("Path", "");
+
+                RegisterAnimation(name, path);
+
+                if (node.contains("Notifies"))
+                {
+                    for (const auto& notifyNode : node["Notifies"])
+                    {
+                        std::string notifyName = notifyNode.value("Name", "");
+                        float time = notifyNode.value("Time", 0.0f);
+
+                        AddNotify(name, notifyName, time);
+                    }
+                }
             }
         );
 
@@ -945,6 +1108,53 @@ namespace engine
                     layer.mask[bone.index] = 1;
 
                     break;
+                }
+            }
+        }
+    }
+    void SkeletalAnimator::CheckNotifies(const AnimationState& state, float prevTime, float currTime)
+    {
+        auto find = m_animations.find(state.name);
+        if (find == m_animations.end()) return;
+
+        const auto& notifies = find->second.notifies;
+        if (notifies.empty()) return;
+
+        float duration = 0.0f;
+        if (state.data && !state.data->GetAnimations().empty())
+        {
+            duration = state.data->GetAnimations()[0].duration;
+        }
+
+        for (const auto& notify : notifies)
+        {
+            bool fired = false;
+
+            if (prevTime < notify.time && notify.time <= currTime)
+            {
+                fired = true;
+            }
+            else if (currTime < prevTime)
+            {
+                if (prevTime < notify.time && notify.time <= duration)
+                {
+                    fired = true;
+                }
+                else if (0.0f <= notify.time && notify.time <= currTime)
+                {
+                    fired = true;
+                }
+            }
+
+            if (fired)
+            {
+                auto iter = m_notifyCallbacks.find(notify.name);
+                if (iter != m_notifyCallbacks.end())
+                {
+                    if (iter->second)
+                    {
+                        iter->second();
+                    }
                 }
             }
         }

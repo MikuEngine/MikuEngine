@@ -15,6 +15,7 @@ namespace game
         float m_currentYaw = 0.0f;   // 좌우 (Y축 회전)
 
     public:
+		void Awake() override;
         void Update() override;
 
     public:
