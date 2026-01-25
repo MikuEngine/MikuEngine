@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "StaticMeshData.h"
 
 #include <assimp/Importer.hpp>
@@ -66,14 +66,32 @@ namespace engine
         {
             const aiMesh* mesh = scene->mMeshes[i];
 
-            for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
+            if (mesh->mTextureCoords[0] == nullptr)
             {
-                m_vertices.emplace_back(
-                    &mesh->mVertices[j].x,
-                    &mesh->mTextureCoords[0][j].x,
-                    &mesh->mNormals[j].x,
-                    &mesh->mTangents[j].x,
-                    &mesh->mBitangents[j].x);
+                for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
+                {
+                    static constexpr float v2[2]{ 0.0f, 0.0f };
+                    static constexpr float v3[3]{ 0.0f, 0.0f, 0.0f };
+
+                    m_vertices.emplace_back(
+                        &mesh->mVertices[j].x,
+                        &v2[0],
+                        &mesh->mNormals[j].x,
+                        &v3[0],
+                        &v3[0]);
+                }
+            }
+            else
+            {
+                for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
+                {
+                    m_vertices.emplace_back(
+                        &mesh->mVertices[j].x,
+                        &mesh->mTextureCoords[0][j].x,
+                        &mesh->mNormals[j].x,
+                        &mesh->mTangents[j].x,
+                        &mesh->mBitangents[j].x);
+                }
             }
 
             for (unsigned int j = 0; j < mesh->mNumFaces; ++j)

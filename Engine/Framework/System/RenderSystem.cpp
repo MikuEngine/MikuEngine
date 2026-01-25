@@ -32,6 +32,7 @@
 #include "Editor/EditorCamera.h"
 
 #include "Framework/Physics/PhysicsDebugRenderer.h"
+#include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
 
 namespace engine
 {
@@ -456,6 +457,7 @@ namespace engine
         graphics.BeginDrawDebugPass();
         {
             PhysicsDebugRenderer::Get().Render(view, projection);
+            PathfindingDebugRenderer::Get().Render(view, projection);
         }
         graphics.EndDrawDebugPass();
     }

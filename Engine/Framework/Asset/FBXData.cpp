@@ -65,10 +65,17 @@ namespace engine
             aiProcess_GenNormals |
             aiProcess_GenUVCoords |
             aiProcess_CalcTangentSpace |
-            aiProcess_ConvertToLeftHanded |
-            aiProcess_PreTransformVertices;
+            aiProcess_ConvertToLeftHanded/* |
+            aiProcess_PreTransformVertices*/;
 
         const aiScene* scene = importer.ReadFile(filePath, importFlags);
+
+        aiMatrix4x4 rotation;
+        aiMatrix4x4::RotationY(DirectX::XM_PI, rotation);
+
+        scene->mRootNode->mTransformation = rotation * scene->mRootNode->mTransformation;
+
+        importer.ApplyPostProcessing(aiProcess_PreTransformVertices);
 
         m_staticMesh = std::make_shared<StaticMeshData>();
         m_material = std::make_shared<MaterialData>();

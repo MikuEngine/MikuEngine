@@ -8,6 +8,8 @@
 #include <Engine/Framework/Object/Component/Camera.h>
 #include <Engine/Framework/Object/Component/Light.h>
 #include <Engine/Framework/Object/Component/Particle/ParticleEffect.h>
+#include <Engine/Framework/Object/Component/Pathfinding/GridMap.h>
+#include <Engine/Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 
 // Physics Components
 #include <Engine/Framework/Object/Component/Rigidbody.h>

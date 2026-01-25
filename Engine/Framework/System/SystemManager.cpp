@@ -12,7 +12,7 @@
 #include "Framework/System/UIEventSystem.h"
 #include "Framework/System/SoundSystem.h"
 #include "Framework/System/ParticleSystem.h"
-
+#include "Framework/System/PathfindingSystem.h"
 
 namespace engine
 {
@@ -24,7 +24,8 @@ namespace engine
         m_animatorSystem{ std::make_unique<AnimatorSystem>() },
         m_lightSystem{ std::make_unique<LightSystem>() },
         m_uiEventSystem{ std::make_unique<UIEventSystem>() },
-        m_particleSystem{ std::make_unique<ParticleSystem>() }
+        m_particleSystem{ std::make_unique<ParticleSystem>() },
+        m_pathfindingSystem{ std::make_unique<PathfindingSystem>() }
     {
         // Singleton으로 자동관리 되는 System
         // PhysicsSystem, CollisionSystem, SoundSystem
@@ -42,7 +43,8 @@ namespace engine
         m_lightSystem.reset();
         m_uiEventSystem.reset();
         m_particleSystem.reset();
-        
+        m_pathfindingSystem.reset();
+
         // Singleton
         PhysicsSystem::Get().Shutdown();
         SoundSystem::Get().Shutdown();
@@ -81,6 +83,11 @@ namespace engine
     ParticleSystem& SystemManager::GetParticleSystem() const
     {
         return *m_particleSystem.get();
+    }
+
+    PathfindingSystem& SystemManager::GetPathfindingSystem() const
+    {
+        return *m_pathfindingSystem.get();
     }
 
     PhysicsSystem& SystemManager::GetPhysicsSystem() const

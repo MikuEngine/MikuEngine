@@ -42,6 +42,9 @@ namespace engine
         virtual void OnDestroy() {};
         bool IsPendingKill() const;
 
+        std::int32_t GetSystemIndex() const;
+        void SetSystemIndex(std::int32_t index);
+
     public: // 타입 체크 관련 함수들
         static int GetStaticTypeID();
 

@@ -22,6 +22,7 @@
 #include "Framework/Object/Component/UI/UISlider.h"
 #include "Framework/Object/Component/UI/UIProgressBar.h"
 #include "Framework/Object/Component/UI/UIPanel.h"
+#include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
 
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
@@ -1065,6 +1066,7 @@ namespace engine
 
         // Physics Debug
         PhysicsDebugRenderer::Get().OnGui();
+        PathfindingDebugRenderer::Get().OnGui();
 
         ImGui::End();
     }

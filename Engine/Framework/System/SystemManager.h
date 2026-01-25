@@ -15,6 +15,7 @@ namespace engine
     class LightSystem;
     class UIEventSystem;
     class ParticleSystem;
+    class PathfindingSystem;
 
     class SystemManager :
         public Singleton<SystemManager>
@@ -28,6 +29,7 @@ namespace engine
         std::unique_ptr<LightSystem> m_lightSystem;
         std::unique_ptr<UIEventSystem> m_uiEventSystem;
         std::unique_ptr<ParticleSystem> m_particleSystem;
+        std::unique_ptr<PathfindingSystem> m_pathfindingSystem;
 
         // PhysicsSystem과 CollisionSystem은 Singleton이므로 별도 멤버 불필요
 
@@ -46,6 +48,7 @@ namespace engine
         AnimatorSystem& GetAnimatorSystem() const;
         LightSystem& GetLightSystem() const;
         ParticleSystem& GetParticleSystem() const;
+        PathfindingSystem& GetPathfindingSystem() const;
 
         // 물리 시스템 접근 (Singleton 래핑)
         PhysicsSystem& GetPhysicsSystem() const;

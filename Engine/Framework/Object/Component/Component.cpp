@@ -96,6 +96,16 @@ namespace engine
         return m_isPendingKill;
     }
 
+    std::int32_t Component::GetSystemIndex() const
+    {
+        return m_systemIndex;
+    }
+
+    void Component::SetSystemIndex(std::int32_t index)
+    {
+        m_systemIndex = index;
+    }
+
     int Component::GetStaticTypeID()
     {
         static int s_typeID = detail::GetNextComponentTypeID();

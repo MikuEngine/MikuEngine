@@ -28,6 +28,7 @@
     <ClCompile Include="Script\BulletFactory.cpp" />
     <ClCompile Include="Script\TempMonster.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
+    <ClCompile Include="Script\PathfindTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Script\BulletParams.h" />
     <ClInclude Include="Script\TempMonster.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />
+    <ClInclude Include="Script\PathfindTest.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\TestHeader.hlsli" />
