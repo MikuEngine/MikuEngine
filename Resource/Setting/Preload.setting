@@ -4,7 +4,7 @@
     { "Type": "StaticMesh", "Path": "Resource/Model/Sphere.fbx" },
     { "Type": "StaticMesh", "Path": "Resource/Model/Quad.fbx" },
 	{ 
-		"Type": "RandomSound",
+		"Type": "SoundQue",
 		"Name": "UI_Click_Random",
 		"Paths": [
 			"Resource/Sound/test_click_1.wav",

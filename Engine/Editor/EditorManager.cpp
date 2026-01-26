@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "EditorManager.h"
 
 #include <fstream>
@@ -22,6 +22,7 @@
 #include "Framework/Object/Component/UI/UISlider.h"
 #include "Framework/Object/Component/UI/UIProgressBar.h"
 #include "Framework/Object/Component/UI/UIPanel.h"
+#include "Framework/Object/Component/UI/UIScrollView.h"
 #include "Framework/Object/Component/UI/UIClickArea.h"
 #include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
 

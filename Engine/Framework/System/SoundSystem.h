@@ -67,7 +67,7 @@ namespace engine
 
         //std::map<std::string, Sound*> m_sounds;
         std::map<std::string, FMOD::ChannelGroup *> m_channelGroups;
-        std::map<std::string, std::vector<Sound*>> m_randomSounds;
+        std::map<std::string, std::vector<Sound*>> m_SoundQues;
 
         // FMOD 리스너(듣는 사람) 정보
         Vector3 m_listenerPos = { 0, 0, 0 };

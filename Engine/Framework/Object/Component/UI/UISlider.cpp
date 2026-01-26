@@ -186,6 +186,7 @@ namespace engine
 		}
 
 		// Fill
+		if (m_useFill)
 		{
 			GameObject* go = makeChild("Fill");
 			if (go)
@@ -202,6 +203,10 @@ namespace engine
 				rt->SetAnchoredPosition({ 0.0f, 0.0f });
 				rt->SetSize(0.0f, 0.0f);
 			}
+		}
+		else
+		{
+			m_fill = nullptr;
 		}
 
 		// Handle
@@ -236,12 +241,19 @@ namespace engine
 		GameObject* bgGO = FindChildByName(parent, "Background");
 		GameObject* fillGO = FindChildByName(parent, "Fill");
 		GameObject* hGO = FindChildByName(parent, "Handle");
-		if (!bgGO || !fillGO || !hGO) return false;
+		if (!bgGO || !hGO) return false;
 
 		UIImage* newBg = bgGO->GetComponent<UIImage>();
-		UIImage* newFill = fillGO->GetComponent<UIImage>();
 		UIImage* newHandle = hGO->GetComponent<UIImage>();
-		if (!newBg || !newFill || !newHandle) return false;
+		if (!newBg || !newHandle) return false;
+
+		UIImage* newFill = nullptr;
+		if (m_useFill) // Fill 쓰기로 했는데 없으면 return
+		{
+			if (!fillGO) return false;
+			newFill = fillGO->GetComponent<UIImage>();
+			if (!newFill) return false;
+		}
 
 		const bool bgChanged = (newBg != m_background);
 		const bool fillChanged = (newFill != m_fill);
@@ -285,111 +297,121 @@ namespace engine
 		if (m_fill)       m_fill->m_raycastTarget = false;
 		if (m_handle)     m_handle->m_raycastTarget = false;
 
-		if (!m_background || !m_fill) return;
+		if (!m_background) return;
 
 		if (!m_bgSprite.empty())  m_background->SetTexture(m_bgSprite);
-		if (!m_fillSprite.empty()) m_fill->SetTexture(m_fillSprite);
-		if (!m_handleSprite.empty() && m_handleSprite != "None") m_handle->SetTexture(m_handleSprite);
-
 		m_background->SetColor(m_bgColor);
-		m_fill->SetColor(m_fillColor);
-		m_handle->SetColor(m_handleColor);
 
-		// Fill 처리
-		RectTransform* rootRT = GetRectTransform();
-		RectTransform* fillRT = m_fill->GetGameObject()->GetComponent<RectTransform>();
-		if (!rootRT || !fillRT) return;
-		
-		// (화면 픽셀 좌표) 루트 Rect 계산
-		auto& gd = GraphicsDevice::Get();
-		const D3D11_VIEWPORT vp = gd.GetViewport();
-		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
-		const UIRect barRect = rootRT->GetWorldRectResolved(rootRect);
+		if (m_handle)
+		{
+			if (!m_handleSprite.empty() && m_handleSprite != "None") m_handle->SetTexture(m_handleSprite);
+			m_handle->SetColor(m_handleColor);
+		}
+
+		if (m_useFill && m_fill)
+		{
+			if (!m_fillSprite.empty()) m_fill->SetTexture(m_fillSprite);
+			m_fill->SetColor(m_fillColor);
+		}
 
 		const float v = Clamp01(m_value);
 
-		if (m_fillMode == FillMode::AnchorResize)
+		// Fill 처리
+		if (m_useFill && m_fill)
 		{
-			m_fill->SetMaskMode(MaskMode::None);
+			RectTransform* rootRT = GetRectTransform();
+			RectTransform* fillRT = m_fill->GetGameObject()->GetComponent<RectTransform>();
+			if (!rootRT || !fillRT) return;
 
-			switch (m_direction)
-			{
-			case Direction::LeftToRight:
-				fillRT->SetPivot({ 0.5f, 0.5f });
-				fillRT->SetAnchorMin({ 0.0f, 0.0f });
-				fillRT->SetAnchorMax({ v, 1.0f });
-				break;
+			// (화면 픽셀 좌표) 루트 Rect 계산
+			auto& gd = GraphicsDevice::Get();
+			const D3D11_VIEWPORT vp = gd.GetViewport();
+			UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+			const UIRect barRect = rootRT->GetWorldRectResolved(rootRect);
 
-			case Direction::RightToLeft:
-				fillRT->SetPivot({ 0.5f, 0.5f });
-				fillRT->SetAnchorMin({ 1.0f - v, 0.0f });
-				fillRT->SetAnchorMax({ 1.0f, 1.0f });
-				break;
-
-			case Direction::TopToBottom:
-				fillRT->SetPivot({ 0.5f, 0.5f });
-				fillRT->SetAnchorMin({ 0.0f, 0.0f });
-				fillRT->SetAnchorMax({ 1.0f, v });
-				break;
-
-			case Direction::BottomToTop:
-				fillRT->SetPivot({ 0.5f, 0.5f });
-				fillRT->SetAnchorMin({ 0.0f, 1.0f - v });
-				fillRT->SetAnchorMax({ 1.0f, 1.0f });
-				break;
-			}
-
-			fillRT->SetAnchoredPosition({ 0.0f, 0.0f });
-			fillRT->SetSize(0.0f, 0.0f);
-		}
-
-		if (m_fillMode == FillMode::PixelMask)
-		{
-			if (v <= 0.0f)
+			if (m_fillMode == FillMode::AnchorResize)
 			{
 				m_fill->SetMaskMode(MaskMode::None);
 
-				Vector4 c = m_fillColor;
-				c.w = 0.0f;
-				m_fill->SetColor(c);
+				switch (m_direction)
+				{
+				case Direction::LeftToRight:
+					fillRT->SetPivot({ 0.5f, 0.5f });
+					fillRT->SetAnchorMin({ 0.0f, 0.0f });
+					fillRT->SetAnchorMax({ v, 1.0f });
+					break;
+
+				case Direction::RightToLeft:
+					fillRT->SetPivot({ 0.5f, 0.5f });
+					fillRT->SetAnchorMin({ 1.0f - v, 0.0f });
+					fillRT->SetAnchorMax({ 1.0f, 1.0f });
+					break;
+
+				case Direction::TopToBottom:
+					fillRT->SetPivot({ 0.5f, 0.5f });
+					fillRT->SetAnchorMin({ 0.0f, 0.0f });
+					fillRT->SetAnchorMax({ 1.0f, v });
+					break;
+
+				case Direction::BottomToTop:
+					fillRT->SetPivot({ 0.5f, 0.5f });
+					fillRT->SetAnchorMin({ 0.0f, 1.0f - v });
+					fillRT->SetAnchorMax({ 1.0f, 1.0f });
+					break;
+				}
+
+				fillRT->SetAnchoredPosition({ 0.0f, 0.0f });
+				fillRT->SetSize(0.0f, 0.0f);
 			}
-			else
+
+			if (m_fillMode == FillMode::PixelMask)
 			{
-				m_fill->SetColor(m_fillColor);
+				if (v <= 0.0f)
+				{
+					m_fill->SetMaskMode(MaskMode::None);
+
+					Vector4 c = m_fillColor;
+					c.w = 0.0f;
+					m_fill->SetColor(c);
+				}
+				else
+				{
+					m_fill->SetColor(m_fillColor);
+				}
+
+				fillRT->SetPivot({ 0.5f, 0.5f });
+				fillRT->SetAnchorMin({ 0.0f, 0.0f });
+				fillRT->SetAnchorMax({ 1.0f, 1.0f });
+				fillRT->SetAnchoredPosition({ 0.0f, 0.0f });
+				fillRT->SetSize(0.0f, 0.0f);
+
+				float x0 = barRect.x;
+				float y0 = barRect.y;
+				float x1 = barRect.x + barRect.w;
+				float y1 = barRect.y + barRect.h;
+
+				switch (m_direction)
+				{
+				case Direction::LeftToRight:
+					x1 = barRect.x + barRect.w * v;
+					break;
+
+				case Direction::RightToLeft:
+					x0 = barRect.x + barRect.w * (1.0f - v);
+					break;
+
+				case Direction::TopToBottom:
+					y1 = barRect.y + barRect.h * v;
+					break;
+
+				case Direction::BottomToTop:
+					y0 = barRect.y + barRect.h * (1.0f - v);
+					break;
+				}
+
+				m_fill->SetMaskMode(MaskMode::Rect);
+				m_fill->SetClipRect(Vector4(x0, y0, x1, y1));
 			}
-
-			fillRT->SetPivot({ 0.5f, 0.5f });
-			fillRT->SetAnchorMin({ 0.0f, 0.0f });
-			fillRT->SetAnchorMax({ 1.0f, 1.0f });
-			fillRT->SetAnchoredPosition({ 0.0f, 0.0f });
-			fillRT->SetSize(0.0f, 0.0f);
-
-			float x0 = barRect.x;
-			float y0 = barRect.y;
-			float x1 = barRect.x + barRect.w;
-			float y1 = barRect.y + barRect.h;
-
-			switch (m_direction)
-			{
-			case Direction::LeftToRight:
-				x1 = barRect.x + barRect.w * v;
-				break;
-
-			case Direction::RightToLeft:
-				x0 = barRect.x + barRect.w * (1.0f - v);
-				break;
-
-			case Direction::TopToBottom:
-				y1 = barRect.y + barRect.h * v;
-				break;
-
-			case Direction::BottomToTop:
-				y0 = barRect.y + barRect.h * (1.0f - v);
-				break;
-			}
-
-			m_fill->SetMaskMode(MaskMode::Rect);
-			m_fill->SetClipRect(Vector4(x0, y0, x1, y1));
 		}
 
 		// Handle 처리
@@ -507,6 +529,14 @@ namespace engine
 		if (ImGui::ColorEdit4("FillColor", &m_fillColor.x)) { m_dirty = true; changed = true; }
 		if (ImGui::ColorEdit4("HandleColor", &m_handleColor.x)) { m_dirty = true; changed = true; }
 
+		if (ImGui::Checkbox("UseFill", &m_useFill))
+		{
+			m_dirty = true;
+			CreateVisuals();
+			RefreshVisuals();
+			UpdateVisuals();
+		}
+
 		if (changed)
 			UpdateVisuals();
 	}
@@ -526,6 +556,8 @@ namespace engine
 		j["TrackColor"] = m_bgColor;
 		j["FillColor"] = m_fillColor;
 		j["HandleColor"] = m_handleColor;
+
+		j["UseFill"] = m_useFill;
 	}
 
 	void UISlider::Load(const json& j)
@@ -549,6 +581,8 @@ namespace engine
 		JsonGet(j, "TrackColor", m_bgColor);
 		JsonGet(j, "FillColor", m_fillColor);
 		JsonGet(j, "HandleColor", m_handleColor);
+
+		JsonGet(j, "UseFill", m_useFill);
 
 		CreateVisuals();
 		RefreshVisuals();
