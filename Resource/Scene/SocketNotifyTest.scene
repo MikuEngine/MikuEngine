@@ -92,23 +92,37 @@
                     "Animations": [
                         {
                             "Name": "TestBackward",
-                            "Path": "Resource/Animation/TestBackward.fbx"
+                            "Path": "Resource/Animation/TestBackward.fbx",
+                            "Notifies": []
                         },
                         {
                             "Name": "TestElbow",
-                            "Path": "Resource/Animation/TestElbow.fbx"
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
                         },
                         {
                             "Name": "TestForward",
-                            "Path": "Resource/Animation/TestForward.fbx"
+                            "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
                         },
                         {
                             "Name": "TestIdle",
-                            "Path": "Resource/Animation/TestIdle.fbx"
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
                         },
                         {
                             "Name": "TestPunch",
-                            "Path": "Resource/Animation/TestPunch.fbx"
+                            "Path": "Resource/Animation/TestPunch.fbx",
+                            "Notifies": [
+                                {
+                                    "Name": "Event",
+                                    "Time": 0.34506282210350037
+                                },
+                                {
+                                    "Name": "Event",
+                                    "Time": 0.6901256442070007
+                                }
+                            ]
                         }
                     ],
                     "Layers": [

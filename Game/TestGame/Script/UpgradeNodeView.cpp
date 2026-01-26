@@ -1,10 +1,29 @@
 ﻿#include "GamePCH.h"
 #include "UpgradeNodeView.h"
-
+#include "Framework/Object/Component/UI/UIClickArea.h"
+#include "UpgradeSystem.h"
 namespace game
 {
     void UpgradeNodeView::Awake()
     {
+        auto* go = GetGameObject();
+        if (!go) return;
+
+        auto* click = go->GetComponent<engine::UIClickArea>();
+        if (!click) return;
+
+        auto* sysGo = engine::GameObject::Find("UpgradeSystem");
+        if (!sysGo) return;
+
+        auto* sys = sysGo->GetComponent<game::UpgradeSystem>();
+        if (!sys) return;
+
+        click->AddOnClick([this, sys](int mouseButton)
+            {
+                if (sys)
+                    sys->ApplyUpgrade(m_nodeId);
+            });
+
 
     }
 
@@ -127,5 +146,10 @@ namespace game
         engine::JsonGet(j, "Ruby", m_ruby);
         engine::JsonGet(j, "Sapphire", m_sapphire);
         engine::JsonGet(j, "Emerald", m_emerald);
+    }
+
+    void UpgradeNodeView::SetVisualState(bool unlocked, bool purchased)
+    {
+        LOG_PRINT("버튼 눌림");
     }
 }

@@ -119,6 +119,7 @@ namespace engine
             float speed = 1.0f);
         void Update() override;
         void DrawTimeline(const std::string& animName);
+        void UpdateTimeinePose();
 
         const BoneMatrixArray& GetFinalBoneMatrices() const;
 

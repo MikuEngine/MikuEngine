@@ -19,6 +19,8 @@ namespace game
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
 
+        void SetVisualState(bool unlocked, bool purchased);
+
     public:
         int m_nodeId = 0;
         std::vector<int> m_parents = {};

@@ -4,6 +4,8 @@
 
 namespace game
 {
+    class UpgradeNodeView;
+
     class UpgradeSystem :
         public engine::Script<UpgradeSystem>
     {
@@ -23,19 +25,30 @@ namespace game
 
     public:
         // 재화
-        int  GetCurrency() const { return m_currency; }
-        void SetCurrency(int v) { m_currency = std::max(0, v); RecomputeUnlocked(); }
+        //int  GetCurrency() const { return m_currency; }
+        //void SetCurrency(int v) { m_currency = std::max(0, v); RecomputeUnlocked(); }
 
         bool CanUpgrade(int nodeId) const;
         bool ApplyUpgrade(int nodeId);
 
+        void RefreshNodeVisuals();
+
     private:
         void BuildDefaultTreeIfEmpty();
         void RecomputeUnlocked();
+        
 
     private:
         //std::unordered_map<int, UpgradeNode> m_nodes;
+        std::vector<engine::GameObject*> m_nodeObjects;
 
-        int m_currency = 100;   // 임시 재화
+        std::unordered_map<int, game::UpgradeNodeView*> m_views;
+
+        std::unordered_map<int, bool> m_purchased;
+        std::unordered_map<int, bool> m_unlocked;
+
+        int m_ruby = 100;
+        int m_sapphire = 100;
+        int m_emerald = 100;
     };
 }
