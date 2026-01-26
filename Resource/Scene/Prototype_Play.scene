@@ -12069,6 +12069,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12118,6 +12120,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         },
@@ -12174,6 +12180,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12223,6 +12231,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         },
@@ -12279,6 +12291,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12328,6 +12342,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         },
@@ -12384,6 +12402,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12433,6 +12453,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         },
@@ -12489,6 +12513,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12538,6 +12564,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         },
@@ -12594,6 +12624,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12643,6 +12675,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         },
@@ -12699,6 +12735,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12748,6 +12786,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         },
@@ -12804,6 +12846,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12853,6 +12897,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         },
@@ -12909,6 +12957,8 @@
                 {
                     "Type": "MonsterScript",
                     "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
                     "MoveSpeed": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 0.20000000298023224,
@@ -12958,6 +13008,10 @@
                     "Type": "TempMonster",
                     "Active": true,
                     "HitCount": 0
+                },
+                {
+                    "Type": "PathfindTest",
+                    "Active": true
                 }
             ]
         }
