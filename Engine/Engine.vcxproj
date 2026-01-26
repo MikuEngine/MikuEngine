@@ -270,6 +270,7 @@
     <ClCompile Include="Framework\Object\Component\UI\UIPanel.cpp" />
     <ClCompile Include="Framework\Object\Component\UI\UIClickArea.cpp" />
     <ClCompile Include="UIScrollView.cpp" />
+    <ClCompile Include="UIScrollView2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Utility\EditorHelper.h" />
@@ -405,6 +406,7 @@
     <ClInclude Include="Framework\Object\Component\UI\UIPanel.h" />
     <ClInclude Include="Framework\Object\Component\UI\UIClickArea.h" />
     <ClInclude Include="UIScrollView.h" />
+    <ClInclude Include="UIScrollView2.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Geometry\Shadow_Point_GS.hlsl">

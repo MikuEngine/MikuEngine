@@ -157,37 +157,33 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Script\AimPointer.cpp" />   
-    <ClCompile Include="Script\SceneController_Lobby.cpp" />    
-    <ClCompile Include="Script\SceneController_Play.cpp" />     
+    <ClCompile Include="Script\AimPointer.cpp" />
+    <ClCompile Include="Script\SceneController_Lobby.cpp" />
+    <ClCompile Include="Script\SceneController_Play.cpp" />
     <ClCompile Include="Script\SceneController_Main.cpp" />
     <ClCompile Include="Script\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
     <ClCompile Include="Script\UpgradeNodeView.cpp" />
     <ClCompile Include="Script\UpgradeController.cpp" />
-
     <ClCompile Include="Script\CharacterScript\Common\BaseControllerScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\BulletFactory.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\BulletPlayer.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
-
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="Script\AimPointer.h" />
-	
-    <ClInclude Include="Script\SceneController_Lobby.h" />  
+    <ClInclude Include="Script\SceneController_Lobby.h" />
     <ClInclude Include="Script\SceneController_Play.h" />
     <ClInclude Include="Script\SceneController_Main.h" />
     <ClInclude Include="Script\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />
     <ClInclude Include="Script\UpgradeNodeView.h" />
     <ClInclude Include="Script\UpgradeController.h" />
-
     <ClInclude Include="Script\CharacterScript\Common\BaseControllerScript.h" />
     <ClInclude Include="Script\CharacterScript\Common\BulletFactory.h" />
     <ClInclude Include="Script\CharacterScript\Common\BulletMovement.h" />
@@ -196,7 +192,6 @@
     <ClInclude Include="Script\CharacterScript\Monster\MonsterScript.h" />
     <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h" />
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
-
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">
