@@ -1076,7 +1076,7 @@
                     }
                 },
                 {
-                    "Type": "TitleButtonController",
+                    "Type": "SceneController_Main",
                     "Active": true
                 }
             ]

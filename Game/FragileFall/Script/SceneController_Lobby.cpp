@@ -1,5 +1,5 @@
 ﻿#include "GamePCH.h"
-#include "HubButtonController.h"
+#include "SceneController_Lobby.h"
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIImage.h>
@@ -9,22 +9,22 @@
 
 namespace game
 {
-    void HubButtonController::Awake()
+    void SceneController_Lobby::Awake()
     {
         if (m_bound) return;
         m_bound = true;
 
-        BindButton("UI_EnterPlay", [self = engine::Ptr<HubButtonController>(this)]() {if (self) self->EnterPlay(); });
-        BindButton("UI_OpenUpgrade", [self = engine::Ptr<HubButtonController>(this)]() {if (self) self->OpenUpgrade(); });
-        BindButton("UI_OpenOption", [self = engine::Ptr<HubButtonController>(this)]() {if (self) self->OpenOption(); });
-        BindButton("UI_BackToMain", [self = engine::Ptr<HubButtonController>(this)]() {if (self) self->BackToMain(); });
-        BindButton("UI_BackToHub", [self = engine::Ptr<HubButtonController>(this)]() {if (self) self->BackToHub(); });
-        BindButton("UI_CloseButton_Option", [self = engine::Ptr<HubButtonController>(this)]() {if (self) self->Back(); });
+        BindButton("UI_EnterPlay", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->EnterPlay(); });
+        BindButton("UI_OpenUpgrade", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->OpenUpgrade(); });
+        BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->OpenOption(); });
+        BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->BackToMain(); });
+        BindButton("UI_BackToHub", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->BackToHub(); });
+        BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->Back(); });
 
-        BindButton("UI_EnterPlay", [self = engine::Ptr<HubButtonController>(this)](bool) {if (self) self->ShowEffect(); });
+        BindButton("UI_EnterPlay", [self = engine::Ptr<SceneController_Lobby>(this)](bool) {if (self) self->ShowEffect(); });
     }
 
-    void HubButtonController::Start()
+    void SceneController_Lobby::Start()
     {
         m_optionPopUp = engine::GameObject::Find("UI_OptionPopUp");
         if (m_optionPopUp) m_optionPopUp->SetActive(false);
@@ -42,25 +42,25 @@ namespace game
         SetUpgradeOpen(false);
     }
 
-    void HubButtonController::Update()
+    void SceneController_Lobby::Update()
     {
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
             HandleEscape();
     }
 
-    void HubButtonController::OnGui()
+    void SceneController_Lobby::OnGui()
     {
 
     }
 
-    void HubButtonController::Save(engine::json& j) const
+    void SceneController_Lobby::Save(engine::json& j) const
     {
         Object::Save(j);
         j["OptionOpen"] = m_isOptionOpen;
         j["UpgradeOpen"] = m_isUpgradeOpen;
     }
 
-    void HubButtonController::Load(const engine::json& j)
+    void SceneController_Lobby::Load(const engine::json& j)
     {
         Object::Load(j);
         engine::JsonGet(j, "OptionOpen", m_isOptionOpen);
@@ -69,7 +69,7 @@ namespace game
         SetUpgradeOpen(m_isUpgradeOpen);
     }
 
-    void HubButtonController::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
+    void SceneController_Lobby::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
     {
         auto* go = engine::GameObject::Find(name);
         if (!go) return;
@@ -80,7 +80,7 @@ namespace game
         button->AddOnClick(std::move(cb));
     }
 
-    void HubButtonController::BindButton(const std::string& name, engine::UIButton::HoverCallback cb)
+    void SceneController_Lobby::BindButton(const std::string& name, engine::UIButton::HoverCallback cb)
     {
         auto* go = engine::GameObject::Find(name);
         if (!go) return;
@@ -91,35 +91,35 @@ namespace game
         button->AddOnHover(std::move(cb));
     }
 
-    void HubButtonController::EnterPlay()
+    void SceneController_Lobby::EnterPlay()
     {
         LOG_PRINT("EnterPlay");
         engine::SceneManager::Get().ChangeScene("z_Hiro_Play");
     }
 
-    void HubButtonController::OpenUpgrade()
+    void SceneController_Lobby::OpenUpgrade()
     {
         SetUpgradeOpen(true);
     }
 
-    void HubButtonController::OpenOption()
+    void SceneController_Lobby::OpenOption()
     {
         LOG_PRINT("OpenOption");
         SetOptionOpen(true);
     }
 
-    void HubButtonController::BackToMain()
+    void SceneController_Lobby::BackToMain()
     {
         LOG_PRINT("BackToMain");
         engine::SceneManager::Get().ChangeScene("z_Hiro_Title");
     }
 
-    void HubButtonController::BackToHub()
+    void SceneController_Lobby::BackToHub()
     {
         SetUpgradeOpen(false);
     }
 
-    void HubButtonController::SetOptionOpen(bool open)
+    void SceneController_Lobby::SetOptionOpen(bool open)
     {
         m_isOptionOpen = open;
 
@@ -138,7 +138,7 @@ namespace game
         }
     }
 
-    void HubButtonController::SetUpgradeOpen(bool open)
+    void SceneController_Lobby::SetUpgradeOpen(bool open)
     {
         m_isUpgradeOpen = open;
 
@@ -160,7 +160,7 @@ namespace game
             m_groupSelect->SetActive(!open);
     }
 
-    void HubButtonController::HandleEscape()
+    void SceneController_Lobby::HandleEscape()
     {
         if (m_isOptionOpen)
         {
@@ -175,12 +175,12 @@ namespace game
         }
     }
 
-    void HubButtonController::Back()
+    void SceneController_Lobby::Back()
     {
         SetOptionOpen(false);
     }
 
-    void HubButtonController::ShowEffect()
+    void SceneController_Lobby::ShowEffect()
     {
 
     }

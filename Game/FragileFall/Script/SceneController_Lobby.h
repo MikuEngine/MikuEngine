@@ -5,10 +5,10 @@
 
 namespace game
 {
-    class HubButtonController :
-        public engine::Script<HubButtonController>
+    class SceneController_Lobby :
+        public engine::Script<SceneController_Lobby>
     {
-        REGISTER_COMPONENT(HubButtonController, Script)
+        REGISTER_COMPONENT(SceneController_Lobby, Script)
     public:
         void Awake() override;
         void Start() override;
