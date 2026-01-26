@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Common/Utility/Singleton.h"
 #include "Framework/System/SoundSystem.h"
@@ -16,6 +16,8 @@ namespace engine
     class PhysicsSystem;
     class CollisionSystem;
     class PathfindingSystem;
+    class EnvironmentSystem;
+    class PostProcessingSystem;
 
     class SystemManager :
         public Singleton<SystemManager>
@@ -31,6 +33,8 @@ namespace engine
         std::unique_ptr<UIEventSystem> m_uiEventSystem;
         std::unique_ptr<ParticleSystem> m_particleSystem;
         std::unique_ptr<PathfindingSystem> m_pathfindingSystem;
+        std::unique_ptr<EnvironmentSystem> m_environmentSystem;
+        std::unique_ptr<PostProcessingSystem> m_postProcessingSystem;
         
         // 물리 시스템 (unique_ptr로 관리)
         std::unique_ptr<PhysicsSystem> m_physicsSystem;
@@ -52,6 +56,8 @@ namespace engine
         LightSystem& GetLightSystem() const;
         ParticleSystem& GetParticleSystem() const;
         PathfindingSystem& GetPathfindingSystem() const;
+        EnvironmentSystem& GetEnvironmentSystem() const;
+        PostProcessingSystem& GetPostProcessingSystem() const;
 
         // 물리 시스템 접근
         PhysicsSystem& GetPhysicsSystem() const;

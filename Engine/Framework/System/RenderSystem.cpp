@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "RenderSystem.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -23,7 +23,12 @@
 #include "Framework/System/CameraSystem.h"
 #include "Framework/System/LightSystem.h"
 #include "Framework/System/ParticleSystem.h"
+#include "Framework/System/EnvironmentSystem.h"
+#include "Framework/System/PostProcessingSystem.h"
 #include "Framework/Object/Component/Light.h"
+#include "Framework/Object/Component/EnvironmentSettings.h"
+#include "Framework/Object/Component/PostProcessingSettings.h"
+#include "Core/System/ProjectSettings.h"
 
 #include "Framework/Object/Component/Canvas.h"
 #include "Framework/Object/Component/UI/UIElement.h"
@@ -41,17 +46,69 @@ namespace engine
         TimePoint g_startTime = Clock::now();
     }
 
-    RenderSystem::RenderSystem()
+    void RenderSystem::Register(Renderer* renderer)
     {
+        System<Renderer>::Register(renderer);
+
+        if (renderer->HasRenderType(RenderType::Opaque))
+        {
+            AddRenderer(m_opaqueList, renderer, RenderType::Opaque);
+        }
+
+        if (renderer->HasRenderType(RenderType::Cutout))
+        {
+            AddRenderer(m_cutoutList, renderer, RenderType::Cutout);
+        }
+
+        if (renderer->HasRenderType(RenderType::Transparent))
+        {
+            AddRenderer(m_transparentList, renderer, RenderType::Transparent);
+        }
+
+        if (renderer->HasRenderType(RenderType::Screen))
+        {
+            m_screenDirty = true;
+            m_screenLayoutDirty = true;
+            AddRenderer(m_screenList, renderer, RenderType::Screen);
+        }
+    }
+
+    void RenderSystem::Unregister(Renderer* renderer)
+    {
+        RemoveRenderer(m_opaqueList, renderer, RenderType::Opaque);
+        RemoveRenderer(m_cutoutList, renderer, RenderType::Cutout);
+        RemoveRenderer(m_transparentList, renderer, RenderType::Transparent);
+        RemoveRenderer(m_screenList, renderer, RenderType::Screen);
+
+        System<Renderer>::Unregister(renderer);
+    }
+
+    void RenderSystem::Initialize()
+    {
+        // ProjectSettings 로드
+        m_projectSettings.Load();
+        m_projectSettingsLoaded = true;
+
         m_frameCB = ResourceManager::Get().GetOrCreateConstantBuffer("Frame", sizeof(CbFrame));
 
         m_comparisonSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Comparison);
         m_clampSamplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Clamp);
 
-        m_skyboxEnv = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/PlainsSunsetEnvHDR.dds");
-        m_irradianceMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/PlainsSunsetDiffuseHDR.dds");
-        m_specularMap = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/PlainsSunsetSpecularHDR.dds");
-        m_brdfLut = ResourceManager::Get().GetOrCreateTexture("Resource/Texture/PlainsSunsetBrdf.dds");
+        // 텍스처 경로는 헬퍼 메서드를 통해 가져옴
+        std::string skyboxPath = GetSkyboxTexturePath();
+        std::string irradiancePath = GetIBLIrradiancePath();
+        std::string specularPath = GetIBLSpecularPath();
+        std::string brdfLutPath = GetIBLBrdfLutPath();
+
+        m_skyboxEnv = ResourceManager::Get().GetOrCreateTexture(skyboxPath);
+        m_irradianceMap = ResourceManager::Get().GetOrCreateTexture(irradiancePath);
+        m_specularMap = ResourceManager::Get().GetOrCreateTexture(specularPath);
+        m_brdfLut = ResourceManager::Get().GetOrCreateTexture(brdfLutPath);
+
+        m_currentSkyboxPath = skyboxPath;
+        m_currentIBLIrradiancePath = irradiancePath;
+        m_currentIBLSpecularPath = specularPath;
+        m_currentIBLBrdfLutPath = brdfLutPath;
 
         // cube
         {
@@ -129,45 +186,11 @@ namespace engine
         }
     }
 
-    void RenderSystem::Register(Renderer* renderer)
-    {
-        System<Renderer>::Register(renderer);
-
-        if (renderer->HasRenderType(RenderType::Opaque))
-        {
-            AddRenderer(m_opaqueList, renderer, RenderType::Opaque);
-        }
-
-        if (renderer->HasRenderType(RenderType::Cutout))
-        {
-            AddRenderer(m_cutoutList, renderer, RenderType::Cutout);
-        }
-
-        if (renderer->HasRenderType(RenderType::Transparent))
-        {
-            AddRenderer(m_transparentList, renderer, RenderType::Transparent);
-        }
-
-        if (renderer->HasRenderType(RenderType::Screen))
-        {
-            m_screenDirty = true;
-            m_screenLayoutDirty = true;
-            AddRenderer(m_screenList, renderer, RenderType::Screen);
-        }
-    }
-
-    void RenderSystem::Unregister(Renderer* renderer)
-    {
-        RemoveRenderer(m_opaqueList, renderer, RenderType::Opaque);
-        RemoveRenderer(m_cutoutList, renderer, RenderType::Cutout);
-        RemoveRenderer(m_transparentList, renderer, RenderType::Transparent);
-        RemoveRenderer(m_screenList, renderer, RenderType::Screen);
-
-        System<Renderer>::Unregister(renderer);
-    }
-
     void RenderSystem::Update()
     {
+        // 텍스처 경로가 변경되었는지 확인
+        CheckAndReloadTextures();
+        
         for (auto renderer : m_components)
         {
             renderer->Update();
@@ -176,6 +199,9 @@ namespace engine
 
     void RenderSystem::Render()
     {
+        // 텍스처 경로가 변경되었는지 확인 (렌더링 직전에 체크하여 바로 적용)
+        CheckAndReloadTextures();
+        
         auto& graphics = GraphicsDevice::Get();
         const auto& context = GraphicsDevice::Get().GetDeviceContext();
 
@@ -269,17 +295,29 @@ namespace engine
         cbFrame.mainLightColor = lightColor;
         cbFrame.mainLightIntensity = lightIntensity;
         cbFrame.maxHDRNits = graphics.GetMaxHDRNits();
-        cbFrame.exposure = -2.5f;
         cbFrame.shadowMapSize = graphics.GetShadowMapSize();
         cbFrame.useShadowPCF = 1;
         cbFrame.pcfSize = 2;
-        cbFrame.useIBL = 1;
-        cbFrame.bloomStrength = m_bloomStrength;
-        cbFrame.bloomThreshold = m_bloomThreshold;
-        cbFrame.bloomSoftKnee = m_bloomSoftKnee;
-        cbFrame.fxaaQualitySubpix = 0.75f;           // 0.0 to 1.0 (default: 0.75)
-        cbFrame.fxaaQualityEdgeThreshold = 0.166f;    // 0.063 to 0.333 (default: 0.166)
-        cbFrame.fxaaQualityEdgeThresholdMin = 0.0833f; // 0.0312 to 0.0833 (default: 0.0833)
+        cbFrame.useIBL = GetUseIBL() ? 1 : 0;
+        
+        // 스카이박스/IBL 설정
+        cbFrame.skyboxColor = GetSkyboxColor();
+        cbFrame.useSkyboxTexture = GetUseSkyboxTexture() ? 1.0f : 0.0f;
+        cbFrame.skyboxHorizonColor = GetSkyboxHorizonColor();
+        cbFrame.useIBLTexture = GetUseIBLTexture() ? 1.0f : 0.0f;
+        cbFrame.iblAmbientColor = GetIBLAmbientColor();
+        
+        // 포스트프로세싱 설정
+        cbFrame.exposure = GetExposure();
+        cbFrame.bloomStrength = GetBloomStrength();
+        cbFrame.bloomThreshold = GetBloomThreshold();
+        cbFrame.bloomSoftKnee = GetBloomSoftKnee();
+        cbFrame.enableBloom = GetEnableBloom() ? 1.0f : 0.0f;
+        cbFrame.enableToneMapping = GetEnableToneMapping() ? 1.0f : 0.0f;
+        cbFrame.fxaaQualitySubpix = GetFXAAQualitySubpix();
+        cbFrame.fxaaQualityEdgeThreshold = GetFXAAQualityEdgeThreshold();
+        cbFrame.fxaaQualityEdgeThresholdMin = GetFXAAQualityEdgeThresholdMin();
+        cbFrame.enableFXAA = GetEnableFXAA() ? 1.0f : 0.0f;
 
         context->VSSetConstantBuffers(
             static_cast<UINT>(ConstantBufferSlot::Frame),
@@ -464,9 +502,9 @@ namespace engine
 
     void RenderSystem::GetBloomSettings(float& bloomStrength, float& bloomThreshold, float& bloomSoftKnee)
     {
-        bloomStrength = m_bloomStrength;
-        bloomThreshold = m_bloomThreshold;
-        bloomSoftKnee = m_bloomSoftKnee;
+        bloomStrength = GetBloomStrength();
+        bloomThreshold = GetBloomThreshold();
+        bloomSoftKnee = GetBloomSoftKnee();
     }
 
     void RenderSystem::SetBloomSettings(float bloomStrength, float bloomThreshold, float bloomSoftKnee)
@@ -474,6 +512,221 @@ namespace engine
         m_bloomStrength = bloomStrength;
         m_bloomThreshold = bloomThreshold;
         m_bloomSoftKnee = bloomSoftKnee;
+    }
+
+    // 텍스처 경로 가져오기 (컴포넌트 > ProjectSettings)
+    std::string RenderSystem::GetSkyboxTexturePath() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && !envSettings->GetSkyboxTexturePath().empty())
+            return envSettings->GetSkyboxTexturePath();
+        
+        return m_projectSettings.skyboxTexturePath;
+    }
+
+    std::string RenderSystem::GetIBLIrradiancePath() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && !envSettings->GetIBLIrradiancePath().empty())
+            return envSettings->GetIBLIrradiancePath();
+        
+        return m_projectSettings.iblIrradiancePath;
+    }
+
+    std::string RenderSystem::GetIBLSpecularPath() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && !envSettings->GetIBLSpecularPath().empty())
+            return envSettings->GetIBLSpecularPath();
+        
+        return m_projectSettings.iblSpecularPath;
+    }
+
+    std::string RenderSystem::GetIBLBrdfLutPath() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && !envSettings->GetIBLBrdfLutPath().empty())
+            return envSettings->GetIBLBrdfLutPath();
+        
+        return m_projectSettings.iblBrdfLutPath;
+    }
+
+    // 색상 가져오기 (컴포넌트 > ProjectSettings)
+    Vector3 RenderSystem::GetSkyboxColor() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && envSettings->HasSkyboxColorOverride())
+            return envSettings->GetSkyboxColor();
+        
+        return m_projectSettings.skyboxColor;
+    }
+
+    Vector3 RenderSystem::GetSkyboxHorizonColor() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && envSettings->HasSkyboxHorizonColorOverride())
+            return envSettings->GetSkyboxHorizonColor();
+        
+        return m_projectSettings.skyboxHorizonColor;
+    }
+
+    Vector3 RenderSystem::GetIBLAmbientColor() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && envSettings->HasIBLAmbientColorOverride())
+            return envSettings->GetIBLAmbientColor();
+        
+        return m_projectSettings.iblAmbientColor;
+    }
+
+    // 플래그 가져오기 (컴포넌트 > ProjectSettings)
+    bool RenderSystem::GetUseSkyboxTexture() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && envSettings->GetUseSkyboxTexture() >= 0)
+            return envSettings->GetUseSkyboxTexture() > 0;
+        
+        return m_projectSettings.useSkyboxTexture;
+    }
+
+    bool RenderSystem::GetUseIBLTexture() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && envSettings->GetUseIBLTexture() >= 0)
+            return envSettings->GetUseIBLTexture() > 0;
+        
+        return m_projectSettings.useIBLTexture;
+    }
+
+    bool RenderSystem::GetUseIBL() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings && envSettings->GetUseIBL() >= 0)
+            return envSettings->GetUseIBL() > 0;
+        
+        return m_projectSettings.useIBL;
+    }
+
+    // 포스트프로세싱 값 가져오기 (컴포넌트 > ProjectSettings)
+    float RenderSystem::GetBloomStrength() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->HasBloomStrengthOverride())
+            return postProcess->GetBloomStrength();
+        
+        return m_projectSettings.bloomStrength;
+    }
+
+    float RenderSystem::GetBloomThreshold() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->HasBloomThresholdOverride())
+            return postProcess->GetBloomThreshold();
+        
+        return m_projectSettings.bloomThreshold;
+    }
+
+    float RenderSystem::GetBloomSoftKnee() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->HasBloomSoftKneeOverride())
+            return postProcess->GetBloomSoftKnee();
+        
+        return m_projectSettings.bloomSoftKnee;
+    }
+
+    bool RenderSystem::GetEnableBloom() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->GetEnableBloom() >= 0)
+            return postProcess->GetEnableBloom() > 0;
+        
+        return m_projectSettings.enableBloom;
+    }
+
+    float RenderSystem::GetExposure() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->HasExposureOverride())
+            return postProcess->GetExposure();
+        
+        return m_projectSettings.exposure;
+    }
+
+    bool RenderSystem::GetEnableToneMapping() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->GetEnableToneMapping() >= 0)
+            return postProcess->GetEnableToneMapping() > 0;
+        
+        return m_projectSettings.enableToneMapping;
+    }
+
+    float RenderSystem::GetFXAAQualitySubpix() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->HasFXAAQualitySubpixOverride())
+            return postProcess->GetFXAAQualitySubpix();
+        
+        return m_projectSettings.fxaaQualitySubpix;
+    }
+
+    float RenderSystem::GetFXAAQualityEdgeThreshold() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->HasFXAAQualityEdgeThresholdOverride())
+            return postProcess->GetFXAAQualityEdgeThreshold();
+        
+        return m_projectSettings.fxaaQualityEdgeThreshold;
+    }
+
+    float RenderSystem::GetFXAAQualityEdgeThresholdMin() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->HasFXAAQualityEdgeThresholdMinOverride())
+            return postProcess->GetFXAAQualityEdgeThresholdMin();
+        
+        return m_projectSettings.fxaaQualityEdgeThresholdMin;
+    }
+
+    bool RenderSystem::GetEnableFXAA() const
+    {
+        auto* postProcess = SystemManager::Get().GetPostProcessingSystem().GetPostProcessingSettings();
+        if (postProcess && postProcess->GetEnableFXAA() >= 0)
+            return postProcess->GetEnableFXAA() > 0;
+        
+        return m_projectSettings.enableFXAA;
+    }
+
+    void RenderSystem::CheckAndReloadTextures()
+    {
+        std::string newSkyboxPath = GetSkyboxTexturePath();
+        if (m_currentSkyboxPath != newSkyboxPath)
+        {
+            m_skyboxEnv = ResourceManager::Get().GetOrCreateTexture(newSkyboxPath);
+            m_currentSkyboxPath = newSkyboxPath;
+        }
+
+        std::string newIrradiancePath = GetIBLIrradiancePath();
+        if (m_currentIBLIrradiancePath != newIrradiancePath)
+        {
+            m_irradianceMap = ResourceManager::Get().GetOrCreateTexture(newIrradiancePath);
+            m_currentIBLIrradiancePath = newIrradiancePath;
+        }
+
+        std::string newSpecularPath = GetIBLSpecularPath();
+        if (m_currentIBLSpecularPath != newSpecularPath)
+        {
+            m_specularMap = ResourceManager::Get().GetOrCreateTexture(newSpecularPath);
+            m_currentIBLSpecularPath = newSpecularPath;
+        }
+
+        std::string newBrdfLutPath = GetIBLBrdfLutPath();
+        if (m_currentIBLBrdfLutPath != newBrdfLutPath)
+        {
+            m_brdfLut = ResourceManager::Get().GetOrCreateTexture(newBrdfLutPath);
+            m_currentIBLBrdfLutPath = newBrdfLutPath;
+        }
     }
 
     GameObject* RenderSystem::PickObject(int mouseX, int mouseY)

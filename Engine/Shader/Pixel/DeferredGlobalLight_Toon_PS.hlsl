@@ -134,16 +134,29 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
         
         float3 kd = lerp(1.0f - f, 0.0f, metalness);
         
-        float3 irradiance = g_texIBLIrradiance.Sample(g_samLinear, n).rgb;
+        float3 irradiance;
+        float3 prefilteredColor;
+        
+        if (g_useIBLTexture > 0.5f)
+        {
+            // ??? ??
+            irradiance = g_texIBLIrradiance.Sample(g_samLinear, n).rgb;
+            
+            uint specularTextureLevels, width, height;
+            g_texIBLSpecular.GetDimensions(0, width, height, specularTextureLevels);
+            
+            float3 viewReflect = -(v - 2.0 * nDotV * n);
+            
+            prefilteredColor = g_texIBLSpecular.SampleLevel(g_samLinear, viewReflect, roughness * specularTextureLevels).rgb;
+        }
+        else
+        {
+            // ?? ??
+            irradiance = g_iblAmbientColor;
+            prefilteredColor = g_iblAmbientColor;
+        }
     
         float3 diffuseIBL = kd * baseColor / PI * irradiance;
-    
-        uint specularTextureLevels, width, height;
-        g_texIBLSpecular.GetDimensions(0, width, height, specularTextureLevels);
-    
-        float3 viewReflect = -(v - 2.0 * nDotV * n);
-    
-        float3 prefilteredColor = g_texIBLSpecular.SampleLevel(g_samLinear, viewReflect, roughness * specularTextureLevels).rgb;
     
         float2 specularBRDF = g_texIBLSpecularBRDFLUT.Sample(g_samClamp, float2(nDotV, roughness)).rg;
     

@@ -20,6 +20,30 @@ namespace engine
         json root;
 
         root["SceneList"] = sceneList;
+        
+        // 스카이박스/IBL 설정
+        root["SkyboxTexturePath"] = skyboxTexturePath;
+        root["IBLIrradiancePath"] = iblIrradiancePath;
+        root["IBLSpecularPath"] = iblSpecularPath;
+        root["IBLBrdfLutPath"] = iblBrdfLutPath;
+        root["SkyboxColor"] = skyboxColor;
+        root["SkyboxHorizonColor"] = skyboxHorizonColor;
+        root["IBLAmbientColor"] = iblAmbientColor;
+        root["UseSkyboxTexture"] = useSkyboxTexture;
+        root["UseIBLTexture"] = useIBLTexture;
+        root["UseIBL"] = useIBL;
+        
+        // 포스트프로세싱 설정
+        root["BloomStrength"] = bloomStrength;
+        root["BloomThreshold"] = bloomThreshold;
+        root["BloomSoftKnee"] = bloomSoftKnee;
+        root["EnableBloom"] = enableBloom;
+        root["Exposure"] = exposure;
+        root["EnableToneMapping"] = enableToneMapping;
+        root["FXAAQualitySubpix"] = fxaaQualitySubpix;
+        root["FXAAQualityEdgeThreshold"] = fxaaQualityEdgeThreshold;
+        root["FXAAQualityEdgeThresholdMin"] = fxaaQualityEdgeThresholdMin;
+        root["EnableFXAA"] = enableFXAA;
 
         std::filesystem::path path{ g_settingPath };
 
@@ -47,6 +71,30 @@ namespace engine
             {
                 json root = json::parse(fileData.begin(), fileData.end());
                 JsonGet(root, "SceneList", sceneList);
+                
+                // 스카이박스/IBL 설정
+                JsonGet(root, "SkyboxTexturePath", skyboxTexturePath);
+                JsonGet(root, "IBLIrradiancePath", iblIrradiancePath);
+                JsonGet(root, "IBLSpecularPath", iblSpecularPath);
+                JsonGet(root, "IBLBrdfLutPath", iblBrdfLutPath);
+                JsonGet(root, "SkyboxColor", skyboxColor);
+                JsonGet(root, "SkyboxHorizonColor", skyboxHorizonColor);
+                JsonGet(root, "IBLAmbientColor", iblAmbientColor);
+                JsonGet(root, "UseSkyboxTexture", useSkyboxTexture);
+                JsonGet(root, "UseIBLTexture", useIBLTexture);
+                JsonGet(root, "UseIBL", useIBL);
+                
+                // 포스트프로세싱 설정
+                JsonGet(root, "BloomStrength", bloomStrength);
+                JsonGet(root, "BloomThreshold", bloomThreshold);
+                JsonGet(root, "BloomSoftKnee", bloomSoftKnee);
+                JsonGet(root, "EnableBloom", enableBloom);
+                JsonGet(root, "Exposure", exposure);
+                JsonGet(root, "EnableToneMapping", enableToneMapping);
+                JsonGet(root, "FXAAQualitySubpix", fxaaQualitySubpix);
+                JsonGet(root, "FXAAQualityEdgeThreshold", fxaaQualityEdgeThreshold);
+                JsonGet(root, "FXAAQualityEdgeThresholdMin", fxaaQualityEdgeThresholdMin);
+                JsonGet(root, "EnableFXAA", enableFXAA);
             }
             catch (const json::parse_error& e)
             {
@@ -67,6 +115,30 @@ namespace engine
                         json root;
                         i >> root;
                         JsonGet(root, "SceneList", sceneList);
+                        
+                        // 스카이박스/IBL 설정
+                        JsonGet(root, "SkyboxTexturePath", skyboxTexturePath);
+                        JsonGet(root, "IBLIrradiancePath", iblIrradiancePath);
+                        JsonGet(root, "IBLSpecularPath", iblSpecularPath);
+                        JsonGet(root, "IBLBrdfLutPath", iblBrdfLutPath);
+                        JsonGet(root, "SkyboxColor", skyboxColor);
+                        JsonGet(root, "SkyboxHorizonColor", skyboxHorizonColor);
+                        JsonGet(root, "IBLAmbientColor", iblAmbientColor);
+                        JsonGet(root, "UseSkyboxTexture", useSkyboxTexture);
+                        JsonGet(root, "UseIBLTexture", useIBLTexture);
+                        JsonGet(root, "UseIBL", useIBL);
+                        
+                        // 포스트프로세싱 설정
+                        JsonGet(root, "BloomStrength", bloomStrength);
+                        JsonGet(root, "BloomThreshold", bloomThreshold);
+                        JsonGet(root, "BloomSoftKnee", bloomSoftKnee);
+                        JsonGet(root, "EnableBloom", enableBloom);
+                        JsonGet(root, "Exposure", exposure);
+                        JsonGet(root, "EnableToneMapping", enableToneMapping);
+                        JsonGet(root, "FXAAQualitySubpix", fxaaQualitySubpix);
+                        JsonGet(root, "FXAAQualityEdgeThreshold", fxaaQualityEdgeThreshold);
+                        JsonGet(root, "FXAAQualityEdgeThresholdMin", fxaaQualityEdgeThresholdMin);
+                        JsonGet(root, "EnableFXAA", enableFXAA);
                     }
                     catch (const json::parse_error& e)
                     {

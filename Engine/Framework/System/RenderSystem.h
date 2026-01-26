@@ -2,6 +2,7 @@
 
 #include "Framework/System/System.h"
 #include "Framework/Object/Component/Renderer/Renderer.h"
+#include "Core/System/ProjectSettings.h"
 
 namespace engine
 {
@@ -108,14 +109,22 @@ namespace engine
         float m_prevViewportH = -1.0f;
         bool  m_screenLayoutDirty = true;
 
-    public:
-        RenderSystem();
+        // ProjectSettings 캐시
+        ProjectSettings m_projectSettings;
+        bool m_projectSettingsLoaded = false;
+        
+        // 현재 텍스처 경로 (변경 감지용)
+        std::string m_currentSkyboxPath;
+        std::string m_currentIBLIrradiancePath;
+        std::string m_currentIBLSpecularPath;
+        std::string m_currentIBLBrdfLutPath;
 
     public:
         void Register(Renderer* renderer) override;
         void Unregister(Renderer* renderer) override;
 
     public:
+        void Initialize();
         void Update();
         void Render();
 
@@ -140,5 +149,36 @@ namespace engine
 
         std::vector<Renderer*> RebuildScreenDrawList(const std::vector<Renderer*>& v);
         void UpdateCanvasLayout();
+
+        // 헬퍼 메서드: 텍스처 경로
+        std::string GetSkyboxTexturePath() const;
+        std::string GetIBLIrradiancePath() const;
+        std::string GetIBLSpecularPath() const;
+        std::string GetIBLBrdfLutPath() const;
+
+        // 헬퍼 메서드: 색상
+        Vector3 GetSkyboxColor() const;
+        Vector3 GetSkyboxHorizonColor() const;
+        Vector3 GetIBLAmbientColor() const;
+
+        // 헬퍼 메서드: 플래그
+        bool GetUseSkyboxTexture() const;
+        bool GetUseIBLTexture() const;
+        bool GetUseIBL() const;
+
+        // 헬퍼 메서드: 포스트프로세싱
+        float GetBloomStrength() const;
+        float GetBloomThreshold() const;
+        float GetBloomSoftKnee() const;
+        bool GetEnableBloom() const;
+        float GetExposure() const;
+        bool GetEnableToneMapping() const;
+        float GetFXAAQualitySubpix() const;
+        float GetFXAAQualityEdgeThreshold() const;
+        float GetFXAAQualityEdgeThresholdMin() const;
+        bool GetEnableFXAA() const;
+
+        // 텍스처 변경 감지 및 재로딩
+        void CheckAndReloadTextures();
     };
 }

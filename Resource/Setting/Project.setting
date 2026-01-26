@@ -2,5 +2,36 @@
     "SceneList": [
         "SpriteRendererTest",
         "StaticMeshTest"
-    ]
+    ],
+    "SkyboxTexturePath": "Resource/Texture/PlainsSunsetEnvHDR.dds",
+    "IBLIrradiancePath": "Resource/Texture/PlainsSunsetDiffuseHDR.dds",
+    "IBLSpecularPath": "Resource/Texture/PlainsSunsetSpecularHDR.dds",
+    "IBLBrdfLutPath": "Resource/Texture/PlainsSunsetBrdf.dds",
+    "SkyboxColor": {
+        "x": 0.5,
+        "y": 0.699999988079071,
+        "z": 1.0
+    },
+    "SkyboxHorizonColor": {
+        "x": 0.30000001192092896,
+        "y": 0.4000000059604645,
+        "z": 0.5
+    },
+    "IBLAmbientColor": {
+        "x": 0.5,
+        "y": 0.699999988079071,
+        "z": 1.0
+    },
+    "UseSkyboxTexture": true,
+    "UseIBLTexture": true,
+    "BloomStrength": 0.05000000074505806,
+    "BloomThreshold": 1.0,
+    "BloomSoftKnee": 2.0,
+    "EnableBloom": true,
+    "Exposure": -2.5,
+    "EnableToneMapping": true,
+    "FXAAQualitySubpix": 0.75,
+    "FXAAQualityEdgeThreshold": 0.16599999368190765,
+    "FXAAQualityEdgeThresholdMin": 0.08330000191926956,
+    "EnableFXAA": true
 }
