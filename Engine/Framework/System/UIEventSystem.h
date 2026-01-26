@@ -7,7 +7,7 @@ namespace engine
 {
 	class UIInteractable;
 	class Canvas;
-	class UIRect;
+	struct UIRect;
 
 	enum class PointerPhase
 	{

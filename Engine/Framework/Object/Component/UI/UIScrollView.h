@@ -6,7 +6,7 @@
 namespace engine
 {
 	class RectTransform;
-	class UIRect;
+	struct UIRect;
 	class UISlider;
 
 	class UIScrollView : public UIElement, public UIInteractable
