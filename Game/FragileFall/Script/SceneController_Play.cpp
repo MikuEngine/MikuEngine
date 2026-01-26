@@ -86,6 +86,9 @@ namespace game
         }
 
         UpdateBlocker();
+
+        // TODO : 시간 멈춤 / 재개 구현
+        //engine::Time::SetTimeScale()
     }
 
     void SceneController_Play::OpenMenu()

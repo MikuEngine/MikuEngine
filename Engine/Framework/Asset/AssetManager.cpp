@@ -211,7 +211,7 @@ namespace engine
         return spriteData;
     }
 
-    std::shared_ptr<SoundData> AssetManager::GetOrCreateSoundData(const std::string &filePath, const std::string &option, LifeScope scope)
+    std::shared_ptr<SoundData> AssetManager::GetOrCreateSoundData(const std::string& filePath, const std::string& option, LifeScope scope)
     {
         if (auto find = m_soundDatas.find(filePath); find != m_soundDatas.end())
         {

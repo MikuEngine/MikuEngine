@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PreloadManager.h"
 
 #include <fstream>
@@ -6,6 +6,7 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Core/System/VirtualFileSystem.h"
+#include "Framework/System/SoundSystem.h"
 
 namespace engine
 {
@@ -132,12 +133,33 @@ namespace engine
     void PreloadManager::LoadAsset(const json& assetData, bool isGlobal)
     {
         std::string type = assetData.value("Type", "");
-        std::string path = assetData.value("Path", "");
-
-        if (type.empty() || path.empty())
-            return;
+        if (type.empty()) return;
 
         LifeScope scope = isGlobal ? LifeScope::Global : LifeScope::Scene;
+
+        if (type == "RandomSound")
+        {
+            std::string name = assetData.value("Name", "");
+
+            if (assetData.contains("Paths") && assetData["Paths"].is_array())
+            {
+                std::vector<std::string> paths;
+                for (const auto& p : assetData["Paths"])
+                {
+                    paths.push_back(p);
+                }
+
+                std::string option = assetData.value("Option", "SFX");
+
+                if (!name.empty() && !paths.empty())
+                {
+                    SoundSystem::Get().CreateRandomSound(name, paths, option, scope);
+                }
+            }
+            return; 
+        }
+
+        std::string path = assetData.value("Path", "");
 
         if (type == "Texture")
         {

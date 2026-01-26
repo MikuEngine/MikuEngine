@@ -102,3 +102,31 @@ namespace engine
         void Load(const json& j) override;
     };
 }
+
+/*//
+<< AudioSource Component event 사용 예시 >>
+** 재생 후 로그 출력 **
+attackSound->Play([]() {
+    std::cout << "공격 소리 끝!" << std::endl;
+    });
+
+** 재생 후 오브젝트 삭제 **
+dieSound->Play([this]()
+    {
+        // 엔진이 안전하다면 아래 코드 사용 가능
+        this->m_destroyPending = true;
+        // 플래그를 세우거나
+        // 엔진이 싱글 스레드 이벤트 처리를 보장한다면
+        GameObject::Destroy(this->GetGameObject());
+
+    }, 0.0f); // 두 번째 인자는 fadeInDuration
+
+
+<< play fadeIn / fadeOut 사용 예시 >>
+** Play(float fadeIn, float duration, float fadeOut) 함수 **
+// 1.5초 동안 소리가 커짐
+// 3.0초 동안 소리 유지
+// 1.5초 동안 소리가 줄어들며 종료
+// 총 재생 시간: 6초
+AudioSource->Play(1.5f, 3.0f, 1.5f);
+//*/
