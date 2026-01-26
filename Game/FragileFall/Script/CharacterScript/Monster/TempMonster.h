@@ -17,6 +17,7 @@ namespace game
     private:
         engine::SpriteRenderer* m_spriteRenderer = nullptr;
         int m_hitCount = 0;
+        bool m_isCrystalized = false;
 
     public:
         void Start() override;

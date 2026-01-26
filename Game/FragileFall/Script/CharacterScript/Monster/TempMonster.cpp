@@ -2,6 +2,7 @@
 #include "TempMonster.h"
 
 #include <Framework/Object/Component/Renderer/SpriteRenderer.h>
+#include <Framework/Asset/Prefab.h>
 
 namespace game
 {
@@ -46,6 +47,18 @@ namespace game
             m_hitCount);
         
         ToggleHitIndicator();
+
+        if (m_hitCount > 5)
+        {
+            if (!m_isCrystalized)
+            {
+                m_isCrystalized = true;
+
+                auto go = engine::Prefab::Instantiate("Crystalized");
+                go->GetTransform()->SetParent(GetTransform(), false);
+                go->GetTransform()->SetLocalPosition(engine::Vector3(0.0f, 2.0f, 0.0f));
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
