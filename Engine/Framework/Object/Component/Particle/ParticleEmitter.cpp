@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ParticleEmitter.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -13,22 +13,26 @@ namespace engine
 		m_particles.reserve(props.maxParticles);
 	}
 
-	void ParticleEmitter::Update(float dt, const Vector3& emitterPosition, const Vector3& cameraPosition) 
+	void ParticleEmitter::Update(float dt, const Vector3& emitterPosition, const Vector3& cameraPosition, bool isPlaying) 
 	{
-		m_emitterAge += dt;
-
-		for (auto& burst : m_props.bursts)
+		// 재생 중일 때만 emitter age와 파티클 생성 처리
+		if (isPlaying)
 		{
-			ProcessBurst(burst, m_emitterAge, emitterPosition);
-		}
+			m_emitterAge += dt;
 
-		m_emissionTimer += dt;
-		float emissionInterval = 1.0f / std::max(EPSILON, m_props.emissionRate);
+			for (auto& burst : m_props.bursts)
+			{
+				ProcessBurst(burst, m_emitterAge, emitterPosition);
+			}
 
-		while (m_emissionTimer >= emissionInterval)
-		{
-			Emit(emitterPosition + m_props.positionOffset);
-			m_emissionTimer -= emissionInterval;
+			m_emissionTimer += dt;
+			float emissionInterval = 1.0f / std::max(EPSILON, m_props.emissionRate);
+
+			while (m_emissionTimer >= emissionInterval)
+			{
+				Emit(emitterPosition + m_props.positionOffset);
+				m_emissionTimer -= emissionInterval;
+			}
 		}
 
 		for (auto& p : m_particles)
@@ -158,6 +162,49 @@ namespace engine
 			{
 				return a.distanceToCamera > b.distanceToCamera;
 			});
+	}
+
+	size_t ParticleEmitter::GetActiveParticleCount() const
+	{
+		return m_particles.size();
+	}
+
+	bool ParticleEmitter::IsFinished(bool isPlaying) const
+	{
+		// 재생 중이 아니면 (Stop 호출됨) 활성 파티클이 없으면 끝난 것으로 간주
+		// Stop() 후에는 파티클이 자연스럽게 사라질 때까지 기다림
+		if (!isPlaying)
+		{
+			return m_particles.size() == 0;
+		}
+
+		// 재생 중일 때는:
+		// 1. 활성 파티클이 있으면 아직 끝나지 않음
+		if (m_particles.size() > 0)
+		{
+			return false;
+		}
+
+		// 2. 활성 파티클이 없고, 더 이상 파티클을 생성하지 않을 때만 끝난 것으로 간주
+		// emissionRate가 0이고, 모든 burst가 끝났는지 확인
+		if (m_props.emissionRate <= 0.0f)
+		{
+			// 모든 burst가 완료되었는지 확인
+			for (const auto& burst : m_props.bursts)
+			{
+				// cycles가 0이면 무한 반복이므로 끝나지 않음
+				if (burst.cycles == 0)
+				{
+					return false;
+				}
+				// cycles가 설정되어 있으면 모든 cycle이 완료되었는지 확인
+				// (실제로는 Update에서 처리되므로 여기서는 단순히 cycles가 0이 아니면 끝날 수 있다고 가정)
+			}
+			return true;
+		}
+
+		// emissionRate가 0보다 크면 계속 생성되므로 끝나지 않음
+		return false;
 	}
 
 	void ParticleEmitter::Save(json& j) const

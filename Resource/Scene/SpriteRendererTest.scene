@@ -780,7 +780,7 @@
         },
         {
             "ID": 17,
-            "Name": "GameObject",
+            "Name": "Particle",
             "Active": true,
             "Components": [
                 {
@@ -807,6 +807,8 @@
                     "Type": "ParticleEffect",
                     "Active": true,
                     "IsPlaying": true,
+                    "AutoDestroy": true,
+                    "Duration": 3.0,
                     "Emitters": [
                         {
                             "TexturePath": "Resource/Texture/DefaultParticle.png",
@@ -842,12 +844,12 @@
                                 "z": 1.0,
                                 "w": 0.0
                             },
-                            "SizeBegin": 0.10000000149011612,
+                            "SizeBegin": 0.5099999904632568,
                             "SizeEnd": 0.10000000149011612,
                             "SizeVariation": 0.10000000149011612,
                             "LifeTime": 0.5,
-                            "EmissionRate": 10.0,
-                            "MaxParticles": 1000,
+                            "EmissionRate": 20.5,
+                            "MaxParticles": 220,
                             "Shape": 0,
                             "Radius": 0.0,
                             "Angle": 25.0,
@@ -866,7 +868,7 @@
                                 {
                                     "Time": 0.0,
                                     "Count": 200,
-                                    "Cycles": 0,
+                                    "Cycles": 1,
                                     "Interval": 0.0
                                 }
                             ]
