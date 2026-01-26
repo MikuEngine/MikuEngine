@@ -157,11 +157,27 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Script\AimPointer.cpp" />
+    <ClCompile Include="Script\BaseControllerScript.cpp" />
+    <ClCompile Include="Script\BulletFactory.cpp" />
+    <ClCompile Include="Script\BulletPlayer.cpp" />
+    <ClCompile Include="Script\MonsterScript.cpp" />
+    <ClCompile Include="Script\TempMonster.cpp" />
+    <ClCompile Include="Script\TestShootingPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
+    <ClInclude Include="Script\AimPointer.h" />
+    <ClInclude Include="Script\BaseControllerScript.h" />
+    <ClInclude Include="Script\BulletFactory.h" />
+    <ClInclude Include="Script\BulletMovement.h" />
+    <ClInclude Include="Script\BulletParams.h" />
+    <ClInclude Include="Script\BulletPlayer.h" />
+    <ClInclude Include="Script\MonsterScript.h" />
+    <ClInclude Include="Script\TempMonster.h" />
+    <ClInclude Include="Script\TestShootingPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">
