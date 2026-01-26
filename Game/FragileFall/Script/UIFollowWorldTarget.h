@@ -14,7 +14,7 @@ namespace game
     class UIFollowWorldTarget :
         public engine::Script<UIFollowWorldTarget>
     {
-        REGISTER_COMPONENT(UIFollowWorldTarget, Script)
+        REGISTER_SCRIPT(UIFollowWorldTarget, Script)
 
     public:
         void Awake() override;

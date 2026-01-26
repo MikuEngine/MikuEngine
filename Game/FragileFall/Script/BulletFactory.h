@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "BulletParams.h"
@@ -20,7 +20,7 @@ namespace game
     class BulletFactory :
         public engine::Script<BulletFactory>
     {
-        REGISTER_COMPONENT(BulletFactory, Script)
+        REGISTER_SCRIPT(BulletFactory, Script)
 
     public:
         // ─────────────────────────────────────────────

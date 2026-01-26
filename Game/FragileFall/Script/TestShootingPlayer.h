@@ -30,7 +30,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     class TestShootingPlayer : public BaseControllerScript
     {
-        REGISTER_COMPONENT(TestShootingPlayer, BaseControllerScript)
+        REGISTER_SCRIPT(TestShootingPlayer, BaseControllerScript)
 
     protected:
         // ─────────────────────────────────────────────

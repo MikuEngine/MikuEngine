@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -45,7 +45,7 @@ namespace game
     class BaseControllerScript :
         public engine::Script<BaseControllerScript>
     {
-        REGISTER_COMPONENT(BaseControllerScript, Script)
+        REGISTER_SCRIPT(BaseControllerScript, Script)
 
     protected:
         // ─────────────────────────────────────────────

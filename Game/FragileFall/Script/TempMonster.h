@@ -12,7 +12,7 @@ namespace game
     class TempMonster :
         public engine::Script<TempMonster>
     {
-        REGISTER_COMPONENT(TempMonster, Script)
+        REGISTER_SCRIPT(TempMonster, Script)
 
     private:
         engine::SpriteRenderer* m_spriteRenderer = nullptr;

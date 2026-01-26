@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "BaseControllerScript.h"
 
@@ -27,7 +27,7 @@ namespace game
     class MonsterScript :
         public BaseControllerScript
     {
-        REGISTER_COMPONENT(MonsterScript, BaseControllerScript)
+        REGISTER_SCRIPT(MonsterScript, BaseControllerScript)
 
     protected:
         // ─────────────────────────────────────────────
