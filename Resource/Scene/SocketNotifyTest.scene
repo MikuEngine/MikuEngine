@@ -115,12 +115,8 @@
                             "Path": "Resource/Animation/TestPunch.fbx",
                             "Notifies": [
                                 {
-                                    "Name": "Event",
-                                    "Time": 0.34506282210350037
-                                },
-                                {
-                                    "Name": "Event",
-                                    "Time": 0.6901256442070007
+                                    "Name": "PunchSound",
+                                    "Time": 0.5769599080085754
                                 }
                             ]
                         }
