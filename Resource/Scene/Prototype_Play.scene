@@ -297,7 +297,7 @@
                 {
                     "Type": "PlayerControllerScript",
                     "Active": true,
-                    "MoveSpeed": 5.0,
+                    "MoveSpeed": 0.5,
                     "FireRate": 0.20000000298023224,
                     "BulletSpeed": 1.0,
                     "BulletLifetime": 3.0,
@@ -332,12 +332,12 @@
                 {
                     "Type": "Rigidbody",
                     "Active": true,
-                    "type": 1,
+                    "type": 0,
                     "mass": 0.0010000000474974513,
                     "linearDamping": 0.0,
                     "angularDamping": 0.0,
                     "useGravity": false,
-                    "constraints": 0
+                    "constraints": 42
                 },
                 {
                     "Type": "BoxCollider",
@@ -12635,7 +12635,7 @@
                 {
                     "Type": "Rigidbody",
                     "Active": true,
-                    "type": 1,
+                    "type": 0,
                     "mass": 1.0,
                     "linearDamping": 0.0,
                     "angularDamping": 100.0,

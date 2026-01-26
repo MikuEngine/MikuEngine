@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace engine
 {
@@ -93,7 +93,7 @@ namespace engine
 
 	public:
 		void Initialize(const EmitterProps& props);
-		void Update(float dt, const Vector3& emitterPosition, const Vector3& cameraPosition);
+		void Update(float dt, const Vector3& emitterPosition, const Vector3& cameraPosition, bool isPlaying = true);
 		void Reset();
 
 		const std::vector<Particle>& GetParticles() const;
@@ -105,6 +105,10 @@ namespace engine
 		void SetTexturePath(const std::string& filePath);
 
 		void SortParticlesByDistance();
+
+		// 파티클 상태 확인
+		size_t GetActiveParticleCount() const;
+		bool IsFinished(bool isPlaying) const;
 
 	public: // 직렬화
 		void Save(json& j) const;

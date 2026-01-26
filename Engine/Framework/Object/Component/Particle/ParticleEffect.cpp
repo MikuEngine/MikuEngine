@@ -1,10 +1,11 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ParticleEffect.h"
 
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/CameraSystem.h"
 #include "Framework/System/ParticleSystem.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/GameObject/GameObject.h"
 
 namespace engine
 {
@@ -20,11 +21,6 @@ namespace engine
 
 	void ParticleEffect::Update()
 	{
-		if (!m_isPlaying)
-		{
-			return;
-		}
-
 		Vector3 camPos;
 		if (auto mainCam = SystemManager::Get().GetCameraSystem().GetMainCamera())
 		{
@@ -35,9 +31,30 @@ namespace engine
 
 		Vector3 myPos = GetTransform()->GetWorldPosition();
 
+		// 재생 중일 때만 재생 시간 업데이트
+		if (m_isPlaying)
+		{
+			// 재생 시간 업데이트
+			m_playTime += dt;
+
+			// Duration이 설정되어 있고 시간이 지났으면 자동 Stop
+			if (m_duration > 0.0f && m_playTime >= m_duration)
+			{
+				Stop();
+			}
+		}
+
+		// Stop() 후에도 기존 파티클이 사라질 수 있도록 항상 업데이트
+		// isPlaying 상태를 전달하여 재생 중일 때만 새 파티클 생성
 		for (auto& emitter : m_emitters)
 		{
-			emitter.Update(dt, myPos, camPos);
+			emitter.Update(dt, myPos, camPos, m_isPlaying);
+		}
+
+		// 자동 삭제가 활성화되어 있고 파티클이 모두 끝났으면 삭제
+		if (m_autoDestroy && IsFinished())
+		{
+			GetGameObject()->Destroy();
 		}
 	}
 
@@ -66,11 +83,49 @@ namespace engine
 	void ParticleEffect::Play()
 	{
 		m_isPlaying = true;
+		m_playTime = 0.0f; // 재생 시간 리셋
 	}
 
 	void ParticleEffect::Stop()
 	{
 		m_isPlaying = false;
+	}
+
+	bool ParticleEffect::IsFinished() const
+	{
+		// 모든 emitter가 끝났는지 확인
+		for (const auto& emitter : m_emitters)
+		{
+			if (!emitter.IsFinished(m_isPlaying))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	void ParticleEffect::SetAutoDestroy(bool autoDestroy)
+	{
+		m_autoDestroy = autoDestroy;
+	}
+
+	bool ParticleEffect::GetAutoDestroy() const
+	{
+		return m_autoDestroy;
+	}
+
+	void ParticleEffect::SetDuration(float duration)
+	{
+		m_duration = duration;
+		if (duration < 0.0f)
+		{
+			m_duration = 0.0f; // 음수는 0으로 클램프
+		}
+	}
+
+	float ParticleEffect::GetDuration() const
+	{
+		return m_duration;
 	}
 	
 	void ParticleEffect::OnGui()
@@ -87,6 +142,34 @@ namespace engine
 			else
 			{
 				Stop();
+			}
+		}
+
+		ImGui::Checkbox("Auto Destroy", &m_autoDestroy);
+		if (m_autoDestroy)
+		{
+			ImGui::SameLine();
+			bool isFinished = IsFinished();
+			ImGui::TextColored(isFinished ? ImVec4(1.0f, 0.0f, 0.0f, 1.0f) : ImVec4(0.0f, 1.0f, 0.0f, 1.0f),
+				isFinished ? " (Finished)" : " (Active)");
+		}
+
+		ImGui::Spacing();
+
+		// Duration 설정
+		ImGui::DragFloat("Duration", &m_duration, 0.1f, 0.0f, 1000.0f);
+		if (m_duration <= 0.0f)
+		{
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Infinite)");
+		}
+		else
+		{
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(%.2fs)", m_duration);
+			if (m_isPlaying)
+			{
+				ImGui::Text("Play Time: %.2f / %.2f", m_playTime, m_duration);
 			}
 		}
 
@@ -130,6 +213,8 @@ namespace engine
 		Object::Save(j);
 
 		j["IsPlaying"] = m_isPlaying;
+		j["AutoDestroy"] = m_autoDestroy;
+		j["Duration"] = m_duration;
 		j["Emitters"] = json::array();
 
 		for (const auto& emitter : m_emitters)
@@ -145,6 +230,9 @@ namespace engine
 		Object::Load(j);
 
 		JsonGet(j, "IsPlaying", m_isPlaying);
+		JsonGet(j, "AutoDestroy", m_autoDestroy);
+		JsonGet(j, "Duration", m_duration);
+		m_playTime = 0.0f; // 로드 시 재생 시간 리셋
 
 		// Emitters 로드
 		m_emitters.clear();

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/Particle/ParticleEmitter.h"
@@ -13,6 +13,9 @@ namespace engine
 	private:
 		std::vector<ParticleEmitter> m_emitters;
 		bool m_isPlaying = true;
+		bool m_autoDestroy = false;
+		float m_duration = 0.0f; // 0 = 무한 반복, >0 = 해당 시간 후 자동 Stop
+		float m_playTime = 0.0f; // 현재 재생 시간
 
 	public:
 		~ParticleEffect();
@@ -27,6 +30,17 @@ namespace engine
 
 		void Play();
 		void Stop();
+
+		// 파티클 효과가 완전히 끝났는지 확인
+		bool IsFinished() const;
+
+		// 자동 삭제 설정
+		void SetAutoDestroy(bool autoDestroy);
+		bool GetAutoDestroy() const;
+
+		// Duration 설정 (0 = 무한 반복, >0 = 해당 시간 후 자동 Stop)
+		void SetDuration(float duration);
+		float GetDuration() const;
 
 	public:
 		void OnGui() override;
