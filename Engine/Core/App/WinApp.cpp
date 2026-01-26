@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <DirectXColors.h>
@@ -28,6 +28,7 @@
 #include "Framework/System/PathfindingSystem.h"
 #include "Editor/EditorManager.h"
 #include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
+#include "Core/System/VirtualFileSystem.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -184,6 +185,18 @@ namespace engine
         ImGui_ImplDX11_CreateDeviceObjects();
 
         SoundSystem::Get().Initialize();
+        
+        // VFS 초기화 및 패키지 파일 마운트
+        auto& vfs = VirtualFileSystem::Get();
+#ifdef _DEBUG
+        // 개발 모드: 실제 파일 시스템 사용
+        vfs.SetDevelopmentMode(true);
+#else
+        // 릴리즈 모드: 패키지 파일 사용
+        vfs.SetDevelopmentMode(false);
+        vfs.Mount("Resource.pak");
+#endif
+        
         AssetManager::Get().Initialize();
         ResourceManager::Get().Initialize();
 
@@ -229,6 +242,9 @@ namespace engine
         SystemManager::Get().Shutdown();
         ResourceManager::Get().Cleanup();
         GraphicsDevice::Get().Shutdown();
+        
+        // VFS 언마운트
+        VirtualFileSystem::Get().Unmount();
     }
 
     void WinApp::Run()

@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "GraphicsDevice.h"
 
 #include <dxgi1_5.h>
@@ -23,6 +23,7 @@
 #include "Core/Graphics/Data/ConstantBufferTypes.h"
 #include "Core/Graphics/Data/ShaderSlotTypes.h"
 #include "Framework/Asset/GeometryGenerator.h"
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
@@ -663,6 +664,16 @@ namespace engine
         const std::string& shaderModel,
         Microsoft::WRL::ComPtr<ID3DBlob>& blobOut)
     {
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        // VFS를 통해 파일 로드
+        if (!vfs.LoadFile(fileName.string(), fileData))
+        {
+            LOG_ERROR("셰이더 파일 로드 실패: {} - GraphicsDevice", fileName.string());
+            return;
+        }
+
 #ifdef _DEBUG
         DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
         shaderFlags |= D3DCOMPILE_DEBUG;
@@ -670,8 +681,11 @@ namespace engine
 
         Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
 
-        HR_CHECK(D3DCompileFromFile(
-            (fileName).c_str(),
+        // 메모리에서 컴파일
+        HR_CHECK(D3DCompile(
+            fileData.data(),
+            fileData.size(),
+            fileName.string().c_str(),
             nullptr,
             D3D_COMPILE_STANDARD_FILE_INCLUDE,
             entryPoint.c_str(),
@@ -684,7 +698,18 @@ namespace engine
         std::filesystem::path csoPath = fileName;
         csoPath.replace_extension(".cso");
 
-        HR_CHECK(D3DReadFileToBlob(csoPath.c_str(), &blobOut));
+        // CSO 파일도 VFS를 통해 로드
+        std::vector<uint8_t> csoData;
+        if (vfs.LoadFile(csoPath.string(), csoData))
+        {
+            // 메모리에서 Blob 생성
+            HR_CHECK(D3DCreateBlob(csoData.size(), &blobOut));
+            std::memcpy(blobOut->GetBufferPointer(), csoData.data(), csoData.size());
+        }
+        else
+        {
+            LOG_ERROR("CSO 파일 로드 실패: {} - GraphicsDevice", csoPath.string());
+        }
 
 #endif // _DEBUG
     }

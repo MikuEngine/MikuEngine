@@ -1,10 +1,11 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PreloadManager.h"
 
 #include <fstream>
 
 #include "Framework/Asset/AssetManager.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
@@ -16,18 +17,19 @@ namespace engine
         }
 
         std::string configPath{ "Resource/Setting/Preload.setting" };
-        std::ifstream file{ configPath };
-
-        if (file.is_open())
+        
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        if (vfs.LoadFile(configPath, fileData))
         {
             try
             {
-                m_preloadData = json::parse(file);
+                m_preloadData = json::parse(fileData.begin(), fileData.end());
             }
             catch (json::parse_error& e)
             {
                 LOG_ERROR("Preload.json 파일 파싱 실패: {} - PreloadManager", e.what());
-
                 return;
             }
         }

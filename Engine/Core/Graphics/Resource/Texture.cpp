@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Texture.h"
 
 #include <directxtk/WICTextureLoader.h>
@@ -8,6 +8,7 @@
 
 #include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Common/Utility/TextureHelper.h"
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
@@ -28,15 +29,23 @@ namespace engine
         namespace fs = std::filesystem;
 
         auto path = fs::path(filePath);
-
         auto extension = path.extension();
 
         const auto& device = GraphicsDevice::Get().GetDevice();
+        auto& vfs = VirtualFileSystem::Get();
+
+        // VFS를 통해 파일 로드
+        std::vector<uint8_t> fileData;
+        if (!vfs.LoadFile(filePath, fileData))
+        {
+            LOG_ERROR("텍스처 파일 로드 실패: {} - Texture", filePath);
+            return;
+        }
 
         if (extension == ".tga" || extension == ".TGA")
         {
             DirectX::ScratchImage image;
-            HR_CHECK(LoadFromTGAFile(path.c_str(), nullptr, image));
+            HR_CHECK(LoadFromTGAMemory(fileData.data(), fileData.size(), nullptr, image));
 
             HR_CHECK(CreateShaderResourceView(
                 device.Get(),
@@ -105,11 +114,21 @@ namespace engine
         //}
         else if (extension == ".dds" || extension == ".DDS")
         {
-            HR_CHECK(DirectX::CreateDDSTextureFromFile(device.Get(), path.c_str(), nullptr, &m_srv));
+            HR_CHECK(DirectX::CreateDDSTextureFromMemory(
+                device.Get(),
+                fileData.data(),
+                fileData.size(),
+                nullptr,
+                &m_srv));
         }
         else
         {
-            HR_CHECK(DirectX::CreateWICTextureFromFile(device.Get(), path.c_str(), nullptr, &m_srv));
+            HR_CHECK(DirectX::CreateWICTextureFromMemory(
+                device.Get(),
+                fileData.data(),
+                fileData.size(),
+                nullptr,
+                &m_srv));
         }
 
         m_desc = GetTextureDescFromSRV(m_srv.Get());

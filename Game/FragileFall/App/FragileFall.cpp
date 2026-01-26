@@ -19,10 +19,13 @@ namespace game
 	FragileFall::FragileFall(const std::filesystem::path& settingFilePath)
 		: engine::WinApp(settingFilePath, g_default)
 	{
+		
 	}
 
 	void FragileFall::Initialize()
 	{
+		m_windowName = "Fragile Fall";
+
 		engine::WinApp::Initialize();
 	}
 }
