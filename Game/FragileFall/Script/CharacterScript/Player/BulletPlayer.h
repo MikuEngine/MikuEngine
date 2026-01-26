@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
-#include "BulletMovement.h"
+#include "Script/CharacterScript/Common/BulletMovement.h"
 #include <memory>
 
 namespace game

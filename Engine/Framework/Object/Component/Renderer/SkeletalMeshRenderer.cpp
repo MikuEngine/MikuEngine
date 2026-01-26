@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SkeletalMeshRenderer.h"
 
 #include <filesystem>
@@ -644,6 +644,8 @@ namespace engine
 
     void SkeletalMeshRenderer::OnGui()
     {
+        ImGui::Indent();
+        
         // 1. Mesh Selector
         ImGui::Text("Mesh: %s", m_meshFilePath.c_str());
         std::string selectedMesh;
@@ -708,5 +710,15 @@ namespace engine
                 ImGui::TreePop();
             }
         }
+        
+        ImGui::Unindent();
+        
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::Separator();
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+        ImGui::Spacing();
     }
 }

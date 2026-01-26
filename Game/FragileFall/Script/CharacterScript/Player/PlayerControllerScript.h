@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "BaseControllerScript.h"
-#include "BulletParams.h"
+#include "Script/CharacterScript/Common/BaseControllerScript.h"
+#include "Script/CharacterScript/Common/BulletParams.h"
 
 namespace engine
 {
@@ -15,7 +15,7 @@ namespace game
     class BulletFactory;
 
     // ═══════════════════════════════════════════════════════════════
-    // TestShootingPlayer - 하이브리드 FSM 기반 슈팅 플레이어
+    // PlayerControllerScript - 하이브리드 FSM 기반 슈팅 플레이어
     // 
     // 아키텍처:
     //   - LogicFSM: 고수준 상태 (Idle, Walk, IdleShoot, WalkShoot)
@@ -28,7 +28,7 @@ namespace game
     //   - IdleShoot: 정지 + 발사
     //   - WalkShoot: 이동 + 발사
     // ═══════════════════════════════════════════════════════════════
-    class TestShootingPlayer : public BaseControllerScript
+    class PlayerControllerScript : public BaseControllerScript
     {
         REGISTER_SCRIPT(TestShootingPlayer, BaseControllerScript)
 
@@ -62,6 +62,14 @@ namespace game
         // 기타 설정
         // ─────────────────────────────────────────────
         bool m_enableUpperBodyAim = true;
+
+        // ─────────────────────────────────────────────
+        // 애니메이션 설정 (Initialize에서 SkeletalAnimator에 등록할 애니메이션 이름)
+        // ─────────────────────────────────────────────
+        std::string m_animName_Idle = "Idle";
+        std::string m_animName_WalkForward = "WalkForward";
+        std::string m_animName_WalkBackward = "WalkBackward";
+        std::string m_animName_Fire = "Fire";  // 발사 애니메이션 (현재 Punch 애니메이션)
 
         // ─────────────────────────────────────────────
         // 런타임 상태
@@ -108,6 +116,7 @@ namespace game
         // ─────────────────────────────────────────────
         void InitializeFSM();
         void InitializeAnimFSM();  // AnimFSM 상태 매핑 등록
+        void InitializeAnimations();  // SkeletalAnimator에 애니메이션 등록
 
         // ─────────────────────────────────────────────
         // 입력 유틸리티
@@ -135,6 +144,11 @@ namespace game
         // ─────────────────────────────────────────────
         void UpdateAimTracking();             // 에임 각속도 업데이트
         float GetAimRotationDirection() const; // 에임 회전 방향 (양수: 시계, 음수: 반시계)
+
+        // ─────────────────────────────────────────────
+        // 에디터 검증
+        // ─────────────────────────────────────────────
+        bool ValidateComponents() const;  // 컴포넌트 유효성 검사
 
     public:
         void OnGui() override;

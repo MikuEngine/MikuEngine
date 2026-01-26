@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "BaseControllerScript.h"
+#include "Script/CharacterScript/Common/BaseControllerScript.h"
 
 namespace engine
 {

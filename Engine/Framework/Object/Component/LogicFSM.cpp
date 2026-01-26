@@ -381,6 +381,8 @@ namespace engine
     // ═══════════════════════════════════════════════════════════════
     void LogicFSM::OnGui()
     {
+        ImGui::Indent();
+        
         ImGui::Text("LogicFSM Component");
         ImGui::Text("Current State: %s", m_currentState.empty() ? "(None)" : m_currentState.c_str());
         ImGui::Text("State Timer: %.2f", m_stateTimer);
@@ -388,6 +390,7 @@ namespace engine
         ImGui::Separator();
 
         // States 표시 (에디터에서도 보이도록)
+        ImGui::Indent();  // "States" CollapsingHeader 들여쓰기
         if (ImGui::CollapsingHeader("States", ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (m_states.empty())
@@ -448,10 +451,12 @@ namespace engine
                 }
             }
         }
+        ImGui::Unindent();  // "States" CollapsingHeader 들여쓰기 종료
 
         ImGui::Separator();
 
         // Parameters 표시 (에디터에서도 보이도록)
+        ImGui::Indent();  // "Parameters" CollapsingHeader 들여쓰기
         if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (m_parameters.empty())
@@ -485,6 +490,17 @@ namespace engine
                 }
             }
         }
+        ImGui::Unindent();  // "Parameters" CollapsingHeader 들여쓰기 종료
+        
+        ImGui::Unindent();  // 전체 들여쓰기 종료
+        
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::Separator();
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+        ImGui::Spacing();
     }
 
     void LogicFSM::Save(json& j) const
