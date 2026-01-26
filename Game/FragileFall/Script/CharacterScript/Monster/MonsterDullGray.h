@@ -32,6 +32,7 @@ namespace game
 
     public:
         void Awake() override;
+        void Start() override;
 
     protected:
         // ─────────────────────────────────────────────

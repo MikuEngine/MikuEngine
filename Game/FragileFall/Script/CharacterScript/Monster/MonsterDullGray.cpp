@@ -18,13 +18,55 @@ namespace game
         MonsterScript::Awake();
 
         // DullGray 고유 스탯 설정
-        m_Hp = 100.0f;
+        m_Hp = 10;
         m_AttackRange = 15.0f;
         m_moveSpeed = 0.0f;  // 이동 불가
-        m_rotationSpeed = 2.0f * 3.14159f;  // 360도/초 (라디안)
+        m_rotationSpeed = 3.0f * 3.14159f;  // 360도/초 (라디안)
         m_fireRate = 3.0f;
-        m_bulletSpeed = 1.0f;
+        m_bulletSpeed = 1.2f;
         m_bulletLifetime = 3.0f;
+    }
+
+    void MonsterDullGray::Start()
+    {
+        MonsterScript::Start();
+
+        // ─────────────────────────────────────────────
+        // DullGray 고유 Rigidbody Constraints 설정
+        // X, Y, Z 이동 모두 불가, X, Z 회전 불가 (Y축 회전만 허용)
+        // ─────────────────────────────────────────────
+        if (m_rigidbody)
+        {
+            using namespace engine;
+            RigidbodyConstraints constraints = 
+                RigidbodyConstraints::FreezePositionX |
+                RigidbodyConstraints::FreezePositionY |
+                RigidbodyConstraints::FreezePositionZ |
+                RigidbodyConstraints::FreezeRotationX |
+                RigidbodyConstraints::FreezeRotationZ;
+            
+            m_rigidbody->SetConstraints(constraints);
+            
+            LOG_PRINT("[MonsterDullGray] Rigidbody constraints set: All position frozen, Y-rotation only");
+        }
+
+        // 초기 Idle 애니메이션 재생
+        if (m_skeletalAnimator && !m_animName_Idle.empty())
+        {
+            m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
+        }
+        
+        // ─────────────────────────────────────────────
+        // 초기화 검증 로그
+        // ─────────────────────────────────────────────
+        LOG_PRINT("[MonsterDullGray] Initialization Complete:");
+        LOG_PRINT("  - Rigidbody: {}", m_rigidbody ? "OK" : "MISSING");
+        LOG_PRINT("  - SkeletalAnimator: {}", m_skeletalAnimator ? "OK" : "MISSING");
+        LOG_PRINT("  - BulletFactory: {}", m_bulletFactory ? "OK" : "MISSING");
+        LOG_PRINT("  - AnimFSM: {}", m_animFSM ? "OK" : "MISSING");
+        LOG_PRINT("  - LogicFSM: {}", m_logicFSM ? "OK" : "MISSING");
+        LOG_PRINT("  - Target Player: {}", m_targetPlayer ? "Found" : "NOT FOUND");
+        LOG_PRINT("  - Current State: {}", GetCurrentState());
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -111,43 +153,46 @@ namespace game
         if (m_fireTimer > 0.0f)
         {
             m_fireTimer -= deltaTime;
+            return;  // 쿨다운 중에는 발사하지 않음
         }
 
-        // 발사 조건: 회전 완료 + 쿨다운 완료
-        if (IsRotatedTowardsPlayer() && m_fireTimer <= 0.0f)
+        // 발사 조건: 쿨다운 완료 (회전 완료 대기 안 함, 플레이어 방향으로 발사)
+        if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
         {
-            // 발사!
-            if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
+            engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
+            engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+            
+            // ─────────────────────────────────────────────
+            // 플레이어 방향 계산 (직접 계산)
+            // 매 프레임 플레이어를 향해 회전 중이므로 얼추 맞음
+            // ─────────────────────────────────────────────
+            engine::Vector3 direction = playerPos - monsterPos;
+            direction.y = 0.0f;  // Y축 무시 (수평 방향만)
+            
+            if (direction.LengthSquared() > 0.001f)
             {
-                engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
-                engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+                direction.Normalize();
 
-                // 방향 벡터 계산
-                engine::Vector3 direction = playerPos - monsterPos;
-                direction.y = 0.0f;
-                
-                if (direction.LengthSquared() > 0.001f)
+                // 리니어 총알 발사
+                BulletParams params;
+                params.type = BulletType::Linear;
+                params.speed = m_bulletSpeed;      // 1.0
+                params.lifetime = m_bulletLifetime; // 3.0
+                params.damage = 10;
+
+                LOG_PRINT("[MonsterDullGray] Firing bullet towards player ({:.2f}, {:.2f}, {:.2f})", 
+                          direction.x, direction.y, direction.z);
+
+                m_bulletFactory->LinearFireMonster(monsterPos, direction, params);
+
+                // 발사 애니메이션 재생 (루프 없음)
+                if (m_skeletalAnimator && !m_animName_Attack.empty())
                 {
-                    direction.Normalize();
-
-                    // 리니어 총알 발사
-                    BulletParams params;
-                    params.type = BulletType::Linear;
-                    params.speed = m_bulletSpeed;      // 1.0
-                    params.lifetime = m_bulletLifetime; // 3.0
-                    params.damage = 10;
-
-                    m_bulletFactory->FireMonster(monsterPos, direction, params);
-
-                    // 발사 애니메이션 재생 (루프 없음)
-                    if (m_skeletalAnimator && !m_animName_Attack.empty())
-                    {
-                        m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-                    }
-
-                    // 쿨다운 재설정 (3초)
-                    m_fireTimer = m_fireRate;  // 3.0초
+                    m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
                 }
+
+                // 쿨다운 재설정 (3초)
+                m_fireTimer = m_fireRate;  // 3.0초
             }
         }
     }
@@ -207,8 +252,8 @@ namespace game
         // 스탯
         ImGui::Separator();
         ImGui::Text("Stats:");
-        ImGui::DragFloat("HP", &m_Hp, 1.0f, 0.0f, 1000.0f);
-        ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.0f, 100.0f);
+        ImGui::DragInt("HP", &m_Hp, 1, 1, 10);
+        ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.0f, 15.0f);
 
         // 설정
         ImGui::Separator();

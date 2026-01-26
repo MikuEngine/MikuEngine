@@ -593,8 +593,8 @@ namespace game
         // 스탯
         ImGui::Separator();
         ImGui::Text("Stats:");
-        ImGui::DragFloat("HP", &m_Hp, 1.0f, 0.0f, 1000.0f);
-        ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.0f, 100.0f);
+        ImGui::DragInt("HP", &m_Hp, 1, 1, 10);
+        ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.1f, 15.0f);
 
         // 설정
         ImGui::Separator();

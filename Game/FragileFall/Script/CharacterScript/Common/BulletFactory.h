@@ -31,11 +31,11 @@ namespace game
                   const BulletParams& params);
 
         // ─────────────────────────────────────────────
-        // 몬스터 총알 발사 (EnemyProjectile 레이어 사용)
+        // 몬스터 직선 총알 발사 (EnemyProjectile 레이어 사용)
         // ─────────────────────────────────────────────
-        void FireMonster(const engine::Vector3& position,
-                         const engine::Vector3& direction,
-                         const BulletParams& params);
+        void LinearFireMonster(const engine::Vector3& position,
+                               const engine::Vector3& direction,
+                               const BulletParams& params);
 
     private:
         // ─────────────────────────────────────────────

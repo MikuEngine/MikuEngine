@@ -346,15 +346,20 @@ namespace engine
             ImGui::SetTooltip("Enable to automatically sync collider size with Transform scale");
         }
 
-        // Physics Layer 콤보박스
-        const char* layerNames[] = {
-            "Default", "Player", "Enemy", "Projectile", 
-            "Environment", "Trigger", "Layer6", "Layer7"
-        };
-        int currentLayer = static_cast<int>(m_layer);
-        if (currentLayer >= IM_ARRAYSIZE(layerNames)) currentLayer = 0;
+        // Physics Layer 콤보박스 (PhysicsLayer.h에서 자동으로 레이어 이름 가져오기)
+        constexpr int displayLayerCount = 16;  // 인스펙터에 표시할 레이어 수 (0~15)
+        static const char* layerNames[displayLayerCount];
         
-        if (ImGui::Combo("Physics Layer", &currentLayer, layerNames, IM_ARRAYSIZE(layerNames)))
+        // PhysicsLayer::GetLayerName()을 사용하여 동적으로 레이어 이름 가져오기
+        for (int i = 0; i < displayLayerCount; ++i)
+        {
+            layerNames[i] = PhysicsLayer::GetLayerName(static_cast<uint32_t>(i));
+        }
+        
+        int currentLayer = static_cast<int>(m_layer);
+        if (currentLayer >= displayLayerCount) currentLayer = 0;
+        
+        if (ImGui::Combo("Physics Layer", &currentLayer, layerNames, displayLayerCount))
         {
             SetLayer(static_cast<uint32_t>(currentLayer));
         }

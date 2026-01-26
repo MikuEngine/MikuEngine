@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -53,8 +53,8 @@ namespace game
         // ─────────────────────────────────────────────
         // 몬스터 스탯 (자식 클래스에서 설정)
         // ─────────────────────────────────────────────
-        float m_Hp = 100.0f;
-        float m_AttackRange = 10.0f;
+        int m_Hp = 10;
+        float m_AttackRange = 5.0f;
 
         // ─────────────────────────────────────────────
         // 이동/회전/발사 설정
@@ -77,9 +77,9 @@ namespace game
         std::string m_animName_Attack = "Attack";  // 공격 애니메이션 이름
 
         // ─────────────────────────────────────────────
-        // 회전 완료 판정
+        // 회전 완료 판정 (물리 기반 회전에서는 더 큰 임계값 필요)
         // ─────────────────────────────────────────────
-        static constexpr float ROTATION_THRESHOLD = 7.0f * 3.14159f / 180.0f;  // 2도 (라디안)
+        static constexpr float ROTATION_THRESHOLD = 15.0f * 3.14159f / 180.0f;  // 15도 (라디안)
 
     public:
         virtual void Awake() override;
