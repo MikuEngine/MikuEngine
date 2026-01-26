@@ -224,6 +224,7 @@
     <ClCompile Include="Framework\Object\Component\Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\StaticMeshRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Transform.cpp" />
+    <ClCompile Include="Framework\Object\Component\UI\UIScrollView.cpp" />
     <ClCompile Include="Framework\Object\GameObject\GameObject.cpp" />
     <ClCompile Include="Framework\Object\Object.cpp" />
     <ClCompile Include="Framework\Object\Ptr.cpp" />
@@ -357,6 +358,7 @@
     <ClInclude Include="Framework\Object\Component\Renderer\SpriteRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\StaticMeshRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Transform.h" />
+    <ClInclude Include="Framework\Object\Component\UI\UIScrollView.h" />
     <ClInclude Include="Framework\Object\GameObject\GameObject.h" />
     <ClInclude Include="Framework\Object\Handle.h" />
     <ClInclude Include="Framework\Object\Object.h" />
