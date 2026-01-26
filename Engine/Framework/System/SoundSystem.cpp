@@ -134,6 +134,7 @@ namespace engine
 
     void SoundSystem::Shutdown()
     {
+        m_SoundQues.clear();
         m_channelGroups.clear();
         m_callbackList.clear();
 
@@ -476,7 +477,7 @@ namespace engine
 
         if (!soundList.empty())
         {
-            m_randomSounds[groupName] = soundList;
+            m_SoundQues[groupName] = soundList;
         }
     }
 
@@ -492,8 +493,8 @@ namespace engine
         Sound* targetSound = nullptr;
 
         // random
-        auto itRandom = m_randomSounds.find(key);
-        if (itRandom != m_randomSounds.end() && !itRandom->second.empty())
+        auto itRandom = m_SoundQues.find(key);
+        if (itRandom != m_SoundQues.end() && !itRandom->second.empty())
         {
             const std::vector<Sound*>& group = itRandom->second;
             int index = rand() % group.size();

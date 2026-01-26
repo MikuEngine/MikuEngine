@@ -137,7 +137,7 @@ namespace engine
 
         LifeScope scope = isGlobal ? LifeScope::Global : LifeScope::Scene;
 
-        if (type == "RandomSound")
+        if (type == "SoundQue")
         {
             std::string name = assetData.value("Name", "");
 
