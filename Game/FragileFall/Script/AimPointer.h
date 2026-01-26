@@ -16,7 +16,7 @@ namespace game
     class AimPointer :
         public engine::Script<AimPointer>
     {
-        REGISTER_COMPONENT(AimPointer, Script)
+        REGISTER_SCRIPT(AimPointer, Script)
 
     private:
         engine::Vector3 m_worldPosition;  // 마우스 월드 좌표

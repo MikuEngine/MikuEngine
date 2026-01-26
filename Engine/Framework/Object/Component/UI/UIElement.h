@@ -23,6 +23,7 @@ namespace engine
 		Circle,
 		Ring,
 		RectRing,
+		Radial,
 	};
 
 	// UIElement는 UI 컴포넌트들의 공통 베이스입니다.

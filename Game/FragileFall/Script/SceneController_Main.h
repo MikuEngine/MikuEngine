@@ -8,7 +8,7 @@ namespace game
     class SceneController_Main :
         public engine::Script<SceneController_Main>
     {
-        REGISTER_COMPONENT(SceneController_Main, Script)
+        REGISTER_SCRIPT(SceneController_Main, Script)
 
     public:
         void Awake() override;

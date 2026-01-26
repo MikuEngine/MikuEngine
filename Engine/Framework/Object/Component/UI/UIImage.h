@@ -47,6 +47,9 @@ namespace engine
 		MaskMode m_maskMode = MaskMode::Rect;
 		Vector4  m_clipRect = Vector4(0, 0, 0, 0);
 
+		Vector4 m_mask0 = Vector4(0, 0, 0, 0);
+		Vector4 m_mask1 = Vector4(0, 0, 0, 0);
+
 	public:
 		UIImage() = default;
 		~UIImage() override = default;
@@ -73,6 +76,11 @@ namespace engine
 
 		void SetClipRect(const Vector4& r) { m_clipRect = r; m_dirty = true; }
 		const Vector4& GetClipRect() const { return m_clipRect; }
+
+		void SetMask0(const Vector4& v) { m_mask0 = v; m_dirty = true; }
+		void SetMask1(const Vector4& v) { m_mask1 = v; m_dirty = true; }
+		const Vector4& GetMask0() const { return m_mask0; }
+		const Vector4& GetMask1() const { return m_mask1; }
 
 	public:
 		bool HasRenderType(RenderType type) const override;

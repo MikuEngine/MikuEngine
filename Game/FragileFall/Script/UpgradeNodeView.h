@@ -7,7 +7,7 @@ namespace game
     class UpgradeNodeView :
         public engine::Script<UpgradeNodeView>
     {
-        REGISTER_COMPONENT(UpgradeNodeView, Script)
+        REGISTER_SCRIPT(UpgradeNodeView, Script)
 
     public:
         void Awake() override;

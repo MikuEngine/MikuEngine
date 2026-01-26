@@ -973,14 +973,39 @@ namespace engine
 
         if (ImGui::BeginPopup("AddCompPopup"))
         {
-            for (const auto& [name, creator] : ComponentFactory::Get().GetRegistry())
+            auto& factory = ComponentFactory::Get();
+            const auto& reg = factory.GetRegistry();
+
+            if (ImGui::BeginMenu("Components"))
             {
-                if (ImGui::MenuItem(name.c_str()))
+                for (const auto& [name, creator] : reg)
                 {
-                    m_selectedObject->AddComponent(std::move(creator()));
-                    ImGui::CloseCurrentPopup();
+                    if (factory.IsScript(name)) continue;
+
+                    if (ImGui::MenuItem(name.c_str()))
+                    {
+                        m_selectedObject->AddComponent(std::move(creator()));
+                        ImGui::CloseCurrentPopup();
+                    }
                 }
+                ImGui::EndMenu();
             }
+
+            if (ImGui::BeginMenu("Scripts"))
+            {
+                for (const auto& [name, creator] : reg)
+                {
+                    if (!factory.IsScript(name)) continue;
+
+                    if (ImGui::MenuItem(name.c_str()))
+                    {
+                        m_selectedObject->AddComponent(std::move(creator()));
+                        ImGui::CloseCurrentPopup();
+                    }
+                }
+                ImGui::EndMenu();
+            }
+
             ImGui::EndPopup();
         }
 

@@ -9,7 +9,7 @@ namespace game
     class UpgradeController :
         public engine::Script<UpgradeController>
     {
-        REGISTER_COMPONENT(UpgradeController, Script)
+        REGISTER_SCRIPT(UpgradeController, Script)
 
     public:
 

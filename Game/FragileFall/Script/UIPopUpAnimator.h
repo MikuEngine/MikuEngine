@@ -7,7 +7,7 @@ namespace game
     class UIPopUpAnimator :
         public engine::Script<UIPopUpAnimator>
     {
-        REGISTER_COMPONENT(UIPopUpAnimator, Script)
+        REGISTER_SCRIPT(UIPopUpAnimator, Script)
 
     public:
         void Awake() override;

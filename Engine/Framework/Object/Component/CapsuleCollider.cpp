@@ -71,6 +71,8 @@ namespace engine
 
     void CapsuleCollider::OnGui()
     {
+        ImGui::Indent();
+        
         Collider::OnGui();
         
         ImGui::Separator();
@@ -88,6 +90,16 @@ namespace engine
         {
             SetHeight(height);
         }
+        
+        ImGui::Unindent();
+        
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::Separator();
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+        ImGui::Spacing();
     }
 
     void CapsuleCollider::Save(json& j) const

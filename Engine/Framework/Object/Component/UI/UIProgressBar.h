@@ -24,6 +24,12 @@ namespace engine
 			AnchorResize, 
 		};
 
+		enum class Shape
+		{
+			Linear,
+			Radial,   // 원형/링 포함
+		};
+
 	public:
 		UIProgressBar() = default;
 		~UIProgressBar() override = default;
@@ -41,6 +47,16 @@ namespace engine
 
 		void SetSprites(const std::string& background, const std::string& fill);
 		void SetColors(const Vector4& bg, const Vector4& fill);
+
+		Shape GetShape() const { return m_shape; }
+		void SetShape(Shape s) { if (m_shape == s) return; m_shape = s; m_dirty = true; }
+
+		// Radial 옵션
+		void SetStartAngleRad(float rad) { m_startAngleRad = rad; m_dirty = true; }
+		void SetClockwise(bool cw) { m_clockwise = cw; m_dirty = true; }
+
+		// 0.0 = 원, (0~1) = 링 (값이 클수록 안쪽 구멍이 커짐)
+		void SetInnerRadius01(float t) { m_innerRadius01 = Clamp01(t); m_dirty = true; }
 
 	private:
 		void CreateVisuals();
@@ -66,10 +82,17 @@ namespace engine
 
 		Direction m_direction = Direction::LeftToRight;
 		FillMode m_fillMode = FillMode::PixelMask;
+		Shape m_shape = Shape::Linear;
 
 		bool m_dirty = true;
 
 		float m_barWidth = 100.0f;
 		float m_barHeight = 100.0f;
+
+	private:
+		// 라디얼 전용
+		float m_startAngleRad = -DirectX::XM_PIDIV2;  // 12시 시작 기본
+		bool  m_clockwise = true;
+		float m_innerRadius01 = 0.6f;
 	};
 }

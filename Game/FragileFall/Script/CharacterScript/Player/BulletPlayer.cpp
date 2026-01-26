@@ -1,6 +1,6 @@
-#include "GamePCH.h"
-#include "BulletPlayer.h"
-#include "TempMonster.h"
+﻿#include "GamePCH.h"
+#include "Script/CharacterScript/Player/BulletPlayer.h"
+#include "Script/CharacterScript/Monster/TempMonster.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>

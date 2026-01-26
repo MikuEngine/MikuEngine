@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
-#include "BulletMovement.h"
+#include "Script/CharacterScript/Common/BulletMovement.h"
 #include <memory>
 
 namespace game
@@ -25,7 +25,7 @@ namespace game
     class BulletPlayer :
         public engine::Script<BulletPlayer>
     {
-        REGISTER_COMPONENT(BulletPlayer, Script)
+        REGISTER_SCRIPT(BulletPlayer, Script)
 
     private:
         // ─────────────────────────────────────────────

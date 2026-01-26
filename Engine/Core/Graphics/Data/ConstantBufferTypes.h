@@ -152,10 +152,11 @@ namespace engine
 		Vector4 color;      // RGBA
 		Vector4 uv;         // offset.xy, scale.xy
 		Vector4 clipRect;   // (xMin, yMin, xMax, yMax) in pixels 또는 NDC 중 하나로 통일
-		uint32_t maskMode;  // none, rect, circle, ring, rectring
+		uint32_t maskMode;  // none, rect, circle, ring, rectring, radial
 		float pad[3];
 
-		Vector4 mask0;		// 원형 프로그레스 바 전용
+		Vector4 mask0;		// (cx, cy, rInner, rOuter) 또는 (cx,cy,r,0)
+		Vector4 mask1;		// (startAngleRad, fill01, clockwise, unused)
 	};
 
 
