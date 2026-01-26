@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <DirectXColors.h>
@@ -318,7 +318,9 @@ namespace engine
         {
             GraphicsDevice::Get().ClearAllViews();
             SceneManager::Get().RenderLoadingScreen();
+#ifdef _DEBUG
             EditorManager::Get().Render();
+#endif //_DEBUG
             GraphicsDevice::Get().EndDraw();
 
             return;
