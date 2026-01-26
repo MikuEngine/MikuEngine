@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <DirectXColors.h>
@@ -29,6 +29,7 @@
 #include "Editor/EditorManager.h"
 #include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
 #include "Framework/Physics/PhysicsDebugRenderer.h"
+#include "Framework/Object/Component/Light/LightDebugRenderer.h"
 #include "Core/System/VirtualFileSystem.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -218,6 +219,7 @@ namespace engine
         // 디버그 렌더러 초기화
         PathfindingDebugRenderer::Get().Initialize();
         PhysicsDebugRenderer::Get().Initialize();
+        LightDebugRenderer::Get().Initialize();
         EditorManager::Get().Initialize();
 #else
         ProjectSettings settings;
@@ -252,6 +254,7 @@ namespace engine
         // 디버그 렌더러 정리
         PathfindingDebugRenderer::Get().Shutdown();
         PhysicsDebugRenderer::Get().Shutdown();
+        LightDebugRenderer::Get().Shutdown();
         // VFS 언마운트
         VirtualFileSystem::Get().Unmount();
     }

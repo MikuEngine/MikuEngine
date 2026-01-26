@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "RenderSystem.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -25,7 +25,7 @@
 #include "Framework/System/ParticleSystem.h"
 #include "Framework/System/EnvironmentSystem.h"
 #include "Framework/System/PostProcessingSystem.h"
-#include "Framework/Object/Component/Light.h"
+#include "Framework/Object/Component/Light/Light.h"
 #include "Framework/Object/Component/EnvironmentSettings.h"
 #include "Framework/Object/Component/PostProcessingSettings.h"
 #include "Core/System/ProjectSettings.h"
@@ -38,6 +38,7 @@
 
 #include "Framework/Physics/PhysicsDebugRenderer.h"
 #include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
+#include "Framework/Object/Component/Light/LightDebugRenderer.h"
 
 namespace engine
 {
@@ -491,13 +492,16 @@ namespace engine
         }
 #endif
 
+#ifdef _DEBUG
         // Physics Debug Rendering (PostProcessing 이후, finalBuffer에 렌더링)
         graphics.BeginDrawDebugPass();
         {
             PhysicsDebugRenderer::Get().Render(view, projection);
             PathfindingDebugRenderer::Get().Render(view, projection);
+            LightDebugRenderer::Get().Render(view, projection);
         }
         graphics.EndDrawDebugPass();
+#endif
     }
 
     void RenderSystem::GetBloomSettings(float& bloomStrength, float& bloomThreshold, float& bloomSoftKnee)
