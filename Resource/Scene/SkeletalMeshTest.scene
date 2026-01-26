@@ -96,24 +96,9 @@
                     "Active": true,
                     "Animations": [
                         {
-                            "Name": "TestBackward",
-                            "Path": "Resource/Animation/TestBackward.fbx"
-                        },
-                        {
-                            "Name": "TestElbow",
-                            "Path": "Resource/Animation/TestElbow.fbx"
-                        },
-                        {
-                            "Name": "TestForward",
-                            "Path": "Resource/Animation/TestForward.fbx"
-                        },
-                        {
-                            "Name": "TestIdle",
-                            "Path": "Resource/Animation/TestIdle.fbx"
-                        },
-                        {
-                            "Name": "TestPunch",
-                            "Path": "Resource/Animation/TestPunch.fbx"
+                            "Name": "1",
+                            "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
                         }
                     ],
                     "Layers": [
