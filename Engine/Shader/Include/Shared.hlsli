@@ -314,12 +314,12 @@ float GetLuminance(float3 color)
 
 float3 LinearToSRGB(float3 linearColor)
 {
-    return pow(linearColor, 1.0f / 2.2f);
+    return pow(abs(linearColor), 1.0f / 2.2f);
 }
 
 float3 SRGBToLinear(float3 linearColor)
 {
-    return pow(linearColor, 2.2f);
+    return pow(abs(linearColor), 2.2f);
 }
 
 #endif //SHARED_HLSLI

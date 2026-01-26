@@ -11,11 +11,15 @@ namespace engine
 		using ClickCallback = std::function<void(int)>;
 		using HoverCallback = std::function<void(bool)>;
 
+	public:
+		void Initialize() override;
+		void DrawUI() const override {}
+
 		void AddOnClick(ClickCallback&& cb);
 		void AddOnHover(HoverCallback&& cb);
 
 		void SetInteractable(bool v);
-		bool IsInteractable() const;
+		bool IsInteractable() const override;
 
 		// Input
 		void OnMouseEnter(const Vector2&) override;
@@ -28,19 +32,8 @@ namespace engine
 		void OnMouseOver(const Vector2&) override {}
 		void OnMouseCancel(const Vector2&, int) override {}
 
-		void DrawUI() const override {}
-
-		void Save(json& j) const override
-		{
-			UIElement::Save(j);
-			j["Interactable"] = m_interactable;
-		}
-
-		void Load(const json& j) override
-		{
-			UIElement::Load(j);
-			JsonGet(j, "Interactable", m_interactable);
-		}
+		void Save(json& j) const override;
+		void Load(const json& j) override;
 
 	private:
 		bool m_interactable = true;

@@ -1,25 +1,25 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SpriteAnimationData.h"
 
 #include <fstream>
 
 #include "Framework/Asset/SpriteData.h"
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
 	void SpriteAnimationData::Create(const std::string& filePath)
 	{
-        std::ifstream i{ filePath };
-        if (!i.is_open())
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        if (!vfs.LoadFile(filePath, fileData))
         {
             LOG_INFO("{} 파일 열기 실패", filePath);
-
             return;
         }
 
-        json j;
-        i >> j;
-        i.close();
+        json j = json::parse(fileData.begin(), fileData.end());
 
         m_name = j["name"];
         m_duration = j["duration"];

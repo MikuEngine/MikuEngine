@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "FBXData.h"
 
 #include <assimp/Importer.hpp>
@@ -10,6 +10,7 @@
 #include "Framework/Asset/SkeletalMeshData.h"
 #include "Framework/Asset/SkeletonData.h"
 #include "Framework/Asset/AnimationData.h"
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
@@ -68,7 +69,20 @@ namespace engine
             aiProcess_ConvertToLeftHanded/* |
             aiProcess_PreTransformVertices*/;
 
-        const aiScene* scene = importer.ReadFile(filePath, importFlags);
+        // VFS를 통해 파일 로드
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        if (!vfs.LoadFile(filePath, fileData))
+        {
+            LOG_ERROR("FBX 파일 로드 실패: {} - FBXAssetData", filePath);
+            return;
+        }
+
+        const aiScene* scene = importer.ReadFileFromMemory(
+            fileData.data(),
+            fileData.size(),
+            importFlags,
+            filePath.c_str());
 
         aiMatrix4x4 rotation;
         aiMatrix4x4::RotationY(DirectX::XM_PI, rotation);
@@ -97,7 +111,20 @@ namespace engine
             aiProcess_LimitBoneWeights |
             aiProcess_ConvertToLeftHanded;
 
-        const aiScene* scene = importer.ReadFile(filePath, importFlags);
+        // VFS를 통해 파일 로드
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        if (!vfs.LoadFile(filePath, fileData))
+        {
+            LOG_ERROR("FBX 파일 로드 실패: {} - FBXAssetData", filePath);
+            return;
+        }
+
+        const aiScene* scene = importer.ReadFileFromMemory(
+            fileData.data(),
+            fileData.size(),
+            importFlags,
+            filePath.c_str());
 
         // bone 생성
         m_skeleton = std::make_shared<SkeletonData>();
@@ -123,7 +150,20 @@ namespace engine
             aiProcess_LimitBoneWeights |
             aiProcess_ConvertToLeftHanded;
 
-        const aiScene* scene = importer.ReadFile(filePath, importFlags);
+        // VFS를 통해 파일 로드
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        if (!vfs.LoadFile(filePath, fileData))
+        {
+            LOG_ERROR("FBX 파일 로드 실패: {} - FBXAssetData", filePath);
+            return;
+        }
+
+        const aiScene* scene = importer.ReadFileFromMemory(
+            fileData.data(),
+            fileData.size(),
+            importFlags,
+            filePath.c_str());
 
         // bone 생성
         m_skeleton = std::make_shared<SkeletonData>();

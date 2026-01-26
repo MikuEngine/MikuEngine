@@ -1,10 +1,10 @@
 {
-    "Name": "UpgradeNode",
+    "Name": "Node(n)",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "UpgradeNode",
+            "Name": "Node(n)",
             "Active": true,
             "Components": [
                 {
@@ -73,14 +73,14 @@
                     "Active": true,
                     "Layer": 0,
                     "OrderInLayer": 0,
-                    "RaycastTarget": true,
+                    "RaycastTarget": false,
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
-                        "x": 0.5521235466003418,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 0.49420851469039917,
+                        "y": 0.49420851469039917,
+                        "z": 0.49420851469039917,
                         "w": 1.0
                     },
                     "AlphaBlend": true

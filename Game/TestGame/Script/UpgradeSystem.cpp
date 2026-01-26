@@ -6,7 +6,7 @@ namespace game
 {
     void UpgradeSystem::Awake()
     {
-        
+
     }
 
     void UpgradeSystem::Start()
@@ -55,6 +55,16 @@ namespace game
             BuildDefaultTreeIfEmpty();
         }
 
+        if (ImGui::InputInt3("Currency", &m_ruby))
+        {
+            m_ruby = std::max(0, m_ruby);
+            m_sapphire = std::max(0, m_sapphire);
+            m_emerald = std::max(0, m_emerald);
+
+            RecomputeUnlocked();
+            RefreshNodeVisuals();
+        }
+
         ImGui::Text("Wallet: Ruby=%d Sapphire=%d Emerald=%d", m_ruby, m_sapphire, m_emerald);
 
         for (auto& [id, view] : m_views)
@@ -84,9 +94,14 @@ namespace game
             if (isBought)
                 purchased.push_back(id);
         }
-
         j["Purchased"] = purchased;
 
+        engine::json nodeNames = engine::json::array();
+        for (auto* go : m_nodeObjects)
+        {
+            if (go) nodeNames.push_back(go->GetName());
+        }
+        j["NodeObjects"] = nodeNames;
     }
 
     void UpgradeSystem::Load(const engine::json& j)
@@ -97,9 +112,21 @@ namespace game
         engine::JsonGet(j, "Sapphire", m_sapphire);
         engine::JsonGet(j, "Emerald", m_emerald);
 
-        // purchased 초기화
-        for (auto& [id, _] : m_purchased)
-            m_purchased[id] = false;
+        m_purchased.clear();
+        m_unlocked.clear();
+        m_views.clear();
+
+        // 노드 오브젝트 로드
+        m_nodeObjects.clear();
+        engine::JsonArrayForEach(j, "NodeObjects",
+            [this](const engine::json& v)
+            {
+                const std::string name = v.get<std::string>();
+                if (auto* go = engine::GameObject::Find(name.c_str()))
+                    m_nodeObjects.push_back(go);
+            });
+
+        BuildDefaultTreeIfEmpty();
 
         // 저장된 구매 목록 반영
         engine::JsonArrayForEach(j, "Purchased",
@@ -111,7 +138,6 @@ namespace game
 
         RecomputeUnlocked();
         RefreshNodeVisuals();
-
     }
 
     bool UpgradeSystem::CanUpgrade(int nodeId) const

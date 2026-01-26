@@ -1,22 +1,24 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SpriteData.h"
 
 #include <fstream>
+
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
     void SpriteData::Create(const std::string& filePath)
     {
-        std::ifstream f{ filePath };
-        if (!f.is_open())
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        if (!vfs.LoadFile(filePath, fileData))
         {
             LOG_INFO("{} 파일 열기 실패", filePath);
             return;
         }
 
-        json j;
-        f >> j;
-        f.close();
+        json j = json::parse(fileData.begin(), fileData.end());
 
         m_name = j["name"];
         m_width = j["width"];

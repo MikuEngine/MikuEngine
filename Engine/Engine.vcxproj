@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Graphics\Resource\GeometryShader.cpp" />
+    <ClCompile Include="Core\System\VirtualFileSystem.cpp" />
     <ClCompile Include="Editor\EditorGrid.cpp" />
     <ClCompile Include="Framework\Asset\FontData.cpp" />
     <ClCompile Include="Framework\Asset\Prefab.cpp" />
@@ -267,6 +268,7 @@
     <ClInclude Include="Common\Utility\EditorHelper.h" />
     <ClInclude Include="Core\Graphics\Data\ParticleStructuredData.h" />
     <ClInclude Include="Core\Graphics\Resource\GeometryShader.h" />
+    <ClInclude Include="Core\System\VirtualFileSystem.h" />
     <ClInclude Include="Editor\EditorGrid.h" />
     <ClInclude Include="Framework\Asset\FontData.h" />
     <ClInclude Include="Framework\Asset\Prefab.h" />
@@ -549,6 +551,7 @@
     </FxCompile>
     <FxCompile Include="Shader\Pixel\UIQuad_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\Vertex\FullscreenQuad_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

@@ -327,6 +327,9 @@
     <ClCompile Include="Framework\Object\Component\Pathfinding\PathfindingDebugRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Core\System\VirtualFileSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -702,6 +705,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\Pathfinding\PathfindingDebugRenderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\System\VirtualFileSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

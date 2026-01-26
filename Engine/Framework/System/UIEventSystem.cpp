@@ -8,6 +8,8 @@
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/Canvas.h"
 
+#include "Core/Graphics/Device/GraphicsDevice.h"
+
 namespace engine
 {
 	namespace

@@ -1,17 +1,21 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PrefabData.h"
 
 #include <fstream>
 #include <iomanip>
 
+#include "Core/System/VirtualFileSystem.h"
+
 namespace engine
 {
 	void PrefabData::Load(const std::string& path)
 	{
-		std::ifstream file{ path };
-		if (file.is_open())
+		auto& vfs = VirtualFileSystem::Get();
+		std::vector<uint8_t> fileData;
+		
+		if (vfs.LoadFile(path, fileData))
 		{
-			file >> m_prefabData;
+			m_prefabData = json::parse(fileData.begin(), fileData.end());
 		}
 	}
 
