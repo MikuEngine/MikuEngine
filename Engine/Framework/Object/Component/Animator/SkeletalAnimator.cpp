@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SkeletalAnimator.h"
 
 #include "Framework/Asset/AssetManager.h"
@@ -899,7 +899,10 @@ namespace engine
 
     void SkeletalAnimator::OnGui()
     {
+        ImGui::Indent();
+        
         // animation
+        ImGui::Indent();
         if (ImGui::CollapsingHeader("Animation Registration", ImGuiTreeNodeFlags_DefaultOpen))
         {
             static std::string selectedPath = "";
@@ -931,7 +934,9 @@ namespace engine
                 }
             }
         }
+        ImGui::Unindent();
 
+        ImGui::Indent();
         if (ImGui::CollapsingHeader("Registered List", ImGuiTreeNodeFlags_DefaultOpen))
         {
             ImGui::BeginChild("AnimList", ImVec2(0, 150), true);
@@ -1002,8 +1007,10 @@ namespace engine
                 }
             }
         }
+        ImGui::Unindent();
 
         // layer
+        ImGui::Indent();
         if (ImGui::CollapsingHeader("Layers", ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (ImGui::Button("Add Layer"))
@@ -1077,6 +1084,17 @@ namespace engine
                 ImGui::PopID();
             }
         }
+        ImGui::Unindent();
+        
+        ImGui::Unindent();
+        
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::Separator();
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+        ImGui::Spacing();
     }
 
     void SkeletalAnimator::Save(json& j) const

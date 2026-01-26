@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -27,22 +27,22 @@
     <ClCompile Include="Script\AimPointer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\BaseControllerScript.cpp">
+    <ClCompile Include="Script\CharacterScript\Common\BaseControllerScript.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\BulletFactory.cpp">
+    <ClCompile Include="Script\CharacterScript\Common\BulletFactory.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\BulletPlayer.cpp">
+    <ClCompile Include="Script\CharacterScript\Player\BulletPlayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\MonsterScript.cpp">
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterScript.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\TestShootingPlayer.cpp">
+    <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\TempMonster.cpp">
+    <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\SceneController_Play.cpp">
@@ -80,28 +80,28 @@
     <ClInclude Include="Script\AimPointer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\BaseControllerScript.h">
+    <ClInclude Include="Script\CharacterScript\Common\BaseControllerScript.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\BulletFactory.h">
+    <ClInclude Include="Script\CharacterScript\Common\BulletFactory.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\BulletMovement.h">
+    <ClInclude Include="Script\CharacterScript\Common\BulletMovement.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\BulletParams.h">
+    <ClInclude Include="Script\CharacterScript\Common\BulletParams.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\BulletPlayer.h">
+    <ClInclude Include="Script\CharacterScript\Player\BulletPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\MonsterScript.h">
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterScript.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\TestShootingPlayer.h">
+    <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\TempMonster.h">
+    <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\SceneController_Play.h">

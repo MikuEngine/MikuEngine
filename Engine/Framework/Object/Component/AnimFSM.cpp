@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Framework/Object/Component/AnimFSM.h"
 #include "Framework/Object/Component/LogicFSM.h"
 #include "Framework/Object/Component/Animator/SkeletalAnimator.h"
@@ -316,8 +316,12 @@ namespace engine
     // ═══════════════════════════════════════════════════════════════
     void AnimFSM::OnGui()
     {
+        ImGui::Indent();  // "AnimFSM Component" CollapsingHeader 들여쓰기
+        
         if (ImGui::CollapsingHeader("AnimFSM Component", ImGuiTreeNodeFlags_DefaultOpen))
         {
+            ImGui::Indent();
+            
             // ─────────────────────────────────────────────
             // 현재 상태
             // ─────────────────────────────────────────────
@@ -416,7 +420,19 @@ namespace engine
                     }
                 }
             }
+            
+            ImGui::Unindent();
         }
+        
+        ImGui::Unindent();  // "AnimFSM Component" CollapsingHeader 들여쓰기 종료
+        
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::Separator();
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+        ImGui::Spacing();
     }
 
     // ═══════════════════════════════════════════════════════════════
