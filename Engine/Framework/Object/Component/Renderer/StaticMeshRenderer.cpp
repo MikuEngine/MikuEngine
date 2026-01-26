@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "StaticMeshRenderer.h"
 
 #include <filesystem>
@@ -167,6 +167,25 @@ namespace engine
         return m_castShadow;
     }
 
+    void StaticMeshRenderer::SetObstacleAlpha(bool enable, float alpha)
+    {
+        if (!m_isInitialized)
+        {
+            return; // Initialize가 안 되어있으면 무시
+        }
+
+        bool wasTransparent = m_useObstacleTransparency;
+        m_useObstacleTransparency = enable;
+        m_obstacleAlpha = std::clamp(alpha, 0.0f, 1.0f);
+
+        // 상태가 변경되었을 때만 Register/Unregister
+        if (wasTransparent != m_useObstacleTransparency)
+        {
+            SystemManager::Get().GetRenderSystem().Unregister(this);
+            SystemManager::Get().GetRenderSystem().Register(this);
+        }
+    }
+
     void StaticMeshRenderer::OnGui()
     {
         ImGui::Text("Mesh: %s", m_meshFilePath.c_str());
@@ -288,6 +307,11 @@ namespace engine
     {
         if (!m_materialData)
         {
+            // 반투명 모드면 Transparent만 반환, Opaque는 반환하지 않음
+            if (m_useObstacleTransparency)
+            {
+                return (type == RenderType::Transparent);
+            }
             return (type == RenderType::Opaque);
         }
         
@@ -302,6 +326,25 @@ namespace engine
                 }
             }
 
+            return false;
+        }
+        
+        // 반투명 모드일 때는 Opaque와 Cutout을 렌더링하지 않음
+        if (m_useObstacleTransparency)
+        {
+            if (type == RenderType::Transparent)
+            {
+                // Opaque나 Cutout 머테리얼이 있으면 반투명으로 렌더링 가능
+                for (const auto& mat : m_materialData->GetMaterials())
+                {
+                    if (mat.renderType == MaterialRenderType::Opaque ||
+                        mat.renderType == MaterialRenderType::Cutout)
+                    {
+                        return true;
+                    }
+                }
+            }
+            // 반투명 모드일 때는 Opaque와 Cutout은 false 반환
             return false;
         }
         
@@ -366,6 +409,7 @@ namespace engine
             cbMaterial.materialRoughness = m_materialRoughness;
             cbMaterial.materialMetalness = m_materialMetalness;
             cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;
+            cbMaterial.materialAlpha = m_useObstacleTransparency ? m_obstacleAlpha : 1.0f;
             cbMaterial.overrideMaterial = m_overrideMaterial ? 1 : 0;
 
             deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
@@ -440,26 +484,66 @@ namespace engine
 
             deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
             deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
-            deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
 
             const auto& meshSections = m_staticMeshData->GetMeshSections();
             const auto& materials = m_materialData->GetMaterials();
 
-            for (const auto& meshSection : meshSections)
+            // 반투명 장애물 모드: Opaque/Cutout 머테리얼을 반투명으로 렌더링
+            if (m_useObstacleTransparency)
             {
-                if (materials[meshSection.materialIndex].renderType != MaterialRenderType::Transparent)
+                // Transparent 셰이더로 Opaque/Cutout 머테리얼을 반투명 렌더링
+                deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
+                
+                // Opaque 머테리얼을 반투명으로 렌더링
+                for (const auto& meshSection : meshSections)
                 {
-                    continue;
+                    if (materials[meshSection.materialIndex].renderType != MaterialRenderType::Opaque)
+                    {
+                        continue;
+                    }
+
+                    const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
+                    deviceContext->PSSetShaderResources(
+                        static_cast<UINT>(TextureSlot::BaseColor),
+                        static_cast<UINT>(textureSRVs.size()),
+                        textureSRVs.data());
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
                 }
 
-                const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
+                // Cutout 머테리얼을 반투명으로 렌더링
+                for (const auto& meshSection : meshSections)
+                {
+                    if (materials[meshSection.materialIndex].renderType != MaterialRenderType::Cutout)
+                    {
+                        continue;
+                    }
 
-                deviceContext->PSSetShaderResources(
-                    static_cast<UINT>(TextureSlot::BaseColor),
-                    static_cast<UINT>(textureSRVs.size()),
-                    textureSRVs.data());
+                    const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
+                    deviceContext->PSSetShaderResources(
+                        static_cast<UINT>(TextureSlot::BaseColor),
+                        static_cast<UINT>(textureSRVs.size()),
+                        textureSRVs.data());
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                }
+            }
+            else
+            {
+                // 일반 Transparent 머테리얼 렌더링
+                deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
+                for (const auto& meshSection : meshSections)
+                {
+                    if (materials[meshSection.materialIndex].renderType != MaterialRenderType::Transparent)
+                    {
+                        continue;
+                    }
 
-                deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                    const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
+                    deviceContext->PSSetShaderResources(
+                        static_cast<UINT>(TextureSlot::BaseColor),
+                        static_cast<UINT>(textureSRVs.size()),
+                        textureSRVs.data());
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                }
             }
 
             deviceContext->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFFF);

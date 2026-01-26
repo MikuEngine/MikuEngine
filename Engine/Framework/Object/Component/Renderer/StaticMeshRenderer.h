@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Resource/Texture.h"
@@ -64,6 +64,10 @@ namespace engine
         bool m_castShadow = false;
         bool m_isInitialized = false;
 
+        // 장애물 반투명 처리
+        bool m_useObstacleTransparency = false;
+        float m_obstacleAlpha = 1.0f;
+
     public:
         ~StaticMeshRenderer();
 
@@ -80,6 +84,9 @@ namespace engine
         void SetTransparentPixelShader(const std::string& shaderFilePath);
         void SetCastShadow(bool cast);;
         bool IsCastShadow() const override;
+
+        // 장애물 반투명 설정 (스크립트에서 호출)
+        void SetObstacleAlpha(bool enable, float alpha);
 
     public:
         void OnGui() override;

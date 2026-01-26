@@ -1,7 +1,6 @@
 {
     "SceneList": [
-        "SpriteRendererTest",
-        "StaticMeshTest"
+        "SpriteRendererTest"
     ],
     "SkyboxTexturePath": "Resource/Texture/PlainsSunsetEnvHDR.dds",
     "IBLIrradiancePath": "Resource/Texture/PlainsSunsetDiffuseHDR.dds",
@@ -24,6 +23,7 @@
     },
     "UseSkyboxTexture": true,
     "UseIBLTexture": true,
+    "UseIBL": true,
     "BloomStrength": 0.05000000074505806,
     "BloomThreshold": 1.0,
     "BloomSoftKnee": 2.0,
