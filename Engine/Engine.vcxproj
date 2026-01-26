@@ -263,6 +263,7 @@
     <ClCompile Include="Framework\Object\Component\UI\UIProgressBar.cpp" />
     <ClCompile Include="Framework\Object\Component\UI\UIPanel.cpp" />
     <ClCompile Include="Framework\Object\Component\UI\UIClickArea.cpp" />
+    <ClCompile Include="UIScrollView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Utility\EditorHelper.h" />
@@ -391,6 +392,7 @@
     <ClInclude Include="Framework\Object\Component\UI\UIProgressBar.h" />
     <ClInclude Include="Framework\Object\Component\UI\UIPanel.h" />
     <ClInclude Include="Framework\Object\Component\UI\UIClickArea.h" />
+    <ClInclude Include="UIScrollView.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Geometry\Shadow_Point_GS.hlsl">

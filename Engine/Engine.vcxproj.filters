@@ -330,6 +330,9 @@
     <ClCompile Include="Core\System\VirtualFileSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="UIScrollView.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -708,6 +711,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\System\VirtualFileSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScrollView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
