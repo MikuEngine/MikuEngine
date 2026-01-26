@@ -72,7 +72,23 @@ cbuffer Frame : register(b0) // 프레임 당 한번만 갱신되는 버퍼
     float g_fxaaQualitySubpix; // 0.0 to 1.0 (default: 0.75)
     float g_fxaaQualityEdgeThreshold; // 0.063 to 0.333 (default: 0.166)
     float g_fxaaQualityEdgeThresholdMin; // 0.0312 to 0.0833 (default: 0.0833)
-    float __pad1_Frame;
+    float __pad_fxaa;
+    
+    // 스카이박스/IBL 설정
+    float3 g_skyboxColor;
+    float g_useSkyboxTexture;
+    
+    float3 g_skyboxHorizonColor;
+    float g_useIBLTexture;
+    
+    float3 g_iblAmbientColor;
+    float __pad_skybox1;
+    
+    // 포스트프로세싱 추가 설정
+    float g_enableBloom;
+    float g_enableToneMapping;
+    float g_enableFXAA;
+    float __pad_postprocess1;
 };
 
 cbuffer Material : register(b1)

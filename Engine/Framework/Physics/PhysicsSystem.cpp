@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PhysicsSystem.h"
 
 #include "Framework/System/SystemManager.h"
@@ -11,7 +11,6 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
-#include "Framework/Physics/PhysicsDebugRenderer.h"
 #include "Framework/Physics/PhysicsCallback.h"
 
 namespace engine
@@ -31,9 +30,6 @@ namespace engine
         {
             return;
         }
-
-        // 디버그 렌더러 정리
-        PhysicsDebugRenderer::Get().Shutdown();
 
         // 기본 재질 해제
         if (m_defaultMaterial)
@@ -156,9 +152,6 @@ namespace engine
 
         // 7. 레이어 매트릭스 기본 설정
         m_layerMatrix.SetupDefault();
-
-        // 8. 디버그 렌더러 초기화
-        PhysicsDebugRenderer::Get().Initialize();
 
         m_isInitialized = true;
         LOG_PRINT("[PhysicsSystem] Initialized successfully");

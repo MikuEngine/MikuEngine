@@ -19,7 +19,7 @@
 
 namespace engine
 {
-	ParticleSystem::ParticleSystem()
+	void ParticleSystem::Initialize()
 	{
 		auto& resourceManager = ResourceManager::Get();
 

@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "EditorManager.h"
 
 #include <fstream>
@@ -32,6 +32,7 @@
 #include "Editor/EditorGrid.h"
 
 #include "Framework/Physics/PhysicsDebugRenderer.h"
+#include "Framework/Object/Component/Light/LightDebugRenderer.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/CollisionSystem.h"
 
@@ -1093,6 +1094,7 @@ namespace engine
         // Physics Debug
         PhysicsDebugRenderer::Get().OnGui();
         PathfindingDebugRenderer::Get().OnGui();
+        LightDebugRenderer::Get().OnGui();
 
         ImGui::End();
     }

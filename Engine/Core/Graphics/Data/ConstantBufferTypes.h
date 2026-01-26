@@ -47,7 +47,23 @@ namespace engine
 		float fxaaQualitySubpix;           // 0.0 to 1.0 (default: 0.75)
 		float fxaaQualityEdgeThreshold;    // 0.063 to 0.333 (default: 0.166)
 		float fxaaQualityEdgeThresholdMin; // 0.0312 to 0.0833 (default: 0.0833)
-		float pad1;
+		float __pad_fxaa;
+		
+		// 스카이박스/IBL 설정
+		Vector3 skyboxColor;
+		float useSkyboxTexture;  // 1.0f = true, 0.0f = false
+		
+		Vector3 skyboxHorizonColor;
+		float useIBLTexture;
+		
+		Vector3 iblAmbientColor;
+		float __pad_skybox1;
+		
+		// 포스트프로세싱 추가 설정
+		float enableBloom;  // 1.0f = true, 0.0f = false
+		float enableToneMapping;
+		float enableFXAA;
+		float __pad_postprocess1;
 	};
 
 	struct CbMaterial
