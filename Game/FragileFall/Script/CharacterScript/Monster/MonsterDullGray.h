@@ -41,6 +41,9 @@ namespace game
         void InitializeAnimFSM() override;
         void InitializeAnimations() override;
         void InitializeBullet() override;
+        
+        // 공격 (3초마다 리니어 총알 발사)
+        void Attack(float deltaTime) override;
 
     public:
         void OnGui() override;

@@ -92,9 +92,9 @@
                     "type": 0,
                     "mass": 1.0,
                     "linearDamping": 10.0,
-                    "angularDamping": 100.0,
+                    "angularDamping": 57.0,
                     "useGravity": false,
-                    "constraints": 58
+                    "constraints": 42
                 },
                 {
                     "Type": "BoxCollider",
@@ -130,7 +130,7 @@
                     "BaseLayerIndex": 0,
                     "UpperBodyLayerIndex": 1,
                     "EnableProceduralAim": false,
-                    "MaxYaw": 70.0,
+                    "MaxYaw": 90.0,
                     "MaxPitch": 0.0,
                     "AimLerpSpeed": 10.0,
                     "SpineBoneName": "mixamorig:Spine1",
@@ -623,6 +623,28 @@
                 {
                     "Type": "BulletFactory",
                     "Active": true
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.2999999523162842,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 2,
+                    "size": [
+                        60.0,
+                        170.0,
+                        60.0
+                    ]
                 }
             ]
         },

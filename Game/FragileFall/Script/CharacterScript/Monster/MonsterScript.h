@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
 
 namespace engine
@@ -69,7 +70,6 @@ namespace game
         // ─────────────────────────────────────────────
         float m_fireTimer = 0.0f;
         bool m_fsmInitialized = false;
-        float m_currentRotationAngle = 0.0f;
         
         // ─────────────────────────────────────────────
         // 애니메이션 이름 (자식 클래스에서 설정)
@@ -79,7 +79,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 회전 완료 판정
         // ─────────────────────────────────────────────
-        static constexpr float ROTATION_THRESHOLD = 2.0f * 3.14159f / 180.0f;  // 2도 (라디안)
+        static constexpr float ROTATION_THRESHOLD = 7.0f * 3.14159f / 180.0f;  // 2도 (라디안)
 
     public:
         virtual void Awake() override;
@@ -123,12 +123,14 @@ namespace game
         engine::Vector3 CalculateDirectionToPlayer() const;  // 플레이어 방향 벡터 계산
 
         // ─────────────────────────────────────────────
-        // 회전 및 발사
+        // 회전 및 공격
         // ─────────────────────────────────────────────
         void RotateTowardsPlayer(float deltaTime);
         void RotateTowards(const engine::Vector3& targetDirection, float deltaTime);  // 특정 방향으로 회전
         bool IsRotatedTowardsPlayer() const;
-        void HandleShooting(float deltaTime);
+        
+        // 공격 (자손 클래스에서 오버라이드)
+        virtual void Attack(float deltaTime);
         
         // ─────────────────────────────────────────────
         // 이동 (PathfindingSystem 활용, 향후 이동 몬스터용)

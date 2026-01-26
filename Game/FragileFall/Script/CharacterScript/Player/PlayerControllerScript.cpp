@@ -50,15 +50,25 @@ namespace game
 			}
 		}
 
-		// 초기 회전 설정 (-Z 방향)
+		// 초기 회전 설정 (-Z 방향 모델이므로 +180도 보정)
 		if (GetTransform())
 		{
-			m_currentRotationAngle = atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z);
+			m_currentRotationAngle = atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z) + 3.14159f;
 			engine::Quaternion initialRot = engine::Quaternion::CreateFromAxisAngle(
 				engine::Vector3::UnitY, 
 				m_currentRotationAngle
 			);
-			GetTransform()->SetLocalRotation(initialRot);
+			
+			// Dynamic Rigidbody의 경우 초기 회전도 Rigidbody를 통해 설정
+			if (m_rigidbody && m_rigidbody->IsDynamic())
+			{
+				GetTransform()->SetLocalRotation(initialRot);  // 초기화는 직접 설정 가능
+				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);  // 각속도 초기화
+			}
+			else
+			{
+				GetTransform()->SetLocalRotation(initialRot);
+			}
 		}
 	}
 
@@ -108,17 +118,17 @@ namespace game
 		// BulletFactory: 같은 오브젝트 또는 씬에서 검색
 		// ─────────────────────────────────────────────
 		m_bulletFactory = GetGameObject()->GetComponent<BulletFactory>();
-		if (!m_bulletFactory)
-		{
-			auto* scene = engine::SceneManager::Get().GetScene();
-			if (scene)
-			{
-				if (auto* factoryGO = scene->FindGameObject("BulletFactory"))
-				{
-					m_bulletFactory = factoryGO->GetComponent<BulletFactory>();
-				}
-			}
-		}
+		//if (!m_bulletFactory)
+		//{
+		//	auto* scene = engine::SceneManager::Get().GetScene();
+		//	if (scene)
+		//	{
+		//		if (auto* factoryGO = scene->FindGameObject("BulletFactory"))
+		//		{
+		//			m_bulletFactory = factoryGO->GetComponent<BulletFactory>();
+		//		}
+		//	}
+		//}
 		// 참고: m_fireRate, m_bulletSpeed 등 파라미터 값은 
 		// 여기서 설정하지 않음. Load()에서 읽어온 값 또는 
 		// 헤더의 초기값이 사용됨.
@@ -638,6 +648,11 @@ namespace game
 		// 거의 같은 방향이면 회전 불필요
 		if (dotToTarget > 0.9999f)
 		{
+			// Dynamic Rigidbody의 경우 Angular Velocity 정지
+			if (m_rigidbody && m_rigidbody->IsDynamic())
+			{
+				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+			}
 			return;
 		}
 
@@ -654,32 +669,46 @@ namespace game
 		// 회전 방향 결정:
 		// - 에임이 움직이고 있으면 → 에임 방향 따라감
 		// - 에임이 멈춰있으면 → 최단 경로 (현재→목표 외적)
+		// 주의: 모델이 -Z 방향이라 +180도 보정 → 외적 부호 반전 필요
 		float rotationSign;
 		if (std::abs(aimCross) > 0.001f)
 		{
-			// 에임이 움직이는 방향으로
-			rotationSign = (aimCross > 0.0f) ? 1.0f : -1.0f;
+			// 에임이 움직이는 방향으로 (부호 반전)
+			rotationSign = (aimCross > 0.0f) ? -1.0f : 1.0f;
 		}
 		else
 		{
-			// 에임이 멈춰있으면 최단 경로
-			rotationSign = (targetCross > 0.0f) ? 1.0f : -1.0f;
+			// 에임이 멈춰있으면 최단 경로 (부호 반전)
+			rotationSign = (targetCross > 0.0f) ? -1.0f : 1.0f;
 		}
 
 		// ─────────────────────────────────────────────
-		// 5. 회전 적용
+		// 5. 회전 적용 (Dynamic Rigidbody용)
 		// ─────────────────────────────────────────────
 		float deltaTime = engine::Time::DeltaTime();
-		float rotationSpeed = 10.0f;
-		float rotationAmount = rotationSpeed * deltaTime;
+		float rotationSpeed = 10.0f;  // rad/sec
 		
-		// 각도 업데이트 (정규화 없음 - 값이 커져도 sin/cos는 동일하게 동작)
-		m_currentRotationAngle += rotationSign * rotationAmount;
-		
-		// 쿼터니언 적용
-		engine::Quaternion newRot = engine::Quaternion::CreateFromAxisAngle(
-			engine::Vector3::UnitY, m_currentRotationAngle);
-		GetTransform()->SetLocalRotation(newRot);
+		if (m_rigidbody && m_rigidbody->IsDynamic())
+		{
+			// Dynamic Rigidbody: Angular Velocity 사용
+			float angularVelocity = rotationSign * rotationSpeed;
+			m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
+			
+			// 각도 동기화 (다음 프레임에서 정확한 계산을 위해)
+			engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
+			engine::Vector3 euler = currentRot.ToEuler();
+			m_currentRotationAngle = euler.y;
+		}
+		else
+		{
+			// Kinematic/Static: 직접 회전 (이전 방식)
+			float rotationAmount = rotationSpeed * deltaTime;
+			m_currentRotationAngle += rotationSign * rotationAmount;
+			
+			engine::Quaternion newRot = engine::Quaternion::CreateFromAxisAngle(
+				engine::Vector3::UnitY, m_currentRotationAngle);
+			GetTransform()->SetLocalRotation(newRot);
+		}
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -782,43 +811,13 @@ namespace game
 		ImGui::Separator();
 		ImGui::Text("=== Component Validation ===");
 		
-		// 에디터 모드를 위한 실시간 컴포넌트 검색
+		// 에디터 모드를 위한 실시간 컴포넌트 검색 (같은 GameObject 내에서만 검색)
 		engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
 		engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
 		engine::AnimFSM* animFSM = m_animFSM ? m_animFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::AnimFSM>() : nullptr);
 		engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
-		
-		// AimPointer와 BulletFactory는 씬에서 검색 (캐싱된 것이 없으면)
-		AimPointer* aimPointer = m_aimPointer;
-		BulletFactory* bulletFactory = m_bulletFactory;
-		
-		if (!aimPointer && GetGameObject())
-		{
-			aimPointer = GetGameObject()->GetComponent<AimPointer>();
-			if (!aimPointer)
-			{
-				auto* scene = engine::SceneManager::Get().GetScene();
-				if (scene && !m_aimPointerObjectName.empty())
-				{
-					if (auto* aimGO = scene->FindGameObject(m_aimPointerObjectName))
-					{
-						aimPointer = aimGO->GetComponent<AimPointer>();
-					}
-				}
-			}
-		}
-		
-		if (!bulletFactory)
-		{
-			auto* scene = engine::SceneManager::Get().GetScene();
-			if (scene)
-			{
-				if (auto* factoryGO = scene->FindGameObject("BulletFactory"))
-				{
-					bulletFactory = factoryGO->GetComponent<BulletFactory>();
-				}
-			}
-		}
+		AimPointer* aimPointer = m_aimPointer ? m_aimPointer : (GetGameObject() ? GetGameObject()->GetComponent<AimPointer>() : nullptr);
+		BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
 		
 		// 전체 유효성 검사
 		bool allValid = rigidbody && skeletalAnimator && aimPointer && bulletFactory && animFSM && logicFSM;

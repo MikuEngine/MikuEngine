@@ -99,21 +99,57 @@ namespace game
 
     void MonsterDullGray::InitializeBullet()
     {
-        BulletParams params;
-        params.type = BulletType::Linear;
-        params.speed = m_bulletSpeed;
-        params.lifetime = m_bulletLifetime;
-        params.damage = 10;
+        // 총알 파라미터는 Attack()에서 직접 설정
+    }
 
-        // BulletMonster를 생성하도록 BulletFactory 설정
-        // BulletFactory는 Fire() 호출 시 적절한 총알을 생성
-        
-        // 현재 BulletFactory는 BulletPlayer만 생성하므로
-        // BulletMonster를 생성하도록 수정이 필요하거나,
-        // 별도의 BulletFactoryMonster를 사용해야 함
-        
-        // TODO: BulletFactory 확장 또는 별도 팩토리 사용
-        // 현재는 MonsterScript::HandleShooting()에서 처리
+    // ═══════════════════════════════════════════════════════════════
+    // 공격
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterDullGray::Attack(float deltaTime)
+    {
+        // 쿨다운 타이머 감소
+        if (m_fireTimer > 0.0f)
+        {
+            m_fireTimer -= deltaTime;
+        }
+
+        // 발사 조건: 회전 완료 + 쿨다운 완료
+        if (IsRotatedTowardsPlayer() && m_fireTimer <= 0.0f)
+        {
+            // 발사!
+            if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
+            {
+                engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
+                engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+
+                // 방향 벡터 계산
+                engine::Vector3 direction = playerPos - monsterPos;
+                direction.y = 0.0f;
+                
+                if (direction.LengthSquared() > 0.001f)
+                {
+                    direction.Normalize();
+
+                    // 리니어 총알 발사
+                    BulletParams params;
+                    params.type = BulletType::Linear;
+                    params.speed = m_bulletSpeed;      // 1.0
+                    params.lifetime = m_bulletLifetime; // 3.0
+                    params.damage = 10;
+
+                    m_bulletFactory->FireMonster(monsterPos, direction, params);
+
+                    // 발사 애니메이션 재생 (루프 없음)
+                    if (m_skeletalAnimator && !m_animName_Attack.empty())
+                    {
+                        m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
+                    }
+
+                    // 쿨다운 재설정 (3초)
+                    m_fireTimer = m_fireRate;  // 3.0초
+                }
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -131,13 +167,11 @@ namespace game
         ImGui::Separator();
         ImGui::Text("=== Component Validation ===");
         
-        // 에디터 모드를 위한 실시간 컴포넌트 검색
+        // 에디터 모드를 위한 실시간 컴포넌트 검색 (같은 GameObject 내에서만 검색)
         engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
         engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
         engine::AnimFSM* animFSM = m_animFSM ? m_animFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::AnimFSM>() : nullptr);
         engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
-        
-        // BulletFactory는 자신의 GameObject에서만 검색
         BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
         
         // 전체 유효성 검사
