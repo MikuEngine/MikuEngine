@@ -1,7 +1,9 @@
 ﻿#include "EnginePCH.h"
 #include "Framework/Asset/SocketData.h"
-#include "Common/Utility/JsonHelper.h"
+
 #include <fstream>
+
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
@@ -14,16 +16,23 @@ namespace engine
 
     void SocketData::Create(const std::string& filePath)
     {
-        std::ifstream file(filePath);
-        if (!file.is_open()) return;
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
 
-        nlohmann::ordered_json j;
-        file >> j;
+        if (!vfs.LoadFile(filePath, fileData))
+        {
+            LOG_INFO("{} 파일 열기 실패 - SocketData", filePath);
+            return;
+        }
+
+        json j = json::parse(fileData.begin(), fileData.end());
 
         if (j.is_array())
         {
             m_sockets.clear();
             m_socketMap.clear();
+
+            m_sockets.reserve(j.size());
 
             for (const auto& item : j)
             {
