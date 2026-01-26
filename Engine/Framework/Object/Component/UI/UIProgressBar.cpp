@@ -7,6 +7,7 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/UI/UIImage.h"
+#include "Framework/Object/Component/Canvas.h"
 
 namespace engine
 {
@@ -190,9 +191,18 @@ namespace engine
 			}
 		}
 
-		bool horizontal = (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft);
-		if (horizontal) GetRectTransform()->SetSize(300, 50);
-		else			GetRectTransform()->SetSize(50, 300);
+		// 기본 크기
+		if (m_shape == Shape::Radial)
+		{
+			GetRectTransform()->SetSize(200, 200);
+		}
+		else
+		{
+			bool horizontal = (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft);
+			if (horizontal) GetRectTransform()->SetSize(300, 50);
+			else            GetRectTransform()->SetSize(50, 300);
+		}
+
 		m_dirty = true;
 	}
 
@@ -224,10 +234,68 @@ namespace engine
 		// (화면 픽셀 좌표) 루트 Rect 계산
 		auto& gd = GraphicsDevice::Get();
 		const D3D11_VIEWPORT vp = gd.GetViewport();
-		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
-		const UIRect barRect = rootRT->GetWorldRectResolved(rootRect);
 
+		Canvas* c = GetCanvasInParent();
+		if (!c) return;
+
+		const Vector2 ref = c->GetReferenceResolution();
+		UIRect rootRect = { 0.0f, 0.0f, ref.x, ref.y };
+		const UIRect rect = rootRT->GetWorldRectResolved(rootRect);
+
+		const Vector2 scale = c->GetUIScale();
+		const Vector2 offset = c->GetUIOffset();
+
+		const float pxX = offset.x + rect.x * scale.x;
+		const float pxY = offset.y + rect.y * scale.y;
+		const float pxW = rect.w * scale.x;
+		const float pxH = rect.h * scale.y;
+
+		if (pxW <= 0.0f || pxH <= 0.0f) return;
+
+		const UIRect barRect{ pxX, pxY, pxW, pxH };
 		const float v = Clamp01(m_value);
+
+		if (m_shape == Shape::Radial)
+		{
+			// Fill은 항상 전체를 덮게 두고, 셰이더 마스크가 잘라내게 함
+			fillRT->SetPivot({ 0.5f, 0.5f });
+			fillRT->SetAnchorMin({ 0.0f, 0.0f });
+			fillRT->SetAnchorMax({ 1.0f, 1.0f });
+			fillRT->SetAnchoredPosition({ 0.0f, 0.0f });
+			fillRT->SetSize(0.0f, 0.0f);
+
+			if (v <= 0.0f)
+			{
+				m_fill->SetMaskMode(MaskMode::None);
+				Vector4 cc = m_fillColor;
+				cc.w = 0.0f;
+				m_fill->SetColor(cc);
+				return;
+			}
+
+			m_fill->SetColor(m_fillColor);
+
+			const float cx = barRect.x + barRect.w * 0.5f;
+			const float cy = barRect.y + barRect.h * 0.5f;
+
+			const float rOuter = 0.5f * std::min(barRect.w, barRect.h);
+			const float rInner = rOuter * Clamp01(m_innerRadius01);
+
+			m_fill->SetMaskMode(MaskMode::Radial);
+
+			// mask0 = (cx, cy, rInner, rOuter)
+			m_fill->SetMask0(Vector4(cx, cy, rInner, rOuter));
+
+			// mask1 = (startAngleRad, fill01, clockwise(0/1), unused)
+			m_fill->SetMask1(Vector4(
+				m_startAngleRad,
+				v,
+				m_clockwise ? 1.0f : 0.0f,
+				0.0f
+			));
+
+			return;
+		}
 
 		if (m_fillMode == FillMode::AnchorResize)
 		{
@@ -359,6 +427,21 @@ namespace engine
 
 		bool changed = false;
 
+		{
+			int s = (int)m_shape;
+			const char* items[] = { "Linear", "Radial" };
+			if (ImGui::Combo("Shape", &s, items, IM_ARRAYSIZE(items)))
+			{
+				SetShape((Shape)s);
+
+				// Shape 변경 시 기본 크기 한 번 맞춰주기(선택)
+				if (m_shape == Shape::Radial)
+					GetRectTransform()->SetSize(200, 200);
+
+				changed = true;
+			}
+		}
+
 		float v = m_value;
 		if (ImGui::SliderFloat("Value", &v, 0.0f, 1.0f))
 		{
@@ -366,20 +449,29 @@ namespace engine
 			changed = true;
 		}
 
-		int dir = (int)m_direction;
-		const char* dirItems[] = { "LeftToRight", "RightToLeft", "BottomToTop", "TopToBottom" };
-		if (ImGui::Combo("Direction", &dir, dirItems, IM_ARRAYSIZE(dirItems)))
+		if (m_shape == Shape::Linear)
 		{
-			SetDirection((Direction)dir);
-			changed = true;
-		}
+			int dir = (int)m_direction;
+			const char* dirItems[] = { "LeftToRight", "RightToLeft", "BottomToTop", "TopToBottom" };
+			if (ImGui::Combo("Direction", &dir, dirItems, IM_ARRAYSIZE(dirItems)))
+			{
+				SetDirection((Direction)dir);
+				changed = true;
+			}
 
-		int fm = (int)m_fillMode;
-		const char* fmItems[] = { "PixelMask", "AnchorResize" };
-		if (ImGui::Combo("FillMode", &fm, fmItems, IM_ARRAYSIZE(fmItems)))
+			int fm = (int)m_fillMode;
+			const char* fmItems[] = { "PixelMask", "AnchorResize" };
+			if (ImGui::Combo("FillMode", &fm, fmItems, IM_ARRAYSIZE(fmItems)))
+			{
+				SetFillMode((FillMode)fm);
+				changed = true;
+			}
+		}
+		else
 		{
-			SetFillMode((FillMode)fm);
-			changed = true;
+			if (ImGui::SliderFloat("StartAngleRad", &m_startAngleRad, -6.2831853f, 6.2831853f)) { m_dirty = true; changed = true; }
+			if (ImGui::Checkbox("Clockwise", &m_clockwise)) { m_dirty = true; changed = true; }
+			if (ImGui::SliderFloat("InnerRadius01", &m_innerRadius01, 0.0f, 0.99f)) { m_dirty = true; changed = true; }
 		}
 
 		if (ImGui::ColorEdit4("BgColor", &m_bgColor.x)) { m_dirty = true; changed = true; }
@@ -396,8 +488,16 @@ namespace engine
 		UIElement::Save(j);
 
 		j["Value"] = m_value;
+		j["Shape"] = (int)m_shape;
+
+		// Linear
 		j["Direction"] = (int)m_direction;
 		j["FillMode"] = (int)m_fillMode;
+
+		// Radial
+		j["StartAngleRad"] = m_startAngleRad;
+		j["Clockwise"] = m_clockwise;
+		j["InnerRadius01"] = m_innerRadius01;
 
 		j["BgSprite"] = m_bgSprite;
 		j["FillSprite"] = m_fillSprite;
@@ -413,6 +513,10 @@ namespace engine
 		JsonGet(j, "Value", m_value);
 		m_value = Clamp01(m_value);
 
+		int shape = (int)Shape::Linear;
+		JsonGet(j, "Shape", shape);
+		m_shape = (Shape)shape;
+
 		int dir = (int)Direction::LeftToRight;
 		JsonGet(j, "Direction", dir);
 		m_direction = (Direction)dir;
@@ -420,6 +524,11 @@ namespace engine
 		int fm = (int)FillMode::AnchorResize;
 		JsonGet(j, "FillMode", fm);
 		m_fillMode = (FillMode)fm;
+
+		JsonGet(j, "StartAngleRad", m_startAngleRad);
+		JsonGet(j, "Clockwise", m_clockwise);
+		JsonGet(j, "InnerRadius01", m_innerRadius01);
+		m_innerRadius01 = Clamp01(m_innerRadius01);
 
 		JsonGet(j, "BgSprite", m_bgSprite);
 		JsonGet(j, "FillSprite", m_fillSprite);
