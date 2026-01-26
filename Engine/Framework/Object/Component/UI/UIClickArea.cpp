@@ -3,6 +3,11 @@
 
 namespace engine
 {
+	void UIClickArea::Initialize()
+	{
+		UIElement::Initialize();
+	}
+
 	void UIClickArea::AddOnClick(ClickCallback&& cb)
 	{
 		m_onClick.push_back(std::move(cb));
@@ -41,5 +46,17 @@ namespace engine
 	{
 		if (!m_interactable) return;
 		for (auto& f : m_onClick) f(mouseButton);
+	}
+
+	void UIClickArea::Save(json& j) const
+	{
+		UIElement::Save(j);
+		j["Interactable"] = m_interactable;
+	}
+
+	void UIClickArea::Load(const json& j)
+	{
+		UIElement::Load(j);
+		JsonGet(j, "Interactable", m_interactable);
 	}
 }

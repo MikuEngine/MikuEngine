@@ -5,6 +5,7 @@
 namespace game
 {
     class UpgradeNodeView;
+    
 
     class UpgradeSystem :
         public engine::Script<UpgradeSystem>
@@ -37,7 +38,6 @@ namespace game
         void BuildDefaultTreeIfEmpty();
         void RecomputeUnlocked();
         
-
     private:
         //std::unordered_map<int, UpgradeNode> m_nodes;
         std::vector<engine::GameObject*> m_nodeObjects;

@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Hub",
-    "NumGameObjects": 41,
+    "NumGameObjects": 45,
     "GameObjects": [
         {
             "ID": 0,
@@ -2443,7 +2443,7 @@
             "ID": 34,
             "ParentID": 14,
             "Name": "UI_UpgradePopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -2732,6 +2732,177 @@
         {
             "ID": 38,
             "ParentID": 34,
+            "Name": "ButtonPrefab",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 39,
+            "ParentID": 38,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 25.0,
+                        "y": 10.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "Text": "Button",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 50,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 40,
+            "ParentID": 34,
             "Name": "Node(1)",
             "Active": true,
             "Components": [
@@ -2780,7 +2951,7 @@
                 {
                     "Type": "UIClickArea",
                     "Active": true,
-                    "Layer": 0,
+                    "Layer": 1,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Interactable": true
@@ -2788,25 +2959,25 @@
                 {
                     "Type": "UpgradeNodeView",
                     "Active": true,
-                    "NodeId": 0,
+                    "NodeId": 1,
                     "Parent": [],
-                    "Name": "루비",
-                    "Desc": "ㅋ",
-                    "Ruby": 100,
-                    "Sapphire": 100,
-                    "Emerald": 100
+                    "Name": "이름",
+                    "Desc": "뭐 적지",
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
                 },
                 {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
                     "OrderInLayer": 0,
-                    "RaycastTarget": true,
+                    "RaycastTarget": false,
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
-                        "x": 0.5521235466003418,
+                        "x": 1.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
@@ -2816,7 +2987,7 @@
             ]
         },
         {
-            "ID": 39,
+            "ID": 41,
             "ParentID": 34,
             "Name": "Node(2)",
             "Active": true,
@@ -2866,7 +3037,7 @@
                 {
                     "Type": "UIClickArea",
                     "Active": true,
-                    "Layer": 0,
+                    "Layer": 1,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Interactable": true
@@ -2874,27 +3045,29 @@
                 {
                     "Type": "UpgradeNodeView",
                     "Active": true,
-                    "NodeId": 1,
-                    "Parent": [],
+                    "NodeId": 2,
+                    "Parent": [
+                        1
+                    ],
                     "Name": "",
                     "Desc": "",
-                    "Ruby": 100,
-                    "Sapphire": 100,
-                    "Emerald": 100
+                    "Ruby": 2,
+                    "Sapphire": 2,
+                    "Emerald": 2
                 },
                 {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
                     "OrderInLayer": 0,
-                    "RaycastTarget": true,
+                    "RaycastTarget": false,
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.0780550166964531,
-                        "z": 0.7220077514648438,
+                        "x": 1.0,
+                        "y": 0.39382243156433105,
+                        "z": 0.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true
@@ -2902,8 +3075,185 @@
             ]
         },
         {
-            "ID": 40,
-            "Name": "UpGradeSystem",
+            "ID": 42,
+            "ParentID": 34,
+            "Name": "Node(3)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -600.0,
+                        "y": 99.80000305175781
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "NodeId": 3,
+                    "Parent": [
+                        1
+                    ],
+                    "Name": "",
+                    "Desc": "",
+                    "Ruby": 3,
+                    "Sapphire": 3,
+                    "Emerald": 3
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 0.9266408681869507,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 43,
+            "ParentID": 34,
+            "Name": "Node(4)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -297.70001220703125,
+                        "y": 185.1999969482422
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "NodeId": 4,
+                    "Parent": [
+                        2,
+                        3
+                    ],
+                    "Name": "",
+                    "Desc": "",
+                    "Ruby": 4,
+                    "Sapphire": 4,
+                    "Emerald": 4
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 0.49420851469039917,
+                        "y": 0.49420851469039917,
+                        "z": 0.49420851469039917,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 44,
+            "Name": "UpgradeSystem",
             "Active": true,
             "Components": [
                 {
@@ -2932,7 +3282,15 @@
                     "Ruby": 100,
                     "Sapphire": 100,
                     "Emerald": 100,
-                    "Purchased": []
+                    "Purchased": [
+                        
+                    ],
+                    "NodeObjects": [
+                        "Node(1)",
+                        "Node(2)",
+                        "Node(3)",
+                        "Node(4)"
+                    ]
                 }
             ]
         }
