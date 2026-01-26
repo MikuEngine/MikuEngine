@@ -7,6 +7,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
+#include "Core/System/VirtualFileSystem.h"
+
 namespace engine
 {
     namespace
@@ -23,11 +25,25 @@ namespace engine
     {
         Assimp::Importer importer;
 
-        const aiScene* scene = importer.ReadFile(filePath, 0);
+        // VFS를 통해 파일 로드
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        if (!vfs.LoadFile(filePath, fileData))
+        {
+            LOG_ERROR("[MaterialData] Failed to load material: {}", filePath);
+            return;
+        }
+
+        const aiScene* scene = importer.ReadFileFromMemory(
+            fileData.data(),
+            fileData.size(),
+            0,
+            filePath.c_str());
 
         if (!scene)
         {
-            LOG_ERROR("[MaterialData] Failed to load material: {}", filePath);
+            LOG_ERROR("[MaterialData] Failed to parse material: {}", filePath);
             return;
         }
 

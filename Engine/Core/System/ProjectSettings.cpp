@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ProjectSettings.h"
 
 #include <fstream>
@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include "Common/Utility/JsonHelper.h"
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
@@ -36,19 +37,43 @@ namespace engine
 
     void ProjectSettings::Load()
     {
-        std::filesystem::path path{ g_settingPath };
-        if (!std::filesystem::exists(path))
+        // VFS를 통해 파일 로드 시도
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        if (vfs.LoadFile(g_settingPath, fileData))
         {
-            return;
+            try
+            {
+                json root = json::parse(fileData.begin(), fileData.end());
+                JsonGet(root, "SceneList", sceneList);
+            }
+            catch (const json::parse_error& e)
+            {
+                LOG_ERROR("ProjectSettings 파일 파싱 실패: {} - ProjectSettings", e.what());
+            }
         }
-
-        std::ifstream i{ path };
-        if (i.is_open())
+        else
         {
-            json root;
-            i >> root;
-
-            JsonGet(root, "SceneList", sceneList);
+            // VFS에서 실패하면 파일 시스템에서 시도 (개발 모드)
+            std::filesystem::path path{ g_settingPath };
+            if (std::filesystem::exists(path))
+            {
+                std::ifstream i{ path };
+                if (i.is_open())
+                {
+                    try
+                    {
+                        json root;
+                        i >> root;
+                        JsonGet(root, "SceneList", sceneList);
+                    }
+                    catch (const json::parse_error& e)
+                    {
+                        LOG_ERROR("ProjectSettings 파일 파싱 실패: {} - ProjectSettings", e.what());
+                    }
+                }
+            }
         }
     }
 }

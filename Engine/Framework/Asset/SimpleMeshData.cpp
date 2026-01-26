@@ -1,9 +1,11 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SimpleMeshData.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
@@ -17,7 +19,27 @@ namespace engine
             aiProcess_ConvertToLeftHanded |
             aiProcess_PreTransformVertices;
 
-        const aiScene* scene = importer.ReadFile(filePath, importFlags);
+        // VFS를 통해 파일 로드
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        if (!vfs.LoadFile(filePath, fileData))
+        {
+            LOG_ERROR("SimpleMesh 파일 로드 실패: {} - SimpleMeshData", filePath);
+            return;
+        }
+
+        const aiScene* scene = importer.ReadFileFromMemory(
+            fileData.data(),
+            fileData.size(),
+            importFlags,
+            filePath.c_str());
+
+        if (!scene)
+        {
+            LOG_ERROR("SimpleMesh 파싱 실패: {} - SimpleMeshData", filePath);
+            return;
+        }
 
         Create(scene);
     }

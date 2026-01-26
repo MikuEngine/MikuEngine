@@ -1,10 +1,14 @@
 #include "EnginePCH.h"
 #include "SoundSystem.h"
 
+#include <fstream>
+#include <filesystem>
+
 #include "Common/Utility/StringHelper.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include "Core/System/VirtualFileSystem.h"
 #include "fmod.hpp"
 #include "fmod_errors.h"
 
@@ -333,56 +337,88 @@ namespace engine
 
         FMOD::ChannelGroup* targetGroup = GetOrCreateChannelGroup(groupName);
 
+        // VFS를 통해 파일 로드 시도
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        // 경로 정규화
+        std::string soundPath = filename;
+        if (soundPath.find("Resource/") != 0 && soundPath.find("resource/") != 0)
+        {
+            soundPath = m_soundPath + filename;
+        }
+        
+        // VFS에서 로드 시도
+        bool loaded = vfs.LoadFile(soundPath, fileData);
+        
+        // VFS에서 실패하면 파일 시스템에서 시도 (개발 모드)
         namespace fs = std::filesystem;
-        fs::path rootPath(m_soundPath);
-        fs::path inputPath(filename);
-        fs::path targetPath;
-
-        std::string inputStr = inputPath.generic_string();
-        std::string rootStr = rootPath.generic_string();
-
-        if (fs::exists(inputPath) || inputStr.find(rootStr) == 0)
+        if (!loaded)
         {
-            targetPath = inputPath;
-        }
-        else
-        {
-            targetPath = rootPath / inputPath;
-        }
+            fs::path rootPath(m_soundPath);
+            fs::path inputPath(filename);
+            fs::path targetPath;
 
-        if (!targetPath.has_extension() || !fs::exists(targetPath))
-        {
-            fs::path searchDir = targetPath.parent_path();
+            std::string inputStr = inputPath.generic_string();
+            std::string rootStr = rootPath.generic_string();
 
-            if (searchDir.empty() || !fs::exists(searchDir))
+            if (fs::exists(inputPath) || inputStr.find(rootStr) == 0)
             {
-                searchDir = rootPath;
+                targetPath = inputPath;
+            }
+            else
+            {
+                targetPath = rootPath / inputPath;
             }
 
-            if (fs::exists(searchDir))
+            if (!targetPath.has_extension() || !fs::exists(targetPath))
             {
-                for (const auto& entry : fs::directory_iterator(searchDir))
-                {
-                    if (entry.is_regular_file())
-                    {
-                        if (entry.path().stem() == targetPath.stem())
-                        {
-                            std::string ext = entry.path().extension().string();
+                fs::path searchDir = targetPath.parent_path();
 
-                            if (ext == ".wav" || ext == ".mp3" || ext == ".ogg" || ext == ".flac")
+                if (searchDir.empty() || !fs::exists(searchDir))
+                {
+                    searchDir = rootPath;
+                }
+
+                if (fs::exists(searchDir))
+                {
+                    for (const auto& entry : fs::directory_iterator(searchDir))
+                    {
+                        if (entry.is_regular_file())
+                        {
+                            if (entry.path().stem() == targetPath.stem())
                             {
-                                targetPath = entry.path();
-                                break;
+                                std::string ext = entry.path().extension().string();
+
+                                if (ext == ".wav" || ext == ".mp3" || ext == ".ogg" || ext == ".flac")
+                                {
+                                    targetPath = entry.path();
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
+
+            // 파일 시스템에서 로드
+            if (fs::exists(targetPath))
+            {
+                std::ifstream file(targetPath, std::ios::binary | std::ios::ate);
+                if (file.is_open())
+                {
+                    size_t size = static_cast<size_t>(file.tellg());
+                    file.seekg(0, std::ios::beg);
+                    fileData.resize(size);
+                    file.read(reinterpret_cast<char*>(fileData.data()), size);
+                    loaded = true;
+                }
+            }
         }
 
-        if (!fs::exists(targetPath))
+        if (!loaded || fileData.empty())
         {
-            LOG_ERROR("[SoundSystem] File Not Found: {} (Original Input: {})", targetPath.string(), filename);
+            LOG_ERROR("[SoundSystem] File Not Found: {} (Original Input: {})", soundPath, filename);
             return nullptr;
         }
 
@@ -392,16 +428,22 @@ namespace engine
         FMOD_MODE mode = FMOD_DEFAULT;
         if (is3D) mode = FMOD_3D | FMOD_3D_LINEARROLLOFF;
         else      mode = FMOD_2D;
-		
-		//std::string absPathStr = fs::absolute(targetPath).string();
-        // Convert path to UTF-8 for proper handling of non-ASCII characters (Korean, etc.)
-        std::string absPathStr = PathToUTF8(fs::absolute(targetPath));
 
-        FMOD_RESULT ret = m_pSystem->createSound(absPathStr.c_str(), mode, 0, &sound->m_pSound);
+        // FMOD 메모리 버퍼에서 로드
+        FMOD_CREATESOUNDEXINFO exinfo = {};
+        exinfo.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
+        exinfo.length = static_cast<unsigned int>(fileData.size());
+
+        // 메모리 버퍼를 FMOD에 전달 (FMOD가 복사하므로 fileData는 해제 가능)
+        FMOD_RESULT ret = m_pSystem->createSound(
+            reinterpret_cast<const char*>(fileData.data()),
+            mode | FMOD_OPENMEMORY,
+            &exinfo,
+            &sound->m_pSound);
 
         if (ret != FMOD_OK)
         {
-            LOG_ERROR("SoundSystem::CreateSound FAILED / Path: {}", absPathStr);
+            LOG_ERROR("SoundSystem::CreateSound FAILED / Path: {}", soundPath);
             LOG_ERROR("FMOD Error: {} ({})", FMOD_ErrorString(ret), static_cast<int>(ret));
 
             delete sound;

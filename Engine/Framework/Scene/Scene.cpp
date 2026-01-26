@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Scene.h"
 
 #include <functional>
@@ -6,6 +6,8 @@
 #include <algorithm>
 
 #include "Common/Utility/JsonHelper.h"
+#include "Core/System/VirtualFileSystem.h"
+#include "Core/System/VirtualFileSystem.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/Camera.h"
@@ -479,16 +481,40 @@ namespace engine
     {
         std::filesystem::path path{ "Resource/Scene" };
         path /= (m_name + ".scene");
+        std::string scenePath = path.generic_string();
 
-        std::ifstream i(path);
-        if (!i.is_open())
-        {
-            FATAL_CHECK(false, path.string());
-            return;
-        }
-
+        // VFS를 통해 파일 로드 시도
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        bool loaded = vfs.LoadFile(scenePath, fileData);
+        
         json root;
-        i >> root;
+        
+        if (loaded)
+        {
+            try
+            {
+                root = json::parse(fileData.begin(), fileData.end());
+            }
+            catch (const json::parse_error& e)
+            {
+                LOG_ERROR("Scene 파일 파싱 실패: {} - Scene", e.what());
+                FATAL_CHECK(false, scenePath);
+                return;
+            }
+        }
+        else
+        {
+            // VFS에서 실패하면 파일 시스템에서 시도 (개발 모드)
+            std::ifstream i(path);
+            if (!i.is_open())
+            {
+                FATAL_CHECK(false, path.string());
+                return;
+            }
+            i >> root;
+        }
 
         JsonGet(root, "Name", m_name);
         size_t numGameObjects;

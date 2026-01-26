@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SkeletonData.h"
 
 #include <assimp/Importer.hpp>
@@ -6,6 +6,10 @@
 #include <assimp/postprocess.h>
 #include <assimp/mesh.h>
 #include <queue>
+
+#include "Core/System/VirtualFileSystem.h"
+
+#include "Core/System/VirtualFileSystem.h"
 
 namespace engine
 {
@@ -37,7 +41,27 @@ namespace engine
             aiProcess_LimitBoneWeights |
             aiProcess_ConvertToLeftHanded;
 
-        const aiScene* scene = importer.ReadFile(filePath, importFlags);
+        // VFS를 통해 파일 로드
+        auto& vfs = VirtualFileSystem::Get();
+        std::vector<uint8_t> fileData;
+        
+        if (!vfs.LoadFile(filePath, fileData))
+        {
+            LOG_ERROR("Skeleton 파일 로드 실패: {} - SkeletonData", filePath);
+            return;
+        }
+
+        const aiScene* scene = importer.ReadFileFromMemory(
+            fileData.data(),
+            fileData.size(),
+            importFlags,
+            filePath.c_str());
+
+        if (!scene)
+        {
+            LOG_ERROR("Skeleton 파싱 실패: {} - SkeletonData", filePath);
+            return;
+        }
 
         Create(scene);
     }
