@@ -7,6 +7,7 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/UI/UISlider.h"
+#include "Framework/Object/Component/UI/UIImage.h"
 
 namespace engine
 {
@@ -78,7 +79,34 @@ namespace engine
 		GameObject* parent = GetGameObject();
 		if (!parent) return;
 
-		m_viewportRT = GetRectTransform();
+		// Viewport
+		{
+			bool created = false;
+			GameObject* vgo = EnsureChildUI(parent, m_viewportName.c_str(), created);
+
+			if (vgo)
+			{
+				RectTransform* rt = vgo->GetComponent<RectTransform>();
+				m_viewportRT = rt;
+
+				if (created && rt)
+				{
+					// 루트 기준 좌상단에 고정된 500x500 예시
+					rt->SetAnchorMin({ 0.0f, 1.0f });
+					rt->SetAnchorMax({ 0.0f, 1.0f });
+					rt->SetPivot({ 0.0f, 1.0f });
+					rt->SetAnchoredPosition({ 0.0f, 0.0f });
+
+					rt->SetWidth(500.0f);
+					rt->SetHeight(500.0f);
+				}
+
+				// (선택) 배경 이미지: 입력 막지 않게
+				if (auto* img = vgo->GetComponent<UIImage>(); !img)
+					img = vgo->AddComponent<UIImage>();
+				vgo->GetComponent<UIImage>()->m_raycastTarget = false;
+			}
+		}
 
 		// Content
 		{
@@ -227,10 +255,15 @@ namespace engine
 	{
 		if (!m_viewportRT || !m_contentRT) return 0.0f;
 
-		const float viewportH = m_viewportRT->GetHeight();
-		const float contentH = m_contentRT->GetHeight();
+		const float viewportH = m_viewportRT->GetWorldRect().h;
+		const float contentH = m_contentRT->GetWorldRect().h;
 
 		return std::max(0.0f, contentH - viewportH);
+	}
+
+	UIRect UIScrollView::GetViewPortWorldRect() const
+	{
+		return m_viewportRT ? m_viewportRT->GetWorldRect() : UIRect{};
 	}
 
 	void UIScrollView::OnBeginDrag(const Vector2& mousePos, int mouseButton)

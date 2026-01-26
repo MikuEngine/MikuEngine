@@ -33,11 +33,6 @@
                     "Near": 1.0,
                     "Far": 5000.0,
                     "FOV": 60.0
-                },
-                {
-                    "Type": "FreeCameraController",
-                    "Active": false,
-                    "MoveSpeed": 10.0
                 }
             ]
         },
@@ -442,16 +437,6 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false
-                },
-                {
-                    "Type": "TestShootingPlayer",
-                    "Active": true,
-                    "MoveSpeed": 5.0,
-                    "FireRate": 0.20000000298023224,
-                    "BulletSpeed": 1.0,
-                    "BulletLifetime": 3.0,
-                    "EnableUpperBodyAim": true,
-                    "FSMInitialized": false
                 }
             ]
         },
@@ -1102,6 +1087,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -1273,6 +1260,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -1444,6 +1433,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -1695,6 +1686,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -1764,6 +1757,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -1846,7 +1841,8 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
+                    },
+                    "UseFill": true
                 }
             ]
         },
@@ -2128,7 +2124,8 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
+                    },
+                    "UseFill": true
                 }
             ]
         },
@@ -2410,7 +2407,8 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
+                    },
+                    "UseFill": true
                 }
             ]
         },
@@ -2679,6 +2677,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2748,6 +2748,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2817,6 +2819,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2846,10 +2850,6 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                },
-                {
-                    "Type": "PlayButtonController",
-                    "Active": true
                 }
             ]
         },
@@ -2974,7 +2974,7 @@
                     "AlphaBlend": true
                 },
                 {
-                    "Type": "UIFollowTarget",
+                    "Type": "UIFollowWorldTarget",
                     "Active": true,
                     "TargetName": "Player",
                     "Offset": {
@@ -2982,7 +2982,7 @@
                         "y": 0.0,
                         "z": 0.0
                     },
-                    "HideWhenOffscreen": false
+                    "HideWhenOffscreen": true
                 }
             ]
         }
