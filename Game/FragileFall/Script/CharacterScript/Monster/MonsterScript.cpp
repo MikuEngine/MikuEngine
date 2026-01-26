@@ -1,7 +1,7 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterScript.h"
 
-#include "BulletFactory.h"
+#include "Script/CharacterScript/Common/BulletFactory.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>

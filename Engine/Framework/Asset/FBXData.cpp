@@ -95,7 +95,7 @@ namespace engine
         m_material = std::make_shared<MaterialData>();
 
         m_staticMesh->Create(scene);
-        m_material->Create(scene);
+        m_material->Create(scene, filePath);
     }
 
     void FBXAssetData::LoadSkeletalMesh(const std::string& filePath)
@@ -138,7 +138,7 @@ namespace engine
 
         // material 생성
         m_material = std::make_shared<MaterialData>();
-        m_material->Create(scene);
+        m_material->Create(scene, filePath);
     }
 
     void FBXAssetData::LoadAnimation(const std::string& filePath)

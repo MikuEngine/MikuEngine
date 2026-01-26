@@ -6,7 +6,7 @@
 #include <Engine/Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Engine/Framework/Object/Component/Animator/SpriteAnimator.h>
 #include <Engine/Framework/Object/Component/Camera.h>
-#include <Engine/Framework/Object/Component/Light.h>
+#include <Engine/Framework/Object/Component/Light/Light.h>
 #include <Engine/Framework/Object/Component/Particle/ParticleEffect.h>
 #include <Engine/Framework/Object/Component/Pathfinding/GridMap.h>
 #include <Engine/Framework/Object/Component/Pathfinding/PathfindingAgent.h>

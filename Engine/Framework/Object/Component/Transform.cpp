@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Transform.h"
 
 #include <imgui.h>
@@ -375,6 +375,8 @@ namespace engine
 
     void Transform::OnGui()
     {
+        ImGui::Indent();
+        
         if (ImGui::DragFloat3("Position", &m_localPosition.x, 0.1f))
         {
             MarkDirty();
@@ -410,6 +412,16 @@ namespace engine
                 MarkDirty();
             }
         }
+        
+        ImGui::Unindent();
+        
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::Separator();
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+        ImGui::Spacing();
     }
 
     void Transform::Save(json& j) const

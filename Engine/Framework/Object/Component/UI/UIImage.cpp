@@ -165,6 +165,9 @@ namespace engine
 			cbUI.clipRect = cr;
 			cbUI.maskMode = static_cast<uint32_t>(m_maskMode);
 
+			cbUI.mask0 = m_mask0;
+			cbUI.mask1 = m_mask1;
+
 			dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 			dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
 			dc->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());

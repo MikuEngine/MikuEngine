@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/System/System.h"
 #include "Framework/Object/Component/Particle/ParticleEffect.h"
@@ -45,8 +45,7 @@ namespace engine
 		std::shared_ptr<DepthStencilState> m_dsState;
 
 	public:
-		ParticleSystem();
-
+		void Initialize();
 		void Update();
 		void Render(const Matrix& view, const Matrix& projection);
 

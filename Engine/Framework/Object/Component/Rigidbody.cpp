@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Rigidbody.h"
 
 #include "Framework/Object/Component/Collider.h"
@@ -579,6 +579,8 @@ namespace engine
 
     void Rigidbody::OnGui()
     {
+        ImGui::Indent();
+        
         // Body Type 콤보박스
         const char* bodyTypes[] = { "Dynamic", "Kinematic", "Static" };
         int currentType = static_cast<int>(m_type);
@@ -623,6 +625,7 @@ namespace engine
         }
 
         // Constraints (접이식)
+        ImGui::Indent();  // "Constraints" TreeNode 들여쓰기
         if (ImGui::TreeNode("Constraints"))
         {
             uint32_t constraints = static_cast<uint32_t>(m_constraints);
@@ -675,6 +678,17 @@ namespace engine
 
             ImGui::TreePop();
         }
+        ImGui::Unindent();  // "Constraints" TreeNode 들여쓰기 종료
+        
+        ImGui::Unindent();  // 전체 들여쓰기 종료
+        
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+        ImGui::Separator();
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+        ImGui::Spacing();
     }
 
     void Rigidbody::Save(json& j) const

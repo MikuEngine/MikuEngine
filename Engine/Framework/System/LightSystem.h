@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Framework/System/System.h"
-#include "Framework/Object/Component/Light.h"
+#include "Framework/Object/Component/Light/Light.h"
 
 namespace engine
 {

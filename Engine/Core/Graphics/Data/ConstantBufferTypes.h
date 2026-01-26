@@ -47,7 +47,23 @@ namespace engine
 		float fxaaQualitySubpix;           // 0.0 to 1.0 (default: 0.75)
 		float fxaaQualityEdgeThreshold;    // 0.063 to 0.333 (default: 0.166)
 		float fxaaQualityEdgeThresholdMin; // 0.0312 to 0.0833 (default: 0.0833)
-		float pad1;
+		float __pad_fxaa;
+		
+		// 스카이박스/IBL 설정
+		Vector3 skyboxColor;
+		float useSkyboxTexture;  // 1.0f = true, 0.0f = false
+		
+		Vector3 skyboxHorizonColor;
+		float useIBLTexture;
+		
+		Vector3 iblAmbientColor;
+		float __pad_skybox1;
+		
+		// 포스트프로세싱 추가 설정
+		float enableBloom;  // 1.0f = true, 0.0f = false
+		float enableToneMapping;
+		float enableFXAA;
+		float __pad_postprocess1;
 	};
 
 	struct CbMaterial
@@ -136,10 +152,11 @@ namespace engine
 		Vector4 color;      // RGBA
 		Vector4 uv;         // offset.xy, scale.xy
 		Vector4 clipRect;   // (xMin, yMin, xMax, yMax) in pixels 또는 NDC 중 하나로 통일
-		uint32_t maskMode;  // none, rect, circle, ring, rectring
+		uint32_t maskMode;  // none, rect, circle, ring, rectring, radial
 		float pad[3];
 
-		Vector4 mask0;		// 원형 프로그레스 바 전용
+		Vector4 mask0;		// (cx, cy, rInner, rOuter) 또는 (cx,cy,r,0)
+		Vector4 mask1;		// (startAngleRad, fill01, clockwise, unused)
 	};
 
 
