@@ -596,7 +596,45 @@ namespace engine
         float duration = res.data->GetAnimations()[0].duration;
 
         if (m_layers.empty()) return;
-        auto& layer = m_layers[0];
+
+        int targetLayerIndex = 0;
+        bool isFoundPlayingLayer = false;
+
+        for (int i = 0; i < m_layers.size(); ++i)
+        {
+            if (m_layers[i].current.active && m_layers[i].current.name == animName)
+            {
+                targetLayerIndex = i;
+                isFoundPlayingLayer = true;
+                break;
+            }
+
+            if (m_layers[i].next.active && m_layers[i].next.name == animName)
+            {
+                targetLayerIndex = i;
+                isFoundPlayingLayer = true;
+                break;
+            }
+        }
+
+        auto& layer = m_layers[targetLayerIndex];
+
+        float displayTime = 0.0f;
+        if (isFoundPlayingLayer)
+        {
+            if (layer.next.active && layer.next.name == animName)
+            {
+                displayTime = layer.next.time;
+            }
+            else if (layer.current.active && layer.current.name == animName)
+            {
+                displayTime = layer.current.time;
+            }
+        }
+        else
+        {
+            displayTime = 0.0f;
+        }
 
         ImGui::Text("Timeline (Duration: %.2fs)", duration);
 
@@ -706,7 +744,7 @@ namespace engine
 
             if (layer.current.name != animName || !layer.current.active)
             {
-                Play(animName, false, 0, 0.0f);
+                Play(animName, false, targetLayerIndex, 0.0f);
             }
 
             layer.current.time = newTime;
@@ -718,11 +756,14 @@ namespace engine
                 layer.transitionTime = 0.0f;
             }
 
+            displayTime = newTime;
+
             UpdateTimeinePose();
         }
 
-        float playheadX = cursorPos.x + (layer.current.time / duration) * width;
+        float playheadX = cursorPos.x + (displayTime / duration) * width;
         drawList->AddLine(ImVec2(playheadX, cursorPos.y), ImVec2(playheadX, cursorPos.y + height), IM_COL32(255, 50, 50, 255), 2.0f);
+    
     }
 
     // Update()의 deltatime 제외 본 행렬 계산
