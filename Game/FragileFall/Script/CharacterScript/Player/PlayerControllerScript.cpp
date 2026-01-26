@@ -331,19 +331,59 @@ namespace game
 	void PlayerControllerScript::HandleMovement(float deltaTime)
 	{
 		engine::Vector3 moveDir = GetMoveInputDirection();
-		if (moveDir.LengthSquared() < 0.001f) return;
 
-		// 이동 방향 저장 (정규화)
-		moveDir.y = 0.0f;
-		moveDir.Normalize();
-		m_lastMoveDirection = moveDir;
+		if (!m_rigidbody)
+		{
+			// Rigidbody 없으면 Transform 직접 변경 (하위 호환성)
+			if (moveDir.LengthSquared() < 0.001f) return;
+			
+			moveDir.y = 0.0f;
+			moveDir.Normalize();
+			m_lastMoveDirection = moveDir;
 
-		engine::Transform* transform = GetGameObject()->GetTransform();
-		if (!transform) return;
+			engine::Transform* transform = GetGameObject()->GetTransform();
+			if (!transform) return;
 
-		engine::Vector3 currentPos = transform->GetLocalPosition();
-		engine::Vector3 newPos = currentPos + moveDir * m_moveSpeed * deltaTime;
-		transform->SetLocalPosition(newPos);
+			engine::Vector3 currentPos = transform->GetLocalPosition();
+			engine::Vector3 newPos = currentPos + moveDir * m_moveSpeed * deltaTime;
+			transform->SetLocalPosition(newPos);
+			return;
+		}
+
+		// Rigidbody 이동 방식
+		if (m_rigidbody->IsKinematic())
+		{
+			// Kinematic: MovePosition 사용 (충돌 감지)
+			if (moveDir.LengthSquared() < 0.001f) return;
+
+			moveDir.y = 0.0f;
+			moveDir.Normalize();
+			m_lastMoveDirection = moveDir;
+
+			engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+			engine::Vector3 newPos = currentPos + moveDir * m_moveSpeed * deltaTime;
+			m_rigidbody->MovePosition(newPos);
+		}
+		else if (m_rigidbody->IsDynamic())
+		{
+			// Dynamic: Velocity 사용 (물리 시뮬레이션, 충돌 감지)
+			if (moveDir.LengthSquared() < 0.001f)
+			{
+				// 입력 없으면 속도만 정지 (Y축은 유지)
+				engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+				m_rigidbody->SetLinearVelocity(engine::Vector3(0.0f, currentVel.y, 0.0f));
+				return;
+			}
+
+			moveDir.y = 0.0f;
+			moveDir.Normalize();
+			m_lastMoveDirection = moveDir;
+
+			// XZ 평면 속도 설정, Y축 속도는 유지 (중력/점프용)
+			engine::Vector3 targetVelocity = moveDir * m_moveSpeed;
+			targetVelocity.y = m_rigidbody->GetLinearVelocity().y;
+			m_rigidbody->SetLinearVelocity(targetVelocity);
+		}
 	}
 
 	void PlayerControllerScript::HandleShooting(float deltaTime)

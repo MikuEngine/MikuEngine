@@ -1,6 +1,7 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
+#include "Script/CharacterScript/Monster/BulletMonster.h"
 
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
@@ -62,6 +63,63 @@ namespace game
         // 6. BulletPlayer 컴포넌트 추가 및 설정
         // ─────────────────────────────────────────────
         auto* bullet = go->GetComponent<BulletPlayer>();
+        bullet->Setup(std::move(movement), params.lifetime);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 몬스터 총알 발사
+    // ═══════════════════════════════════════════════════════════════
+    void BulletFactory::FireMonster(const engine::Vector3& position,
+                                     const engine::Vector3& direction,
+                                     const BulletParams& params)
+    {
+        // ─────────────────────────────────────────────
+        // 1. GameObject 생성
+        // ─────────────────────────────────────────────
+        auto* bulletGO = CreateGameObject("BulletMonster");
+        bulletGO->GetTransform()->SetLocalPosition(position);
+        bulletGO->GetTransform()->SetLocalScale(engine::Vector3(1.2f, 1.2f, 1.2f));
+
+        // ─────────────────────────────────────────────
+        // 2. StaticMeshRenderer 추가
+        // ─────────────────────────────────────────────
+        auto* renderer = bulletGO->AddComponent<engine::StaticMeshRenderer>();
+        renderer->SetMesh("Resource/Model/Sphere.fbx");
+        renderer->SetVertexShader("Resource/Shader/Vertex/Static_VS.hlsl");
+        renderer->SetOpaquePixelShader("Resource/Shader/Pixel/GBuffer_PS.hlsl");
+
+        // ─────────────────────────────────────────────
+        // 3. Rigidbody 추가 (Dynamic)
+        // ─────────────────────────────────────────────
+        auto* rb = bulletGO->AddComponent<engine::Rigidbody>();
+        rb->SetRigidbodyType(engine::RigidbodyType::Dynamic);
+        rb->SetUseGravity(false);
+        rb->SetLinearDamping(0.0f);
+
+        // ─────────────────────────────────────────────
+        // 4. SphereCollider 추가 (Trigger, EnemyProjectile 레이어)
+        // ─────────────────────────────────────────────
+        auto* collider = bulletGO->AddComponent<engine::SphereCollider>();
+        collider->SetIsTrigger(true);
+        collider->SetRadius(1.1f);
+        collider->SetLayer(engine::PhysicsLayer::EnemyProjectile);  // 몬스터 총알 레이어
+        
+        // 충돌 마스크: Default, Player, Environment와 충돌
+        uint32_t collisionMask = engine::PhysicsLayer::DefaultMask |
+                                  engine::PhysicsLayer::PlayerMask |
+                                  engine::PhysicsLayer::EnvironmentMask;
+        collider->SetCollisionMask(collisionMask);
+
+        // ─────────────────────────────────────────────
+        // 5. Movement 생성 및 초기화
+        // ─────────────────────────────────────────────
+        auto movement = CreateMovement(params);
+        movement->Initialize(direction, params.speed);
+
+        // ─────────────────────────────────────────────
+        // 6. BulletMonster 컴포넌트 추가 및 설정
+        // ─────────────────────────────────────────────
+        auto* bullet = bulletGO->AddComponent<BulletMonster>();
         bullet->Setup(std::move(movement), params.lifetime);
     }
 

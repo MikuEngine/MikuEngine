@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdint>
 #include <string>
@@ -22,6 +22,7 @@ namespace engine
             Projectile = 3,
             Environment = 4,
             Trigger = 5,
+            EnemyProjectile = 6,
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -37,6 +38,7 @@ namespace engine
             ProjectileMask = (1u << Projectile),
             EnvironmentMask = (1u << Environment),
             TriggerMask = (1u << Trigger),
+            EnemyProjectileMask = (1u << EnemyProjectile),
             
             All = 0xFFFFFFFF
         };
@@ -57,7 +59,8 @@ namespace engine
                 "Projectile",   // 3
                 "Environment",  // 4
                 "Trigger",      // 5
-                "Layer6", "Layer7", "Layer8", "Layer9",
+                "EnemyProjectile", // 6
+                "Layer7", "Layer8", "Layer9",
                 "Layer10", "Layer11", "Layer12", "Layer13", "Layer14", "Layer15",
                 "Layer16", "Layer17", "Layer18", "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
@@ -107,6 +110,8 @@ namespace engine
             
             // Projectile ↔ Projectile: 충돌 안 함
             SetCollision(Projectile, Projectile, false);
+
+            SetCollision(Player, Environment, true);
             
             // Player ↔ Enemy: 충돌함
             // (기본값 All이므로 별도 설정 불필요)
@@ -116,6 +121,26 @@ namespace engine
             
             // Enemy ↔ Enemy: 충돌 안 함 (적끼리 밀치지 않음)
             SetCollision(Enemy, Enemy, false);
+            
+            // ═══════════════════════════════════════
+            // EnemyProjectile 충돌 규칙
+            // ═══════════════════════════════════════
+            
+            // EnemyProjectile ↔ Enemy: 충돌 안 함 (적 총알은 적에게 안 맞음)
+            SetCollision(EnemyProjectile, Enemy, false);
+            
+            // EnemyProjectile ↔ EnemyProjectile: 충돌 안 함
+            SetCollision(EnemyProjectile, EnemyProjectile, false);
+            
+            // EnemyProjectile ↔ Projectile: 충돌 안 함 (총알끼리 충돌 안 함)
+            SetCollision(EnemyProjectile, Projectile, false);
+            
+            // EnemyProjectile ↔ Trigger: 충돌 안 함
+            SetCollision(EnemyProjectile, Trigger, false);
+            
+            // EnemyProjectile ↔ Player: 충돌함 (기본값)
+            // EnemyProjectile ↔ Default: 충돌함 (기본값)
+            // EnemyProjectile ↔ Environment: 충돌함 (기본값)
         }
 
         // 두 레이어 간 충돌 여부 설정

@@ -168,7 +168,9 @@
     <ClCompile Include="Script\CharacterScript\Common\BaseControllerScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\BulletFactory.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\BulletPlayer.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\BulletMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterDullGray.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
   </ItemGroup>
@@ -189,7 +191,9 @@
     <ClInclude Include="Script\CharacterScript\Common\BulletMovement.h" />
     <ClInclude Include="Script\CharacterScript\Common\BulletParams.h" />
     <ClInclude Include="Script\CharacterScript\Player\BulletPlayer.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\BulletMonster.h" />
     <ClInclude Include="Script\CharacterScript\Monster\MonsterScript.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterDullGray.h" />
     <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h" />
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
   </ItemGroup>
