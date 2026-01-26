@@ -6,11 +6,10 @@ namespace game
 {
     class UpgradeNodeView;
     
-
-    class UpgradeSystem :
-        public engine::Script<UpgradeSystem>
+    class UpgradeController :
+        public engine::Script<UpgradeController>
     {
-        REGISTER_COMPONENT(UpgradeSystem, Script)
+        REGISTER_COMPONENT(UpgradeController, Script)
 
     public:
 

@@ -11,10 +11,10 @@ namespace engine
 
 namespace game
 {
-    class UIFollowTarget :
-        public engine::Script<UIFollowTarget>
+    class UIFollowWorldTarget :
+        public engine::Script<UIFollowWorldTarget>
     {
-        REGISTER_COMPONENT(UIFollowTarget, Script)
+        REGISTER_COMPONENT(UIFollowWorldTarget, Script)
 
     public:
         void Awake() override;

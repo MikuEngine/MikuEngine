@@ -1,7 +1,7 @@
 ﻿#include "GamePCH.h"
 #include "UpgradeNodeView.h"
 #include "Framework/Object/Component/UI/UIClickArea.h"
-#include "UpgradeSystem.h"
+#include "UpgradeController.h"
 namespace game
 {
     void UpgradeNodeView::Awake()
@@ -12,10 +12,10 @@ namespace game
         auto* click = go->GetComponent<engine::UIClickArea>();
         if (!click) return;
 
-        auto* sysGo = engine::GameObject::Find("UpgradeSystem");
+        auto* sysGo = engine::GameObject::Find("UpgradeController");
         if (!sysGo) return;
 
-        auto* sys = sysGo->GetComponent<game::UpgradeSystem>();
+        auto* sys = sysGo->GetComponent<game::UpgradeController>();
         if (!sys) return;
 
         click->AddOnClick([this, sys](int mouseButton)

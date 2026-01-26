@@ -54,7 +54,7 @@
     <ClCompile Include="Script\SceneController_Main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\UIFollowTarget.cpp">
+    <ClCompile Include="Script\UIFollowWorldTarget.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\UIPopUpAnimator.cpp">
@@ -63,7 +63,7 @@
     <ClCompile Include="Script\UpgradeNodeView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\UpgradeSystem.cpp">
+    <ClCompile Include="Script\UpgradeController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,7 +113,7 @@
     <ClInclude Include="Script\SceneController_Main.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\UIFollowTarget.h">
+    <ClInclude Include="Script\UIFollowWorldTarget.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\UIPopUpAnimator.h">
@@ -122,7 +122,7 @@
     <ClInclude Include="Script\UpgradeNodeView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\UpgradeSystem.h">
+    <ClInclude Include="Script\UpgradeController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

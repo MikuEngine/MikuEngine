@@ -167,10 +167,10 @@
     <ClCompile Include="Script\TempMonster.cpp" />
     <ClCompile Include="Script\TestShootingPlayer.cpp" />
     <ClCompile Include="Script\SceneController_Main.cpp" />
-    <ClCompile Include="Script\UIFollowTarget.cpp" />
+    <ClCompile Include="Script\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
     <ClCompile Include="Script\UpgradeNodeView.cpp" />
-    <ClCompile Include="Script\UpgradeSystem.cpp" />
+    <ClCompile Include="Script\UpgradeController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -188,10 +188,10 @@
     <ClInclude Include="Script\TempMonster.h" />
     <ClInclude Include="Script\TestShootingPlayer.h" />
     <ClInclude Include="Script\SceneController_Main.h" />
-    <ClInclude Include="Script\UIFollowTarget.h" />
+    <ClInclude Include="Script\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />
     <ClInclude Include="Script\UpgradeNodeView.h" />
-    <ClInclude Include="Script\UpgradeSystem.h" />
+    <ClInclude Include="Script\UpgradeController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">

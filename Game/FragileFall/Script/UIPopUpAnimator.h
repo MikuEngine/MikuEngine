@@ -29,7 +29,7 @@ namespace game
         engine::Vector2 m_hidden{ 0.0f, 900.0f };
 
         float m_time = 0.0f;
-        float m_duration = 0.25f;
+        float m_duration = 0.15f;
 
         bool m_isOpen = false;
         bool m_animating = false;

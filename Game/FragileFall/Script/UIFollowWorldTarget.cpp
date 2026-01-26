@@ -1,5 +1,5 @@
 ﻿#include "GamePCH.h"
-#include "UIFollowTarget.h"
+#include "UIFollowWorldTarget.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
 
@@ -10,7 +10,7 @@
 
 namespace game
 {
-    void UIFollowTarget::Awake()
+    void UIFollowWorldTarget::Awake()
     {
         auto* go = GetGameObject();
         if (!go) return;
@@ -34,7 +34,7 @@ namespace game
         m_cachedVisible = true;
     }
 
-    void UIFollowTarget::Update()
+    void UIFollowWorldTarget::Update()
     {
 
         if (!m_rt || !m_cameraCached || !m_target)
@@ -107,7 +107,7 @@ namespace game
         m_rt->SetAnchoredPosition(finalPos);
     }
 
-    void UIFollowTarget::OnGui()
+    void UIFollowWorldTarget::OnGui()
     {
         ImGui::InputText("Target", &m_targetName); ImGui::SameLine();
         if (ImGui::Button("Rebind"))
@@ -120,7 +120,7 @@ namespace game
         ImGui::Checkbox("Visible", &m_visible);
     }
 
-    void UIFollowTarget::Save(engine::json& j) const
+    void UIFollowWorldTarget::Save(engine::json& j) const
     {
         Object::Save(j);
         j["TargetName"] = m_targetName;
@@ -128,7 +128,7 @@ namespace game
         j["HideWhenOffscreen"] = m_hideWhenOffscreen;
     }
 
-    void UIFollowTarget::Load(const engine::json& j)
+    void UIFollowWorldTarget::Load(const engine::json& j)
     {
         Object::Load(j);
         engine::JsonGet(j, "TargetName", m_targetName);
@@ -140,7 +140,7 @@ namespace game
         RebindTarget();
     }
 
-    void UIFollowTarget::RebindTarget()
+    void UIFollowWorldTarget::RebindTarget()
     {
         if (m_lastBoundName == m_targetName && m_target != nullptr) return;
             
@@ -152,7 +152,7 @@ namespace game
         m_target = engine::GameObject::Find(m_targetName);
     }
 
-    void UIFollowTarget::PrepareAnchorOnce()
+    void UIFollowWorldTarget::PrepareAnchorOnce()
     {
         if (!m_rt || m_anchorsPrepared) return;
 
@@ -163,7 +163,7 @@ namespace game
         m_anchorsPrepared = true;
     }
 
-    void UIFollowTarget::SetVisible(bool v)
+    void UIFollowWorldTarget::SetVisible(bool v)
     {
         if (!m_img) return;
 

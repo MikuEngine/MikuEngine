@@ -1,25 +1,25 @@
 ﻿#include "GamePCH.h"
-#include "UpgradeSystem.h"
+#include "UpgradeController.h"
 #include "UpgradeNodeView.h"
 
 namespace game
 {
-    void UpgradeSystem::Awake()
+    void UpgradeController::Awake()
     {
 
     }
 
-    void UpgradeSystem::Start()
+    void UpgradeController::Start()
     {
         BuildDefaultTreeIfEmpty();
     }
 
-    void UpgradeSystem::Update()
+    void UpgradeController::Update()
     {
 
     }
 
-    void UpgradeSystem::OnGui()
+    void UpgradeController::OnGui()
     {
         static char buf[128] = { 0 };
         ImGui::InputText("Add Node GO Name", buf, sizeof(buf));
@@ -80,7 +80,7 @@ namespace game
         }
     }
 
-    void UpgradeSystem::Save(engine::json& j) const
+    void UpgradeController::Save(engine::json& j) const
     {
         Object::Save(j);
 
@@ -104,7 +104,7 @@ namespace game
         j["NodeObjects"] = nodeNames;
     }
 
-    void UpgradeSystem::Load(const engine::json& j)
+    void UpgradeController::Load(const engine::json& j)
     {
         Object::Load(j);
 
@@ -140,7 +140,7 @@ namespace game
         RefreshNodeVisuals();
     }
 
-    bool UpgradeSystem::CanUpgrade(int nodeId) const
+    bool UpgradeController::CanUpgrade(int nodeId) const
     {
         auto itV = m_views.find(nodeId);
         if (itV == m_views.end() || !itV->second)
@@ -163,7 +163,7 @@ namespace game
         return true;
     }
 
-    bool UpgradeSystem::ApplyUpgrade(int nodeId)
+    bool UpgradeController::ApplyUpgrade(int nodeId)
     {
         if (!CanUpgrade(nodeId))
             return false;
@@ -181,7 +181,7 @@ namespace game
         return true;
     }
 
-    void UpgradeSystem::RefreshNodeVisuals()
+    void UpgradeController::RefreshNodeVisuals()
     {
         for (auto& [id, view] : m_views)
         {
@@ -194,7 +194,7 @@ namespace game
         }
     }
 
-    void UpgradeSystem::BuildDefaultTreeIfEmpty()
+    void UpgradeController::BuildDefaultTreeIfEmpty()
     {
         m_views.clear();
 
@@ -223,7 +223,7 @@ namespace game
         RefreshNodeVisuals();
     }
 
-    void UpgradeSystem::RecomputeUnlocked()
+    void UpgradeController::RecomputeUnlocked()
     {
         m_unlocked.clear();
 
