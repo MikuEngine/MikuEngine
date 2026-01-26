@@ -22,7 +22,6 @@
     <ClCompile Include="GamePCH.cpp" />
     <ClCompile Include="App\TestGameApp.cpp" />
     <ClCompile Include="Script\TestSound.cpp" />
-    <ClCompile Include="Script\HubButtonController.cpp" />
     <ClCompile Include="Script\TestShootingPlayer.cpp" />
     <ClCompile Include="Script\BulletPlayer.cpp" />
     <ClCompile Include="Script\BulletFactory.cpp" />
@@ -51,7 +50,6 @@
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
     <ClInclude Include="Script\TestSound.h" />
-    <ClInclude Include="Script\HubButtonController.h" />
     <ClInclude Include="Script\TestShootingPlayer.h" />
     <ClInclude Include="Script\BulletPlayer.h" />
     <ClInclude Include="Script\BulletFactory.h" />

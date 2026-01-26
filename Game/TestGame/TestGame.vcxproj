@@ -157,7 +157,6 @@
   <ItemGroup>
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
-    <ClCompile Include="Script\HubButtonController.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
     <ClCompile Include="Script\MonsterScript.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
@@ -242,7 +241,6 @@
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="App\TestGameApp.h" />
-    <ClInclude Include="Script\HubButtonController.h" />
     <ClInclude Include="Script\AimPointer.h">
       <SubType>
       </SubType>
