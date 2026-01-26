@@ -1,6 +1,6 @@
 ﻿#include "GamePCH.h"
-#include "BulletFactory.h"
-#include "BulletPlayer.h"
+#include "Script/CharacterScript/Common/BulletFactory.h"
+#include "Script/CharacterScript/Player/BulletPlayer.h"
 
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
