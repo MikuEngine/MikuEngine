@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Hand_R_Socket",
+    "parent_bone": "hand_r",
+    "position": { "x": 10.0, "y": 0.0, "z": 0.0 },
+    "rotation": { "x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0 },
+    "scale": { "x": 1.0, "y": 1.0, "z": 1.0 }
+  },
+  {
+    "name": "Head_Socket",
+    "parent_bone": "head",
+    "position": { "x": 0.0, "y": 20.0, "z": 5.0 },
+    "rotation": { "x": 0.0, "y": 0.707, "z": 0.0, "w": 0.707 },
+    "scale": { "x": 1.2, "y": 1.2, "z": 1.2 }
+  }
+]

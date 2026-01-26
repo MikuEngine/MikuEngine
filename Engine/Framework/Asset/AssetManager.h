@@ -17,6 +17,7 @@ namespace engine
     class GeometryData;
     class SoundData;
     class PrefabData;
+	class SocketData;
 
     class AssetManager :
         public Singleton<AssetManager>
@@ -40,6 +41,7 @@ namespace engine
         std::unordered_map<std::string, std::weak_ptr<GeometryData>> m_geometryDatas;
         std::unordered_map<std::string, std::weak_ptr<SoundData>> m_soundDatas;
         std::unordered_map<std::string, std::weak_ptr<PrefabData>> m_prefabDatas;
+        std::unordered_map<std::string, std::weak_ptr<SocketData>> m_socketDatas;
 
         std::vector<std::shared_ptr<AssetData>> m_globalCachedDatas;
         std::vector<std::shared_ptr<AssetData>> m_sceneCachedDatas;
@@ -66,6 +68,7 @@ namespace engine
         std::shared_ptr<PrefabData> GetOrCreatePrefabData(const std::string& name, LifeScope scope = LifeScope::Owning);
         std::shared_ptr<GeometryData> GetGeometryData(const std::string& name);
         std::shared_ptr<SoundData> GetOrCreateSoundData(const std::string& filePath, const std::string& option = "SFX", LifeScope scope = LifeScope::Owning);
+        std::shared_ptr<SocketData> GetOrCreateSocketData(const std::string& filePath, LifeScope scope = LifeScope::Owning);
 
     private:
         void CreateGeometryData();
