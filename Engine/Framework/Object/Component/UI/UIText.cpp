@@ -108,9 +108,9 @@ namespace engine
 
 		Canvas* c = GetCanvasInParent();
 		if (!c) return;
-		
+
 		const Vector2 ref = c->GetReferenceResolution();
-		
+
 		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 		const UIRect rect = rt->GetWorldRectResolved(rootRect);
 		if (rect.w <= 0.0f || rect.h <= 0.0f) return;
@@ -125,13 +125,79 @@ namespace engine
 		const float asc = m_font->GetAscenderPx();
 		const float lineH = m_font->GetLineHeightPx() * m_lineSpacingMul;
 
-		float penX = rect.x;
-		float baseLineY = rect.y + asc;
+		const char* textBegin = m_text.data();
+		const char* textEnd = textBegin + m_text.size();
 
-		const char* p = m_text.data();
-		const char* end = p + m_text.size();
+		// ----------------------------
+		// 1) Prepass: 줄 폭 계산 (레퍼런스 좌표계 기준)
+		// ----------------------------
+		std::vector<float> lineWidths;
+		lineWidths.reserve(8);
 
-		// IA
+		{
+			const char* p = textBegin;
+			float w = 0.0f;
+
+			while (p < textEnd)
+			{
+				uint32_t cp = 0;
+				if (!NextUtf8Codepoint(p, textEnd, cp))
+					break;
+
+				if (cp == '\n')
+				{
+					lineWidths.push_back(w);
+					w = 0.0f;
+					continue;
+				}
+
+				if (cp == '\t')
+				{
+					w += (m_fontPixelSize * 0.5f) * 4.0f;
+					continue;
+				}
+
+				const FontGlyph& g = m_font->EnsureGlyph(dc.Get(), cp);
+				w += (g.advance + m_letterSpacingPx);
+			}
+
+			// 마지막 줄
+			lineWidths.push_back(w);
+		}
+
+		const int lineCount = (int)lineWidths.size();
+		const float blockH = lineH * (float)lineCount;
+
+		// ----------------------------
+		// 2) 정렬 계산
+		// ----------------------------
+		float yOffset = 0.0f;
+		switch (m_alignV)
+		{
+		case UITextAlignV::Top:    yOffset = 0.0f; break;
+		case UITextAlignV::Middle: yOffset = (rect.h - blockH) * 0.5f; break;
+		case UITextAlignV::Bottom: yOffset = (rect.h - blockH); break;
+		}
+		if (yOffset < 0.0f) yOffset = 0.0f; // 텍스트가 더 크면 상단 고정
+
+		auto CalcLineStartX = [&](float lw) -> float
+			{
+				switch (m_alignH)
+				{
+				case UITextAlignH::Left:   return rect.x;
+				case UITextAlignH::Center: return rect.x + (rect.w - lw) * 0.5f;
+				case UITextAlignH::Right:  return rect.x + (rect.w - lw);
+				}
+				return rect.x;
+			};
+
+		int lineIndex = 0;
+		float penX = CalcLineStartX(lineCount > 0 ? lineWidths[0] : 0.0f);
+		float baseLineY = rect.y + yOffset + asc;
+
+		// ----------------------------
+		// 3) IA / Shader / State 세팅
+		// ----------------------------
 		dc->IASetInputLayout(m_inputLayout->GetRawInputLayout());
 		{
 			UINT stride = m_vertexBuffer->GetBufferStride();
@@ -141,6 +207,7 @@ namespace engine
 			dc->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
 			dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
+
 		dc->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
 		dc->PSSetShader(m_ps->GetRawShader(), nullptr, 0);
 
@@ -158,7 +225,7 @@ namespace engine
 				dc->OMSetDepthStencilState(nullptr, 0);
 		}
 
-		// Texture/Sampler
+		// Sampler
 		{
 			auto samp = m_sampler ? m_sampler->GetSamplerState().GetAddressOf() : nullptr;
 			if (samp)
@@ -168,15 +235,21 @@ namespace engine
 		dc->RSSetState(nullptr);
 		dc->RSSetViewports(1, &vp);
 
-		while (p < end)
+		// ----------------------------
+		// 4) Draw loop
+		// ----------------------------
+		const char* p = textBegin;
+
+		while (p < textEnd)
 		{
 			uint32_t cp = 0;
-			if (!NextUtf8Codepoint(p, end, cp))
+			if (!NextUtf8Codepoint(p, textEnd, cp))
 				break;
 
 			if (cp == '\n')
 			{
-				penX = rect.x;
+				lineIndex = std::min(lineIndex + 1, lineCount - 1);
+				penX = CalcLineStartX(lineWidths[lineIndex]);
 				baseLineY += lineH;
 				continue;
 			}
@@ -196,17 +269,19 @@ namespace engine
 				continue;
 			}
 
+			// 레퍼런스 좌표계 (rootRect/ref)에서 글리프 사각형
 			const float gxL = penX + g.bearingX;
 			const float gyL = baseLineY - g.bearingY;
 			const float gwL = g.width;
 			const float ghL = g.height;
 
+			// 최종 뷰포트 픽셀 좌표로 변환 (Canvas scale/offset)
 			const float gx = o.x + gxL * s.x;
 			const float gy = o.y + gyL * s.y;
 			const float gw = gwL * s.x;
 			const float gh = ghL * s.y;
 
-			// 픽셀 기준으로 NDC 변환
+			// NDC 변환
 			const float cx = gx + gw * 0.5f;
 			const float cy = gy + gh * 0.5f;
 
@@ -216,6 +291,7 @@ namespace engine
 			const float sx = (gw / vp.Width) * 2.0f;
 			const float sy = (gh / vp.Height) * 2.0f;
 
+			// ConstantBuffer
 			{
 				CbUIElement cbUI{};
 				cbUI.clip = DirectX::XMMatrixTranspose(
@@ -231,15 +307,16 @@ namespace engine
 				const float sv = (g.h / atlasH);
 				cbUI.uv = Vector4(u0, v0, su, sv);
 
-				// 클리핑은 일단 뷰포트 전체로. (원하면 rect 기반 clipRect로 바꾸면 됨)
+				// TODO(원하면): rect 기반 clipRect로 바꾸기
 				cbUI.clipRect = Vector4(0, 0, vp.Width, vp.Height);
-				cbUI.maskMode = 1; // rect
+				cbUI.maskMode = 1;
 
 				dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 				dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
 				dc->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
 			}
 
+			// Atlas SRV
 			{
 				ID3D11ShaderResourceView* srv = m_font->GetAtlasSRV(g.page);
 				dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
@@ -367,6 +444,17 @@ namespace engine
 		if (ImGui::Button("Rebuild Font"))
 			RefreshFont();
 
+		ImGui::Separator();
+		const char* hItems[] = { "Left", "Center", "Right" };
+		int h = (int)m_alignH;
+		if (ImGui::Combo("Align H", &h, hItems, IM_ARRAYSIZE(hItems)))
+			m_alignH = (UITextAlignH)h;
+
+		const char* vItems[] = { "Top", "Middle", "Bottom" };
+		int v = (int)m_alignV;
+		if (ImGui::Combo("Align V", &v, vItems, IM_ARRAYSIZE(vItems)))
+			m_alignV = (UITextAlignV)v;
+
 		ImGui::SliderFloat("Letter Spacing(px)", &m_letterSpacingPx, -5.0f, 20.0f);
 		ImGui::SliderFloat("Line Spacing(mul)", &m_lineSpacingMul, 0.5f, 3.0f);
 	}
@@ -382,6 +470,9 @@ namespace engine
 		j["Color"] = m_color;
 		j["AlphaBlend"] = m_useAlphaBlend;
 
+		j["AlignH"] = (int)m_alignH;
+		j["AlignV"] = (int)m_alignV;
+
 		j["LetterSpacingPx"] = m_letterSpacingPx;
 		j["LineSpacingMul"] = m_lineSpacingMul;
 	}
@@ -396,6 +487,15 @@ namespace engine
 
 		JsonGet(j, "Color", m_color);
 		JsonGet(j, "AlphaBlend", m_useAlphaBlend);
+
+		int ah = (int)UITextAlignH::Left;
+		int av = (int)UITextAlignV::Top;
+
+		JsonGet(j, "AlignH", ah);
+		JsonGet(j, "AlignV", av);
+
+		m_alignH = (UITextAlignH)ah;
+		m_alignV = (UITextAlignV)av;
 
 		JsonGet(j, "LetterSpacingPx", m_letterSpacingPx);
 		JsonGet(j, "LineSpacingMul", m_lineSpacingMul);
