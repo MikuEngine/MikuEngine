@@ -20,17 +20,17 @@ namespace game
 
         click->AddOnClick([this, sys](int mouseButton)
             {
+                if (mouseButton != 0) return;
+
                 if (sys)
                     sys->ApplyUpgrade(m_nodeId);
             });
-
-
     }
 
     void UpgradeNodeView::OnGui()
     {
         ImGui::InputInt("NodeId", &m_nodeId);
-        
+
 
 
         ImGui::Text("Parents");
@@ -73,14 +73,13 @@ namespace game
 
         ImGui::Separator();
 
-        // 새 부모 추가
-        static int s_newParent = 0;
-        ImGui::InputInt("New Parent", &s_newParent);
 
-        bool canAdd = (s_newParent != m_nodeId);
+        ImGui::InputInt("New Parent", &m_newParent);
+
+        bool canAdd = (m_newParent != m_nodeId);
         for (int pid : m_parents)
         {
-            if (pid == s_newParent)
+            if (pid == m_newParent)
             {
                 canAdd = false;
                 break;
@@ -90,8 +89,8 @@ namespace game
         if (!canAdd) ImGui::BeginDisabled(true);
         if (ImGui::Button("+ Add Parent"))
         {
-            m_parents.push_back(s_newParent);
-            s_newParent = 0;
+            m_parents.push_back(m_newParent);
+            m_newParent = 0;
         }
         if (!canAdd) ImGui::EndDisabled();
 
@@ -142,7 +141,7 @@ namespace game
 
         engine::JsonGet(j, "Name", m_name);
         engine::JsonGet(j, "Desc", m_desc);
-        
+
         engine::JsonGet(j, "Ruby", m_ruby);
         engine::JsonGet(j, "Sapphire", m_sapphire);
         engine::JsonGet(j, "Emerald", m_emerald);
@@ -150,6 +149,6 @@ namespace game
 
     void UpgradeNodeView::SetVisualState(bool unlocked, bool purchased)
     {
-        LOG_PRINT("버튼 눌림");
+        //
     }
 }

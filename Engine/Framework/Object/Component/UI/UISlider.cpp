@@ -56,8 +56,14 @@ namespace engine
 	void UISlider::Update()
 	{
 		UIElement::Update();
-
 		RefreshVisuals();
+
+		if (m_fillMode == FillMode::PixelMask)
+		{
+			UpdateVisuals();
+			m_dirty = false;
+			return;
+		}
 
 		if (m_dirty)
 		{
@@ -469,6 +475,11 @@ namespace engine
 
 		bool changed = false;
 
+		if (m_fillMode == FillMode::PixelMask)
+		{
+			changed = true;
+		}
+
 		float v = m_value;
 		if (ImGui::SliderFloat("Value", &v, 0.0f, 1.0f))
 		{
@@ -497,9 +508,7 @@ namespace engine
 		if (ImGui::ColorEdit4("HandleColor", &m_handleColor.x)) { m_dirty = true; changed = true; }
 
 		if (changed)
-		{
 			UpdateVisuals();
-		}
 	}
 
 	void UISlider::Save(json& j) const

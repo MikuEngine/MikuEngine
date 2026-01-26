@@ -23,6 +23,7 @@ namespace game
 
     public:
         int m_nodeId = 0;
+        int m_newParent = 0;
         std::vector<int> m_parents = {};
 
         std::string m_name = "None";

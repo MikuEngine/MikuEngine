@@ -1,6 +1,8 @@
 ﻿#include "EnginePCH.h"
 #include "UIElement.h"
 
+#include "Core/Graphics/Device/GraphicsDevice.h"
+
 #include "Framework/System/RenderSystem.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/UIEventSystem.h"
@@ -61,7 +63,11 @@ namespace engine
 		p.x = (screenPos.x - offset.x) / scale.x;
 		p.y = (screenPos.y - offset.y) / scale.y;
 
-		return PointInRect(p, rt->GetWorldRect());
+		auto& gd = GraphicsDevice::Get();
+		auto vp = gd.GetViewport();
+		UIRect rootRect{ 0,0,vp.Width,vp.Height };
+
+		return PointInRect(p, rt->GetWorldRectResolved(rootRect));
 	}
 
 	bool UIElement::HasRenderType(RenderType type) const

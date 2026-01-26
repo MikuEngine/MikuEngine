@@ -222,6 +222,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -522,6 +524,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -693,6 +697,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -864,6 +870,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -1035,6 +1043,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -1372,6 +1382,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -1441,6 +1453,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2356,6 +2370,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2425,6 +2441,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2494,6 +2512,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2745,6 +2765,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2814,6 +2836,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -2957,6 +2981,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -3100,6 +3126,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -3243,6 +3271,8 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
