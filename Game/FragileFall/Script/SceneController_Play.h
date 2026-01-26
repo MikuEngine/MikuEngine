@@ -21,11 +21,10 @@ namespace game
         void Load(const engine::json& j) override;
 
     private:
-
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
 
-        void ToggleMenu();
         void SetMenuOpen(bool open);
+        void SetOptionOpen(bool open);
 
         void OpenMenu();
 
@@ -33,10 +32,18 @@ namespace game
         void BackToPlay();
         void BackToMain();
 
-        bool m_bound = false;
+        void Back();
 
+        void UpdateBlocker();
+
+        bool m_bound = false;
         bool m_isMenuOpen = false;
-        engine::GameObject* m_menu = nullptr;
+        bool m_isOptionOpen = false;
+
+    private:
+        // GameObject
+        engine::GameObject* m_menuPopUp = nullptr;
+        engine::GameObject* m_optionPopUp = nullptr;
         engine::GameObject* m_blocker = nullptr;
     };
 }
