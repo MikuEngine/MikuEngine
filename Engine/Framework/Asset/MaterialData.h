@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Asset/AssetData.h"
 
@@ -39,7 +39,7 @@ namespace engine
     public:
         void Create();
         void Create(const std::string& filePath);
-        void Create(const aiScene* scene);
+        void Create(const aiScene* scene, const std::string& filePath = "");
 
     public:
         const std::vector<Material>& GetMaterials() const;
