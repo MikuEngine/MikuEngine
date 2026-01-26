@@ -951,12 +951,6 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true
-                },
-                {
-                    "Type": "UIPopUpAnimator",
-                    "Active": true,
-                    "Duration": 0.25,
-                    "ClosedOffsetY": -700.0
                 }
             ]
         },
@@ -2289,7 +2283,7 @@
                     }
                 },
                 {
-                    "Type": "PlayButtonController",
+                    "Type": "SceneController_Play",
                     "Active": true
                 }
             ]

@@ -883,7 +883,7 @@
                     }
                 },
                 {
-                    "Type": "HubButtonController",
+                    "Type": "SceneController_Lobby",
                     "Active": true,
                     "OptionOpen": false,
                     "UpgradeOpen": false
@@ -1145,12 +1145,6 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true
-                },
-                {
-                    "Type": "UIPopUpAnimator",
-                    "Active": true,
-                    "Duration": 0.15000000596046448,
-                    "ClosedOffsetY": -700.0
                 }
             ]
         },
@@ -2461,7 +2455,7 @@
             "ID": 34,
             "ParentID": 14,
             "Name": "UI_UpgradePopUp",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -2528,12 +2522,6 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true
-                },
-                {
-                    "Type": "UIPopUpAnimator",
-                    "Active": true,
-                    "Duration": 0.15000000596046448,
-                    "ClosedOffsetY": -700.0
                 }
             ]
         },
@@ -2979,17 +2967,6 @@
                     "Interactable": true
                 },
                 {
-                    "Type": "UpgradeNodeView",
-                    "Active": true,
-                    "NodeId": 1,
-                    "Parent": [],
-                    "Name": "이름",
-                    "Desc": "뭐 적지",
-                    "Ruby": 1,
-                    "Sapphire": 1,
-                    "Emerald": 1
-                },
-                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
@@ -3063,19 +3040,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Interactable": true
-                },
-                {
-                    "Type": "UpgradeNodeView",
-                    "Active": true,
-                    "NodeId": 2,
-                    "Parent": [
-                        1
-                    ],
-                    "Name": "",
-                    "Desc": "",
-                    "Ruby": 2,
-                    "Sapphire": 2,
-                    "Emerald": 2
                 },
                 {
                     "Type": "UIImage",
@@ -3153,19 +3117,6 @@
                     "Interactable": true
                 },
                 {
-                    "Type": "UpgradeNodeView",
-                    "Active": true,
-                    "NodeId": 3,
-                    "Parent": [
-                        1
-                    ],
-                    "Name": "",
-                    "Desc": "",
-                    "Ruby": 3,
-                    "Sapphire": 3,
-                    "Emerald": 3
-                },
-                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
@@ -3241,20 +3192,6 @@
                     "Interactable": true
                 },
                 {
-                    "Type": "UpgradeNodeView",
-                    "Active": true,
-                    "NodeId": 4,
-                    "Parent": [
-                        2,
-                        3
-                    ],
-                    "Name": "",
-                    "Desc": "",
-                    "Ruby": 4,
-                    "Sapphire": 4,
-                    "Emerald": 4
-                },
-                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
@@ -3305,12 +3242,7 @@
                     "Sapphire": 100,
                     "Emerald": 100,
                     "Purchased": [],
-                    "NodeObjects": [
-                        "Node(1)",
-                        "Node(2)",
-                        "Node(3)",
-                        "Node(4)"
-                    ]
+                    "NodeObjects": []
                 }
             ]
         }

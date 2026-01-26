@@ -45,6 +45,27 @@
     <ClCompile Include="Script\TempMonster.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Script\SceneController_Play.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\SceneController_Lobby.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\SceneController_Main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\UIFollowTarget.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\UIPopUpAnimator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\UpgradeNodeView.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\UpgradeSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamePCH.h">
@@ -81,6 +102,27 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\TempMonster.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\SceneController_Play.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\SceneController_Lobby.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\SceneController_Main.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\UIFollowTarget.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\UIPopUpAnimator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\UpgradeNodeView.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\UpgradeSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

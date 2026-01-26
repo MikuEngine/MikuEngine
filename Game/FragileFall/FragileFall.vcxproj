@@ -161,9 +161,16 @@
     <ClCompile Include="Script\BaseControllerScript.cpp" />
     <ClCompile Include="Script\BulletFactory.cpp" />
     <ClCompile Include="Script\BulletPlayer.cpp" />
+    <ClCompile Include="Script\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\MonsterScript.cpp" />
+    <ClCompile Include="Script\SceneController_Play.cpp" />
     <ClCompile Include="Script\TempMonster.cpp" />
     <ClCompile Include="Script\TestShootingPlayer.cpp" />
+    <ClCompile Include="Script\SceneController_Main.cpp" />
+    <ClCompile Include="Script\UIFollowTarget.cpp" />
+    <ClCompile Include="Script\UIPopUpAnimator.cpp" />
+    <ClCompile Include="Script\UpgradeNodeView.cpp" />
+    <ClCompile Include="Script\UpgradeSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -175,9 +182,16 @@
     <ClInclude Include="Script\BulletMovement.h" />
     <ClInclude Include="Script\BulletParams.h" />
     <ClInclude Include="Script\BulletPlayer.h" />
+    <ClInclude Include="Script\SceneController_Lobby.h" />
     <ClInclude Include="Script\MonsterScript.h" />
+    <ClInclude Include="Script\SceneController_Play.h" />
     <ClInclude Include="Script\TempMonster.h" />
     <ClInclude Include="Script\TestShootingPlayer.h" />
+    <ClInclude Include="Script\SceneController_Main.h" />
+    <ClInclude Include="Script\UIFollowTarget.h" />
+    <ClInclude Include="Script\UIPopUpAnimator.h" />
+    <ClInclude Include="Script\UpgradeNodeView.h" />
+    <ClInclude Include="Script\UpgradeSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">
