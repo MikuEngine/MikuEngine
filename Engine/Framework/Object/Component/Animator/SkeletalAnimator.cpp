@@ -595,8 +595,6 @@ namespace engine
         if (!res.data || res.data->GetAnimations().empty()) return;
         float duration = res.data->GetAnimations()[0].duration;
 
-        static float previewTime = 0.0f;
-
         if (m_layers.empty()) return;
         auto& layer = m_layers[0];
 
@@ -614,6 +612,92 @@ namespace engine
 
         bool isHovered = ImGui::IsItemHovered();
         bool isDown = ImGui::IsMouseDown(ImGuiMouseButton_Left);
+        bool isRightClicked = ImGui::IsItemClicked(ImGuiMouseButton_Right);
+
+        for (int i = 0; i <= 10; ++i)
+        {
+            float ratio = (float)i / 10.0f;
+            float x = cursorPos.x + width * ratio;
+            drawList->AddLine(ImVec2(x, cursorPos.y), ImVec2(x, cursorPos.y + height), IM_COL32(80, 80, 80, 255));
+        }
+
+        int hoveredNotifyIndex = -1;
+
+        for (int i = 0; i < notifies.size(); ++i)
+        {
+            auto& notify = notifies[i];
+            float ratio = notify.time / duration;
+            float x = cursorPos.x + width * ratio;
+            float y = cursorPos.y + height * 0.5f;
+            float size = 6.0f;
+
+            ImVec2 p1(x, y - size); ImVec2 p2(x + size, y);
+            ImVec2 p3(x, y + size); ImVec2 p4(x - size, y);
+
+            bool isMarkerHovered = false;
+            ImVec2 mousePos = ImGui::GetMousePos();
+            if (mousePos.x >= x - size && mousePos.x <= x + size &&
+                mousePos.y >= y - size && mousePos.y <= y + size)
+            {
+                isMarkerHovered = true;
+                hoveredNotifyIndex = i;
+            }
+
+            if (isMarkerHovered)
+            {
+                drawList->AddQuadFilled(p1, p2, p3, p4, IM_COL32(100, 255, 100, 255));
+                ImGui::SetTooltip("%s (%.2f)", notify.name.c_str(), notify.time);
+
+                if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+                {
+                    ImGui::OpenPopup(("DeleteNotifyPopup_" + std::to_string(i)).c_str());
+                }
+            }
+            else
+            {
+                drawList->AddQuadFilled(p1, p2, p3, p4, IM_COL32(0, 255, 0, 255));
+            }
+
+            drawList->AddQuad(p1, p2, p3, p4, IM_COL32(255, 255, 255, 255));
+            drawList->AddText(ImVec2(x - 10, y - 20), IM_COL32(200, 255, 200, 255), notify.name.c_str());
+
+            if (ImGui::BeginPopup(("DeleteNotifyPopup_" + std::to_string(i)).c_str()))
+            {
+                ImGui::Text("Notify: %s", notify.name.c_str());
+                ImGui::Separator();
+                if (ImGui::MenuItem("Delete"))
+                {
+                    notifies.erase(notifies.begin() + i);
+                    ImGui::CloseCurrentPopup();
+                    ImGui::EndPopup();
+                    return;
+                }
+                ImGui::EndPopup();
+            }
+        }
+
+        static float rightClickTime = 0.0f;
+        if (isRightClicked && hoveredNotifyIndex == -1)
+        {
+            float mouseRatio = (ImGui::GetMousePos().x - cursorPos.x) / width;
+            rightClickTime = std::clamp(mouseRatio, 0.0f, 1.0f) * duration;
+
+            ImGui::OpenPopup("TimelineContextMenu");
+        }
+
+        if (ImGui::BeginPopup("TimelineContextMenu"))
+        {
+            ImGui::Text("Add Notify at %.2f sec", rightClickTime);
+            static char notifyNameBuf[64] = "Event";
+            ImGui::InputText("Name", notifyNameBuf, 64);
+
+            if (ImGui::Button("Add"))
+            {
+                AddNotify(animName, notifyNameBuf, rightClickTime);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
 
         if (isHovered && isDown)
         {
@@ -637,57 +721,8 @@ namespace engine
             UpdateTimeinePose();
         }
 
-        if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.0f))
-        {
-            float mouseRatio = (ImGui::GetMousePos().x - cursorPos.x) / width;
-            previewTime = std::clamp(mouseRatio, 0.0f, 1.0f) * duration;
-        }
-
-        static float rightClickTime = 0.0f;
-        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-        {
-            float mouseRatio = (ImGui::GetMousePos().x - cursorPos.x) / width;
-            rightClickTime = std::clamp(mouseRatio, 0.0f, 1.0f) * duration;
-            ImGui::OpenPopup("TimelineContextMenu");
-        }
-
-        for (int i = 0; i <= 10; ++i)
-        {
-            float ratio = (float)i / 10.0f;
-            float x = cursorPos.x + width * ratio;
-            drawList->AddLine(ImVec2(x, cursorPos.y), ImVec2(x, cursorPos.y + height), IM_COL32(80, 80, 80, 255));
-        }
-
-        for (auto& notify : notifies)
-        {
-            float ratio = notify.time / duration;
-            float x = cursorPos.x + width * ratio;
-            float y = cursorPos.y + height * 0.5f;
-
-            drawList->AddQuadFilled(
-                ImVec2(x, y - 6), ImVec2(x + 6, y), ImVec2(x, y + 6), ImVec2(x - 6, y),
-                IM_COL32(0, 255, 0, 255)
-            );
-
-            drawList->AddText(ImVec2(x - 10, y - 20), IM_COL32(200, 255, 200, 255), notify.name.c_str());
-        }
-
         float playheadX = cursorPos.x + (layer.current.time / duration) * width;
         drawList->AddLine(ImVec2(playheadX, cursorPos.y), ImVec2(playheadX, cursorPos.y + height), IM_COL32(255, 50, 50, 255), 2.0f);
-
-        if (ImGui::BeginPopup("TimelineContextMenu"))
-        {
-            ImGui::Text("Time: %.2f", rightClickTime);
-            static char notifyNameBuf[64] = "Event";
-            ImGui::InputText("Notify Name", notifyNameBuf, 64);
-
-            if (ImGui::Button("Add Notify"))
-            {
-                AddNotify(animName, notifyNameBuf, rightClickTime);
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::EndPopup();
-        }
     }
 
     // Update()의 deltatime 제외 본 행렬 계산
