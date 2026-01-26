@@ -76,6 +76,9 @@ namespace engine
 		float m_scrollY = 0.0f;
 		float m_dragSpeed = 1.0f;
 
+		float m_lastScrollbarV = 0.0f;
+		float m_scrollbarDragSpeed = 1.0f;	// 스크롤 감도
+
 		std::string m_contentName = "Content";
 		std::string m_scrollbarName;
 

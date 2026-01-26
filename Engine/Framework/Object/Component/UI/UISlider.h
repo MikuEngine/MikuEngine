@@ -52,6 +52,9 @@ namespace engine
 
 		void SetOnValueChanged(ValueChangedCallback cb);
 
+		void SetUseFill(bool use) { m_useFill = use; }
+		bool GetUseFill() const { return m_useFill; }
+
 	private:
 		void CreateVisuals();
 		bool RefreshVisuals();
@@ -97,6 +100,8 @@ namespace engine
 		bool m_dragging = false;
 		bool m_dragFromHandle = false;
 		bool m_dirty = true;
+
+		bool m_useFill = true;
 
 		std::string m_bgSprite;
 		std::string m_fillSprite;
