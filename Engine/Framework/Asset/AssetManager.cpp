@@ -13,6 +13,7 @@
 #include "Framework/Asset/GeometryData.h"
 #include "Framework/Asset/SoundData.h"
 #include "Framework/Asset/PrefabData.h"
+#include "Framework/Asset/SocketData.h"
 
 namespace engine
 {
@@ -230,6 +231,25 @@ namespace engine
         CacheData(soundData, scope);
 
         return soundData;
+    }
+
+    std::shared_ptr<SocketData> AssetManager::GetOrCreateSocketData(const std::string& filePath, LifeScope scope)
+    {
+        if (auto find = m_socketDatas.find(filePath); find != m_socketDatas.end())
+        {
+            if (!find->second.expired())
+            {
+                return find->second.lock();
+            }
+        }
+
+        auto socketData = std::make_shared<SocketData>();
+        socketData->Create(filePath);
+
+        m_socketDatas[filePath] = socketData;
+        CacheData(socketData, scope);
+
+        return socketData;
     }
 
     std::shared_ptr<SpriteAnimationData> AssetManager::GetOrCreateSpriteAnimationData(const std::string& filePath, LifeScope scope)
