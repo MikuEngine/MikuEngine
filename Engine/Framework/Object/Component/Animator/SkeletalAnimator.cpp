@@ -597,6 +597,9 @@ namespace engine
 
         static float previewTime = 0.0f;
 
+        if (m_layers.empty()) return;
+        auto& layer = m_layers[0];
+
         ImGui::Text("Timeline (Duration: %.2fs)", duration);
 
         ImDrawList* drawList = ImGui::GetWindowDrawList();
@@ -608,6 +611,31 @@ namespace engine
         drawList->AddRect(cursorPos, ImVec2(cursorPos.x + width, cursorPos.y + height), IM_COL32(100, 100, 100, 255));
 
         ImGui::InvisibleButton("##TimelineArea", ImVec2(width, height));
+
+        bool isHovered = ImGui::IsItemHovered();
+        bool isDown = ImGui::IsMouseDown(ImGuiMouseButton_Left);
+
+        if (isHovered && isDown)
+        {
+            float mouseRatio = (ImGui::GetMousePos().x - cursorPos.x) / width;
+            float newTime = std::clamp(mouseRatio, 0.0f, 1.0f) * duration;
+
+            if (layer.current.name != animName || !layer.current.active)
+            {
+                Play(animName, false, 0, 0.0f);
+            }
+
+            layer.current.time = newTime;
+            layer.current.speed = 0.0f;
+
+            if (layer.next.active)
+            {
+                layer.next.Reset();
+                layer.transitionTime = 0.0f;
+            }
+
+            UpdateTimeinePose();
+        }
 
         if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.0f))
         {
@@ -644,7 +672,7 @@ namespace engine
             drawList->AddText(ImVec2(x - 10, y - 20), IM_COL32(200, 255, 200, 255), notify.name.c_str());
         }
 
-        float playheadX = cursorPos.x + (previewTime / duration) * width;
+        float playheadX = cursorPos.x + (layer.current.time / duration) * width;
         drawList->AddLine(ImVec2(playheadX, cursorPos.y), ImVec2(playheadX, cursorPos.y + height), IM_COL32(255, 50, 50, 255), 2.0f);
 
         if (ImGui::BeginPopup("TimelineContextMenu"))
@@ -659,6 +687,132 @@ namespace engine
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
+        }
+    }
+
+    // Update()의 deltatime 제외 본 행렬 계산
+    void SkeletalAnimator::UpdateTimeinePose()
+    {
+        if (m_skeleton.empty() || !m_skeletonData) return;
+
+        const auto& boneOffsets = m_skeletonData->GetBoneOffsets();
+
+        for (size_t i = 0; i < m_skeleton.size(); ++i)
+        {
+            auto& bone = m_skeleton[i];
+
+            Vector3 finalPos = bone.local.Translation();
+            Quaternion finalRot = Quaternion::CreateFromRotationMatrix(bone.local);
+            Vector3 finalScale{ 1.0f, 1.0f, 1.0f };
+
+            for (size_t layerIndex = 0; layerIndex < m_layers.size(); ++layerIndex)
+            {
+                auto& layer = m_layers[layerIndex];
+                if (!layer.current.active) continue;
+
+                if (!layer.mask.empty())
+                {
+                    if (i >= layer.mask.size() || layer.mask[i] == 0)
+                    {
+                        continue;
+                    }
+                }
+
+                Vector3 curPos;
+                Quaternion curRot;
+                Vector3 curScale;
+
+                bool hasCur = EvaluateBone(layer.current, bone.name, layer.current.time, curPos, curRot, curScale);
+
+                if (!hasCur)
+                {
+                    continue;
+                }
+
+                Vector3 layerPos = curPos;
+                Quaternion layerRot = curRot;
+                Vector3 layerScale = curScale;
+
+                if (layer.next.active)
+                {
+                    Vector3 nextPos;
+                    Quaternion nextRot;
+                    Vector3 nextScale;
+
+                    bool hasNext = EvaluateBone(layer.next, bone.name, layer.next.time, nextPos, nextRot, nextScale);
+
+                    if (hasNext)
+                    {
+                        float t = std::clamp(layer.transitionTime / layer.transitionDuration, 0.0f, 1.0f);
+
+                        layerPos = Vector3::Lerp(layerPos, nextPos, t);
+                        layerRot = Quaternion::Slerp(layerRot, nextRot, t);
+                        layerScale = Vector3::Lerp(layerScale, nextScale, t);
+                    }
+                }
+
+                float w = layer.weight;
+
+                if (layer.blendMode == AnimationBlendMode::Additive)
+                {
+                    Vector3 refPos;
+                    Quaternion refRot;
+                    Vector3 refScale;
+
+                    EvaluateBone(layer.current, bone.name, 0.0f, refPos, refRot, refScale);
+
+                    Vector3 deltaPos = layerPos - refPos;
+                    Quaternion inv;
+                    refRot.Inverse(inv);
+                    Quaternion deltaRot = layerRot * inv;
+
+                    finalPos += deltaPos * w;
+                    finalRot = finalRot * Quaternion::Slerp(Quaternion::Identity, deltaRot, w);
+                }
+                else
+                {
+                    if (layerIndex == 0)
+                    {
+                        finalPos = layerPos;
+                        finalRot = layerRot;
+                        finalScale = layerScale;
+                    }
+                    else
+                    {
+                        finalPos = Vector3::Lerp(finalPos, layerPos, w);
+                        finalRot = Quaternion::Slerp(finalRot, layerRot, w);
+                        finalScale = Vector3::Lerp(finalScale, layerScale, w);
+                    }
+                }
+            }
+
+            if (auto iter = m_proceduralRotations.find(static_cast<int>(i));
+                iter != m_proceduralRotations.end())
+            {
+                finalRot = finalRot * iter->second;
+            }
+
+            Matrix nodeTrans =
+                Matrix::CreateScale(finalScale) *
+                Matrix::CreateFromQuaternion(finalRot) *
+                Matrix::CreateTranslation(finalPos);
+
+            if (bone.parentIndex != -1)
+            {
+                bone.model = nodeTrans * m_skeleton[bone.parentIndex].model;
+            }
+            else
+            {
+                bone.model = nodeTrans;
+            }
+
+            m_finalBoneMatrices[bone.index] = (boneOffsets[bone.index] * bone.model).Transpose();
+        }
+
+        auto renderer = GetGameObject()->GetComponent<SkeletalMeshRenderer>();
+        if (renderer)
+        {
+            renderer->Update();
         }
     }
 
