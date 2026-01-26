@@ -1,13 +1,14 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "SoundSystem.h"
 
 #include <fstream>
 #include <filesystem>
 
 #include "Common/Utility/StringHelper.h"
-#include "Framework/Asset/AssetManager.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Asset/AssetManager.h"
+#include "Framework/Asset/SoundData.h"
 #include "Core/System/VirtualFileSystem.h"
 #include "fmod.hpp"
 #include "fmod_errors.h"
@@ -459,84 +460,23 @@ namespace engine
         return sound;
     }
 
-    void SoundSystem::DrawImgui()
+    void SoundSystem::CreateRandomSound(const std::string& groupName, const std::vector<std::string>& filePaths, const std::string& option, LifeScope scope)
     {
-        if (ImGui::Button("Refresh List"))
+        std::vector<Sound*> soundList;
+
+        for (const auto& path : filePaths)
         {
-            RefreshSoundList();
-        }
-        if (ImGui::BeginListBox("##SoundPlayList", ImVec2(-1, 300)))
-        {
-            for (int i = 0; i < static_cast<int>(m_PlayUIList.size()); ++i)
+            auto soundData = AssetManager::Get().GetOrCreateSoundData(path, option, scope);
+
+            if (soundData && soundData->GetSound())
             {
-                bool isSelected = (m_selectedSoundIndex == i);
-                std::string label = m_PlayUIList[i];
-
-                if (ImGui::Selectable(label.c_str(), isSelected))
-                {
-                    m_selectedSoundIndex = i;
-
-                    // 클릭 시 바로 로드해서 준비하거나 할 수 있음
-                    // LoadSound(m_soundPath + label); 
-                }
-
-                if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-                {
-                    //auto soundData = AssetManager::Get().GetOrCreateSoundData(label, LifeScope::Global);
-
-                    /*// EndEvent
-                         if (snd) snd->Play2D(false, []()
-                         {
-                             //std::cout << "play 끝!" << std::endl;
-                         });
-                     //*/
-                }
-
-                if (ImGui::BeginDragDropSource())
-                {
-                    ImGui::SetDragDropPayload("SOUND_ORDER", &i, sizeof(int));
-                    ImGui::Text(label.c_str());
-                    ImGui::EndDragDropSource();
-                }
-
-                if (ImGui::BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SOUND_ORDER"))
-                    {
-                        int fromIdx = *(int*)payload->Data;
-                        int toIdx = i;
-                        if (fromIdx != toIdx)
-                        {
-                            std::string temp = m_PlayUIList[fromIdx];
-                            m_PlayUIList.erase(m_PlayUIList.begin() + fromIdx);
-                            m_PlayUIList.insert(m_PlayUIList.begin() + toIdx, temp);
-                            m_selectedSoundIndex = toIdx;
-                        }
-                    }
-                    ImGui::EndDragDropTarget();
-                }
-
-                if (ImGui::BeginPopupContextItem())
-                {
-                    if (ImGui::MenuItem("Remove from List"))
-                    {
-                        m_PlayUIList.erase(m_PlayUIList.begin() + i);
-                        ImGui::EndPopup();
-                        break;
-                    }
-                    /*/ 파일 삭제 기능
-                        if (ImGui::MenuItem("Delete File (Warning!)"))
-                        {
-                            fs::remove(m_soundPath + label);
-                            m_playList.erase(m_playList.begin() + i);
-                            ImGui::EndPopup();
-                            break;
-                        }
-                    //*/
-                    ImGui::EndPopup();
-                }
+                soundList.push_back(soundData->GetSound());
             }
-            ImGui::EndListBox();
+        }
+
+        if (!soundList.empty())
+        {
+            m_randomSounds[groupName] = soundList;
         }
     }
 
@@ -545,6 +485,48 @@ namespace engine
         m_listenerPos = pos;
         m_listenerForward = forward;
         m_listenerUp = up;
+    }
+
+    void SoundSystem::Play(const std::string& key, float volume, float pitch)
+    {
+        Sound* targetSound = nullptr;
+
+        // random
+        auto itRandom = m_randomSounds.find(key);
+        if (itRandom != m_randomSounds.end() && !itRandom->second.empty())
+        {
+            const std::vector<Sound*>& group = itRandom->second;
+            int index = rand() % group.size();
+            targetSound = group[index];
+        }
+        else
+        {
+            auto soundData = AssetManager::Get().GetOrCreateSoundData(key, "SFX", LifeScope::Scene);
+
+            if (soundData)
+            {
+                targetSound = soundData->GetSound();
+            }
+        }
+
+        if (!targetSound) return;
+
+        FMOD::Channel* channel = nullptr;
+
+        FMOD::ChannelGroup* targetGroup = targetSound->m_pChannelGroup;
+        if (!targetGroup) targetGroup = m_channelGroups["Master"];
+
+        m_pSystem->playSound(targetSound->m_pSound, targetGroup, true, &channel);
+
+        if (channel)
+        {
+            channel->setMode(FMOD_2D);
+
+            channel->setVolume(volume);
+            channel->setPitch(pitch);
+
+            channel->setPaused(false);
+        }
     }
 
     void SoundSystem::RefreshSoundList()

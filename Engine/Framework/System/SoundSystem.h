@@ -4,6 +4,7 @@
 #include <list>
 #include "Framework/Object/Component/AudioSource.h"
 #include "Framework/System/System.h"
+#include "Common/Utility/CommonTypes.h"
 #include "fmod.hpp"
 
 namespace engine
@@ -55,6 +56,7 @@ namespace engine
     {
         friend class Singleton<SoundSystem>;
         friend class Sound;
+        friend class SoundData;
 
     private:
         SoundSystem() = default;
@@ -63,7 +65,9 @@ namespace engine
     private:
         FMOD::System* m_pSystem = nullptr;
 
+        //std::map<std::string, Sound*> m_sounds;
         std::map<std::string, FMOD::ChannelGroup *> m_channelGroups;
+        std::map<std::string, std::vector<Sound*>> m_randomSounds;
 
         // FMOD 리스너(듣는 사람) 정보
         Vector3 m_listenerPos = { 0, 0, 0 };
@@ -90,6 +94,7 @@ namespace engine
         void OnGameStart();
 
         Sound* CreateSound(const std::string& filename, const std::string& option);
+        void CreateRandomSound(const std::string& groupName, const std::vector<std::string>& filePaths, const std::string& option, LifeScope scope);
         const std::string& GetSoundPath() const { return m_soundPath; }
 
         void RefreshSoundList();
@@ -97,21 +102,18 @@ namespace engine
         // FMOD Listener 설정 (CameraSystem에서 Main Camera 정보를 받아와서 호출해줘야 함)
         void SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up);
 
-        void DrawImgui();
+        void Play(const std::string& key, float volume = 1.0f, float pitch = 1.0f);
 
     private:
         FMOD::ChannelGroup* GetOrCreateChannelGroup(const std::string &groupName);
     };
 }
 
-/*// sound event 사용 예시
-**재생 후 로그 출력**
-attackSound->Play(false, [](){
-    std::cout << "공격 소리 끝!" << std::endl;
-});
+/*//
+<<SounSystem Play 함수 사용 예시>>
+** 랜덤 사용 시 Name 키 값 맞추기 **
+SoundSystem::Get().Play("UI_Click_Random");
 
-**재생 후 오브젝트 삭제**
-dieSound->Play(false, [this](){
-    GameObject::Destroy(this->GetGameObject());
-});
+** 단일 사운드 재생 시 **
+SoundSystem::Get().Play("Resource/Sound/Attack.wav", 0.8f); // 볼륨 0.8
 //*/
