@@ -1,8 +1,25 @@
 #include "EnginePCH.h"
 #include "SphereCollider.h"
 
+#include "Common/Utility/StaticMemoryPool.h"
+
 namespace engine
 {
+    namespace
+    {
+        StaticMemoryPool<SphereCollider, 256> g_sphereColliderPool;
+    }
+
+    void* SphereCollider::operator new(size_t size)
+    {
+        return g_sphereColliderPool.Allocate(size);
+    }
+
+    void SphereCollider::operator delete(void* ptr)
+    {
+        g_sphereColliderPool.Deallocate(ptr);
+    }
+
     void SphereCollider::SetRadius(float radius)
     {
         m_radius = std::max(0.001f, radius);

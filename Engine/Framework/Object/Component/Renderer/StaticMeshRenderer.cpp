@@ -28,7 +28,7 @@ namespace engine
 {
     namespace
     {
-        StaticMemoryPool<StaticMeshRenderer, 1024> g_staticMeshRendererPool;
+        StaticMemoryPool<StaticMeshRenderer, 256> g_staticMeshRendererPool;
     }
 
     StaticMeshRenderer::~StaticMeshRenderer()

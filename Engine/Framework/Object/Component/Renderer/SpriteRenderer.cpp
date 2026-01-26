@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SpriteRenderer.h"
 
 #include <filesystem>
@@ -61,7 +61,7 @@ namespace engine
 {
     namespace
     {
-        StaticMemoryPool<SpriteRenderer, 1024> g_spriteRendererPool;
+        StaticMemoryPool<SpriteRenderer, 256> g_spriteRendererPool;
     }
 
     SpriteRenderer::~SpriteRenderer()

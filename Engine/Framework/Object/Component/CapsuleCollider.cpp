@@ -1,10 +1,26 @@
 #include "EnginePCH.h"
 #include "CapsuleCollider.h"
 
+#include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/Physics/PhysicsUtility.h"
 
 namespace engine
 {
+    namespace
+    {
+        StaticMemoryPool<CapsuleCollider, 256> g_capsuleColliderPool;
+    }
+
+    void* CapsuleCollider::operator new(size_t size)
+    {
+        return g_capsuleColliderPool.Allocate(size);
+    }
+
+    void CapsuleCollider::operator delete(void* ptr)
+    {
+        g_capsuleColliderPool.Deallocate(ptr);
+    }
+
     void CapsuleCollider::SetRadius(float radius)
     {
         m_radius = std::max(0.001f, radius);

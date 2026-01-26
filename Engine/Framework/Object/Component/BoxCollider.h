@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/ComponentFactory.h"
@@ -19,6 +19,9 @@ namespace engine
     public:
         BoxCollider() = default;
         virtual ~BoxCollider() = default;
+
+        static void* operator new(size_t size);
+        static void operator delete(void* ptr);
 
     public:
         // 크기 (전체 크기, half extents 아님)
