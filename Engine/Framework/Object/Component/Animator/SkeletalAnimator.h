@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Animator/Animator.h"
 #include "Framework/Asset/SkeletonData.h"
@@ -126,6 +126,10 @@ namespace engine
         void OnGui() override;
         void Save(json& j) const override;
         void Load(const json& j) override;
+
+        Matrix GetBoneOffsetByName(const std::string& name);
+        Vector3 GetBoneWorldPosition(const std::string& name);
+        Matrix GetBoneWorldMatrix(const std::string& name);
 
     private:
         void InitializeSkeleton();

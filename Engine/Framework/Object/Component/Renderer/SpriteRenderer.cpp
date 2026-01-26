@@ -117,6 +117,8 @@ namespace engine
 
         m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidNone);
 
+        m_isInitialized = true;
+
         SystemManager::Get().GetRenderSystem().Register(this);
     }
 

@@ -62,6 +62,7 @@ namespace engine
         float m_materialAmbientOcclusion = 1.0f;
         bool m_overrideMaterial = false;
         bool m_castShadow = false;
+        bool m_isInitialized = false;
 
     public:
         ~StaticMeshRenderer();

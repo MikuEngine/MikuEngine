@@ -77,6 +77,7 @@ namespace engine
         Vector2 m_pivot{ 0.5f, 0.5f };
         bool m_castShadow = false;
         bool m_isLoaded = false;
+        bool m_isInitialized = false;
 
     public:
         ~SpriteRenderer();

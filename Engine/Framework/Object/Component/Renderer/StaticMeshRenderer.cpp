@@ -71,11 +71,17 @@ namespace engine
 
         m_objectConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
         m_materialConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Material", sizeof(CbMaterial));
+
+        m_isInitialized = true;
+        SystemManager::Get().GetRenderSystem().Register(this);
     }
 
     void StaticMeshRenderer::SetMesh(const std::string& meshFilePath)
     {
-        SystemManager::Get().GetRenderSystem().Unregister(this);
+        if (m_isInitialized)
+        {
+            SystemManager::Get().GetRenderSystem().Unregister(this);
+        }
 
         m_meshFilePath = meshFilePath;
 
@@ -117,7 +123,10 @@ namespace engine
 
         SetupTextures(m_materialData, m_textures);
 
-        SystemManager::Get().GetRenderSystem().Register(this);
+        if (m_isInitialized)
+        {
+            SystemManager::Get().GetRenderSystem().Register(this);
+        }
     }
 
     void StaticMeshRenderer::SetVertexShader(const std::string& shaderFilePath)

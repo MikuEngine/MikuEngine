@@ -1209,6 +1209,37 @@ namespace engine
         }
     }
 
+    Matrix SkeletalAnimator::GetBoneOffsetByName(const std::string& name)
+    {
+        auto index = m_skeletonData->GetBoneIndexByBoneName(name);
+
+        return m_finalBoneMatrices[index];
+    }
+
+    Vector3 SkeletalAnimator::GetBoneWorldPosition(const std::string& name)
+    {
+        for (const auto& bone : m_skeleton)
+        {
+            if (bone.name == name)
+            {
+                return bone.model.Translation();
+            }
+        }
+        return Vector3::Zero;
+    }
+
+    Matrix SkeletalAnimator::GetBoneWorldMatrix(const std::string& name)
+    {
+        for (const auto& bone : m_skeleton)
+        {
+            if (bone.name == name)
+            {
+                return bone.model;
+            }
+        }
+        return Matrix::Identity;
+    }
+
     void SkeletalAnimator::InitializeSkeleton()
     {
         if (m_skeleton.empty())

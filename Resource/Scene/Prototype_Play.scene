@@ -328,6 +328,38 @@
                 {
                     "Type": "BulletFactory",
                     "Active": true
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 0.0010000000474974513,
+                    "linearDamping": 0.0,
+                    "angularDamping": 0.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 1,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -432,6 +464,28 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 4,
+                    "size": [
+                        1.1299999952316284,
+                        1.1799999475479126,
+                        1.0700000524520874
+                    ]
                 }
             ]
         },
@@ -484,6 +538,28 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 4,
+                    "size": [
+                        1.100000023841858,
+                        1.090000033378601,
+                        1.090000033378601
+                    ]
                 }
             ]
         },
@@ -536,6 +612,28 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 4,
+                    "size": [
+                        1.1200000047683716,
+                        1.090000033378601,
+                        1.0499999523162842
+                    ]
                 }
             ]
         },
@@ -588,6 +686,28 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 4,
+                    "size": [
+                        1.059999942779541,
+                        1.059999942779541,
+                        1.059999942779541
+                    ]
                 }
             ]
         },
