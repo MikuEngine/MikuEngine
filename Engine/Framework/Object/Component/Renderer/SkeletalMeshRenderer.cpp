@@ -29,7 +29,7 @@ namespace engine
 {
     namespace
     {
-        StaticMemoryPool<SkeletalMeshRenderer, 1024> g_skeletalMeshRendererPool;
+        StaticMemoryPool<SkeletalMeshRenderer, 256> g_skeletalMeshRendererPool;
     }
 
     SkeletalMeshRenderer::SkeletalMeshRenderer() = default;

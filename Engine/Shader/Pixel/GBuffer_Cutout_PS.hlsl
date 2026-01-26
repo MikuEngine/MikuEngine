@@ -19,11 +19,13 @@ PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input)
     output.orm.a = 1.0f;
     
     output.baseColor *= g_materialBaseColor;
+    output.baseColor.a *= g_materialAlpha; // 장애물 반투명 적용
     output.emissive.rgb = output.emissive.rgb * g_materialEmissive * g_materialEmissiveIntensity;
     
     if (g_overrideMaterial)
     {
         output.baseColor = g_materialBaseColor;
+        output.baseColor.a *= g_materialAlpha; // 장애물 반투명 적용
         output.emissive = 0.0f;
         output.orm.r = g_materialAmbientOcclusion;
         output.orm.g = g_materialRoughness;

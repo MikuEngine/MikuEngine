@@ -1,6 +1,6 @@
 {
     "Name": "SocketNotifyTest",
-    "NumGameObjects": 2,
+    "NumGameObjects": 3,
     "GameObjects": [
         {
             "ID": 0,
@@ -12,8 +12,8 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 55.599998474121094,
+                        "z": -166.39999389648438
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -46,8 +46,8 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": -52.0,
-                        "z": 87.9000015258789
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -91,27 +91,22 @@
                     "Active": true,
                     "Animations": [
                         {
-                            "Name": "TestBackward",
-                            "Path": "Resource/Animation/TestBackward.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "TestElbow",
-                            "Path": "Resource/Animation/TestElbow.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "TestForward",
+                            "Name": "1",
                             "Path": "Resource/Animation/TestForward.fbx",
                             "Notifies": []
                         },
                         {
-                            "Name": "TestIdle",
-                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Name": "2",
+                            "Path": "Resource/Animation/TestBackward.fbx",
                             "Notifies": []
                         },
                         {
-                            "Name": "TestPunch",
+                            "Name": "3",
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "4",
                             "Path": "Resource/Animation/TestPunch.fbx",
                             "Notifies": [
                                 {
@@ -260,6 +255,103 @@
                 {
                     "Type": "AnimationPlayer",
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "ParticleObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -0.10000000149011612,
+                        "y": 0.5,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true,
+                    "IsPlaying": true,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/DefaultParticle.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 5.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 1.0,
+                                "y": 0.9729729294776917,
+                                "z": 0.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "SizeBegin": 0.10000000149011612,
+                            "SizeEnd": 0.10000000149011612,
+                            "SizeVariation": 1.3700000047683716,
+                            "LifeTime": 1.0,
+                            "EmissionRate": 10.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 200,
+                                    "Cycles": 0,
+                                    "Interval": 0.0
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }

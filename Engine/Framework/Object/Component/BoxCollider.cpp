@@ -1,10 +1,26 @@
 #include "EnginePCH.h"
 #include "BoxCollider.h"
 
+#include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/Physics/PhysicsUtility.h"
 
 namespace engine
 {
+    namespace
+    {
+        StaticMemoryPool<BoxCollider, 256> g_boxColliderPool;
+    }
+
+    void* BoxCollider::operator new(size_t size)
+    {
+        return g_boxColliderPool.Allocate(size);
+    }
+
+    void BoxCollider::operator delete(void* ptr)
+    {
+        g_boxColliderPool.Deallocate(ptr);
+    }
+
     void BoxCollider::SetSize(const Vector3& size)
     {
         m_size = Vector3(

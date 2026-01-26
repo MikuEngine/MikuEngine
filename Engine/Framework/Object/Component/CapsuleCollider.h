@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/ComponentFactory.h"
@@ -23,6 +23,9 @@ namespace engine
     public:
         CapsuleCollider() = default;
         virtual ~CapsuleCollider() = default;
+
+        static void* operator new(size_t size);
+        static void operator delete(void* ptr);
 
     public:
         float GetRadius() const { return m_radius; }

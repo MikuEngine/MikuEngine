@@ -32,12 +32,35 @@ float4 main(PS_INPUT_GBUFFER input) : SV_Target
 {
     float2 uv = input.texCoord;
     float4 baseColor = g_texBaseColor.Sample(g_samLinear, uv);
+    baseColor = float4(pow(abs(baseColor.rgb), 2.2f), baseColor.a);
     float3 encodedNormal = g_texNormal.Sample(g_samLinear, uv).rgb;
     float3 worldPosition = input.worldPosition;
-    float3 emissive = g_texEmissive.Sample(g_samLinear, uv).rgb;
+    float3 emissive = pow(abs(g_texEmissive.Sample(g_samLinear, uv).rgb), 2.2f);
     float ao = g_texAmbientOcclusion.Sample(g_samLinear, uv).r;
     float roughness = g_texRoughness.Sample(g_samLinear, uv).r;
     float metalness = g_texMetalness.Sample(g_samLinear, uv).r;
+    
+    // Material override 및 조정
+    baseColor *= g_materialBaseColor;
+    baseColor.a *= g_materialAlpha; // 장애물 반투명 적용
+    emissive = emissive * g_materialEmissive * g_materialEmissiveIntensity;
+    
+    if (g_overrideMaterial)
+    {
+        baseColor = g_materialBaseColor;
+        baseColor.a *= g_materialAlpha; // 장애물 반투명 적용
+        emissive = 0.0f;
+        ao = g_materialAmbientOcclusion;
+        roughness = g_materialRoughness;
+        metalness = g_materialMetalness;
+    }
+    else
+    {
+        // Override가 아닐 때는 텍스처 값에 머테리얼 값을 적용
+        roughness = roughness * g_materialRoughness;
+        metalness = saturate(metalness + g_materialMetalness);
+        ao = ao * g_materialAmbientOcclusion;
+    }
     
     // normal
     float3 n = normalize(DecodeNormal(encodedNormal));

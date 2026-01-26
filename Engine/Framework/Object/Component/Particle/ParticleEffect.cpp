@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "ParticleEffect.h"
 
+#include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/CameraSystem.h"
 #include "Framework/System/ParticleSystem.h"
@@ -9,9 +10,24 @@
 
 namespace engine
 {
+	namespace
+	{
+		StaticMemoryPool<ParticleEffect, 256> g_particleEffectPool;
+	}
+
 	ParticleEffect::~ParticleEffect()
 	{
 		SystemManager::Get().GetParticleSystem().Unregister(this);
+	}
+
+	void* ParticleEffect::operator new(size_t size)
+	{
+		return g_particleEffectPool.Allocate(size);
+	}
+
+	void ParticleEffect::operator delete(void* ptr)
+	{
+		g_particleEffectPool.Deallocate(ptr);
 	}
 
 	void ParticleEffect::Initialize()

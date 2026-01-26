@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/ComponentFactory.h"
@@ -87,6 +87,9 @@ namespace engine
     public:
         Rigidbody() = default;
         virtual ~Rigidbody();
+
+        static void* operator new(size_t size);
+        static void operator delete(void* ptr);
 
     public:
         void Initialize() override;

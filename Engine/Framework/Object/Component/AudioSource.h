@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/ComponentFactory.h"
@@ -64,6 +64,9 @@ namespace engine
     public:
         AudioSource();
         virtual ~AudioSource();
+
+        static void* operator new(size_t size);
+        static void operator delete(void* ptr);
 
         void Initialize() override;
         void Update();

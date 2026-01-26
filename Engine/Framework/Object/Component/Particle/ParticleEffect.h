@@ -20,6 +20,9 @@ namespace engine
 	public:
 		~ParticleEffect();
 
+		static void* operator new(size_t size);
+		static void operator delete(void* ptr);
+
 		void Initialize() override;
 		void Update();
 

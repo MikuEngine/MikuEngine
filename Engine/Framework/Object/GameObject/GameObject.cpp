@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "GameObject.h"
 
 #include "Common/Utility/JsonHelper.h"
@@ -15,7 +15,7 @@ namespace engine
 {
     namespace
     {
-        StaticMemoryPool<GameObject, 4096> g_gameObjectPool;
+        StaticMemoryPool<GameObject, 1024> g_gameObjectPool;
     }
 
     GameObject::GameObject()

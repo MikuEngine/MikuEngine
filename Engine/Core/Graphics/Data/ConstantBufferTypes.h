@@ -76,7 +76,10 @@ namespace engine
 		float materialRoughness;
 		float materialMetalness;
 		float materialAmbientOcclusion;
+		float materialAlpha; // 장애물 반투명용 (0.0 ~ 1.0)
+
 		int overrideMaterial;
+		float __pad[3];
 	};
 
 	struct CbObject
