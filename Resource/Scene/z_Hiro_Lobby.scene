@@ -1,6 +1,6 @@
 {
-    "Name": "z_Hiro_Hub",
-    "NumGameObjects": 53,
+    "Name": "z_Hiro_Lobby",
+    "NumGameObjects": 54,
     "GameObjects": [
         {
             "ID": 0,
@@ -3765,6 +3765,73 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/Miku.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 53,
+            "ParentID": 46,
+            "Name": "Viewport",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 500.0,
+                    "Height": 500.0,
+                    "Pivot": {
+                        "x": 0.0,
+                        "y": 1.0
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 1.0
+                    },
+                    "AnchorMax": {
+                        "x": 0.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {

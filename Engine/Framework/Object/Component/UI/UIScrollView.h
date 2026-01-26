@@ -6,6 +6,7 @@
 namespace engine
 {
 	class RectTransform;
+	class UIRect;
 	class UISlider;
 
 	class UIScrollView : public UIElement, public UIInteractable
@@ -38,6 +39,9 @@ namespace engine
 		void SetScrollY(float y, bool syncScrollbar = true);
 		float GetScrollY() const { return m_scrollY; }
 		float GetMaxScroll() const;
+
+		UIRect GetViewPortWorldRect() const;
+		RectTransform* GetViewportRT() const { return m_viewportRT; }
 
 	public:
 		bool IsInteractable() const override { return true; }
@@ -80,6 +84,7 @@ namespace engine
 		float m_scrollbarDragSpeed = 1.0f;	// 스크롤 감도
 
 		std::string m_contentName = "Content";
+		std::string m_viewportName = "Viewport";
 		std::string m_scrollbarName;
 
 		bool m_syncGuard = false;

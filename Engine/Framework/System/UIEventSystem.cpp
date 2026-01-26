@@ -2,13 +2,15 @@
 #include "UIEventSystem.h"
 
 #include "Core/System/Input.h"
+#include "Core/Graphics/Device/GraphicsDevice.h"
+
+#include "Framework/Object/GameObject/GameObject.h"
 
 #include "Framework/Object/Component/UI/UIElement.h"
 #include "Framework/Object/Component/UI/UIInteractable.h"
 #include "Framework/Object/Component/RectTransform.h"
+#include "Framework/Object/Component/UI/UIScrollView.h"
 #include "Framework/Object/Component/Canvas.h"
-
-#include "Core/Graphics/Device/GraphicsDevice.h"
 
 namespace engine
 {
@@ -22,6 +24,34 @@ namespace engine
 		UIInteractable* AsInteractable(UIElement* e)
 		{
 			return dynamic_cast<UIInteractable*>(e);
+		}
+
+		static bool IsDescendantOf(RectTransform* rt, RectTransform* ancestor)
+		{
+			if (!rt || !ancestor) return false;
+
+			Transform* cur = rt;
+			while (cur)
+			{
+				if (cur == ancestor) return true;
+				cur = cur->GetParent();
+			}
+			return false;
+		}
+
+		static UIScrollView* FindScrollViewInParents(RectTransform* rt)
+		{
+			Transform* cur = rt;
+			while (cur)
+			{
+				if (auto* go = cur->GetGameObject())
+				{
+					if (auto* sv = go->GetComponent<UIScrollView>())
+						return sv;
+				}
+				cur = cur->GetParent();
+			}
+			return nullptr;
 		}
 	}
 
@@ -121,6 +151,17 @@ namespace engine
 			if (!rt) continue;
 
 			if (!e->HitTestPoint(mousePos)) continue;
+
+			if (UIScrollView* sv = FindScrollViewInParents(rt))
+			{
+				RectTransform* vpRT = sv->GetViewportRT();
+				if (vpRT && IsDescendantOf(rt, vpRT))
+				{
+					const UIRect vp = sv->GetViewPortWorldRect();
+					if (!PointInRect(vp, mousePos))
+						continue;
+				}
+			}
 
 			return e;
 		}
