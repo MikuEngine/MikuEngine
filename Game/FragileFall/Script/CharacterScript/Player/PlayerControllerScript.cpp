@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include "Script/AimPointer.h"
@@ -737,12 +737,51 @@ namespace game
 		ImGui::Text("PlayerControllerScript:");
 
 		// ─────────────────────────────────────────────
-		// 컴포넌트 검증 (에디터 화면에서 체크)
+		// 컴포넌트 검증 (에디터 화면에서도 체크)
 		// ─────────────────────────────────────────────
 		ImGui::Separator();
 		ImGui::Text("=== Component Validation ===");
 		
-		bool allValid = ValidateComponents();
+		// 에디터 모드를 위한 실시간 컴포넌트 검색
+		engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
+		engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
+		engine::AnimFSM* animFSM = m_animFSM ? m_animFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::AnimFSM>() : nullptr);
+		engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
+		
+		// AimPointer와 BulletFactory는 씬에서 검색 (캐싱된 것이 없으면)
+		AimPointer* aimPointer = m_aimPointer;
+		BulletFactory* bulletFactory = m_bulletFactory;
+		
+		if (!aimPointer && GetGameObject())
+		{
+			aimPointer = GetGameObject()->GetComponent<AimPointer>();
+			if (!aimPointer)
+			{
+				auto* scene = engine::SceneManager::Get().GetScene();
+				if (scene && !m_aimPointerObjectName.empty())
+				{
+					if (auto* aimGO = scene->FindGameObject(m_aimPointerObjectName))
+					{
+						aimPointer = aimGO->GetComponent<AimPointer>();
+					}
+				}
+			}
+		}
+		
+		if (!bulletFactory)
+		{
+			auto* scene = engine::SceneManager::Get().GetScene();
+			if (scene)
+			{
+				if (auto* factoryGO = scene->FindGameObject("BulletFactory"))
+				{
+					bulletFactory = factoryGO->GetComponent<BulletFactory>();
+				}
+			}
+		}
+		
+		// 전체 유효성 검사
+		bool allValid = rigidbody && skeletalAnimator && aimPointer && bulletFactory && animFSM && logicFSM;
 		
 		if (allValid)
 		{
@@ -755,23 +794,23 @@ namespace game
 
 		// 개별 컴포넌트 상태 표시
 		ImGui::Indent();
-		ImGui::Text("Rigidbody:         %s", m_rigidbody ? "[OK]" : "[MISSING]");
-		if (!m_rigidbody) ImGui::SameLine(); if (!m_rigidbody) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		ImGui::Text("Rigidbody:         %s", rigidbody ? "[OK]" : "[MISSING]");
+		if (!rigidbody) ImGui::SameLine(); if (!rigidbody) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 		
-		ImGui::Text("SkeletalAnimator:  %s", m_skeletalAnimator ? "[OK]" : "[MISSING]");
-		if (!m_skeletalAnimator) ImGui::SameLine(); if (!m_skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		ImGui::Text("SkeletalAnimator:  %s", skeletalAnimator ? "[OK]" : "[MISSING]");
+		if (!skeletalAnimator) ImGui::SameLine(); if (!skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 		
-		ImGui::Text("AimPointer:        %s", m_aimPointer ? "[OK]" : "[MISSING]");
-		if (!m_aimPointer) ImGui::SameLine(); if (!m_aimPointer) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		ImGui::Text("AimPointer:        %s", aimPointer ? "[OK]" : "[MISSING]");
+		if (!aimPointer) ImGui::SameLine(); if (!aimPointer) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 		
-		ImGui::Text("BulletFactory:     %s", m_bulletFactory ? "[OK]" : "[MISSING]");
-		if (!m_bulletFactory) ImGui::SameLine(); if (!m_bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		ImGui::Text("BulletFactory:     %s", bulletFactory ? "[OK]" : "[MISSING]");
+		if (!bulletFactory) ImGui::SameLine(); if (!bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 		
-		ImGui::Text("AnimFSM:           %s", m_animFSM ? "[OK]" : "[MISSING]");
-		if (!m_animFSM) ImGui::SameLine(); if (!m_animFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		ImGui::Text("AnimFSM:           %s", animFSM ? "[OK]" : "[MISSING]");
+		if (!animFSM) ImGui::SameLine(); if (!animFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 		
-		ImGui::Text("LogicFSM:          %s", m_logicFSM ? "[OK]" : "[MISSING]");
-		if (!m_logicFSM) ImGui::SameLine(); if (!m_logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		ImGui::Text("LogicFSM:          %s", logicFSM ? "[OK]" : "[MISSING]");
+		if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 		ImGui::Unindent();
 
 		// 이동
