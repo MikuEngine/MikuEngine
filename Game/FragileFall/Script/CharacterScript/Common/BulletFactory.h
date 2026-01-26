@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "BulletParams.h"
@@ -24,11 +24,18 @@ namespace game
 
     public:
         // ─────────────────────────────────────────────
-        // 총알 발사 (파라미터로 속성 전달)
+        // 플레이어 총알 발사
         // ─────────────────────────────────────────────
         void Fire(const engine::Vector3& position,
                   const engine::Vector3& direction,
                   const BulletParams& params);
+
+        // ─────────────────────────────────────────────
+        // 몬스터 총알 발사 (EnemyProjectile 레이어 사용)
+        // ─────────────────────────────────────────────
+        void FireMonster(const engine::Vector3& position,
+                         const engine::Vector3& direction,
+                         const BulletParams& params);
 
     private:
         // ─────────────────────────────────────────────

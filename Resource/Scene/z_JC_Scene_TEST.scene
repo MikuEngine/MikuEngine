@@ -1,6 +1,6 @@
 {
     "Name": "z_JC_Scene_TEST",
-    "NumGameObjects": 4,
+    "NumGameObjects": 6,
     "GameObjects": [
         {
             "ID": 0,
@@ -70,8 +70,8 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
+                        "x": 0.2046331763267517,
+                        "y": 0.3643208146095276,
                         "z": 1.0,
                         "w": 1.0
                     },
@@ -81,20 +81,20 @@
                         "z": 1.0
                     },
                     "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
+                    "MaterialMetalness": 0.8529999852180481,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false,
+                    "OverrideMaterial": true,
                     "CastShadow": false
                 },
                 {
                     "Type": "Rigidbody",
                     "Active": true,
-                    "type": 1,
+                    "type": 0,
                     "mass": 1.0,
-                    "linearDamping": 100.0,
+                    "linearDamping": 10.0,
                     "angularDamping": 100.0,
                     "useGravity": false,
-                    "constraints": 0
+                    "constraints": 58
                 },
                 {
                     "Type": "BoxCollider",
@@ -113,9 +113,9 @@
                     "syncWithTransform": true,
                     "layer": 1,
                     "size": [
-                        50.0,
+                        60.0,
                         180.0,
-                        50.0
+                        60.0
                     ]
                 },
                 {
@@ -131,7 +131,7 @@
                     "UpperBodyLayerIndex": 1,
                     "EnableProceduralAim": false,
                     "MaxYaw": 70.0,
-                    "MaxPitch": 45.0,
+                    "MaxPitch": 0.0,
                     "AimLerpSpeed": 10.0,
                     "SpineBoneName": "mixamorig:Spine1",
                     "AnimStates": []
@@ -158,6 +158,352 @@
                         {
                             "Name": "WalkForward",
                             "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer1",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Armature",
+                                "mixamorig:Hips",
+                                "mixamorig:Spine",
+                                "mixamorig:RightUpLeg",
+                                "mixamorig:LeftUpLeg",
+                                "mixamorig:Spine1",
+                                "mixamorig:RightLeg",
+                                "mixamorig:LeftLeg",
+                                "mixamorig:Spine2",
+                                "mixamorig:RightFoot",
+                                "mixamorig:LeftFoot",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:RightToeBase",
+                                "mixamorig:LeftToeBase",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:RightToe_End",
+                                "mixamorig:LeftToe_End",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:RightToe_End_end",
+                                "mixamorig:LeftToe_End_end",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
+                        },
+                        {
+                            "Name": "New Layer2",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "mixamorig:Spine",
+                                "mixamorig:Spine1",
+                                "mixamorig:Spine2",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Type": "PlayerControllerScript",
+                    "Active": true,
+                    "MoveSpeed": 0.5,
+                    "FireRate": 0.20000000298023224,
+                    "BulletSpeed": 1.0,
+                    "BulletLifetime": 3.0,
+                    "AimPointerObjectName": "AimPointer",
+                    "EnableUpperBodyAim": true,
+                    "FSMInitialized": false,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_WalkForward": "WalkForward",
+                    "AnimName_WalkBackward": "WalkBackward",
+                    "AnimName_Fire": "Fire"
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "AimPointer",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "AimPointer",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
+                    },
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "BulletFactory",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Monster_DullGray",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 2.200000047683716,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.014999999664723873,
+                        "y": 0.014999999664723873,
+                        "z": 0.014999999664723873
+                    }
+                },
+                {
+                    "Type": "MonsterDullGray",
+                    "Active": true,
+                    "Hp": 100.0,
+                    "AttackRange": 10.0,
+                    "MoveSpeed": 0.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 1.0,
+                    "BulletLifetime": 3.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_Attack": "Attack",
+                    "AnimName_Dead": "Dead"
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.37837839126586914,
+                        "y": 0.37837839126586914,
+                        "z": 0.37837839126586914,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": true,
+                    "CastShadow": false
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Attack",
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Dead",
+                            "Path": "Resource/Animation/TestPunch.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/TestIdle.fbx",
                             "Notifies": []
                         }
                     ],
@@ -252,164 +598,115 @@
                             "Name": "New Layer",
                             "Weight": 0.0,
                             "BlendMode": 0,
-                            "MaskBones": [
-                                "mixamorig:Spine",
-                                "mixamorig:Spine1",
-                                "mixamorig:Spine2",
-                                "mixamorig:Neck",
-                                "mixamorig:RightShoulder",
-                                "mixamorig:LeftShoulder",
-                                "mixamorig:Head",
-                                "mixamorig:RightArm",
-                                "mixamorig:LeftArm",
-                                "mixamorig:HeadTop_End",
-                                "mixamorig:RightForeArm",
-                                "mixamorig:LeftForeArm",
-                                "mixamorig:HeadTop_End_end",
-                                "mixamorig:RightHand",
-                                "mixamorig:LeftHand",
-                                "mixamorig:RightHandThumb1",
-                                "mixamorig:RightHandIndex1",
-                                "mixamorig:RightHandMiddle1",
-                                "mixamorig:RightHandRing1",
-                                "mixamorig:RightHandPinky1",
-                                "mixamorig:LeftHandThumb1",
-                                "mixamorig:LeftHandIndex1",
-                                "mixamorig:LeftHandMiddle1",
-                                "mixamorig:LeftHandRing1",
-                                "mixamorig:LeftHandPinky1",
-                                "mixamorig:RightHandThumb2",
-                                "mixamorig:RightHandIndex2",
-                                "mixamorig:RightHandMiddle2",
-                                "mixamorig:RightHandRing2",
-                                "mixamorig:RightHandPinky2",
-                                "mixamorig:LeftHandThumb2",
-                                "mixamorig:LeftHandIndex2",
-                                "mixamorig:LeftHandMiddle2",
-                                "mixamorig:LeftHandRing2",
-                                "mixamorig:LeftHandPinky2",
-                                "mixamorig:RightHandThumb3",
-                                "mixamorig:RightHandIndex3",
-                                "mixamorig:RightHandMiddle3",
-                                "mixamorig:RightHandRing3",
-                                "mixamorig:RightHandPinky3",
-                                "mixamorig:LeftHandThumb3",
-                                "mixamorig:LeftHandIndex3",
-                                "mixamorig:LeftHandMiddle3",
-                                "mixamorig:LeftHandRing3",
-                                "mixamorig:LeftHandPinky3",
-                                "mixamorig:RightHandThumb4",
-                                "mixamorig:RightHandIndex4",
-                                "mixamorig:RightHandMiddle4",
-                                "mixamorig:RightHandRing4",
-                                "mixamorig:RightHandPinky4",
-                                "mixamorig:LeftHandThumb4",
-                                "mixamorig:LeftHandIndex4",
-                                "mixamorig:LeftHandMiddle4",
-                                "mixamorig:LeftHandRing4",
-                                "mixamorig:LeftHandPinky4",
-                                "mixamorig:RightHandThumb4_end",
-                                "mixamorig:RightHandIndex4_end",
-                                "mixamorig:RightHandMiddle4_end",
-                                "mixamorig:RightHandRing4_end",
-                                "mixamorig:RightHandPinky4_end",
-                                "mixamorig:LeftHandThumb4_end",
-                                "mixamorig:LeftHandIndex4_end",
-                                "mixamorig:LeftHandMiddle4_end",
-                                "mixamorig:LeftHandRing4_end",
-                                "mixamorig:LeftHandPinky4_end"
-                            ]
+                            "MaskBones": []
                         }
                     ]
                 },
                 {
-                    "Type": "PlayerControllerScript",
+                    "Type": "AnimFSM",
                     "Active": true,
-                    "MoveSpeed": 5.0,
-                    "FireRate": 0.20000000298023224,
-                    "BulletSpeed": 1.0,
-                    "BulletLifetime": 3.0,
-                    "AimPointerObjectName": "AimPointer",
-                    "EnableUpperBodyAim": true,
-                    "FSMInitialized": false,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_WalkForward": "WalkForward",
-                    "AnimName_WalkBackward": "WalkBackward",
-                    "AnimName_Fire": "Fire"
-                }
-            ]
-        },
-        {
-            "ID": 2,
-            "Name": "AimPointer",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 10.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "AnimStates": []
                 },
                 {
-                    "Type": "AimPointer",
+                    "Type": "LogicFSM",
                     "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
-                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
-                    "UseAlternateCursor": false,
-                    "CursorSize": {
-                        "x": 32.0,
-                        "y": 32.0
-                    },
-                    "CursorPivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 3,
-            "Name": "BulletFactory",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
+                    "CurrentState": "",
+                    "States": []
                 },
                 {
                     "Type": "BulletFactory",
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Environment",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -5.0,
+                        "y": 1.5,
+                        "z": 7.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 3.0,
+                        "y": 3.0,
+                        "z": 3.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 63
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 4,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }
