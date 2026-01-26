@@ -7,6 +7,10 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/UI/UISlider.h"
+#include "Framework/Object/Component/UI/UIImage.h"
+#include "Framework/Object/Component/UI/UIText.h"
+
+#include "Framework/Object/Component/Canvas.h"
 
 namespace engine
 {
@@ -58,17 +62,76 @@ namespace engine
 
 			return go;
 		}
+
+		static Vector4 CalcViewportClipRectPx(UIElement* owner, RectTransform* viewportRT)
+		{
+			if (!owner || !viewportRT) return Vector4(0, 0, 0, 0);
+
+			Canvas* c = owner->GetCanvasInParent();
+			if (!c) return Vector4(0, 0, 0, 0);
+
+			const Vector2 ref = c->GetReferenceResolution();
+			const UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+
+			const UIRect vr = viewportRT->GetWorldRectResolved(rootRect);
+
+			const Vector2 scale = c->GetUIScale();
+			const Vector2 offset = c->GetUIOffset();
+
+			const float pxX = offset.x + vr.x * scale.x;
+			const float pxY = offset.y + vr.y * scale.y;
+			const float pxW = vr.w * scale.x;
+			const float pxH = vr.h * scale.y;
+
+			// (L, T, R, B)
+			return Vector4(pxX, pxY, pxX + pxW, pxY + pxH);
+		}
+
+		static void ApplyMaskToContentSubtree(Transform* t, const Vector4& clipPx)
+		{
+			if (!t) return;
+
+			GameObject* go = t->GetGameObject();
+			if (go)
+			{
+				if (auto* img = go->GetComponent<UIImage>())
+				{
+					img->SetMaskMode(MaskMode::Rect);
+					img->SetClipRect(clipPx);
+				}
+
+				if (auto* txt = go->GetComponent<UIText>())
+				{
+					txt->SetMaskMode(MaskMode::Rect);
+					txt->SetClipRect(clipPx);
+				}
+			}
+
+			for (Transform* ch : t->GetChildren())
+				ApplyMaskToContentSubtree(ch, clipPx);
+		}
 	}
 
 	RectTransform* UIScrollView::FindChildRTByName(const char* name) const
 	{
-		GameObject* parent = GetGameObject();
-		if (!parent) return nullptr;
+		GameObject* root = GetGameObject();
+		if (!root) return nullptr;
 
-		GameObject* child = FindChildByName(parent, name);
-		if (!child) return nullptr;
+		// 루트 직계에서 먼저 찾기
+		if (GameObject* child = FindChildByName(root, name))
+			return child->GetComponent<RectTransform>();
 
-		return child->GetComponent<RectTransform>();
+		// Viewport 직계에서도 찾기
+		if (m_viewportRT)
+		{
+			if (GameObject* vpGO = m_viewportRT->GetGameObject())
+			{
+				if (GameObject* child = FindChildByName(vpGO, name))
+					return child->GetComponent<RectTransform>();
+			}
+		}
+
+		return nullptr;
 	}
 
 	void UIScrollView::Initialize()
@@ -78,12 +141,44 @@ namespace engine
 		GameObject* parent = GetGameObject();
 		if (!parent) return;
 
-		m_viewportRT = GetRectTransform();
+		// Viewport
+		{
+			bool created = false;
+			GameObject* vgo = EnsureChildUI(parent, m_viewportName.c_str(), created);
+
+			if (vgo)
+			{
+				RectTransform* rt = vgo->GetComponent<RectTransform>();
+				m_viewportRT = rt;
+
+				if (created && rt)
+				{
+					// 루트 기준 좌상단에 고정된 500x500 예시
+					rt->SetAnchorMin({ 0.0f, 1.0f });
+					rt->SetAnchorMax({ 0.0f, 1.0f });
+					rt->SetPivot({ 0.0f, 1.0f });
+					rt->SetAnchoredPosition({ 0.0f, 0.0f });
+
+					rt->SetWidth(500.0f);
+					rt->SetHeight(500.0f);
+				}
+
+				// (선택) 배경 이미지: 입력 막지 않게
+				if (auto* img = vgo->GetComponent<UIImage>(); !img)
+					img = vgo->AddComponent<UIImage>();
+				vgo->GetComponent<UIImage>()->m_raycastTarget = false;
+			}
+		}
 
 		// Content
 		{
 			bool created = false;
-			GameObject* cgo = EnsureChildUI(parent, m_contentName.c_str(), created);
+			GameObject* contentParent = parent;
+
+			if (m_viewportRT && m_viewportRT->GetGameObject())
+				contentParent = m_viewportRT->GetGameObject();
+
+			GameObject* cgo = EnsureChildUI(contentParent, m_contentName.c_str(), created);
 			if (cgo)
 			{
 				RectTransform* rt = cgo->GetComponent<RectTransform>();
@@ -172,6 +267,12 @@ namespace engine
 			m_cachedMaxScroll = maxS;
 			SetScrollY(m_scrollY, true);
 		}
+
+		if (m_viewportRT && m_contentRT)
+		{
+			const Vector4 clipPx = CalcViewportClipRectPx(this, m_viewportRT);
+			ApplyMaskToContentSubtree(m_contentRT->GetTransform(), clipPx);
+		}
 	}
 	void UIScrollView::DrawUI() const
 	{
@@ -227,10 +328,15 @@ namespace engine
 	{
 		if (!m_viewportRT || !m_contentRT) return 0.0f;
 
-		const float viewportH = m_viewportRT->GetHeight();
-		const float contentH = m_contentRT->GetHeight();
+		const float viewportH = m_viewportRT->GetWorldRect().h;
+		const float contentH = m_contentRT->GetWorldRect().h;
 
 		return std::max(0.0f, contentH - viewportH);
+	}
+
+	UIRect UIScrollView::GetViewPortWorldRect() const
+	{
+		return m_viewportRT ? m_viewportRT->GetWorldRect() : UIRect{};
 	}
 
 	void UIScrollView::OnBeginDrag(const Vector2& mousePos, int mouseButton)

@@ -1,6 +1,7 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "AudioSource.h"
 
+#include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/System/SoundSystem.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/SoundData.h"
@@ -12,7 +13,22 @@
 // "Audio Files\0*.wav;*.mp3;*.ogg;*.flac\0All Files\0*.*\0";
 
 namespace engine
-{ 
+{
+    namespace
+    {
+        StaticMemoryPool<AudioSource, 256> g_audioSourcePool;
+    }
+
+    void* AudioSource::operator new(size_t size)
+    {
+        return g_audioSourcePool.Allocate(size);
+    }
+
+    void AudioSource::operator delete(void* ptr)
+    {
+        g_audioSourcePool.Deallocate(ptr);
+    }
+
     AudioSource::AudioSource()
     {
     }

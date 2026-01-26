@@ -101,7 +101,10 @@ cbuffer Material : register(b1)
     float g_materialRoughness;
     float g_materialMetalness;
     float g_materialAmbientOcclusion;
+    float g_materialAlpha; // 장애물 반투명용 (0.0 ~ 1.0)
+    
     int g_overrideMaterial;
+    float3 __pad_material;
 };
 
 cbuffer Object : register(b2)

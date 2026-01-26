@@ -3,22 +3,10 @@
 
 #include "Test2.h"
 
+#include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 
 namespace game
 {
-    void TestScript::Awake()
-    {
-        auto gameObject = CreateGameObject("Test2");
-        gameObject->AddComponent<Test2>();
-    }
-
-    void TestScript::Start()
-    {
-        LOG_PRINT("TestScript Start");
-
-        LOG_INFO("asdf");
-    }
-
     void TestScript::Update()
     {
         if (engine::Input::IsKeyHeld(engine::Keys::Left))
@@ -37,6 +25,12 @@ namespace game
             position -= engine::Vector3::Left * engine::Time::DeltaTime() * m_speed;
 
             GetTransform()->SetLocalPosition(position);
+        }
+
+        if (engine::Input::IsKeyPressed(engine::Keys::D1))
+        {
+            auto renderer = GetGameObject()->GetComponent<engine::StaticMeshRenderer>();
+            renderer->SetObstacleAlpha(true, 0.5f);
         }
     }
 

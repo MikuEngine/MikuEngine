@@ -70,20 +70,6 @@ namespace engine
 
 		const D3D11_VIEWPORT vp = gd.GetViewport();
 
-		//UIRect rootRect{0.0f, 0.0f, vp.Width, vp.Height};
-
-		//const UIRect rect = rt->GetWorldRectResolved(rootRect);
-
-		//const float cx = rect.x + rect.w * 0.5f;
-		//const float cy = rect.y + rect.h * 0.5f;
-
-		//const float tx = (cx / vp.Width) * 2.0f - 1.0f;
-		//const float ty = 1.0f - (cy / vp.Height) * 2.0f;
-
-		//// 픽셀 크기 -> NDC 크기
-		//const float sx = (rect.w / vp.Width) * 2.0f;
-		//const float sy = (rect.h / vp.Height) * 2.0f;
-
 		Canvas* c = GetCanvasInParent();
 		if (!c) return;
 

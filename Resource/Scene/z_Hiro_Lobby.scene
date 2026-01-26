@@ -1,6 +1,6 @@
 {
-    "Name": "z_Hiro_Hub",
-    "NumGameObjects": 53,
+    "Name": "z_Hiro_Lobby",
+    "NumGameObjects": 54,
     "GameObjects": [
         {
             "ID": 0,
@@ -3319,7 +3319,7 @@
         {
             "ID": 46,
             "ParentID": 45,
-            "Name": "UIScrollView",
+            "Name": "Scroll",
             "Active": true,
             "Components": [
                 {
@@ -3373,14 +3373,14 @@
                     "ContentName": "Content",
                     "ScrollbarName": "Scrollbar",
                     "ScrollY": 0.0,
-                    "DragSpeed": 0.9430000185966492
+                    "DragSpeed": 1.0
                 }
             ]
         },
         {
             "ID": 47,
             "ParentID": 46,
-            "Name": "Scrollbar",
+            "Name": "Viewport",
             "Active": true,
             "Components": [
                 {
@@ -3410,180 +3410,31 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 50.0,
-                    "Height": 300.0,
+                    "Width": 500.0,
+                    "Height": 500.0,
                     "Pivot": {
-                        "x": 1.0,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 1.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
+                        "x": 0.0,
                         "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UISlider",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": true,
-                    "Value": 0.0,
-                    "Direction": 2,
-                    "FillMode": 0,
-                    "TrackSprite": "",
-                    "FillSprite": "",
-                    "HandleSprite": "",
-                    "TrackColor": {
-                        "x": 0.5289574861526489,
-                        "y": 0.5289574861526489,
-                        "z": 0.5289574861526489,
-                        "w": 1.0
-                    },
-                    "FillColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "HandleColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "UseFill": false
-                }
-            ]
-        },
-        {
-            "ID": 48,
-            "ParentID": 47,
-            "Name": "Background",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
                     },
                     "AnchorMin": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": 1.0
                     },
                     "AnchorMax": {
-                        "x": 1.0,
+                        "x": 0.0,
                         "y": 1.0
                     }
                 },
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "Layer": 1,
+                    "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
-                        "x": 0.5289574861526489,
-                        "y": 0.5289574861526489,
-                        "z": 0.5289574861526489,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true
-                }
-            ]
-        },
-        {
-            "ID": 49,
-            "ParentID": 47,
-            "Name": "Handle",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/Earth.png",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "Color": {
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
@@ -3594,8 +3445,8 @@
             ]
         },
         {
-            "ID": 50,
-            "ParentID": 46,
+            "ID": 48,
+            "ParentID": 47,
             "Name": "Content",
             "Active": true,
             "Components": [
@@ -3644,8 +3495,8 @@
             ]
         },
         {
-            "ID": 51,
-            "ParentID": 50,
+            "ID": 49,
+            "ParentID": 48,
             "Name": "image",
             "Active": true,
             "Components": [
@@ -3711,8 +3562,8 @@
             ]
         },
         {
-            "ID": 52,
-            "ParentID": 50,
+            "ID": 50,
+            "ParentID": 48,
             "Name": "image2",
             "Active": true,
             "Components": [
@@ -3765,6 +3616,222 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/Miku.png",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 51,
+            "ParentID": 46,
+            "Name": "Scrollbar",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -100.0,
+                        "y": -100.0
+                    },
+                    "Width": 50.0,
+                    "Height": 300.0,
+                    "Pivot": {
+                        "x": 1.0,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 1.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UISlider",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Value": 0.0,
+                    "Direction": 2,
+                    "FillMode": 0,
+                    "TrackSprite": "",
+                    "FillSprite": "",
+                    "HandleSprite": "",
+                    "TrackColor": {
+                        "x": 0.6254826188087463,
+                        "y": 0.6254826188087463,
+                        "z": 0.6254826188087463,
+                        "w": 1.0
+                    },
+                    "FillColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "HandleColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "UseFill": false
+                }
+            ]
+        },
+        {
+            "ID": 52,
+            "ParentID": 51,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "Color": {
+                        "x": 0.6254826188087463,
+                        "y": 0.6254826188087463,
+                        "z": 0.6254826188087463,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 53,
+            "ParentID": 51,
+            "Name": "Handle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/Pikachu.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {

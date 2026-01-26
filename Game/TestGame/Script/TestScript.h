@@ -13,8 +13,6 @@ namespace game
         float m_speed = 10.0f;
 
     public:
-        void Awake() override;
-        void Start() override;
         void Update() override;
 
     public:

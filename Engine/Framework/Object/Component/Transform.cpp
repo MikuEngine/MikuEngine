@@ -16,7 +16,7 @@ namespace engine
 {
     namespace
     {
-        StaticMemoryPool<Transform, 4096> g_transformPool;
+        StaticMemoryPool<Transform, 1024> g_transformPool;
     }
 
     Transform::~Transform()

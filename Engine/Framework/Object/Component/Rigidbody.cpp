@@ -1,6 +1,7 @@
 ﻿#include "EnginePCH.h"
 #include "Rigidbody.h"
 
+#include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/Object/Component/Collider.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
@@ -12,9 +13,24 @@
 
 namespace engine
 {
+    namespace
+    {
+        StaticMemoryPool<Rigidbody, 256> g_rigidbodyPool;
+    }
+
     Rigidbody::~Rigidbody()
     {
         // OnDestroy에서 정리됨
+    }
+
+    void* Rigidbody::operator new(size_t size)
+    {
+        return g_rigidbodyPool.Allocate(size);
+    }
+
+    void Rigidbody::operator delete(void* ptr)
+    {
+        g_rigidbodyPool.Deallocate(ptr);
     }
 
     void Rigidbody::Initialize()

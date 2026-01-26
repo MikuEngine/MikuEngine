@@ -162,6 +162,7 @@
     <ClCompile Include="Framework\Asset\Prefab.cpp" />
     <ClCompile Include="Framework\Asset\PrefabData.cpp" />
     <ClCompile Include="Framework\Asset\PreloadManager.cpp" />
+    <ClCompile Include="Framework\Asset\SocketData.cpp" />
     <ClCompile Include="Framework\Object\Component\AudioSource.cpp" />
     <ClCompile Include="Framework\Object\Component\Canvas.cpp" />
     <ClCompile Include="Common\Debug\Debug.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="Framework\Asset\Prefab.h" />
     <ClInclude Include="Framework\Asset\PrefabData.h" />
     <ClInclude Include="Framework\Asset\PreloadManager.h" />
+    <ClInclude Include="Framework\Asset\SocketData.h" />
     <ClInclude Include="Framework\Asset\SoundData.h" />
     <ClInclude Include="Framework\Object\Component\AudioSource.h" />
     <ClInclude Include="Framework\Object\Component\Canvas.h" />
