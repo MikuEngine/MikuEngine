@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "StaticMeshRenderer.h"
 
 #include <filesystem>
@@ -768,6 +768,14 @@ namespace engine
             ID3D11ShaderResourceView* srv = m_textures[meshSection.materialIndex].baseColor->GetRawSRV();
             deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, &srv);
             deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+        }
+    }
+
+    void StaticMeshRenderer::UpdateSockets()
+    {
+        for (auto& instance : m_socketInstances)
+        {
+            instance.worldMatrix = instance.info->localMatrix * GetTransform()->GetWorld();
         }
     }
 

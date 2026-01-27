@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "SkeletalMeshRenderer.h"
 
 #include <filesystem>
@@ -623,6 +623,15 @@ namespace engine
 
             // Draw
             deviceContext->DrawIndexed(section.indexCount, section.indexOffset, section.vertexOffset);
+        }
+    }
+
+    void SkeletalMeshRenderer::UpdateSockets()
+    {
+        for (auto& instance : m_socketInstances)
+        {
+            int boneIndex = m_skeletonData->GetBoneIndexByBoneName(instance.info->parentBoneName);
+            instance.worldMatrix = instance.info->localMatrix * m_boneTransformData.boneTransform[boneIndex] * GetTransform()->GetWorld();
         }
     }
 

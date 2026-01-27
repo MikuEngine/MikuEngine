@@ -105,6 +105,8 @@ namespace engine
         void DrawMask() const override;
         void DrawPickingID() const override;
 
+        void UpdateSockets() override;
+
     private:
         void Refresh();
     };
