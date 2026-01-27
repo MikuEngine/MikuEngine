@@ -12,11 +12,28 @@ namespace game
 {
     namespace
     {
-        static float Clamp01(float v)
+        // 마우스 감도 예외처리
+        constexpr float kSensMin = 0.2f;
+        constexpr float kSensMax = 3.0f;
+
+        static float Clamp(float v, float a, float b)
         {
-            if (v < 0.f) return 0.f;
-            if (v > 1.f) return 1.f;
+            if (v < a) return a;
+            if (v > b) return b;
             return v;
+        }
+
+        static float SliderToSensitivity(float t01)
+        {
+            t01 = Clamp(t01, 0.f, 1.f);
+            return kSensMin + t01 * (kSensMax - kSensMin);
+        }
+
+        // sensitivity -> slider(0~1)
+        static float SensitivityToSlider(float sens)
+        {
+            sens = Clamp(sens, kSensMin, kSensMax);
+            return (sens - kSensMin) / (kSensMax - kSensMin);
         }
     }
 
@@ -41,10 +58,6 @@ namespace game
 
     void SceneController_Main::Start()
     {
-        auto& app = engine::AppContext::GetApp();
-        const auto& s = app.GetUserSettings();
-        float master = s.audio.master;
-
         m_optionPopUp = engine::GameObject::Find("UI_OptionPopUp");
         if (m_optionPopUp) m_optionPopUp->SetActive(false);
 
@@ -56,6 +69,21 @@ namespace game
 
         m_isOptionOpen = false;
         m_isCreditOpen = false;
+
+        auto& app = engine::AppContext::GetApp();
+        const auto& s = app.GetUserSettings();
+
+        if (auto* go = engine::GameObject::Find("UI_BGMSlider"))
+            if (auto* slider = go->GetComponent<engine::UISlider>())
+                slider->SetValue(s.audio.bgm, false);
+
+        if (auto* go = engine::GameObject::Find("UI_SFXSlider"))
+            if (auto* slider = go->GetComponent<engine::UISlider>())
+                slider->SetValue(s.audio.sfx, false);
+
+        if (auto* go = engine::GameObject::Find("UI_SensitivitySlider"))
+            if (auto* slider = go->GetComponent<engine::UISlider>())
+                slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
     }
 
     void SceneController_Main::Update()
@@ -132,6 +160,7 @@ namespace game
 
     void SceneController_Main::Back()
     {
+        engine::AppContext::GetApp().SaveUserSettings();
         SetOptionOpen(false);
         SetCreditOpen(false);
     }
@@ -141,7 +170,7 @@ namespace game
         auto& app = engine::AppContext::GetApp();
 
         engine::UserSettings s = app.GetUserSettings();
-        s.audio.bgm = Clamp01(v);
+        s.audio.bgm = Clamp(v, 0.0f, 1.0f);
 
         app.SetUserSettings(s);
     }
@@ -151,7 +180,7 @@ namespace game
         auto& app = engine::AppContext::GetApp();
 
         engine::UserSettings s = app.GetUserSettings();
-        s.audio.sfx = Clamp01(v);
+        s.audio.sfx = Clamp(v, 0.0f, 1.0f);
 
         app.SetUserSettings(s);
     }
@@ -160,8 +189,8 @@ namespace game
     {
         auto& app = engine::AppContext::GetApp();
 
-        engine::UserSettings s = app.GetUserSettings(); // 복사
-        s.controls.mouseSensitivity = v; // 감도는 0~1이 아닐 수 있음
+        engine::UserSettings s = app.GetUserSettings();
+        s.controls.mouseSensitivity = SliderToSensitivity(v);
         
         app.SetUserSettings(s);
     }
