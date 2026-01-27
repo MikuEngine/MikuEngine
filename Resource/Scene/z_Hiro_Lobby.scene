@@ -223,6 +223,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -396,6 +397,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -569,6 +571,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -742,6 +745,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1212,6 +1216,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3232,6 +3237,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3405,6 +3411,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3578,6 +3585,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3751,6 +3759,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -4311,7 +4320,7 @@
                         "x": 500.0,
                         "y": 0.0
                     },
-                    "Width": 50.0,
+                    "Width": 20.0,
                     "Height": 500.0,
                     "Pivot": {
                         "x": 0.0,
@@ -4335,9 +4344,9 @@
                     "Value": 0.0,
                     "Direction": 2,
                     "FillMode": 0,
-                    "TrackSprite": "",
+                    "TrackSprite": "None",
                     "FillSprite": "",
-                    "HandleSprite": "",
+                    "HandleSprite": "None",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,

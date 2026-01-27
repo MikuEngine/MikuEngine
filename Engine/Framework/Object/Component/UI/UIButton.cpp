@@ -175,11 +175,7 @@ namespace engine
 			}
 		}
 
-		if (m_background)
-		{
-			m_background->m_raycastTarget = false;
-			m_tintNormal = m_background->GetColor();
-		}
+		if (m_background) m_background->m_raycastTarget = false;
 
 		GameObject* parent = GetGameObject();
 		if (!parent) return;
@@ -240,22 +236,42 @@ namespace engine
 	
 		if (!m_background) return;
 
-		std::string sprite;
 		Vector4 tint(1, 1, 1, 1);
-
 		switch (m_state)
 		{
-		case State::Normal:   sprite = m_spriteNormal;   tint = m_tintNormal; break;
-		case State::Hovered:  sprite = m_spriteHovered.empty() ? m_spriteNormal : m_spriteHovered;
-			tint = m_tintHover; break;
-		case State::Pressed:  sprite = m_spritePressed.empty() ? m_spriteNormal : m_spritePressed;
-			tint = m_tintPressed; break;
-		case State::Disabled: sprite = m_spriteDisabled.empty() ? m_spriteNormal : m_spriteDisabled;
-			tint = m_tintDisabled; break;
+		case State::Normal:   tint = m_tintNormal;  break;
+		case State::Hovered:  tint = m_tintHover;   break;
+		case State::Pressed:  tint = m_tintPressed; break;
+		case State::Disabled: tint = m_tintDisabled; break;
 		}
 
-		if (!sprite.empty() && sprite != "None")
-			m_background->SetTexture(sprite);
+		if (m_useTintOnly)
+		{
+			if (!m_spriteNormal.empty() && m_spriteNormal != "None")
+				m_background->SetTexture(m_spriteNormal);
+		}
+		else
+		{
+			std::string sprite;
+			switch (m_state)
+			{
+			case State::Normal:
+				sprite = m_spriteNormal;
+				break;
+			case State::Hovered:
+				sprite = m_spriteHovered.empty() ? m_spriteNormal : m_spriteHovered;
+				break;
+			case State::Pressed:
+				sprite = m_spritePressed.empty() ? m_spriteNormal : m_spritePressed;
+				break;
+			case State::Disabled:
+				sprite = m_spriteDisabled.empty() ? m_spriteNormal : m_spriteDisabled;
+				break;
+			}
+
+			if (!sprite.empty() && sprite != "None")
+				m_background->SetTexture(sprite);
+		}
 
 		m_background->SetColor(tint);
 	}
@@ -264,12 +280,18 @@ namespace engine
 	{
 		UIElement::OnGui();
 
+		bool changed = false;
+
+		if (ImGui::Checkbox("TintOnly", &m_useTintOnly))
+			changed = true;
+
+		ImGui::Separator();
+
 		std::string selectedTex[4] = {};
 		static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga" };
 		static std::string hlslExtension{ ".hlsl" };
 
-		bool changed = false;
-
+		// 텍스처 변경
 		if (DrawFileSelector("Normal Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[0]))
 		{
 			m_spriteNormal = selectedTex[0];
@@ -278,30 +300,41 @@ namespace engine
 		ImGui::SameLine();
 		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteNormal).filename().string().c_str());
 
-		if (DrawFileSelector("Hovered Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[1]))
+		if (m_useTintOnly)
 		{
-			m_spriteHovered = selectedTex[1];
-			changed = true;
+			if (ImGui::ColorEdit4("Tint Normal", &m_tintNormal.x))  changed = true;
+			if (ImGui::ColorEdit4("Tint Hover", &m_tintHover.x))   changed = true;
+			if (ImGui::ColorEdit4("Tint Pressed", &m_tintPressed.x)) changed = true;
+			if (ImGui::ColorEdit4("Tint Disabled", &m_tintDisabled.x))changed = true;
 		}
-		ImGui::SameLine();
-		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteHovered).filename().string().c_str());
-
-		if (DrawFileSelector("Pressed Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[2]))
+		else
 		{
-			m_spritePressed = selectedTex[2];
-			changed = true;
-		}
-		ImGui::SameLine();
-		ImGui::Text("Texture: %s", std::filesystem::path(m_spritePressed).filename().string().c_str());
+			if (DrawFileSelector("Hovered Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[1]))
+			{
+				m_spriteHovered = selectedTex[1];
+				changed = true;
+			}
+			ImGui::SameLine();
+			ImGui::Text("Texture: %s", std::filesystem::path(m_spriteHovered).filename().string().c_str());
 
-		if (DrawFileSelector("Disabled Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[3]))
-		{
-			m_spriteDisabled = selectedTex[3];
-			changed = true;
-		}
-		ImGui::SameLine();
-		ImGui::Text("Texture: %s", std::filesystem::path(m_spriteDisabled).filename().string().c_str());
+			if (DrawFileSelector("Pressed Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[2]))
+			{
+				m_spritePressed = selectedTex[2];
+				changed = true;
+			}
+			ImGui::SameLine();
+			ImGui::Text("Texture: %s", std::filesystem::path(m_spritePressed).filename().string().c_str());
 
+			if (DrawFileSelector("Disabled Sprite", "Resource/Texture/UI/Button", texExtensions, selectedTex[3]))
+			{
+				m_spriteDisabled = selectedTex[3];
+				changed = true;
+			}
+			ImGui::SameLine();
+			ImGui::Text("Texture: %s", std::filesystem::path(m_spriteDisabled).filename().string().c_str());
+
+		}
+		
 		if (changed)
 			UpdateVisuals();
 
@@ -317,6 +350,8 @@ namespace engine
 		j["SpritePressed"] = m_spritePressed;
 		j["SpriteDisabled"] = m_spriteDisabled;
 
+		j["TintOnly"] = m_useTintOnly;
+
 		j["TintNormal"] = m_tintNormal;
 		j["TintHover"] = m_tintHover;
 		j["TintPressed"] = m_tintPressed;
@@ -331,6 +366,8 @@ namespace engine
 		JsonGet(j, "SpriteHover", m_spriteHovered);
 		JsonGet(j, "SpritePressed", m_spritePressed);
 		JsonGet(j, "SpriteDisabled", m_spriteDisabled);
+
+		JsonGet(j, "TintOnly", m_useTintOnly);
 
 		JsonGet(j, "TintNormal", m_tintNormal);
 		JsonGet(j, "TintHover", m_tintHover);

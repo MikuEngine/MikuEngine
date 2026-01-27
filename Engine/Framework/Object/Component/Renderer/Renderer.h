@@ -3,6 +3,7 @@
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/Light/Light.h"
 #include "Framework/Asset/MaterialData.h"
+#include "Framework/Asset/SocketData.h"
 
 namespace engine
 {
@@ -23,6 +24,12 @@ namespace engine
 		Front
 	};
 
+	struct SocketInstance
+	{
+		const Socket* info;
+		Matrix worldMatrix;
+	};
+
 	class Renderer :
 		public Component
 	{
@@ -30,6 +37,10 @@ namespace engine
 
 	private:
 		std::array<std::int32_t, static_cast<size_t>(RenderType::Count)> m_systemIndices;
+
+	protected:
+		std::shared_ptr<SocketData> m_socketData;
+		std::vector<SocketInstance> m_socketInstances;
 
 	public:
 		Renderer();
@@ -48,6 +59,8 @@ namespace engine
 		virtual void DrawShadow(RenderType renderType, LightType lightType) const {}
 		virtual void DrawMask() const {}
 		virtual void DrawPickingID() const {}
+
+		virtual void UpdateSockets() {}
 
 	private:
 		friend class RenderSystem;

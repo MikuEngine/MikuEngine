@@ -48,12 +48,19 @@ namespace engine
 		void AddOnBeginDrag(DragCallback cb) { m_onBeginDrag.push_back(std::move(cb)); }
 		void AddOnEndDrag(DragCallback cb) { m_onEndDrag.push_back(std::move(cb)); }
 
+	public:
+		bool IsScrollEnabled() const override { return true; }
+		void OnScroll(const Vector2& mousePos, float wheelDelta) override;
+		bool HitTestPoint(const Vector2& p) const override;
+
 	private:
 		void OnGui() override;
 		void Save(json& j) const override;
 		void Load(const json& j) override;
 
 	private:
+		void ApplyLayout();
+
 		void BindScrollbarCallBack();
 		void ApplyContentPosition();
 		void SyncScrollbarFromScroll();

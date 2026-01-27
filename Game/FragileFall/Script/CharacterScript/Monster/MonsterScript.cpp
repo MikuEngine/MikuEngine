@@ -64,16 +64,24 @@ namespace game
         m_rigidbody->SetAngularDamping(55.0f);
         m_rigidbody->SetLinearDamping(10.0f);
 
-        // Rigidbody 제약 설정 (몬스터는 Y축 회전만 허용)
+        // Rigidbody 제약 설정 (m_moveSpeed 기준 자동 판단)
+        // Dynamic Rigidbody의 예기치 않은 동작(높이 변화, 넘어짐) 방지
         using namespace engine;
-        RigidbodyConstraints constraints = 
-            RigidbodyConstraints::FreezeRotationX | 
-            RigidbodyConstraints::FreezeRotationZ;
+        RigidbodyConstraints constraints;
         
-        // 이동하지 않는 몬스터는 Y축 위치도 고정
         if (m_moveSpeed <= 0.0f)
         {
-            constraints = constraints | RigidbodyConstraints::FreezePositionY;
+            // 이동 불가 몬스터: 위치 완전 고정 (X, Y, Z), 회전은 Y축만 허용
+            constraints = RigidbodyConstraints::FreezePosition | 
+                         RigidbodyConstraints::FreezeRotationX | 
+                         RigidbodyConstraints::FreezeRotationZ;
+        }
+        else
+        {
+            // 이동 가능 몬스터: 높이(Y) 고정, XZ 이동 가능, 회전은 Y축만 허용
+            constraints = RigidbodyConstraints::FreezePositionY | 
+                         RigidbodyConstraints::FreezeRotationX | 
+                         RigidbodyConstraints::FreezeRotationZ;
         }
         
         m_rigidbody->SetConstraints(constraints);
@@ -86,6 +94,9 @@ namespace game
 
         // 플레이어 찾기
         FindPlayer();
+        
+        // 첫 발사 쿨타임 설정 (게임 시작 즉시 발사 방지)
+        m_fireTimer = m_fireRate;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -142,18 +153,31 @@ namespace game
 
     float MonsterScript::GetDistanceToPlayer() const
     {
-        if (!m_targetPlayer || !m_targetPlayer->GetGameObject()) return FLT_MAX;
+        return GetDistanceToTarget(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr);
+    }
 
-        engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
-        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-        
-        return (playerPos - monsterPos).Length();
+    engine::Vector3 MonsterScript::CalculateDirectionToPlayer() const
+    {
+        return CalculateDirectionToTarget(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr);
+    }
+
+    bool MonsterScript::IsPlayerInRange() const
+    {
+        return IsTargetInRange(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr, m_AttackRange);
+    }
+
+    void MonsterScript::RotateTowardsPlayer(float deltaTime)
+    {
+        RotateTowardsTarget(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr, deltaTime);
+    }
+
+    bool MonsterScript::IsLookingAtPlayer() const
+    {
+        return IsLookingAtTarget(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr);
     }
 
     float MonsterScript::GetPathDistanceToPlayer() const
     {
-        // PathfindingSystem을 사용한 실제 경로 거리 계산
-        // 향후 이동하는 몬스터에서 장애물을 고려한 실제 거리가 필요할 때 사용
         if (!m_pathfindingSystem || !m_targetPlayer || !m_targetPlayer->GetGameObject())
         {
             return FLT_MAX;
@@ -162,7 +186,6 @@ namespace game
         engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
         engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
         
-        // PathfindingSystem으로 경로 찾기
         engine::PathResult pathResult = m_pathfindingSystem->FindPath(monsterPos, playerPos);
         
         if (pathResult.success)
@@ -170,173 +193,9 @@ namespace game
             return pathResult.totalDistance;
         }
         
-        // 경로를 찾지 못하면 직선 거리 반환
         return GetDistanceToPlayer();
     }
 
-    bool MonsterScript::IsPlayerInRange() const
-    {
-        // 현재는 직선 거리만 사용
-        // 향후 이동 몬스터는 GetPathDistanceToPlayer()를 사용할 수 있음
-        return GetDistanceToPlayer() <= m_AttackRange;
-    }
-
-    engine::Vector3 MonsterScript::CalculateDirectionToPlayer() const
-    {
-        if (!m_targetPlayer || !m_targetPlayer->GetGameObject())
-        {
-            return engine::Vector3::Zero;
-        }
-
-        engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
-        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-
-        // 방향 벡터 계산 (Y축 무시)
-        engine::Vector3 direction = playerPos - monsterPos;
-        direction.y = 0.0f;
-        
-        if (direction.LengthSquared() < 0.001f)
-        {
-            return engine::Vector3::Zero;
-        }
-        
-        direction.Normalize();
-        return direction;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // 회전 및 발사
-    // ═══════════════════════════════════════════════════════════════
-    void MonsterScript::RotateTowardsPlayer(float deltaTime)
-    {
-        // CalculateDirectionToPlayer()를 사용하여 방향 계산
-        engine::Vector3 direction = CalculateDirectionToPlayer();
-        
-        if (direction.LengthSquared() < 0.001f) return;
-        
-        RotateTowards(direction, deltaTime);
-    }
-
-    void MonsterScript::RotateTowards(const engine::Vector3& targetDirection, float deltaTime)
-    {
-        if (!m_rigidbody)
-        {
-            LOG_PRINT("[MonsterScript] ERROR: Rigidbody is required for monster rotation!");
-            return;
-        }
-
-        if (targetDirection.LengthSquared() < 0.001f)
-        {
-            // 목표 방향 없음 - 회전 멈춤
-            m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-            return;
-        }
-
-        // ─────────────────────────────────────────────
-        // 1. 현재 각도 (Transform에서 읽음)
-        // ─────────────────────────────────────────────
-        engine::Quaternion currentRotation = GetTransform()->GetWorldRotation();
-        engine::Vector3 currentEuler = currentRotation.ToEuler();
-        float currentAngle = currentEuler.y;
-
-        // ─────────────────────────────────────────────
-        // 2. 목표 각도 계산 (앞뒤 반대 수정: +180도)
-        // ─────────────────────────────────────────────
-        float targetAngle = atan2f(targetDirection.x, targetDirection.z) + 3.14159f;  // +180도 (앞뒤 반전)
-        
-        // 각도 정규화 (-π ~ π)
-        while (targetAngle > 3.14159f) targetAngle -= 6.28318f;
-        while (targetAngle < -3.14159f) targetAngle += 6.28318f;
-
-        // ─────────────────────────────────────────────
-        // 3. 각도 차이 계산 (정규화: -π ~ π)
-        // ─────────────────────────────────────────────
-        float angleDiff = targetAngle - currentAngle;
-        while (angleDiff > 3.14159f) angleDiff -= 6.28318f;
-        while (angleDiff < -3.14159f) angleDiff += 6.28318f;
-
-        // ─────────────────────────────────────────────
-        // 4. PD 컨트롤러로 각속도 계산 (진동 방지)
-        // ─────────────────────────────────────────────
-        
-        // 목표에 거의 도달하면 회전 멈춤
-        if (std::abs(angleDiff) < ROTATION_THRESHOLD)
-        {
-            m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-            return;
-        }
-
-        // Proportional: 각도 차이에 비례
-        float proportional = angleDiff * m_rotationSpeed;
-        
-        // Derivative: 현재 각속도 (damping 역할)
-        engine::Vector3 currentAngVel = m_rigidbody->GetAngularVelocity();
-        float derivative = -currentAngVel.y * 0.5f;  // Damping factor
-        
-        // PD 제어
-        float angularVelocity = proportional + derivative;
-        
-        // 최대 각속도 제한
-        const float maxAngularSpeed = 5.0f;  // rad/sec (진동 방지를 위해 감소)
-        if (std::abs(angularVelocity) > maxAngularSpeed)
-        {
-            angularVelocity = (angularVelocity > 0) ? maxAngularSpeed : -maxAngularSpeed;
-        }
-
-        // Y축 각속도 설정
-        m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
-
-        // 디버깅 로그
-        static int logCounter = 0;
-        if (logCounter++ % 60 == 0)  // 60프레임마다 1번
-        {
-            LOG_PRINT("[MonsterScript] Rotate: current={:.1f}°, target={:.1f}°, diff={:.1f}°, angVel={:.2f}",
-                currentAngle * 180.0f / 3.14159f,
-                targetAngle * 180.0f / 3.14159f,
-                angleDiff * 180.0f / 3.14159f,
-                angularVelocity);
-        }
-    }
-
-    bool MonsterScript::IsRotatedTowardsPlayer() const
-    {
-        if (!m_targetPlayer || !m_targetPlayer->GetGameObject()) return false;
-
-        engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
-        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-
-        // 방향 벡터 계산 (Y축 무시)
-        engine::Vector3 direction = playerPos - monsterPos;
-        direction.y = 0.0f;
-        
-        if (direction.LengthSquared() < 0.001f) return true;
-        
-        direction.Normalize();
-
-        // ─────────────────────────────────────────────
-        // 현재 회전값 (Transform에서 직접 읽음)
-        // ─────────────────────────────────────────────
-        engine::Quaternion currentRotation = GetTransform()->GetWorldRotation();
-        engine::Vector3 currentEuler = currentRotation.ToEuler();
-        float currentAngle = currentEuler.y;
-
-        // 목표 각도 계산 (앞뒤 반전: +180도)
-        float targetAngle = atan2f(direction.x, direction.z) + 3.14159f;
-        
-        // 각도 정규화 (-π ~ π)
-        while (targetAngle > 3.14159f) targetAngle -= 6.28318f;
-        while (targetAngle < -3.14159f) targetAngle += 6.28318f;
-
-        // 각도 차이 계산
-        float angleDiff = targetAngle - currentAngle;
-
-        // 각도 정규화
-        while (angleDiff > 3.14159f) angleDiff -= 6.28318f;
-        while (angleDiff < -3.14159f) angleDiff += 6.28318f;
-
-        // 임계값 이하인지 확인
-        return std::abs(angleDiff) <= ROTATION_THRESHOLD;
-    }
 
     void MonsterScript::Attack(float deltaTime)
     {
@@ -349,52 +208,36 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterScript::MoveTowardsPlayer(float deltaTime)
     {
-        // PathfindingSystem을 사용하여 플레이어를 향해 이동
-        // 현재 DullGray는 이동하지 않지만, 향후 이동하는 몬스터에서 사용
-        
-        if (!m_pathfindingSystem || !m_rigidbody || !m_targetPlayer)
+        if (!m_pathfindingSystem || !m_rigidbody || !m_targetPlayer || m_moveSpeed <= 0.0f)
         {
             return;
-        }
-
-        if (m_moveSpeed <= 0.0f)
-        {
-            return;  // 이동 속도가 0이면 이동하지 않음 (DullGray)
         }
 
         engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
         engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
 
-        // PathfindingSystem으로 경로 찾기
         engine::PathResult pathResult = m_pathfindingSystem->FindPath(currentPos, playerPos);
-
+        
         if (!pathResult.success || pathResult.path.empty())
         {
-            return;  // 경로를 찾지 못함
+            return;
         }
 
-        // 다음 웨이포인트로 이동
-        // path[0]는 현재 위치이므로, path[1]이 다음 목표 지점
-        size_t nextWaypointIndex = pathResult.path.size() > 1 ? 1 : 0;
-        engine::Vector3 nextWaypoint = pathResult.path[nextWaypointIndex];
+        size_t nextIndex = pathResult.path.size() > 1 ? 1 : 0;
+        engine::Vector3 nextWaypoint = pathResult.path[nextIndex];
 
-        // 다음 웨이포인트 방향 계산
         engine::Vector3 direction = nextWaypoint - currentPos;
-        direction.y = 0.0f;  // Y축 무시
-
+        direction.y = 0.0f;
+        
         if (direction.LengthSquared() < 0.001f)
         {
-            return;  // 이미 웨이포인트에 도착
+            return;
         }
-
+        
         direction.Normalize();
 
-        // 방향으로 회전
-        RotateTowards(direction, deltaTime);
-
-        // Rigidbody를 통한 이동 (물리 시뮬레이션 활용)
-        engine::Vector3 velocity = direction * m_moveSpeed;
-        m_rigidbody->SetLinearVelocity(velocity);
+        RotateToDirection(direction, deltaTime);
+        m_rigidbody->SetLinearVelocity(direction * m_moveSpeed);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -423,32 +266,60 @@ namespace game
     void MonsterScript::UpdateGameLogic()
     {
         float deltaTime = engine::Time::DeltaTime();
-
-        // 체력 체크
-        m_isDead = CheckDeath();
-
-        // 현재 상태 확인
         std::string currentState = GetCurrentState();
 
-        // 디버깅: 상태 변경 로그
-        static std::string lastState = "";
-        if (currentState != lastState)
-        {
-            LOG_PRINT("[MonsterScript] State changed: {} -> {}", lastState, currentState);
-            lastState = currentState;
-            
-            // Engage 상태가 아니면 회전 멈춤
-            if (currentState != "Engage" && m_rigidbody)
-            {
-                m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-            }
-        }
+        CheckHealth();
+        UpdateStateBasedBehavior(currentState, deltaTime);
+    }
 
-        // Engage 상태: 플레이어 방향 회전 + 공격
-        if (currentState == "Engage")
+    void MonsterScript::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
+    {
+        if (state == "Engage")
         {
-            RotateTowardsPlayer(deltaTime);
-            Attack(deltaTime);
+            ExecuteEngageBehavior(deltaTime);
+        }
+        else if (state == "Idle")
+        {
+            ExecuteIdleBehavior();
+        }
+        else if (state == "Fragile")
+        {
+            ExecuteFragileBehavior();
+        }
+        else if (state == "Dead")
+        {
+            ExecuteDeadBehavior();
+        }
+    }
+
+    void MonsterScript::ExecuteEngageBehavior(float deltaTime)
+    {
+        RotateTowardsPlayer(deltaTime);
+        Attack(deltaTime);
+    }
+
+    void MonsterScript::ExecuteIdleBehavior()
+    {
+        StopRotation();
+    }
+
+    void MonsterScript::ExecuteFragileBehavior()
+    {
+        // Fragile 상태에서는 아무 행동도 하지 않음
+        // Execution을 기다리는 상태
+    }
+
+    void MonsterScript::ExecuteDeadBehavior()
+    {
+        StopAllMovement();
+    }
+
+    void MonsterScript::StopAllMovement()
+    {
+        if (m_rigidbody)
+        {
+            StopRotation();
+            m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
         }
     }
 
@@ -457,23 +328,19 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterScript::OnStateEntered(const std::string& state)
     {
-        if (state == "Dead")
+        if (state == "Fragile")
         {
-            // 죽음: 모든 물리 동작 정지
-            if (m_rigidbody)
-            {
-                m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-                m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
-            }
+            StopAllMovement();
+            OnFragile();
+        }
+        else if (state == "Dead")
+        {
+            StopAllMovement();
             OnDeath();
         }
         else if (state == "Idle")
         {
-            // Idle: 회전 정지
-            if (m_rigidbody)
-            {
-                m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-            }
+            StopRotation();
         }
     }
 
@@ -483,40 +350,55 @@ namespace game
     bool MonsterScript::CanMove() const
     {
         std::string state = GetCurrentState();
-        return state != "Dead";
+        return state != "Fragile" && state != "Dead";
     }
 
     bool MonsterScript::CanAttack() const
     {
         std::string state = GetCurrentState();
-        return state == "Engage" && state != "Dead";
+        return state == "Engage" && state != "Fragile" && state != "Dead";
     }
 
     // ═══════════════════════════════════════════════════════════════
     // 체력 관리
     // ═══════════════════════════════════════════════════════════════
-    bool MonsterScript::CheckDeath()
+    void MonsterScript::CheckHealth()
     {
-        if (m_Hp <= 0.0f && GetCurrentState() != "Dead")
+        std::string currentState = GetCurrentState();
+        
+        if (m_Hp <= 0 && currentState != "Fragile" && currentState != "Dead")
         {
-            if (m_logicFSM)
-            {
-                m_logicFSM->SetTrigger("Die");
-                return true;
-            }
+            TriggerFragile();
         }
+    }
 
-        return false;
+    void MonsterScript::TriggerFragile()
+    {
+        if (m_logicFSM)
+        {
+            m_logicFSM->SetTrigger("Fragile");
+            m_isFragile = true;
+        }
+    }
+
+    void MonsterScript::TriggerDeath()
+    {
+        // Execution에서 호출됨
+        if (m_logicFSM)
+        {
+            m_logicFSM->SetTrigger("Die");
+            m_isDead = true;
+        }
+    }
+
+    void MonsterScript::OnFragile()
+    {
+        // Fragile 상태 진입 시 처리
+        // 추후 이펙트나 사운드 추가 가능
     }
 
     void MonsterScript::OnDeath()
     {
-        // 속도 정지
-        if (m_rigidbody)
-        {
-            m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
-        }
-
         // TODO: Dead 애니메이션 재생 후 일정 시간 후 파괴
         // float deathAnimDuration = 2.0f;
         // GetGameObject()->Destroy(deathAnimDuration);
@@ -614,7 +496,7 @@ namespace game
         {
             ImGui::Text("Distance to Player: %.2f", GetDistanceToPlayer());
             ImGui::Text("Player In Range: %s", IsPlayerInRange() ? "Yes" : "No");
-            ImGui::Text("Rotated to Player: %s", IsRotatedTowardsPlayer() ? "Yes" : "No");
+            ImGui::Text("Looking at Player: %s", IsLookingAtPlayer() ? "Yes" : "No");
         }
         ImGui::Text("Fire Timer: %.2f", m_fireTimer);
         

@@ -55,6 +55,8 @@ namespace engine
 		void SetUseFill(bool use) { m_useFill = use; }
 		bool GetUseFill() const { return m_useFill; }
 
+		void ForceUpdateVisuals() { RefreshVisuals(); UpdateVisuals(); m_dirty = false; }
+
 	private:
 		void CreateVisuals();
 		bool RefreshVisuals();

@@ -10,6 +10,7 @@ namespace engine
 
 		virtual bool IsInteractable() const { return true; }
 		virtual bool IsDragEnabled() const { return false; }
+		virtual bool IsScrollEnabled() const { return false; }
 
 		virtual void OnMouseEnter(const Vector2& mousePos) {}
 		virtual void OnMouseExit(const Vector2& mousePos) {}
@@ -25,5 +26,7 @@ namespace engine
 		virtual void OnBeginDrag(const Vector2& mousePos, int mouseButton) {}
 		virtual void OnDrag(const Vector2& mousePos, const Vector2& delta, int mouseButton) {}
 		virtual void OnEndDrag(const Vector2& mousePos, int mouseButton) {}
+
+		virtual void OnScroll(const Vector2& mousePos, float wheelDelta) {}
 	}; 
 }

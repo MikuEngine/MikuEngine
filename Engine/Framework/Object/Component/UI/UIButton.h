@@ -36,6 +36,8 @@ namespace engine
 		UIImage* m_background = nullptr;
 		UIText* m_label = nullptr;
 
+		bool m_useTintOnly = true;
+
 		// ImagePath
 		std::string m_spriteNormal;
 		std::string m_spriteHovered;
@@ -43,10 +45,10 @@ namespace engine
 		std::string m_spriteDisabled;
 
 		// Tint
-		Vector4 m_tintNormal = Vector4(1, 1, 1, 1);
-		Vector4 m_tintHover = Vector4(1, 1, 1, 1);
-		Vector4 m_tintPressed = Vector4(1, 1, 1, 1);
-		Vector4 m_tintDisabled = Vector4(1, 1, 1, 1);
+		Vector4 m_tintNormal = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		Vector4 m_tintHover = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		Vector4 m_tintPressed = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		Vector4 m_tintDisabled = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 		std::string m_labelText = "Button";
 

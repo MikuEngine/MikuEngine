@@ -79,7 +79,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 회전 완료 판정 (물리 기반 회전에서는 더 큰 임계값 필요)
         // ─────────────────────────────────────────────
-        static constexpr float ROTATION_THRESHOLD = 15.0f * 3.14159f / 180.0f;  // 15도 (라디안)
+        static constexpr float ROTATION_THRESHOLD = 10.0f * 3.14159f / 180.0f;  // 10도 (라디안)
 
     public:
         virtual void Awake() override;
@@ -109,39 +109,57 @@ namespace game
         virtual void InitializeBullet() {}       // 자식에서 구현 (총알 설정)
 
         // ─────────────────────────────────────────────
-        // 플레이어 추적
+        // 플레이어 추적 (Player 특화 wrapper 함수)
         // ─────────────────────────────────────────────
         void FindPlayer();
         
-        // 거리 계산
-        float GetDistanceToPlayer() const;              // 직선 거리 (빠름)
-        float GetPathDistanceToPlayer() const;          // 경로 거리 (느림, PathfindingSystem 필요)
+        float GetDistanceToPlayer() const;
+        engine::Vector3 CalculateDirectionToPlayer() const;
         bool IsPlayerInRange() const;
+        void RotateTowardsPlayer(float deltaTime);
+        bool IsLookingAtPlayer() const;
+        
+        // 호환성 유지
+        bool IsRotatedTowardsPlayer() const { return IsLookingAtPlayer(); }
+        
         bool m_isPlayerInRange = false;
         
-        // 방향 계산
-        engine::Vector3 CalculateDirectionToPlayer() const;  // 플레이어 방향 벡터 계산
-
         // ─────────────────────────────────────────────
-        // 회전 및 공격
+        // 경로 찾기 (PathfindingSystem 활용)
         // ─────────────────────────────────────────────
-        void RotateTowardsPlayer(float deltaTime);
-        void RotateTowards(const engine::Vector3& targetDirection, float deltaTime);  // 특정 방향으로 회전
-        bool IsRotatedTowardsPlayer() const;
+        float GetPathDistanceToPlayer() const;
         
+        void StopAllMovement();
+        
+        // ─────────────────────────────────────────────
         // 공격 (자손 클래스에서 오버라이드)
+        // ─────────────────────────────────────────────
         virtual void Attack(float deltaTime);
+        
+        // ─────────────────────────────────────────────
+        // 상태별 행동
+        // ─────────────────────────────────────────────
+        virtual void UpdateStateBasedBehavior(const std::string& state, float deltaTime);
+        virtual void ExecuteEngageBehavior(float deltaTime);
+        virtual void ExecuteIdleBehavior();
+        virtual void ExecuteFragileBehavior();
+        virtual void ExecuteDeadBehavior();
         
         // ─────────────────────────────────────────────
         // 이동 (PathfindingSystem 활용, 향후 이동 몬스터용)
         // ─────────────────────────────────────────────
-        virtual void MoveTowardsPlayer(float deltaTime);     // 플레이어를 향해 이동 (PathfindingSystem 사용)
+        virtual void MoveTowardsPlayer(float deltaTime);
 
         // ─────────────────────────────────────────────
         // 체력 관리
         // ─────────────────────────────────────────────
+        void CheckHealth();
+        void TriggerFragile();
+        void TriggerDeath();  // Execution에서 호출
+        virtual void OnFragile();
         virtual void OnDeath();
-        bool CheckDeath();
+        
+        bool m_isFragile = false;
         bool m_isDead = false;
 
         // ─────────────────────────────────────────────
