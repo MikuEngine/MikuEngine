@@ -86,13 +86,14 @@ namespace game
 
     // ═══════════════════════════════════════════════════════════════
     // 방향 유틸리티
+    // - SkeletalAnimator가 FBX 모델을 180도 회전시킴
+    // - 결과적으로 Transform Forward (+Z) = 모델의 실제 앞 방향
     // ═══════════════════════════════════════════════════════════════
     engine::Vector3 BaseControllerScript::GetForwardDirection() const
     {
-        // +Z가 Forward인 모델에 사용
+        // Transform의 Forward 방향 (+Z) = 모델의 실제 앞 방향
         if (!GetTransform()) return engine::Vector3(0.0f, 0.0f, 1.0f);
 
-        // FBX 모델의 실제 Forward 방향 (-Z)
         engine::Vector3 forward = GetTransform()->GetForward();
         forward.y = 0.0f;
         
@@ -107,7 +108,7 @@ namespace game
 
     engine::Vector3 BaseControllerScript::GetForwardDirectionReverse() const
     {
-        // -Z가 Forward인 모델에 사용
+        // 뒤쪽 방향 (-Z)
         return GetForwardDirection() * -1.0f;
     }
 
@@ -176,8 +177,9 @@ namespace game
             return;
         }
 
-        // 엔진의 +Z Forward 방향 사용
-        engine::Vector3 currentForward = GetForwardDirectionReverse();
+        // 현재 Forward 방향 (+Z)
+        // SkeletalAnimator가 모델을 180도 회전시켜서 +Z가 실제 앞 방향
+        engine::Vector3 currentForward = GetForwardDirection();
 
         engine::Vector3 targetDir = targetDirection;
         
@@ -187,7 +189,7 @@ namespace game
         float dot = currentForward.Dot(targetDir);
         
         // Threshold 체크: 각도 차이가 작으면 회전 멈춤
-        const float ROTATION_THRESHOLD = 15.0f * 3.14159f / 180.0f;
+        const float ROTATION_THRESHOLD = 1.0f * 3.14159f / 180.0f;
         const float dotThreshold = cosf(ROTATION_THRESHOLD);
 
         if (dot >= dotThreshold)
@@ -196,12 +198,12 @@ namespace game
             return;
         }
 
-        engine::Vector3 cross = currentForward.Cross(targetDir);
-        float rotationSign = (cross.y >= 0.0f) ? 1.0f : -1.0f;
+        engine::Vector3 cross = currentForward.Cross(targetDir); 
+        float rotationSign = (cross.y >= 0.0f) ? -1.0f : 1.0f;
 
         float angleDiff = acosf(std::clamp(dot, -1.0f, 1.0f));
         
-        const float rotationSpeed = 2.0f;
+        const float rotationSpeed = 3.5f;  // 2.0f → 3.5f (75% 증가)
         float proportional = rotationSign * angleDiff * rotationSpeed;
         
         engine::Vector3 currentAngVel = m_cachedRigidbody->GetAngularVelocity();
@@ -209,7 +211,7 @@ namespace game
         
         float targetAngularVelocity = proportional + derivative;
         
-        const float maxAngularSpeed = 5.0f;
+        const float maxAngularSpeed = 8.0f;  // 5.0f → 8.0f (60% 증가)
         targetAngularVelocity = std::clamp(targetAngularVelocity, -maxAngularSpeed, maxAngularSpeed);
 
         m_cachedRigidbody->SetAngularVelocity(engine::Vector3(0.0f, targetAngularVelocity, 0.0f));
@@ -227,8 +229,9 @@ namespace game
     {
         if (targetDirection.LengthSquared() < 0.0001f) return true;
 
-        // 엔진의 +Z Forward 방향 사용
-        engine::Vector3 currentForward = GetForwardDirectionReverse();
+        // 현재 Forward 방향 (+Z)
+        // SkeletalAnimator가 모델을 180도 회전시켜서 +Z가 실제 앞 방향
+        engine::Vector3 currentForward = GetForwardDirection();
 
         engine::Vector3 targetDir = targetDirection;
         targetDir.y = 0.0f;

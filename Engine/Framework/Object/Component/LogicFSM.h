@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -62,6 +62,18 @@ namespace engine
         
         bool hasExitTime = false;        // 애니메이션 종료 대기
         float exitTime = 0.0f;          // 종료 시점 (0.0 ~ 1.0)
+        
+        // ─────────────────────────────────────────────
+        // 추가 조건 (AND로 연결)
+        // ─────────────────────────────────────────────
+        struct AdditionalCondition
+        {
+            std::string parameterName;
+            ConditionType conditionType = ConditionType::Default;
+            float floatThreshold = 0.0f;
+            int intThreshold = 0;
+        };
+        std::vector<AdditionalCondition> additionalConditions;
     };
 
     // ═══════════════════════════════════════════════════════════════

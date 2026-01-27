@@ -1,6 +1,6 @@
 {
     "Name": "Prototype_Play",
-    "NumGameObjects": 19,
+    "NumGameObjects": 20,
     "GameObjects": [
         {
             "ID": 0,
@@ -337,8 +337,8 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.21621620655059814,
-                        "y": 1.0,
+                        "x": 1.0,
+                        "y": 0.7413126826286316,
                         "z": 0.0,
                         "w": 1.0
                     },
@@ -351,7 +351,8 @@
                     "MaterialMetalness": 0.8629999756813049,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BulletFactory",
@@ -11701,6 +11702,7 @@
                     "BulletLifetime": 3.0,
                     "AnimName_Idle": "Idle",
                     "AnimName_Attack": "Attack",
+                    "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead"
                 },
                 {
@@ -11873,7 +11875,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BoxCollider",
@@ -11936,6 +11939,7 @@
                     "BulletLifetime": 3.0,
                     "AnimName_Idle": "Idle",
                     "AnimName_Attack": "Attack",
+                    "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead"
                 },
                 {
@@ -12108,7 +12112,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BoxCollider",
@@ -12210,7 +12215,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 }
             ]
         },
@@ -12263,7 +12269,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 }
             ]
         },
@@ -12316,7 +12323,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 }
             ]
         },
@@ -12369,7 +12377,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 }
             ]
         },
@@ -12422,7 +12431,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BoxCollider",
@@ -12497,7 +12507,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 }
             ]
         },
@@ -12550,7 +12561,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BoxCollider",
@@ -12586,9 +12598,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -3.700000047683716,
+                        "x": -3.5,
                         "y": 1.2000000476837158,
-                        "z": 6.300000190734863
+                        "z": 6.400000095367432
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -12597,9 +12609,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 2.200000047683716,
+                        "x": 3.200000047683716,
                         "y": 2.0,
-                        "z": 3.700000047683716
+                        "z": 4.099999904632568
                     }
                 },
                 {
@@ -12625,7 +12637,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BoxCollider",
@@ -12700,7 +12713,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BoxCollider",
@@ -12763,6 +12777,7 @@
                     "BulletLifetime": 3.0,
                     "AnimName_Idle": "Idle",
                     "AnimName_Attack": "Attack",
+                    "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead"
                 },
                 {
@@ -12935,7 +12950,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BoxCollider",
@@ -13170,11 +13186,272 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
                     "Type": "BulletMonster",
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "Name": "MonPG",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 6.800000190734863,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.014999999664723873,
+                        "y": 0.014999999664723873,
+                        "z": 0.014999999664723873
+                    }
+                },
+                {
+                    "Type": "MonsterPointedGreen",
+                    "Active": true,
+                    "Hp": 10,
+                    "AttackRange": 5.0,
+                    "MoveSpeed": 0.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 1.0,
+                    "BulletLifetime": 3.0,
+                    "DetectionRange": 55.0,
+                    "AttackAnimationDuration": 1.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead"
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 500.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 55.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Dead",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageAttack",
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageMove",
+                            "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageStop",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Fragile",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "Base Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Armature",
+                                "mixamorig:Hips",
+                                "mixamorig:Spine",
+                                "mixamorig:RightUpLeg",
+                                "mixamorig:LeftUpLeg",
+                                "mixamorig:Spine1",
+                                "mixamorig:RightLeg",
+                                "mixamorig:LeftLeg",
+                                "mixamorig:Spine2",
+                                "mixamorig:RightFoot",
+                                "mixamorig:LeftFoot",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:RightToeBase",
+                                "mixamorig:LeftToeBase",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:RightToe_End",
+                                "mixamorig:LeftToe_End",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:RightToe_End_end",
+                                "mixamorig:LeftToe_End_end",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
+                        },
+                        {
+                            "Name": "New Layer",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": []
+                        }
+                    ]
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 10.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.0540541410446167,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.4800000190734863,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 2,
+                    "radius": 0.20000000298023224,
+                    "height": 1.0
+                },
+                {
+                    "Type": "PathfindingAgent",
+                    "Active": true,
+                    "PathUpdateInterval": 1.0,
+                    "WaypointReachDistance": 0.20000000298023224,
+                    "TargetMoveThreshold": 1.0
                 }
             ]
         }

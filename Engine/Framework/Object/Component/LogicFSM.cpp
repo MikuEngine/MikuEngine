@@ -276,6 +276,7 @@ namespace engine
 
     bool LogicFSM::CheckTransition(const FSMTransition& transition) const
     {
+        // 주 조건 체크
         auto it = m_parameters.find(transition.conditionParameter);
         if (it == m_parameters.end())
         {
@@ -283,48 +284,118 @@ namespace engine
         }
 
         const auto& param = it->second;
+        bool mainConditionMet = false;
 
         switch (transition.conditionType)
         {
         case FSMTransition::ConditionType::Greater:
             if (param.type == FSMParameter::Type::Float)
-                return param.floatValue > transition.floatThreshold;
+                mainConditionMet = param.floatValue > transition.floatThreshold;
             else if (param.type == FSMParameter::Type::Int)
-                return param.intValue > transition.intThreshold;
+                mainConditionMet = param.intValue > transition.intThreshold;
             break;
 
         case FSMTransition::ConditionType::Less:
             if (param.type == FSMParameter::Type::Float)
-                return param.floatValue < transition.floatThreshold;
+                mainConditionMet = param.floatValue < transition.floatThreshold;
             else if (param.type == FSMParameter::Type::Int)
-                return param.intValue < transition.intThreshold;
+                mainConditionMet = param.intValue < transition.intThreshold;
             break;
 
         case FSMTransition::ConditionType::Equals:
             if (param.type == FSMParameter::Type::Float)
-                return std::abs(param.floatValue - transition.floatThreshold) < 0.001f;
+                mainConditionMet = std::abs(param.floatValue - transition.floatThreshold) < 0.001f;
             else if (param.type == FSMParameter::Type::Int)
-                return param.intValue == transition.intThreshold;
+                mainConditionMet = param.intValue == transition.intThreshold;
             break;
 
         case FSMTransition::ConditionType::NotEquals:
             if (param.type == FSMParameter::Type::Float)
-                return std::abs(param.floatValue - transition.floatThreshold) >= 0.001f;
+                mainConditionMet = std::abs(param.floatValue - transition.floatThreshold) >= 0.001f;
             else if (param.type == FSMParameter::Type::Int)
-                return param.intValue != transition.intThreshold;
+                mainConditionMet = param.intValue != transition.intThreshold;
             break;
 
         case FSMTransition::ConditionType::BoolTrue:
-            return param.type == FSMParameter::Type::Bool && param.boolValue;
+            mainConditionMet = param.type == FSMParameter::Type::Bool && param.boolValue;
+            break;
 
         case FSMTransition::ConditionType::BoolFalse:
-            return param.type == FSMParameter::Type::Bool && !param.boolValue;
+            mainConditionMet = param.type == FSMParameter::Type::Bool && !param.boolValue;
+            break;
 
         case FSMTransition::ConditionType::Trigger:
-            return param.type == FSMParameter::Type::Trigger && param.triggerValue;
+            mainConditionMet = param.type == FSMParameter::Type::Trigger && param.triggerValue;
+            break;
         }
 
-        return false;
+        if (!mainConditionMet)
+        {
+            return false;
+        }
+
+        // 추가 조건 체크 (AND로 연결)
+        for (const auto& addCond : transition.additionalConditions)
+        {
+            auto addIt = m_parameters.find(addCond.parameterName);
+            if (addIt == m_parameters.end())
+            {
+                return false;  // 파라미터가 없으면 실패
+            }
+
+            const auto& addParam = addIt->second;
+            bool additionalConditionMet = false;
+
+            switch (addCond.conditionType)
+            {
+            case FSMTransition::ConditionType::Greater:
+                if (addParam.type == FSMParameter::Type::Float)
+                    additionalConditionMet = addParam.floatValue > addCond.floatThreshold;
+                else if (addParam.type == FSMParameter::Type::Int)
+                    additionalConditionMet = addParam.intValue > addCond.intThreshold;
+                break;
+
+            case FSMTransition::ConditionType::Less:
+                if (addParam.type == FSMParameter::Type::Float)
+                    additionalConditionMet = addParam.floatValue < addCond.floatThreshold;
+                else if (addParam.type == FSMParameter::Type::Int)
+                    additionalConditionMet = addParam.intValue < addCond.intThreshold;
+                break;
+
+            case FSMTransition::ConditionType::Equals:
+                if (addParam.type == FSMParameter::Type::Float)
+                    additionalConditionMet = std::abs(addParam.floatValue - addCond.floatThreshold) < 0.001f;
+                else if (addParam.type == FSMParameter::Type::Int)
+                    additionalConditionMet = addParam.intValue == addCond.intThreshold;
+                break;
+
+            case FSMTransition::ConditionType::NotEquals:
+                if (addParam.type == FSMParameter::Type::Float)
+                    additionalConditionMet = std::abs(addParam.floatValue - addCond.floatThreshold) >= 0.001f;
+                else if (addParam.type == FSMParameter::Type::Int)
+                    additionalConditionMet = addParam.intValue != addCond.intThreshold;
+                break;
+
+            case FSMTransition::ConditionType::BoolTrue:
+                additionalConditionMet = addParam.type == FSMParameter::Type::Bool && addParam.boolValue;
+                break;
+
+            case FSMTransition::ConditionType::BoolFalse:
+                additionalConditionMet = addParam.type == FSMParameter::Type::Bool && !addParam.boolValue;
+                break;
+
+            case FSMTransition::ConditionType::Trigger:
+                additionalConditionMet = addParam.type == FSMParameter::Type::Trigger && addParam.triggerValue;
+                break;
+            }
+
+            if (!additionalConditionMet)
+            {
+                return false;  // 하나라도 실패하면 전체 실패 (AND)
+            }
+        }
+
+        return true;  // 모든 조건이 충족됨
     }
 
     void LogicFSM::UpdateTransitions()

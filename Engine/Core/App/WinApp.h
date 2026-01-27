@@ -48,7 +48,7 @@ namespace engine
         void Run();
 
         const UserSettings& GetUserSettings() const { return m_userSettings; }
-        void SetUserSettings();
+        void SetUserSettings(const UserSettings& userSettings);
         void ApplyResolution(int width, int height, bool isFullscreen);
 
     private:
