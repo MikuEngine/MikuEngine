@@ -54,6 +54,8 @@ namespace engine
 		void Load(const json& j) override;
 
 	private:
+		void ApplyLayout();
+
 		void BindScrollbarCallBack();
 		void ApplyContentPosition();
 		void SyncScrollbarFromScroll();
