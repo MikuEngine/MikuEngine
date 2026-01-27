@@ -29,9 +29,12 @@ namespace game
 
     void UpgradeNodeView::OnGui()
     {
+        static const char* kCats[] = { "Attack", "Defense", "Life", "Stamina" };
+        int c = (int)m_category;
+        if (ImGui::Combo("Category", &c, kCats, IM_ARRAYSIZE(kCats)))
+            m_category = (UpgradeCategory)c;
+
         ImGui::InputInt("NodeId", &m_nodeId);
-
-
 
         ImGui::Text("Parents");
         for (int i = 0; i < (int)m_parents.size(); ++i)
@@ -94,11 +97,6 @@ namespace game
         }
         if (!canAdd) ImGui::EndDisabled();
 
-
-
-
-
-
         ImGui::InputText("Name", &m_name);
         ImGui::InputTextMultiline("Desc", &m_desc);
 
@@ -111,6 +109,7 @@ namespace game
     {
         Object::Save(j);
 
+        j["Category"] = (int)m_category;
         j["NodeId"] = m_nodeId;
 
         engine::json parents = engine::json::array();
@@ -129,6 +128,14 @@ namespace game
     void UpgradeNodeView::Load(const engine::json& j)
     {
         Object::Load(j);
+
+        int c = 0;
+        engine::JsonGet(j, "Category", c);
+
+        if (c < 0 || c >= (int)UpgradeCategory::COUNT)
+            c = 0;
+
+        m_category = (UpgradeCategory)c;
 
         engine::JsonGet(j, "NodeId", m_nodeId);
 

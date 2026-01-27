@@ -10,6 +10,16 @@ namespace game
         REGISTER_SCRIPT(UpgradeNodeView, Script)
 
     public:
+        enum class UpgradeCategory : int
+        {
+            Attack = 0,
+            Defense,
+            Life,
+            Stamina,
+            COUNT
+        };
+
+    public:
         void Awake() override;
         //void Start() override;
         //void Update() override;
@@ -22,6 +32,9 @@ namespace game
         void SetVisualState(bool unlocked, bool purchased);
 
     public:
+        UpgradeCategory m_category = UpgradeCategory::Attack;
+        UpgradeCategory m_selectedCategory;
+
         int m_nodeId = 0;
         int m_newParent = 0;
         std::vector<int> m_parents = {};
