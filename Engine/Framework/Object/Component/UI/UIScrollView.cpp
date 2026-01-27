@@ -188,7 +188,7 @@ namespace engine
 					rt->SetAnchorMax({ 1.0f, 1.0f });
 					rt->SetPivot({ 0.5f, 0.5f });
 					rt->SetAnchoredPosition({ 0.0f, 0.0f });
-					rt->SetSize(0.0f, 0.0f);
+					rt->SetSize(0.0f, 500.0f);
 				}
 			}
 		}
@@ -233,50 +233,6 @@ namespace engine
 		SetScrollY(m_scrollY, true);
 	}
 
-	void UIScrollView::Update()
-	{
-		UIElement::Update();
-
-		if (!m_contentRT && !m_contentName.empty())
-			m_contentRT = FindChildRTByName(m_contentName.c_str());
-
-		if (!m_scrollbar && !m_scrollbarName.empty())
-		{
-			GameObject* parent = GetGameObject();
-				
-			if (parent)
-			{
-				if (GameObject* child = FindChildByName(parent, m_scrollbarName.c_str()))
-					m_scrollbar = child->GetComponent<UISlider>();
-			}
-
-			if (!m_scrollbar)
-			{
-				if (GameObject* sbGO = GameObject::Find(m_scrollbarName.c_str()))
-					m_scrollbar = sbGO->GetComponent<UISlider>();
-			}
-
-			if (m_scrollbar)
-				BindScrollbarCallBack();
-		}
-
-		const float maxS = GetMaxScroll();
-		if (std::fabs(maxS - m_cachedMaxScroll) > 1e-4f)
-		{
-			m_cachedMaxScroll = maxS;
-			SetScrollY(m_scrollY, true);
-		}
-
-		if (m_viewportRT && m_contentRT)
-		{
-			const Vector4 clipPx = CalcViewportClipRectPx(this, m_viewportRT);
-			ApplyMaskToContentSubtree(m_contentRT->GetTransform(), clipPx);
-		}
-	}
-	void UIScrollView::DrawUI() const
-	{
-		//
-	}
 	void UIScrollView::SetContentByName(const std::string& childName)
 	{
 		m_contentName = childName;
@@ -336,55 +292,6 @@ namespace engine
 	UIRect UIScrollView::GetViewPortWorldRect() const
 	{
 		return m_viewportRT ? m_viewportRT->GetWorldRect() : UIRect{};
-	}
-
-	void UIScrollView::OnBeginDrag(const Vector2& mousePos, int mouseButton)
-	{
-		if (mouseButton != 0) return;
-		m_dragging = true;
-
-		for (auto& cb : m_onBeginDrag)
-			if (cb) cb();
-	}
-
-	void UIScrollView::OnDrag(const Vector2& mousePos, const Vector2& delta, int mouseButton)
-	{
-		if (mouseButton != 0) return;
-		if (!m_dragging) return;
-
-		const float viewportH = m_viewportRT->GetHeight();
-		const float maxScroll = GetMaxScroll();
-		if (viewportH <= 1e-4f || maxScroll <= 0.0f)
-			return;
-
-		const float scrollDelta =
-			(delta.y / viewportH) * maxScroll * m_dragSpeed;
-
-		SetScrollY(m_scrollY - scrollDelta, true);
-	}
-
-	void UIScrollView::OnEndDrag(const Vector2& mousePos, int mouseButton)
-	{
-		if (mouseButton != 0) return;
-		if (!m_dragging) return;
-
-		m_dragging = false;
-
-		for (auto& cb : m_onEndDrag)
-			if (cb) cb();
-	}
-
-	void UIScrollView::OnMouseCancel(const Vector2& mousePos, int mouseButton)
-	{
-		if (mouseButton != 0) return;
-
-		if (m_dragging)
-		{
-			m_dragging = false;
-
-			for (auto& cb : m_onEndDrag)
-				if (cb) cb();
-		}
 	}
 
 	void UIScrollView::BindScrollbarCallBack()
