@@ -75,6 +75,15 @@
     <ClCompile Include="Script\PathfindTest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\UIHoverScale.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedGreen.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -147,6 +156,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\UpgradeTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\MonsterGenerator\MonsterData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\UIHoverScale.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedGreen.h">

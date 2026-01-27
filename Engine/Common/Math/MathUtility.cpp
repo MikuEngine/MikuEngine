@@ -5,37 +5,29 @@
 
 namespace engine
 {
-    constexpr float PI = 3.1415926535f;
-    constexpr float TWO_PI = PI * 2.0f;
-
-	namespace
-	{
-		std::mt19937 gen{ std::random_device{}() };
-	}
-
 	int Random::Int(int min, int max)
 	{
-		return std::uniform_int_distribution<int>(min, max)(gen);
+		return std::uniform_int_distribution<int>(min, max)(GetRandomGenerator());
 	}
 
 	float Random::Float(float min, float max)
 	{
-		return std::uniform_real_distribution<float>(min, max)(gen);
+		return std::uniform_real_distribution<float>(min, max)(GetRandomGenerator());
 	}
 
 	bool Random::Chance(float probability)
 	{
 		assert((probability >= 0.0f && probability <= 1.0f) && "확률을 0 ~ 1 사이로 해주세요");
 
-		return std::uniform_real_distribution<float>(0.0f, 1.0f)(gen) <= probability;
+		return std::uniform_real_distribution<float>(0.0f, 1.0f)(GetRandomGenerator()) <= probability;
 	}
 
     // x z
     Vector3 Random::InsideUnitCircle()
     {
-        float theta = std::uniform_real_distribution<float>(0.0f, TWO_PI)(gen);
+        float theta = std::uniform_real_distribution<float>(0.0f, DirectX::XM_2PI)(GetRandomGenerator());
 
-        float u = std::uniform_real_distribution<float>(0.0f, 1.0f)(gen);
+        float u = std::uniform_real_distribution<float>(0.0f, 1.0f)(GetRandomGenerator());
         float r = std::sqrt(u);
 
         float x = r * std::cos(theta);
@@ -46,8 +38,8 @@ namespace engine
 
     Vector3 Random::OnUnitSphere()
     {
-        float z = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
-        float theta = std::uniform_real_distribution<float>(0.0f, TWO_PI)(gen);
+        float z = std::uniform_real_distribution<float>(-1.0f, 1.0f)(GetRandomGenerator());
+        float theta = std::uniform_real_distribution<float>(0.0f, DirectX::XM_2PI)(GetRandomGenerator());
 
         float planar_r = std::sqrt(1.0f - z * z);
 
@@ -62,9 +54,9 @@ namespace engine
         Vector3 v;
         while (true)
         {
-            v.x = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
-            v.y = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
-            v.z = std::uniform_real_distribution<float>(-1.0f, 1.0f)(gen);
+            v.x = std::uniform_real_distribution<float>(-1.0f, 1.0f)(GetRandomGenerator());
+            v.y = std::uniform_real_distribution<float>(-1.0f, 1.0f)(GetRandomGenerator());
+            v.z = std::uniform_real_distribution<float>(-1.0f, 1.0f)(GetRandomGenerator());
 
             // LengthSquared()는 sqrt를 안 쓰므로 매우 빠름.
             // 반지름 1.0 이내인지 체크
@@ -77,7 +69,7 @@ namespace engine
 
 	Vector2 Random::Direction(float minDegree, float maxDegree)
 	{
-		float degree = std::uniform_real_distribution<float>(minDegree, maxDegree)(gen);
+		float degree = std::uniform_real_distribution<float>(minDegree, maxDegree)(GetRandomGenerator());
 		float radian = ToRadian(degree);
 
 		return Vector2(std::cos(radian), std::sin(radian));

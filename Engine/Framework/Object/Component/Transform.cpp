@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "Transform.h"
 
 #include <imgui.h>
@@ -263,6 +263,43 @@ namespace engine
 
         // 물리 컴포넌트에 부모 변경 알림
         NotifyPhysicsComponentsParentChanged();
+    }
+
+    void Transform::SetWorldMatrix(const Matrix& worldMatrix)
+    {
+        Matrix targetLocalMatrix;
+
+        if (m_parent != nullptr)
+        {
+            Matrix parentWorldInverse = m_parent->GetWorld().Invert();
+            targetLocalMatrix = worldMatrix * parentWorldInverse;
+        }
+        else
+        {
+            // 부모가 없으면 worldMatrix 자체가 곧 localMatrix입니다.
+            targetLocalMatrix = worldMatrix;
+        }
+
+        Vector3 newLocalScale;
+        Quaternion newLocalRotation;
+        Vector3 newLocalPosition;
+
+        if (targetLocalMatrix.Decompose(newLocalScale, newLocalRotation, newLocalPosition))
+        {
+            m_localPosition = newLocalPosition;
+            m_localRotation = newLocalRotation;
+            m_localRotation.Normalize();
+            m_localScale = newLocalScale;
+        }
+        else
+        {
+            // Decompose 실패 시 최소한 위치라도 보정
+            m_localPosition = Vector3(targetLocalMatrix._41, targetLocalMatrix._42, targetLocalMatrix._43);
+        }
+
+        // 오일러 각도 업데이트
+        m_localEulerRotation = m_localRotation.ToEuler() * (180.0f / DirectX::XM_PI);
+        MarkDirty();
     }
 
     void Transform::NotifyPhysicsComponentsParentChanged()

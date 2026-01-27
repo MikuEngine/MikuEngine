@@ -64,6 +64,10 @@
                 {
                     "Type": "DontDestroyTest",
                     "Active": true
+                },
+                {
+                    "Type": "CSVReaderTest",
+                    "Active": true
                 }
             ]
         }

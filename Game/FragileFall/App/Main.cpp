@@ -1,5 +1,7 @@
 ﻿#include "GamePCH.h"
 
+#include <Core/App/AppContext.h>
+
 #include "App/ComponentRegistry.h"
 #include "App/FragileFall.h"
 
@@ -11,7 +13,8 @@ int APIENTRY wWinMain(
 {
 	engine::LeakCheck lc;
 
-	game::FragileFall app("Windows.config");
+	game::FragileFall app("Settings.config");
+	engine::AppContext::SetApp(&app);
 
 	app.Initialize();
 	app.Run();

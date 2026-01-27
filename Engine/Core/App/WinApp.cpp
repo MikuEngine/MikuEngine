@@ -9,7 +9,7 @@
 #include "Common/Utility/Profiling.h"
 #include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
-#include "Core/App/ConfigLoader.h"
+#include "Core/App/UserSettingsLoader.h"
 #include "Core/System/ProjectSettings.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/PreloadManager.h"
@@ -67,9 +67,9 @@ namespace engine
 
     LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    WinApp::WinApp(const std::filesystem::path& settingFilePath, const WindowSettings& defaultSetting)
+    WinApp::WinApp(const std::filesystem::path& settingFilePath, const UserSettings& defaultSetting)
         : m_settingFilePath{ settingFilePath },
-        m_settings{ defaultSetting },
+        m_userSettings{ defaultSetting },
         m_screenWidth{ GetSystemMetrics(SM_CXSCREEN) },
         m_screenHeight{ GetSystemMetrics(SM_CYSCREEN) }
     {
@@ -85,7 +85,9 @@ namespace engine
     
     void WinApp::Initialize()
     {
-        SetWindowMode(m_settings.isFullscreen);
+        auto& ws = m_userSettings.window;
+
+        SetWindowMode(ws.isFullscreen);
 
         m_hInstance = GetModuleHandleW(nullptr);
         if (m_hCursor == nullptr)
@@ -109,15 +111,15 @@ namespace engine
         FATAL_CHECK(RegisterClassExW(&wc), "RegisterClassExW failed");
 
         RECT rc{};
-        if (m_settings.isFullscreen)
+        if (ws.isFullscreen)
         {
             rc.right = m_screenWidth;
             rc.bottom = m_screenHeight;
         }
         else
         {
-            rc.right = m_settings.resolutionWidth;
-            rc.bottom = m_settings.resolutionHeight;
+            rc.right = ws.resolutionWidth;
+            rc.bottom = ws.resolutionHeight;
         }
 
         AdjustWindowRect(&rc, m_windowStyle, FALSE);
@@ -150,12 +152,12 @@ namespace engine
 
         GraphicsDevice::Get().Initialize(
             m_hWnd,
-            static_cast<UINT>(m_settings.resolutionWidth),
-            static_cast<UINT>(m_settings.resolutionHeight),
+            static_cast<UINT>(ws.resolutionWidth),
+            static_cast<UINT>(ws.resolutionHeight),
             static_cast<UINT>(m_screenWidth),
             static_cast<UINT>(m_screenHeight),
-            m_settings.isFullscreen,
-            m_settings.useVsync);
+            ws.isFullscreen,
+            ws.useVsync);
 
         Input::Initialize(m_hWnd);
 
@@ -281,6 +283,56 @@ namespace engine
                 Render();
             }
         }
+    }
+
+    void WinApp::SetUserSettings(const UserSettings& userSettings)
+    {
+        m_userSettings = userSettings;
+
+        const auto& ws = m_userSettings.window;
+
+        SetResolution(
+            ws.resolutionWidth,
+            ws.resolutionHeight,
+            ws.isFullscreen
+        );
+
+        // 2) 사운드 설정 적용
+        const auto& audio = m_userSettings.audio;
+        auto& sound = SoundSystem::Get();
+
+        // TODO : Getter 추가
+        //sound.SetMasterVolume(audio.master);
+        //sound.SetBGMVolume(audio.bgm);
+        //sound.SetSFXVolume(audio.sfx);
+        //sound.SetMute(audio.mute);
+
+        // 3) 컨트롤 설정 적용
+        //const auto& ctrl = m_userSettings.controls;
+        //Input::SetMouseSensitivity(ctrl.mouseSensitivity);
+        //Input::SetInvertY(ctrl.invertY);
+
+        // 4) 저장 (Apply 버튼 눌렀을 때 호출된다는 전제)
+        UserSettingsLoader::Save(m_settingFilePath, m_userSettings);
+    }
+
+    void WinApp::ApplyResolution(int width, int height, bool isFullscreen)
+    {
+        auto& ws = m_userSettings.window;
+
+        // 1) 설정 값 갱신
+        if (width > 0)  ws.resolutionWidth = width;
+        if (height > 0) ws.resolutionHeight = height;
+        ws.isFullscreen = isFullscreen;
+
+        // 2) 실제 시스템 반영
+        SetResolution(
+            ws.resolutionWidth,
+            ws.resolutionHeight,
+            ws.isFullscreen
+        );
+
+        UserSettingsLoader::Save(m_settingFilePath, m_userSettings);
     }
 
     void WinApp::Update()
@@ -466,9 +518,11 @@ namespace engine
 
     void WinApp::ValidateSettings()
     {
-        ConfigLoader::Load(m_settingFilePath, m_settings);
+        UserSettingsLoader::Load(m_settingFilePath, m_userSettings);
 
-        Resolution currentRes{ m_settings.resolutionWidth, m_settings.resolutionHeight };
+        auto& ws = m_userSettings.window;
+
+        Resolution currentRes{ ws.resolutionWidth, ws.resolutionHeight };
         Resolution screenRes{ GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
 
         bool isValid = false;
@@ -476,7 +530,7 @@ namespace engine
         {
             if (supported == currentRes)
             {
-                if (m_settings.isFullscreen)
+                if (ws.isFullscreen)
                 {
                     if (supported <= screenRes)
                     {
@@ -503,7 +557,7 @@ namespace engine
             {
                 const auto& supported = *it;
 
-                if (m_settings.isFullscreen)
+                if (ws.isFullscreen)
                 {
                     if (supported <= screenRes)
                     {
@@ -522,16 +576,16 @@ namespace engine
             }
         }
 
-        m_settings.resolutionWidth = currentRes.width;
-        m_settings.resolutionHeight = currentRes.height;
+        ws.resolutionWidth = currentRes.width;
+        ws.resolutionHeight = currentRes.height;
 
-        m_settings.supportedResolutions.clear();
+        ws.supportedResolutions.clear();
         for (const auto& res : g_supportedResolutions)
         {
-            m_settings.supportedResolutions.push_back(std::format("{}x{}", res.width, res.height));
+            ws.supportedResolutions.push_back(std::format("{}x{}", res.width, res.height));
         }
 
-        ConfigLoader::Save(m_settingFilePath, m_settings);
+        UserSettingsLoader::Save(m_settingFilePath, m_userSettings);
     }
 
     void WinApp::SetWindowMode(bool isFullscreen)
@@ -548,13 +602,15 @@ namespace engine
 
     void WinApp::SetResolution(int width, int height, bool isFullscreen)
     {
+        auto& ws = m_userSettings.window;
+
         if (width == 0)
         {
-            width = m_settings.resolutionWidth;
+            width = ws.resolutionWidth;
         }
         if (height == 0)
         {
-            height = m_settings.resolutionHeight;
+            height = ws.resolutionHeight;
         }
 
         SetWindowMode(isFullscreen);
@@ -585,13 +641,15 @@ namespace engine
             y = 0;
         }
 
-        m_settings.isFullscreen = isFullscreen;
-        
+        ws.resolutionWidth = width;
+        ws.resolutionHeight = height;
+        ws.isFullscreen = isFullscreen;
+
         SetWindowPos(m_hWnd, HWND_TOP, x, y, actualW, actualH, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 
         GraphicsDevice::Get().Resize(
-            m_settings.resolutionWidth,
-            m_settings.resolutionHeight,
+            ws.resolutionWidth,
+            ws.resolutionHeight,
             m_screenWidth,
             m_screenHeight,
             isFullscreen
@@ -602,7 +660,9 @@ namespace engine
 
     void WinApp::UpdateViewportTransformData()
     {
-        float targetAspectRatio = static_cast<float>(m_settings.resolutionWidth) / static_cast<float>(m_settings.resolutionHeight);
+        auto& ws = m_userSettings.window;
+
+        float targetAspectRatio = static_cast<float>(ws.resolutionWidth) / static_cast<float>(ws.resolutionHeight);
         float screenAspectRatio = static_cast<float>(m_screenWidth) / static_cast<float>(m_screenHeight);
 
         float viewWidth = static_cast<float>(m_screenWidth);
@@ -610,7 +670,7 @@ namespace engine
         float viewX = 0.0f;
         float viewY = 0.0f;
 
-        if (m_settings.isFullscreen)
+        if (ws.isFullscreen)
         {
             if (screenAspectRatio > targetAspectRatio)
             {
@@ -627,8 +687,8 @@ namespace engine
         {
             // 창 모드일 때는 창 크기 = 해상도 크기라고 가정 (필러박스 없음)
             // 만약 창 모드에서도 레터박스를 쓴다면 로직 수정 필요
-            viewWidth = static_cast<float>(m_settings.resolutionWidth);
-            viewHeight = static_cast<float>(m_settings.resolutionHeight);
+            viewWidth = static_cast<float>(ws.resolutionWidth);
+            viewHeight = static_cast<float>(ws.resolutionHeight);
         }
 
         // 멤버 변수에 저장
@@ -638,8 +698,8 @@ namespace engine
         m_viewportData.height = viewHeight;
 
         // 모니터 뷰포트 크기 -> 게임 해상도 크기로 가는 비율
-        m_viewportData.scaleX = static_cast<float>(m_settings.resolutionWidth) / viewWidth;
-        m_viewportData.scaleY = static_cast<float>(m_settings.resolutionHeight) / viewHeight;
+        m_viewportData.scaleX = static_cast<float>(ws.resolutionWidth) / viewWidth;
+        m_viewportData.scaleY = static_cast<float>(ws.resolutionHeight) / viewHeight;
 
         // 기존 Input 시스템에도 적용
         Input::SetCoordinateTransform(viewX, viewY, m_viewportData.scaleX, m_viewportData.scaleY);

@@ -21,7 +21,7 @@
     <ClCompile Include="EnginePCH.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\App\ConfigLoader.cpp">
+    <ClCompile Include="Core\App\UserSettingsLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Common\Utility\StringHelper.cpp">
@@ -351,6 +351,15 @@
     <ClCompile Include="Framework\Asset\SocketData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Utility\CSVReader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\SocketAttachment.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\App\AppContext.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -359,7 +368,7 @@
     <ClInclude Include="EnginePCH.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\App\ConfigLoader.h">
+    <ClInclude Include="Core\App\UserSettingsLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Common\Utility\StringHelper.h">
@@ -392,7 +401,7 @@
     <ClInclude Include="Framework\Scene\SceneManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\App\WindowSettings.h">
+    <ClInclude Include="Core\App\UserSettings.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Object.h">
@@ -752,6 +761,15 @@
     <ClInclude Include="Framework\Asset\SocketData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Utility\CSVReader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\SocketAttachment.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\App\AppContext.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\FullscreenQuad_VS.hlsl" />
@@ -806,5 +824,8 @@
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />
     <None Include="Shader\Include\PBR_Shared.hlsli" />
+    <None Include="Common\Utility\CSVReader.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>

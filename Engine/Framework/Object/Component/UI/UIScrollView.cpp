@@ -229,6 +229,7 @@ namespace engine
 		}
 
 		BindScrollbarCallBack();
+		SyncScrollbarFromScroll();
 		SetScrollY(m_scrollY, true);
 	}
 
@@ -240,7 +241,12 @@ namespace engine
 		ApplyContentPosition();
 
 		if (syncScrollbar)
+		{
 			SyncScrollbarFromScroll();
+
+			if (m_scrollbar)
+				m_lastScrollbarV = m_scrollbar->GetValue();
+		}
 
 		// 클립 유지
 		RefreshClipFromViewport(false);
@@ -356,8 +362,13 @@ namespace engine
 		const float maxS = GetMaxScroll();
 		const float t = (maxS > 0.0f) ? (m_scrollY / maxS) : 0.0f;
 
+		const float clampedT = std::clamp(t, 0.0f, 1.0f);
+
 		m_syncGuard = true;
-		m_scrollbar->SetValue(std::clamp(t, 0.0f, 1.0f), false);
+		m_scrollbar->SetValue(clampedT, false);
+		m_scrollbar->ForceUpdateVisuals();
+		m_lastScrollbarV = clampedT;
+
 		m_syncGuard = false;
 	}
 
@@ -427,6 +438,23 @@ namespace engine
 
 		m_cachedClipPx = clipPx;
 		ApplyClipToCachedRenderers(clipPx);
+	}
+
+	void UIScrollView::OnScroll(const Vector2& mousePos, float wheelDelta)
+	{
+		const float wheelStep = 5.0f;
+		SetScrollY(m_scrollY - wheelDelta / wheelStep, true);
+	}
+
+	bool UIScrollView::HitTestPoint(const Vector2& p) const
+	{
+		if (!m_viewportRT)
+			return UIElement::HitTestPoint(p);
+
+		const Vector4 cr = CalcViewportClipRectPx(const_cast<UIScrollView*>(this), m_viewportRT);
+
+		return (p.x >= cr.x && p.x <= cr.z &&
+			p.y >= cr.y && p.y <= cr.w);
 	}
 
 	void UIScrollView::OnGui()

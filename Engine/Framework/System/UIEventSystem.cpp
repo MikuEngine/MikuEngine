@@ -82,6 +82,8 @@ namespace engine
 		if (!mouse.leftHeld)
 			HandleHover(newHover, mouse);
 
+		HandleScroll(newHover, mouse);
+
 		HandlePressDragRelease(newHover, mouse);
 
 		m_prevMousePos = mouse.position;
@@ -107,6 +109,8 @@ namespace engine
 		m.leftDown = Input::IsMousePressed(Input::Buttons::LEFT);
 		m.leftHeld = Input::IsMouseHeld(Input::Buttons::LEFT);
 		m.leftUp = Input::IsMouseReleased(Input::Buttons::LEFT);
+
+		m.wheelDelta = Input::GetMouseWheelDelta();
 
 		return m;
 	}
@@ -303,6 +307,18 @@ namespace engine
 			m_dragTarget = nullptr;
 			m_isDragging = false;
 			m_phase = PointerPhase::None;
+		}
+	}
+
+	void UIEventSystem::HandleScroll(UIElement* target, const MouseState& mouse)
+	{
+		if (!target) return;
+		if (std::fabs(mouse.wheelDelta) < 1e-6f) return;
+
+		if (UIInteractable* it = AsInteractable(target))
+		{
+			if (it->IsScrollEnabled())
+				it->OnScroll(mouse.position, mouse.wheelDelta);
 		}
 	}
 }

@@ -1,7 +1,19 @@
-﻿#pragma once
+#pragma once
+
+#include <type_traits>
+#include <random>
 
 namespace engine
 {
+    namespace
+    {
+        inline std::mt19937& GetRandomGenerator()
+        {
+            static thread_local std::mt19937 gen{ std::random_device{}() };
+            return gen;
+        }
+    }
+
     inline constexpr float EPSILON = 0.00001f;
 
     constexpr float ToRadian(float degree)
@@ -37,7 +49,16 @@ namespace engine
     class Random
     {
     public:
+        // 정수 타입 랜덤 (int 전용, 하위 호환성)
         static int Int(int min, int max);
+        
+        // 정수 타입 랜덤 (템플릿, 모든 정수 타입 지원)
+        template<typename T>
+        static T Int(T min, T max)
+        {
+            static_assert(std::is_integral_v<T>, "Random::Int requires an integral type");
+            return std::uniform_int_distribution<T>(min, max)(GetRandomGenerator());
+        }
 
         static float Float(float min, float max);
 
