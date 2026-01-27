@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterDullGray.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -31,42 +31,11 @@ namespace game
     {
         MonsterScript::Start();
 
-        // ─────────────────────────────────────────────
-        // DullGray 고유 Rigidbody Constraints 설정
-        // X, Y, Z 이동 모두 불가, X, Z 회전 불가 (Y축 회전만 허용)
-        // ─────────────────────────────────────────────
-        if (m_rigidbody)
-        {
-            using namespace engine;
-            RigidbodyConstraints constraints = 
-                RigidbodyConstraints::FreezePositionX |
-                RigidbodyConstraints::FreezePositionY |
-                RigidbodyConstraints::FreezePositionZ |
-                RigidbodyConstraints::FreezeRotationX |
-                RigidbodyConstraints::FreezeRotationZ;
-            
-            m_rigidbody->SetConstraints(constraints);
-            
-            LOG_PRINT("[MonsterDullGray] Rigidbody constraints set: All position frozen, Y-rotation only");
-        }
-
         // 초기 Idle 애니메이션 재생
         if (m_skeletalAnimator && !m_animName_Idle.empty())
         {
             m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
-        }
-        
-        // ─────────────────────────────────────────────
-        // 초기화 검증 로그
-        // ─────────────────────────────────────────────
-        LOG_PRINT("[MonsterDullGray] Initialization Complete:");
-        LOG_PRINT("  - Rigidbody: {}", m_rigidbody ? "OK" : "MISSING");
-        LOG_PRINT("  - SkeletalAnimator: {}", m_skeletalAnimator ? "OK" : "MISSING");
-        LOG_PRINT("  - BulletFactory: {}", m_bulletFactory ? "OK" : "MISSING");
-        LOG_PRINT("  - AnimFSM: {}", m_animFSM ? "OK" : "MISSING");
-        LOG_PRINT("  - LogicFSM: {}", m_logicFSM ? "OK" : "MISSING");
-        LOG_PRINT("  - Target Player: {}", m_targetPlayer ? "Found" : "NOT FOUND");
-        LOG_PRINT("  - Current State: {}", GetCurrentState());
+        } 
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -79,8 +48,9 @@ namespace game
         // ─────────────────────────────────────────────
         // 상태 정의
         // ─────────────────────────────────────────────
-        AddFSMState("Idle", true);   // 기본 상태
+        AddFSMState("Idle", true);    // 기본 상태
         AddFSMState("Engage", false);
+        AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
         // ─────────────────────────────────────────────
@@ -92,6 +62,7 @@ namespace game
         // 파라미터 정의
         // ─────────────────────────────────────────────
         m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
+        m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
 
         // ─────────────────────────────────────────────
@@ -101,9 +72,12 @@ namespace game
         AddFSMTransition("Idle", "Engage", "PlayerInRange", BoolTrue());
         AddFSMTransition("Engage", "Idle", "PlayerInRange", BoolFalse());
 
-        // Any → Dead (Die 트리거)
-        AddFSMTransition("Idle", "Dead", "Die", Trigger());
-        AddFSMTransition("Engage", "Dead", "Die", Trigger());
+        // Any → Fragile (HP 0, Fragile 트리거)
+        AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
+        AddFSMTransition("Engage", "Fragile", "Fragile", Trigger());
+
+        // Fragile → Dead (Execution, Die 트리거)
+        AddFSMTransition("Fragile", "Dead", "Die", Trigger());
 
         // ─────────────────────────────────────────────
         // 초기 상태 설정
@@ -124,9 +98,10 @@ namespace game
         // AddSplitState(상태명, 하체애니, 하체루프, 상체애니, 상체루프, 상체웨이트, 크로스페이드)
         // 상체웨이트 0 = 전체 애니메이션 (상/하체 분리 안 함)
         // ─────────────────────────────────────────────
-        m_animFSM->AddSplitState("Idle",   m_animName_Idle, true,  "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("Engage", m_animName_Idle, true,  "", false, 0.0f, 0.1f);  // Engage는 Idle 재생
-        m_animFSM->AddSplitState("Dead",   m_animName_Dead, false, "", false, 0.0f, 0.1f);  // Dead는 루프 안 함
+        m_animFSM->AddSplitState("Idle",    m_animName_Idle, true,  "", false, 0.0f, 0.1f);
+        m_animFSM->AddSplitState("Engage",  m_animName_Idle, true,  "", false, 0.0f, 0.1f);  // Engage는 Idle 재생
+        m_animFSM->AddSplitState("Fragile", m_animName_Idle, true,  "", false, 0.0f, 0.1f);  // Fragile은 Idle 재생 (전용 애니메이션 설정 가능)
+        m_animFSM->AddSplitState("Dead",    m_animName_Dead, false, "", false, 0.0f, 0.1f);  // Dead는 루프 안 함
     }
 
     void MonsterDullGray::InitializeAnimations()
@@ -141,7 +116,76 @@ namespace game
 
     void MonsterDullGray::InitializeBullet()
     {
-        // 총알 파라미터는 Attack()에서 직접 설정
+        m_bulletParams.type = BulletType::Linear;
+        m_bulletParams.speed = m_bulletSpeed;
+        m_bulletParams.lifetime = m_bulletLifetime;
+        m_bulletParams.damage = 10;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 상태별 행동
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterDullGray::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
+    {
+        if (state == "Engage")
+        {
+            ExecuteEngageBehavior(deltaTime);
+        }
+        else if (state == "Idle")
+        {
+            ExecuteIdleBehavior();
+        }
+        else if (state == "Fragile")
+        {
+            ExecuteFragileBehavior();
+        }
+        else if (state == "Dead")
+        {
+            ExecuteDeadBehavior();
+        }
+    }
+
+    void MonsterDullGray::ExecuteEngageBehavior(float deltaTime)
+    {
+        // RotateToDirection 내부에서 threshold 체크하므로 무조건 호출
+        RotateTowardsPlayer(deltaTime);
+        Attack(deltaTime);
+    }
+
+    void MonsterDullGray::ExecuteIdleBehavior()
+    {
+        StopRotation();
+    }
+
+    void MonsterDullGray::ExecuteFragileBehavior()
+    {
+        // Fragile 상태: 아무 행동도 하지 않음 (Execution 대기)
+    }
+
+    void MonsterDullGray::ExecuteDeadBehavior()
+    {
+        StopAllMovement();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 상태 진입 콜백
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterDullGray::OnStateEntered(const std::string& state)
+    {
+        if (state == "Fragile")
+        {
+            StopAllMovement();
+            OnFragile();
+        }
+        else if (state == "Dead")
+        {
+            StopAllMovement();
+            OnDeath();
+        }
+        else if (state == "Idle")
+        {
+            StopRotation();
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -149,52 +193,33 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterDullGray::Attack(float deltaTime)
     {
-        // 쿨다운 타이머 감소
         if (m_fireTimer > 0.0f)
         {
             m_fireTimer -= deltaTime;
-            return;  // 쿨다운 중에는 발사하지 않음
+            return;
         }
 
-        // 발사 조건: 쿨다운 완료 (회전 완료 대기 안 함, 플레이어 방향으로 발사)
-        if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
+        if (!m_bulletFactory || !m_targetPlayer || !m_targetPlayer->GetGameObject())
         {
-            engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
-            engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-            
-            // ─────────────────────────────────────────────
-            // 플레이어 방향 계산 (직접 계산)
-            // 매 프레임 플레이어를 향해 회전 중이므로 얼추 맞음
-            // ─────────────────────────────────────────────
-            engine::Vector3 direction = playerPos - monsterPos;
-            direction.y = 0.0f;  // Y축 무시 (수평 방향만)
-            
-            if (direction.LengthSquared() > 0.001f)
-            {
-                direction.Normalize();
-
-                // 리니어 총알 발사
-                BulletParams params;
-                params.type = BulletType::Linear;
-                params.speed = m_bulletSpeed;      // 1.0
-                params.lifetime = m_bulletLifetime; // 3.0
-                params.damage = 10;
-
-                LOG_PRINT("[MonsterDullGray] Firing bullet towards player ({:.2f}, {:.2f}, {:.2f})", 
-                          direction.x, direction.y, direction.z);
-
-                m_bulletFactory->LinearFireMonster(monsterPos, direction, params);
-
-                // 발사 애니메이션 재생 (루프 없음)
-                if (m_skeletalAnimator && !m_animName_Attack.empty())
-                {
-                    m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-                }
-
-                // 쿨다운 재설정 (3초)
-                m_fireTimer = m_fireRate;  // 3.0초
-            }
+            return;
         }
+
+        // 현재 보고 있는 방향으로 발사. 현재 쓰고있는 메쉬는 앞뒤가 반대라 * -1.0f
+        //engine::Vector3 direction = GetForwardDirection();
+        //direction *= -1.0f;
+
+        // 그냥 플레이어를 향해 발사.
+        engine::Vector3 direction = CalculateDirectionToPlayer();
+
+        engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
+        m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+
+        if (m_skeletalAnimator && !m_animName_Attack.empty())
+        {
+            m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
+        }
+
+        m_fireTimer = m_fireRate;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -269,6 +294,7 @@ namespace game
         ImGui::Text("Animation Names:");
         ImGui::InputText("Idle", &m_animName_Idle);
         ImGui::InputText("Attack", &m_animName_Attack);
+        ImGui::InputText("Fragile", &m_animName_Fragile);
         ImGui::InputText("Dead", &m_animName_Dead);
 
         // 런타임 정보
@@ -280,7 +306,74 @@ namespace game
         {
             ImGui::Text("Distance to Player: %.2f", GetDistanceToPlayer());
             ImGui::Text("Player In Range: %s", IsPlayerInRange() ? "Yes" : "No");
-            ImGui::Text("Rotated to Player: %s", IsRotatedTowardsPlayer() ? "Yes" : "No");
+            ImGui::Text("Looking at Player: %s", IsLookingAtPlayer() ? "Yes" : "No");
+            
+            // 회전 디버그 정보
+            ImGui::Separator();
+            ImGui::Text("=== Rotation Debug ===");
+            engine::Vector3 dirToPlayer = CalculateDirectionToPlayer();
+            // GetForward()는 -Z를 반환하므로 -1을 곱해서 +Z 방향으로 변환
+            engine::Vector3 forward = GetTransform()->GetForward() * -1.0f;
+            forward.y = 0.0f;
+            forward.Normalize();
+            
+            float dot = forward.Dot(dirToPlayer);
+            float angleDeg = acosf(std::clamp(dot, -1.0f, 1.0f)) * 180.0f / 3.14159f;
+            
+            ImGui::Text("Forward (GetForward): (%.2f, %.2f, %.2f)", forward.x, forward.y, forward.z);
+            ImGui::Text("To Player: (%.2f, %.2f, %.2f)", dirToPlayer.x, dirToPlayer.y, dirToPlayer.z);
+            ImGui::Text("Dot Product: %.3f", dot);
+            ImGui::Text("Angle to Player: %.1f deg", angleDeg);
+            ImGui::Text("Threshold: 15.0 deg (stop), 25.0 deg (near-stop)");
+            
+            // 좌표계 정보
+            ImGui::Separator();
+            engine::Vector3 worldPos = GetTransform()->GetWorldPosition();
+            engine::Vector3 playerPos = m_targetPlayer->GetGameObject()->GetTransform()->GetWorldPosition();
+            ImGui::Text("Monster Pos: (%.1f, %.1f, %.1f)", worldPos.x, worldPos.y, worldPos.z);
+            ImGui::Text("Player Pos: (%.1f, %.1f, %.1f)", playerPos.x, playerPos.y, playerPos.z);
+            
+            if (m_rigidbody)
+            {
+                ImGui::Separator();
+                engine::Vector3 angVel = m_rigidbody->GetAngularVelocity();
+                ImGui::Text("Angular Velocity: (%.3f, %.3f, %.3f)", angVel.x, angVel.y, angVel.z);
+                
+                // Cross product로 계산한 회전 방향 표시
+                engine::Vector3 cross = forward.Cross(dirToPlayer);
+                float rotationSign = (cross.y >= 0.0f) ? 1.0f : -1.0f;
+                ImGui::Text("Cross Product Y: %.3f", cross.y);
+                ImGui::Text("Rotation Sign: %.1f (%s)", rotationSign, 
+                    rotationSign > 0 ? "CCW (Left)" : "CW (Right)");
+                
+                // 회전 상태 표시
+                if (angleDeg <= 15.0f)
+                {
+                    ImGui::TextColored(ImVec4(0, 1, 0, 1), "Status: STOPPED (Within 15deg threshold)");
+                }
+                else if (angleDeg <= 25.0f)
+                {
+                    if (std::abs(angVel.y) < 0.5f)
+                    {
+                        ImGui::TextColored(ImVec4(0, 1, 1, 1), "Status: NEAR-STOP (Slowing down)");
+                    }
+                    else
+                    {
+                        ImGui::TextColored(ImVec4(1, 1, 0, 1), "Status: Rotating (Angle: %.1f deg)", angleDeg);
+                    }
+                }
+                else
+                {
+                    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Status: ROTATING (Angle: %.1f deg)", angleDeg);
+                }
+                
+                // 경고: 회전 방향이 잘못되었을 가능성
+                if (std::abs(angVel.y) > 1.0f && angleDeg > 90.0f)
+                {
+                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "WARNING: High velocity but large angle!");
+                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "Check: Rotation direction or player movement");
+                }
+            }
         }
         ImGui::Text("Fire Timer: %.2f", m_fireTimer);
         
@@ -301,6 +394,7 @@ namespace game
         
         j["AnimName_Idle"] = m_animName_Idle;
         j["AnimName_Attack"] = m_animName_Attack;
+        j["AnimName_Fragile"] = m_animName_Fragile;
         j["AnimName_Dead"] = m_animName_Dead;
     }
 
@@ -310,6 +404,7 @@ namespace game
         
         m_animName_Idle = j.value("AnimName_Idle", "Idle");
         m_animName_Attack = j.value("AnimName_Attack", "Attack");
+        m_animName_Fragile = j.value("AnimName_Fragile", "Fragile");
         m_animName_Dead = j.value("AnimName_Dead", "Dead");
     }
 }

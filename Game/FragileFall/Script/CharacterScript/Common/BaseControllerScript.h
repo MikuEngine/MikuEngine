@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -116,10 +116,36 @@ namespace game
         bool IsInAnyState(const std::initializer_list<std::string>& states) const;
 
         // ─────────────────────────────────────────────
+        // 방향 유틸리티
+        // ─────────────────────────────────────────────
+        engine::Vector3 GetForwardDirection() const;
+
+        // ─────────────────────────────────────────────
+        // 대상(Target) 유틸리티 - 범용 함수
+        // ─────────────────────────────────────────────
+        float GetDistanceToTarget(engine::GameObject* target) const;
+        engine::Vector3 CalculateDirectionToTarget(engine::GameObject* target) const;
+        bool IsTargetInRange(engine::GameObject* target, float range) const;
+        
+        // ─────────────────────────────────────────────
+        // 회전 유틸리티 - 범용 함수
+        // ─────────────────────────────────────────────
+        void RotateTowardsTarget(engine::GameObject* target, float deltaTime);
+        void RotateToDirection(const engine::Vector3& targetDirection, float deltaTime);
+        bool IsLookingAtTarget(engine::GameObject* target) const;
+        bool IsLookingAtDirection(const engine::Vector3& targetDirection) const;
+        
+        void StopRotation();
+
+        // ─────────────────────────────────────────────
         // 컴포넌트 캐싱
         // ─────────────────────────────────────────────
         virtual void CacheComponents();
         void CacheFSMComponents();
         void RegisterFSMCallbacks();
+        
+    private:
+        // Rigidbody 캐시 (회전 함수에서 사용)
+        mutable engine::Rigidbody* m_cachedRigidbody = nullptr;
     };
 }

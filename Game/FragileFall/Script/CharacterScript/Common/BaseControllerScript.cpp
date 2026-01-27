@@ -3,6 +3,7 @@
 
 #include <Framework/Object/Component/LogicFSM.h>
 #include <Framework/Object/Component/AnimFSM.h>
+#include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/GameObject/GameObject.h>
 
 namespace game
@@ -81,6 +82,180 @@ namespace game
             if (current == state) return true;
         }
         return false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 방향 유틸리티
+    // ═══════════════════════════════════════════════════════════════
+    engine::Vector3 BaseControllerScript::GetForwardDirection() const
+    {
+        if (!GetTransform()) return engine::Vector3(0.0f, 0.0f, 1.0f);
+
+        // GetForward()는 -Z를 반환하므로 -1을 곱해서 +Z 방향으로 변환
+        engine::Vector3 forward = GetTransform()->GetForward() * -1.0f;
+        forward.y = 0.0f;
+        
+        if (forward.LengthSquared() < 0.0001f)
+        {
+            return engine::Vector3(0.0f, 0.0f, 1.0f);
+        }
+        
+        forward.Normalize();
+        return forward;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 대상(Target) 유틸리티
+    // ═══════════════════════════════════════════════════════════════
+    float BaseControllerScript::GetDistanceToTarget(engine::GameObject* target) const
+    {
+        if (!target || !GetTransform()) return FLT_MAX;
+
+        engine::Transform* targetTransform = target->GetTransform();
+        if (!targetTransform) return FLT_MAX;
+
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 targetPos = targetTransform->GetWorldPosition();
+        
+        return (targetPos - myPos).Length();
+    }
+
+    engine::Vector3 BaseControllerScript::CalculateDirectionToTarget(engine::GameObject* target) const
+    {
+        if (!target || !GetTransform()) return engine::Vector3::Zero;
+
+        engine::Transform* targetTransform = target->GetTransform();
+        if (!targetTransform) return engine::Vector3::Zero;
+
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 targetPos = targetTransform->GetWorldPosition();
+
+        engine::Vector3 direction = targetPos - myPos;
+        direction.y = 0.0f;
+        
+        if (direction.LengthSquared() < 0.0001f)
+        {
+            return engine::Vector3::Zero;
+        }
+        
+        direction.Normalize();
+        return direction;
+    }
+
+    bool BaseControllerScript::IsTargetInRange(engine::GameObject* target, float range) const
+    {
+        return GetDistanceToTarget(target) <= range;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 회전 유틸리티
+    // ═══════════════════════════════════════════════════════════════
+    void BaseControllerScript::RotateTowardsTarget(engine::GameObject* target, float deltaTime)
+    {
+        engine::Vector3 direction = CalculateDirectionToTarget(target);
+        RotateToDirection(direction, deltaTime);
+    }
+
+    void BaseControllerScript::RotateToDirection(const engine::Vector3& targetDirection, float deltaTime)
+    {
+        if (!m_cachedRigidbody)
+        {
+            m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
+        }
+
+        if (!m_cachedRigidbody || targetDirection.LengthSquared() < 0.0001f)
+        {
+            if (m_cachedRigidbody) m_cachedRigidbody->SetAngularVelocity(engine::Vector3::Zero);
+            return;
+        }
+
+        // GetForward()는 -Z를 반환하므로 -1을 곱해서 +Z 방향으로 변환
+        engine::Vector3 currentForward = GetTransform()->GetForward() * -1.0f;
+        currentForward.y = 0.0f;
+        
+        if (currentForward.LengthSquared() < 0.0001f)
+        {
+            currentForward = engine::Vector3(0.0f, 0.0f, 1.0f);
+        }
+        
+        currentForward.Normalize();
+
+        engine::Vector3 targetDir = targetDirection;
+        
+        targetDir.y = 0.0f;        
+        targetDir.Normalize();
+
+        float dot = currentForward.Dot(targetDir);
+        
+        // Threshold 체크: 각도 차이가 작으면 회전 멈춤
+        const float ROTATION_THRESHOLD = 15.0f * 3.14159f / 180.0f;
+        const float dotThreshold = cosf(ROTATION_THRESHOLD);
+
+        if (dot >= dotThreshold)
+        {
+            StopRotation();
+            return;
+        }
+
+        engine::Vector3 cross = currentForward.Cross(targetDir);
+        float rotationSign = (cross.y >= 0.0f) ? 1.0f : -1.0f;
+
+        float angleDiff = acosf(std::clamp(dot, -1.0f, 1.0f));
+        
+        const float rotationSpeed = 2.0f;
+        float proportional = rotationSign * angleDiff * rotationSpeed;
+        
+        engine::Vector3 currentAngVel = m_cachedRigidbody->GetAngularVelocity();
+        float derivative = -currentAngVel.y * 0.5f;
+        
+        float targetAngularVelocity = proportional + derivative;
+        
+        const float maxAngularSpeed = 5.0f;
+        targetAngularVelocity = std::clamp(targetAngularVelocity, -maxAngularSpeed, maxAngularSpeed);
+
+        m_cachedRigidbody->SetAngularVelocity(engine::Vector3(0.0f, targetAngularVelocity, 0.0f));
+    }
+
+    bool BaseControllerScript::IsLookingAtTarget(engine::GameObject* target) const
+    {
+        if (!target) return false;
+        
+        engine::Vector3 direction = CalculateDirectionToTarget(target);
+        return IsLookingAtDirection(direction);
+    }
+
+    bool BaseControllerScript::IsLookingAtDirection(const engine::Vector3& targetDirection) const
+    {
+        if (targetDirection.LengthSquared() < 0.0001f) return true;
+
+        // GetForward()는 -Z를 반환하므로 -1을 곱해서 +Z 방향으로 변환
+        engine::Vector3 currentForward = GetTransform()->GetForward() * -1.0f;
+        currentForward.y = 0.0f;
+        currentForward.Normalize();
+
+        engine::Vector3 targetDir = targetDirection;
+        targetDir.y = 0.0f;
+        targetDir.Normalize();
+
+        float dot = currentForward.Dot(targetDir);
+        // RotateToDirection과 동일한 threshold 사용
+        const float ROTATION_THRESHOLD = 15.0f * 3.14159f / 180.0f;
+        const float dotThreshold = cosf(ROTATION_THRESHOLD);
+        
+        return dot >= dotThreshold;
+    }
+
+    void BaseControllerScript::StopRotation()
+    {
+        if (!m_cachedRigidbody)
+        {
+            m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
+        }
+
+        if (m_cachedRigidbody)
+        {
+            m_cachedRigidbody->SetAngularVelocity(engine::Vector3::Zero);
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
