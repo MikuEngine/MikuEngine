@@ -158,6 +158,7 @@
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="Manager\TestManager.cpp" />
     <ClCompile Include="Script\AnimationPlayer.cpp" />
+    <ClCompile Include="Script\CSVReaderTest.cpp" />
     <ClCompile Include="Script\MonsterScript.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\TempMonster.cpp" />
@@ -245,6 +246,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Script\CSVReaderTest.h" />
     <ClInclude Include="Script\MonsterScript.h" />
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\TempMonster.h" />

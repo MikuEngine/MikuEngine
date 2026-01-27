@@ -155,6 +155,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Common\Utility\CSVReader.cpp" />
     <ClCompile Include="Core\Graphics\Resource\GeometryShader.cpp" />
     <ClCompile Include="Core\System\VirtualFileSystem.cpp" />
     <ClCompile Include="Editor\EditorGrid.cpp" />
@@ -272,6 +273,7 @@
     <ClCompile Include="Framework\Object\Component\UI\UIClickArea.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\Utility\CSVReader.h" />
     <ClInclude Include="Common\Utility\EditorHelper.h" />
     <ClInclude Include="Core\Graphics\Data\ParticleStructuredData.h" />
     <ClInclude Include="Core\Graphics\Resource\GeometryShader.h" />
@@ -686,6 +688,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Common\Utility\CSVReader.inl" />
     <None Include="Shader\Include\PBR_Shared.hlsli" />
     <None Include="Shader\Include\Shared.hlsli" />
   </ItemGroup>

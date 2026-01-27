@@ -351,6 +351,9 @@
     <ClCompile Include="Framework\Asset\SocketData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Utility\CSVReader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -752,6 +755,9 @@
     <ClInclude Include="Framework\Asset\SocketData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Utility\CSVReader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\FullscreenQuad_VS.hlsl" />
@@ -806,5 +812,8 @@
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />
     <None Include="Shader\Include\PBR_Shared.hlsli" />
+    <None Include="Common\Utility\CSVReader.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>
