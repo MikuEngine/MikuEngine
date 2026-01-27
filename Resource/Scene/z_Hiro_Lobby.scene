@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Lobby",
-    "NumGameObjects": 62,
+    "NumGameObjects": 61,
     "GameObjects": [
         {
             "ID": 0,
@@ -3964,62 +3964,7 @@
         },
         {
             "ID": 53,
-            "Name": "Canvas",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
-                }
-            ]
-        },
-        {
-            "ID": 54,
-            "ParentID": 53,
+            "ParentID": 52,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -4083,8 +4028,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 54,
+            "ID": 54,
+            "ParentID": 53,
             "Name": "Viewport",
             "Active": true,
             "Components": [
@@ -4150,8 +4095,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 55,
+            "ID": 55,
+            "ParentID": 54,
             "Name": "Content",
             "Active": true,
             "Components": [
@@ -4200,8 +4145,8 @@
             ]
         },
         {
-            "ID": 57,
-            "ParentID": 56,
+            "ID": 56,
+            "ParentID": 55,
             "Name": "image",
             "Active": true,
             "Components": [
@@ -4267,8 +4212,8 @@
             ]
         },
         {
-            "ID": 58,
-            "ParentID": 56,
+            "ID": 57,
+            "ParentID": 55,
             "Name": "image2",
             "Active": true,
             "Components": [
@@ -4334,8 +4279,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 54,
+            "ID": 58,
+            "ParentID": 53,
             "Name": "Scrollbar",
             "Active": true,
             "Components": [
@@ -4416,8 +4361,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 59,
+            "ID": 59,
+            "ParentID": 58,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -4483,8 +4428,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 59,
+            "ID": 60,
+            "ParentID": 58,
             "Name": "Handle",
             "Active": true,
             "Components": [
