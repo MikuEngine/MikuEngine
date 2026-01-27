@@ -163,6 +163,7 @@
     <ClCompile Include="Script\SceneController_Play.cpp" />
     <ClCompile Include="Script\SceneController_Main.cpp" />
     <ClCompile Include="Script\UIFollowWorldTarget.cpp" />
+    <ClCompile Include="Script\UIHoverScale.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
     <ClCompile Include="Script\UpgradeNodeView.cpp" />
     <ClCompile Include="Script\UpgradeController.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Script\SceneController_Play.h" />
     <ClInclude Include="Script\SceneController_Main.h" />
     <ClInclude Include="Script\UIFollowWorldTarget.h" />
+    <ClInclude Include="Script\UIHoverScale.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />
     <ClInclude Include="Script\UpgradeNodeView.h" />
     <ClInclude Include="Script\UpgradeController.h" />
