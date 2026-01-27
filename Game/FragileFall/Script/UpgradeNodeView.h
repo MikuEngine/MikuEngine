@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include "UpgradeTypes.h"
 
 namespace game
 {
@@ -8,16 +9,6 @@ namespace game
         public engine::Script<UpgradeNodeView>
     {
         REGISTER_SCRIPT(UpgradeNodeView, Script)
-
-    public:
-        enum class UpgradeCategory : int
-        {
-            Attack = 0,
-            Defense,
-            Life,
-            Stamina,
-            COUNT
-        };
 
     public:
         void Awake() override;
@@ -33,7 +24,6 @@ namespace game
 
     public:
         UpgradeCategory m_category = UpgradeCategory::Attack;
-        UpgradeCategory m_selectedCategory;
 
         int m_nodeId = 0;
         int m_newParent = 0;

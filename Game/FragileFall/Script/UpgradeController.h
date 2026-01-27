@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include <Framework/Object/Component/UI/UIButton.h>
+#include "UpgradeTypes.h"
 
 namespace game
 {
@@ -37,14 +39,21 @@ namespace game
         void BuildDefaultTreeIfEmpty();
         void RecomputeUnlocked();
         
+        void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
+
+        // Category
+        void SetCategory(UpgradeCategory c);
+        void ApplyCategoryFilter();
+
     private:
-        //std::unordered_map<int, UpgradeNode> m_nodes;
         std::vector<engine::GameObject*> m_nodeObjects;
 
         std::unordered_map<int, game::UpgradeNodeView*> m_views;
 
         std::unordered_map<int, bool> m_purchased;
         std::unordered_map<int, bool> m_unlocked;
+
+        UpgradeCategory m_selected = UpgradeCategory::Attack;
 
         int m_ruby = 100;
         int m_sapphire = 100;

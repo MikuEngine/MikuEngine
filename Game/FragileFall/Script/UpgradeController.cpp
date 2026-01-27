@@ -6,7 +6,10 @@ namespace game
 {
     void UpgradeController::Awake()
     {
-
+        BindButton("Btn_Attack", [this] { SetCategory(UpgradeCategory::Attack); });
+        BindButton("Btn_Defense", [this] { SetCategory(UpgradeCategory::Defense); });
+        BindButton("Btn_Life", [this] { SetCategory(UpgradeCategory::Life); });
+        BindButton("Btn_Stamina", [this] { SetCategory(UpgradeCategory::Stamina); });
     }
 
     void UpgradeController::Start()
@@ -249,6 +252,37 @@ namespace game
             }
 
             m_unlocked[id] = ok;
+        }
+    }
+
+    void UpgradeController::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
+    {
+        auto* go = engine::GameObject::Find(name);
+        if (!go) return;
+
+        auto* button = go->GetComponent<engine::UIButton>();
+        if (!button) return;
+
+        button->AddOnClick(std::move(cb));
+    }
+
+    void UpgradeController::SetCategory(UpgradeCategory c)
+    {
+        if (m_selected == c) return;
+        m_selected = c;
+        ApplyCategoryFilter();
+    }
+
+    void UpgradeController::ApplyCategoryFilter()
+    {
+        for (auto* go : m_nodeObjects)
+        {
+            if (!go) continue;
+            auto* view = go->GetComponent<UpgradeNodeView>();
+            if (!view) continue;
+
+            const bool show = (view->m_category == m_selected);
+            go->SetActive(show);
         }
     }
 }

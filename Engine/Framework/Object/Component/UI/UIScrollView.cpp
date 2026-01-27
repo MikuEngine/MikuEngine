@@ -464,6 +464,12 @@ namespace engine
 
 		if (ImGui::Button("Rebind Scrollbar") && !m_scrollbarName.empty())
 			SetScrollbarByName(m_scrollbarName);
+
+		if (m_viewportRT)
+		{
+			Vector4 cr = CalcViewportClipRectPx(this, m_viewportRT);
+			ImGui::Text("ClipRect Px LTRB: %.1f %.1f %.1f %.1f", cr.x, cr.y, cr.z, cr.w);
+		}
 	}
 
 	void UIScrollView::Save(json& j) const

@@ -143,5 +143,8 @@
     <ClInclude Include="Script\PathfindTest.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Script\UpgradeTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
