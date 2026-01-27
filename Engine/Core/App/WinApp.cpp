@@ -305,11 +305,10 @@ namespace engine
         const auto& audio = m_userSettings.audio;
         auto& sound = SoundSystem::Get();
 
-        // TODO : Setter 추가
-        //sound.SetMasterVolume(audio.master);
-        //sound.SetBGMVolume(audio.bgm);
-        //sound.SetSFXVolume(audio.sfx);
-        //sound.SetMute(audio.mute);
+        sound.SetMasterVolume(audio.master);  //(미구현, 기본값 1.0f)
+        sound.SetBGMVolume(audio.bgm);
+        sound.SetSFXVolume(audio.sfx);
+        sound.SetMute(audio.mute);
 
         // 3) 컨트롤 설정 적용
         //const auto& ctrl = m_userSettings.controls;

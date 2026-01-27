@@ -82,6 +82,16 @@ namespace engine
         int m_selectedSoundIndex = 0;
         int m_index = 0;
 
+    private:
+        void ApplyVolumes();
+        static float Clamp01(float v);
+
+    private:
+        float m_master = 1.0f;
+        float m_bgm = 1.0f;
+        float m_sfx = 1.0f;
+        bool  m_mute = false;
+
     public:
         bool Initialize();
         void Shutdown();
@@ -103,6 +113,18 @@ namespace engine
         void SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up);
 
         void Play(const std::string& key, float volume = 1.0f, float pitch = 1.0f);
+
+        // Setter, Getter
+        void SetMasterVolume(float v);
+        void SetBGMVolume(float v);
+        void SetSFXVolume(float v);
+        void SetMute(bool mute);
+
+        float GetMasterVolume() const { return m_master; }
+        float GetBGMVolume() const { return m_bgm; }
+        float GetSFXVolume() const { return m_sfx; }
+        bool  IsMuted() const { return m_mute; }
+
 
     private:
         FMOD::ChannelGroup* GetOrCreateChannelGroup(const std::string &groupName);
