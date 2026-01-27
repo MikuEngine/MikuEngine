@@ -14,7 +14,8 @@
 			"Resource/Sound/test_click_5.wav"
 		],
 		"Option": "SFX/UI" 
-	}
+	},
+	{ "Type": "Sound", "Path": "Resource/Sound/Suki_Yuki_Maji_Magic.mp3", "Option": "BGM" }
   ],
   "Scenes": {
     "StaticMeshTest": [

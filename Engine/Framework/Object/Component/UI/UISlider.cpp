@@ -108,6 +108,8 @@ namespace engine
 		m_value = v;
 		m_dirty = true;
 
+		UpdateVisuals();
+
 		if (notify && m_onValueChanged)
 			m_onValueChanged(m_value);
 	}

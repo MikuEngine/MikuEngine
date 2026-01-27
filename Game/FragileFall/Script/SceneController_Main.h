@@ -2,6 +2,7 @@
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/UI/UIButton.h>
+#include <Framework/Object/Component/UI/UISlider.h>
 
 namespace game
 {
@@ -21,28 +22,36 @@ namespace game
         void Load(const engine::json& j) override;
 
     private:
+        // Bind
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
-        
+        void BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb);
+
+        // Button
         void StartGame();
         void OpenOption();
         void OpenCredit();
         void QuitGame();
-
         void Back();
 
+        // Slider
+        //void OnMasterChanged(float v);    (미구현)
+        void OnBGMChanged(float v);
+        void OnSFXChanged(float v);
+        void SetSensitivity(float v);
+
+        // Execute
         void SetOptionOpen(bool open);
         void SetCreditOpen(bool open);
         void UpdateBlocker();
-
-        bool m_bound = false;
-
-        bool m_isOptionOpen = false;
-        bool m_isCreditOpen = false;
 
     private:
         // GameObject
         engine::GameObject* m_optionPopUp = nullptr;
         engine::GameObject* m_creditPopUp = nullptr;
         engine::GameObject* m_blocker = nullptr;
+
+        bool m_bound = false;
+        bool m_isOptionOpen = false;
+        bool m_isCreditOpen = false;
     };
 }
