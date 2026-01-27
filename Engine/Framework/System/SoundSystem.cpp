@@ -113,6 +113,29 @@ namespace engine
     // SoundSystem Class Implementation
     // ==============================================================
 
+    void SoundSystem::ApplyVolumes()
+    {
+        if (!m_pSystem) return;
+
+        const float master = m_mute ? 0.0f : Clamp01(m_master);
+
+        if (auto* g = GetOrCreateChannelGroup("Master"))
+            g->setVolume(master);
+
+        if (auto* g = GetOrCreateChannelGroup("BGM"))
+            g->setVolume(Clamp01(m_bgm));
+
+        if (auto* g = GetOrCreateChannelGroup("SFX"))
+            g->setVolume(Clamp01(m_sfx));
+    }
+
+    float SoundSystem::Clamp01(float v)
+    {
+        if (v < 0.f) return 0.f;
+        if (v > 1.f) return 1.f;
+        return v;
+    }
+
     bool SoundSystem::Initialize()
     {
         m_components.clear();
@@ -129,6 +152,20 @@ namespace engine
         // 3D 세팅: 거리 계수 (1.0f = 미터 단위), 왼손 좌표계/오른손 좌표계에 따라 수정 필요
         m_pSystem->set3DSettings(1.0f, 1.0f, 1.0f);
 
+        FMOD::ChannelGroup* masterGroup = nullptr;
+        m_pSystem->getMasterChannelGroup(&masterGroup);
+
+        if (masterGroup)
+        {
+            m_channelGroups["Master"] = masterGroup;
+
+            // 기본 그룹들 생성/확보
+            GetOrCreateChannelGroup("BGM");
+            GetOrCreateChannelGroup("SFX");
+            GetOrCreateChannelGroup("UI");
+        }
+
+        ApplyVolumes();
         return true;
     }
 
@@ -263,18 +300,32 @@ namespace engine
 
     FMOD::ChannelGroup* SoundSystem::GetOrCreateChannelGroup(const std::string &groupName)
     {
+        if (!m_pSystem) return nullptr;
+
+        if (groupName == "Master")
+        {
+            FMOD::ChannelGroup* masterGroup = nullptr;
+            m_pSystem->getMasterChannelGroup(&masterGroup);
+
+            if (masterGroup)
+            {
+                m_channelGroups["Master"] = masterGroup;
+            }
+            return masterGroup;
+        }
+
         if (m_channelGroups.contains(groupName))
         {
             return m_channelGroups[groupName];
         }
 
-        FMOD::ChannelGroup *parentGroup = nullptr;
-        m_pSystem->getMasterChannelGroup(&parentGroup);
+        FMOD::ChannelGroup* parentGroup = GetOrCreateChannelGroup("Master");
+        if (!parentGroup) return nullptr;
 
         std::string currentPath;
         std::string remainingPath = groupName;
-        size_t pos = 0;
 
+        size_t pos = 0;
         while ((pos = remainingPath.find('/')) != std::string::npos)
         {
             std::string token = remainingPath.substr(0, pos);
@@ -296,25 +347,22 @@ namespace engine
             remainingPath.erase(0, pos + 1);
         }
 
-
         if (!remainingPath.empty())
         {
-            if (!currentPath.empty())
-            {
-                currentPath += "/";
-            }
-        }
-        currentPath += remainingPath;
+            if (!currentPath.empty()) currentPath += "/";
+            currentPath += remainingPath;
 
-        if (!m_channelGroups.contains(currentPath))
-        {
-            FMOD::ChannelGroup *newGroup = nullptr;
-            m_pSystem->createChannelGroup(remainingPath.c_str(), &newGroup);
-            parentGroup->addGroup(newGroup);
-            m_channelGroups[currentPath] = newGroup;
+            if (!m_channelGroups.contains(currentPath))
+            {
+                FMOD::ChannelGroup* newGroup = nullptr;
+                m_pSystem->createChannelGroup(remainingPath.c_str(), &newGroup);
+                parentGroup->addGroup(newGroup);
+                m_channelGroups[currentPath] = newGroup;
+            }
+
+            return m_channelGroups[currentPath];
         }
-        parentGroup = m_channelGroups[currentPath];
-        
+
         return parentGroup;
     }
 
@@ -529,6 +577,11 @@ namespace engine
             channel->setPaused(false);
         }
     }
+
+    void SoundSystem::SetMasterVolume(float v) { m_master = Clamp01(v); ApplyVolumes(); }
+    void SoundSystem::SetBGMVolume(float v) { m_bgm = Clamp01(v); ApplyVolumes(); }
+    void SoundSystem::SetSFXVolume(float v) { m_sfx = Clamp01(v); ApplyVolumes(); }
+    void SoundSystem::SetMute(bool mute) { m_mute = mute;       ApplyVolumes(); }
 
     void SoundSystem::RefreshSoundList()
     {

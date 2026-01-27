@@ -62,20 +62,16 @@
                     }
                 },
                 {
-                    "Type": "SoundTest",
-                    "Active": false
-                },
-                {
                     "Type": "AudioSource",
                     "Active": true,
-                    "ClipName": "singing.wav",
-                    "IsLoop": false,
+                    "ClipName": "Suki_Yuki_Maji_Magic.mp3",
+                    "IsLoop": true,
                     "Is3D": false,
                     "PlayOnAwake": true,
                     "Volume": 1.0,
                     "MinDist": 1.0,
                     "MaxDist": 500.0,
-                    "UseRandom": true,
+                    "UseRandom": false,
                     "RandomClips": [
                         "test_click_1.wav",
                         "test_click_2.wav",

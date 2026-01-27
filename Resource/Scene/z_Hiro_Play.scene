@@ -1241,7 +1241,7 @@
         {
             "ID": 16,
             "ParentID": 12,
-            "Name": "UI_SoundSlider",
+            "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
                 {
@@ -1524,7 +1524,7 @@
         {
             "ID": 20,
             "ParentID": 12,
-            "Name": "UI_EffectSlider",
+            "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
                 {
@@ -1807,7 +1807,7 @@
         {
             "ID": 24,
             "ParentID": 12,
-            "Name": "UI_MouseSlider",
+            "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
                 {

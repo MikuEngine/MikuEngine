@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Physics/PhysicsLayer.h"
@@ -34,7 +34,7 @@ namespace engine
         Vector3 m_center{ 0.0f, 0.0f, 0.0f };   // 로컬 오프셋
         Vector3 m_rotation{ 0.0f, 0.0f, 0.0f }; // 로컬 회전 (오일러 각도, degrees)
         bool m_isTrigger = false;
-        bool m_syncWithTransform = true;        // Transform 스케일과 자동 동기화
+        bool m_syncWithTransform = false;       // Transform 스케일과 자동 동기화 (기본: 비활성화)
         Vector3 m_lastSyncedScale{ 1.0f, 1.0f, 1.0f };  // 마지막 동기화된 스케일
         
         // 레이어

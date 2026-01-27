@@ -68,6 +68,8 @@ namespace engine
         }
 
         // WorldScale 적용 (부모 스케일 포함)
+        // 참고: m_syncWithTransform이 true인 경우에만 Transform 스케일 자동 동기화
+        // 기본적으로 false이므로 콜라이더는 Transform 스케일과 독립적으로 동작
         if (m_syncWithTransform && m_shape && GetTransform())
         {
             Vector3 worldScale = GetTransform()->GetWorldScale();
@@ -328,22 +330,6 @@ namespace engine
         if (ImGui::Checkbox("Is Trigger", &isTrigger))
         {
             SetIsTrigger(isTrigger);
-        }
-
-        // Transform 스케일 동기화
-        bool syncWithTransform = m_syncWithTransform;
-        if (ImGui::Checkbox("Sync With Transform", &syncWithTransform))
-        {
-            SetSyncWithTransform(syncWithTransform);
-            if (syncWithTransform)
-            {
-                // 동기화 활성화 시 현재 WorldScale로 초기화
-                m_lastSyncedScale = GetTransform()->GetWorldScale();
-            }
-        }
-        if (ImGui::IsItemHovered())
-        {
-            ImGui::SetTooltip("Enable to automatically sync collider size with Transform scale");
         }
 
         // Physics Layer 콤보박스 (PhysicsLayer.h에서 자동으로 레이어 이름 가져오기)

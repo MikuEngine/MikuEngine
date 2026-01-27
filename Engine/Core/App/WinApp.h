@@ -51,6 +51,8 @@ namespace engine
         void SetUserSettings(const UserSettings& userSettings);
         void ApplyResolution(int width, int height, bool isFullscreen);
 
+        void SaveUserSettings();    // 저장
+
     private:
         void Update();
         void Render();

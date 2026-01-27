@@ -2,6 +2,7 @@
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/UI/UIButton.h>
+#include <Framework/Object/Component/UI/UISlider.h>
 
 namespace game
 {
@@ -22,6 +23,7 @@ namespace game
     private:
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
         void BindButton(const std::string& name, engine::UIButton::HoverCallback cb);
+        void BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb);
 
         // OnClick
         void EnterPlay();
@@ -34,6 +36,12 @@ namespace game
 
         // OnHover
         void ShowEffect();
+
+        // Slider
+        void OnBGMChanged(float v);
+        void OnSFXChanged(float v);
+        void SetSensitivity(float v);
+
 
         // State / UI Control
         void SetOptionOpen(bool open);
