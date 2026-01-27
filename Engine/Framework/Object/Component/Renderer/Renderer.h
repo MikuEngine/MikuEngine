@@ -61,6 +61,7 @@ namespace engine
 		virtual void DrawPickingID() const {}
 
 		virtual void UpdateSockets() {}
+		virtual Matrix GetSocketWorldMatrix(const std::string& name) const;
 
 	private:
 		friend class RenderSystem;
