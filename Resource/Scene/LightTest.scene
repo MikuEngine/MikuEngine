@@ -130,7 +130,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": true
+                    "CastShadow": true,
+                    "CullMode": 1
                 }
             ]
         },
@@ -182,7 +183,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 }
             ]
         },
@@ -464,7 +466,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": true
+                    "CastShadow": true,
+                    "CullMode": 1
                 }
             ]
         },
@@ -516,7 +519,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": true
+                    "CastShadow": true,
+                    "CullMode": 1
                 }
             ]
         },
@@ -568,7 +572,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": true
+                    "CastShadow": true,
+                    "CullMode": 1
                 }
             ]
         },
@@ -620,7 +625,8 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": true
+                    "CastShadow": true,
+                    "CullMode": 1
                 }
             ]
         }

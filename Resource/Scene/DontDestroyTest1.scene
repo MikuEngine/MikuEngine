@@ -60,14 +60,6 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                },
-                {
-                    "Type": "DontDestroyTest",
-                    "Active": true
-                },
-                {
-                    "Type": "CSVReaderTest",
-                    "Active": true
                 }
             ]
         }
