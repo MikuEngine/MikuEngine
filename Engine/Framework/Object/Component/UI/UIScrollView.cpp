@@ -153,10 +153,9 @@ namespace engine
 
 				if (created && rt)
 				{
-					// 루트 기준 좌상단에 고정된 500x500 예시
-					rt->SetAnchorMin({ 0.0f, 1.0f });
-					rt->SetAnchorMax({ 0.0f, 1.0f });
-					rt->SetPivot({ 0.0f, 1.0f });
+					rt->SetAnchorMin({ 0.0f, 0.0f });
+					rt->SetAnchorMax({ 0.0f, 0.0f });
+					rt->SetPivot({ 0.0f, 0.0f });
 					rt->SetAnchoredPosition({ 0.0f, 0.0f });
 
 					rt->SetWidth(500.0f);

@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-
+#include "Core/System/VirtualFileSystem.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Core/Graphics/Resource/Texture.h"
 
@@ -83,6 +83,7 @@ namespace engine
 	{
 		m_glyphs.clear();
 		m_pages.clear();
+		m_ttfBuffer.clear();
 
 		if (m_face)
 		{
@@ -172,11 +173,24 @@ namespace engine
 		if (m_desc.ttfPath.empty())
 			return false;
 
-		// 상대경로면 그대로 시도
-		const std::string path = m_desc.ttfPath;
+		// VFS로 파일을 메모리로 로드
+		m_ttfBuffer.clear();
 
-		if (FT_New_Face(m_ftLib, path.c_str(), 0, &m_face) != 0)
+		const std::string path = m_desc.ttfPath; // 가상 경로 그대로 사용
+		if (!VirtualFileSystem::Get().LoadFile(path, m_ttfBuffer) || m_ttfBuffer.empty())
 			return false;
+
+		// 메모리에서 Face 생성 (버퍼는 m_ttfBuffer가 들고 있으므로 수명 OK)
+		if (FT_New_Memory_Face(
+			m_ftLib,
+			reinterpret_cast<const FT_Byte*>(m_ttfBuffer.data()),
+			static_cast<FT_Long>(m_ttfBuffer.size()),
+			0,
+			&m_face) != 0)
+		{
+			m_ttfBuffer.clear();
+			return false;
+		}
 
 		return true;
 	}
