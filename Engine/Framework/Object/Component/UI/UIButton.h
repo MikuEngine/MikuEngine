@@ -45,10 +45,10 @@ namespace engine
 		std::string m_spriteDisabled;
 
 		// Tint
-		Vector4 m_tintNormal = Vector4(1, 1, 1, 1);
-		Vector4 m_tintHover = Vector4(0.84f, 0.84f, 0.84f, 1);
-		Vector4 m_tintPressed = Vector4(0.71f, 0.71f, 0.71f, 1);
-		Vector4 m_tintDisabled = Vector4(1, 1, 1, 1);
+		Vector4 m_tintNormal = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		Vector4 m_tintHover = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		Vector4 m_tintPressed = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		Vector4 m_tintDisabled = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 		std::string m_labelText = "Button";
 
