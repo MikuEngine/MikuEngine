@@ -102,11 +102,63 @@ namespace game
         // FSM 초기화 헬퍼 (자식에서 사용)
         // ─────────────────────────────────────────────
         void AddFSMState(const std::string& stateName, bool isDefault = false);
+        
+        // 단일 조건 전이
         void AddFSMTransition(
             const std::string& fromState,
             const std::string& toState,
             const std::string& parameterName,
             FSMTransitionType conditionType);
+        
+        // 여러 조건 전이 (가변 인자)
+        template<typename... Args>
+        void AddFSMTransition(
+            const std::string& fromState,
+            const std::string& toState,
+            const std::string& param1, FSMTransitionType type1,
+            const std::string& param2, FSMTransitionType type2,
+            Args&&... args)
+        {
+            if (!m_logicFSM) return;
+
+            engine::FSMTransition transition;
+            transition.toState = toState;
+            transition.conditionParameter = param1;
+            transition.conditionType = type1;
+
+            // 두 번째 조건 추가
+            engine::FSMTransition::AdditionalCondition cond2;
+            cond2.parameterName = param2;
+            cond2.conditionType = type2;
+            transition.additionalConditions.push_back(cond2);
+
+            // 나머지 조건들 추가 (재귀적으로 처리)
+            AddAdditionalConditions(transition, std::forward<Args>(args)...);
+
+            m_logicFSM->AddTransition(fromState, transition);
+        }
+
+    private:
+        // 추가 조건 재귀 처리 (베이스 케이스)
+        void AddAdditionalConditions(engine::FSMTransition& transition) {}
+
+        // 추가 조건 재귀 처리
+        template<typename... Args>
+        void AddAdditionalConditions(
+            engine::FSMTransition& transition,
+            const std::string& paramName, FSMTransitionType condType,
+            Args&&... args)
+        {
+            engine::FSMTransition::AdditionalCondition cond;
+            cond.parameterName = paramName;
+            cond.conditionType = condType;
+            transition.additionalConditions.push_back(cond);
+
+            // 재귀 호출
+            AddAdditionalConditions(transition, std::forward<Args>(args)...);
+        }
+
+    protected:
 
         // ─────────────────────────────────────────────
         // 현재 상태 확인 유틸리티
@@ -117,9 +169,11 @@ namespace game
 
         // ─────────────────────────────────────────────
         // 방향 유틸리티
+        // - SkeletalAnimator가 FBX를 180도 회전시킴
+        // - GetForwardDirection(): +Z = 모델의 실제 앞 방향
         // ─────────────────────────────────────────────
-        engine::Vector3 GetForwardDirection() const;  // FBX 모델의 실제 Forward (-Z)
-        engine::Vector3 GetForwardDirectionReverse() const;  // 엔진의 Forward (+Z)
+        engine::Vector3 GetForwardDirection() const;
+        engine::Vector3 GetForwardDirectionReverse() const;
 
         // ─────────────────────────────────────────────
         // 대상(Target) 유틸리티 - 범용 함수

@@ -158,6 +158,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Script\AimPointer.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedGreen.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\SceneController_Play.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="Script\AimPointer.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedGreen.h" />
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\SceneController_Lobby.h" />
     <ClInclude Include="Script\SceneController_Play.h" />

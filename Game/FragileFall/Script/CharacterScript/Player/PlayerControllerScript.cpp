@@ -164,7 +164,7 @@ namespace game
 		// 1. 이동 입력 → FSM 파라미터
 		// ─────────────────────────────────────────────
 		engine::Vector3 moveDir = GetMoveInputDirection();
-		bool isMoving = moveDir.LengthSquared() > 0.001f;
+		bool isMoving = moveDir.LengthSquared() > 0.0001f;
 
 		m_logicFSM->SetParameter("IsMoving", isMoving);
 		if (isMoving)
@@ -345,7 +345,7 @@ namespace game
 		if (!m_rigidbody)
 		{
 			// Rigidbody 없으면 Transform 직접 변경 (하위 호환성)
-			if (moveDir.LengthSquared() < 0.001f) return;
+			if (moveDir.LengthSquared() < 0.0001f) return;
 			
 			moveDir.y = 0.0f;
 			moveDir.Normalize();
@@ -364,7 +364,7 @@ namespace game
 		if (m_rigidbody->IsKinematic())
 		{
 			// Kinematic: MovePosition 사용 (충돌 감지)
-			if (moveDir.LengthSquared() < 0.001f) return;
+			if (moveDir.LengthSquared() < 0.0001f) return;
 
 			moveDir.y = 0.0f;
 			moveDir.Normalize();
@@ -377,7 +377,7 @@ namespace game
 		else if (m_rigidbody->IsDynamic())
 		{
 			// Dynamic: Velocity 사용 (물리 시뮬레이션, 충돌 감지)
-			if (moveDir.LengthSquared() < 0.001f)
+			if (moveDir.LengthSquared() < 0.0001f)
 			{
 				// 입력 없으면 속도만 정지 (Y축은 유지)
 				engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
@@ -466,7 +466,7 @@ namespace game
 		engine::Vector3 toAim = aimPos - playerPos;
 		toAim.y = 0.0f;
 
-		if (toAim.LengthSquared() < 0.001f) return 0.0f;
+		if (toAim.LengthSquared() < 0.0001f) return 0.0f;
 
 		toAim.Normalize();
 
@@ -495,7 +495,7 @@ namespace game
 		if (!m_aimPointer) return false;
 
 		engine::Vector3 moveDir = GetMoveInputDirection();
-		if (moveDir.LengthSquared() < 0.001f) return false;
+		if (moveDir.LengthSquared() < 0.0001f) return false;
 
 		// 에임포인터 방향 벡터 (플레이어 기준)
 		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
@@ -518,7 +518,7 @@ namespace game
 
 	std::string PlayerControllerScript::GetAnimationState() const
 	{
-		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.001f;
+		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.0001f;
 		bool isShooting = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
 		bool isBackward = IsMovingBackward();
 
@@ -546,7 +546,7 @@ namespace game
 		// LogicFSM 상태 + 방향 정보 → AnimFSM 상태 결정
 		// ─────────────────────────────────────────────
 		std::string logicState = m_logicFSM ? m_logicFSM->GetCurrentState() : "Idle";
-		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.001f;
+		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.0001f;
 		bool isShooting = (logicState == "IdleShoot" || logicState == "WalkShoot");
 		bool isBackward = IsMovingBackward();
 

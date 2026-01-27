@@ -8,8 +8,7 @@ namespace engine
 {
     class Rigidbody;
     class SkeletalAnimator;
-    class PathfindingSystem;
-    struct PathResult;
+    class PathfindingAgent;
 }
 
 namespace game
@@ -42,7 +41,7 @@ namespace game
         engine::Rigidbody* m_rigidbody = nullptr;
         engine::SkeletalAnimator* m_skeletalAnimator = nullptr;
         BulletFactory* m_bulletFactory = nullptr;
-        engine::PathfindingSystem* m_pathfindingSystem = nullptr;  // 경로 찾기 시스템 (향후 이동 몬스터용)
+        engine::PathfindingAgent* m_pathfindingAgent = nullptr;  // 경로 찾기 에이전트
 
         // ─────────────────────────────────────────────
         // 플레이어 추적
@@ -74,7 +73,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 애니메이션 이름 (자식 클래스에서 설정)
         // ─────────────────────────────────────────────
-        std::string m_animName_Attack = "Attack";  // 공격 애니메이션 이름
+        //std::string m_animName_Attack = "Attack";  // 공격 애니메이션 이름
 
         // ─────────────────────────────────────────────
         // 회전 완료 판정 (물리 기반 회전에서는 더 큰 임계값 필요)
@@ -125,7 +124,7 @@ namespace game
         bool m_isPlayerInRange = false;
         
         // ─────────────────────────────────────────────
-        // 경로 찾기 (PathfindingSystem 활용)
+        // 경로 찾기 (PathfindingAgent 활용)
         // ─────────────────────────────────────────────
         float GetPathDistanceToPlayer() const;
         
@@ -146,7 +145,7 @@ namespace game
         virtual void ExecuteDeadBehavior();
         
         // ─────────────────────────────────────────────
-        // 이동 (PathfindingSystem 활용, 향후 이동 몬스터용)
+        // 이동 (PathfindingAgent 활용, 이동 몬스터용)
         // ─────────────────────────────────────────────
         virtual void MoveTowardsPlayer(float deltaTime);
 
