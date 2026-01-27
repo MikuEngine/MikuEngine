@@ -63,6 +63,12 @@ namespace engine
         void SetLineSpacing(float mul);
         float GetLineSpacing() const;
 
+        void SetMaskMode(MaskMode mode) { m_maskMode = mode; m_dirty = true; }
+        MaskMode GetMaskMode() const { return m_maskMode; }
+
+        void SetClipRect(const Vector4& r) { m_clipRect = r; m_dirty = true; }
+        const Vector4& GetClipRect() const { return m_clipRect; }
+
     public:
         bool HasRenderType(RenderType type) const override;
         void Draw(RenderType type) const override;
@@ -106,5 +112,10 @@ namespace engine
         // Layout
         float m_letterSpacingPx = 0.0f;
         float m_lineSpacingMul = 1.0f;
+
+        // Mask
+        MaskMode m_maskMode = MaskMode::Rect;
+        Vector4  m_clipRect = Vector4(0, 0, 0, 0);
+        bool m_dirty = true;
 	};
 }

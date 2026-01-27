@@ -198,6 +198,7 @@
     <ClInclude Include="Script\CharacterScript\Monster\MonsterDullGray.h" />
     <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h" />
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
+    <ClInclude Include="Script\UpgradeTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">

@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "Rigidbody.h"
 
 #include "Common/Utility/StaticMemoryPool.h"
@@ -344,7 +344,7 @@ namespace engine
 
     void Rigidbody::MoveRotation(const Quaternion& rotation)
     {
-        if (!m_actor || m_type != RigidbodyType::Kinematic)
+        if (!m_actor)
         {
             return;
         }

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -46,36 +46,42 @@ namespace game
             InitializeAnimFSM();
         }
 
-        // 현재 회전 각도 초기화
-        if (GetTransform())
+        // Rigidbody 필수 확인
+        if (!m_rigidbody)
         {
-            engine::Quaternion currentRotation = GetTransform()->GetLocalRotation();
-            engine::Vector3 euler = currentRotation.ToEuler();
-            m_currentRotationAngle = euler.y;  // Y축 회전값 (라디안)
-            LOG_PRINT("[MonsterScript] Initial rotation: Y={:.2f}° ({:.2f} rad)", 
-                euler.y * 180.0f / 3.14159f, euler.y);
+            LOG_PRINT("[MonsterScript] ERROR: Monster requires Dynamic Rigidbody!");
+            return;
         }
 
+        // ─────────────────────────────────────────────
+        // Mass 강제 설정 (플레이어와의 충돌 시 밀림 방지)
+        // Scene 파일의 값보다 우선 적용됨
+        // - 이동하지 않는 몬스터 (moveSpeed == 0): 1500
+        // - 이동하는 몬스터: 100
+        // ─────────────────────────────────────────────
+        float mass = (m_moveSpeed <= 0.0f) ? 15000.0f : 500.0f;
+        m_rigidbody->SetMass(mass);
+        m_rigidbody->SetAngularDamping(55.0f);
+        m_rigidbody->SetLinearDamping(10.0f);
+
         // Rigidbody 제약 설정 (몬스터는 Y축 회전만 허용)
-        // Start()에서 설정하여 m_moveSpeed가 자식 클래스에서 설정된 후 적용
-        if (m_rigidbody)
+        using namespace engine;
+        RigidbodyConstraints constraints = 
+            RigidbodyConstraints::FreezeRotationX | 
+            RigidbodyConstraints::FreezeRotationZ;
+        
+        // 이동하지 않는 몬스터는 Y축 위치도 고정
+        if (m_moveSpeed <= 0.0f)
         {
-            // X, Z축 회전 고정 (Y축만 스크립트로 제어)
-            using namespace engine;
-            RigidbodyConstraints constraints = 
-                RigidbodyConstraints::FreezeRotationX | 
-                RigidbodyConstraints::FreezeRotationZ;
-            
-            //// 이동하지 않는 몬스터는 Y축 위치도 고정
-            //if (m_moveSpeed <= 0.0f)
-            //{
-            //    constraints = constraints | RigidbodyConstraints::FreezePositionY;
-            //}
-            
-            m_rigidbody->SetConstraints(constraints);
-            
-            LOG_PRINT("[MonsterScript] Rigidbody constraints set: FreezeRotationX|Z, FreezePositionY={}", 
-                m_moveSpeed <= 0.0f);
+            constraints = constraints | RigidbodyConstraints::FreezePositionY;
+        }
+        
+        m_rigidbody->SetConstraints(constraints);
+        
+        // Dynamic Rigidbody 설정 확인
+        if (!m_rigidbody->IsDynamic())
+        {
+            LOG_PRINT("[MonsterScript] WARNING: Monster Rigidbody should be Dynamic!");
         }
 
         // 플레이어 찾기
@@ -195,18 +201,6 @@ namespace game
         }
         
         direction.Normalize();
-        
-        // 디버깅: 정규화된 방향 벡터 출력 (처음 몇 번만)
-        static int dirLogCount = 0;
-        if (dirLogCount < 3)
-        {
-            LOG_PRINT("[MonsterScript] Direction: monster({:.2f}, {:.2f}, {:.2f}), player({:.2f}, {:.2f}, {:.2f}), dir_normalized({:.2f}, {:.2f}, {:.2f})",
-                monsterPos.x, monsterPos.y, monsterPos.z,
-                playerPos.x, playerPos.y, playerPos.z,
-                direction.x, direction.y, direction.z);
-            dirLogCount++;
-        }
-        
         return direction;
     }
 
@@ -225,65 +219,82 @@ namespace game
 
     void MonsterScript::RotateTowards(const engine::Vector3& targetDirection, float deltaTime)
     {
-        if (targetDirection.LengthSquared() < 0.001f)
+        if (!m_rigidbody)
         {
-            LOG_PRINT("[MonsterScript] RotateTowards: Target direction is too small, skipping rotation");
+            LOG_PRINT("[MonsterScript] ERROR: Rigidbody is required for monster rotation!");
             return;
         }
 
-        // 목표 각도 계산 (라디안)
-        float targetAngle = atan2f(targetDirection.x, targetDirection.z);
+        if (targetDirection.LengthSquared() < 0.001f)
+        {
+            // 목표 방향 없음 - 회전 멈춤
+            m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+            return;
+        }
 
-        // 현재 각도와의 차이 계산
-        float angleDiff = targetAngle - m_currentRotationAngle;
+        // ─────────────────────────────────────────────
+        // 1. 현재 각도 (Transform에서 읽음)
+        // ─────────────────────────────────────────────
+        engine::Quaternion currentRotation = GetTransform()->GetWorldRotation();
+        engine::Vector3 currentEuler = currentRotation.ToEuler();
+        float currentAngle = currentEuler.y;
 
+        // ─────────────────────────────────────────────
+        // 2. 목표 각도 계산 (앞뒤 반대 수정: +180도)
+        // ─────────────────────────────────────────────
+        float targetAngle = atan2f(targetDirection.x, targetDirection.z) + 3.14159f;  // +180도 (앞뒤 반전)
+        
         // 각도 정규화 (-π ~ π)
+        while (targetAngle > 3.14159f) targetAngle -= 6.28318f;
+        while (targetAngle < -3.14159f) targetAngle += 6.28318f;
+
+        // ─────────────────────────────────────────────
+        // 3. 각도 차이 계산 (정규화: -π ~ π)
+        // ─────────────────────────────────────────────
+        float angleDiff = targetAngle - currentAngle;
         while (angleDiff > 3.14159f) angleDiff -= 6.28318f;
         while (angleDiff < -3.14159f) angleDiff += 6.28318f;
 
-        // 회전 속도만큼 회전
-        float maxRotation = m_rotationSpeed * deltaTime;
+        // ─────────────────────────────────────────────
+        // 4. PD 컨트롤러로 각속도 계산 (진동 방지)
+        // ─────────────────────────────────────────────
         
-        // 디버깅 로그 (처음 몇 프레임만)
-        static int logCount = 0;
-        if (logCount < 5)
+        // 목표에 거의 도달하면 회전 멈춤
+        if (std::abs(angleDiff) < ROTATION_THRESHOLD)
         {
-            LOG_PRINT("[MonsterScript] Rotate: current={:.2f}°, target={:.2f}°, diff={:.2f}°, maxRot={:.2f}°", 
-                m_currentRotationAngle * 180.0f / 3.14159f,
-                targetAngle * 180.0f / 3.14159f,
-                angleDiff * 180.0f / 3.14159f,
-                maxRotation * 180.0f / 3.14159f);
-            logCount++;
-        }
-        
-        if (std::abs(angleDiff) < maxRotation)
-        {
-            m_currentRotationAngle = targetAngle;
-        }
-        else
-        {
-            m_currentRotationAngle += (angleDiff > 0 ? maxRotation : -maxRotation);
+            m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+            return;
         }
 
-        // Transform 회전 적용
-        engine::Quaternion rotation = engine::Quaternion::CreateFromAxisAngle(
-            engine::Vector3::UnitY,
-            m_currentRotationAngle
-        );
+        // Proportional: 각도 차이에 비례
+        float proportional = angleDiff * m_rotationSpeed;
         
-        GetTransform()->SetLocalRotation(rotation);
+        // Derivative: 현재 각속도 (damping 역할)
+        engine::Vector3 currentAngVel = m_rigidbody->GetAngularVelocity();
+        float derivative = -currentAngVel.y * 0.5f;  // Damping factor
         
-        // 디버깅: 회전 적용 확인 (처음 몇 번만)
-        static int rotLogCount = 0;
-        if (rotLogCount < 3)
+        // PD 제어
+        float angularVelocity = proportional + derivative;
+        
+        // 최대 각속도 제한
+        const float maxAngularSpeed = 5.0f;  // rad/sec (진동 방지를 위해 감소)
+        if (std::abs(angularVelocity) > maxAngularSpeed)
         {
-            engine::Quaternion appliedRot = GetTransform()->GetLocalRotation();
-            engine::Vector3 appliedEuler = appliedRot.ToEuler();
-            
-            LOG_PRINT("[MonsterScript] Rotation applied: Y={:.2f}° (target={:.2f}°)",
-                appliedEuler.y * 180.0f / 3.14159f,
-                m_currentRotationAngle * 180.0f / 3.14159f);
-            rotLogCount++;
+            angularVelocity = (angularVelocity > 0) ? maxAngularSpeed : -maxAngularSpeed;
+        }
+
+        // Y축 각속도 설정
+        m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
+
+        // 디버깅 로그
+        static int logCounter = 0;
+        if (logCounter++ % 60 == 0)  // 60프레임마다 1번
+        {
+            LOG_PRINT("[MonsterScript] Rotate: current={:.1f}°, target={:.1f}°, diff={:.1f}°, angVel={:.2f}",
+                currentAngle * 180.0f / 3.14159f,
+                targetAngle * 180.0f / 3.14159f,
+                angleDiff * 180.0f / 3.14159f,
+                angularVelocity);
         }
     }
 
@@ -302,11 +313,22 @@ namespace game
         
         direction.Normalize();
 
-        // 목표 각도 계산
-        float targetAngle = atan2f(direction.x, direction.z);
+        // ─────────────────────────────────────────────
+        // 현재 회전값 (Transform에서 직접 읽음)
+        // ─────────────────────────────────────────────
+        engine::Quaternion currentRotation = GetTransform()->GetWorldRotation();
+        engine::Vector3 currentEuler = currentRotation.ToEuler();
+        float currentAngle = currentEuler.y;
+
+        // 목표 각도 계산 (앞뒤 반전: +180도)
+        float targetAngle = atan2f(direction.x, direction.z) + 3.14159f;
+        
+        // 각도 정규화 (-π ~ π)
+        while (targetAngle > 3.14159f) targetAngle -= 6.28318f;
+        while (targetAngle < -3.14159f) targetAngle += 6.28318f;
 
         // 각도 차이 계산
-        float angleDiff = targetAngle - m_currentRotationAngle;
+        float angleDiff = targetAngle - currentAngle;
 
         // 각도 정규화
         while (angleDiff > 3.14159f) angleDiff -= 6.28318f;
@@ -316,60 +338,10 @@ namespace game
         return std::abs(angleDiff) <= ROTATION_THRESHOLD;
     }
 
-    void MonsterScript::HandleShooting(float deltaTime)
+    void MonsterScript::Attack(float deltaTime)
     {
-        engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
-        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-        engine::Vector3 direction = CalculateDirectionToPlayer();
-        LOG_PRINT("[MonsterScript] Direction: monster({:.2f}, {:.2f}, {:.2f}), player({:.2f}, {:.2f}, {:.2f}), dir_normalized({:.2f}, {:.2f}, {:.2f})",
-            monsterPos.x, monsterPos.y, monsterPos.z,
-            playerPos.x, playerPos.y, playerPos.z,
-            direction.x, direction.y, direction.z);
-
-        // 쿨다운 타이머 감소
-        if (m_fireTimer > 0.0f)
-        {
-            m_fireTimer -= deltaTime;
-        }
-
-        // 발사 조건: 회전 완료 + 쿨다운 완료
-        if (IsRotatedTowardsPlayer() && m_fireTimer <= 0.0f)
-        {
-            // 발사!
-            if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
-            {
-                engine::Vector3 monsterPos = GetTransform()->GetWorldPosition();
-                engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-
-                // 방향 벡터 계산
-                engine::Vector3 direction = playerPos - monsterPos;
-                direction.y = 0.0f;
-                
-                if (direction.LengthSquared() > 0.001f)
-                {
-                    direction.Normalize();
-
-                    // BulletParams 설정 (자식 클래스에서 InitializeBullet으로 설정 가능)
-                    BulletParams params;
-                    params.type = BulletType::Linear;
-                    params.speed = m_bulletSpeed;
-                    params.lifetime = m_bulletLifetime;
-                    params.damage = 10;
-
-                    m_bulletFactory->FireMonster(monsterPos, direction, params);
-
-                    // 발사 애니메이션 재생 (루프 없음)
-                    // SkeletalAnimator로 직접 제어하여 Attack 애니메이션을 한 번만 재생
-                    if (m_skeletalAnimator && !m_animName_Attack.empty())
-                    {
-                        m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-                    }
-
-                    // 쿨다운 재설정
-                    m_fireTimer = m_fireRate;
-                }
-            }
-        }
+        // 기본 구현은 비어있음
+        // 자손 클래스에서 오버라이드하여 구현
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -464,13 +436,19 @@ namespace game
         {
             LOG_PRINT("[MonsterScript] State changed: {} -> {}", lastState, currentState);
             lastState = currentState;
+            
+            // Engage 상태가 아니면 회전 멈춤
+            if (currentState != "Engage" && m_rigidbody)
+            {
+                m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+            }
         }
 
-        // Engage 상태: 플레이어 방향 회전 + 발사
+        // Engage 상태: 플레이어 방향 회전 + 공격
         if (currentState == "Engage")
         {
             RotateTowardsPlayer(deltaTime);
-            HandleShooting(deltaTime);
+            Attack(deltaTime);
         }
     }
 
@@ -481,7 +459,21 @@ namespace game
     {
         if (state == "Dead")
         {
+            // 죽음: 모든 물리 동작 정지
+            if (m_rigidbody)
+            {
+                m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+                m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
+            }
             OnDeath();
+        }
+        else if (state == "Idle")
+        {
+            // Idle: 회전 정지
+            if (m_rigidbody)
+            {
+                m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+            }
         }
     }
 
@@ -561,13 +553,11 @@ namespace game
         ImGui::Separator();
         ImGui::Text("=== Component Validation ===");
         
-        // 에디터 모드를 위한 실시간 컴포넌트 검색
+        // 에디터 모드를 위한 실시간 컴포넌트 검색 (같은 GameObject 내에서만 검색)
         engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
         engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
         engine::AnimFSM* animFSM = m_animFSM ? m_animFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::AnimFSM>() : nullptr);
         engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
-        
-        // BulletFactory는 자신의 GameObject에서만 검색
         BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
         
         // 전체 유효성 검사
@@ -603,8 +593,8 @@ namespace game
         // 스탯
         ImGui::Separator();
         ImGui::Text("Stats:");
-        ImGui::DragFloat("HP", &m_Hp, 1.0f, 0.0f, 1000.0f);
-        ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.0f, 100.0f);
+        ImGui::DragInt("HP", &m_Hp, 1, 1, 10);
+        ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.1f, 15.0f);
 
         // 설정
         ImGui::Separator();

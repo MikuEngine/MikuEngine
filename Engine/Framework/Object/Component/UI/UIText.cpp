@@ -22,6 +22,8 @@
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/Canvas.h"
 
+// TODO : 여기에 마스크 모드에 따른 클리핑 함수 추가
+
 namespace engine
 {
 	static bool NextUtf8Codepoint(const char*& p, const char* end, uint32_t& outCp)

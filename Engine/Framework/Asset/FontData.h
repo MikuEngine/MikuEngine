@@ -120,6 +120,8 @@ namespace engine
 
 		uint32_t m_fallbackCodepoint = static_cast<uint32_t>('?');
 
+		std::vector<uint8_t> m_ttfBuffer;
+
 		//int m_atlasW = 0;
 		//int m_atlasH = 0;
 

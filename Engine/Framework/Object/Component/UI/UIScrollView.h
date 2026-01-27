@@ -9,6 +9,9 @@ namespace engine
 	struct UIRect;
 	class UISlider;
 
+	class UIImage;
+	class UIText;
+
 	class UIScrollView : public UIElement, public UIInteractable
 	{
 		REGISTER_COMPONENT(UIScrollView, UIElement)
@@ -27,14 +30,11 @@ namespace engine
 		~UIScrollView() override = default;
 
 		void Initialize() override;
-		void Update() override;
-		void DrawUI() const override;
+		void DrawUI() const override {}
 
 	public:
 		void SetContentByName(const std::string& childName);
 		void SetScrollbarByName(const std::string& goName);
-
-		void SetDragSpeed(float s) { m_dragSpeed = s; }
 
 		void SetScrollY(float y, bool syncScrollbar = true);
 		float GetScrollY() const { return m_scrollY; }
@@ -42,15 +42,6 @@ namespace engine
 
 		UIRect GetViewPortWorldRect() const;
 		RectTransform* GetViewportRT() const { return m_viewportRT; }
-
-	public:
-		bool IsInteractable() const override { return true; }
-		bool IsDragEnabled() const override { return true; }
-
-		void OnBeginDrag(const Vector2& mousePos, int mouseButton) override;
-		void OnDrag(const Vector2& mousePos, const Vector2& delta, int mouseButton) override;
-		void OnEndDrag(const Vector2& mousePos, int mouseButton) override;
-		void OnMouseCancel(const Vector2& mousePos, int mouseButton) override;
 
 	public:
 		void AddOnScrollChanged(ScrollChangedCallback cb) { m_onScrollChanged.push_back(std::move(cb)); }
@@ -67,6 +58,9 @@ namespace engine
 		void ApplyContentPosition();
 		void SyncScrollbarFromScroll();
 		void EmitScrollChanged();
+		void RebuildRendererCache();
+		void ApplyClipToCachedRenderers(const Vector4& clipPx);
+		void RefreshClipFromViewport(bool force);
 
 		RectTransform* FindChildRTByName(const char* name) const;
 
@@ -75,13 +69,14 @@ namespace engine
 		RectTransform* m_contentRT = nullptr;
 		UISlider* m_scrollbar = nullptr;
 
-		bool m_dragging = false;
-
 		float m_scrollY = 0.0f;
-		float m_dragSpeed = 1.0f;
-
 		float m_lastScrollbarV = 0.0f;
 		float m_scrollbarDragSpeed = 1.0f;	// 스크롤 감도
+
+		float m_contentHeight = 500.0f;
+		float m_viewportSize = 500.0f;   // 정사각형 한 변
+		float m_scrollbarWidth = 20.0f;
+		float m_scrollbarGap = 0.0f;     // 뷰포트-바 간격
 
 		std::string m_contentName = "Content";
 		std::string m_viewportName = "Viewport";
@@ -94,5 +89,11 @@ namespace engine
 		std::vector<ScrollChangedCallback> m_onScrollChanged;
 		std::vector<DragCallback> m_onBeginDrag;
 		std::vector<DragCallback> m_onEndDrag;
+
+		std::vector<UIImage*> m_cachedImages;
+		std::vector<UIText*>  m_cachedTexts;
+
+		Vector4 m_cachedClipPx = Vector4(-1, -1, -1, -1);
+		bool m_rendererCacheDirty = true;
 	};
 }

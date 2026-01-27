@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include "UpgradeTypes.h"
 
 namespace game
 {
@@ -22,6 +23,8 @@ namespace game
         void SetVisualState(bool unlocked, bool purchased);
 
     public:
+        UpgradeCategory m_category = UpgradeCategory::Attack;
+
         int m_nodeId = 0;
         int m_newParent = 0;
         std::vector<int> m_parents = {};

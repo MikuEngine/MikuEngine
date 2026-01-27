@@ -227,9 +227,20 @@ namespace engine
 			}
 		}
 
-		bool horizontal = (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft);
-		if (horizontal) GetRectTransform()->SetSize(300.0f, 50.0f);
-		else            GetRectTransform()->SetSize(50.0f, 300.0f);
+		RectTransform* root = GetRectTransform();
+		if (root)
+		{
+			const Vector2 sz = root->GetSize();
+			const bool sizeUnset = (sz.x <= 0.0f && sz.y <= 0.0f);
+
+			if (sizeUnset)
+			{
+				const bool horizontal = (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft);
+				if (horizontal) root->SetSize(300.0f, 50.0f);
+				else            root->SetSize(50.0f, 300.0f);
+			}
+		}
+
 		m_dirty = true;
 	}
 
@@ -443,7 +454,10 @@ namespace engine
 		handleRT->SetAnchorMin({ ax, ay });
 		handleRT->SetAnchorMax({ ax, ay });
 		handleRT->SetAnchoredPosition({ 0.0f, 0.0f });
-		handleRT->SetSize(100.0f, 100.0f); // 테스트
+
+		Vector2 hs = handleRT->GetSize();
+		if (hs.x <= 0.0f && hs.y <= 0.0f)
+			handleRT->SetSize(100.0f, 100.0f);
 	}
 
 	void UISlider::OnMouseDown(const Vector2& mousePos, int mouseButton)
@@ -528,14 +542,6 @@ namespace engine
 		if (ImGui::ColorEdit4("TrackColor", &m_bgColor.x)) { m_dirty = true; changed = true; }
 		if (ImGui::ColorEdit4("FillColor", &m_fillColor.x)) { m_dirty = true; changed = true; }
 		if (ImGui::ColorEdit4("HandleColor", &m_handleColor.x)) { m_dirty = true; changed = true; }
-
-		if (ImGui::Checkbox("UseFill", &m_useFill))
-		{
-			m_dirty = true;
-			CreateVisuals();
-			RefreshVisuals();
-			UpdateVisuals();
-		}
 
 		if (changed)
 			UpdateVisuals();

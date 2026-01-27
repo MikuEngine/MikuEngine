@@ -72,7 +72,7 @@ namespace game
 
     void SceneController_Main::StartGame()
     {
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Hub");
+        engine::SceneManager::Get().ChangeScene("z_Hiro_Lobby");
     }
 
     void SceneController_Main::OpenOption()
