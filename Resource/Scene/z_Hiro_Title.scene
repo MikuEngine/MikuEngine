@@ -189,9 +189,9 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -290.0
+                        "y": -300.0
                     },
-                    "Width": 330.0,
+                    "Width": 100.0,
                     "Height": 100.0,
                     "Pivot": {
                         "x": 0.5,
@@ -212,9 +212,9 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "Fragile Fall",
+                    "Text": "Fragile\n        Fall",
                     "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 70,
+                    "FontPx": 150,
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -223,7 +223,7 @@
                     },
                     "AlphaBlend": true,
                     "AlignH": 0,
-                    "AlignV": 0,
+                    "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -416,6 +416,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -423,15 +424,15 @@
                         "w": 1.0
                     },
                     "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
                         "w": 1.0
                     },
                     "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
                         "w": 1.0
                     },
                     "TintDisabled": {
@@ -589,6 +590,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -596,15 +598,15 @@
                         "w": 1.0
                     },
                     "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
                         "w": 1.0
                     },
                     "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
                         "w": 1.0
                     },
                     "TintDisabled": {
@@ -762,6 +764,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -769,15 +772,15 @@
                         "w": 1.0
                     },
                     "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
                         "w": 1.0
                     },
                     "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
                         "w": 1.0
                     },
                     "TintDisabled": {
@@ -935,6 +938,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -942,15 +946,15 @@
                         "w": 1.0
                     },
                     "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
                         "w": 1.0
                     },
                     "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
                         "w": 1.0
                     },
                     "TintDisabled": {
@@ -1274,6 +1278,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1281,15 +1286,15 @@
                         "w": 1.0
                     },
                     "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
                         "w": 1.0
                     },
                     "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
                         "w": 1.0
                     },
                     "TintDisabled": {
@@ -2660,6 +2665,7 @@
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2667,15 +2673,15 @@
                         "w": 1.0
                     },
                     "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
                         "w": 1.0
                     },
                     "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
                         "w": 1.0
                     },
                     "TintDisabled": {
