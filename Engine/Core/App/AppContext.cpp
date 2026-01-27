@@ -15,6 +15,7 @@ namespace engine
 
 	WinApp& AppContext::GetApp()
 	{
+		FATAL_CHECK(g_app != nullptr, "AppContext::GetApp() called before SetApp()");
 		return *g_app;
 	}
 }

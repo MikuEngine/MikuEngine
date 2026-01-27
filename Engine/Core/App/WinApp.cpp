@@ -287,21 +287,25 @@ namespace engine
 
     void WinApp::SetUserSettings(const UserSettings& userSettings)
     {
+        const bool windowChanged =
+            (m_userSettings.window.resolutionWidth != userSettings.window.resolutionWidth) ||
+            (m_userSettings.window.resolutionHeight != userSettings.window.resolutionHeight) ||
+            (m_userSettings.window.isFullscreen != userSettings.window.isFullscreen) ||
+            (m_userSettings.window.useVsync != userSettings.window.useVsync);
+
         m_userSettings = userSettings;
 
-        const auto& ws = m_userSettings.window;
-
-        SetResolution(
-            ws.resolutionWidth,
-            ws.resolutionHeight,
-            ws.isFullscreen
-        );
+        if (windowChanged)
+        {
+            const auto& ws = m_userSettings.window;
+            SetResolution(ws.resolutionWidth, ws.resolutionHeight, ws.isFullscreen);
+        }
 
         // 2) 사운드 설정 적용
         const auto& audio = m_userSettings.audio;
         auto& sound = SoundSystem::Get();
 
-        // TODO : Getter 추가
+        // TODO : Setter 추가
         //sound.SetMasterVolume(audio.master);
         //sound.SetBGMVolume(audio.bgm);
         //sound.SetSFXVolume(audio.sfx);
@@ -311,9 +315,6 @@ namespace engine
         //const auto& ctrl = m_userSettings.controls;
         //Input::SetMouseSensitivity(ctrl.mouseSensitivity);
         //Input::SetInvertY(ctrl.invertY);
-
-        // 4) 저장 (Apply 버튼 눌렀을 때 호출된다는 전제)
-        UserSettingsLoader::Save(m_settingFilePath, m_userSettings);
     }
 
     void WinApp::ApplyResolution(int width, int height, bool isFullscreen)
@@ -323,6 +324,16 @@ namespace engine
         // 1) 설정 값 갱신
         if (width > 0)  ws.resolutionWidth = width;
         if (height > 0) ws.resolutionHeight = height;
+        
+        if (ws.resolutionWidth == width &&
+            ws.resolutionHeight == height &&
+            ws.isFullscreen == isFullscreen)
+        {
+            return;
+        }
+
+        ws.resolutionWidth = width;
+        ws.resolutionHeight = height;
         ws.isFullscreen = isFullscreen;
 
         // 2) 실제 시스템 반영
@@ -332,6 +343,11 @@ namespace engine
             ws.isFullscreen
         );
 
+        SaveUserSettings();
+    }
+
+    void WinApp::SaveUserSettings()
+    {
         UserSettingsLoader::Save(m_settingFilePath, m_userSettings);
     }
 
