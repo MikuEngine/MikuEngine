@@ -285,8 +285,10 @@ namespace engine
         }
     }
 
-    void WinApp::SetUserSettings()
+    void WinApp::SetUserSettings(const UserSettings& userSettings)
     {
+        m_userSettings = userSettings;
+
         const auto& ws = m_userSettings.window;
 
         SetResolution(

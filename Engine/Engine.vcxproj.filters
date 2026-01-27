@@ -357,6 +357,9 @@
     <ClCompile Include="Framework\Object\Component\SocketAttachment.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Core\App\AppContext.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -762,6 +765,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\SocketAttachment.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\App\AppContext.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

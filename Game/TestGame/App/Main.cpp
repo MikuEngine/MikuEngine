@@ -1,5 +1,7 @@
 ﻿#include "GamePCH.h"
 
+#include <Core/App/AppContext.h>
+
 #include "App/ComponentRegistry.h"
 #include "App/TestGameApp.h"
 
@@ -12,6 +14,7 @@ int APIENTRY wWinMain(
 	engine::LeakCheck lc;
 
 	game::TestGameApp app("Windows.config");
+	engine::AppContext::SetApp(&app);
 
 	app.Initialize();
 	app.Run();
