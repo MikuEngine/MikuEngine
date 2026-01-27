@@ -1,33 +1,31 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterScript.h"
+#include "Script/CharacterScript/Common/BulletParams.h"
 
 namespace game
 {
     // ═══════════════════════════════════════════════════════════════
-    // MonsterDullGray - DullGray 몬스터 구현
-    // 
-    // 특징:
-    //   - 제자리 고정형 적 (이동 불가)
-    //   - 플레이어 감지 시 자동 공격
-    //   - 사거리 내 진입: Idle → Engage
-    //   - 사거리 이탈: Engage → Idle
-    // 
-    // FSM 상태:
-    //   - Idle: 플레이어 미감지, 대기
-    //   - Engage: 플레이어 추적 + 회전 + 발사
-    //   - Dead: 사망 (모든 행동 정지)
+    // MonsterDullGray - DullGray 몬스터 구현 
     // ═══════════════════════════════════════════════════════════════
+
     class MonsterDullGray : public MonsterScript
     {
         REGISTER_SCRIPT(MonsterDullGray, MonsterScript)
 
     private:
         // ─────────────────────────────────────────────
+        // 총알 설정
+        // ─────────────────────────────────────────────
+        BulletParams m_bulletParams;
+
+        // ─────────────────────────────────────────────
         // 애니메이션 이름 (Initialize에서 설정)
         // m_animName_Attack은 부모 클래스 MonsterScript에 정의됨
         // ─────────────────────────────────────────────
         std::string m_animName_Idle = "Idle";
+        std::string m_animName_Engage = "Engage";
+        std::string m_animName_Fragile = "Fragile";
         std::string m_animName_Dead = "Dead";
 
     public:
@@ -42,6 +40,16 @@ namespace game
         void InitializeAnimFSM() override;
         void InitializeAnimations() override;
         void InitializeBullet() override;
+        
+        // 상태별 행동 (코드 가독성을 위한 명시적 오버라이드)
+        void UpdateStateBasedBehavior(const std::string& state, float deltaTime) override;
+        void ExecuteEngageBehavior(float deltaTime) override;
+        void ExecuteIdleBehavior() override;
+        void ExecuteFragileBehavior() override;
+        void ExecuteDeadBehavior() override;
+        
+        // 상태 진입 콜백
+        void OnStateEntered(const std::string& state) override;
         
         // 공격 (3초마다 리니어 총알 발사)
         void Attack(float deltaTime) override;

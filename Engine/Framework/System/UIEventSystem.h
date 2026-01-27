@@ -24,6 +24,8 @@ namespace engine
 		bool leftDown = false;
 		bool leftHeld = false;
 		bool leftUp = false;
+
+		float wheelDelta = 0.0f;
 	};
 
 	class UIEventSystem : public System<UIElement>
@@ -49,6 +51,7 @@ namespace engine
 
 		void HandleHover(UIElement* target, const MouseState& mouse);
 		void HandlePressDragRelease(UIElement* target, const MouseState& mouse);
+		void HandleScroll(UIElement* target, const MouseState& mouse);
 
 	private:
 		bool m_dirty = true;
