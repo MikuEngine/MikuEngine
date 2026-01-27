@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/System/System.h"
 #include "Framework/Object/Component/Pathfinding/GridMap.h"
@@ -94,5 +94,8 @@ namespace engine
 		bool IsLineWalkable(const Vector3& start, const Vector3& end);
 
 		std::vector<Vector3> SmoothPath(const std::vector<Vector3>& path, int iterations = 2);
+
+		// start가 unwalkable일 때 가장 가까운 walkable 셀 탐색 (BFS)
+		bool FindNearestWalkable(const GridMap* gridMap, int fromX, int fromZ, int& outX, int& outZ) const;
 	};
 }

@@ -1,8 +1,9 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PathfindingSystem.h"
 
 #include <queue>
 #include <unordered_set>
+#include <utility>
 
 #include "Framework/Object/Component/Pathfinding/PathfindingAgent.h"
 
@@ -28,11 +29,34 @@ namespace engine
 
         float directDistance = Vector3::Distance(start, end);
 
-        // 직선으로 이동 가능하면 바로 반환 (경로 찾기 불필요)
-        if (IsLineWalkable(start, end))
+        // 월드 좌표를 그리드 좌표로 변환
+        int startX, startZ, endX, endZ;
+        gridMap->WorldToGrid(start, startX, startZ);
+        gridMap->WorldToGrid(end, endX, endZ);
+
+        bool usedSnap = false;
+        const Vector3 originalStart = start;
+
+        // start가 unwalkable이면 가장 가까운 walkable 셀로 스냅 (스무딩으로 살짝 파고든 경우 대응)
+        if (gridMap->IsValid(startX, startZ) && !gridMap->IsWalkable(startX, startZ))
+        {
+            int snapX, snapZ;
+            if (!FindNearestWalkable(gridMap, startX, startZ, snapX, snapZ))
+            {
+                result.success = false;
+                return result;
+            }
+            startX = snapX;
+            startZ = snapZ;
+            usedSnap = true;
+        }
+
+        // 직선으로 이동 가능하면 바로 반환 (스냅된 start 기준으로 검사)
+        Vector3 lineStart = usedSnap ? gridMap->GridToWorld(startX, startZ) : start;
+        if (IsLineWalkable(lineStart, end))
         {
             result.success = true;
-            result.path = { start, end };
+            result.path = { originalStart, end };
             result.rawPath = result.path;
             result.totalDistance = directDistance;
             result.nodeCount = 2;
@@ -40,12 +64,7 @@ namespace engine
             return result;
         }
 
-        // 월드 좌표를 그리드 좌표로 변환
-        int startX, startZ, endX, endZ;
-        gridMap->WorldToGrid(start, startX, startZ);
-        gridMap->WorldToGrid(end, endX, endZ);
-
-        // A* 알고리즘 실행
+        // A* 알고리즘 실행 (스냅된 start 사용)
         result.rawPath = FindPathAStar(startX, startZ, endX, endZ);
 
         if (result.rawPath.empty())
@@ -61,6 +80,10 @@ namespace engine
         result.optimizedNodeCount = result.nodeCount;
 
         result.path = SmoothPath(result.path, 2);  // 2회 반복
+
+        // 스냅했을 경우 첫 웨이포인트를 실제 현재 위치로 (들락날락 방지)
+        if (usedSnap && !result.path.empty())
+            result.path[0] = originalStart;
 
         // 거리 계산
         for (size_t i = 1; i < result.path.size(); ++i)
@@ -295,6 +318,50 @@ namespace engine
 	{
 		// 간단한 해시 함수 (x, z를 하나의 정수로 변환)
 		return static_cast<size_t>(x) * 10000 + static_cast<size_t>(z);
+	}
+
+	bool PathfindingSystem::FindNearestWalkable(const GridMap* gridMap, int fromX, int fromZ, int& outX, int& outZ) const
+	{
+		if (!gridMap->IsValid(fromX, fromZ))
+			return false;
+		if (gridMap->IsWalkable(fromX, fromZ))
+		{
+			outX = fromX;
+			outZ = fromZ;
+			return true;
+		}
+
+		std::queue<std::pair<int, int>> q;
+		std::unordered_set<size_t> visited;
+		q.push({ fromX, fromZ });
+		visited.insert(GetNodeHash(fromX, fromZ));
+
+		while (!q.empty())
+		{
+			int x = q.front().first;
+			int z = q.front().second;
+			q.pop();
+
+			for (int i = 0; i < 8; ++i)
+			{
+				int nx = x + s_directions[i][0];
+				int nz = z + s_directions[i][1];
+				if (!gridMap->IsValid(nx, nz))
+					continue;
+				size_t h = GetNodeHash(nx, nz);
+				if (visited.count(h))
+					continue;
+				visited.insert(h);
+				if (gridMap->IsWalkable(nx, nz))
+				{
+					outX = nx;
+					outZ = nz;
+					return true;
+				}
+				q.push({ nx, nz });
+			}
+		}
+		return false;
 	}
 
     std::vector<Vector3> PathfindingSystem::StringPull(const std::vector<Vector3>& rawPath)
