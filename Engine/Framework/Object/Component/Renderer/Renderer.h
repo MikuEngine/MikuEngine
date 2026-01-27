@@ -16,6 +16,13 @@ namespace engine
 		Count
 	};
 
+	enum class CullMode
+	{
+		None,
+		Back,
+		Front
+	};
+
 	class Renderer :
 		public Component
 	{

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Resource/Texture.h"
@@ -19,6 +19,7 @@ namespace engine
     class Texture;
     class InputLayout;
     class SamplerState;
+    class RasterizerState;
 
     class SkeletalMeshRenderer :
         public Renderer
@@ -53,6 +54,7 @@ namespace engine
         std::vector<Textures> m_textures;
         std::shared_ptr<InputLayout> m_inputLayout;
         std::shared_ptr<SamplerState> m_samplerState;
+        std::shared_ptr<RasterizerState> m_rasterizerState;
 
         CbBone m_boneTransformData; // CPU측 본 데이터
 
@@ -69,6 +71,7 @@ namespace engine
         float m_materialAmbientOcclusion = 1.0f;
         bool m_overrideMaterial = false;
         bool m_castShadow = false;
+        CullMode m_cullMode = CullMode::Back;
 
 
     public:
@@ -89,6 +92,7 @@ namespace engine
         void SetTransparentPixelShader(const std::string& shaderFilePath);
         void SetCastShadow(bool cast);
         bool IsCastShadow() const override;
+        void SetCullMode(CullMode cullMode);
 
         std::shared_ptr<SkeletonData> GetSkeletonData() const;
         const std::string& GetMeshPath() const;

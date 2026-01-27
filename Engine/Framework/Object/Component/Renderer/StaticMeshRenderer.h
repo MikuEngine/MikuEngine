@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Resource/Texture.h"
@@ -16,6 +16,7 @@ namespace engine
     class Texture;
     class InputLayout;
     class SamplerState;
+    class RasterizerState;
 
     class StaticMeshRenderer :
         public Renderer
@@ -48,6 +49,7 @@ namespace engine
         std::vector<Textures> m_textures;
         std::shared_ptr<InputLayout> m_inputLayout;
         std::shared_ptr<SamplerState> m_samplerState;
+        std::shared_ptr<RasterizerState> m_rasterizerState;
 
         std::string m_meshFilePath;
         std::string m_vsFilePath;
@@ -63,6 +65,7 @@ namespace engine
         bool m_overrideMaterial = false;
         bool m_castShadow = false;
         bool m_isInitialized = false;
+        CullMode m_cullMode = CullMode::Back;
 
         // 장애물 반투명 처리
         bool m_useObstacleTransparency = false;
@@ -84,6 +87,7 @@ namespace engine
         void SetTransparentPixelShader(const std::string& shaderFilePath);
         void SetCastShadow(bool cast);;
         bool IsCastShadow() const override;
+        void SetCullMode(CullMode cullMode);
 
         // 장애물 반투명 설정 (스크립트에서 호출)
         void SetObstacleAlpha(bool enable, float alpha);

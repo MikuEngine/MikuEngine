@@ -28,7 +28,7 @@ float GAFSchlickGGX(float nDotV, float nDotL, float roughness)
     return GAFSchlickGGXSub(nDotV, k) * GAFSchlickGGXSub(nDotL, k);
 }
 
-float4 main(PS_INPUT_GBUFFER input) : SV_Target
+float4 main(PS_INPUT_GBUFFER input, bool isFrontFace : SV_IsFrontFace) : SV_Target
 {
     float2 uv = input.texCoord;
     float4 baseColor = g_texBaseColor.Sample(g_samLinear, uv);
@@ -63,7 +63,19 @@ float4 main(PS_INPUT_GBUFFER input) : SV_Target
     }
     
     // normal
-    float3 n = normalize(DecodeNormal(encodedNormal));
+    float3x3 tbn = float3x3(
+        normalize(input.tangent),
+        normalize(input.binormal),
+        normalize(input.normal)
+    );
+    
+    float3 n = normalize(mul(DecodeNormal(encodedNormal), tbn));
+    
+    // 반대면(backface)일 때 normal을 뒤집어서 올바른 라이팅 계산
+    if (!isFrontFace)
+    {
+        n = -n;
+    }
     
     // view
     float3 v = normalize(g_cameraWorldPosition - worldPosition);

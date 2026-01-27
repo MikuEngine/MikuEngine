@@ -87,30 +87,6 @@ namespace engine
 			return Vector4(pxX, pxY, pxX + pxW, pxY + pxH);
 		}
 
-		static void ApplyMaskToContentSubtree(Transform* t, const Vector4& clipPx)
-		{
-			if (!t) return;
-
-			GameObject* go = t->GetGameObject();
-			if (go)
-			{
-				if (auto* img = go->GetComponent<UIImage>())
-				{
-					img->SetMaskMode(MaskMode::Rect);
-					img->SetClipRect(clipPx);
-				}
-
-				if (auto* txt = go->GetComponent<UIText>())
-				{
-					txt->SetMaskMode(MaskMode::Rect);
-					txt->SetClipRect(clipPx);
-				}
-			}
-
-			for (Transform* ch : t->GetChildren())
-				ApplyMaskToContentSubtree(ch, clipPx);
-		}
-
 		static void CollectRenderersInSubtree(Transform* t,
 			std::vector<UIImage*>& outImgs,
 			std::vector<UIText*>& outTxts)
@@ -164,22 +140,9 @@ namespace engine
 		{
 			bool created = false;
 			GameObject* vgo = EnsureChildUI(parent, m_viewportName.c_str(), created);
-
 			if (vgo)
 			{
-				RectTransform* rt = vgo->GetComponent<RectTransform>();
-				m_viewportRT = rt;
-
-				if (created && rt)
-				{
-					rt->SetAnchorMin({ 0.0f, 0.0f });
-					rt->SetAnchorMax({ 0.0f, 0.0f });
-					rt->SetPivot({ 0.0f, 0.0f });
-					rt->SetAnchoredPosition({ 0.0f, 0.0f });
-
-					rt->SetWidth(m_viewportSize);
-					rt->SetHeight(m_viewportSize);
-				}
+				m_viewportRT = vgo->GetComponent<RectTransform>();
 
 				if (auto* img = vgo->GetComponent<UIImage>(); !img)
 					img = vgo->AddComponent<UIImage>();
@@ -190,25 +153,13 @@ namespace engine
 		// Content
 		{
 			bool created = false;
-			GameObject* contentParent = parent;
-
-			if (m_viewportRT && m_viewportRT->GetGameObject())
-				contentParent = m_viewportRT->GetGameObject();
+			GameObject* contentParent = (m_viewportRT && m_viewportRT->GetGameObject())
+				? m_viewportRT->GetGameObject()
+				: parent;
 
 			GameObject* cgo = EnsureChildUI(contentParent, m_contentName.c_str(), created);
 			if (cgo)
-			{
-				RectTransform* rt = cgo->GetComponent<RectTransform>();
-
-				if (created && rt)
-				{
-					rt->SetAnchorMin({ 0.0f, 0.0f });
-					rt->SetAnchorMax({ 1.0f, 1.0f });
-					rt->SetPivot({ 0.5f, 0.5f });
-					rt->SetAnchoredPosition({ 0.0f, 0.0f });
-					rt->SetSize(0.0f, m_contentHeight);
-				}
-			}
+				m_contentRT = cgo->GetComponent<RectTransform>();
 		}
 
 		if (m_scrollbarName.empty())
@@ -220,21 +171,6 @@ namespace engine
 			GameObject* sgo = EnsureChildUI(parent, m_scrollbarName.c_str(), created);
 			if (sgo)
 			{
-				RectTransform* rt = sgo->GetComponent<RectTransform>();
-
-				if (created && rt)
-				{
-					rt->SetAnchorMin({ 0.0f, 0.0f });
-					rt->SetAnchorMax({ 0.0f, 0.0f });
-					rt->SetPivot({ 0.0f, 0.0f });
-
-					const float x = m_viewportSize + m_scrollbarGap;
-					rt->SetAnchoredPosition({ x, 0.0f });
-
-					rt->SetWidth(m_scrollbarWidth);
-					rt->SetHeight(m_viewportSize);
-				}
-
 				UISlider* slider = sgo->GetComponent<UISlider>();
 				if (!slider) slider = sgo->AddComponent<UISlider>();
 
@@ -249,6 +185,9 @@ namespace engine
 
 		if (!m_scrollbarName.empty())
 			SetScrollbarByName(m_scrollbarName);
+
+		// 레이아웃 적용
+		ApplyLayout();
 
 		m_cachedMaxScroll = -1.0f;
 		SetScrollY(m_scrollY, true);
@@ -330,6 +269,43 @@ namespace engine
 		return m_viewportRT ? m_viewportRT->GetWorldRect() : UIRect{};
 	}
 
+	void UIScrollView::ApplyLayout()
+	{
+		if (m_viewportRT)
+		{
+			m_viewportRT->SetAnchorMin({ 0.0f, 0.0f });
+			m_viewportRT->SetAnchorMax({ 0.0f, 0.0f });
+			m_viewportRT->SetPivot({ 0.0f, 0.0f });
+			m_viewportRT->SetAnchoredPosition({ 0.0f, 0.0f });
+			m_viewportRT->SetWidth(m_viewportSize);
+			m_viewportRT->SetHeight(m_viewportSize);
+		}
+
+		if (m_contentRT)
+		{
+			m_contentRT->SetAnchorMin({ 0.0f, 0.0f });
+			m_contentRT->SetAnchorMax({ 1.0f, 1.0f });
+			m_contentRT->SetPivot({ 0.5f, 0.5f });
+			m_contentRT->SetSize(0.0f, m_contentHeight);
+		}
+
+		if (m_scrollbar)
+		{
+			if (auto* sbRT = m_scrollbar->GetRectTransform())
+			{
+				sbRT->SetAnchorMin({ 0.0f, 0.0f });
+				sbRT->SetAnchorMax({ 0.0f, 0.0f });
+				sbRT->SetPivot({ 0.0f, 0.0f });
+
+				const float x = m_viewportSize + m_scrollbarGap;
+				sbRT->SetAnchoredPosition({ x, 0.0f });
+
+				sbRT->SetWidth(m_scrollbarWidth);
+				sbRT->SetHeight(m_viewportSize);
+			}
+		}
+	}
+
 	void UIScrollView::BindScrollbarCallBack()
 	{
 		if (!m_scrollbar) return;
@@ -354,12 +330,9 @@ namespace engine
 
 				sv->m_syncGuard = true;
 
-				// 스크롤 이동
+				// 스크롤 갱신
 				sv->SetScrollY(sv->m_scrollY + dv * maxS * sv->m_scrollbarDragSpeed, false);
 
-				// 클립 갱신
-				sv->RefreshClipFromViewport(false);
-				
 				sv->m_syncGuard = false;
 			});
 
@@ -486,13 +459,12 @@ namespace engine
 
 		j["ContentName"] = m_contentName;
 		j["ScrollbarName"] = m_scrollbarName;
-		j["ViewportSize"] = m_viewportSize;
 
-		// ScrollBar
+		j["ViewportSize"] = m_viewportSize;
 		j["ScrollbarWidth"] = m_scrollbarWidth;
 		j["ScrollbarGap"] = m_scrollbarGap;
-		j["ScrollY"] = m_scrollY;
 
+		j["ScrollY"] = m_scrollY;
 		j["ContentHeight"] = m_contentHeight;
 		j["DragSpeed"] = m_scrollbarDragSpeed;
 	}
@@ -503,14 +475,23 @@ namespace engine
 
 		JsonGet(j, "ContentName", m_contentName);
 		JsonGet(j, "ScrollbarName", m_scrollbarName);
-		JsonGet(j, "ViewportSize", m_viewportSize);
 
-		// ScrollBar
+		JsonGet(j, "ViewportSize", m_viewportSize);
 		JsonGet(j, "ScrollbarWidth", m_scrollbarWidth);
 		JsonGet(j, "ScrollbarGap", m_scrollbarGap);
-		JsonGet(j, "ScrollY", m_scrollY);
 
+		JsonGet(j, "ScrollY", m_scrollY);
 		JsonGet(j, "ContentHeight", m_contentHeight);
 		JsonGet(j, "DragSpeed", m_scrollbarDragSpeed);
+
+		m_contentRT = !m_contentName.empty() ? FindChildRTByName(m_contentName.c_str()) : nullptr;
+		if (!m_scrollbarName.empty())
+			SetScrollbarByName(m_scrollbarName);
+
+		ApplyLayout();
+
+		m_rendererCacheDirty = true;
+		RefreshClipFromViewport(true);
+		SetScrollY(m_scrollY, true);
 	}
 }

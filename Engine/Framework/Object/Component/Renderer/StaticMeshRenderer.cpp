@@ -11,6 +11,7 @@
 #include "Core/Graphics/Resource/PixelShader.h"
 #include "Core/Graphics/Resource/InputLayout.h"
 #include "Core/Graphics/Resource/SamplerState.h"
+#include "Core/Graphics/Resource/RasterizerState.h"
 #include "Core/Graphics/Resource/MaterialHelper.h"
 #include "Core/Graphics/Resource/BlendState.h"
 #include "Core/Graphics/Resource/DepthStencilState.h"
@@ -68,6 +69,7 @@ namespace engine
 
         m_inputLayout = m_vs->GetOrCreateInputLayout<CommonVertex>();
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
+        m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidBack);
 
         m_objectConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
         m_materialConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Material", sizeof(CbMaterial));
@@ -167,6 +169,26 @@ namespace engine
         return m_castShadow;
     }
 
+    void StaticMeshRenderer::SetCullMode(CullMode cullMode)
+    {
+        m_cullMode = cullMode;
+
+        switch (m_cullMode)
+        {
+        case CullMode::None:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidNone);
+            break;
+
+        case CullMode::Back:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidBack);
+            break;
+
+        case CullMode::Front:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidFront);
+            break;
+        }
+    }
+
     void StaticMeshRenderer::SetObstacleAlpha(bool enable, float alpha)
     {
         if (!m_isInitialized)
@@ -206,6 +228,14 @@ namespace engine
         ImGui::DragFloat("Roughness", &m_materialRoughness, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
         ImGui::DragFloat("Metalness", &m_materialMetalness, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
         ImGui::DragFloat("Ambient Occlusion", &m_materialAmbientOcclusion, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+        ImGui::Spacing();
+        static const char* cullModes[] = { "None", "Back", "Front" };
+        int currentMode = static_cast<int>(m_cullMode);
+        if (ImGui::Combo("Cull mode", &currentMode, cullModes, IM_ARRAYSIZE(cullModes)))
+        {
+            SetCullMode(static_cast<CullMode>(currentMode));
+        }
 
         ImGui::Spacing();
         // 2. Shader Selectors
@@ -281,6 +311,7 @@ namespace engine
         j["MaterialAmbientOcclusion"] = m_materialAmbientOcclusion;
         j["OverrideMaterial"] = m_overrideMaterial;
         j["CastShadow"] = m_castShadow;
+        j["CullMode"] = m_cullMode;
     }
 
     void StaticMeshRenderer::Load(const json& j)
@@ -299,6 +330,11 @@ namespace engine
         JsonGet(j, "MaterialAmbientOcclusion", m_materialAmbientOcclusion);
         JsonGet(j, "OverrideMaterial", m_overrideMaterial);
         JsonGet(j, "CastShadow", m_castShadow);
+        if (j.contains("CullMode"))
+        {
+            m_cullMode = static_cast<CullMode>(j.at("CullMode").get<int>());
+            SetCullMode(m_cullMode);
+        }
 
         Refresh();
     }
@@ -391,6 +427,7 @@ namespace engine
         deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
         deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
         deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+        deviceContext->RSSetState(m_rasterizerState->GetRawRasterizerState());
 
         CbObject cbObject{};
         cbObject.world = GetTransform()->GetWorld().Transpose();

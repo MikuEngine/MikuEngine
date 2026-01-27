@@ -16,13 +16,6 @@ namespace engine
     class SamplerState;
     class RasterizerState;
 
-    enum class CullMode
-    {
-        None,
-        Back,
-        Front
-    };
-
     enum class BillboardType
     {
         None,
