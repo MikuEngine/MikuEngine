@@ -64,7 +64,7 @@
                 {
                     "Type": "PlayerControllerScript",
                     "Active": true,
-                    "MoveSpeed": 0.699999988079071,
+                    "MoveSpeed": 1.5,
                     "FireRate": 0.30000001192092896,
                     "BulletSpeed": 1.0,
                     "BulletLifetime": 3.0,
@@ -119,28 +119,6 @@
                     "angularDamping": 57.0,
                     "useGravity": false,
                     "constraints": 42
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        1.7999999523162842,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": true,
-                    "layer": 1,
-                    "size": [
-                        1.0,
-                        3.5999999046325684,
-                        1.0
-                    ]
                 },
                 {
                     "Type": "SkeletalAnimator",
@@ -357,6 +335,25 @@
                 {
                     "Type": "BulletFactory",
                     "Active": true
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.7599999904632568,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "radius": 0.7699999809265137,
+                    "height": 3.7100000381469727
                 }
             ]
         },
@@ -12448,7 +12445,7 @@
                         0.0
                     ],
                     "isTrigger": false,
-                    "syncWithTransform": true,
+                    "syncWithTransform": false,
                     "layer": 4,
                     "size": [
                         1.1299999952316284,
@@ -12578,7 +12575,7 @@
                         0.0
                     ],
                     "isTrigger": false,
-                    "syncWithTransform": true,
+                    "syncWithTransform": false,
                     "layer": 4,
                     "size": [
                         1.100000023841858,
@@ -12609,9 +12606,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 3.200000047683716,
+                        "x": 3.0,
                         "y": 2.0,
-                        "z": 4.099999904632568
+                        "z": 3.9000000953674316
                     }
                 },
                 {
@@ -12730,7 +12727,7 @@
                         0.0
                     ],
                     "isTrigger": false,
-                    "syncWithTransform": true,
+                    "syncWithTransform": false,
                     "layer": 4,
                     "size": [
                         1.059999942779541,
@@ -12967,7 +12964,7 @@
                         0.0
                     ],
                     "isTrigger": false,
-                    "syncWithTransform": true,
+                    "syncWithTransform": false,
                     "layer": 2,
                     "size": [
                         0.6000000238418579,
@@ -13347,7 +13344,7 @@
                     "Active": true,
                     "center": [
                         0.0,
-                        1.2200000286102295,
+                        1.350000023841858,
                         0.0
                     ],
                     "rotation": [
@@ -13358,8 +13355,8 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 2,
-                    "radius": 0.2199999988079071,
-                    "height": 2.4000000953674316
+                    "radius": 0.3700000047683716,
+                    "height": 2.5999999046325684
                 },
                 {
                     "Type": "PathfindingAgent",
