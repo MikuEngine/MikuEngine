@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "Core/App/WindowSettings.h"
+#include "Core/App/UserSettings.h"
 
 namespace engine
 {
@@ -28,7 +28,7 @@ namespace engine
         std::string m_className = "game123";
         std::string m_windowName = "Default";
         std::filesystem::path m_settingFilePath;
-        WindowSettings m_settings;
+        UserSettings m_userSettings;
         ViewportTransformData m_viewportData;
 
         UINT m_classStyle = 0;
@@ -39,13 +39,17 @@ namespace engine
         int m_screenHeight = 0;
 
     protected:
-        WinApp(const std::filesystem::path& settingFilePath = "Windows.config", const WindowSettings& defaultSetting = {});
+        WinApp(const std::filesystem::path& settingFilePath = "settings.config", const UserSettings& defaultSetting = {});
         virtual ~WinApp();
 
     public:
         virtual void Initialize();
         virtual void Shutdown();
         void Run();
+
+        const UserSettings& GetUserSettings() const { return m_userSettings; }
+        void SetUserSettings();
+        void ApplyResolution(int width, int height, bool isFullscreen);
 
     private:
         void Update();

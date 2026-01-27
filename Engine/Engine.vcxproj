@@ -172,7 +172,7 @@
     <ClCompile Include="Core\Graphics\Resource\MaterialHelper.cpp" />
     <ClCompile Include="Common\Utility\Profiling.cpp" />
     <ClCompile Include="Common\Utility\StringHelper.cpp" />
-    <ClCompile Include="Core\App\ConfigLoader.cpp" />
+    <ClCompile Include="Core\App\UserSettingsLoader.cpp" />
     <ClCompile Include="Core\Graphics\Device\GraphicsDevice.cpp" />
     <ClCompile Include="Core\Graphics\Resource\BlendState.cpp" />
     <ClCompile Include="Core\Graphics\Resource\ConstantBuffer.cpp" />
@@ -304,8 +304,8 @@
     <ClInclude Include="Common\Utility\Profiling.h" />
     <ClInclude Include="Common\Utility\Singleton.h" />
     <ClInclude Include="Common\Utility\StringHelper.h" />
-    <ClInclude Include="Core\App\ConfigLoader.h" />
-    <ClInclude Include="Core\App\WindowSettings.h" />
+    <ClInclude Include="Core\App\UserSettingsLoader.h" />
+    <ClInclude Include="Core\App\UserSettings.h" />
     <ClInclude Include="Core\Graphics\Data\ConstantBufferTypes.h" />
     <ClInclude Include="Core\Graphics\Data\Vertex.h" />
     <ClInclude Include="Core\Graphics\Device\GraphicsDevice.h" />
