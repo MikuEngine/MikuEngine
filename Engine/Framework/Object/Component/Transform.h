@@ -62,6 +62,7 @@ namespace engine
         void SetLocalScale(float scale);
 
         void SetParent(Transform* parent, bool worldPositionStays = true);
+        void SetWorldMatrix(const Matrix& worldMatrix);
 
         void UnmarkDirtyThisFrame();
         bool IsAncestorOf(Transform* other) const;
