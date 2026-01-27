@@ -118,7 +118,8 @@ namespace game
         // ─────────────────────────────────────────────
         // 방향 유틸리티
         // ─────────────────────────────────────────────
-        engine::Vector3 GetForwardDirection() const;
+        engine::Vector3 GetForwardDirection() const;  // FBX 모델의 실제 Forward (-Z)
+        engine::Vector3 GetForwardDirectionReverse() const;  // 엔진의 Forward (+Z)
 
         // ─────────────────────────────────────────────
         // 대상(Target) 유틸리티 - 범용 함수

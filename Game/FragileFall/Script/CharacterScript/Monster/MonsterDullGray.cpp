@@ -312,10 +312,8 @@ namespace game
             ImGui::Separator();
             ImGui::Text("=== Rotation Debug ===");
             engine::Vector3 dirToPlayer = CalculateDirectionToPlayer();
-            // GetForward()는 -Z를 반환하므로 -1을 곱해서 +Z 방향으로 변환
-            engine::Vector3 forward = GetTransform()->GetForward() * -1.0f;
-            forward.y = 0.0f;
-            forward.Normalize();
+            // 엔진의 +Z Forward 방향 사용
+            engine::Vector3 forward = GetForwardDirectionReverse();
             
             float dot = forward.Dot(dirToPlayer);
             float angleDeg = acosf(std::clamp(dot, -1.0f, 1.0f)) * 180.0f / 3.14159f;

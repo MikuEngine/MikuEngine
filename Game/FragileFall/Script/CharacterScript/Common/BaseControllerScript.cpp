@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BaseControllerScript.h"
 
 #include <Framework/Object/Component/LogicFSM.h>
@@ -89,10 +89,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     engine::Vector3 BaseControllerScript::GetForwardDirection() const
     {
+        // +Z가 Forward인 모델에 사용
         if (!GetTransform()) return engine::Vector3(0.0f, 0.0f, 1.0f);
 
-        // GetForward()는 -Z를 반환하므로 -1을 곱해서 +Z 방향으로 변환
-        engine::Vector3 forward = GetTransform()->GetForward() * -1.0f;
+        // FBX 모델의 실제 Forward 방향 (-Z)
+        engine::Vector3 forward = GetTransform()->GetForward();
         forward.y = 0.0f;
         
         if (forward.LengthSquared() < 0.0001f)
@@ -102,6 +103,12 @@ namespace game
         
         forward.Normalize();
         return forward;
+    }
+
+    engine::Vector3 BaseControllerScript::GetForwardDirectionReverse() const
+    {
+        // -Z가 Forward인 모델에 사용
+        return GetForwardDirection() * -1.0f;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -169,16 +176,8 @@ namespace game
             return;
         }
 
-        // GetForward()는 -Z를 반환하므로 -1을 곱해서 +Z 방향으로 변환
-        engine::Vector3 currentForward = GetTransform()->GetForward() * -1.0f;
-        currentForward.y = 0.0f;
-        
-        if (currentForward.LengthSquared() < 0.0001f)
-        {
-            currentForward = engine::Vector3(0.0f, 0.0f, 1.0f);
-        }
-        
-        currentForward.Normalize();
+        // 엔진의 +Z Forward 방향 사용
+        engine::Vector3 currentForward = GetForwardDirectionReverse();
 
         engine::Vector3 targetDir = targetDirection;
         
@@ -228,10 +227,8 @@ namespace game
     {
         if (targetDirection.LengthSquared() < 0.0001f) return true;
 
-        // GetForward()는 -Z를 반환하므로 -1을 곱해서 +Z 방향으로 변환
-        engine::Vector3 currentForward = GetTransform()->GetForward() * -1.0f;
-        currentForward.y = 0.0f;
-        currentForward.Normalize();
+        // 엔진의 +Z Forward 방향 사용
+        engine::Vector3 currentForward = GetForwardDirectionReverse();
 
         engine::Vector3 targetDir = targetDirection;
         targetDir.y = 0.0f;
