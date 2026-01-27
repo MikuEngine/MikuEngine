@@ -34,7 +34,7 @@ namespace game
         engine::Vector2 m_normalScale = { 1.0f, 1.0f };
         engine::Vector2 m_baseSize = { 100.0f, 100.0f };
 
-        float m_hoverScale = 1.1f;
+        float m_hoverScale = 1.10f;
 
         float m_speed = 12.0f;
 

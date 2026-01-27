@@ -43,7 +43,7 @@ namespace game
 
     void UIHoverScale::OnGui()
     {
-
+        ImGui::SliderFloat("HoverScale", &m_hoverScale, 1.0f, 1.5f, "%.2f");
     }
 
     void UIHoverScale::Save(engine::json& j) const
