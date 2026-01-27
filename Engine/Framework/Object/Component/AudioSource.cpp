@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "AudioSource.h"
 
 #include "Common/Utility/StaticMemoryPool.h"
@@ -108,10 +108,9 @@ namespace engine
     void AudioSource::SetClip(std::string name)
     {
         Stop();
-
         m_clipName = name;
 
-        m_soundData = AssetManager::Get().GetOrCreateSoundData(name);
+        m_soundData = AssetManager::Get().GetOrCreateSoundData(name, "BGM");
     }
 
     void AudioSource::Play(EventCallBack callback, float fadeInDuration)
@@ -139,7 +138,7 @@ namespace engine
         }
 
         std::string option = m_is3D ? "3D" : "2D";
-        auto soundData = AssetManager::Get().GetOrCreateSoundData(clipToPlay, option);
+        auto soundData = AssetManager::Get().GetOrCreateSoundData(clipToPlay, m_bus);
         if (!soundData) return;
         m_soundData = soundData;
         Sound* soundResource = soundData->GetSound();
@@ -164,11 +163,34 @@ namespace engine
 
         if (m_currentChannel)
         {
+            FMOD::ChannelGroup* cg = nullptr;
+            m_currentChannel->getChannelGroup(&cg);
+            if (cg)
+            {
+                char n[128] = {};
+                cg->getName(n, 128);
+                LOG_PRINT("[AudioSource] group AFTER Play2D = {}", n);
+            }
+
+
             // 그룹 할당
             if (soundResource->m_pChannelGroup)
             {
                 m_currentChannel->setChannelGroup(soundResource->m_pChannelGroup);
             }
+
+            if (m_currentChannel)
+            {
+                FMOD::ChannelGroup* cg = nullptr;
+                m_currentChannel->getChannelGroup(&cg);
+                if (cg)
+                {
+                    char n[128] = {};
+                    cg->getName(n, 128);
+                    LOG_PRINT("[AudioSource] group AFTER setChannelGroup = {}", n);
+                }
+            }
+
 
             if (m_useRandom)
             {

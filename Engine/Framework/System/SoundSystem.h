@@ -112,7 +112,7 @@ namespace engine
         // FMOD Listener 설정 (CameraSystem에서 Main Camera 정보를 받아와서 호출해줘야 함)
         void SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up);
 
-        void Play(const std::string& key, float volume = 1.0f, float pitch = 1.0f);
+        void Play(const std::string& key, const std::string& option, float volume = 1.0f, float pitch = 1.0f);
 
         // Setter, Getter
         void SetMasterVolume(float v);

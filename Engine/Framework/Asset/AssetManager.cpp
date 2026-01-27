@@ -214,12 +214,14 @@ namespace engine
 
     std::shared_ptr<SoundData> AssetManager::GetOrCreateSoundData(const std::string& filePath, const std::string& option, LifeScope scope)
     {
-        if (auto find = m_soundDatas.find(filePath); find != m_soundDatas.end())
+        const std::string key = filePath + "|" + option;
+
+        LOG_PRINT("[SoundData] filePath='{}' option='{}' key='{}'", filePath, option, key);
+
+        if (auto find = m_soundDatas.find(key); find != m_soundDatas.end())
         {
             if (!find->second.expired())
-            {
                 return find->second.lock();
-            }
         }
 
         Sound *sound = SoundSystem::Get().CreateSound(filePath, option);
@@ -227,7 +229,7 @@ namespace engine
 
         auto soundData = std::make_shared<SoundData>(sound);
 
-        m_soundDatas[filePath] = soundData;
+        m_soundDatas[key] = soundData;
         CacheData(soundData, scope);
 
         return soundData;
