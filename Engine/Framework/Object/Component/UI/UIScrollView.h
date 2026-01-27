@@ -9,6 +9,9 @@ namespace engine
 	struct UIRect;
 	class UISlider;
 
+	class UIImage;
+	class UIText;
+
 	class UIScrollView : public UIElement, public UIInteractable
 	{
 		REGISTER_COMPONENT(UIScrollView, UIElement)
@@ -55,6 +58,9 @@ namespace engine
 		void ApplyContentPosition();
 		void SyncScrollbarFromScroll();
 		void EmitScrollChanged();
+		void RebuildRendererCache();
+		void ApplyClipToCachedRenderers(const Vector4& clipPx);
+		void RefreshClipFromViewport(bool force);
 
 		RectTransform* FindChildRTByName(const char* name) const;
 
@@ -67,6 +73,11 @@ namespace engine
 		float m_lastScrollbarV = 0.0f;
 		float m_scrollbarDragSpeed = 1.0f;	// 스크롤 감도
 
+		float m_contentHeight = 500.0f;
+		float m_viewportSize = 500.0f;   // 정사각형 한 변
+		float m_scrollbarWidth = 20.0f;
+		float m_scrollbarGap = 0.0f;     // 뷰포트-바 간격
+
 		std::string m_contentName = "Content";
 		std::string m_viewportName = "Viewport";
 		std::string m_scrollbarName;
@@ -78,5 +89,11 @@ namespace engine
 		std::vector<ScrollChangedCallback> m_onScrollChanged;
 		std::vector<DragCallback> m_onBeginDrag;
 		std::vector<DragCallback> m_onEndDrag;
+
+		std::vector<UIImage*> m_cachedImages;
+		std::vector<UIText*>  m_cachedTexts;
+
+		Vector4 m_cachedClipPx = Vector4(-1, -1, -1, -1);
+		bool m_rendererCacheDirty = true;
 	};
 }

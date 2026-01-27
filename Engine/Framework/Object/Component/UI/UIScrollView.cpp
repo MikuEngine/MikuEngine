@@ -110,6 +110,25 @@ namespace engine
 			for (Transform* ch : t->GetChildren())
 				ApplyMaskToContentSubtree(ch, clipPx);
 		}
+
+		static void CollectRenderersInSubtree(Transform* t,
+			std::vector<UIImage*>& outImgs,
+			std::vector<UIText*>& outTxts)
+		{
+			if (!t) return;
+
+			if (GameObject* go = t->GetGameObject())
+			{
+				if (auto* img = go->GetComponent<UIImage>())
+					outImgs.push_back(img);
+
+				if (auto* txt = go->GetComponent<UIText>())
+					outTxts.push_back(txt);
+			}
+
+			for (Transform* ch : t->GetChildren())
+				CollectRenderersInSubtree(ch, outImgs, outTxts);
+		}
 	}
 
 	RectTransform* UIScrollView::FindChildRTByName(const char* name) const
@@ -158,11 +177,10 @@ namespace engine
 					rt->SetPivot({ 0.0f, 0.0f });
 					rt->SetAnchoredPosition({ 0.0f, 0.0f });
 
-					rt->SetWidth(500.0f);
-					rt->SetHeight(500.0f);
+					rt->SetWidth(m_viewportSize);
+					rt->SetHeight(m_viewportSize);
 				}
 
-				// (선택) 배경 이미지: 입력 막지 않게
 				if (auto* img = vgo->GetComponent<UIImage>(); !img)
 					img = vgo->AddComponent<UIImage>();
 				vgo->GetComponent<UIImage>()->m_raycastTarget = false;
@@ -188,7 +206,7 @@ namespace engine
 					rt->SetAnchorMax({ 1.0f, 1.0f });
 					rt->SetPivot({ 0.5f, 0.5f });
 					rt->SetAnchoredPosition({ 0.0f, 0.0f });
-					rt->SetSize(0.0f, 500.0f);
+					rt->SetSize(0.0f, m_contentHeight);
 				}
 			}
 		}
@@ -206,12 +224,15 @@ namespace engine
 
 				if (created && rt)
 				{
-					rt->SetAnchorMin({ 1.0f, 0.0f });
-					rt->SetAnchorMax({ 1.0f, 1.0f });
-					rt->SetPivot({ 1.0f, 0.5f });
-					rt->SetAnchoredPosition({ 0.0f, 0.0f });
-					rt->SetWidth(20.0f);   
-					rt->SetHeight(0.0f);   
+					rt->SetAnchorMin({ 0.0f, 0.0f });
+					rt->SetAnchorMax({ 0.0f, 0.0f });
+					rt->SetPivot({ 0.0f, 0.0f });
+
+					const float x = m_viewportSize + m_scrollbarGap;
+					rt->SetAnchoredPosition({ x, 0.0f });
+
+					rt->SetWidth(m_scrollbarWidth);
+					rt->SetHeight(m_viewportSize);
 				}
 
 				UISlider* slider = sgo->GetComponent<UISlider>();
@@ -231,6 +252,9 @@ namespace engine
 
 		m_cachedMaxScroll = -1.0f;
 		SetScrollY(m_scrollY, true);
+
+		m_rendererCacheDirty = true;
+		RefreshClipFromViewport(true);
 	}
 
 	void UIScrollView::SetContentByName(const std::string& childName)
@@ -240,6 +264,9 @@ namespace engine
 
 		m_cachedMaxScroll = -1.0f;
 		SetScrollY(m_scrollY, true);
+
+		m_rendererCacheDirty = true;
+		RefreshClipFromViewport(true);
 	}
 
 	void UIScrollView::SetScrollbarByName(const std::string& goName)
@@ -276,6 +303,9 @@ namespace engine
 		if (syncScrollbar)
 			SyncScrollbarFromScroll();
 
+		// 클립 유지
+		RefreshClipFromViewport(false);
+
 		EmitScrollChanged();
 	}
 
@@ -283,8 +313,14 @@ namespace engine
 	{
 		if (!m_viewportRT || !m_contentRT) return 0.0f;
 
-		const float viewportH = m_viewportRT->GetWorldRect().h;
-		const float contentH = m_contentRT->GetWorldRect().h;
+		Canvas* c = GetCanvasInParent();
+		if (!c) return 0.0f;
+
+		const Vector2 ref = c->GetReferenceResolution();
+		const UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+
+		const float viewportH = m_viewportRT->GetWorldRectResolved(rootRect).h;
+		const float contentH = m_contentRT->GetWorldRectResolved(rootRect).h;
 
 		return std::max(0.0f, contentH - viewportH);
 	}
@@ -300,22 +336,34 @@ namespace engine
 		
 		m_lastScrollbarV = m_scrollbar->GetValue();
 
-		// Slider 값 변화 -> Scroll 이동
-		m_scrollbar->SetOnValueChanged([this](float v)
-			{
-				if (!this) return;
-				if (m_syncGuard) return;
+		auto self = engine::Ptr<UIScrollView>(this);
 
-				const float maxS = GetMaxScroll();
+		// Slider 값 변화 -> Scroll 이동
+		m_scrollbar->SetOnValueChanged([self](float v)
+			{
+				if (!self) return;
+				UIScrollView* sv = self.Get();
+
+				if (sv->m_syncGuard) return;
+
+				const float maxS = sv->GetMaxScroll();
 				const float clamped = std::clamp(v, 0.0f, 1.0f);
 
-				const float dv = clamped - m_lastScrollbarV;
-				m_lastScrollbarV = clamped;
+				const float dv = clamped - sv->m_lastScrollbarV;
+				sv->m_lastScrollbarV = clamped;
 
-				m_syncGuard = true;
-				SetScrollY(m_scrollY + dv * maxS * m_scrollbarDragSpeed, false);
-				m_syncGuard = false;
+				sv->m_syncGuard = true;
+
+				// 스크롤 이동
+				sv->SetScrollY(sv->m_scrollY + dv * maxS * sv->m_scrollbarDragSpeed, false);
+
+				// 클립 갱신
+				sv->RefreshClipFromViewport(false);
+				
+				sv->m_syncGuard = false;
 			});
+
+		RefreshClipFromViewport(true);
 	}
 
 	void UIScrollView::ApplyContentPosition()
@@ -351,6 +399,63 @@ namespace engine
 			if (cb) cb(info);
 	}
 
+	void UIScrollView::RebuildRendererCache()
+	{
+		if (!m_rendererCacheDirty) return;
+		m_rendererCacheDirty = false;
+
+		m_cachedImages.clear();
+		m_cachedTexts.clear();
+
+		if (!m_contentRT) return;
+
+		CollectRenderersInSubtree(m_contentRT->GetTransform(), m_cachedImages, m_cachedTexts);
+	}
+
+	void UIScrollView::ApplyClipToCachedRenderers(const Vector4& clipPx)
+	{
+		for (auto* img : m_cachedImages)
+		{
+			if (!img) continue;
+			img->SetMaskMode(MaskMode::Rect);
+			img->SetClipRect(clipPx);
+		}
+
+		// 텍스트
+		for (auto* txt : m_cachedTexts)
+		{
+			if (!txt) continue;
+			txt->SetMaskMode(MaskMode::Rect);
+			txt->SetClipRect(clipPx);
+		}
+	}
+
+	void UIScrollView::RefreshClipFromViewport(bool force)
+	{
+		if (!m_viewportRT || !m_contentRT) return;
+
+		// 캐시 재구성
+		RebuildRendererCache();
+
+		const Vector4 clipPx = CalcViewportClipRectPx(this, m_viewportRT);
+
+		// clip 변화 없으면 스킵
+		if (!force)
+		{
+			const float eps = 0.01f;
+			if (std::fabs(clipPx.x - m_cachedClipPx.x) < eps &&
+				std::fabs(clipPx.y - m_cachedClipPx.y) < eps &&
+				std::fabs(clipPx.z - m_cachedClipPx.z) < eps &&
+				std::fabs(clipPx.w - m_cachedClipPx.w) < eps)
+			{
+				return;
+			}
+		}
+
+		m_cachedClipPx = clipPx;
+		ApplyClipToCachedRenderers(clipPx);
+	}
+
 	void UIScrollView::OnGui()
 	{
 		UIElement::OnGui();
@@ -366,17 +471,13 @@ namespace engine
 			SetScrollY(y, true);
 		}
 
+		ImGui::SliderFloat("ContentHeight", &m_contentHeight, 0.0f, 1000.0f);
+
 		if (ImGui::Button("Rebind Content"))
 			SetContentByName(m_contentName);
 
 		if (ImGui::Button("Rebind Scrollbar") && !m_scrollbarName.empty())
 			SetScrollbarByName(m_scrollbarName);
-
-		if (m_viewportRT)
-		{
-			Vector4 cr = CalcViewportClipRectPx(this, m_viewportRT);
-			ImGui::Text("ClipRect Px LTRB: %.1f %.1f %.1f %.1f", cr.x, cr.y, cr.z, cr.w);
-		}
 	}
 
 	void UIScrollView::Save(json& j) const
@@ -385,8 +486,14 @@ namespace engine
 
 		j["ContentName"] = m_contentName;
 		j["ScrollbarName"] = m_scrollbarName;
+		j["ViewportSize"] = m_viewportSize;
 
+		// ScrollBar
+		j["ScrollbarWidth"] = m_scrollbarWidth;
+		j["ScrollbarGap"] = m_scrollbarGap;
 		j["ScrollY"] = m_scrollY;
+
+		j["ContentHeight"] = m_contentHeight;
 		j["DragSpeed"] = m_scrollbarDragSpeed;
 	}
 
@@ -396,8 +503,14 @@ namespace engine
 
 		JsonGet(j, "ContentName", m_contentName);
 		JsonGet(j, "ScrollbarName", m_scrollbarName);
+		JsonGet(j, "ViewportSize", m_viewportSize);
 
+		// ScrollBar
+		JsonGet(j, "ScrollbarWidth", m_scrollbarWidth);
+		JsonGet(j, "ScrollbarGap", m_scrollbarGap);
 		JsonGet(j, "ScrollY", m_scrollY);
+
+		JsonGet(j, "ContentHeight", m_contentHeight);
 		JsonGet(j, "DragSpeed", m_scrollbarDragSpeed);
 	}
 }
