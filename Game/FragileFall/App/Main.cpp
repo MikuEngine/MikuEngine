@@ -11,7 +11,7 @@ int APIENTRY wWinMain(
 {
 	engine::LeakCheck lc;
 
-	game::FragileFall app("Windows.config");
+	game::FragileFall app("Settings.config");
 
 	app.Initialize();
 	app.Run();
