@@ -31,5 +31,8 @@ namespace engine
 
         static Vector2 GetMouseDelta();
         static Vector2 GetMousePosition();
+
+        static float GetMouseWheelDelta();
+        static float GetMouseWheelNotch();
     };
 }

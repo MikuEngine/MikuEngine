@@ -22,6 +22,9 @@ namespace engine
         float g_offsetY = 0.0f;
         float g_scaleX = 1.0f;
         float g_scaleY = 1.0f;
+
+        int g_prevWheel = 0;
+        float g_wheelDelta = 0.0f;
     }
 
     void Input::Initialize(HWND hWnd)
@@ -39,6 +42,10 @@ namespace engine
         g_mouseStateTable[static_cast<size_t>(Input::Buttons::MIDDLE)] = &g_mouseStateTracker.middleButton;
         g_mouseStateTable[static_cast<size_t>(Input::Buttons::SIDE_FRONT)] = &g_mouseStateTracker.xButton1;
         g_mouseStateTable[static_cast<size_t>(Input::Buttons::SIDE_BACK)] = &g_mouseStateTracker.xButton2;
+
+        g_mouseState = g_mouse.GetState();
+        g_prevWheel = g_mouseState.scrollWheelValue;
+        g_wheelDelta = 0.0f;
     }
 
     void Input::Update()
@@ -48,6 +55,10 @@ namespace engine
 
         g_mouseState = g_mouse.GetState();
         g_mouseStateTracker.Update(g_mouseState);
+
+        const int nowWheel = g_mouseState.scrollWheelValue;
+        g_wheelDelta = static_cast<float>(nowWheel - g_prevWheel);
+        g_prevWheel = nowWheel;
     }
 
     bool Input::IsKeyHeld(DirectX::Keyboard::Keys key)
@@ -113,5 +124,16 @@ namespace engine
         }
 
         return { 0.0f, 0.0f };
+    }
+
+    float Input::GetMouseWheelDelta()
+    {
+        return g_wheelDelta;
+    }
+
+    float Input::GetMouseWheelNotch()
+    {
+        constexpr float WHEEL_TICK = 120.0f;
+        return (WHEEL_TICK > 0.0f) ? (g_wheelDelta / WHEEL_TICK) : 0.0f;
     }
 }
