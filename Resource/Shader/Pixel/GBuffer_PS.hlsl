@@ -1,6 +1,6 @@
 #include "../Include/Shared.hlsli"
 
-PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input)
+PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input, bool isFrontFace : SV_IsFrontFace)
 {
     PS_OUTPUT_GBUFFER output = (PS_OUTPUT_GBUFFER) 0;
     
@@ -38,6 +38,13 @@ PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input)
     );
     
     float3 n = normalize(mul(DecodeNormal(encodedNormal), tbn));
+    
+    // 반대면(backface)일 때 normal을 뒤집어서 올바른 라이팅 계산
+    if (!isFrontFace)
+    {
+        n = -n;
+    }
+    
     output.normal = float4(EncodeNormal(n), 1.0f);
     
     return output;
