@@ -74,13 +74,14 @@ namespace engine
     {
         if (collider)
         {
-            m_collidingColliders.insert(collider);
+            // Handle 기반으로 저장 (dangling pointer 방지)
+            m_collidingColliderHandles.insert(collider->GetHandle());
         }
     }
 
     void PhysicsDebugRenderer::ClearCollidingState()
     {
-        m_collidingColliders.clear();
+        m_collidingColliderHandles.clear();
     }
 
     void PhysicsDebugRenderer::Render(const Matrix& view, const Matrix& projection)
@@ -193,13 +194,14 @@ namespace engine
                 colliderSet.insert(col);
             }
             
-            // 충돌 중인 Collider들도 추가 (Destroy 직후에도 렌더링되도록)
-            for (Collider* col : m_collidingColliders)
+            // 충돌 중인 Collider들도 추가 (Handle 기반으로 유효성 검사)
+            for (const Handle& handle : m_collidingColliderHandles)
             {
-                if (col && colliderSet.find(col) == colliderSet.end())
+                Ptr<Collider> col(handle);
+                if (col && colliderSet.find(col.Get()) == colliderSet.end())
                 {
-                    colliders.push_back(col);
-                    colliderSet.insert(col);
+                    colliders.push_back(col.Get());
+                    colliderSet.insert(col.Get());
                 }
             }
         }
@@ -227,9 +229,9 @@ namespace engine
                 continue;
             }
 
-            // 색상 결정
+            // 색상 결정 (Handle 기반으로 충돌 상태 확인)
             DirectX::XMVECTOR color;
-            if (m_collidingColliders.find(collider) != m_collidingColliders.end())
+            if (m_collidingColliderHandles.find(collider->GetHandle()) != m_collidingColliderHandles.end())
             {
                 color = DirectX::XMLoadFloat4(reinterpret_cast<const DirectX::XMFLOAT4*>(&m_collidingColor));
             }

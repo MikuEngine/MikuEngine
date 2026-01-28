@@ -29,9 +29,9 @@ namespace engine
         // 중력
         Vector3 defaultGravity{ 0.0f, -9.81f, 0.0f };
         
-        // 솔버
-        uint32_t solverIterations = 6;          // 위치 솔버 반복 횟수
-        uint32_t velocitySolverIterations = 1;  // 속도 솔버 반복 횟수
+        // 솔버 (Actor 레벨에서 적용됨 - Rigidbody::CreatePxActor)
+        uint32_t solverIterations = 6;          // 위치 솔버 반복 횟수 (penetration 해결)
+        uint32_t velocitySolverIterations = 2;  // 속도 솔버 반복 횟수 (마찰/반발 정확도)
         
         // 디버그
         bool enablePvd = true;                  // PhysX Visual Debugger
@@ -82,8 +82,9 @@ namespace engine
         // PVD (Visual Debugger)
         physx::PxPvd* m_pvd = nullptr;
         
-        // 기본 재질
+        // 재질 (프리셋)
         physx::PxMaterial* m_defaultMaterial = nullptr;
+        physx::PxMaterial* m_slipperyMaterial = nullptr;  // Ice 프리셋 (미끄러운 충돌용)
         
         // 레이어 매트릭스
         PhysicsLayerMatrix m_layerMatrix;
@@ -179,6 +180,7 @@ namespace engine
         // ═══════════════════════════════════════
         physx::PxPhysics* GetPxPhysics() const { return m_physics; }
         physx::PxMaterial* GetDefaultMaterial() const { return m_defaultMaterial; }
+        physx::PxMaterial* GetSlipperyMaterial() const { return m_slipperyMaterial; }
         
         // Scene에서 PxScene 접근 (Scene을 통해)
         physx::PxScene* GetActivePxScene() const;

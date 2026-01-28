@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <DirectXColors.h>
@@ -441,19 +441,11 @@ namespace engine
         SystemManager::Get().GetPathfindingSystem().Update();
         SystemManager::Get().GetParticleSystem().Update();
 
-        m_accumulatedDeltaTime += Time::DeltaTime();
-        const float fixedDeltaTime = Time::FixedDeltaTime(); // 60fps -> 0.0166666
-
-        while (m_accumulatedDeltaTime >= fixedDeltaTime)
-        {
-            m_accumulatedDeltaTime -= fixedDeltaTime;
-
-            SystemManager::Get().GetScriptSystem().CallFixedUpdate();
-            // Physics 시뮬레이션
-            SystemManager::Get().GetPhysicsSystem().Update(fixedDeltaTime);
-        }
-
-        SystemManager::Get().GetCollisionSystem().ProcessEvents();
+        // Physics 시뮬레이션 (내부에서 Fixed Timestep Accumulator 관리)
+        // - PhysicsSystem이 자체적으로 fixedDeltaTime 단위로 시뮬레이션
+        // - ScriptSystem.CallFixedUpdate()도 PhysicsSystem 내부에서 호출됨
+        // - CollisionSystem.ProcessEvents()도 PhysicsSystem 내부에서 호출됨
+        SystemManager::Get().GetPhysicsSystem().Update(Time::DeltaTime());
 
         SystemManager::Get().GetCameraSystem().Update();
 

@@ -170,6 +170,7 @@
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp" />
     <ClCompile Include="Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Script\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\SceneController_Play.cpp" />
     <ClCompile Include="Script\SceneController_Main.cpp" />
+    <ClCompile Include="Script\StateTextRenderer.cpp" />
     <ClCompile Include="Script\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UIHoverScale.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
@@ -209,6 +211,7 @@
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.h" />
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h" />
     <ClInclude Include="Script\Boss\BossScript.h" />
+    <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />
@@ -217,6 +220,7 @@
     <ClInclude Include="Script\SceneController_Lobby.h" />
     <ClInclude Include="Script\SceneController_Play.h" />
     <ClInclude Include="Script\SceneController_Main.h" />
+    <ClInclude Include="Script\StateTextRenderer.h" />
     <ClInclude Include="Script\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UIHoverScale.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />

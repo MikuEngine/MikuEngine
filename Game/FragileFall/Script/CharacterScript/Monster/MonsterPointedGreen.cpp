@@ -20,14 +20,14 @@ namespace game
         MonsterScript::Awake();
 
         // PointedGreen 고유 스탯 설정
-        m_Hp = 10;
-        m_AttackRange = 7.0f;
+        m_Hp = 150;
+        m_AttackRange = 2.0f;
         m_detectionRange = 40.0f;
-        m_moveSpeed = 0.3f;  // 이동 가능
-        m_rotationSpeed = 3.0f * 3.14159f;  // 360도/초 (라디안)
+        m_moveSpeed = 5.0f;  // 이동 가능
+        m_rotationSpeed = 6.0f * 3.14159f;  // 360도/초 (라디안)
         m_fireRate = 3.0f;
         m_fireTimer = m_fireRate;
-        m_bulletSpeed = 1.2f;
+        m_bulletSpeed = 10.2f;
         m_bulletLifetime = 3.0f;
         m_attackAnimationDuration = 1.0f;
     }
@@ -193,11 +193,11 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 상태별 행동
+    // 상태별 행동 - 비물리 (Update에서 호출)
     // ═══════════════════════════════════════════════════════════════
     void MonsterPointedGreen::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
     {
-        // 발사 쿨타임 감소 (모든 상태에서)
+        // 발사 쿨타임 감소 (모든 상태에서, 비물리)
         if (m_fireTimer > 0.0f)
         {
             m_fireTimer -= deltaTime;
@@ -205,63 +205,124 @@ namespace game
 
         if (state == "EngageMove")
         {
-            ExecuteEngageMoveBehavior(deltaTime);
+            ExecuteEngageMoveBehaviorNonPhysics(deltaTime);
         }
         else if (state == "EngageStop")
         {
-            ExecuteEngageStopBehavior(deltaTime);
+            ExecuteEngageStopBehaviorNonPhysics(deltaTime);
         }
         else if (state == "EngageAttack")
         {
-            ExecuteEngageAttackBehavior(deltaTime);
+            ExecuteEngageAttackBehaviorNonPhysics(deltaTime);
         }
         else if (state == "Idle")
         {
-            ExecuteIdleBehavior();
+            ExecuteIdleBehaviorNonPhysics();
         }
         else if (state == "Fragile")
         {
-            ExecuteFragileBehavior();
+            ExecuteFragileBehaviorNonPhysics();
         }
         else if (state == "Dead")
         {
-            ExecuteDeadBehavior();
+            ExecuteDeadBehaviorNonPhysics();
         }
     }
 
-    void MonsterPointedGreen::ExecuteEngageMoveBehavior(float deltaTime)
+    void MonsterPointedGreen::ExecuteEngageMoveBehaviorNonPhysics(float deltaTime)
     {
-        // 플레이어를 향해 이동
-        MoveTowardsPlayer(deltaTime);
+        // 비물리 처리 (없음 - 이동은 물리에서 처리)
     }
 
-    void MonsterPointedGreen::ExecuteEngageStopBehavior(float deltaTime)
+    void MonsterPointedGreen::ExecuteEngageStopBehaviorNonPhysics(float deltaTime)
     {
-        // 공격 사거리 안에 있지만 쿨타임 중 - 정지하고 회전만
-        StopAllMovement();
-        RotateTowardsPlayer(deltaTime);
+        // 비물리 처리 (없음 - 회전은 물리에서 처리)
     }
 
-    void MonsterPointedGreen::ExecuteEngageAttackBehavior(float deltaTime)
+    void MonsterPointedGreen::ExecuteEngageAttackBehaviorNonPhysics(float deltaTime)
     {
-        // 공격 중에는 이동 불가, 회전만 가능
-        StopAllMovement();
-        RotateTowardsPlayer(deltaTime);
+        // 공격 타이머 및 발사 (비물리)
         Attack(deltaTime);
     }
 
-    void MonsterPointedGreen::ExecuteIdleBehavior()
+    void MonsterPointedGreen::ExecuteIdleBehaviorNonPhysics()
+    {
+        // 비물리 Idle 처리
+    }
+
+    void MonsterPointedGreen::ExecuteFragileBehaviorNonPhysics()
+    {
+        // Fragile 상태: 아무 행동도 하지 않음 (Execution 대기)
+    }
+
+    void MonsterPointedGreen::ExecuteDeadBehaviorNonPhysics()
+    {
+        // 비물리 Dead 처리
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 상태별 행동 - 물리 (FixedUpdate에서 호출)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterPointedGreen::UpdatePhysicsStateBasedBehavior(const std::string& state)
+    {
+        if (state == "EngageMove")
+        {
+            ExecuteEngageMoveBehaviorPhysics();
+        }
+        else if (state == "EngageStop")
+        {
+            ExecuteEngageStopBehaviorPhysics();
+        }
+        else if (state == "EngageAttack")
+        {
+            ExecuteEngageAttackBehaviorPhysics();
+        }
+        else if (state == "Idle")
+        {
+            ExecuteIdleBehaviorPhysics();
+        }
+        else if (state == "Fragile")
+        {
+            ExecuteFragileBehaviorPhysics();
+        }
+        else if (state == "Dead")
+        {
+            ExecuteDeadBehaviorPhysics();
+        }
+    }
+
+    void MonsterPointedGreen::ExecuteEngageMoveBehaviorPhysics()
+    {
+        // 플레이어를 향해 이동 (물리)
+        MoveTowardsPlayer();
+    }
+
+    void MonsterPointedGreen::ExecuteEngageStopBehaviorPhysics()
+    {
+        // 공격 사거리 안에 있지만 쿨타임 중 - 정지하고 회전만 (물리)
+        StopAllMovement();
+        RotateTowardsPlayer();
+    }
+
+    void MonsterPointedGreen::ExecuteEngageAttackBehaviorPhysics()
+    {
+        // 공격 중에는 이동 불가, 회전만 가능 (물리)
+        StopAllMovement();
+        RotateTowardsPlayer();
+    }
+
+    void MonsterPointedGreen::ExecuteIdleBehaviorPhysics()
     {
         StopAllMovement();
         StopRotation();
     }
 
-    void MonsterPointedGreen::ExecuteFragileBehavior()
+    void MonsterPointedGreen::ExecuteFragileBehaviorPhysics()
     {
-        // Fragile 상태: 아무 행동도 하지 않음 (Execution 대기)
+        // Fragile 상태: 물리적으로 정지
     }
 
-    void MonsterPointedGreen::ExecuteDeadBehavior()
+    void MonsterPointedGreen::ExecuteDeadBehaviorPhysics()
     {
         StopAllMovement();
     }

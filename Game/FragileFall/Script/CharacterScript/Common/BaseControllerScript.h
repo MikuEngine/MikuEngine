@@ -45,7 +45,8 @@ namespace game
     class BaseControllerScript :
         public engine::Script<BaseControllerScript>
     {
-        REGISTER_SCRIPT(BaseControllerScript, Script)
+        //REGISTER_SCRIPT(BaseControllerScript, Script)
+        DEFINE_COMPONENT_TYPE(BaseControllerScript, Script)
 
     protected:
         // ─────────────────────────────────────────────
@@ -53,6 +54,14 @@ namespace game
         // ─────────────────────────────────────────────
         engine::LogicFSM* m_logicFSM = nullptr;
         engine::AnimFSM* m_animFSM = nullptr;
+
+        // ─────────────────────────────────────────────
+        // 물리 이동 설정
+        // ─────────────────────────────────────────────
+        // 속도 블렌딩 계수 (0.0 = 완전 물리, 1.0 = 완전 덮어쓰기)
+        // - 높을수록 즉각적인 반응, 낮을수록 물리 응답 보존
+        // - 충돌 시 penetration 방지를 위해 0.5 권장
+        float m_velocityBlendFactor = 0.5f;
 
         // ─────────────────────────────────────────────
         // FSM 타입 별칭 및 헬퍼 (가독성 향상)
@@ -74,8 +83,15 @@ namespace game
         void Awake() override;
         void Start() override;
         void Update() override;
+        void FixedUpdate() override;
 
     protected:
+        // ─────────────────────────────────────────────
+        // 물리/비물리 로직 분리
+        // - UpdateGameLogic(): 비물리 로직 (타이머, UI 등) - Update()에서 호출
+        // - UpdatePhysicsLogic(): 물리 로직 (이동, 회전) - FixedUpdate()에서 호출
+        // ─────────────────────────────────────────────
+        virtual void UpdatePhysicsLogic() {}   // 물리 기반 로직 (자식에서 오버라이드)
         // ─────────────────────────────────────────────
         // 메인 로직 (자식에서 오버라이드)
         // ─────────────────────────────────────────────

@@ -42,7 +42,6 @@ namespace game
         void OnSFXChanged(float v);
         void SetSensitivity(float v);
 
-
         // State / UI Control
         void SetOptionOpen(bool open);
         void SetUpgradeOpen(bool open);

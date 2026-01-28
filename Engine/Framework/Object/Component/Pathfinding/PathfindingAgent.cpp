@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PathfindingAgent.h"
 
 #include "Framework/System/SystemManager.h"
@@ -117,6 +117,81 @@ namespace engine
 				RequestPath(targetPosition);
 				m_lastTargetPos = targetPosition;
 			}
+		}
+	}
+
+	void PathfindingAgent::UpdatePathfindingFixed(float fixedDeltaTime, const Vector3& targetPosition)
+	{
+		Vector3 currentPos = GetTransform()->GetWorldPosition();
+
+		// 1. waypoint 도달 체크
+		if (m_hasWaypoint)
+		{
+			float threshold = (m_waypointReachDistance > 0.0f) ? m_waypointReachDistance : 0.5f;
+			if (IsWaypointReached(currentPos, threshold))
+			{
+				// waypoint 도달 - 다음 waypoint로 진행
+				AdvanceToNextWaypoint();
+
+				// 경로가 완료되었으면 즉시 재계산
+				if (IsPathComplete())
+				{
+					RequestPathImmediate(targetPosition);
+				}
+			}
+		}
+
+		// 2. 주기적 경로 업데이트 (즉시 계산)
+		m_pathUpdateTimer += fixedDeltaTime;
+		if (m_pathUpdateTimer >= m_pathUpdateInterval)
+		{
+			m_pathUpdateTimer = 0.0f;
+
+			// 목표가 충분히 움직였거나 waypoint가 없을 때만 재계산
+			float targetMoved = Vector3::Distance(targetPosition, m_lastTargetPos);
+			if (targetMoved > m_targetMoveThreshold || !m_hasWaypoint)
+			{
+				RequestPathImmediate(targetPosition);  // 즉시 계산
+				m_lastTargetPos = targetPosition;
+			}
+		}
+
+		// 3. waypoint가 없고 경로도 없으면 즉시 경로 요청
+		if (!m_hasWaypoint && !m_hasPath)
+		{
+			RequestPathImmediate(targetPosition);
+			m_lastTargetPos = targetPosition;
+		}
+	}
+
+	void PathfindingAgent::RequestPathImmediate(const Vector3& destination)
+	{
+		m_targetDestination = destination;
+		m_pathRequested = false;  // 플래그는 사용하지 않음
+
+		Vector3 start = GetTransform()->GetWorldPosition();
+
+		// 즉시 경로 계산
+		PathResult result = SystemManager::Get().GetPathfindingSystem().FindPath(start, destination);
+
+		if (result.success)
+		{
+			m_path = result.path;
+			m_currentPathIndex = 0;
+			m_hasPath = true;
+
+			// 첫 waypoint 설정
+			if (!m_path.empty())
+			{
+				m_currentWaypoint = m_path[0];
+				m_hasWaypoint = true;
+			}
+		}
+		else
+		{
+			m_hasPath = false;
+			m_path.clear();
+			m_hasWaypoint = false;
 		}
 	}
 

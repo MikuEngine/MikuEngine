@@ -108,6 +108,12 @@
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_PillarShield.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\StateTextRenderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Script\Boss\BossPattern\Components\BossBullet.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -228,6 +234,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\Boss\BossPattern\Components\BossShieldEffect.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\StateTextRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\Boss\BossPattern\Components\BossBullet.h">

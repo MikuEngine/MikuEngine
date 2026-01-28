@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -45,8 +45,16 @@ namespace engine
         Vector3 GetNextWaypoint() const;
         void AdvanceToNextWaypoint();
 
-        // 몬스터 AI용
+        // 몬스터 AI용 (deltaTime 기반 - 기존 방식, 1프레임 지연 있음)
         void UpdatePathfinding(float deltaTime, const Vector3& targetPosition);
+        
+        // 몬스터 AI용 (FixedUpdate 기반 - 즉시 계산, 지연 없음)
+        // Physics와 동기화된 경로 업데이트가 필요할 때 사용
+        void UpdatePathfindingFixed(float fixedDeltaTime, const Vector3& targetPosition);
+        
+        // 즉시 경로 계산 (요청과 동시에 FindPath 실행)
+        void RequestPathImmediate(const Vector3& destination);
+        
         bool GetCurrentWaypoint(Vector3& outWaypoint) const;
         bool IsWaypointReached(const Vector3& currentPos, float threshold = -1.0f) const;
 

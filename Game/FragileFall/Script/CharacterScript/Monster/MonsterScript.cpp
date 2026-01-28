@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -161,9 +161,11 @@ namespace game
 		return IsTargetInRange(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr, m_AttackRange);
 	}
 
-	void MonsterScript::RotateTowardsPlayer(float deltaTime)
+	void MonsterScript::RotateTowardsPlayer()
 	{
-		RotateTowardsTarget(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr, deltaTime);
+		// FixedUpdate에서 호출됨 - deltaTime 파라미터 불필요
+		// (BaseControllerScript::RotateTowardsTarget 내부에서 물리 엔진이 처리)
+		RotateTowardsTarget(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr, 0.0f);
 	}
 
 	bool MonsterScript::IsLookingAtPlayer() const
@@ -212,9 +214,9 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 이동 (PathfindingAgent 활용)
+	// 이동 (PathfindingAgent 활용) - FixedUpdate에서 호출
 	// ═══════════════════════════════════════════════════════════════
-	void MonsterScript::MoveTowardsPlayer(float deltaTime)
+	void MonsterScript::MoveTowardsPlayer()
 	{
 		if (!m_pathfindingAgent || !m_rigidbody || !m_targetPlayer || m_moveSpeed <= 0.0f)
 		{
@@ -224,36 +226,37 @@ namespace game
 		engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
 		engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
 
-		// PathfindingAgent 자동 경로 업데이트
-		m_pathfindingAgent->UpdatePathfinding(deltaTime, playerPos);
+		// PathfindingAgent 자동 경로 업데이트 (FixedUpdate 기반 - 즉시 계산)
+		float fixedDeltaTime = engine::Time::FixedDeltaTime();
+		m_pathfindingAgent->UpdatePathfindingFixed(fixedDeltaTime, playerPos);
 
 		engine::Vector3 nextWaypoint;
 		engine::Vector3 direction;
 
-		if (!m_pathfindingAgent->HasPath())
+		// waypoint 가져오기 시도
+		bool hasValidWaypoint = m_pathfindingAgent->HasPath() && 
+		                        m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
+
+		if (!hasValidWaypoint)
 		{
-			// 경로가 없으면 직접 이동
+			// 경로가 없거나 유효한 waypoint가 없으면 직접 이동
 			direction = CalculateDirectionToPlayer();
 		}
 		else
 		{
-			m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
-
 			engine::Vector3 toCurrentWaypoint = nextWaypoint - currentPos;
-
 			toCurrentWaypoint.y = 0.0f;
 
 			if (toCurrentWaypoint.LengthSquared() > 0.0001f)
 			{
 				toCurrentWaypoint.Normalize();
+				direction = toCurrentWaypoint;
 			}
 			else
 			{
-				return;
+				// waypoint에 거의 도달했으면 직접 이동으로 폴백
+				direction = CalculateDirectionToPlayer();
 			}
-
-			direction = toCurrentWaypoint;
-
 		}
 
 		// ─────────────────────────────────────────────
@@ -268,8 +271,13 @@ namespace game
 
 		direction.Normalize();
 
-		RotateToDirection(direction, deltaTime);
-		m_rigidbody->SetLinearVelocity(direction * m_moveSpeed);
+		RotateToDirection(direction, 0.0f);  // deltaTime 불필요 (물리 엔진이 처리)
+		
+		// 속도 블렌딩 적용 (충돌 시 penetration 방지)
+		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+		engine::Vector3 desiredVel = direction * m_moveSpeed;
+		engine::Vector3 finalVel = engine::Vector3::Lerp(currentVel, desiredVel, m_velocityBlendFactor);
+		m_rigidbody->SetLinearVelocity(finalVel);
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -293,7 +301,7 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 게임 로직 업데이트
+	// 게임 로직 업데이트 - 비물리 (Update에서 호출)
 	// ═══════════════════════════════════════════════════════════════
 	void MonsterScript::UpdateGameLogic()
 	{
@@ -304,44 +312,100 @@ namespace game
 		UpdateStateBasedBehavior(currentState, deltaTime);
 	}
 
+	// ═══════════════════════════════════════════════════════════════
+	// 물리 로직 업데이트 - FixedUpdate에서 호출
+	// ═══════════════════════════════════════════════════════════════
+	void MonsterScript::UpdatePhysicsLogic()
+	{
+		std::string currentState = GetCurrentState();
+		UpdatePhysicsStateBasedBehavior(currentState);
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 상태별 행동 - 비물리 (타이머, 공격 쿨다운 등)
+	// ═══════════════════════════════════════════════════════════════
 	void MonsterScript::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
 	{
 		if (state == "Engage")
 		{
-			ExecuteEngageBehavior(deltaTime);
+			ExecuteEngageBehaviorNonPhysics(deltaTime);
 		}
 		else if (state == "Idle")
 		{
-			ExecuteIdleBehavior();
+			ExecuteIdleBehaviorNonPhysics();
 		}
 		else if (state == "Fragile")
 		{
-			ExecuteFragileBehavior();
+			ExecuteFragileBehaviorNonPhysics();
 		}
 		else if (state == "Dead")
 		{
-			ExecuteDeadBehavior();
+			ExecuteDeadBehaviorNonPhysics();
 		}
 	}
 
-	void MonsterScript::ExecuteEngageBehavior(float deltaTime)
+	void MonsterScript::ExecuteEngageBehaviorNonPhysics(float deltaTime)
 	{
-		RotateTowardsPlayer(deltaTime);
+		// 공격 타이머 및 발사 처리 (비물리)
 		Attack(deltaTime);
 	}
 
-	void MonsterScript::ExecuteIdleBehavior()
+	void MonsterScript::ExecuteIdleBehaviorNonPhysics()
 	{
-		StopRotation();
+		// 비물리 Idle 처리
 	}
 
-	void MonsterScript::ExecuteFragileBehavior()
+	void MonsterScript::ExecuteFragileBehaviorNonPhysics()
 	{
 		// Fragile 상태에서는 아무 행동도 하지 않음
 		// Execution을 기다리는 상태
 	}
 
-	void MonsterScript::ExecuteDeadBehavior()
+	void MonsterScript::ExecuteDeadBehaviorNonPhysics()
+	{
+		// 비물리 Dead 처리
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 상태별 행동 - 물리 (이동, 회전)
+	// ═══════════════════════════════════════════════════════════════
+	void MonsterScript::UpdatePhysicsStateBasedBehavior(const std::string& state)
+	{
+		if (state == "Engage")
+		{
+			ExecuteEngageBehaviorPhysics();
+		}
+		else if (state == "Idle")
+		{
+			ExecuteIdleBehaviorPhysics();
+		}
+		else if (state == "Fragile")
+		{
+			ExecuteFragileBehaviorPhysics();
+		}
+		else if (state == "Dead")
+		{
+			ExecuteDeadBehaviorPhysics();
+		}
+	}
+
+	void MonsterScript::ExecuteEngageBehaviorPhysics()
+	{
+		// 회전 (물리)
+		RotateTowardsPlayer();
+	}
+
+	void MonsterScript::ExecuteIdleBehaviorPhysics()
+	{
+		StopRotation();
+	}
+
+	void MonsterScript::ExecuteFragileBehaviorPhysics()
+	{
+		// Fragile 상태: 물리적으로 정지
+	}
+
+	void MonsterScript::ExecuteDeadBehaviorPhysics()
 	{
 		StopAllMovement();
 	}
@@ -434,6 +498,24 @@ namespace game
 		// TODO: Dead 애니메이션 재생 후 일정 시간 후 파괴
 		// float deathAnimDuration = 2.0f;
 		// GetGameObject()->Destroy(deathAnimDuration);
+	}
+
+	void MonsterScript::TakeDamage(int damage)
+	{
+		// 이미 Fragile 또는 Dead 상태이면 무시
+		std::string currentState = GetCurrentState();
+		if (currentState == "Fragile" || currentState == "Dead")
+		{
+			return;
+		}
+
+		m_Hp -= damage;
+		if (m_Hp < 0)
+		{
+			m_Hp = 0;
+		}
+
+		// 체력 체크는 CheckHealth()에서 자동으로 처리됨
 	}
 
 	// ═══════════════════════════════════════════════════════════════
