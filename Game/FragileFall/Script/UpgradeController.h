@@ -2,12 +2,8 @@
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/UI/UIButton.h>
+#include <Framework/Object/Component/UI/UISlider.h>
 #include "UpgradeTypes.h"
-
-namespace engine
-{
-    class UISlider;
-}
 
 namespace game
 {
@@ -41,8 +37,9 @@ namespace game
         void RefreshNodeVisuals();
 
     private:
-        void BuildDefaultTreeIfEmpty();
+        void BuildNodeTree();
         void RecomputeUnlocked();
+        void AutoRegisterNodesFromContent(const std::string& contentRootName);
         
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
 

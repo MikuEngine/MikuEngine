@@ -6,22 +6,9 @@
 
 namespace game
 {
-    // ═══════════════════════════════════════════════════════════════
-    // 생성자/소멸자
-    // ═══════════════════════════════════════════════════════════════
-    BossPatternManager::BossPatternManager()
-        : m_boss(nullptr)
-        , m_independentPattern(nullptr)
-    {
-    }
+    BossPatternManager::BossPatternManager() = default;
+    BossPatternManager::~BossPatternManager() = default;
 
-    BossPatternManager::~BossPatternManager()
-    {
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // 초기화
-    // ═══════════════════════════════════════════════════════════════
     void BossPatternManager::Initialize(BossScript* boss)
     {
         m_boss = boss;
@@ -29,7 +16,10 @@ namespace game
 
     void BossPatternManager::RegisterPattern(std::unique_ptr<BossPatternBase> pattern)
     {
-        if (!pattern) return;
+        if (!pattern)
+        {
+            return;
+        }
 
         // 독립 패턴이 아니면 일반 패턴으로 등록
         if (pattern.get() != m_independentPattern)
@@ -45,30 +35,42 @@ namespace game
         m_independentPattern = pattern;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 패턴 실행
-    // ═══════════════════════════════════════════════════════════════
     void BossPatternManager::Update(float deltaTime)
     {
-        if (!m_boss) return;
-
-        // 독립 패턴 (기둥 쉴드) - 시간 기반 독립 실행
         if (m_independentPattern)
         {
             m_independentPattern->Update(m_boss, deltaTime);
-
-            // 간격 타이머 체크
-            // TODO: BossPatternBase에 intervalTimer 관리 로직 추가 필요
-            // 현재는 각 패턴에서 직접 관리하도록 설계
         }
 
-        // 일반 패턴들 - 독립적이지 않은 방식으로 실행 (구현 시 결정)
-        // TODO: 일반 패턴 실행 로직 구현
-    }
+        // 일반 패턴들 - 각 패턴이 독립적으로 interval을 체크하여 실행
+        for (auto* pattern : m_normalPatterns)
+        {
+            if (!pattern)
+            {
+                continue;
+            }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 패턴 조회
-    // ═══════════════════════════════════════════════════════════════
+            // 패턴이 이미 실행 중이면 Update만 호출
+            if (pattern->IsActive())
+            {
+                pattern->Update(m_boss, deltaTime);
+                
+                // 패턴이 완료되었으면 종료
+                if (pattern->IsFinished())
+                {
+                    pattern->End(m_boss);
+                }
+            }
+            else
+            {
+                // 패턴이 실행 중이 아니면 interval 체크
+                // 각 패턴은 자신의 intervalTimer를 관리
+                // 여기서는 간단히 Update를 호출하고, 패턴 내부에서 interval 체크
+                pattern->Update(m_boss, deltaTime);
+            }
+        }
+    }
+    
     BossPatternBase* BossPatternManager::GetPattern(const std::string& patternName) const
     {
         for (const auto& pattern : m_patterns)
@@ -78,6 +80,7 @@ namespace game
                 return pattern.get();
             }
         }
+
         return nullptr;
     }
 }

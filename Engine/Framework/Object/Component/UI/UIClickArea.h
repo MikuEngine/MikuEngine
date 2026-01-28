@@ -25,6 +25,8 @@ namespace engine
 		void OnMouseEnter(const Vector2&) override;
 		void OnMouseExit(const Vector2&) override;
 		void OnMouseClick(const Vector2&, int mouseButton) override;
+		void OnScroll(const Vector2& mousePos, float wheelDelta) override;
+		bool IsScrollEnabled() const override { return true; }
 
 		// etc...
 		void OnMouseDown(const Vector2&, int) override {}

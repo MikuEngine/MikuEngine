@@ -7,6 +7,11 @@
 
 #include "Script/Boss/BossScript.h"
 #include "Script/Boss/BossPattern/BossPatternManager.h"
+#include "Script/Boss/BossPattern/Patterns/BossPattern_PillarShield.h"
+#include "Script/Boss/BossPattern/Patterns/BossPattern_BulletFire.h"
+#include "Script/Boss/BossPattern/Patterns/BossPattern_Meteor.h"
+#include "Script/Boss/BossPattern/Patterns/BossPattern_Summon.h"
+#include "Script/Boss/BossPattern/Patterns/BossPattern_SphereProjectile.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -15,42 +20,19 @@ namespace game
     BossScript::BossScript() = default;
     BossScript::~BossScript() = default;
 
-    // ═══════════════════════════════════════════════════════════════
-    // 생명주기
-    // ═══════════════════════════════════════════════════════════════
     void BossScript::Awake()
     {
     }
 
     void BossScript::Start()
     {
-        CacheComponents();
         InitializeCrystalMeshes();
         InitializePatterns();
 
-        // 플레이어 찾기
-        auto* scene = engine::SceneManager::Get().GetScene();
-        if (scene)
+        auto playerGo = engine::GameObject::Find("Player");
+        if (playerGo != nullptr)
         {
-            if (auto* playerGO = scene->FindGameObject(m_targetPlayerObjectName))
-            {
-                if (auto* player = playerGO->GetComponent<PlayerControllerScript>())
-                {
-                    m_targetPlayer = player;
-                }
-            }
-
-            if (!m_targetPlayer)
-            {
-                for (const auto& go : scene->GetGameObjects())
-                {
-                    if (auto* player = go->GetComponent<PlayerControllerScript>())
-                    {
-                        m_targetPlayer = player;
-                        break;
-                    }
-                }
-            }
+            m_targetPlayer = playerGo->GetComponent<PlayerControllerScript>();
         }
     }
 
@@ -64,42 +46,32 @@ namespace game
         CheckHealth();
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 초기화
-    // ═══════════════════════════════════════════════════════════════
-    void BossScript::CacheComponents()
-    {
-        if (!GetGameObject()) return;
-
-        m_mainTransform = GetGameObject()->GetComponent<engine::Transform>();
-
-        // 수정 메쉬들 찾기 (자식 GameObject에서도 검색)
-        // TODO: 실제 구조에 맞게 수정 필요
-        auto* meshRenderer = GetGameObject()->GetComponent<engine::StaticMeshRenderer>();
-        if (meshRenderer)
-        {
-            m_crystalMeshes.push_back(meshRenderer);
-        }
-    }
-
     void BossScript::InitializePatterns()
     {
         m_patternManager = std::make_unique<BossPatternManager>();
         m_patternManager->Initialize(this);
 
-        // TODO: 패턴 등록은 자식 클래스에서 구현
-        // InitializePatterns()를 가상 함수로 만들거나 자식에서 오버라이드
+        // 독립 패턴 (기둥 쉴드) - 10초마다 독립 실행
+        auto pillarShield = std::make_unique<BossPattern_PillarShield>();
+        m_patternManager->SetIndependentPattern(pillarShield.get());
+        m_patternManager->RegisterPattern(std::move(pillarShield));
+
+        // 일반 패턴들 등록
+        m_patternManager->RegisterPattern(std::make_unique<BossPattern_BulletFire>());
+        m_patternManager->RegisterPattern(std::make_unique<BossPattern_Meteor>());
+        m_patternManager->RegisterPattern(std::make_unique<BossPattern_Summon>());
+        m_patternManager->RegisterPattern(std::make_unique<BossPattern_SphereProjectile>());
     }
 
     void BossScript::InitializeCrystalMeshes()
     {
-        // TODO: 수정 메쉬들 초기화 및 회전 설정
-        // 실제 구조에 맞게 구현 필요
+        const auto& children = GetTransform()->GetChildren();
+        for (auto* childTransform : children)
+        {
+            m_crystalMeshGameObjects.push_back(childTransform->GetGameObject());
+        }
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 패턴 시스템
-    // ═══════════════════════════════════════════════════════════════
     void BossScript::UpdatePatternSystem(float deltaTime)
     {
         if (m_patternManager)
@@ -118,9 +90,6 @@ namespace game
         // TODO: 패턴 종료 시 처리
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 체력 관리
-    // ═══════════════════════════════════════════════════════════════
     void BossScript::TakeDamage(int damage)
     {
         if (m_isShieldActive)
@@ -149,9 +118,6 @@ namespace game
         // TODO: 보스 사망 처리
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 쉴드 시스템
-    // ═══════════════════════════════════════════════════════════════
     void BossScript::UpdateShieldStatus()
     {
         // 기둥 리스트에서 파괴된 기둥 제거
@@ -186,9 +152,6 @@ namespace game
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 색상 시스템
-    // ═══════════════════════════════════════════════════════════════
     void BossScript::SetColor(BossColor color)
     {
         m_currentColor = color;
@@ -206,10 +169,12 @@ namespace game
         default: return "Unknown";
         }
     }
+    
+    engine::Ptr<PlayerControllerScript> BossScript::GetTargetPlayer() const
+    {
+        return m_targetPlayer;
+    }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 결정화/처형 시스템
-    // ═══════════════════════════════════════════════════════════════
     void BossScript::OnCrystallized()
     {
         // TODO: 결정화 상태 진입 처리
@@ -221,30 +186,39 @@ namespace game
         TakeDamage(200);
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 간단한 움직임 (회전 등)
-    // ═══════════════════════════════════════════════════════════════
     void BossScript::UpdateCrystalMovement(float deltaTime)
     {
-        if (!m_mainTransform) return;
-
         // 메인 수정 주변을 도는 작은 수정들
-        for (size_t i = 0; i < m_crystalMeshes.size(); ++i)
+        for (size_t i = 0; i < m_crystalMeshGameObjects.size(); ++i)
         {
-            if (m_crystalMeshes[i] && m_mainTransform)
+            if (m_crystalMeshGameObjects[i])
             {
-                float angle = static_cast<float>(i) * (360.0f / m_crystalMeshes.size()) + deltaTime * 30.0f;  // 초당 30도 회전
+                float angle = static_cast<float>(i) * (360.0f / m_crystalMeshGameObjects.size()) + deltaTime * 30.0f;  // 초당 30도 회전
                 float radius = 2.0f;
 
                 float angleRad = engine::ToRadian(angle);
                 engine::Vector3 offset(std::cosf(angleRad) * radius, 0.0f, std::sinf(angleRad) * radius);
 
-                auto* meshTransform = m_crystalMeshes[i]->GetTransform();
+                auto* meshTransform = m_crystalMeshGameObjects[i]->GetTransform();
                 if (meshTransform)
                 {
-                    meshTransform->SetLocalPosition(m_mainTransform->GetWorldPosition() + offset);
+                    meshTransform->SetLocalPosition(GetTransform()->GetWorldPosition() + offset);
                 }
             }
         }
+    }
+
+    void BossScript::OnGui()
+    {
+    }
+
+    void BossScript::Save(engine::json& j) const
+    {
+        Object::Save(j);
+    }
+
+    void BossScript::Load(const engine::json& j)
+    {
+        Object::Load(j);
     }
 }

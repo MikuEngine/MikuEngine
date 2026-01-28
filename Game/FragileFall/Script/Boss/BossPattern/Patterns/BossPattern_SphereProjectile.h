@@ -1,0 +1,34 @@
+﻿#pragma once
+
+#include "Script/Boss/BossPattern/BossPatternBase.h"
+
+namespace game
+{
+    class BossScript;
+    class BossProjectile;
+
+    class BossPattern_SphereProjectile :
+        public BossPatternBase
+    {
+    private:
+        float m_interval = 6.0f;  // 6초마다 실행
+        float m_projectileSpeed = 8.0f;  // 투사체 속도
+        float m_projectileDamage = 30.0f;  // 투사체 데미지
+        float m_projectileLifetime = 10.0f;  // 투사체 수명
+        bool m_canBeCrystallized = true;  // 결정화 가능 여부
+
+    public:
+        void Start(BossScript* boss) override;
+        void Update(BossScript* boss, float deltaTime) override;
+        void End(BossScript* boss) override;
+
+        bool IsFinished() const override { return true; }  // 즉시 완료
+        float GetInterval() const override { return m_interval; }
+        float GetCooldown() const override { return 0.0f; }
+
+        std::string GetPatternName() const override { return "SphereProjectile"; }
+        std::string GetPatternDescription() const override { return "구체 발사"; }
+
+        void FireProjectile(BossScript* boss);
+    };
+}

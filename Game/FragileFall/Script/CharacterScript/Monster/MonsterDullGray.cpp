@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterDullGray.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -16,15 +16,7 @@ namespace game
     void MonsterDullGray::Awake()
     {
         MonsterScript::Awake();
-
-        // DullGray 고유 스탯 설정
-        m_Hp = 100;
-        m_AttackRange = 15.0f;
-        m_moveSpeed = 0.0f;  // 이동 불가
-        m_rotationSpeed = 6.0f * 3.14159f;  // 360도/초 (라디안)
-        m_fireRate = 3.0f;
-        m_bulletSpeed = 10.2f;
-        m_bulletLifetime = 3.0f;
+        // 스탯은 씬 파일에서 로드됨 (Load 함수 참조)
     }
 
     void MonsterDullGray::Start()

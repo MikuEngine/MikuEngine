@@ -45,7 +45,8 @@ namespace game
         // 이동 설정
         // ─────────────────────────────────────────────
         float m_moveSpeed = 5.0f;
-        // m_velocityBlendFactor는 BaseControllerScript에서 상속 (기본값 0.5)
+        // 이동 가속/감속 설정은 BaseControllerScript에서 상속
+        // (m_movementAcceleration, m_movementDeceleration, m_maxSpeedBrakeFactor)
 
         // ─────────────────────────────────────────────
         // 발사 설정 (쿨다운/타이밍은 Player가 관리)

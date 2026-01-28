@@ -6,161 +6,101 @@
 #include <algorithm>
 #include <cstring>
 #include <cstdint>
-#include <cctype>
+
 #ifdef _WIN32
 #define NOMINMAX
 #include <Windows.h>
 #endif
 
+#include <lz4.h> // LZ4 필수
+
 namespace fs = std::filesystem;
 
-// 패키지 파일 포맷 구조체 (VirtualFileSystem과 동일)
+// VirtualFileSystem.h와 반드시 일치해야 함
 struct PackHeader
 {
     char signature[4];  // "MIKU"
-    uint32_t version;   // 1
+    uint32_t version;   // 2
     uint32_t fileCount;
-    uint64_t dataOffset; // 실제 데이터가 시작되는 위치
+    uint64_t dataOffset;
 };
 
 struct FileEntry
 {
-    uint64_t pathHash;  // 경로 해시값 (FNV-1a 64bit)
-    uint64_t offset;    // 패키지 파일 내에서의 시작 위치
-    uint64_t size;      // 파일 크기
-    char path[256];     // 디버그용 경로
+    uint64_t pathHash;
+    uint64_t offset;
+    uint64_t compressedSize;    // 압축된 크기
+    uint64_t uncompressedSize;  // 원본 크기
+    char path[256];
 };
 
-// FNV-1a 64bit 해시 함수
 uint64_t HashPath(const std::string& path)
 {
     constexpr uint64_t FNV_OFFSET_BASIS = 14695981039346656037ULL;
     constexpr uint64_t FNV_PRIME = 1099511628211ULL;
-
     uint64_t hash = FNV_OFFSET_BASIS;
-    for (char c : path)
-    {
-        hash ^= static_cast<uint64_t>(c);
-        hash *= FNV_PRIME;
-    }
-
+    for (char c : path) { hash ^= static_cast<uint64_t>(c); hash *= FNV_PRIME; }
     return hash;
 }
 
-// 경로 정규화
 std::string NormalizePath(const std::string& path, const std::string& baseDir)
 {
     std::string normalized = path;
-
-    // 절대 경로를 상대 경로로 변환
-    if (normalized.find(baseDir) == 0)
-    {
-        normalized = normalized.substr(baseDir.length());
-    }
-
-    // 백슬래시를 슬래시로 변환
+    if (normalized.find(baseDir) == 0) normalized = normalized.substr(baseDir.length());
     std::replace(normalized.begin(), normalized.end(), '\\', '/');
-
-    // 앞의 ./ 제거
-    while (normalized.size() >= 2 && normalized[0] == '.' && normalized[1] == '/')
-    {
-        normalized = normalized.substr(2);
-    }
-
-    // 앞의 / 제거
-    if (!normalized.empty() && normalized[0] == '/')
-    {
-        normalized = normalized.substr(1);
-    }
-
-    // 대소문자 통일 (Windows는 대소문자 구분 안 함)
-    std::transform(normalized.begin(), normalized.end(), normalized.begin(),
-        [](unsigned char c) { return std::tolower(c); });
-
+    while (normalized.size() >= 2 && normalized[0] == '.' && normalized[1] == '/') normalized = normalized.substr(2);
+    if (!normalized.empty() && normalized[0] == '/') normalized = normalized.substr(1);
+    std::transform(normalized.begin(), normalized.end(), normalized.begin(), [](unsigned char c) { return std::tolower(c); });
     return normalized;
 }
 
 int main(int argc, char* argv[])
 {
 #ifdef _WIN32
-    // Windows 콘솔을 UTF-8로 설정
-    SetConsoleOutputCP(65001);  // UTF-8 코드 페이지
-    SetConsoleCP(65001);        // 입력도 UTF-8
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
 #endif
 
     std::string inputDir = "Resource";
     std::string outputFile = "Resource.pak";
 
-    // 명령줄 인자 처리
-    if (argc >= 2)
-    {
-        inputDir = argv[1];
-    }
-    if (argc >= 3)
-    {
-        outputFile = argv[2];
-    }
+    if (argc >= 2) inputDir = argv[1];
+    if (argc >= 3) outputFile = argv[2];
 
-    std::cout << "Asset Packer - MikuEngine\n";
-    std::cout << "입력 폴더: " << inputDir << "\n";
-    std::cout << "출력 파일: " << outputFile << "\n\n";
+    std::cout << "Asset Packer (LZ4 Support) - MikuEngine\n";
 
-    // 입력 폴더 확인
-    if (!fs::exists(inputDir) || !fs::is_directory(inputDir))
-    {
-        std::cerr << "오류: 입력 폴더가 존재하지 않습니다: " << inputDir << "\n";
+    if (!fs::exists(inputDir)) {
+        std::cerr << "오류: 입력 폴더 없음: " << inputDir << "\n";
         return 1;
     }
 
-    // 입력 폴더를 절대 경로로 변환
     fs::path basePath = fs::absolute(inputDir);
     std::string baseDir = basePath.string();
     std::replace(baseDir.begin(), baseDir.end(), '\\', '/');
-    if (baseDir.back() != '/')
-    {
-        baseDir += '/';
-    }
+    if (baseDir.back() != '/') baseDir += '/';
 
-    // 파일 목록 수집
     std::vector<std::pair<std::string, fs::path>> files;
-    for (const auto& entry : fs::recursive_directory_iterator(inputDir))
-    {
-        if (entry.is_regular_file())
-        {
-            std::string filePath = entry.path().string();
-            std::string normalized = NormalizePath(filePath, baseDir);
-            files.push_back({ normalized, entry.path() });
+    for (const auto& entry : fs::recursive_directory_iterator(inputDir)) {
+        if (entry.is_regular_file()) {
+            std::string nPath = NormalizePath(entry.path().string(), baseDir);
+            files.push_back({ nPath, entry.path() });
         }
     }
 
-    std::cout << "파일 " << files.size() << "개 발견\n\n";
+    std::cout << "파일 " << files.size() << "개 발견.\n";
+    if (files.empty()) return 1;
 
-    if (files.empty())
-    {
-        std::cerr << "오류: 패키지할 파일이 없습니다.\n";
-        return 1;
-    }
-
-    // 임시 파일에 데이터 쓰기
     std::string tempFile = outputFile + ".tmp";
     std::ofstream outFile(tempFile, std::ios::binary);
-    if (!outFile.is_open())
-    {
-        std::cerr << "오류: 임시 파일을 열 수 없습니다: " << tempFile << "\n";
-        return 1;
-    }
 
-    // 헤더 공간 예약 (나중에 덮어쓸 예정)
     PackHeader header = {};
     std::memcpy(header.signature, "MIKU", 4);
-    header.version = 1;
+    header.version = 2; // 버전 2
     header.fileCount = static_cast<uint32_t>(files.size());
     header.dataOffset = sizeof(PackHeader) + sizeof(FileEntry) * files.size();
 
-    // 헤더와 엔트리 공간 예약
     outFile.seekp(header.dataOffset);
 
-    // 파일 엔트리 생성 및 데이터 쓰기
     std::vector<FileEntry> entries;
     uint64_t currentOffset = header.dataOffset;
 
@@ -169,49 +109,63 @@ int main(int argc, char* argv[])
         FileEntry entry = {};
         entry.pathHash = HashPath(normalizedPath);
         entry.offset = currentOffset;
-        entry.size = fs::file_size(filePath);
 
-        // 경로 복사 (최대 255자)
+        // 원본 파일 읽기
+        std::ifstream inFile(filePath, std::ios::binary | std::ios::ate);
+        size_t srcSize = static_cast<size_t>(inFile.tellg());
+        inFile.seekg(0, std::ios::beg);
+
+        std::vector<char> srcBuffer(srcSize);
+        inFile.read(srcBuffer.data(), srcSize);
+
+        entry.uncompressedSize = srcSize;
+
+        // 경로 저장
         size_t pathLen = std::min(normalizedPath.length(), size_t(255));
         std::memcpy(entry.path, normalizedPath.c_str(), pathLen);
-        entry.path[pathLen] = '\0';
 
-        entries.push_back(entry);
+        // 압축 시도
+        int maxDestSize = LZ4_compressBound(static_cast<int>(srcSize));
+        std::vector<char> compressedBuffer(maxDestSize);
 
-        // 파일 데이터 쓰기
-        std::ifstream inFile(filePath, std::ios::binary);
-        if (!inFile.is_open())
+        int compressedSize = LZ4_compress_default(
+            srcBuffer.data(),
+            compressedBuffer.data(),
+            static_cast<int>(srcSize),
+            maxDestSize
+        );
+
+        // 압축이 성공했고, 원본보다 작으면 압축 데이터 사용
+        // (TGA가 이미 RLE 압축되어 있거나 파일이 너무 작으면 압축 효율이 없을 수 있음)
+        if (compressedSize > 0 && compressedSize < static_cast<int>(srcSize))
         {
-            std::cerr << "경고: 파일을 읽을 수 없습니다: " << filePath << "\n";
-            continue;
+            entry.compressedSize = compressedSize;
+            outFile.write(compressedBuffer.data(), compressedSize);
+            currentOffset += compressedSize;
+            std::cout << "[압축] " << normalizedPath << " (" << (int)(compressedSize * 100.0 / srcSize) << "%)\n";
+        }
+        else
+        {
+            // 압축하지 않음 (원본 저장)
+            entry.compressedSize = srcSize;
+            outFile.write(srcBuffer.data(), srcSize);
+            currentOffset += srcSize;
+            std::cout << "[원본] " << normalizedPath << " (Skip)\n";
         }
 
-        std::vector<char> buffer(entry.size);
-        inFile.read(buffer.data(), entry.size);
-        outFile.write(buffer.data(), entry.size);
-
-        currentOffset += entry.size;
-
-        std::cout << "패키징: " << normalizedPath << " (" << entry.size << " bytes)\n";
+        entries.push_back(entry);
     }
 
     // 헤더와 엔트리 쓰기
     outFile.seekp(0);
     outFile.write(reinterpret_cast<const char*>(&header), sizeof(PackHeader));
     outFile.write(reinterpret_cast<const char*>(entries.data()), sizeof(FileEntry) * entries.size());
-
     outFile.close();
 
-    // 임시 파일을 최종 파일로 이동
-    if (fs::exists(outputFile))
-    {
-        fs::remove(outputFile);
-    }
+    // 파일 교체
+    if (fs::exists(outputFile)) fs::remove(outputFile);
     fs::rename(tempFile, outputFile);
 
-    std::cout << "\n완료! 패키지 파일 생성: " << outputFile << "\n";
-    std::cout << "총 파일 수: " << files.size() << "\n";
-    std::cout << "패키지 크기: " << fs::file_size(outputFile) << " bytes\n";
-
+    std::cout << "\n패키징 완료: " << outputFile << "\n";
     return 0;
 }

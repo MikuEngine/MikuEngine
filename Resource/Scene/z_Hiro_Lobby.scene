@@ -3609,7 +3609,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -150.0
+                        "y": -175.0
                     },
                     "Width": 400.0,
                     "Height": 150.0,
@@ -3755,13 +3755,13 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 150.0
+                        "y": -85.0
                     },
                     "Width": 400.0,
-                    "Height": 400.0,
+                    "Height": 290.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.0
                     },
                     "AnchorMin": {
                         "x": 0.5,
@@ -3829,7 +3829,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": -120.0,
-                        "y": -120.0
+                        "y": -70.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -3901,7 +3901,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": -120.0,
-                        "y": -50.0
+                        "y": -10.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -4383,9 +4383,9 @@
                     "Parent": [],
                     "Name": "None",
                     "Desc": "Node",
-                    "Ruby": 100,
-                    "Sapphire": 100,
-                    "Emerald": 100
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
                 }
             ]
         },
@@ -4419,8 +4419,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -150.0
+                        "x": -150.0,
+                        "y": 0.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -4456,7 +4456,7 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
                         "x": 1.0,
-                        "y": 0.39382243156433105,
+                        "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
@@ -4465,14 +4465,16 @@
                 {
                     "Type": "UpgradeNodeView",
                     "Active": true,
-                    "Category": 1,
+                    "Category": 0,
                     "NodeId": 2,
-                    "Parent": [],
+                    "Parent": [
+                        1
+                    ],
                     "Name": "None",
                     "Desc": "Node",
-                    "Ruby": 100,
-                    "Sapphire": 100,
-                    "Emerald": 100
+                    "Ruby": 2,
+                    "Sapphire": 2,
+                    "Emerald": 2
                 }
             ]
         },
@@ -4506,8 +4508,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -150.0
+                        "x": 150.0,
+                        "y": 0.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -4543,7 +4545,7 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
                         "x": 1.0,
-                        "y": 0.9266408681869507,
+                        "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
@@ -4552,14 +4554,16 @@
                 {
                     "Type": "UpgradeNodeView",
                     "Active": true,
-                    "Category": 2,
+                    "Category": 0,
                     "NodeId": 3,
-                    "Parent": [],
+                    "Parent": [
+                        1
+                    ],
                     "Name": "None",
                     "Desc": "Node",
-                    "Ruby": 100,
-                    "Sapphire": 100,
-                    "Emerald": 100
+                    "Ruby": 3,
+                    "Sapphire": 3,
+                    "Emerald": 3
                 }
             ]
         },
@@ -4594,7 +4598,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -150.0
+                        "y": 150.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -4629,9 +4633,9 @@
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
-                        "x": 0.49420851469039917,
-                        "y": 0.49420851469039917,
-                        "z": 0.49420851469039917,
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true
@@ -4639,14 +4643,17 @@
                 {
                     "Type": "UpgradeNodeView",
                     "Active": true,
-                    "Category": 3,
+                    "Category": 0,
                     "NodeId": 4,
-                    "Parent": [],
+                    "Parent": [
+                        2,
+                        3
+                    ],
                     "Name": "None",
                     "Desc": "Node",
-                    "Ruby": 100,
-                    "Sapphire": 100,
-                    "Emerald": 100
+                    "Ruby": 4,
+                    "Sapphire": 4,
+                    "Emerald": 4
                 }
             ]
         },
@@ -4897,13 +4904,7 @@
                     "Ruby": 100,
                     "Sapphire": 100,
                     "Emerald": 100,
-                    "Purchased": [],
-                    "NodeObjects": [
-                        "Node(1)",
-                        "Node(2)",
-                        "Node(3)",
-                        "Node(4)"
-                    ]
+                    "Purchased": []
                 }
             ]
         }

@@ -50,7 +50,41 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": true,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        -0.03999999910593033,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 1,
+                    "size": [
+                        2.4200000762939453,
+                        1.9299999475479126,
+                        1.909999966621399
+                    ]
                 }
             ]
         }

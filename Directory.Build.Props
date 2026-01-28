@@ -6,6 +6,7 @@
 		<PhysX>$(SolutionDir)Vendor\PhysX</PhysX>
 		<FMOD>$(SolutionDir)Vendor\FMOD</FMOD>
 		<FreeType>$(SolutionDir)Vendor\FreeType</FreeType>
+		<LZ4>$(SolutionDir)Vendor\LZ4</LZ4>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
     </PropertyGroup>
@@ -18,6 +19,7 @@
 				$(PhysX)\include;
 				$(FMOD)\inc;
 				$(FreeType)\include;
+				$(LZ4)\include;
 				$(SolutionDir)Engine;
 				$(SolutionDir);
 				$(ProjectDir);
@@ -39,6 +41,7 @@
 				$(PhysX)\lib\debug;
 				$(FMOD)\lib\x64;
 				$(FreeType)\lib\debug;
+				$(LZ4)\lib\debug;
 				%(AdditionalLibraryDirectories)
 			</AdditionalLibraryDirectories>
 			
@@ -59,6 +62,7 @@
 				PhysXPvdSDK_static_64.lib;
 				fmodL_vc.lib;
 				freetype.lib;
+				liblz4_static.lib;
 				%(AdditionalDependencies)
 			</AdditionalDependencies>
         </Link>
@@ -84,6 +88,7 @@
 				$(PhysX)\lib\release;
 				$(FMOD)\lib\x64;
 				$(FreeType)\lib\release;
+				$(LZ4)\lib\release;
 				%(AdditionalLibraryDirectories)
 			</AdditionalLibraryDirectories>
 			
@@ -104,6 +109,7 @@
 				PhysXPvdSDK_static_64.lib;
 				fmod_vc.lib;
 				freetype.lib;
+				liblz4_static.lib;
 				%(AdditionalDependencies)
 			</AdditionalDependencies>
         </Link>

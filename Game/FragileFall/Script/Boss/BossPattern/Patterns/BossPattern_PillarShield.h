@@ -7,26 +7,17 @@ namespace game
 {
     class BossScript;
     class BossPillar;
+    class BossShieldEffect;
 
-    // ═══════════════════════════════════════════════════════════════
-    // BossPattern_PillarShield - 기둥 쉴드 패턴 (독립 패턴)
-    // 
-    // 기능:
-    //   - N초마다 기둥 생성
-    //   - 기둥이 모두 파괴되지 않으면 보스에게 데미지 차단
-    // 
-    // 특징:
-    //   - 유일한 독립 패턴 (다른 패턴들과 독립적으로 시간 기반 실행)
-    // ═══════════════════════════════════════════════════════════════
     class BossPattern_PillarShield :
         public BossPatternBase
     {
     private:
         float m_interval = 10.0f;  // 10초마다 실행
         float m_intervalTimer = 0.0f;  // 간격 타이머
-        int m_pillarCount = 4;  // 생성할 기둥 개수
-        float m_pillarSpawnRadius = 8.0f;  // 기둥 생성 반경
+        int m_pillarCount = 2;  // 생성할 기둥 개수
         std::vector<engine::Ptr<BossPillar>> m_spawnedPillars;  // 생성된 기둥들
+        std::vector<engine::Ptr<BossShieldEffect>> m_shieldEffects;  // 생성된 기둥들
 
     public:
         void Start(BossScript* boss) override;
