@@ -155,7 +155,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Desktop\backup\SocketAttachment.cpp" />
     <ClCompile Include="Common\Utility\CSVReader.cpp" />
     <ClCompile Include="Core\App\AppContext.cpp" />
     <ClCompile Include="Core\Graphics\Resource\GeometryShader.cpp" />
@@ -277,7 +276,6 @@
     <ClCompile Include="Framework\Object\Component\UI\UIClickArea.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Desktop\backup\SocketAttachment.h" />
     <ClInclude Include="Common\Utility\CSVReader.h" />
     <ClInclude Include="Common\Utility\EditorHelper.h" />
     <ClInclude Include="Core\App\AppContext.h" />

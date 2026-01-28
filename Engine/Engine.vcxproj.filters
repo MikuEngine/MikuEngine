@@ -360,9 +360,6 @@
     <ClCompile Include="Framework\Object\Component\Socket\SocketDebugRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Desktop\backup\SocketAttachment.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Framework\Object\Component\Socket\SocketAttachment.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -774,9 +771,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\Socket\SocketDebugRenderer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Desktop\backup\SocketAttachment.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\Socket\SocketAttachment.h">
