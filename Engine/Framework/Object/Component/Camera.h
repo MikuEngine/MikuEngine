@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -61,5 +61,22 @@ namespace engine
         void SetScale(float scale);
         void SetWidth(float width);
         void SetHeight(float height);
+
+        // ─────────────────────────────────────────────
+        // 좌표 변환 유틸리티
+        // ─────────────────────────────────────────────
+        
+        // 스크린 좌표를 월드 공간의 Ray로 변환
+        // screenPos: 스크린 좌표 (픽셀 단위)
+        // outOrigin: Ray 시작점 (카메라 위치)
+        // outDirection: Ray 방향 (정규화됨)
+        // 반환값: 변환 성공 여부
+        bool ScreenToWorldRay(const Vector2& screenPos, Vector3& outOrigin, Vector3& outDirection) const;
+        
+        // 월드 좌표를 스크린 좌표로 변환
+        // worldPos: 월드 좌표
+        // outScreenPos: 스크린 좌표 (픽셀 단위)
+        // 반환값: 화면 내에 있으면 true, 카메라 뒤에 있으면 false
+        bool WorldToScreen(const Vector3& worldPos, Vector2& outScreenPos) const;
     };
 }

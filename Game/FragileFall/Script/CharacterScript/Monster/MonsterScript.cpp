@@ -7,6 +7,7 @@
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
+#include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
@@ -78,12 +79,19 @@ namespace game
 
 		m_rigidbody = GetGameObject()->GetComponent<engine::Rigidbody>();
 		m_skeletalAnimator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
+		m_skeletalMeshRenderer = GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>();
 
 		// BulletFactory는 자신의 GameObject에서만 검색
 		m_bulletFactory = GetGameObject()->GetComponent<BulletFactory>();
 
 		// PathfindingAgent 검색 (같은 GameObject에 있어야 함)
 		m_pathfindingAgent = GetGameObject()->GetComponent<engine::PathfindingAgent>();
+		
+		// 피격 효과: 원래 색상 저장
+		if (m_skeletalMeshRenderer)
+		{
+			m_originalColor = m_skeletalMeshRenderer->GetBaseColor();
+		}
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -276,6 +284,7 @@ namespace game
 		std::string currentState = GetCurrentState();
 
 		CheckHealth();
+		UpdateHitFlash(deltaTime);
 		UpdateStateBasedBehavior(currentState, deltaTime);
 	}
 
@@ -468,6 +477,43 @@ namespace game
 		// GetGameObject()->Destroy(deathAnimDuration);
 	}
 
+	// ═══════════════════════════════════════════════════════════════
+	// 피격 효과 (Hit Flash)
+	// ═══════════════════════════════════════════════════════════════
+	void MonsterScript::StartHitFlash()
+	{
+		if (!m_skeletalMeshRenderer) return;
+
+		m_isHitFlashing = true;
+		m_hitFlashTimer = 0.0f;
+		
+		// 흰색으로 변경
+		m_skeletalMeshRenderer->SetBaseColor(m_hitFlashColor);
+	}
+
+	void MonsterScript::UpdateHitFlash(float deltaTime)
+	{
+		if (!m_isHitFlashing) return;
+
+		m_hitFlashTimer += deltaTime;
+
+		if (m_hitFlashTimer >= m_hitFlashDuration)
+		{
+			EndHitFlash();
+		}
+	}
+
+	void MonsterScript::EndHitFlash()
+	{
+		if (!m_skeletalMeshRenderer) return;
+
+		m_isHitFlashing = false;
+		m_hitFlashTimer = 0.0f;
+		
+		// 원래 색상으로 복원
+		m_skeletalMeshRenderer->SetBaseColor(m_originalColor);
+	}
+
 	void MonsterScript::TakeDamage(int damage)
 	{
 		// 이미 Fragile 또는 Dead 상태이면 무시
@@ -482,6 +528,9 @@ namespace game
 		{
 			m_Hp = 0;
 		}
+
+		// 피격 효과 시작
+		StartHitFlash();
 
 		// 체력 체크는 CheckHealth()에서 자동으로 처리됨
 	}

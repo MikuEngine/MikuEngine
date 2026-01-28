@@ -2,6 +2,7 @@
 #include "StateTextRenderer.h"
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
+#include "Script/CharacterScript/Monster/MonsterScript.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
 
@@ -132,6 +133,9 @@ namespace game
         rectTransform->SetAnchorMin({ 0.0f, 0.0f });
         rectTransform->SetAnchorMax({ 0.0f, 0.0f });
         rectTransform->SetPivot({ 0.5f, 0.5f });
+        
+        // 상태 텍스트 폰트 크기 설정
+        uiText->SetFontPixelSize(m_stateFontSize);
 
         // TrackedObject 추가 (Ptr로 안전하게 저장)
         TrackedObject tracked;
@@ -139,6 +143,42 @@ namespace game
         tracked.textObject = textGO;
         tracked.uiText = uiText;
         tracked.rectTransform = rectTransform;
+        
+        // MonsterScript인 경우 체력 텍스트도 생성
+        MonsterScript* monster = dynamic_cast<MonsterScript*>(controller);
+        if (m_showHpText && monster)
+        {
+            engine::GameObject* hpTextGO = engine::Prefab::Instantiate(m_prefabName);
+            if (hpTextGO)
+            {
+                if (GetGameObject() && GetGameObject()->GetTransform())
+                {
+                    hpTextGO->GetTransform()->SetParent(GetGameObject()->GetTransform(), false);
+                }
+                
+                engine::UIText* hpUiText = hpTextGO->GetComponent<engine::UIText>();
+                engine::RectTransform* hpRectTransform = hpTextGO->GetComponent<engine::RectTransform>();
+                
+                if (hpUiText && hpRectTransform)
+                {
+                    hpRectTransform->SetAnchorMin({ 0.0f, 0.0f });
+                    hpRectTransform->SetAnchorMax({ 0.0f, 0.0f });
+                    hpRectTransform->SetPivot({ 0.5f, 0.5f });
+                    
+                    // 체력 텍스트는 더 큰 폰트
+                    hpUiText->SetFontPixelSize(m_hpFontSize);
+                    hpUiText->SetAlignH(engine::UITextAlignH::Center);
+                    
+                    tracked.hpTextObject = hpTextGO;
+                    tracked.hpUiText = hpUiText;
+                    tracked.hpRectTransform = hpRectTransform;
+                }
+                else
+                {
+                    hpTextGO->Destroy();
+                }
+            }
+        }
 
         m_trackedObjects.push_back(tracked);
     }
@@ -183,23 +223,53 @@ namespace game
             return;
         }
 
-        // UI 위치 설정
+        // UI 위치 설정 (상태 텍스트)
         const engine::Vector2 finalPos(
             screenPos.x - m_cachedParentRectX,
             screenPos.y - m_cachedParentRectY
         );
 
         tracked.rectTransform->SetAnchoredPosition(finalPos);
+        
+        // 체력 텍스트 업데이트 (MonsterScript인 경우)
+        if (tracked.hpUiText && tracked.hpRectTransform)
+        {
+            MonsterScript* monster = dynamic_cast<MonsterScript*>(tracked.controller.Get());
+            if (monster)
+            {
+                // 체력 텍스트 내용 설정
+                std::string hpText = "HP: " + std::to_string(monster->GetHp());
+                tracked.hpUiText->SetText(hpText);
+                
+                // 체력 텍스트 위치 (상태 텍스트 위쪽)
+                const engine::Vector2 hpPos(
+                    finalPos.x,
+                    finalPos.y - m_hpTextYOffset  // 위로 올림 (스크린 좌표계에서 Y가 아래로 증가)
+                );
+                tracked.hpRectTransform->SetAnchoredPosition(hpPos);
+            }
+        }
+        
         SetTextVisible(tracked, true);
     }
 
     void StateTextRenderer::SetTextVisible(TrackedObject& tracked, bool visible)
     {
-        if (!tracked.uiText) return;
-
-        engine::Vector4 color = tracked.uiText->GetColor();
-        color.w = visible ? 1.0f : 0.0f;
-        tracked.uiText->SetColor(color);
+        // 상태 텍스트 표시/숨김
+        if (tracked.uiText)
+        {
+            engine::Vector4 color = tracked.uiText->GetColor();
+            color.w = visible ? 1.0f : 0.0f;
+            tracked.uiText->SetColor(color);
+        }
+        
+        // 체력 텍스트 표시/숨김
+        if (tracked.hpUiText)
+        {
+            engine::Vector4 hpColor = tracked.hpUiText->GetColor();
+            hpColor.w = visible ? 1.0f : 0.0f;
+            tracked.hpUiText->SetColor(hpColor);
+        }
     }
 
     void StateTextRenderer::CleanupDestroyedObjects()
@@ -282,6 +352,13 @@ namespace game
         ImGui::InputText("Prefab Name", &m_prefabName);
         ImGui::DragFloat3("World Offset", &m_worldOffset.x, 0.1f);
         ImGui::Checkbox("Hide When Offscreen", &m_hideWhenOffscreen);
+        
+        ImGui::Separator();
+        ImGui::Text("HP Text Settings:");
+        ImGui::Checkbox("Show HP Text", &m_showHpText);
+        ImGui::DragInt("HP Font Size", &m_hpFontSize, 1, 12, 128);
+        ImGui::DragInt("State Font Size", &m_stateFontSize, 1, 12, 128);
+        ImGui::DragFloat("HP Text Y Offset", &m_hpTextYOffset, 1.0f, 0.0f, 100.0f);
 
         ImGui::Separator();
         ImGui::Text("Tracked Objects: %d", static_cast<int>(m_trackedObjects.size()));
@@ -298,6 +375,10 @@ namespace game
         j["PrefabName"] = m_prefabName;
         j["WorldOffset"] = m_worldOffset;
         j["HideWhenOffscreen"] = m_hideWhenOffscreen;
+        j["ShowHpText"] = m_showHpText;
+        j["HpFontSize"] = m_hpFontSize;
+        j["StateFontSize"] = m_stateFontSize;
+        j["HpTextYOffset"] = m_hpTextYOffset;
     }
 
     void StateTextRenderer::Load(const engine::json& j)
@@ -306,5 +387,9 @@ namespace game
         engine::JsonGet(j, "PrefabName", m_prefabName);
         engine::JsonGet(j, "WorldOffset", m_worldOffset);
         engine::JsonGet(j, "HideWhenOffscreen", m_hideWhenOffscreen);
+        engine::JsonGet(j, "ShowHpText", m_showHpText);
+        engine::JsonGet(j, "HpFontSize", m_hpFontSize);
+        engine::JsonGet(j, "StateFontSize", m_stateFontSize);
+        engine::JsonGet(j, "HpTextYOffset", m_hpTextYOffset);
     }
 }
