@@ -4,6 +4,7 @@
 
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/UI/UISlider.h>
+#include <Framework/Object/Component/UI/UIImage.h>
 
 namespace game
 {
@@ -25,10 +26,12 @@ namespace game
 
     void UpgradeController::Awake()
     {
-        BindButton("Btn_Attack", [this] { SetCategory(UpgradeCategory::Attack); });
-        BindButton("Btn_Skill", [this] { SetCategory(UpgradeCategory::Skill); });
-        BindButton("Btn_Life", [this] { SetCategory(UpgradeCategory::Life); });
-        BindButton("Btn_Move", [this] { SetCategory(UpgradeCategory::Move); });
+        BindClickArea("Area_Attack", [self = engine::Ptr<UpgradeController>(this)](int mouseButton) {if (self) self->SetCategory(UpgradeCategory::Attack); });
+        BindClickArea("Area_Skill", [self = engine::Ptr<UpgradeController>(this)](int mouseButton) {if (self) self->SetCategory(UpgradeCategory::Skill); });
+        BindClickArea("Area_Life", [self = engine::Ptr<UpgradeController>(this)](int mouseButton) {if (self) self->SetCategory(UpgradeCategory::Life); });
+        BindClickArea("Area_Move", [self = engine::Ptr<UpgradeController>(this)](int mouseButton) {if (self) self->SetCategory(UpgradeCategory::Move);});
+        
+        BindButton("Btn_Upgrade", [self = engine::Ptr<UpgradeController>(this)]() {if (!self)return; if (self->m_selectedNodeId == 0) return; self->ApplyUpgrade(self->m_selectedNodeId); });
     }
 
     void UpgradeController::Start()
@@ -162,6 +165,20 @@ namespace game
         return true;
     }
 
+    void UpgradeController::SelectNode(int nodeId)
+    {
+        if (m_views.find(nodeId) == m_views.end())
+        {
+            m_selectedNodeId = 0;
+            RefreshNodeVisuals();
+            return;
+        }
+
+        m_selectedNodeId = nodeId;
+
+        RefreshNodeVisuals();
+    }
+
     void UpgradeController::RefreshNodeVisuals()
     {
         for (auto& [id, view] : m_views)
@@ -170,8 +187,9 @@ namespace game
             
             const bool purchased = (m_purchased.find(id) != m_purchased.end()) ? m_purchased[id] : false;
             const bool unlocked = (m_unlocked.find(id) != m_unlocked.end()) ? m_unlocked[id] : false;
+            const bool selected = (id == m_selectedNodeId);
 
-            view->SetVisualState(unlocked, purchased);
+            view->SetVisualState(unlocked, purchased, selected);
         }
     }
 
@@ -266,6 +284,17 @@ namespace game
         CollectUpgradeNodesRecursive(rootT, m_nodeObjects);
     }
 
+    void UpgradeController::BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb)
+    {
+        auto* go = engine::GameObject::Find(name);
+        if (!go) return;
+
+        auto* ca = go->GetComponent<engine::UIClickArea>();
+        if (!ca) return;
+
+        ca->AddOnClick(std::move(cb));
+    }
+
     void UpgradeController::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
     {
         auto* go = engine::GameObject::Find(name);
@@ -283,6 +312,34 @@ namespace game
         m_selected = c;
         ApplyCategoryFilter();
 
+        for (auto& [cat, go] : m_categoryArea)
+        {
+            if (!go) continue;
+
+            auto* img = go->GetComponent<engine::UIImage>();
+            if (!img) continue;
+
+            const auto base = GetCategoryColor(cat);
+            const bool selected = (cat == m_selected);
+
+            engine::Vector4 color = base;
+
+            if (selected)
+            {
+                // 강조
+                color.x = std::min(color.x * 1.3f, 1.0f);
+                color.y = std::min(color.y * 1.3f, 1.0f);
+                color.z = std::min(color.z * 1.3f, 1.0f);
+            }
+            else
+            {
+                // 비선택
+                color *= 0.5f;
+            }
+
+            img->SetColor(color);
+        }
+
         if (m_scrollBar)
             m_scrollBar->SetValue(0.0f, true);
     }
@@ -298,5 +355,17 @@ namespace game
             const bool show = (view->m_category == m_selected);
             go->SetActive(show);
         }
+    }
+    engine::Vector4 UpgradeController::GetCategoryColor(UpgradeCategory c) const
+    {
+        for (auto& [id, view] : m_views)
+        {
+            if (!view) continue;
+            if (view->m_category != c) continue;
+
+            return view->m_nodeColor; // 첫 노드 색
+        }
+
+        return { 1,1,1,1 }; // fallback
     }
 }
