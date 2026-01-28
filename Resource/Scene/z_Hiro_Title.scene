@@ -1758,11 +1758,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     }
                 },
@@ -2041,11 +2041,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     }
                 },
@@ -2324,11 +2324,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     }
                 },
@@ -3685,8 +3685,8 @@
         },
         {
             "ID": 50,
-            "Name": "GameObject",
-            "Active": false,
+            "Name": "SoundObject",
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -3707,6 +3707,20 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                },
+                {
+                    "Type": "AudioSource",
+                    "Active": true,
+                    "ClipName": "Suki_Yuki_Maji_Magic.mp3",
+                    "IsLoop": false,
+                    "Is3D": false,
+                    "PlayOnAwake": true,
+                    "Volume": 1.0,
+                    "MinDist": 1.0,
+                    "MaxDist": 500.0,
+                    "UseRandom": false,
+                    "RandomClips": [],
+                    "Bus": "BGM"
                 }
             ]
         }

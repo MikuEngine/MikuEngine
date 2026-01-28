@@ -30,6 +30,7 @@ namespace engine
     {
         std::string name;
         Matrix local;
+        Matrix combined;
         Matrix model;
         int parentIndex;
         unsigned int index;

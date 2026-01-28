@@ -110,7 +110,7 @@ namespace engine
         Stop();
         m_clipName = name;
 
-        m_soundData = AssetManager::Get().GetOrCreateSoundData(name, "BGM");
+        m_soundData = AssetManager::Get().GetOrCreateSoundData(name, m_bus);
     }
 
     void AudioSource::Play(EventCallBack callback, float fadeInDuration)
@@ -137,7 +137,6 @@ namespace engine
             clipToPlay = m_randomClipNames[randomIndex];
         }
 
-        std::string option = m_is3D ? "3D" : "2D";
         auto soundData = AssetManager::Get().GetOrCreateSoundData(clipToPlay, m_bus);
         if (!soundData) return;
         m_soundData = soundData;
@@ -169,7 +168,6 @@ namespace engine
             {
                 char n[128] = {};
                 cg->getName(n, 128);
-                LOG_PRINT("[AudioSource] group AFTER Play2D = {}", n);
             }
 
 
@@ -187,7 +185,6 @@ namespace engine
                 {
                     char n[128] = {};
                     cg->getName(n, 128);
-                    LOG_PRINT("[AudioSource] group AFTER setChannelGroup = {}", n);
                 }
             }
 
@@ -373,6 +370,21 @@ namespace engine
             EditorState currentState = EditorManager::Get().GetEditorState();
 
             ImGui::Spacing();
+
+            const char* items[] = { "SFX", "BGM", "UI" };
+            int item_current = 0;
+            if (m_bus == "BGM") item_current = 1;
+            else if (m_bus == "UI") item_current = 2;
+
+            if (ImGui::Combo("Sound Type", &item_current, items, IM_ARRAYSIZE(items)))
+            {
+                if (item_current == 0) m_bus = "SFX";
+                else if (item_current == 1) m_bus = "BGM";
+                else if (item_current == 2) m_bus = "UI";
+
+                if (!m_clipName.empty()) SetClip(m_clipName);
+            }
+
             ImGui::Checkbox("Use Random Clips", &m_useRandom);
 
             if (m_useRandom)
@@ -571,9 +583,9 @@ namespace engine
         j["Volume"] = m_volume;
         j["MinDist"] = m_minDistance;
         j["MaxDist"] = m_maxDistance;
-
         j["UseRandom"] = m_useRandom;
         j["RandomClips"] = m_randomClipNames;
+        j["Bus"] = m_bus;
     }
 
     void AudioSource::Load(const json& j)
@@ -587,13 +599,12 @@ namespace engine
         if (j.contains("Volume")) m_volume = j["Volume"];
         if (j.contains("MinDist")) m_minDistance = j["MinDist"];
         if (j.contains("MaxDist")) m_maxDistance = j["MaxDist"];
-
         if (j.contains("UseRandom")) m_useRandom = j["UseRandom"];
-
         if (j.contains("RandomClips"))
         {
             m_randomClipNames = j["RandomClips"].get<std::vector<std::string>>();
         }
+        if (j.contains("Bus")) m_bus = j["Bus"];
     }
     
     Sound* AudioSource::GetSoundResource() const

@@ -79,6 +79,7 @@ namespace engine
 
     public:
         void Initialize() override;
+        void Update();
 
         void SetMesh(const std::string& meshFilePath);
         void SetVertexShader(const std::string& shaderFilePath);

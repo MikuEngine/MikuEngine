@@ -1,10 +1,11 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "SkeletalAnimator.h"
 
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/AnimationData.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/Renderer/SkeletalMeshRenderer.h"
+#include "Framework/Object/Component/Transform.h"
 
 #include <imgui_internal.h>
 
@@ -463,7 +464,7 @@ namespace engine
 
         // evaluate and blend bones
         const auto& boneOffsets = m_skeletonData->GetBoneOffsets();
-        
+
         for (size_t i = 0; i < m_skeleton.size(); ++i)
         {
             auto& bone = m_skeleton[i];
@@ -472,6 +473,7 @@ namespace engine
             Quaternion finalRot = Quaternion::CreateFromRotationMatrix(bone.local);
             Vector3 finalScale{ 1.0f, 1.0f, 1.0f };
 
+            // ---------- 레이어 블렌딩 ----------
             for (size_t layerIndex = 0; layerIndex < m_layers.size(); ++layerIndex)
             {
                 auto& layer = m_layers[layerIndex];
@@ -489,98 +491,84 @@ namespace engine
                 }
 
                 // calculate layer pose
+                Vector3 curPos, nextPos;
+                Quaternion curRot, nextRot;
+                Vector3 curScale, nextScale;
 
-                Vector3 curPos;
-                Quaternion curRot;
-                Vector3 curScale;
-
-                bool hasCur = EvaluateBone(layer.current, bone.name, layer.current.time, curPos, curRot, curScale);
-
-                if (!hasCur)
+                if (!EvaluateBone(layer.current, bone.name, layer.current.time, curPos, curRot, curScale))
                 {
                     continue;
                 }
 
-                Vector3 layerPos = curPos;
-                Quaternion layerRot = curRot;
-                Vector3 layerScale = curScale;
+                Vector3 sampledPos = curPos;
+                Quaternion sampledRot = curRot;
+                Vector3 sampledScale = curScale;
 
                 if (layer.next.active)
                 {
-                    Vector3 nextPos;
-                    Quaternion nextRot;
-                    Vector3 nextScale;
-
-                    bool hasNext = EvaluateBone(layer.next, bone.name, layer.next.time, nextPos, nextRot, nextScale);
-
-                    if (hasNext)
+                    if (EvaluateBone(layer.next, bone.name, layer.next.time, nextPos, nextRot, nextScale))
                     {
                         float t = std::clamp(layer.transitionTime / layer.transitionDuration, 0.0f, 1.0f);
-
-                        layerPos = Vector3::Lerp(layerPos, nextPos, t);
-                        layerRot = Quaternion::Slerp(layerRot, nextRot, t);
-                        layerScale = Vector3::Lerp(layerScale, nextScale, t);
+                        sampledPos = Vector3::Lerp(sampledPos, nextPos, t);
+                        sampledRot = Quaternion::Slerp(sampledRot, nextRot, t);
+                        sampledScale = Vector3::Lerp(sampledScale, nextScale, t);
                     }
                 }
 
-                // apply layer weight
                 float w = layer.weight;
-
                 if (layer.blendMode == AnimationBlendMode::Additive)
                 {
-                    Vector3 refPos;
-                    Quaternion refRot;
+                    Vector3 refPos; 
+                    Quaternion refRot; 
                     Vector3 refScale;
-
                     EvaluateBone(layer.current, bone.name, 0.0f, refPos, refRot, refScale);
 
-                    Vector3 deltaPos = layerPos - refPos;
-                    Quaternion inv;
-                    refRot.Inverse(inv);
-                    Quaternion deltaRot = layerRot * inv;
-                    
-                    finalPos += deltaPos * w;
+                    finalPos += (sampledPos - refPos) * w;
+
+                    Quaternion invRefRot;
+                    refRot.Inverse(invRefRot);
+                    Quaternion deltaRot = sampledRot * invRefRot;
+
                     finalRot = finalRot * Quaternion::Slerp(Quaternion::Identity, deltaRot, w);
                 }
-                else // override
+                else
                 {
                     if (layerIndex == 0)
                     {
-                        finalPos = layerPos;
-                        finalRot = layerRot;
-                        finalScale = layerScale;
+                        finalPos = sampledPos;
+                        finalRot = sampledRot;
+                        finalScale = sampledScale;
                     }
                     else
                     {
-                        finalPos = Vector3::Lerp(finalPos, layerPos, w);
-                        finalRot = Quaternion::Slerp(finalRot, layerRot, w);
-                        finalScale = Vector3::Lerp(finalScale, layerScale, w);
+                        finalPos = Vector3::Lerp(finalPos, sampledPos, w);
+                        finalRot = Quaternion::Slerp(finalRot, sampledRot, w);
+                        finalScale = Vector3::Lerp(finalScale, sampledScale, w);
                     }
                 }
             }
 
-            // procedural rotation
-            if (auto iter = m_proceduralRotations.find(static_cast<int>(i));
-                iter != m_proceduralRotations.end())
+            // ---------- Procedural Rotation ----------
+            if (auto iter = m_proceduralRotations.find(static_cast<int>(i)); iter != m_proceduralRotations.end())
             {
                 finalRot = finalRot * iter->second;
             }
 
-            Matrix nodeTrans =
-                Matrix::CreateScale(finalScale) *
+            Matrix localAnim = Matrix::CreateScale(finalScale) *
                 Matrix::CreateFromQuaternion(finalRot) *
                 Matrix::CreateTranslation(finalPos);
 
             if (bone.parentIndex != -1)
             {
-                bone.model = nodeTrans * m_skeleton[bone.parentIndex].model;
+                bone.combined = localAnim * m_skeleton[bone.parentIndex].combined;
             }
             else
             {
-                bone.model = nodeTrans;
+                bone.combined = localAnim;
             }
 
-            m_finalBoneMatrices[bone.index] = (boneOffsets[bone.index] * bone.model).Transpose();
+            bone.model = boneOffsets[bone.index] * bone.combined;
+            m_finalBoneMatrices[bone.index] = bone.model.Transpose();
         }
     }
 
@@ -1234,7 +1222,7 @@ namespace engine
         {
             if (bone.name == name)
             {
-                return bone.model;
+                return bone.combined * GetGameObject()->GetTransform()->GetWorld();
             }
         }
         return Matrix::Identity;

@@ -368,6 +368,7 @@ namespace engine
 
     Sound* SoundSystem::CreateSound(const std::string &filename, const std::string &option)
     {
+        bool isBGM = (option.find("BGM") != std::string::npos);
         bool is3D = false;
         std::string groupName = option;
 

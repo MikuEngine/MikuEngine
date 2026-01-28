@@ -14,6 +14,19 @@ namespace engine
                       Matrix::CreateTranslation(localPosition);
     }
 
+    void Socket::DecomposeLocalMatrix()
+    {
+        Vector3 scale;
+        Vector3 pos;
+        Quaternion rot;
+
+        localMatrix.Decompose(scale, rot, pos);
+
+        localScale = scale;
+        localRotation = rot;
+        localPosition = pos;
+    }
+
     void SocketData::Create(const std::string& filePath)
     {
         auto& vfs = VirtualFileSystem::Get();
@@ -58,5 +71,36 @@ namespace engine
     {
         auto it = m_socketMap.find(name);
         return (it != m_socketMap.end()) ? it->second : nullptr;
+    }
+
+    void SocketData::SetSockets(const std::vector<Socket>& sockets)
+    {
+        m_sockets = sockets;
+        m_socketMap.clear();
+        for (auto& s : m_sockets) m_socketMap[s.name] = &s;
+    }
+
+    void SocketData::Save(const std::string& filePath)
+    {
+        json j = json::array();
+
+        for (const auto& socket : m_sockets)
+        {
+            json item;
+            item["name"] = socket.name;
+            item["parent_bone"] = socket.parentBoneName;
+
+            item["position"] = { {"x", socket.localPosition.x}, {"y", socket.localPosition.y}, {"z", socket.localPosition.z} };
+            item["rotation"] = { {"x", socket.localRotation.x}, {"y", socket.localRotation.y}, {"z", socket.localRotation.z}, {"w", socket.localRotation.w} };
+            item["scale"] = { {"x", socket.localScale.x}, {"y", socket.localScale.y}, {"z", socket.localScale.z} };
+
+            j.push_back(item);
+        }
+
+        std::ofstream file(filePath);
+        if (file.is_open())
+        {
+            file << j.dump(4); // 4칸 들여쓰기로 예쁘게 저장
+        }
     }
 }
