@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/System/System.h"
 #include "Framework/Object/Component/Renderer/Renderer.h"
@@ -130,6 +130,8 @@ namespace engine
 
         void GetBloomSettings(float& bloomStrength, float& bloomThreshold, float& bloomSoftKnee);
         void SetBloomSettings(float bloomStrength, float bloomThreshold, float bloomSoftKnee);
+
+        const std::vector<Renderer*>& GetRegisteredRenderers() const { return m_components; }
 
         GameObject* PickObject(int mouseX, int mouseY);
 

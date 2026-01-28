@@ -39,6 +39,8 @@
 #include "Framework/Physics/PhysicsDebugRenderer.h"
 #include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
 #include "Framework/Object/Component/Light/LightDebugRenderer.h"
+#include "Framework/Object/Component/Socket/SocketDebugRenderer.h"
+
 
 namespace engine
 {
@@ -454,6 +456,7 @@ namespace engine
             graphics.EndDrawForwardPass();
         }
 
+
         graphics.ExecutePostProcessing();
 
         graphics.BeginDrawScreenPass();
@@ -499,6 +502,7 @@ namespace engine
             PhysicsDebugRenderer::Get().Render(view, projection);
             PathfindingDebugRenderer::Get().Render(view, projection);
             LightDebugRenderer::Get().Render(view, projection);
+            SocketDebugRenderer::Get().Render(view, projection);
         }
         graphics.EndDrawDebugPass();
 #endif

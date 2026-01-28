@@ -155,6 +155,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Desktop\backup\SocketAttachment.cpp" />
     <ClCompile Include="Common\Utility\CSVReader.cpp" />
     <ClCompile Include="Core\App\AppContext.cpp" />
     <ClCompile Include="Core\Graphics\Resource\GeometryShader.cpp" />
@@ -226,7 +227,8 @@
     <ClCompile Include="Framework\Object\Component\Animator\SpriteAnimator.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\StaticMeshRenderer.cpp" />
-    <ClCompile Include="Framework\Object\Component\SocketAttachment.cpp" />
+    <ClCompile Include="Framework\Object\Component\Socket\SocketAttachment.cpp" />
+    <ClCompile Include="Framework\Object\Component\Socket\SocketDebugRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Transform.cpp" />
     <ClCompile Include="Framework\Object\Component\UI\UIScrollView.cpp" />
     <ClCompile Include="Framework\Object\GameObject\GameObject.cpp" />
@@ -275,6 +277,7 @@
     <ClCompile Include="Framework\Object\Component\UI\UIClickArea.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Desktop\backup\SocketAttachment.h" />
     <ClInclude Include="Common\Utility\CSVReader.h" />
     <ClInclude Include="Common\Utility\EditorHelper.h" />
     <ClInclude Include="Core\App\AppContext.h" />
@@ -363,7 +366,8 @@
     <ClInclude Include="Framework\Object\Component\Animator\SpriteAnimator.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\SpriteRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\StaticMeshRenderer.h" />
-    <ClInclude Include="Framework\Object\Component\SocketAttachment.h" />
+    <ClInclude Include="Framework\Object\Component\Socket\SocketAttachment.h" />
+    <ClInclude Include="Framework\Object\Component\Socket\SocketDebugRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Transform.h" />
     <ClInclude Include="Framework\Object\Component\UI\UIScrollView.h" />
     <ClInclude Include="Framework\Object\GameObject\GameObject.h" />
