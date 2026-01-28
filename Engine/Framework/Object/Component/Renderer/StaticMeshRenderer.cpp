@@ -230,6 +230,7 @@ namespace engine
         ImGui::Checkbox("Override Material", &m_overrideMaterial);
         ImGui::ColorEdit4("Base Color", &m_materialBaseColor.x);
         ImGui::ColorEdit3("Emissive", &m_materialEmissive.x);
+        ImGui::DragFloat("Emissive Intensity", &m_materialEmissiveIntensity, 0.01f, 0.0f, 1000.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
         ImGui::DragFloat("Roughness", &m_materialRoughness, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
         ImGui::DragFloat("Metalness", &m_materialMetalness, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
         ImGui::DragFloat("Ambient Occlusion", &m_materialAmbientOcclusion, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
@@ -316,6 +317,7 @@ namespace engine
         j["MaterialRoughness"] = m_materialRoughness;
         j["MaterialMetalness"] = m_materialMetalness;
         j["MaterialAmbientOcclusion"] = m_materialAmbientOcclusion;
+        j["MaterialEmissiveIntensity"] = m_materialEmissiveIntensity;
         j["OverrideMaterial"] = m_overrideMaterial;
         j["CastShadow"] = m_castShadow;
         j["CullMode"] = m_cullMode;
@@ -335,6 +337,7 @@ namespace engine
         JsonGet(j, "MaterialRoughness", m_materialRoughness);
         JsonGet(j, "MaterialMetalness", m_materialMetalness);
         JsonGet(j, "MaterialAmbientOcclusion", m_materialAmbientOcclusion);
+        JsonGet(j, "MaterialEmissiveIntensity", m_materialEmissiveIntensity);
         JsonGet(j, "OverrideMaterial", m_overrideMaterial);
         JsonGet(j, "CastShadow", m_castShadow);
         if (j.contains("CullMode"))
@@ -450,6 +453,7 @@ namespace engine
             CbMaterial cbMaterial{};
             cbMaterial.materialBaseColor = m_materialBaseColor;
             cbMaterial.materialEmissive = m_materialEmissive;
+            cbMaterial.materialEmissiveIntensity = m_materialEmissiveIntensity;
             cbMaterial.materialRoughness = m_materialRoughness;
             cbMaterial.materialMetalness = m_materialMetalness;
             cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;

@@ -40,7 +40,7 @@ namespace engine
 			}
 			else
 			{
-				textures.emissive = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
+				textures.emissive = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::Black);
 			}
 
 			if (material.materialFlags & static_cast<std::uint64_t>(MaterialKey::METALNESS_TEXTURE))

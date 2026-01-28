@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "GraphicsDevice.h"
 
 #include <dxgi1_5.h>
@@ -1041,7 +1041,7 @@ namespace engine
             m_gBuffer.orm = std::make_unique<Texture>();
             m_gBuffer.orm->Create(desc);
 
-            desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+            desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 
             m_gBuffer.emissive= std::make_unique<Texture>();
             m_gBuffer.emissive->Create(desc);
@@ -1193,7 +1193,7 @@ namespace engine
             m_blitPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Blit_PS.hlsl");
             m_hdrPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/HDR_PS.hlsl");
             m_ldrPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/LDR_PS.hlsl");
-            m_globalLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredGlobalLight_Toon_PS.hlsl");
+            m_globalLightPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/DeferredGlobalLight_PS.hlsl");
             m_brightPassPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/BrightPass_PS.hlsl");
             m_blurPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Blur_PS.hlsl");
             m_fxaaPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/FXAA_PS.hlsl");
