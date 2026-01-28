@@ -2,19 +2,44 @@
 #include "UpgradeController.h"
 #include "UpgradeNodeView.h"
 
+#include <Framework/Object/GameObject/GameObject.h>
+#include <Framework/Object/Component/UI/UISlider.h>
+
 namespace game
 {
+    namespace
+    {
+        // contentRoot 아래를 재귀 순회하면서 UpgradeNodeView가 달린 GO를 모두 수집
+        static void CollectUpgradeNodesRecursive(engine::Transform* t, std::vector<engine::GameObject*>& out)
+        {
+            if (!t) return;
+
+            engine::GameObject* go = t->GetGameObject();
+            if (go && go->GetComponent<game::UpgradeNodeView>())
+                out.push_back(go);
+
+            for (engine::Transform* c : t->GetChildren())
+                CollectUpgradeNodesRecursive(c, out);
+        }
+    }
+
     void UpgradeController::Awake()
     {
         BindButton("Btn_Attack", [this] { SetCategory(UpgradeCategory::Attack); });
-        BindButton("Btn_Defense", [this] { SetCategory(UpgradeCategory::Defense); });
+        BindButton("Btn_Skill", [this] { SetCategory(UpgradeCategory::Skill); });
         BindButton("Btn_Life", [this] { SetCategory(UpgradeCategory::Life); });
-        BindButton("Btn_Stamina", [this] { SetCategory(UpgradeCategory::Stamina); });
+        BindButton("Btn_Move", [this] { SetCategory(UpgradeCategory::Move); });
     }
 
     void UpgradeController::Start()
     {
-        BuildDefaultTreeIfEmpty();
+        auto* go = engine::GameObject::Find("Scrollbar");
+        if (go)
+            m_scrollBar = go->GetComponent<engine::UISlider>();
+
+        AutoRegisterNodesFromContent("UpgradeContent");
+
+        BuildNodeTree();
         ApplyCategoryFilter();
     }
 
@@ -25,40 +50,6 @@ namespace game
 
     void UpgradeController::OnGui()
     {
-        static char buf[128] = { 0 };
-        ImGui::InputText("Add Node GO Name", buf, sizeof(buf));
-
-        if (ImGui::Button("Add"))
-        {
-            if (auto* go = engine::GameObject::Find(buf))
-                m_nodeObjects.push_back(go);
-        }
-
-        ImGui::Separator();
-        for (int i = 0; i < (int)m_nodeObjects.size(); ++i)
-        {
-            ImGui::PushID(i);
-
-            auto* go = m_nodeObjects[i];
-            ImGui::Text("%d: %s", i, go ? go->GetName().c_str() : "(null)");
-
-            ImGui::SameLine();
-            if (ImGui::Button("X"))
-            {
-                m_nodeObjects.erase(m_nodeObjects.begin() + i);
-                ImGui::PopID();
-                break;
-            }
-
-            ImGui::PopID();
-        }
-
-        ImGui::Separator();
-        if (ImGui::Button("Build From NodeObjects"))
-        {
-            BuildDefaultTreeIfEmpty();
-        }
-
         if (ImGui::InputInt3("Currency", &m_ruby))
         {
             m_ruby = std::max(0, m_ruby);
@@ -99,13 +90,6 @@ namespace game
                 purchased.push_back(id);
         }
         j["Purchased"] = purchased;
-
-        engine::json nodeNames = engine::json::array();
-        for (auto* go : m_nodeObjects)
-        {
-            if (go) nodeNames.push_back(go->GetName());
-        }
-        j["NodeObjects"] = nodeNames;
     }
 
     void UpgradeController::Load(const engine::json& j)
@@ -121,16 +105,9 @@ namespace game
         m_views.clear();
 
         // 노드 오브젝트 로드
-        m_nodeObjects.clear();
-        engine::JsonArrayForEach(j, "NodeObjects",
-            [this](const engine::json& v)
-            {
-                const std::string name = v.get<std::string>();
-                if (auto* go = engine::GameObject::Find(name.c_str()))
-                    m_nodeObjects.push_back(go);
-            });
+        AutoRegisterNodesFromContent("UpgradeContent");
 
-        BuildDefaultTreeIfEmpty();
+        BuildNodeTree();
 
         // 저장된 구매 목록 반영
         engine::JsonArrayForEach(j, "Purchased",
@@ -198,9 +175,11 @@ namespace game
         }
     }
 
-    void UpgradeController::BuildDefaultTreeIfEmpty()
+    void UpgradeController::BuildNodeTree()
     {
         m_views.clear();
+
+        LOG_PRINT("[Upgrade] Collected={}", (int)m_nodeObjects.size());
 
         for (auto* go : m_nodeObjects)
         {
@@ -241,19 +220,50 @@ namespace game
                 continue;
             }
 
-            bool ok = true;
+            if (view->m_parents.empty())
+            {
+                m_unlocked[id] = true;
+                continue;
+            }
+
+            // 선행노드를 모두 구매해야 조건 성립
+            //bool ok = true;
+            //for (int pid : view->m_parents)
+            //{
+            //    auto it = m_purchased.find(pid);
+            //    if (it == m_purchased.end() || !it->second)
+            //    {
+            //        ok = false;
+            //        break;
+            //    }
+            //}
+
+            bool anyBought = false;
             for (int pid : view->m_parents)
             {
                 auto it = m_purchased.find(pid);
-                if (it == m_purchased.end() || !it->second)
+                if (it != m_purchased.end() && it->second)
                 {
-                    ok = false;
+                    anyBought = true;
                     break;
                 }
             }
 
-            m_unlocked[id] = ok;
+            m_unlocked[id] = anyBought;
         }
+    }
+
+    void UpgradeController::AutoRegisterNodesFromContent(const std::string& contentRootName)
+    {
+        m_nodeObjects.clear();
+
+        auto* rootGO = engine::GameObject::Find(contentRootName);
+        if (!rootGO) return;
+
+        auto* rootT = rootGO->GetTransform();
+        if (!rootT) return;
+
+        CollectUpgradeNodesRecursive(rootT, m_nodeObjects);
     }
 
     void UpgradeController::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
@@ -272,6 +282,9 @@ namespace game
         if (m_selected == c) return;
         m_selected = c;
         ApplyCategoryFilter();
+
+        if (m_scrollBar)
+            m_scrollBar->SetValue(0.0f, true);
     }
 
     void UpgradeController::ApplyCategoryFilter()

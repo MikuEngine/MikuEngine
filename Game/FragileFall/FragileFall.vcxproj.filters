@@ -114,6 +114,24 @@
     <ClCompile Include="Script\StateTextRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossBullet.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossProjectile.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_BulletFire.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Meteor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamePCH.h">
@@ -222,6 +240,24 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\StateTextRenderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossBullet.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossProjectile.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_BulletFire.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Meteor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

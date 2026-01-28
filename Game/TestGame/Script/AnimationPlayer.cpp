@@ -4,6 +4,7 @@
 #include "Framework/Object/Component/Animator/SkeletalAnimator.h"
 #include "Framework/Object/Component/Renderer/StaticMeshRenderer.h"
 #include "Framework/Scene/SceneManager.h"
+#include "Framework/System/SoundSystem.h"
 
 namespace game
 {
@@ -17,6 +18,7 @@ namespace game
             {
                 // 펀치 소리 재생 로직만 작성
                 LOG_INFO("AnimationPlayer::Awake() Notify  퍽!");
+                engine::SoundSystem::Get().Play("UI_Click_Random");
             });
 
         animator->BindNotify("CreateHitBox", [this]()

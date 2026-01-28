@@ -29,7 +29,7 @@ namespace game
 
     void UpgradeNodeView::OnGui()
     {
-        static const char* kCats[] = { "Attack", "Defense", "Life", "Stamina" };
+        static const char* kCats[] = { "Attack", "Skill", "Life", "Move" };
         int c = (int)m_category;
         if (ImGui::Combo("Category", &c, kCats, IM_ARRAYSIZE(kCats)))
             m_category = (UpgradeCategory)c;

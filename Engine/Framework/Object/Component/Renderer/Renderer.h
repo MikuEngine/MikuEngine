@@ -60,8 +60,13 @@ namespace engine
 		virtual void DrawMask() const {}
 		virtual void DrawPickingID() const {}
 
-		virtual void UpdateSockets() {}
+		void DrawSocketEditor();
+		void SaveSocketData();
+
+		virtual void UpdateSockets();
 		virtual Matrix GetSocketWorldMatrix(const std::string& name) const;
+
+		const std::vector<SocketInstance>& GetSocketInstances() const { return m_socketInstances; }
 
 	private:
 		friend class RenderSystem;

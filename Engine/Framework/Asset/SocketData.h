@@ -14,6 +14,7 @@ namespace engine
         DirectX::SimpleMath::Matrix localMatrix;
 
         void UpdateLocalMatrix();
+        void DecomposeLocalMatrix();
     };
 
     class SocketData : public AssetData
@@ -30,5 +31,8 @@ namespace engine
 
         const std::vector<Socket>& GetSockets() const { return m_sockets; }
         const Socket* GetSocket(const std::string& name) const;
+        void SetSockets(const std::vector<Socket>& sockets);
+
+        void Save(const std::string& filePath);
     };
 }

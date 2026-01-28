@@ -40,6 +40,55 @@ namespace engine
 			return (p.x >= r.x && p.x <= r.x + r.w &&
 				p.y >= r.y && p.y <= r.y + r.h);
 		}
+
+		// 핸들 위치는 방향에 따라서 핸들의 절반이 슬라이더의 배경을 넘지 않아야 함.
+		static void ComputeHandleRange01(
+			const UIRect& barRect,
+			const UIRect& handleRect,
+			UISlider::Direction dir,
+			float& outMin,
+			float& outMax)
+		{
+			outMin = 0.0f;
+			outMax = 1.0f;
+
+			const bool horizontal = (dir == UISlider::Direction::LeftToRight || dir == UISlider::Direction::RightToLeft);
+
+			const float barLen = horizontal ? barRect.w : barRect.h;
+			const float handleLen = horizontal ? handleRect.w : handleRect.h;
+
+			if (barLen <= 1e-6f || handleLen <= 0.0f)
+				return;
+
+			// 핸들이 트랙 밖으로 나가지 않게: 중심이 이동할 수 있는 범위
+			const float halfN = (0.5f * handleLen) / barLen; // 정규화(0~1)
+			outMin = std::clamp(halfN, 0.0f, 1.0f);
+			outMax = std::clamp(1.0f - halfN, 0.0f, 1.0f);
+
+			// 핸들이 트랙보다 큰 경우(또는 거의 같은 경우) 처리
+			if (outMax < outMin)
+			{
+				const float mid = 0.5f;
+				outMin = mid;
+				outMax = mid;
+			}
+		}
+
+		// m_value(0~1) -> 실제 핸들 위치 tPos(min~max)
+		static float Value01ToPos01(float value01, float min01, float max01)
+		{
+			value01 = std::clamp(value01, 0.0f, 1.0f);
+			if (std::fabs(max01 - min01) < 1e-6f) return min01; // min==max면 고정
+			return min01 + (max01 - min01) * value01;
+		}
+
+		// 마우스 위치로 얻은 tRaw(0~1 full bar) -> m_value(0~1)
+		static float Pos01ToValue01(float pos01, float min01, float max01)
+		{
+			if (std::fabs(max01 - min01) < 1e-6f) return 0.0f; // 움직일 수 없으면 0으로
+			const float v = (pos01 - min01) / (max01 - min01);
+			return std::clamp(v, 0.0f, 1.0f);
+		}
 	}
 
 	void UISlider::Initialize()
@@ -327,9 +376,8 @@ namespace engine
 			m_fill->SetColor(m_fillColor);
 		}
 
-		const float v = Clamp01(m_value);
-
 		// Fill 처리
+		const float v = Clamp01(m_value);
 		if (m_useFill && m_fill)
 		{
 			RectTransform* rootRT = GetRectTransform();
@@ -433,22 +481,42 @@ namespace engine
 		RectTransform* handleRT = m_handle->GetGameObject()->GetComponent<RectTransform>();
 		if (!handleRT) return;
 
+		Vector2 hs = handleRT->GetSize();
+		if (hs.x <= 0.0f && hs.y <= 0.0f)
+			handleRT->SetSize(100.0f, 100.0f);
+
+		RectTransform* rootRT = GetRectTransform();
+		if (!rootRT) return;
+
+		auto& gd2 = GraphicsDevice::Get();
+		const D3D11_VIEWPORT vp2 = gd2.GetViewport();
+		UIRect rootRect2{ 0.0f, 0.0f, vp2.Width, vp2.Height };
+
+		const UIRect barRect2 = rootRT->GetWorldRectResolved(rootRect2);
+
+		const UIRect handleRect2 = handleRT->GetWorldRectResolved(rootRect2);
+
+		float min01 = 0.0f, max01 = 1.0f;
+		ComputeHandleRange01(barRect2, handleRect2, m_direction, min01, max01);
+
+		const float tPos = Value01ToPos01(v, min01, max01);
+
 		float ax = 0.5f;
 		float ay = 0.5f;
 
 		switch (m_direction)
 		{
 		case Direction::LeftToRight:
-			ax = v; ay = 0.5f;
+			ax = tPos; ay = 0.5f;
 			break;
 		case Direction::RightToLeft:
-			ax = 1.0f - v; ay = 0.5f;
+			ax = 1.0f - tPos; ay = 0.5f;
 			break;
 		case Direction::BottomToTop:
-			ax = 0.5f; ay = v;
+			ax = 0.5f; ay = tPos;
 			break;
 		case Direction::TopToBottom:
-			ax = 0.5f; ay = 1.0f - v;
+			ax = 0.5f; ay = 1.0f - tPos;
 			break;
 		}
 
@@ -456,10 +524,6 @@ namespace engine
 		handleRT->SetAnchorMin({ ax, ay });
 		handleRT->SetAnchorMax({ ax, ay });
 		handleRT->SetAnchoredPosition({ 0.0f, 0.0f });
-
-		Vector2 hs = handleRT->GetSize();
-		if (hs.x <= 0.0f && hs.y <= 0.0f)
-			handleRT->SetSize(100.0f, 100.0f);
 	}
 
 	void UISlider::OnMouseDown(const Vector2& mousePos, int mouseButton)
@@ -542,7 +606,10 @@ namespace engine
 		}
 
 		if (ImGui::ColorEdit4("TrackColor", &m_bgColor.x)) { m_dirty = true; changed = true; }
-		if (ImGui::ColorEdit4("FillColor", &m_fillColor.x)) { m_dirty = true; changed = true; }
+
+		if (m_useFill)
+			if (ImGui::ColorEdit4("FillColor", &m_fillColor.x)) { m_dirty = true; changed = true; }
+
 		if (ImGui::ColorEdit4("HandleColor", &m_handleColor.x)) { m_dirty = true; changed = true; }
 
 		if (changed)
@@ -608,6 +675,20 @@ namespace engine
 		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
 
 		const UIRect barRect = rt->GetWorldRectResolved(rootRect);
+		float min01 = 0.0f, max01 = 1.0f;
+
+		if (m_handle)
+		{
+			if (RectTransform* hrt = m_handle->GetRectTransform())
+			{
+				Vector2 hs = hrt->GetSize();
+				if (hs.x <= 0.0f && hs.y <= 0.0f)
+					hrt->SetSize(100.0f, 100.0f);
+
+				const UIRect handleRect = hrt->GetWorldRectResolved(rootRect);
+				ComputeHandleRange01(barRect, handleRect, m_direction, min01, max01);
+			}
+		}
 
 		float t = 0.0f;
 
@@ -627,7 +708,8 @@ namespace engine
 			break;
 		}
 
-		SetValue(Clamp01(t), true);
+		const float value01 = Pos01ToValue01(Clamp01(t), min01, max01);
+		SetValue(value01, true);
 	}
 
 	bool UISlider::IsMouseOnHandle(const Vector2& mousePos) const

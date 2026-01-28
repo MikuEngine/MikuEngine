@@ -354,10 +354,13 @@
     <ClCompile Include="Common\Utility\CSVReader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\SocketAttachment.cpp">
+    <ClCompile Include="Core\App\AppContext.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\App\AppContext.cpp">
+    <ClCompile Include="Framework\Object\Component\Socket\SocketDebugRenderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Object\Component\Socket\SocketAttachment.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -764,10 +767,13 @@
     <ClInclude Include="Common\Utility\CSVReader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\Object\Component\SocketAttachment.h">
+    <ClInclude Include="Core\App\AppContext.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\App\AppContext.h">
+    <ClInclude Include="Framework\Object\Component\Socket\SocketDebugRenderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Object\Component\Socket\SocketAttachment.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

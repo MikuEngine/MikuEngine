@@ -540,6 +540,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -720,6 +721,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -900,6 +902,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1160,6 +1163,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1231,6 +1235,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -1494,11 +1499,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     }
                 },
@@ -1777,11 +1782,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     }
                 },
@@ -2060,11 +2065,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 1.0,
+                        "x": 0.8333333134651184,
                         "y": 0.5
                     }
                 },
@@ -2151,6 +2156,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -2222,6 +2228,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -2293,6 +2300,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,

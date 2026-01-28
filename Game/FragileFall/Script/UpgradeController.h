@@ -4,6 +4,11 @@
 #include <Framework/Object/Component/UI/UIButton.h>
 #include "UpgradeTypes.h"
 
+namespace engine
+{
+    class UISlider;
+}
+
 namespace game
 {
     class UpgradeNodeView;
@@ -36,8 +41,9 @@ namespace game
         void RefreshNodeVisuals();
 
     private:
-        void BuildDefaultTreeIfEmpty();
+        void BuildNodeTree();
         void RecomputeUnlocked();
+        void AutoRegisterNodesFromContent(const std::string& contentRootName);
         
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
 
@@ -58,5 +64,9 @@ namespace game
         int m_ruby = 100;
         int m_sapphire = 100;
         int m_emerald = 100;
+
+    private:
+        // GameObject
+        engine::UISlider* m_scrollBar = nullptr;
     };
 }

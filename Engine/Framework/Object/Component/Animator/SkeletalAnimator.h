@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Animator/Animator.h"
 #include "Framework/Asset/SkeletonData.h"
@@ -109,6 +109,7 @@ namespace engine
         float GetCurrentAnimationTime(int layerIndex = 0) const;
         float GetCurrentAnimationDuration(int layerIndex = 0) const;
         float GetNormalizedTime(int layerIndex = 0) const;
+        const std::vector<Bone>& GetSkeleton() const { return m_skeleton; }
 
         void Play(const std::string& name, bool loop = true, int layerIndex = 0, float speed = 1.0f);
         void PlayCrossFade(
