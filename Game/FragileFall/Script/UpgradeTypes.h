@@ -4,9 +4,9 @@ namespace game
 	enum class UpgradeCategory : int
 	{
 		Attack = 0,
-		Defense,
+		Skill,
 		Life,
-		Stamina,
+		Move,
 		COUNT
 	};
 }
