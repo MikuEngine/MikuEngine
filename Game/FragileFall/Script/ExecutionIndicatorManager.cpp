@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "ExecutionIndicatorManager.h"
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
@@ -17,6 +17,11 @@
 #include <Framework/Object/Component/Transform.h>
 #include <Framework/Physics/PhysicsLayer.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Object/Component/BoxCollider.h>
+#include <Framework/Object/Component/SphereCollider.h>
+#include <Framework/Object/Component/CapsuleCollider.h>
+#include <Framework/Object/Component/LogicFSM.h>
+#include <Framework/Object/Component/Rigidbody.h>
 
 namespace game
 {
@@ -54,6 +59,13 @@ namespace game
     {
         if (!m_mainCamera) return;
 
+        // 대시 중이면 대시 처리
+        if (m_isDashing)
+        {
+            UpdateDash(engine::Time::DeltaTime());
+            return;
+        }
+
         // 처형 애니메이션 중이면 애니메이션만 처리
         if (m_isExecuting)
         {
@@ -72,31 +84,42 @@ namespace game
                 // 새로운 몬스터로 변경
                 m_hoveredMonster = fragileMonster;
                 
-                // 인디케이터 생성/표시
+                // 인디케이터/라인 인스턴스 생성
                 if (!m_indicatorInstance)
                 {
                     CreateIndicatorInstance();
                 }
             }
 
-            // 인디케이터 위치 업데이트
-            if (m_indicatorInstance && fragileMonster->GetTransform())
+            // 거리에 따른 표시 처리
+            bool isInRange = IsMonsterInExecutionRange(fragileMonster);
+            
+            // 라인은 항상 업데이트 및 표시
+            if (m_player && m_lineInstance && fragileMonster->GetTransform())
             {
-                ShowIndicator(fragileMonster->GetTransform());
-                
-                // 라인 업데이트
-                if (m_player && m_lineInstance)
+                engine::Vector3 monsterPos = fragileMonster->GetTransform()->GetWorldPosition();
+                UpdateLine(monsterPos);
+                ShowLine();
+            }
+            
+            // 인디케이터는 처형 사거리 내에서만 표시
+            if (isInRange)
+            {
+                if (m_indicatorInstance && fragileMonster->GetTransform())
                 {
-                    engine::Vector3 monsterPos = fragileMonster->GetTransform()->GetWorldPosition();
-                    UpdateLine(monsterPos);
-                    ShowLine();
+                    ShowIndicator(fragileMonster->GetTransform());
+                }
+                
+                // 우클릭 시 처형 시작 (사거리 내에서만)
+                if (engine::Input::IsMousePressed(engine::Input::Buttons::RIGHT))
+                {
+                    StartExecution(fragileMonster);
                 }
             }
-
-            // 우클릭 시 처형 시작
-            if (engine::Input::IsMousePressed(engine::Input::Buttons::RIGHT))
+            else
             {
-                StartExecution(fragileMonster);
+                // 사거리 밖이면 인디케이터만 숨김
+                HideIndicator();
             }
         }
         else
@@ -315,7 +338,7 @@ namespace game
                     MonsterScript* monster = go->GetComponent<MonsterScript>();
                     if (monster)
                     {
-                        // Fragile 상태인지 확인
+                        // Fragile 상태인지 확인 (거리 체크는 Update에서 별도 처리)
                         if (monster->m_isFragile && !monster->m_isDead)
                         {
                             return monster;
@@ -331,14 +354,164 @@ namespace game
         return nullptr;
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // 거리 계산 헬퍼
+    // ═══════════════════════════════════════════════════════════════
+
+    float ExecutionIndicatorManager::GetDistanceToMonster(MonsterScript* monster) const
+    {
+        if (!monster || !m_player) return FLT_MAX;
+        
+        engine::Transform* playerTransform = m_player->GetTransform();
+        engine::Transform* monsterTransform = monster->GetTransform();
+        
+        if (!playerTransform || !monsterTransform) return FLT_MAX;
+        
+        engine::Vector3 playerPos = playerTransform->GetWorldPosition();
+        engine::Vector3 monsterPos = monsterTransform->GetWorldPosition();
+        
+        return (monsterPos - playerPos).Length();
+    }
+
+    bool ExecutionIndicatorManager::IsMonsterInExecutionRange(MonsterScript* monster) const
+    {
+        if (!m_player) return false;
+        return GetDistanceToMonster(monster) <= m_player->GetExecutionRange();
+    }
+
     void ExecutionIndicatorManager::StartExecution(MonsterScript* monster)
     {
-        if (!monster || m_isExecuting) return;
+        if (!monster || m_isExecuting || m_isDashing || !m_player) return;
 
-        m_isExecuting = true;
-        m_executionTimer = 0.0f;
         m_executingMonster = monster;
 
+        // ─────────────────────────────────────────────
+        // 플레이어 Execution 스테이트로 전이 (순간이동은 대시에서 처리)
+        // ─────────────────────────────────────────────
+        engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
+        if (playerFSM)
+        {
+            playerFSM->SetTrigger("ExecuteMonster");
+        }
+
+        // ─────────────────────────────────────────────
+        // 대시 순간이동 시작
+        // ─────────────────────────────────────────────
+        m_isDashing = true;
+        m_dashTimer = 0.0f;
+        
+        // 첫 번째 대시 즉시 실행
+        PerformDash();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 대시 순간이동
+    // ═══════════════════════════════════════════════════════════════
+
+    void ExecutionIndicatorManager::UpdateDash(float deltaTime)
+    {
+        if (!m_isDashing || !m_executingMonster) return;
+
+        m_dashTimer += deltaTime;
+
+        // 대시 간격마다 순간이동
+        if (m_dashTimer >= m_dashInterval)
+        {
+            m_dashTimer = 0.0f;
+            PerformDash();
+        }
+    }
+
+    void ExecutionIndicatorManager::PerformDash()
+    {
+        if (!m_executingMonster || !m_player) return;
+
+        engine::Transform* playerTransform = m_player->GetTransform();
+        engine::Transform* monsterTransform = m_executingMonster->GetTransform();
+        
+        if (!playerTransform || !monsterTransform) return;
+
+        engine::Vector3 playerPos = playerTransform->GetWorldPosition();
+        engine::Vector3 monsterPos = monsterTransform->GetWorldPosition();
+        
+        engine::Vector3 direction = monsterPos - playerPos;
+        float distance = direction.Length();
+        
+        // 남은 거리가 최종 도달 거리 이하면 최종 순간이동
+        if (distance <= m_finalDashThreshold)
+        {
+            FinishDash();
+            return;
+        }
+        
+        // 몬스터 방향으로 대시 거리만큼 순간이동
+        direction.Normalize();
+        engine::Vector3 targetPos = playerPos + direction * m_dashDistance;
+        
+        // Rigidbody를 통해 순간이동
+        engine::Rigidbody* rigidbody = m_player->GetGameObject()->GetComponent<engine::Rigidbody>();
+        if (rigidbody && rigidbody->IsDynamic())
+        {
+            rigidbody->ForceSetPosition(targetPos, true);
+        }
+        else
+        {
+            playerTransform->SetLocalPosition(targetPos);
+        }
+    }
+
+    void ExecutionIndicatorManager::FinishDash()
+    {
+        if (!m_executingMonster || !m_player) return;
+
+        // ─────────────────────────────────────────────
+        // 몬스터의 모든 콜라이더를 트리거로 변경 (최종 순간이동 직전)
+        // ─────────────────────────────────────────────
+        engine::GameObject* monsterGO = m_executingMonster->GetGameObject();
+        if (monsterGO)
+        {
+            if (auto* boxCollider = monsterGO->GetComponent<engine::BoxCollider>())
+            {
+                boxCollider->SetIsTrigger(true);
+            }
+            if (auto* sphereCollider = monsterGO->GetComponent<engine::SphereCollider>())
+            {
+                sphereCollider->SetIsTrigger(true);
+            }
+            if (auto* capsuleCollider = monsterGO->GetComponent<engine::CapsuleCollider>())
+            {
+                capsuleCollider->SetIsTrigger(true);
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 몬스터 위치로 최종 순간이동
+        // ─────────────────────────────────────────────
+        engine::Transform* monsterTransform = m_executingMonster->GetTransform();
+        if (monsterTransform)
+        {
+            engine::Vector3 monsterPos = monsterTransform->GetWorldPosition();
+            
+            engine::Rigidbody* rigidbody = m_player->GetGameObject()->GetComponent<engine::Rigidbody>();
+            if (rigidbody && rigidbody->IsDynamic())
+            {
+                rigidbody->ForceSetPosition(monsterPos, true);
+            }
+            else if (m_player->GetTransform())
+            {
+                m_player->GetTransform()->SetLocalPosition(monsterPos);
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 대시 종료, 처형 애니메이션 시작
+        // ─────────────────────────────────────────────
+        m_isDashing = false;
+        m_dashTimer = 0.0f;
+        
+        m_isExecuting = true;
+        m_executionTimer = 0.0f;
+        
         // 현재 인디케이터 회전 저장
         if (m_indicatorTransform)
         {
@@ -397,6 +570,16 @@ namespace game
             m_executingMonster->TriggerDeath();
         }
 
+        // 플레이어 Execution 상태 종료
+        if (m_player)
+        {
+            engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
+            if (playerFSM)
+            {
+                playerFSM->SetTrigger("ExecutionComplete");
+            }
+        }
+
         // 상태 초기화
         m_executingMonster = nullptr;
         m_hoveredMonster = nullptr;
@@ -418,11 +601,22 @@ namespace game
         ImGui::DragFloat("Line Height", &m_lineHeight, 0.1f, 0.0f, 10.0f);
 
         ImGui::Separator();
+        ImGui::Text("Dash Settings:");
+        ImGui::DragFloat("Dash Distance", &m_dashDistance, 0.1f, 0.5f, 10.0f);
+        ImGui::DragFloat("Dash Interval", &m_dashInterval, 0.01f, 0.05f, 1.0f);
+        ImGui::DragFloat("Final Dash Threshold", &m_finalDashThreshold, 0.1f, 0.5f, 10.0f);
+
+        ImGui::Separator();
         ImGui::Text("Runtime Info:");
         ImGui::Text("Hovered Monster: %s", m_hoveredMonster ? "Yes" : "No");
+        ImGui::Text("Is Dashing: %s", m_isDashing ? "Yes" : "No");
         ImGui::Text("Is Executing: %s", m_isExecuting ? "Yes" : "No");
         ImGui::Text("Player Found: %s", m_player ? "Yes" : "No");
         ImGui::Text("Line Instance: %s", m_lineInstance ? "Yes" : "No");
+        if (m_isDashing)
+        {
+            ImGui::Text("Dash Timer: %.2f / %.2f", m_dashTimer, m_dashInterval);
+        }
         if (m_isExecuting)
         {
             ImGui::Text("Execution Progress: %.1f%%", (m_executionTimer / m_rotationDuration) * 100.0f);
@@ -443,6 +637,11 @@ namespace game
         j["LineMonsterOffset"] = m_lineMonsterOffset;
         j["LineBaseLength"] = m_lineBaseLength;
         j["LineHeight"] = m_lineHeight;
+
+        // 대시 설정
+        j["DashDistance"] = m_dashDistance;
+        j["DashInterval"] = m_dashInterval;
+        j["FinalDashThreshold"] = m_finalDashThreshold;
     }
 
     void ExecutionIndicatorManager::Load(const engine::json& j)
@@ -459,5 +658,10 @@ namespace game
         engine::JsonGet(j, "LineMonsterOffset", m_lineMonsterOffset);
         engine::JsonGet(j, "LineBaseLength", m_lineBaseLength);
         engine::JsonGet(j, "LineHeight", m_lineHeight);
+
+        // 대시 설정
+        engine::JsonGet(j, "DashDistance", m_dashDistance);
+        engine::JsonGet(j, "DashInterval", m_dashInterval);
+        engine::JsonGet(j, "FinalDashThreshold", m_finalDashThreshold);
     }
 }

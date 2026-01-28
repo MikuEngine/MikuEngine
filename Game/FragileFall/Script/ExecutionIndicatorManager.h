@@ -71,6 +71,17 @@ namespace game
         engine::Quaternion m_initialRotation;
         engine::Ptr<MonsterScript> m_executingMonster;
 
+        // ─────────────────────────────────────────────
+        // 대시 순간이동 설정
+        // ─────────────────────────────────────────────
+        float m_dashDistance = 2.0f;           // 한 번에 이동하는 거리
+        float m_dashInterval = 0.15f;          // 대시 간격 (초)
+        float m_finalDashThreshold = 2.5f;     // 이 거리 이하면 최종 도달
+
+        // 대시 런타임 상태
+        bool m_isDashing = false;
+        float m_dashTimer = 0.0f;
+
     public:
         void Awake() override;
         void Start() override;
@@ -104,5 +115,14 @@ namespace game
         void StartExecution(MonsterScript* monster);
         void UpdateExecution(float deltaTime);
         void FinishExecution();
+        
+        // 대시 순간이동
+        void UpdateDash(float deltaTime);
+        void PerformDash();
+        void FinishDash();
+        
+        // 거리 계산 헬퍼
+        float GetDistanceToMonster(MonsterScript* monster) const;
+        bool IsMonsterInExecutionRange(MonsterScript* monster) const;
     };
 }

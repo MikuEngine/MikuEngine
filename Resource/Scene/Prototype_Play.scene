@@ -77,7 +77,8 @@
                     "AnimName_Idle": "Idle",
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
-                    "AnimName_Fire": "Fire"
+                    "AnimName_Fire": "Fire",
+                    "ExecutionRange": 15.0
                 },
                 {
                     "Type": "AimPointer",
@@ -119,7 +120,7 @@
                     "type": 0,
                     "mass": 1.0,
                     "linearDamping": 10.0,
-                    "angularDamping": 50.0,
+                    "angularDamping": 20.0,
                     "useGravity": false,
                     "constraints": 42
                 },
@@ -331,6 +332,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.8629999756813049,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
                     "CullMode": 1
@@ -354,7 +356,7 @@
                     ],
                     "isTrigger": false,
                     "syncWithTransform": false,
-                    "layer": 0,
+                    "layer": 1,
                     "materialType": 1,
                     "radius": 1.2899999618530273,
                     "height": 3.7899999618530273
@@ -11741,6 +11743,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -11795,6 +11798,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -11849,6 +11853,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -11903,6 +11908,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -11957,6 +11963,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
                     "CullMode": 1
@@ -12034,6 +12041,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -12088,6 +12096,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
                     "CullMode": 1
@@ -12165,6 +12174,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
                     "CullMode": 1
@@ -12242,6 +12252,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
                     "CullMode": 1
@@ -12757,6 +12768,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -13096,6 +13108,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -13226,7 +13239,10 @@
                     "LinePlayerOffset": 1.0,
                     "LineMonsterOffset": 1.5,
                     "LineBaseLength": 0.5,
-                    "LineHeight": 0.6000000238418579
+                    "LineHeight": 0.6000000238418579,
+                    "DashDistance": 3.0,
+                    "DashInterval": 0.10000000149011612,
+                    "FinalDashThreshold": 2.5
                 }
             ]
         }

@@ -139,17 +139,21 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	bool PlayerControllerScript::CanMove() const
 	{
-		// 현재 구현: 모든 상태에서 이동 가능
-		// 필요시 특정 상태에서 이동 제한 가능
-		// 예: return !IsInAnyState({"Stunned", "Dead", "Casting"});
+		// 처형 중에는 이동 불가
+		if (IsInState("Execution"))
+		{
+			return false;
+		}
 		return true;
 	}
 
 	bool PlayerControllerScript::CanAttack() const
 	{
-		// 현재 구현: 모든 상태에서 공격 가능
-		// 필요시 특정 상태에서 공격 제한 가능
-		// 예: return !IsInAnyState({"Stunned", "Dead", "Reloading"});
+		// 처형 중에는 공격 불가
+		if (IsInState("Execution"))
+		{
+			return false;
+		}
 		return true;
 	}
 
@@ -159,6 +163,12 @@ namespace game
 	void PlayerControllerScript::ProcessInput()
 	{
 		if (!m_logicFSM) return;
+
+		// Execution 상태에서는 모든 입력 무시
+		if (IsInState("Execution"))
+		{
+			return;
+		}
 
 		// ─────────────────────────────────────────────
 		// 1. 이동 입력 → FSM 파라미터
@@ -195,6 +205,12 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::UpdateGameLogic()
 	{
+		// Execution 상태에서는 행동 로직 스킵
+		if (IsInState("Execution"))
+		{
+			return;
+		}
+
 		float deltaTime = engine::Time::DeltaTime();
 
 		// 비물리 행동 실행 (타이머, 애니메이션 등)
@@ -211,6 +227,12 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::UpdatePhysicsLogic()
 	{
+		// Execution 상태에서는 물리 로직 스킵 (이동, 회전 모두 막음)
+		if (IsInState("Execution"))
+		{
+			return;
+		}
+
 		// 물리 기반 행동 실행
 		if (CanMove())    HandleMovement();
 		UpdateLowerBodyRotation();  // 매 FixedUpdate 호출 (이동 방향에 따라 회전)
@@ -223,6 +245,42 @@ namespace game
 	{
 		// 하이브리드 패턴에서는 FSM 상태를 주로 애니메이션 트리거로 사용
 		// 필요시 상태별 초기화 로직 추가
+		
+		if (state == "Execution")
+		{
+			// 처형 상태 진입 시 이동 정지
+			if (m_rigidbody)
+			{
+				m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
+				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+			}
+		}
+	}
+
+	void PlayerControllerScript::StartExecution(engine::GameObject* targetMonster)
+	{
+		if (!targetMonster || !m_logicFSM) return;
+
+		// 1. ExecuteMonster 트리거 설정 → Execution 스테이트로 전이
+		m_logicFSM->SetTrigger("ExecuteMonster");
+
+		// 2. 몬스터 위치로 플레이어 순간이동
+		engine::Transform* monsterTransform = targetMonster->GetTransform();
+		if (monsterTransform)
+		{
+			engine::Vector3 targetPos = monsterTransform->GetWorldPosition();
+			
+			// Dynamic Rigidbody가 있으면 ForceSetPosition 사용 (물리 엔진 즉시 적용)
+			if (m_rigidbody && m_rigidbody->IsDynamic())
+			{
+				m_rigidbody->ForceSetPosition(targetPos, true);  // 속도도 리셋
+			}
+			else if (GetTransform())
+			{
+				// Rigidbody가 없거나 Kinematic인 경우 Transform 직접 설정
+				GetTransform()->SetLocalPosition(targetPos);
+			}
+		}
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -241,6 +299,7 @@ namespace game
 		AddFSMState("Walk");
 		AddFSMState("IdleShoot");
 		AddFSMState("WalkShoot");
+		AddFSMState("Execution");    // 처형 상태
 
 		m_logicFSM->UpdateStateMap();
 		m_logicFSM->SetDefaultState("Idle");
@@ -264,6 +323,17 @@ namespace game
 		// Shoot -> 비Shoot (마우스 Released)
 		AddFSMTransition("IdleShoot", "Idle", "IsShooting", BoolFalse());
 		AddFSMTransition("WalkShoot", "Walk", "IsShooting", BoolFalse());
+
+		// ─────────────────────────────────────────────
+		// 처형 전이 (모든 상태 -> Execution)
+		// ─────────────────────────────────────────────
+		AddFSMTransition("Idle", "Execution", "ExecuteMonster", Trigger());
+		AddFSMTransition("Walk", "Execution", "ExecuteMonster", Trigger());
+		AddFSMTransition("IdleShoot", "Execution", "ExecuteMonster", Trigger());
+		AddFSMTransition("WalkShoot", "Execution", "ExecuteMonster", Trigger());
+
+		// Execution -> Idle (처형 완료 트리거)
+		AddFSMTransition("Execution", "Idle", "ExecutionComplete", Trigger());
 	}
 
 	void PlayerControllerScript::InitializeAnimFSM()
@@ -824,6 +894,11 @@ namespace game
 		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 1.0f, 1.0f, 100.0f);
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 3.0f, 0.5f, 10.0f);
 
+		// 처형 설정
+		ImGui::Separator();
+		ImGui::Text("Execution:");
+		ImGui::DragFloat("Execution Range", &m_executionRange, 0.5f, 1.0f, 50.0f);
+
 		// 애니메이션 설정
 		ImGui::Separator();
 		ImGui::Text("Animation Names:");
@@ -900,6 +975,9 @@ namespace game
 		j["AnimName_WalkForward"] = m_animName_WalkForward;
 		j["AnimName_WalkBackward"] = m_animName_WalkBackward;
 		j["AnimName_Fire"] = m_animName_Fire;
+		
+		// 처형 설정
+		j["ExecutionRange"] = m_executionRange;
 	}
 
 	void PlayerControllerScript::Load(const engine::json& j)
@@ -930,5 +1008,9 @@ namespace game
 			m_animName_WalkBackward = j["AnimName_WalkBackward"].get<std::string>();
 		if (j.contains("AnimName_Fire"))
 			m_animName_Fire = j["AnimName_Fire"].get<std::string>();
+		
+		// 처형 설정
+		if (j.contains("ExecutionRange"))
+			m_executionRange = j["ExecutionRange"].get<float>();
 	}
 }

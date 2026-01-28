@@ -56,6 +56,11 @@ namespace game
         float m_bulletLifetime = 3.0f;   // 총알 수명 (초)
 
         // ─────────────────────────────────────────────
+        // 처형 시스템 설정
+        // ─────────────────────────────────────────────
+        float m_executionRange = 10.0f;  // 처형 가능 거리
+
+        // ─────────────────────────────────────────────
         // 참조 설정
         // ─────────────────────────────────────────────
         std::string m_aimPointerObjectName = "AimPointer";  // 씬에서 찾을 AimPointer 오브젝트 이름
@@ -152,6 +157,15 @@ namespace game
         // 에디터 검증
         // ─────────────────────────────────────────────
         bool ValidateComponents() const;  // 컴포넌트 유효성 검사
+
+    public:
+        // ─────────────────────────────────────────────
+        // 처형 시스템 접근자
+        // ─────────────────────────────────────────────
+        float GetExecutionRange() const { return m_executionRange; }
+
+        // 처형 시작 (ExecutionIndicatorManager에서 호출)
+        void StartExecution(engine::GameObject* targetMonster);
 
     public:
         void OnGui() override;
