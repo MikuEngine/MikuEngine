@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Title",
-    "NumGameObjects": 48,
+    "NumGameObjects": 51,
     "GameObjects": [
         {
             "ID": 0,
@@ -222,6 +222,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": true,
                     "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -531,6 +532,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -711,6 +713,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -891,6 +894,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1071,6 +1075,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1417,6 +1422,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1488,6 +1494,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -2408,6 +2415,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -2479,6 +2487,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -2550,6 +2559,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -2810,6 +2820,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -2850,7 +2861,7 @@
                         "x": 0.0,
                         "y": -300.0
                     },
-                    "Width": 200.0,
+                    "Width": 100.0,
                     "Height": 100.0,
                     "Pivot": {
                         "x": 0.5,
@@ -2881,9 +2892,10 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": -0.057999998331069946,
                     "LineSpacingMul": 1.0
                 }
             ]
@@ -2918,7 +2930,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -300.0,
+                        "x": -250.0,
                         "y": -110.0
                     },
                     "Width": 100.0,
@@ -2955,8 +2967,8 @@
                     "Color": {
                         "x": 0.0,
                         "y": 1.0,
-                        "z": 0.7799227237701416,
-                        "w": 1.0
+                        "z": 0.7803921699523926,
+                        "w": 0.0
                     },
                     "AlphaBlend": true
                 }
@@ -3026,8 +3038,9 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "AlignH": 0,
-                    "AlignV": 0,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
@@ -3035,6 +3048,78 @@
         },
         {
             "ID": 41,
+            "ParentID": 39,
+            "Name": "Text_Name",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 200.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Text": "신윤석    이주연",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 42,
             "ParentID": 35,
             "Name": "NameTag",
             "Active": true,
@@ -3063,7 +3148,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -300.0,
+                        "x": -250.0,
                         "y": 0.0
                     },
                     "Width": 100.0,
@@ -3099,17 +3184,17 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
                         "x": 0.0,
-                        "y": 0.5019307136535645,
+                        "y": 0.501960813999176,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true
                 }
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 41,
+            "ID": 43,
+            "ParentID": 42,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -3138,7 +3223,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": 20.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -3171,15 +3256,88 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "AlignH": 0,
-                    "AlignV": 0,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
             ]
         },
         {
-            "ID": 43,
+            "ID": 44,
+            "ParentID": 42,
+            "Name": "Text_Name",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 200.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Text": "오세훈    주영성",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 45,
             "ParentID": 35,
             "Name": "NameTag",
             "Active": true,
@@ -3208,7 +3366,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -300.0,
+                        "x": -250.0,
                         "y": 110.0
                     },
                     "Width": 100.0,
@@ -3244,17 +3402,17 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "Color": {
                         "x": 1.0,
-                        "y": 0.5791505575180054,
-                        "z": 0.5791505575180054,
-                        "w": 1.0
+                        "y": 0.5803921818733215,
+                        "z": 0.5803921818733215,
+                        "w": 0.0
                     },
                     "AlphaBlend": true
                 }
             ]
         },
         {
-            "ID": 44,
-            "ParentID": 43,
+            "ID": 46,
+            "ParentID": 45,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -3316,15 +3474,88 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "AlignH": 0,
-                    "AlignV": 0,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }
             ]
         },
         {
-            "ID": 45,
+            "ID": 47,
+            "ParentID": 45,
+            "Name": "Text_Name",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 200.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Text": "강신익    도옥현    정철    황태현",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 48,
             "Name": "Canvas_Blocker",
             "Active": true,
             "Components": [
@@ -3379,8 +3610,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 45,
+            "ID": 49,
+            "ParentID": 48,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -3453,9 +3684,9 @@
             ]
         },
         {
-            "ID": 47,
+            "ID": 50,
             "Name": "GameObject",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -3476,19 +3707,6 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                },
-                {
-                    "Type": "AudioSource",
-                    "Active": true,
-                    "ClipName": "Suki_Yuki_Maji_Magic.mp3",
-                    "IsLoop": true,
-                    "Is3D": false,
-                    "PlayOnAwake": true,
-                    "Volume": 1.0,
-                    "MinDist": 1.0,
-                    "MaxDist": 500.0,
-                    "UseRandom": false,
-                    "RandomClips": []
                 }
             ]
         }

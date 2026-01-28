@@ -56,6 +56,18 @@ namespace engine
 
         void SetAlignment(UITextAlignH h, UITextAlignV v) { m_alignH = h; m_alignV = v; }
 
+        void SetBold(bool enable);
+        bool IsBold() const { return m_bold; }
+
+        void SetOutline(bool enable) { m_useOutline = enable; RefreshFont(); }
+        bool IsOutline() const { return m_useOutline; }
+
+        void SetOutlinePx(float px) { m_outlinePx = std::max(0.0f, px); RefreshFont(); }
+        float GetOutlinePx() const { return m_outlinePx; }
+
+        void SetOutlineColor(const Vector4& c) { m_outlineColor = c; }
+        const Vector4& GetOutlineColor() const { return m_outlineColor; }
+
         // Spacing
         void SetLetterSpacing(float px);
         float GetLetterSpacing() const;
@@ -87,7 +99,19 @@ namespace engine
         std::string m_fontPath = "Resource/Font/malgun.ttf";
         int m_fontPixelSize = 32;
 
-        std::shared_ptr<FontData> m_font;
+        std::shared_ptr<FontData> m_fontFill;
+        std::shared_ptr<FontData> m_fontOutline;
+
+        bool m_bold;
+        bool m_shadow;
+        Vector2 m_shadowOffset;
+        Vector4 m_shadowColor;
+        int  m_boldStrengthX = 1;
+        int  m_boldStrengthY = 0;
+
+        bool m_useOutline = false;
+        float m_outlinePx = 2.0f;
+        Vector4 m_outlineColor = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
         // Default
         UITextAlignH m_alignH = UITextAlignH::Left;

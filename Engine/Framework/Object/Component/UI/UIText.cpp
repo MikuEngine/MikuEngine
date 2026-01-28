@@ -100,7 +100,7 @@ namespace engine
 		auto* rt = GetRectTransform();
 		if (!rt) return;
 
-		if (!m_font) return;
+		if (!m_fontFill) return;
 
 		if (!m_vs || !m_ps || !m_vertexBuffer || !m_indexBuffer || !m_uiCB) return;
 
@@ -120,220 +120,178 @@ namespace engine
 		const Vector2 s = c->GetUIScale();
 		const Vector2 o = c->GetUIOffset();
 
-		const auto& fd = m_font->GetDesc();
+		const auto& fd = m_fontFill->GetDesc();
 		const float atlasW = static_cast<float>(fd.atlasWidth);
 		const float atlasH = static_cast<float>(fd.atlasHeight);
 
-		const float asc = m_font->GetAscenderPx();
-		const float lineH = m_font->GetLineHeightPx() * m_lineSpacingMul;
+		const float asc = m_fontFill->GetAscenderPx();
+		const float lineH = m_fontFill->GetLineHeightPx() * m_lineSpacingMul;
 
 		const char* textBegin = m_text.data();
 		const char* textEnd = textBegin + m_text.size();
 
-		// ----------------------------
-		// 1) Prepass: 줄 폭 계산 (레퍼런스 좌표계 기준)
-		// ----------------------------
-		std::vector<float> lineWidths;
-		lineWidths.reserve(8);
-
+		// ---------------------------
+		// 공통 드로우 함수
+		//----------------------------
+		auto DrawWithFonts = [&](const std::shared_ptr<FontData>& layoutFont,
+								const std::shared_ptr<FontData>& drawFont,
+								const Vector4& color)
 		{
-			const char* p = textBegin;
-			float w = 0.0f;
+			if (!layoutFont || !drawFont) return;
 
+			const auto& dfd = drawFont->GetDesc();
+			const float atlasW = (float)dfd.atlasWidth;
+			const float atlasH = (float)dfd.atlasHeight;
+
+			const float asc = layoutFont->GetAscenderPx();
+			const float lineH = layoutFont->GetLineHeightPx() * m_lineSpacingMul;
+
+			// 1) Prepass: 줄 폭 계산
+			std::vector<float> lineWidths;
+			lineWidths.reserve(8);
+			{
+				const char* p = textBegin;
+				float w = 0.0f;
+
+				while (p < textEnd)
+				{
+					uint32_t cp = 0;
+					if (!NextUtf8Codepoint(p, textEnd, cp)) break;
+
+					if (cp == '\n') { lineWidths.push_back(w); w = 0.0f; continue; }
+					if (cp == '\t') { w += (m_fontPixelSize * 0.5f) * 4.0f; continue; }
+
+					const FontGlyph& lg = layoutFont->EnsureGlyph(dc.Get(), cp);
+					w += (lg.advance + m_letterSpacingPx);
+				}
+				lineWidths.push_back(w);
+			}
+
+			const int lineCount = (int)lineWidths.size();
+			const float blockH = lineH * (float)lineCount;
+
+			float yOffset = 0.0f;
+			switch (m_alignV)
+			{
+			case UITextAlignV::Top:    yOffset = 0.0f; break;
+			case UITextAlignV::Middle: yOffset = (rect.h - blockH) * 0.5f; break;
+			case UITextAlignV::Bottom: yOffset = (rect.h - blockH); break;
+			}
+			if (yOffset < 0.0f) yOffset = 0.0f;
+
+			auto CalcLineStartX = [&](float lw) -> float
+				{
+					switch (m_alignH)
+					{
+					case UITextAlignH::Left:   return rect.x;
+					case UITextAlignH::Center: return rect.x + (rect.w - lw) * 0.5f;
+					case UITextAlignH::Right:  return rect.x + (rect.w - lw);
+					}
+					return rect.x;
+				};
+
+			int lineIndex = 0;
+			float penX = CalcLineStartX(lineCount > 0 ? lineWidths[0] : 0.0f);
+			float baseLineY = rect.y + yOffset + asc;
+
+			// 3) 상태 세팅(IA/VS/PS/Blend/DS/Sampler/Viewport)
+			const char* p = textBegin;
 			while (p < textEnd)
 			{
 				uint32_t cp = 0;
-				if (!NextUtf8Codepoint(p, textEnd, cp))
-					break;
+				if (!NextUtf8Codepoint(p, textEnd, cp)) break;
 
 				if (cp == '\n')
 				{
-					lineWidths.push_back(w);
-					w = 0.0f;
+					lineIndex = std::min(lineIndex + 1, lineCount - 1);
+					penX = CalcLineStartX(lineWidths[lineIndex]);
+					baseLineY += lineH;
 					continue;
 				}
 
 				if (cp == '\t')
 				{
-					w += (m_fontPixelSize * 0.5f) * 4.0f;
+					penX += (m_fontPixelSize * 0.5f) * 4.0f;
 					continue;
 				}
 
-				const FontGlyph& g = m_font->EnsureGlyph(dc.Get(), cp);
-				w += (g.advance + m_letterSpacingPx);
-			}
+				// 레이아웃은 layoutFont의 glyph로
+				const FontGlyph& lg = layoutFont->EnsureGlyph(dc.Get(), cp);
+				const float adv = lg.advance + m_letterSpacingPx;
 
-			// 마지막 줄
-			lineWidths.push_back(w);
-		}
-
-		const int lineCount = (int)lineWidths.size();
-		const float blockH = lineH * (float)lineCount;
-
-		// ----------------------------
-		// 2) 정렬 계산
-		// ----------------------------
-		float yOffset = 0.0f;
-		switch (m_alignV)
-		{
-		case UITextAlignV::Top:    yOffset = 0.0f; break;
-		case UITextAlignV::Middle: yOffset = (rect.h - blockH) * 0.5f; break;
-		case UITextAlignV::Bottom: yOffset = (rect.h - blockH); break;
-		}
-		if (yOffset < 0.0f) yOffset = 0.0f; // 텍스트가 더 크면 상단 고정
-
-		auto CalcLineStartX = [&](float lw) -> float
-			{
-				switch (m_alignH)
+				if (lg.IsEmptyBitmap())
 				{
-				case UITextAlignH::Left:   return rect.x;
-				case UITextAlignH::Center: return rect.x + (rect.w - lw) * 0.5f;
-				case UITextAlignH::Right:  return rect.x + (rect.w - lw);
+					penX += adv;
+					continue;
 				}
-				return rect.x;
-			};
 
-		int lineIndex = 0;
-		float penX = CalcLineStartX(lineCount > 0 ? lineWidths[0] : 0.0f);
-		float baseLineY = rect.y + yOffset + asc;
+				// 실제 샘플링은 drawFont의 glyph로
+				const FontGlyph& dg = drawFont->EnsureGlyph(dc.Get(), cp);
+				if (dg.IsEmptyBitmap())
+				{
+					penX += adv;
+					continue;
+				}
 
-		// ----------------------------
-		// 3) IA / Shader / State 세팅
-		// ----------------------------
-		dc->IASetInputLayout(m_inputLayout->GetRawInputLayout());
-		{
-			UINT stride = m_vertexBuffer->GetBufferStride();
-			UINT offset = 0;
-			ID3D11Buffer* vb = m_vertexBuffer->GetRawBuffer();
-			dc->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
-			dc->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
-			dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		}
+				// 위치/크기: lg 기준
+				const float gxL = penX + lg.bearingX;
+				const float gyL = baseLineY - lg.bearingY;
+				const float gwL = lg.width;
+				const float ghL = lg.height;
 
-		dc->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
-		dc->PSSetShader(m_ps->GetRawShader(), nullptr, 0);
+				const float gx = o.x + gxL * s.x;
+				const float gy = o.y + gyL * s.y;
+				const float gw = gwL * s.x;
+				const float gh = ghL * s.y;
 
-		// State
-		{
-			float blendFactor[4] = { 0,0,0,0 };
-			if (m_useAlphaBlend && m_blend)
-				dc->OMSetBlendState(m_blend->GetBlendState().Get(), blendFactor, 0xffffffff);
-			else
-				dc->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
+				const float cx = gx + gw * 0.5f;
+				const float cy = gy + gh * 0.5f;
 
-			if (m_depthNone)
-				dc->OMSetDepthStencilState(m_depthNone->GetDepthStencilState().Get(), 0);
-			else
-				dc->OMSetDepthStencilState(nullptr, 0);
-		}
+				const float tx = (cx / vp.Width) * 2.0f - 1.0f;
+				const float ty = 1.0f - (cy / vp.Height) * 2.0f;
 
-		// Sampler
-		{
-			auto samp = m_sampler ? m_sampler->GetSamplerState().GetAddressOf() : nullptr;
-			if (samp)
-				dc->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, samp);
-		}
+				const float sx = (gw / vp.Width) * 2.0f;
+				const float sy = (gh / vp.Height) * 2.0f;
 
-		dc->RSSetState(nullptr);
-		dc->RSSetViewports(1, &vp);
+				// CB (uv는 dg 기준)
+				{
+					CbUIElement cbUI{};
+					cbUI.clip = DirectX::XMMatrixTranspose(
+						DirectX::XMMatrixScaling(sx, sy, 1.0f) *
+						DirectX::XMMatrixTranslation(tx, ty, 0.0f));
 
-		// ----------------------------
-		// 4) Draw loop
-		// ----------------------------
-		const char* p = textBegin;
+					cbUI.color = color;
 
-		while (p < textEnd)
-		{
-			uint32_t cp = 0;
-			if (!NextUtf8Codepoint(p, textEnd, cp))
-				break;
+					const float u0 = dg.x / atlasW;
+					const float v0 = dg.y / atlasH;
+					const float su = (dg.w / atlasW);
+					const float sv = (dg.h / atlasH);
+					cbUI.uv = Vector4(u0, v0, su, sv);
 
-			if (cp == '\n')
-			{
-				lineIndex = std::min(lineIndex + 1, lineCount - 1);
-				penX = CalcLineStartX(lineWidths[lineIndex]);
-				baseLineY += lineH;
-				continue;
-			}
+					cbUI.clipRect = Vector4(0, 0, vp.Width, vp.Height);
+					cbUI.maskMode = 1;
 
-			if (cp == '\t')
-			{
-				penX += (m_fontPixelSize * 0.5f) * 4.0f;
-				continue;
-			}
+					dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
+					dc->VSSetConstantBuffers((UINT)ConstantBufferSlot::UIElement, 1, m_uiCB->GetBuffer().GetAddressOf());
+					dc->PSSetConstantBuffers((UINT)ConstantBufferSlot::UIElement, 1, m_uiCB->GetBuffer().GetAddressOf());
+				}
 
-			const FontGlyph& g = m_font->EnsureGlyph(dc.Get(), cp);
-			const float adv = g.advance + m_letterSpacingPx;
+				// SRV (drawFont + dg.page!)
+				{
+					ID3D11ShaderResourceView* srv = drawFont->GetAtlasSRV(dg.page);
+					dc->PSSetShaderResources((UINT)TextureSlot::Blit, 1, &srv);
+				}
 
-			if (g.IsEmptyBitmap())
-			{
+				dc->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
+
 				penX += adv;
-				continue;
 			}
+		};
 
-			// 레퍼런스 좌표계 (rootRect/ref)에서 글리프 사각형
-			const float gxL = penX + g.bearingX;
-			const float gyL = baseLineY - g.bearingY;
-			const float gwL = g.width;
-			const float ghL = g.height;
+		if (m_useOutline && m_fontOutline && m_outlinePx > 0.0f)
+			DrawWithFonts(m_fontFill, m_fontOutline, m_outlineColor);
 
-			// 최종 뷰포트 픽셀 좌표로 변환 (Canvas scale/offset)
-			const float gx = o.x + gxL * s.x;
-			const float gy = o.y + gyL * s.y;
-			const float gw = gwL * s.x;
-			const float gh = ghL * s.y;
-
-			// NDC 변환
-			const float cx = gx + gw * 0.5f;
-			const float cy = gy + gh * 0.5f;
-
-			const float tx = (cx / vp.Width) * 2.0f - 1.0f;
-			const float ty = 1.0f - (cy / vp.Height) * 2.0f;
-
-			const float sx = (gw / vp.Width) * 2.0f;
-			const float sy = (gh / vp.Height) * 2.0f;
-
-			// ConstantBuffer
-			{
-				CbUIElement cbUI{};
-				cbUI.clip = DirectX::XMMatrixTranspose(
-					DirectX::XMMatrixScaling(sx, sy, 1.0f) *
-					DirectX::XMMatrixTranslation(tx, ty, 0.0f)
-				);
-
-				cbUI.color = m_color;
-
-				const float u0 = g.x / atlasW;
-				const float v0 = g.y / atlasH;
-				const float su = (g.w / atlasW);
-				const float sv = (g.h / atlasH);
-				cbUI.uv = Vector4(u0, v0, su, sv);
-
-				// TODO(원하면): rect 기반 clipRect로 바꾸기
-				cbUI.clipRect = Vector4(0, 0, vp.Width, vp.Height);
-				cbUI.maskMode = 1;
-
-				dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
-				dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
-				dc->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
-			}
-
-			// Atlas SRV
-			{
-				ID3D11ShaderResourceView* srv = m_font->GetAtlasSRV(g.page);
-				dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
-			}
-
-			dc->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
-
-			penX += adv;
-		}
-
-		// SRV unbind
-		{
-			ID3D11ShaderResourceView* nullSRV = nullptr;
-			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &nullSRV);
-		}
+		DrawWithFonts(m_fontFill, m_fontFill, m_color);
 	}
 
 	void UIText::SetText(const std::string& utf8)
@@ -388,6 +346,13 @@ namespace engine
 		return m_useAlphaBlend;
 	}
 
+	void UIText::SetBold(bool enable)
+	{
+		if (m_bold == enable) return;
+		m_bold = enable;
+		RefreshFont();
+	}
+
 	void UIText::SetLetterSpacing(float px)
 	{
 		m_letterSpacingPx = px;
@@ -440,9 +405,15 @@ namespace engine
 		ImGui::InputTextMultiline("Text", &m_text);
 		ImGui::ColorEdit4("Color", &m_color.x);
 
+		ImGui::Checkbox("Bold", &m_bold);
 		//ImGui::Checkbox("Alpha Blend", &m_useAlphaBlend);
 		
 		ImGui::SliderInt("Font Px", &m_fontPixelSize, 1, 256);
+
+		//ImGui::Checkbox("Outline", &m_useOutline);
+		//ImGui::SliderFloat("Outline Px", &m_outlinePx, 0.0f, 8.0f);
+		//ImGui::ColorEdit4("Outline Color", &m_outlineColor.x);
+
 		if (ImGui::Button("Rebuild Font"))
 			RefreshFont();
 
@@ -472,6 +443,12 @@ namespace engine
 		j["Color"] = m_color;
 		j["AlphaBlend"] = m_useAlphaBlend;
 
+		j["Bold"] = m_bold;
+
+		//j["UseOutline"] = m_useOutline;
+		//j["OutlinePx"] = m_outlinePx;
+		//j["OutlineColor"] = m_outlineColor;
+
 		j["AlignH"] = (int)m_alignH;
 		j["AlignV"] = (int)m_alignV;
 
@@ -489,6 +466,12 @@ namespace engine
 
 		JsonGet(j, "Color", m_color);
 		JsonGet(j, "AlphaBlend", m_useAlphaBlend);
+
+		JsonGet(j, "Bold", m_bold);
+
+		//JsonGet(j, "UseOutline", m_useOutline);
+		//JsonGet(j, "OutlinePx", m_outlinePx);
+		//JsonGet(j, "OutlineColor", m_outlineColor);
 
 		int ah = (int)UITextAlignH::Left;
 		int av = (int)UITextAlignV::Top;
@@ -509,7 +492,8 @@ namespace engine
 	{
 		if (m_fontPath.empty() || m_fontPath == "None")
 		{
-			m_font.reset();
+			m_fontFill.reset();
+			m_fontOutline.reset();
 			return;
 		}
 
@@ -517,27 +501,67 @@ namespace engine
 
 		if (!device)
 		{
-			m_font.reset();
+			m_fontFill.reset();
+			m_fontOutline.reset();
 			return;
 		}
 
-		std::shared_ptr<FontData> font = std::make_shared<FontData>();
-
-		FontData::Desc d{};
-		d.ttfPath = m_fontPath;
-		d.pixelSize = m_fontPixelSize;
-		d.atlasWidth = 1024;
-		d.atlasHeight = 1024;
-		d.padding = 1;
-		d.atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-		d.maxPages = 4;
-
-		if (!font->Initialize(device.Get(), d))
 		{
-			m_font.reset();
-			return;
-		}
+			std::shared_ptr<FontData> font = std::make_shared<FontData>();
 
-		m_font = std::move(font);
+			FontData::Desc d{};
+			d.ttfPath = m_fontPath;
+			d.pixelSize = m_fontPixelSize;
+			d.atlasWidth = 1024;
+			d.atlasHeight = 1024;
+			d.padding = 1;
+			d.atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+			d.maxPages = 4;
+
+			d.outline = false;
+			d.outlinePx = 0.0f;
+
+			d.syntheticBold = m_bold;
+
+			if (!font->Initialize(device.Get(), d))
+			{
+				m_fontFill.reset();
+				m_fontOutline.reset();
+				return;
+			}
+
+			m_fontFill = std::move(font);
+		}
+		
+		if (m_useOutline && m_outlinePx > 0.0f)
+		{
+			auto font = std::make_shared<FontData>();
+
+			FontData::Desc d{};
+			d.ttfPath = m_fontPath;
+			d.pixelSize = m_fontPixelSize;
+			d.atlasWidth = 1024;
+			d.atlasHeight = 1024;
+			d.padding = 1;
+			d.atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+			d.maxPages = 4;
+
+			d.outline = true;
+			d.outlinePx = m_outlinePx;
+
+			d.syntheticBold = m_bold;
+
+			if (!font->Initialize(device.Get(), d))
+			{
+				m_fontOutline.reset();
+				return;
+			}
+
+			m_fontOutline = std::move(font);
+		}
+		else
+		{
+			m_fontOutline.reset();
+		}
 	}
 }

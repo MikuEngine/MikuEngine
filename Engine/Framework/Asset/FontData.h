@@ -2,6 +2,8 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_SYNTHESIS_H 
+#include FT_STROKER_H
 
 namespace engine
 {
@@ -56,6 +58,13 @@ namespace engine
 			DXGI_FORMAT atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 			int maxPages = 4;
+
+			bool syntheticBold = false;
+			int boldStrengthX = 1;
+			int boldStrengthY = 0;
+
+			bool outline = false;
+			float outlinePx = 1.0f;
 		};
 
 	private:

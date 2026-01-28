@@ -9,6 +9,91 @@
 
 namespace engine
 {
+	namespace
+	{
+		struct OutlineBitmapResult
+		{
+			FT_Bitmap* bitmap = nullptr; // 실제 비트맵 포인터(FT_BitmapGlyph 내부)
+			int left = 0;
+			int top = 0;
+			int w = 0;
+			int h = 0;
+			FT_Glyph glyph = nullptr;     // Done 필요
+			FT_Stroker stroker = nullptr; // Done 필요
+		};
+
+		static bool MakeOutlinedBitmap(FT_Library lib, FT_Face face, uint32_t codepoint, float outlinePx, bool syntheticBold, OutlineBitmapResult& out)
+		{
+			// 1) glyph 로드 (렌더 X)
+			if (FT_Load_Char(face, codepoint, FT_LOAD_DEFAULT) != 0)
+				return false;
+
+			if (syntheticBold)
+				FT_GlyphSlot_Embolden(face->glyph);
+
+			// 2) slot -> glyph
+			FT_Glyph glyph = nullptr;
+			if (FT_Get_Glyph(face->glyph, &glyph) != 0)
+				return false;
+
+			// 3) stroker 생성/설정
+			FT_Stroker stroker = nullptr;
+			if (FT_Stroker_New(lib, &stroker) != 0)
+			{
+				FT_Done_Glyph(glyph);
+				return false;
+			}
+
+			// FreeType stroker 두께는 26.6 fixed (1px = 64)
+			const FT_Fixed radius = (FT_Fixed)(outlinePx * 64.0f);
+			FT_Stroker_Set(stroker, radius, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0);
+
+			// 4) 외곽선 적용 (바깥 외곽선)
+			//    (destroy = true)면 원 glyph를 내부에서 대체하면서 관리
+			if (FT_Glyph_StrokeBorder(&glyph, stroker, /*inside=*/false, /*destroy=*/true) != 0)
+			{
+				FT_Stroker_Done(stroker);
+				FT_Done_Glyph(glyph);
+				return false;
+			}
+
+			// 5) 비트맵으로 변환
+			if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, nullptr, /*destroy=*/true) != 0)
+			{
+				FT_Stroker_Done(stroker);
+				FT_Done_Glyph(glyph);
+				return false;
+			}
+
+			// glyph는 이제 FT_BitmapGlyph 형태
+			FT_BitmapGlyph bg = (FT_BitmapGlyph)glyph;
+
+			out.bitmap = &bg->bitmap;
+			out.left = bg->left;
+			out.top = bg->top;
+			out.w = (int)bg->bitmap.width;
+			out.h = (int)bg->bitmap.rows;
+			out.glyph = glyph;
+			out.stroker = stroker;
+			return true;
+		}
+
+		static void FreeOutlinedBitmap(OutlineBitmapResult& r)
+		{
+			if (r.stroker)
+			{
+				FT_Stroker_Done(r.stroker);
+				r.stroker = nullptr;
+			}
+			if (r.glyph)
+			{
+				FT_Done_Glyph(r.glyph);
+				r.glyph = nullptr;
+			}
+			r.bitmap = nullptr;
+		}
+	}
+
 	void AtlasPaker::Reset(int atlasW, int atlasH, int padding)
 	{
 		m_w = atlasW;
@@ -128,17 +213,64 @@ namespace engine
 		// 빈 비트맵이면 업로드는 생략하고 캐시에 넣습니다.
 		if (!g.IsEmptyBitmap())
 		{
+			// outline 모드 먼저
+			if (m_desc.outline && m_desc.outlinePx > 0.0f)
+			{
+				OutlineBitmapResult ob{};
+				uint32_t cp = codepoint;
+
+				if (!MakeOutlinedBitmap(m_ftLib, m_face, cp, m_desc.outlinePx, m_desc.syntheticBold, ob))
+				{
+					// fallback
+					if (cp != m_fallbackCodepoint && MakeOutlinedBitmap(m_ftLib, m_face, m_fallbackCodepoint, m_desc.outlinePx, m_desc.syntheticBold, ob))
+					{
+						cp = m_fallbackCodepoint;
+						g = BakeGlyph(cp);
+					}
+				}
+
+				if (ob.bitmap)
+				{
+					// bold까지 같이 쓰고 싶으면:
+					// - outlined bitmap은 stroker 결과라 slot embolden과 “형태가 다릅니다”.
+					// - "볼드+아웃라인"을 원하시면 stroker 적용 전에 glyph를 embolden하는 별도 경로가 필요합니다.
+					//   (원하시면 그 조합 버전도 바로 정리해 드리겠습니다.)
+
+					if (!UploadGlyphToAtlas(dc, g, *ob.bitmap))
+					{
+						FreeOutlinedBitmap(ob);
+						if (codepoint != m_fallbackCodepoint)
+							return EnsureGlyph(dc, m_fallbackCodepoint);
+					}
+
+					FreeOutlinedBitmap(ob);
+
+					auto [it, inserted] = m_glyphs.emplace(codepoint, g);
+					return it->second;
+				}
+
+				// outline 생성 실패면 아래 일반 경로로 진행
+			}
+
 			// 현재 face->glyph->bitmap은 BakeGlyph에서 만든 codepoint에 해당
 			// BakeGlyph는 metrics만 만들었기 때문에,
 			// 여기서 다시 로드해서 bitmap을 얻습니다(안전/명확).
-			if (FT_Load_Char(m_face, codepoint, FT_LOAD_RENDER) != 0)
+			uint32_t cp = codepoint;
+			if (FT_Load_Char(m_face, cp, FT_LOAD_RENDER) != 0)
 			{
 				// fallback
-				if (codepoint != m_fallbackCodepoint &&
+				if (cp != m_fallbackCodepoint &&
 					FT_Load_Char(m_face, m_fallbackCodepoint, FT_LOAD_RENDER) == 0)
 				{
+					cp = m_fallbackCodepoint;
 					g = BakeGlyph(m_fallbackCodepoint);
 				}
+			}
+
+			FT_GlyphSlot slot = m_face->glyph;
+			if (m_desc.syntheticBold)
+			{
+				FT_GlyphSlot_Embolden(slot);
 			}
 
 			const FT_Bitmap& bm = m_face->glyph->bitmap;
@@ -255,6 +387,39 @@ namespace engine
 		FontGlyph g{};
 		g.codePoint = codePoint;
 
+		// outline 모드면 outline bitmap 기준으로 bearing/size 산출
+		if (m_desc.outline && m_desc.outlinePx > 0.0f)
+		{
+			if (FT_Load_Char(m_face, codePoint, FT_LOAD_DEFAULT) != 0)
+			{
+				if (codePoint != m_fallbackCodepoint &&
+					FT_Load_Char(m_face, m_fallbackCodepoint, FT_LOAD_DEFAULT) == 0)
+				{
+					codePoint = m_fallbackCodepoint;
+					g.codePoint = codePoint;
+				}
+			}
+
+			if (m_desc.syntheticBold)
+				FT_GlyphSlot_Embolden(m_face->glyph);
+
+			g.advance = static_cast<float>(m_face->glyph->advance.x) / 64.0f;
+
+			OutlineBitmapResult ob{};
+			if (MakeOutlinedBitmap(m_ftLib, m_face, codePoint, m_desc.outlinePx, m_desc.syntheticBold, ob))
+			{
+				g.bearingX = (float)ob.left;
+				g.bearingY = (float)ob.top;
+				g.width = (float)ob.w;
+				g.height = (float)ob.h;
+				g.w = ob.w;
+				g.h = ob.h;
+
+				FreeOutlinedBitmap(ob);
+				return g;
+			}
+		}
+
 		// FT_LOAD_RENDER로 bitmap 생성
 		if (FT_Load_Char(m_face, codePoint, FT_LOAD_RENDER) != 0)
 		{
@@ -267,11 +432,12 @@ namespace engine
 			}
 		}
 
-		const FT_GlyphSlot slot = m_face->glyph;
+		FT_GlyphSlot slot = m_face->glyph;
 
-		// advance는 26.6
+		if (m_desc.syntheticBold)
+			FT_GlyphSlot_Embolden(slot);
+
 		g.advance = static_cast<float>(slot->advance.x) / 64.0f;
-
 		// bitmap_left는 penX 기준 좌측 오프셋
 		g.bearingX = static_cast<float>(slot->bitmap_left);
 
