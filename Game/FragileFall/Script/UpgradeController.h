@@ -3,6 +3,7 @@
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/UI/UIButton.h>
 #include <Framework/Object/Component/UI/UISlider.h>
+#include <Framework/Object/Component/UI/UIClickArea.h>
 #include "UpgradeTypes.h"
 
 namespace game
@@ -33,6 +34,7 @@ namespace game
 
         bool CanUpgrade(int nodeId) const;
         bool ApplyUpgrade(int nodeId);
+        void SelectNode(int nodeId);
 
         void RefreshNodeVisuals();
 
@@ -41,14 +43,18 @@ namespace game
         void RecomputeUnlocked();
         void AutoRegisterNodesFromContent(const std::string& contentRootName);
         
+        void BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb);
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
 
         // Category
         void SetCategory(UpgradeCategory c);
         void ApplyCategoryFilter();
 
+        engine::Vector4 GetCategoryColor(UpgradeCategory c) const;
+
     private:
         std::vector<engine::GameObject*> m_nodeObjects;
+        std::unordered_map<UpgradeCategory, engine::GameObject*> m_categoryArea;
 
         std::unordered_map<int, game::UpgradeNodeView*> m_views;
 
@@ -61,8 +67,15 @@ namespace game
         int m_sapphire = 100;
         int m_emerald = 100;
 
+        int m_selectedNodeId = 0;
+
     private:
         // GameObject
         engine::UISlider* m_scrollBar = nullptr;
+
+        engine::UIClickArea* m_attackArea = nullptr;
+        engine::UIClickArea* m_skillArea = nullptr;
+        engine::UIClickArea* m_LifeArea = nullptr;
+        engine::UIClickArea* m_MoveArea = nullptr;
     };
 }
