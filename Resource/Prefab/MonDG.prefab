@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -6.099999904632568,
+                        "x": -10.100000381469727,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": 3.4000000953674316
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -30,12 +30,15 @@
                 {
                     "Type": "MonsterDullGray",
                     "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
                     "Hp": 50,
                     "AttackRange": 10.0,
                     "MoveSpeed": 0.0,
-                    "RotationSpeed": 20.0,
+                    "RotationSpeed": 10.0,
                     "FireRate": 3.0,
-                    "BulletSpeed": 11.0,
+                    "BulletSpeed": 15.0,
                     "BulletLifetime": 3.0,
                     "AnimName_Idle": "Idle",
                     "AnimName_Attack": "Attack",
@@ -46,9 +49,9 @@
                     "Type": "Rigidbody",
                     "Active": true,
                     "type": 0,
-                    "mass": 20000.0,
-                    "linearDamping": 1000.0,
-                    "angularDamping": 30.0,
+                    "mass": 500.0,
+                    "linearDamping": 10.0,
+                    "angularDamping": 10.0,
                     "useGravity": false,
                     "constraints": 47
                 },
@@ -216,11 +219,11 @@
                     "CullMode": 1
                 },
                 {
-                    "Type": "CapsuleCollider",
+                    "Type": "BoxCollider",
                     "Active": true,
                     "center": [
                         0.0,
-                        1.409999966621399,
+                        1.2000000476837158,
                         0.0
                     ],
                     "rotation": [
@@ -232,8 +235,33 @@
                     "syncWithTransform": false,
                     "layer": 2,
                     "materialType": 1,
-                    "radius": 0.44999998807907104,
-                    "height": 2.9000000953674316
+                    "size": [
+                        0.6000000238418579,
+                        2.5999999046325684,
+                        0.6000000238418579
+                    ]
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 93,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         }
