@@ -23,6 +23,7 @@ namespace engine
             Environment = 4,
             Trigger = 5,
             EnemyProjectile = 6,
+            Picking = 7,
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -39,6 +40,7 @@ namespace engine
             EnvironmentMask = (1u << Environment),
             TriggerMask = (1u << Trigger),
             EnemyProjectileMask = (1u << EnemyProjectile),
+            PickingMask = (1u << Picking),
             
             All = 0xFFFFFFFF
         };
@@ -60,7 +62,8 @@ namespace engine
                 "Environment",  // 4
                 "Trigger",      // 5
                 "EnemyProjectile", // 6
-                "Layer7", "Layer8", "Layer9",
+                "Picking", // 7
+                "Layer8", "Layer9",
                 "Layer10", "Layer11", "Layer12", "Layer13", "Layer14", "Layer15",
                 "Layer16", "Layer17", "Layer18", "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
@@ -109,8 +112,8 @@ namespace engine
             SetCollision(Player, Projectile, false);
             
             // Projectile ↔ Projectile: 충돌 안 함
-            SetCollision(Projectile, Projectile, false);            
-            
+            SetCollision(Projectile, Projectile, false); 
+
             // Player ↔ Enemy: 충돌함
             // (기본값 All이므로 별도 설정 불필요)
             
@@ -138,6 +141,16 @@ namespace engine
             // EnemyProjectile ↔ Player: 충돌함 (기본값)
             // EnemyProjectile ↔ Default: 충돌함 (기본값)
             // EnemyProjectile ↔ Environment: 충돌함 (기본값)
+
+            SetCollision(Picking, Default, false);
+            SetCollision(Picking, Player, false);
+            SetCollision(Picking, Enemy, false);
+            SetCollision(Picking, Projectile, false);
+            SetCollision(Picking, Environment, false);
+            SetCollision(Picking, Trigger, false);            
+            SetCollision(Picking, EnemyProjectile, false);
+  
+
         }
 
         // 두 레이어 간 충돌 여부 설정

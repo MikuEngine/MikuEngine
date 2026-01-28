@@ -172,7 +172,7 @@ namespace game
     void SceneController_Lobby::BackToMain()
     {
         LOG_PRINT("BackToMain");
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Title");
+        engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
     }
 
     void SceneController_Lobby::BackToHub()

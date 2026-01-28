@@ -233,47 +233,48 @@ namespace engine
 	void UIButton::UpdateVisuals()
 	{
 		if (m_label) m_label->m_raycastTarget = false;
-	
 		if (!m_background) return;
 
-		Vector4 tint(1, 1, 1, 1);
+		Vector4 stateTint(1, 1, 1, 1);
 		switch (m_state)
 		{
-		case State::Normal:   tint = m_tintNormal;  break;
-		case State::Hovered:  tint = m_tintHover;   break;
-		case State::Pressed:  tint = m_tintPressed; break;
-		case State::Disabled: tint = m_tintDisabled; break;
+		case State::Normal:   stateTint = m_tintNormal;   break;
+		case State::Hovered:  stateTint = m_tintHover;    break;
+		case State::Pressed:  stateTint = m_tintPressed;  break;
+		case State::Disabled: stateTint = m_tintDisabled; break;
 		}
 
 		if (m_useTintOnly)
 		{
 			if (!m_spriteNormal.empty() && m_spriteNormal != "None")
 				m_background->SetTexture(m_spriteNormal);
+
+			Vector4 baseTint = m_tintNormal;
+
+			Vector4 finalTint(
+				baseTint.x * stateTint.x,
+				baseTint.y * stateTint.y,
+				baseTint.z * stateTint.z,
+				baseTint.w * stateTint.w
+			);
+
+			m_background->SetColor(finalTint);
+			return;
 		}
-		else
+
+		std::string sprite;
+		switch (m_state)
 		{
-			std::string sprite;
-			switch (m_state)
-			{
-			case State::Normal:
-				sprite = m_spriteNormal;
-				break;
-			case State::Hovered:
-				sprite = m_spriteHovered.empty() ? m_spriteNormal : m_spriteHovered;
-				break;
-			case State::Pressed:
-				sprite = m_spritePressed.empty() ? m_spriteNormal : m_spritePressed;
-				break;
-			case State::Disabled:
-				sprite = m_spriteDisabled.empty() ? m_spriteNormal : m_spriteDisabled;
-				break;
-			}
-
-			if (!sprite.empty() && sprite != "None")
-				m_background->SetTexture(sprite);
+		case State::Normal:   sprite = m_spriteNormal; break;
+		case State::Hovered:  sprite = m_spriteHovered.empty() ? m_spriteNormal : m_spriteHovered; break;
+		case State::Pressed:  sprite = m_spritePressed.empty() ? m_spriteNormal : m_spritePressed; break;
+		case State::Disabled: sprite = m_spriteDisabled.empty() ? m_spriteNormal : m_spriteDisabled; break;
 		}
 
-		m_background->SetColor(tint);
+		if (!sprite.empty() && sprite != "None")
+			m_background->SetTexture(sprite);
+
+		m_background->SetColor(stateTint);
 	}
 
 	void UIButton::OnGui()

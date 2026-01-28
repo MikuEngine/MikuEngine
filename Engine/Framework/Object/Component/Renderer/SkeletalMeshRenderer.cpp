@@ -140,6 +140,11 @@ namespace engine
         // 텍스처 로드
         SetupTextures(m_materialData, m_textures);
 
+        if (!m_meshFilePath.empty())
+        {
+            LoadSocketData();
+        }
+
         SystemManager::Get().GetRenderSystem().Register(this);
     }
 
@@ -641,13 +646,16 @@ namespace engine
     {
         if (!m_skeletonData) return;
 
+        auto gameObject = GetGameObject();
+        if (!gameObject) return;
+
         auto animator = GetGameObject()->GetComponent<SkeletalAnimator>();
         if (!animator) return;
 
-        Matrix objectWorld = GetTransform()->GetWorld();
-
         for (auto& instance : m_socketInstances)
         {
+            if (!instance.info) continue;
+
             if (!instance.info->parentBoneName.empty())
             {
                 Matrix boneWorldMatrix = animator->GetBoneWorldMatrix(instance.info->parentBoneName);
@@ -655,7 +663,7 @@ namespace engine
             }
             else
             {
-                instance.worldMatrix = instance.info->localMatrix * objectWorld;
+                instance.worldMatrix = instance.info->localMatrix * GetTransform()->GetWorld();
             }
         }
     }

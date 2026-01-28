@@ -46,6 +46,12 @@ namespace engine
 				m_socketInstances.push_back(newInstance);
 			}
 
+			ImGui::SameLine();
+			if (ImGui::Button("Save Socket"))
+			{
+				SaveSocketData();
+			}
+
 			for (size_t i = 0; i < m_socketInstances.size(); ++i)
 			{
 				auto& instance = m_socketInstances[i];
@@ -54,101 +60,152 @@ namespace engine
 
 				ImGui::PushID(static_cast<int>(i));
 
+				bool pendingDelete = false;
 				std::string nodeLabel = (socket->name.empty() ? "New Socket" : socket->name) + "###SocketNode_" + std::to_string(i);
+
 				if (ImGui::TreeNode(nodeLabel.c_str()))
 				{
 					bool changed = false;
 
-					if (ImGui::InputText("Socket Name", &socket->name)) { changed = true; }
+					ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 35);
+					if (ImGui::InputText("##SocketNameInput", &socket->name)) { changed = true; }
 
-					if (animator)
+					ImGui::SameLine();
+					if (ImGui::Button("X"))
 					{
-						const char* preview =
-							socket->parentBoneName.empty()
-							? "<None>"
-							: socket->parentBoneName.c_str();
-
-						if (ImGui::BeginCombo("Select Bone##BoneSelect", preview))
-						{
-							const auto& skeleton = animator->GetSkeleton();
-							for (const auto& bone : skeleton)
-							{
-								bool isSelected = (socket->parentBoneName == bone.name);
-
-								if (ImGui::Selectable(bone.name.c_str(), isSelected))
-								{
-									Matrix oldWorld = instance.worldMatrix;
-									socket->parentBoneName = bone.name;
-
-									Matrix newBoneWorld = animator->GetBoneWorldMatrix(bone.name);
-									socket->localMatrix = oldWorld * newBoneWorld.Invert();
-
-									socket->DecomposeLocalMatrix();
-
-									UpdateSockets();
-								}
-
-								if (isSelected)
-									ImGui::SetItemDefaultFocus();
-							}
-							ImGui::EndCombo();
-						}
+						pendingDelete = true;
 					}
-					else
+
+					if (!pendingDelete)
 					{
-						if (ImGui::InputText("Parent Bone", &socket->parentBoneName))
+						if (animator)
 						{
-							changed = true;
+							const char* preview = socket->parentBoneName.empty() ? "<None>" : socket->parentBoneName.c_str();
+
+							if (ImGui::BeginCombo("Select Bone##BoneSelect", preview))
+							{
+								const auto& skeleton = animator->GetSkeleton();
+								for (const auto& bone : skeleton)
+								{
+									bool isSelected = (socket->parentBoneName == bone.name);
+
+									if (ImGui::Selectable(bone.name.c_str(), isSelected))
+									{
+										Matrix oldWorld = instance.worldMatrix;
+										socket->parentBoneName = bone.name;
+
+										Matrix newBoneWorld = animator->GetBoneWorldMatrix(bone.name);
+										socket->localMatrix = oldWorld * newBoneWorld.Invert();
+
+										socket->DecomposeLocalMatrix();
+
+										UpdateSockets();
+									}
+
+
+									if (isSelected)
+										ImGui::SetItemDefaultFocus();
+								}
+								ImGui::EndCombo();
+							}
+						}
+						else
+						{
+							if (ImGui::InputText("Parent Bone", &socket->parentBoneName))
+							{
+								changed = true;
+								socket->localPosition = Vector3::Zero;
+								socket->UpdateLocalMatrix();
+								UpdateSockets();
+							}
+						}
+						
+						ImGui::Separator();
+
+						changed |= ImGui::DragFloat3("Pos", &socket->localPosition.x, 0.05f);
+						ImGui::SameLine();
+						if (ImGui::Button("Reset##Pos"))
+						{
 							socket->localPosition = Vector3::Zero;
+							changed = true;
+						}
+
+						if (s_editingIndex != static_cast<int>(i))
+						{
+							s_tempEuler = socket->localRotation.ToEuler() * (180.0f / DirectX::XM_PI);
+							s_editingIndex = static_cast<int>(i);
+						}
+
+						if (ImGui::DragFloat3("Rot", &s_tempEuler.x, 0.5f))
+						{
+							socket->localRotation = Quaternion::CreateFromYawPitchRoll(
+								ToRadian(s_tempEuler.y),
+								ToRadian(s_tempEuler.x),
+								ToRadian(s_tempEuler.z)
+							);
+							changed = true;
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("Reset##Rot"))
+						{
+							socket->localRotation = Quaternion::Identity;
+							s_tempEuler = Vector3::Zero;
+							changed = true;
+						}
+
+						changed |= ImGui::DragFloat3("Scale", &socket->localScale.x, 0.05f);
+						ImGui::SameLine();
+						if (ImGui::Button("Reset##Scale"))
+						{
+							socket->localScale = Vector3::One;
+							changed = true;
+						}
+
+						if (changed)
+						{
 							socket->UpdateLocalMatrix();
 							UpdateSockets();
 						}
 					}
 
-					ImGui::Separator();
-
-					changed |= ImGui::DragFloat3("Pos", &socket->localPosition.x, 0.05f);
-
-					if (s_editingIndex != static_cast<int>(i))
-					{
-						s_tempEuler = socket->localRotation.ToEuler();
-						s_editingIndex = static_cast<int>(i);
-					}
-
-					if (ImGui::DragFloat3("Rot", &s_tempEuler.x, 0.5f))
-					{
-						socket->localRotation = Quaternion::CreateFromYawPitchRoll(
-							ToRadian(s_tempEuler.y),
-							ToRadian(s_tempEuler.x),
-							ToRadian(s_tempEuler.z)
-						);
-						changed = true;
-					}
-
-					changed |= ImGui::DragFloat3("Scale", &socket->localScale.x, 0.05f);
-
-					if (changed)
-					{
-						socket->UpdateLocalMatrix();
-						UpdateSockets();
-					}
-
-					if (ImGui::Button("Save All Sockets"))
-					{
-						SaveSocketData();
-					}
-
 					ImGui::TreePop();
 				}
+
 				ImGui::PopID();
+
+				if (pendingDelete)
+				{
+					delete instance.info;
+					m_socketInstances.erase(m_socketInstances.begin() + i);
+					--i;
+					continue;
+				}
 			}
 		}
 	}
 
 	void Renderer::SaveSocketData()
 	{
-		std::string modelName = GetGameObject()->GetName();
-		std::string filePath = "Resource/Data/Socket/" + modelName + ".socketdata";
+		std::string meshPath = GetMeshPath();
+		if (meshPath.empty()) return;
+
+		std::string fileName = std::filesystem::path(meshPath).filename().string();
+		std::string folderPath = "Resource/Data/Socket/";
+		std::string filePath = folderPath + fileName + ".socketdata";
+
+		if (m_socketInstances.empty())
+		{
+			if (std::filesystem::exists(filePath))
+			{
+				std::filesystem::remove(filePath);
+			}
+			return;
+		}
+
+		if (!std::filesystem::exists(folderPath))
+		{
+			std::filesystem::create_directories(folderPath);
+		}
 
 		std::vector<Socket> socketsToSave;
 		for (const auto& instance : m_socketInstances)
@@ -160,16 +217,55 @@ namespace engine
 		SocketData saver;
 		saver.SetSockets(socketsToSave);
 		saver.Save(filePath);
+	}
 
-		LOG_INFO("Socket data saved to: {}", filePath);
+	void Renderer::LoadSocketData()
+	{
+		const std::string& meshPath = GetMeshPath();
+		if (meshPath.empty()) return;
+
+		std::string filePath = "Resource/Data/Socket/" + std::filesystem::path(meshPath).filename().string() + ".socketdata";
+
+		SocketData loader;
+		loader.Create(filePath);
+
+		const auto& loadedSockets = loader.GetSockets();
+		if (loadedSockets.empty())
+		{
+			ClearSockets();
+			return;
+		}
+
+		std::vector<SocketInstance> tempInstances;
+		tempInstances.reserve(loadedSockets.size());
+
+		for (const auto& s : loadedSockets)
+		{
+			SocketInstance instance;
+			instance.info = new Socket(s);
+			instance.worldMatrix = Matrix::Identity;
+			tempInstances.push_back(instance);
+		}
+
+		ClearSockets();
+		m_socketInstances = std::move(tempInstances);
+
+		UpdateSockets();
 	}
 
 	void Renderer::UpdateSockets()
 	{
+		if (this == nullptr) return;
+
+		auto transform = GetTransform();
+		if (transform == nullptr) return;
+
 		Matrix world = GetTransform()->GetWorld();
 
 		for (auto& instance : m_socketInstances)
 		{
+			if (instance.info == nullptr) continue;
+
 			instance.worldMatrix = instance.info->localMatrix * world;
 		}
 	}
@@ -185,5 +281,14 @@ namespace engine
 		}
 
 		return GetTransform()->GetWorld();
+	}
+	void Renderer::ClearSockets()
+	{
+		for (auto& instance : m_socketInstances)
+		{
+			delete instance.info;
+			instance.info = nullptr;
+		}
+		m_socketInstances.clear();
 	}
 }

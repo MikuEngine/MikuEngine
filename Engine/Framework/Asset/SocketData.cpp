@@ -100,7 +100,12 @@ namespace engine
         std::ofstream file(filePath);
         if (file.is_open())
         {
-            file << j.dump(4); // 4칸 들여쓰기로 예쁘게 저장
+            file << j.dump(4);
+            file.close();
+        }
+        else
+        {
+            LOG_INFO("Failed to create file: {} (Check folder exists)", filePath);
         }
     }
 }

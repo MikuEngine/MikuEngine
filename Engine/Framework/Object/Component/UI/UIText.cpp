@@ -408,7 +408,7 @@ namespace engine
 		ImGui::Checkbox("Bold", &m_bold);
 		//ImGui::Checkbox("Alpha Blend", &m_useAlphaBlend);
 		
-		ImGui::SliderInt("Font Px", &m_fontPixelSize, 1, 256);
+		ImGui::InputInt("Font Px", &m_fontPixelSize, 1, 256);
 
 		//ImGui::Checkbox("Outline", &m_useOutline);
 		//ImGui::SliderFloat("Outline Px", &m_outlinePx, 0.0f, 8.0f);
