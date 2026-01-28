@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -9,13 +9,6 @@ namespace engine
 
 namespace game
 {
-    // ═══════════════════════════════════════════════════════════════
-    // BossShieldEffect - 쉴드 이펙트
-    // 
-    // 목적:
-    //   - 기둥이 살아있을 때 보스 주변에 표시되는 쉴드 이펙트
-    //   - 쉴드 활성화/비활성화 시각적 피드백
-    // ═══════════════════════════════════════════════════════════════
     class BossShieldEffect :
         public engine::Script<BossShieldEffect>
     {

@@ -198,7 +198,7 @@ namespace engine
         Matrix world = transform->GetWorld();
         
         // 방향 추출 (Transform의 forward 방향)
-        Vector3 forward = Vector3::TransformNormal(Vector3::UnitZ, world);
+        Vector3 forward = Vector3::TransformNormal(-Vector3::UnitY, world);
         forward.Normalize();
 
         DirectX::XMVECTOR color = DirectX::XMLoadFloat4(
@@ -421,7 +421,11 @@ namespace engine
     void LightDebugRenderer::OnGui()
     {
         if (!ImGui::CollapsingHeader("Light Debug"))
+        {
             return;
+        }
+
+        ImGui::PushID(this);
 
         ImGui::Checkbox("Enabled", &m_enabled);
         
@@ -441,5 +445,7 @@ namespace engine
             ImGui::ColorEdit4("Range Color", &m_rangeColor.x);
             ImGui::Unindent();
         }
+
+        ImGui::PopID();
     }
 }
