@@ -46,6 +46,12 @@ namespace engine
 				m_socketInstances.push_back(newInstance);
 			}
 
+			ImGui::SameLine();
+			if (ImGui::Button("Save Socket"))
+			{
+				SaveSocketData();
+			}
+
 			for (size_t i = 0; i < m_socketInstances.size(); ++i)
 			{
 				auto& instance = m_socketInstances[i];
@@ -160,11 +166,6 @@ namespace engine
 							socket->UpdateLocalMatrix();
 							UpdateSockets();
 						}
-
-						if (ImGui::Button("Save All Sockets"))
-						{
-							SaveSocketData();
-						}
 					}
 
 					ImGui::TreePop();
@@ -185,8 +186,26 @@ namespace engine
 
 	void Renderer::SaveSocketData()
 	{
-		std::string modelName = GetGameObject()->GetName();
-		std::string filePath = "Resource/Data/Socket/" + modelName + ".socketdata";
+		std::string meshPath = GetMeshPath();
+		if (meshPath.empty()) return;
+
+		std::string fileName = std::filesystem::path(meshPath).filename().string();
+		std::string folderPath = "Resource/Data/Socket/";
+		std::string filePath = folderPath + fileName + ".socketdata";
+
+		if (m_socketInstances.empty())
+		{
+			if (std::filesystem::exists(filePath))
+			{
+				std::filesystem::remove(filePath);
+			}
+			return;
+		}
+
+		if (!std::filesystem::exists(folderPath))
+		{
+			std::filesystem::create_directories(folderPath);
+		}
 
 		std::vector<Socket> socketsToSave;
 		for (const auto& instance : m_socketInstances)
@@ -198,16 +217,55 @@ namespace engine
 		SocketData saver;
 		saver.SetSockets(socketsToSave);
 		saver.Save(filePath);
+	}
 
-		LOG_INFO("Socket data saved to: {}", filePath);
+	void Renderer::LoadSocketData()
+	{
+		const std::string& meshPath = GetMeshPath();
+		if (meshPath.empty()) return;
+
+		std::string filePath = "Resource/Data/Socket/" + std::filesystem::path(meshPath).filename().string() + ".socketdata";
+
+		SocketData loader;
+		loader.Create(filePath);
+
+		const auto& loadedSockets = loader.GetSockets();
+		if (loadedSockets.empty())
+		{
+			ClearSockets();
+			return;
+		}
+
+		std::vector<SocketInstance> tempInstances;
+		tempInstances.reserve(loadedSockets.size());
+
+		for (const auto& s : loadedSockets)
+		{
+			SocketInstance instance;
+			instance.info = new Socket(s);
+			instance.worldMatrix = Matrix::Identity;
+			tempInstances.push_back(instance);
+		}
+
+		ClearSockets();
+		m_socketInstances = std::move(tempInstances);
+
+		UpdateSockets();
 	}
 
 	void Renderer::UpdateSockets()
 	{
+		if (this == nullptr) return;
+
+		auto transform = GetTransform();
+		if (transform == nullptr) return;
+
 		Matrix world = GetTransform()->GetWorld();
 
 		for (auto& instance : m_socketInstances)
 		{
+			if (instance.info == nullptr) continue;
+
 			instance.worldMatrix = instance.info->localMatrix * world;
 		}
 	}
@@ -223,5 +281,14 @@ namespace engine
 		}
 
 		return GetTransform()->GetWorld();
+	}
+	void Renderer::ClearSockets()
+	{
+		for (auto& instance : m_socketInstances)
+		{
+			delete instance.info;
+			instance.info = nullptr;
+		}
+		m_socketInstances.clear();
 	}
 }

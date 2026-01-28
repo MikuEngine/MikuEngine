@@ -213,6 +213,11 @@ namespace engine
         }
     }
 
+    const std::string& StaticMeshRenderer::GetMeshPath() const
+    {
+        return m_meshFilePath;
+    }
+
     void StaticMeshRenderer::OnGui()
     {
         ImGui::Text("Mesh: %s", m_meshFilePath.c_str());

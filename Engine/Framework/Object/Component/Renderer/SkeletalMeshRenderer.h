@@ -95,7 +95,7 @@ namespace engine
         void SetCullMode(CullMode cullMode);
 
         std::shared_ptr<SkeletonData> GetSkeletonData() const;
-        const std::string& GetMeshPath() const;
+        const std::string& GetMeshPath() const override;
 
         void OnGui() override;
         void Save(json& j) const override;
