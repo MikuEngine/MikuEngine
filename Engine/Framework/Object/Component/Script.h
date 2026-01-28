@@ -38,6 +38,8 @@ namespace engine
         void Awake() override {};
         virtual void Start() {};
         virtual void Update() {};
+        virtual void FixedUpdate() {};
+        virtual void LateUpdate() {};
 
         GameObject* CreateGameObject(const std::string& name = "GameObject");
         GameObject* CreateGameObject(CreateObjectType type, const std::string& name);
@@ -91,6 +93,16 @@ namespace engine
             if constexpr (IsFuncOverridden(&ScriptBase::Update, &T::Update))
             {
                 eventFlags |= 1U << static_cast<int>(ScriptEvent::Update);
+            }
+
+            if constexpr (IsFuncOverridden(&ScriptBase::FixedUpdate, &T::FixedUpdate))
+            {
+                eventFlags |= 1U << static_cast<int>(ScriptEvent::FixedUpdate);
+            }
+
+            if constexpr (IsFuncOverridden(&ScriptBase::LateUpdate, &T::LateUpdate))
+            {
+                eventFlags |= 1U << static_cast<int>(ScriptEvent::LateUpdate);
             }
 
             RegisterScript(eventFlags);

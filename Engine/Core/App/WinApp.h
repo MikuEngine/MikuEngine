@@ -38,6 +38,9 @@ namespace engine
         int m_screenWidth = 0;
         int m_screenHeight = 0;
 
+    private:
+        float m_accumulatedDeltaTime = 0.0f; // fixed update 용
+
     protected:
         WinApp(const std::filesystem::path& settingFilePath = "Settings.config", const UserSettings& defaultSetting = {});
         virtual ~WinApp();

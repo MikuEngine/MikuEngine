@@ -441,8 +441,18 @@ namespace engine
         SystemManager::Get().GetPathfindingSystem().Update();
         SystemManager::Get().GetParticleSystem().Update();
 
-        // Physics 시뮬레이션
-        SystemManager::Get().GetPhysicsSystem().Update(Time::FixedDeltaTime());
+        m_accumulatedDeltaTime += Time::DeltaTime();
+        const float fixedDeltaTime = Time::FixedDeltaTime(); // 60fps -> 0.0166666
+
+        while (m_accumulatedDeltaTime >= fixedDeltaTime)
+        {
+            m_accumulatedDeltaTime -= fixedDeltaTime;
+
+            SystemManager::Get().GetScriptSystem().CallFixedUpdate();
+            // Physics 시뮬레이션
+            SystemManager::Get().GetPhysicsSystem().Update(fixedDeltaTime);
+        }
+
         SystemManager::Get().GetCollisionSystem().ProcessEvents();
 
         SystemManager::Get().GetCameraSystem().Update();
@@ -453,6 +463,7 @@ namespace engine
 
         SystemManager::Get().GetUIEventSystem().Update();
 
+        SystemManager::Get().GetScriptSystem().CallLateUpdate();
     }
 
     LRESULT WinApp::MessageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
