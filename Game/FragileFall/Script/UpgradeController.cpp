@@ -37,7 +37,7 @@ namespace game
         if (go)
             m_scrollBar = go->GetComponent<engine::UISlider>();
 
-        AutoRegisterNodesFromContent("UpgradeContent");
+        AutoRegisterNodesFromContent("Content");
 
         BuildNodeTree();
         ApplyCategoryFilter();
@@ -105,7 +105,7 @@ namespace game
         m_views.clear();
 
         // 노드 오브젝트 로드
-        AutoRegisterNodesFromContent("UpgradeContent");
+        AutoRegisterNodesFromContent("Content");
 
         BuildNodeTree();
 

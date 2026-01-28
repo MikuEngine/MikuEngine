@@ -444,7 +444,7 @@ namespace engine
 
 	void UIScrollView::OnScroll(const Vector2& mousePos, float wheelDelta)
 	{
-		const float wheelStep = 5.0f;
+		const float wheelStep = 3.0f;
 		SetScrollY(m_scrollY - wheelDelta / wheelStep, true);
 	}
 
@@ -453,10 +453,16 @@ namespace engine
 		if (!m_viewportRT)
 			return UIElement::HitTestPoint(p);
 
-		const Vector4 cr = CalcViewportClipRectPx(const_cast<UIScrollView*>(this), m_viewportRT);
+		Canvas* c = GetCanvasInParent();
+		if (!c) return UIElement::HitTestPoint(p);
 
-		return (p.x >= cr.x && p.x <= cr.z &&
-			p.y >= cr.y && p.y <= cr.w);
+		const Vector2 ref = c->GetReferenceResolution();
+		const UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+
+		const UIRect vr = m_viewportRT->GetWorldRectResolved(rootRect);
+
+		return (p.x >= vr.x && p.x <= vr.x + vr.w &&
+			p.y >= vr.y && p.y <= vr.y + vr.h);
 	}
 
 	void UIScrollView::OnGui()

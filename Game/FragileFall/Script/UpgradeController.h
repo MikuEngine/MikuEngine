@@ -2,12 +2,8 @@
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/UI/UIButton.h>
+#include <Framework/Object/Component/UI/UISlider.h>
 #include "UpgradeTypes.h"
-
-namespace engine
-{
-    class UISlider;
-}
 
 namespace game
 {
