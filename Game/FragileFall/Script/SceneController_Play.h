@@ -28,6 +28,7 @@ namespace game
 
         void SetMenuOpen(bool open);
         void SetOptionOpen(bool open);
+        void CheckBackToMain(bool open);
 
         void OpenMenu();
 
@@ -47,11 +48,14 @@ namespace game
         bool m_bound = false;
         bool m_isMenuOpen = false;
         bool m_isOptionOpen = false;
+        bool m_isGiveupOpen = false;
 
     private:
         // GameObject
         engine::GameObject* m_menuPopUp = nullptr;
         engine::GameObject* m_optionPopUp = nullptr;
         engine::GameObject* m_blocker = nullptr;
+
+        engine::GameObject* m_realGiveupPopUp = nullptr;
     };
 }

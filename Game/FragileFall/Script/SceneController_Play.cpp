@@ -42,11 +42,15 @@ namespace game
         if (m_bound) return;
         m_bound = true;
 
+        // Buttons
         BindButton("UI_OpenMenu", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->OpenMenu(); });
         BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->OpenOption(); });
         BindButton("UI_BackToPlay", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->BackToPlay(); });
-        BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->BackToMain(); });
+        BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->CheckBackToMain(true); });
         BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->Back(); });
+
+        BindButton("OK_Button", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->BackToMain(); });
+        BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->CheckBackToMain(false); });
 
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->OnBGMChanged(v); });
@@ -64,6 +68,9 @@ namespace game
 
         m_blocker = engine::GameObject::Find("Panel_Blocker");
         if (m_blocker) m_blocker->SetActive(false);
+
+        m_realGiveupPopUp = engine::GameObject::Find("UI_RealGiveupPopUp");
+        if (m_realGiveupPopUp) m_realGiveupPopUp->SetActive(false);
 
         m_isMenuOpen = false;
         m_isOptionOpen = false;
@@ -89,7 +96,10 @@ namespace game
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
             if (m_isOptionOpen) { Back(); return; }
+            if (m_isGiveupOpen) { CheckBackToMain(false); return; }
+
             if (m_isMenuOpen) { SetMenuOpen(false);   return; }
+
             SetMenuOpen(true);
         }
     }
@@ -168,6 +178,14 @@ namespace game
         SetMenuOpen(false);
     }
 
+    void SceneController_Play::CheckBackToMain(bool open)
+    {
+        m_isGiveupOpen = open;
+        m_realGiveupPopUp->SetActive(open);
+
+        UpdateBlocker();
+    }
+
     void SceneController_Play::BackToMain()
     {
         engine::SceneManager::Get().ChangeScene("z_Hiro_Title");
@@ -182,7 +200,7 @@ namespace game
     void SceneController_Play::UpdateBlocker()
     {
         if (!m_blocker) return;
-        m_blocker->SetActive(m_isMenuOpen || m_isOptionOpen);
+        m_blocker->SetActive(m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen);
     }
 
     void SceneController_Play::OnBGMChanged(float v)
