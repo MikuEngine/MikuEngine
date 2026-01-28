@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <DirectXColors.h>
@@ -449,11 +449,12 @@ namespace engine
             m_accumulatedDeltaTime -= fixedDeltaTime;
 
             SystemManager::Get().GetScriptSystem().CallFixedUpdate();
-            // Physics 시뮬레이션
+            // Physics 시뮬레이션 (내부에서 CollisionSystem.ProcessEvents() 호출)
             SystemManager::Get().GetPhysicsSystem().Update(fixedDeltaTime);
         }
 
-        SystemManager::Get().GetCollisionSystem().ProcessEvents();
+        // 참고: CollisionSystem.ProcessEvents()는 PhysicsSystem.Update() 내부에서 호출됨
+        // 중복 호출 제거됨 (2024-01-28)
 
         SystemManager::Get().GetCameraSystem().Update();
 

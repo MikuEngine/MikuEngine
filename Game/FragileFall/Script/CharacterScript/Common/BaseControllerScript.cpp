@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BaseControllerScript.h"
 
 #include <Framework/Object/Component/LogicFSM.h>
@@ -26,12 +26,19 @@ namespace game
         // 1. 입력 처리 → FSM 파라미터 설정
         ProcessInput();
         
-        // 2. FSM 상태 전이 처리
+        // 2. FSM 상태 전이 처리 (DeltaTime 기반)
         if (m_logicFSM) m_logicFSM->UpdateFSM();
         if (m_animFSM)  m_animFSM->UpdateFSM();
         
-        // 3. 상태 기반 게임 로직 실행
+        // 3. 상태 기반 게임 로직 실행 (비물리: 타이머, 애니메이션 등)
         UpdateGameLogic();
+    }
+
+    void BaseControllerScript::FixedUpdate()
+    {
+        // 물리 기반 로직 실행 (FixedDeltaTime 기반)
+        // - 이동, 회전 등 Rigidbody 조작
+        UpdatePhysicsLogic();
     }
 
     // ═══════════════════════════════════════════════════════════════

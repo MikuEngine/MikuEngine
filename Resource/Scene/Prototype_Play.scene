@@ -64,9 +64,9 @@
                 {
                     "Type": "PlayerControllerScript",
                     "Active": true,
-                    "MoveSpeed": 1.5,
+                    "MoveSpeed": 11.0,
                     "FireRate": 0.30000001192092896,
-                    "BulletSpeed": 1.0,
+                    "BulletSpeed": 13.0,
                     "BulletLifetime": 3.0,
                     "AimPointerObjectName": "AimPointer",
                     "EnableUpperBodyAim": true,
@@ -116,7 +116,7 @@
                     "type": 0,
                     "mass": 1.0,
                     "linearDamping": 10.0,
-                    "angularDamping": 57.0,
+                    "angularDamping": 30.0,
                     "useGravity": false,
                     "constraints": 42
                 },

@@ -90,7 +90,8 @@ namespace game
         // ─────────────────────────────────────────────
         void CacheComponents() override;
         void ProcessInput() override;
-        void UpdateGameLogic() override;
+        void UpdateGameLogic() override;         // 비물리 로직 (타이머, 체력 등)
+        void UpdatePhysicsLogic() override;      // 물리 로직 (이동, 회전)
         void OnStateEntered(const std::string& state) override;
 
         // ─────────────────────────────────────────────
@@ -115,7 +116,7 @@ namespace game
         float GetDistanceToPlayer() const;
         engine::Vector3 CalculateDirectionToPlayer() const;
         bool IsPlayerInRange() const;
-        void RotateTowardsPlayer(float deltaTime);
+        void RotateTowardsPlayer();  // FixedUpdate에서 호출
         bool IsLookingAtPlayer() const;
         
         // 호환성 유지
@@ -136,18 +137,27 @@ namespace game
         virtual void Attack(float deltaTime);
         
         // ─────────────────────────────────────────────
-        // 상태별 행동
+        // 상태별 행동 - 비물리 (Update에서 호출, DeltaTime 기반)
         // ─────────────────────────────────────────────
         virtual void UpdateStateBasedBehavior(const std::string& state, float deltaTime);
-        virtual void ExecuteEngageBehavior(float deltaTime);
-        virtual void ExecuteIdleBehavior();
-        virtual void ExecuteFragileBehavior();
-        virtual void ExecuteDeadBehavior();
+        virtual void ExecuteEngageBehaviorNonPhysics(float deltaTime);  // 공격 타이머 등
+        virtual void ExecuteIdleBehaviorNonPhysics();
+        virtual void ExecuteFragileBehaviorNonPhysics();
+        virtual void ExecuteDeadBehaviorNonPhysics();
+
+        // ─────────────────────────────────────────────
+        // 상태별 행동 - 물리 (FixedUpdate에서 호출)
+        // ─────────────────────────────────────────────
+        virtual void UpdatePhysicsStateBasedBehavior(const std::string& state);
+        virtual void ExecuteEngageBehaviorPhysics();    // 이동, 회전
+        virtual void ExecuteIdleBehaviorPhysics();
+        virtual void ExecuteFragileBehaviorPhysics();
+        virtual void ExecuteDeadBehaviorPhysics();
         
         // ─────────────────────────────────────────────
         // 이동 (PathfindingAgent 활용, 이동 몬스터용)
         // ─────────────────────────────────────────────
-        virtual void MoveTowardsPlayer(float deltaTime);
+        virtual void MoveTowardsPlayer();  // FixedUpdate에서 호출
 
         // ─────────────────────────────────────────────
         // 체력 관리

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include "Script/AimPointer.h"
@@ -190,20 +190,30 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 게임 로직 (상태 확인 후 행동 실행)
+	// 게임 로직 - 비물리 (상태 확인 후 행동 실행)
+	// Update()에서 호출됨 (DeltaTime 기반)
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::UpdateGameLogic()
 	{
 		float deltaTime = engine::Time::DeltaTime();
 
-		// 행동 실행 (제한 함수로 허용 여부 확인)
-		if (CanMove())    HandleMovement(deltaTime);
+		// 비물리 행동 실행 (타이머, 애니메이션 등)
 		if (CanAttack())  HandleShooting(deltaTime);
 
-		// 애니메이션 업데이트
+		// 애니메이션 업데이트 (비물리)
 		UpdateAnimation();
-		UpdateLowerBodyRotation();  // 매 프레임 호출 (이동 방향에 따라 회전)
 		UpdateUpperBodyAim();
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 물리 로직 - FixedUpdate()에서 호출됨 (FixedDeltaTime 기반)
+	// Rigidbody 이동, 회전 등
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::UpdatePhysicsLogic()
+	{
+		// 물리 기반 행동 실행
+		if (CanMove())    HandleMovement();
+		UpdateLowerBodyRotation();  // 매 FixedUpdate 호출 (이동 방향에 따라 회전)
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -336,64 +346,34 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 액션 함수
+	// 액션 함수 - 물리 (FixedUpdate에서 호출)
 	// ═══════════════════════════════════════════════════════════════
-	void PlayerControllerScript::HandleMovement(float deltaTime)
+	void PlayerControllerScript::HandleMovement()
 	{
-		engine::Vector3 moveDir = GetMoveInputDirection();
-
-		if (!m_rigidbody)
+		// Dynamic Rigidbody 전용 (Kinematic은 KinematicHelperScript 사용)
+		if (!m_rigidbody || !m_rigidbody->IsDynamic())
 		{
-			// Rigidbody 없으면 Transform 직접 변경 (하위 호환성)
-			if (moveDir.LengthSquared() < 0.0001f) return;
-			
-			moveDir.y = 0.0f;
-			moveDir.Normalize();
-			m_lastMoveDirection = moveDir;
-
-			engine::Transform* transform = GetGameObject()->GetTransform();
-			if (!transform) return;
-
-			engine::Vector3 currentPos = transform->GetLocalPosition();
-			engine::Vector3 newPos = currentPos + moveDir * m_moveSpeed * deltaTime;
-			transform->SetLocalPosition(newPos);
 			return;
 		}
 
-		// Rigidbody 이동 방식
-		if (m_rigidbody->IsKinematic())
+		engine::Vector3 moveDir = GetMoveInputDirection();
+
+		if (moveDir.LengthSquared() < 0.0001f)
 		{
-			// Kinematic: MovePosition 사용 (충돌 감지)
-			if (moveDir.LengthSquared() < 0.0001f) return;
-
-			moveDir.y = 0.0f;
-			moveDir.Normalize();
-			m_lastMoveDirection = moveDir;
-
-			engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
-			engine::Vector3 newPos = currentPos + moveDir * m_moveSpeed * deltaTime;
-			m_rigidbody->MovePosition(newPos);
+			// 입력 없으면 속도만 정지 (Y축은 유지)
+			engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+			m_rigidbody->SetLinearVelocity(engine::Vector3(0.0f, currentVel.y, 0.0f));
+			return;
 		}
-		else if (m_rigidbody->IsDynamic())
-		{
-			// Dynamic: Velocity 사용 (물리 시뮬레이션, 충돌 감지)
-			if (moveDir.LengthSquared() < 0.0001f)
-			{
-				// 입력 없으면 속도만 정지 (Y축은 유지)
-				engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
-				m_rigidbody->SetLinearVelocity(engine::Vector3(0.0f, currentVel.y, 0.0f));
-				return;
-			}
 
-			moveDir.y = 0.0f;
-			moveDir.Normalize();
-			m_lastMoveDirection = moveDir;
+		moveDir.y = 0.0f;
+		moveDir.Normalize();
+		m_lastMoveDirection = moveDir;
 
-			// XZ 평면 속도 설정, Y축 속도는 유지 (중력/점프용)
-			engine::Vector3 targetVelocity = moveDir * m_moveSpeed;
-			targetVelocity.y = m_rigidbody->GetLinearVelocity().y;
-			m_rigidbody->SetLinearVelocity(targetVelocity);
-		}
+		// XZ 평면 속도 설정, Y축 속도는 유지 (중력/점프용)
+		engine::Vector3 targetVelocity = moveDir * m_moveSpeed;
+		targetVelocity.y = m_rigidbody->GetLinearVelocity().y;
+		m_rigidbody->SetLinearVelocity(targetVelocity);
 	}
 
 	void PlayerControllerScript::HandleShooting(float deltaTime)
@@ -592,10 +572,12 @@ namespace game
 
 	void PlayerControllerScript::UpdateLowerBodyRotation()
 	{
+		// Dynamic Rigidbody 전용 (Kinematic은 KinematicHelperScript 사용)
 		if (!GetGameObject() || !GetTransform() || !m_aimPointer) return;
+		if (!m_rigidbody || !m_rigidbody->IsDynamic()) return;
 
 		// ═══════════════════════════════════════════════════════════════
-		// 완전 벡터 기반 회전 (각도 정규화 없음, 조건 분기 최소화)
+		// 완전 벡터 기반 회전 (FixedUpdate에서 호출됨)
 		// ═══════════════════════════════════════════════════════════════
 		
 		UpdateAimTracking();
@@ -648,11 +630,7 @@ namespace game
 		// 거의 같은 방향이면 회전 불필요
 		if (dotToTarget > 0.9999f)
 		{
-			// Dynamic Rigidbody의 경우 Angular Velocity 정지
-			if (m_rigidbody && m_rigidbody->IsDynamic())
-			{
-				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-			}
+			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
 			return;
 		}
 
@@ -683,32 +661,17 @@ namespace game
 		}
 
 		// ─────────────────────────────────────────────
-		// 5. 회전 적용 (Dynamic Rigidbody용)
+		// 5. 회전 적용 (Dynamic Rigidbody: Angular Velocity 사용)
 		// ─────────────────────────────────────────────
-		float deltaTime = engine::Time::DeltaTime();
 		float rotationSpeed = 10.0f;  // rad/sec
 		
-		if (m_rigidbody && m_rigidbody->IsDynamic())
-		{
-			// Dynamic Rigidbody: Angular Velocity 사용
-			float angularVelocity = rotationSign * rotationSpeed;
-			m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
-			
-			// 각도 동기화 (다음 프레임에서 정확한 계산을 위해)
-			engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
-			engine::Vector3 euler = currentRot.ToEuler();
-			m_currentRotationAngle = euler.y;
-		}
-		else
-		{
-			// Kinematic/Static: 직접 회전 (이전 방식)
-			float rotationAmount = rotationSpeed * deltaTime;
-			m_currentRotationAngle += rotationSign * rotationAmount;
-			
-			engine::Quaternion newRot = engine::Quaternion::CreateFromAxisAngle(
-				engine::Vector3::UnitY, m_currentRotationAngle);
-			GetTransform()->SetLocalRotation(newRot);
-		}
+		float angularVelocity = rotationSign * rotationSpeed;
+		m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
+		
+		// 각도 동기화 (다음 FixedUpdate에서 정확한 계산을 위해)
+		engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
+		engine::Vector3 euler = currentRot.ToEuler();
+		m_currentRotationAngle = euler.y;
 	}
 
 	// ═══════════════════════════════════════════════════════════════

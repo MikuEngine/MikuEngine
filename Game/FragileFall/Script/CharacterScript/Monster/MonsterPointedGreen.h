@@ -61,14 +61,23 @@ namespace game
         // 입력 처리 (FSM 파라미터 업데이트)
         void ProcessInput() override;
         
-        // 상태별 행동
+        // 상태별 행동 - 비물리 (Update에서 호출)
         void UpdateStateBasedBehavior(const std::string& state, float deltaTime) override;
-        void ExecuteEngageMoveBehavior(float deltaTime);
-        void ExecuteEngageStopBehavior(float deltaTime);
-        void ExecuteEngageAttackBehavior(float deltaTime);
-        void ExecuteIdleBehavior() override;
-        void ExecuteFragileBehavior() override;
-        void ExecuteDeadBehavior() override;
+        void ExecuteEngageMoveBehaviorNonPhysics(float deltaTime);
+        void ExecuteEngageStopBehaviorNonPhysics(float deltaTime);
+        void ExecuteEngageAttackBehaviorNonPhysics(float deltaTime);
+        void ExecuteIdleBehaviorNonPhysics() override;
+        void ExecuteFragileBehaviorNonPhysics() override;
+        void ExecuteDeadBehaviorNonPhysics() override;
+        
+        // 상태별 행동 - 물리 (FixedUpdate에서 호출)
+        void UpdatePhysicsStateBasedBehavior(const std::string& state) override;
+        void ExecuteEngageMoveBehaviorPhysics();
+        void ExecuteEngageStopBehaviorPhysics();
+        void ExecuteEngageAttackBehaviorPhysics();
+        void ExecuteIdleBehaviorPhysics() override;
+        void ExecuteFragileBehaviorPhysics() override;
+        void ExecuteDeadBehaviorPhysics() override;
         
         // 상태 진입 콜백
         void OnStateEntered(const std::string& state) override;

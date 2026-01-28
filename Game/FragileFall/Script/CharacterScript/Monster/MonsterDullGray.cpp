@@ -123,46 +123,89 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 상태별 행동
+    // 상태별 행동 - 비물리 (Update에서 호출)
     // ═══════════════════════════════════════════════════════════════
     void MonsterDullGray::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
     {
         if (state == "Engage")
         {
-            ExecuteEngageBehavior(deltaTime);
+            ExecuteEngageBehaviorNonPhysics(deltaTime);
         }
         else if (state == "Idle")
         {
-            ExecuteIdleBehavior();
+            ExecuteIdleBehaviorNonPhysics();
         }
         else if (state == "Fragile")
         {
-            ExecuteFragileBehavior();
+            ExecuteFragileBehaviorNonPhysics();
         }
         else if (state == "Dead")
         {
-            ExecuteDeadBehavior();
+            ExecuteDeadBehaviorNonPhysics();
         }
     }
 
-    void MonsterDullGray::ExecuteEngageBehavior(float deltaTime)
+    void MonsterDullGray::ExecuteEngageBehaviorNonPhysics(float deltaTime)
     {
-        // RotateToDirection 내부에서 threshold 체크하므로 무조건 호출
-        RotateTowardsPlayer(deltaTime);
+        // 공격 타이머 및 발사 (비물리)
         Attack(deltaTime);
     }
 
-    void MonsterDullGray::ExecuteIdleBehavior()
+    void MonsterDullGray::ExecuteIdleBehaviorNonPhysics()
     {
-        StopRotation();
+        // 비물리 Idle 처리
     }
 
-    void MonsterDullGray::ExecuteFragileBehavior()
+    void MonsterDullGray::ExecuteFragileBehaviorNonPhysics()
     {
         // Fragile 상태: 아무 행동도 하지 않음 (Execution 대기)
     }
 
-    void MonsterDullGray::ExecuteDeadBehavior()
+    void MonsterDullGray::ExecuteDeadBehaviorNonPhysics()
+    {
+        // 비물리 Dead 처리
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 상태별 행동 - 물리 (FixedUpdate에서 호출)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterDullGray::UpdatePhysicsStateBasedBehavior(const std::string& state)
+    {
+        if (state == "Engage")
+        {
+            ExecuteEngageBehaviorPhysics();
+        }
+        else if (state == "Idle")
+        {
+            ExecuteIdleBehaviorPhysics();
+        }
+        else if (state == "Fragile")
+        {
+            ExecuteFragileBehaviorPhysics();
+        }
+        else if (state == "Dead")
+        {
+            ExecuteDeadBehaviorPhysics();
+        }
+    }
+
+    void MonsterDullGray::ExecuteEngageBehaviorPhysics()
+    {
+        // 회전 (물리)
+        RotateTowardsPlayer();
+    }
+
+    void MonsterDullGray::ExecuteIdleBehaviorPhysics()
+    {
+        StopRotation();
+    }
+
+    void MonsterDullGray::ExecuteFragileBehaviorPhysics()
+    {
+        // Fragile 상태: 물리적으로 정지
+    }
+
+    void MonsterDullGray::ExecuteDeadBehaviorPhysics()
     {
         StopAllMovement();
     }

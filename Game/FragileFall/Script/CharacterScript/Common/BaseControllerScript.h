@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -45,7 +45,8 @@ namespace game
     class BaseControllerScript :
         public engine::Script<BaseControllerScript>
     {
-        REGISTER_SCRIPT(BaseControllerScript, Script)
+        //REGISTER_SCRIPT(BaseControllerScript, Script)
+        DEFINE_COMPONENT_TYPE(BaseControllerScript, Script)
 
     protected:
         // ─────────────────────────────────────────────
@@ -74,8 +75,15 @@ namespace game
         void Awake() override;
         void Start() override;
         void Update() override;
+        void FixedUpdate() override;
 
     protected:
+        // ─────────────────────────────────────────────
+        // 물리/비물리 로직 분리
+        // - UpdateGameLogic(): 비물리 로직 (타이머, UI 등) - Update()에서 호출
+        // - UpdatePhysicsLogic(): 물리 로직 (이동, 회전) - FixedUpdate()에서 호출
+        // ─────────────────────────────────────────────
+        virtual void UpdatePhysicsLogic() {}   // 물리 기반 로직 (자식에서 오버라이드)
         // ─────────────────────────────────────────────
         // 메인 로직 (자식에서 오버라이드)
         // ─────────────────────────────────────────────
