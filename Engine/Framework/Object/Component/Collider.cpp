@@ -169,6 +169,40 @@ namespace engine
         }
     }
 
+    void Collider::SetMaterialType(PhysicsMaterialType type)
+    {
+        if (m_materialType == type)
+        {
+            return;
+        }
+        
+        m_materialType = type;
+        
+        // 이미 Shape가 생성된 경우 마테리얼 교체
+        if (m_shape)
+        {
+            auto& physicsSystem = SystemManager::Get().GetPhysicsSystem();
+            physx::PxMaterial* newMaterial = nullptr;
+            
+            switch (m_materialType)
+            {
+            case PhysicsMaterialType::Slippery:
+                newMaterial = physicsSystem.GetSlipperyMaterial();
+                break;
+            case PhysicsMaterialType::Default:
+            default:
+                newMaterial = physicsSystem.GetDefaultMaterial();
+                break;
+            }
+            
+            if (newMaterial)
+            {
+                // Shape의 마테리얼 교체
+                m_shape->setMaterials(&newMaterial, 1);
+            }
+        }
+    }
+
     void Collider::SetLayer(uint32_t layer)
     {
         m_layer = layer;
@@ -349,6 +383,20 @@ namespace engine
         {
             SetLayer(static_cast<uint32_t>(currentLayer));
         }
+
+        // Material Type 콤보박스
+        const char* materialTypes[] = { "Default", "Slippery" };
+        int currentMaterial = static_cast<int>(m_materialType);
+        if (ImGui::Combo("Material", &currentMaterial, materialTypes, IM_ARRAYSIZE(materialTypes)))
+        {
+            SetMaterialType(static_cast<PhysicsMaterialType>(currentMaterial));
+        }
+        ImGui::SameLine();
+        ImGui::TextDisabled("(?)");
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Default: Normal friction (0.5)\nSlippery: Low friction (0.05) - for character collisions");
+        }
     }
 
     void Collider::Save(json& j) const
@@ -359,6 +407,7 @@ namespace engine
         j["isTrigger"] = m_isTrigger;
         j["syncWithTransform"] = m_syncWithTransform;
         j["layer"] = m_layer;
+        j["materialType"] = static_cast<uint32_t>(m_materialType);
         // collisionMask는 저장하지 않음 (PhysicsLayerMatrix에서 자동 설정)
     }
 
@@ -387,6 +436,10 @@ namespace engine
             m_layer = j["layer"].get<uint32_t>();
             // PhysicsLayerMatrix에서 자동으로 충돌 마스크 가져오기
             m_collisionMask = SystemManager::Get().GetPhysicsSystem().GetLayerMatrix().GetCollisionMask(m_layer);
+        }
+        if (j.contains("materialType"))
+        {
+            m_materialType = static_cast<PhysicsMaterialType>(j["materialType"].get<uint32_t>());
         }
         // collisionMask는 더 이상 씬에서 로드하지 않음 (PhysicsLayerMatrix에서 자동 설정)
     }
@@ -447,8 +500,25 @@ namespace engine
             return;
         }
 
-        // 기본 재질 사용
-        physx::PxMaterial* material = SystemManager::Get().GetPhysicsSystem().GetDefaultMaterial();
+        // 재질 선택 (마테리얼 타입에 따라)
+        auto& physicsSystem = SystemManager::Get().GetPhysicsSystem();
+        physx::PxMaterial* material = nullptr;
+        
+        switch (m_materialType)
+        {
+        case PhysicsMaterialType::Slippery:
+            material = physicsSystem.GetSlipperyMaterial();
+            break;
+        case PhysicsMaterialType::Default:
+        default:
+            material = physicsSystem.GetDefaultMaterial();
+            break;
+        }
+        
+        if (!material)
+        {
+            material = physicsSystem.GetDefaultMaterial();
+        }
         if (!material)
         {
             return;
@@ -460,6 +530,13 @@ namespace engine
         {
             return;
         }
+
+        // Contact Offset / Rest Offset 설정
+        // - Contact Offset: 충돌 감지 여유 공간 (물체가 겹치기 전에 미리 감지)
+        // - Rest Offset: 충돌 해결 후 유지되는 최소 간격
+        // Contact Offset > Rest Offset 이어야 함
+        m_shape->setContactOffset(0.02f);  // 2cm 여유
+        m_shape->setRestOffset(0.01f);     // 1cm 간격 유지
 
         // 로컬 오프셋 및 회전 설정
         UpdateLocalPose();

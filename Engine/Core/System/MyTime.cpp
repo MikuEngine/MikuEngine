@@ -8,7 +8,7 @@ namespace engine
         TimePoint g_previousTime = Clock::now();
         TimePoint g_currentTime = Clock::now();
         float g_deltaTime = 0.0f;
-        float g_fixedDeltaTime = 0.02f;
+        float g_fixedDeltaTime = 0.0166666f;
         std::vector<float> g_timeScales{ 1.0f };
     }
 

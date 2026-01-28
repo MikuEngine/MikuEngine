@@ -15,6 +15,7 @@ namespace game
     void UpgradeController::Start()
     {
         BuildDefaultTreeIfEmpty();
+        ApplyCategoryFilter();
     }
 
     void UpgradeController::Update()

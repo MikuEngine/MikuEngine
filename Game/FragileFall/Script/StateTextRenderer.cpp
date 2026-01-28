@@ -1,0 +1,310 @@
+#include "GamePCH.h"
+#include "StateTextRenderer.h"
+
+#include "Script/CharacterScript/Common/BaseControllerScript.h"
+
+#include <Core/Graphics/Device/GraphicsDevice.h>
+
+#include <Framework/Asset/Prefab.h>
+#include <Framework/Scene/SceneManager.h>
+#include <Framework/Scene/Scene.h>
+#include <Framework/Object/GameObject/GameObject.h>
+#include <Framework/Object/Component/Camera.h>
+#include <Framework/Object/Component/Canvas.h>
+#include <Framework/Object/Component/RectTransform.h>
+#include <Framework/Object/Component/UI/UIText.h>
+#include <Framework/Object/Component/LogicFSM.h>
+
+namespace game
+{
+    void StateTextRenderer::Awake()
+    {
+        auto* go = GetGameObject();
+        if (!go) return;
+
+        // Canvas 컴포넌트 캐싱
+        m_canvas = go->GetComponent<engine::Canvas>();
+        if (!m_canvas)
+        {
+            LOG_PRINT("[StateTextRenderer] WARNING: Canvas component not found!");
+        }
+
+        // 부모 RectTransform 찾기
+        if (auto* rt = go->GetComponent<engine::RectTransform>())
+        {
+            engine::RectTransform* parentRT = rt->FindPrentRectTransform();
+            m_parentRT = parentRT ? parentRT : rt;  // 자신이 루트면 자신을 사용
+        }
+    }
+
+    void StateTextRenderer::Start()
+    {
+        // 메인 카메라 찾기
+        if (auto* camGO = engine::GameObject::Find("MainCamera"))
+        {
+            m_mainCamera = camGO->GetComponent<engine::Camera>();
+        }
+
+        if (!m_mainCamera)
+        {
+            LOG_PRINT("[StateTextRenderer] WARNING: MainCamera not found!");
+        }
+
+        // 씬의 모든 BaseControllerScript 찾기
+        FindAllControllers();
+    }
+
+    void StateTextRenderer::Update()
+    {
+        if (!m_mainCamera) return;
+
+        // 파괴된 오브젝트 정리
+        CleanupDestroyedObjects();
+
+        // 각 추적 대상 업데이트
+        for (auto& tracked : m_trackedObjects)
+        {
+            UpdateTrackedObject(tracked);
+        }
+    }
+
+    void StateTextRenderer::FindAllControllers()
+    {
+        auto* scene = engine::SceneManager::Get().GetScene();
+        if (!scene) return;
+
+        // 씬의 모든 게임오브젝트 순회
+        for (const auto& go : scene->GetGameObjects())
+        {
+            // BaseControllerScript를 상속한 모든 컴포넌트 찾기
+            if (auto* controller = go->GetComponent<BaseControllerScript>())
+            {
+                // 이미 추적 중인지 확인
+                bool alreadyTracked = false;
+                for (const auto& tracked : m_trackedObjects)
+                {
+                    // Ptr 비교: Handle 기반으로 비교됨
+                    if (tracked.controller && tracked.controller.Get() == controller)
+                    {
+                        alreadyTracked = true;
+                        break;
+                    }
+                }
+
+                if (!alreadyTracked)
+                {
+                    CreateTextForController(controller);
+                }
+            }
+        }
+    }
+
+    void StateTextRenderer::CreateTextForController(BaseControllerScript* controller)
+    {
+        if (!controller) return;
+
+        // StateText 프리팹 인스턴스화
+        engine::GameObject* textGO = engine::Prefab::Instantiate(m_prefabName);
+        if (!textGO)
+        {
+            LOG_PRINT("[StateTextRenderer] ERROR: Failed to instantiate prefab '%s'", m_prefabName.c_str());
+            return;
+        }
+
+        // Canvas가 있는 오브젝트 (this)의 자식으로 설정 (UI 렌더링을 위해 필수)
+        if (GetGameObject() && GetGameObject()->GetTransform())
+        {
+            textGO->GetTransform()->SetParent(GetGameObject()->GetTransform(), false);
+        }
+
+        // UIText 컴포넌트 가져오기
+        engine::UIText* uiText = textGO->GetComponent<engine::UIText>();
+        engine::RectTransform* rectTransform = textGO->GetComponent<engine::RectTransform>();
+
+        if (!uiText || !rectTransform)
+        {
+            LOG_PRINT("[StateTextRenderer] ERROR: Prefab '%s' missing UIText or RectTransform!", m_prefabName.c_str());
+            textGO->Destroy();
+            return;
+        }
+
+        // 앵커 설정 (좌상단 기준)
+        rectTransform->SetAnchorMin({ 0.0f, 0.0f });
+        rectTransform->SetAnchorMax({ 0.0f, 0.0f });
+        rectTransform->SetPivot({ 0.5f, 0.5f });
+
+        // TrackedObject 추가 (Ptr로 안전하게 저장)
+        TrackedObject tracked;
+        tracked.controller = controller;
+        tracked.textObject = textGO;
+        tracked.uiText = uiText;
+        tracked.rectTransform = rectTransform;
+
+        m_trackedObjects.push_back(tracked);
+    }
+
+    void StateTextRenderer::UpdateTrackedObject(TrackedObject& tracked)
+    {
+        // Ptr 유효성 검사 (댕글링 자동 처리)
+        if (!tracked.controller || !tracked.textObject || !tracked.uiText || !tracked.rectTransform)
+        {
+            SetTextVisible(tracked, false);
+            return;
+        }
+
+        // 컨트롤러의 게임오브젝트가 유효한지 확인
+        engine::GameObject* targetGO = tracked.controller->GetGameObject();
+        if (!targetGO)
+        {
+            SetTextVisible(tracked, false);
+            return;
+        }
+
+        // LogicFSM에서 현재 상태 가져오기
+        engine::LogicFSM* logicFSM = targetGO->GetComponent<engine::LogicFSM>();
+        if (!logicFSM)
+        {
+            SetTextVisible(tracked, false);
+            return;
+        }
+
+        std::string currentState = logicFSM->GetCurrentState();
+        tracked.uiText->SetText(currentState);
+
+        // 월드 좌표 계산 (오브젝트 위치 + 오프셋)
+        engine::Vector3 worldPos = targetGO->GetTransform()->GetWorldPosition() + m_worldOffset;
+
+        // 스크린 좌표로 변환
+        engine::Vector2 screenPos;
+        if (!WorldToScreen(worldPos, screenPos))
+        {
+            // 카메라 뒤에 있거나 절두체 밖
+            SetTextVisible(tracked, false);
+            return;
+        }
+
+        // UI 위치 설정
+        const engine::Vector2 finalPos(
+            screenPos.x - m_cachedParentRectX,
+            screenPos.y - m_cachedParentRectY
+        );
+
+        tracked.rectTransform->SetAnchoredPosition(finalPos);
+        SetTextVisible(tracked, true);
+    }
+
+    void StateTextRenderer::SetTextVisible(TrackedObject& tracked, bool visible)
+    {
+        if (!tracked.uiText) return;
+
+        engine::Vector4 color = tracked.uiText->GetColor();
+        color.w = visible ? 1.0f : 0.0f;
+        tracked.uiText->SetColor(color);
+    }
+
+    void StateTextRenderer::CleanupDestroyedObjects()
+    {
+        // Ptr의 유효성 검사로 파괴된 오브젝트 자동 제거
+        m_trackedObjects.erase(
+            std::remove_if(m_trackedObjects.begin(), m_trackedObjects.end(),
+                [](const TrackedObject& tracked) {
+                    // Ptr가 무효화되면 자동으로 false 반환
+                    return !tracked.controller || !tracked.textObject;
+                }),
+            m_trackedObjects.end()
+        );
+    }
+
+    bool StateTextRenderer::WorldToScreen(const engine::Vector3& worldPos, engine::Vector2& screenPos)
+    {
+        if (!m_mainCamera) return false;
+
+        engine::Matrix view = m_mainCamera->GetView();
+        engine::Matrix proj = m_mainCamera->GetProjection();
+
+        // 월드 → 클립 좌표
+        engine::Vector4 pos(worldPos.x, worldPos.y, worldPos.z, 1.0f);
+        engine::Vector4 viewPos = engine::Vector4::Transform(pos, view);
+        engine::Vector4 clipPos = engine::Vector4::Transform(viewPos, proj);
+
+        // 카메라 뒤에 있으면 실패
+        if (clipPos.w <= 0.0001f)
+        {
+            return false;
+        }
+
+        // NDC (Normalized Device Coordinates)
+        const float invW = 1.0f / clipPos.w;
+        const float ndcX = clipPos.x * invW;
+        const float ndcY = clipPos.y * invW;
+
+        // 절두체 밖 체크
+        if (m_hideWhenOffscreen &&
+            (ndcX < -1.0f || ndcX > 1.0f || ndcY < -1.0f || ndcY > 1.0f))
+        {
+            return false;
+        }
+
+        // 뷰포트 정보 가져오기
+        const auto& vp = engine::GraphicsDevice::Get().GetViewport();
+        const float vpW = vp.Width;
+        const float vpH = vp.Height;
+
+        // 뷰포트 변경 시 부모 Rect 재계산
+        if (vpW != m_cachedVpW || vpH != m_cachedVpH)
+        {
+            m_cachedVpW = vpW;
+            m_cachedVpH = vpH;
+
+            if (m_parentRT)
+            {
+                const engine::UIRect rootRect{ 0.0f, 0.0f, vpW, vpH };
+                engine::UIRect parentRect = m_parentRT->GetWorldRectResolved(rootRect);
+                m_cachedParentRectX = parentRect.x;
+                m_cachedParentRectY = parentRect.y;
+            }
+            else
+            {
+                m_cachedParentRectX = 0.0f;
+                m_cachedParentRectY = 0.0f;
+            }
+        }
+
+        // NDC → 스크린 좌표
+        screenPos.x = (ndcX * 0.5f + 0.5f) * vpW;
+        screenPos.y = (-ndcY * 0.5f + 0.5f) * vpH;
+
+        return true;
+    }
+
+    void StateTextRenderer::OnGui()
+    {
+        ImGui::InputText("Prefab Name", &m_prefabName);
+        ImGui::DragFloat3("World Offset", &m_worldOffset.x, 0.1f);
+        ImGui::Checkbox("Hide When Offscreen", &m_hideWhenOffscreen);
+
+        ImGui::Separator();
+        ImGui::Text("Tracked Objects: %d", static_cast<int>(m_trackedObjects.size()));
+
+        if (ImGui::Button("Refresh Controllers"))
+        {
+            FindAllControllers();
+        }
+    }
+
+    void StateTextRenderer::Save(engine::json& j) const
+    {
+        Object::Save(j);
+        j["PrefabName"] = m_prefabName;
+        j["WorldOffset"] = m_worldOffset;
+        j["HideWhenOffscreen"] = m_hideWhenOffscreen;
+    }
+
+    void StateTextRenderer::Load(const engine::json& j)
+    {
+        Object::Load(j);
+        engine::JsonGet(j, "PrefabName", m_prefabName);
+        engine::JsonGet(j, "WorldOffset", m_worldOffset);
+        engine::JsonGet(j, "HideWhenOffscreen", m_hideWhenOffscreen);
+    }
+}

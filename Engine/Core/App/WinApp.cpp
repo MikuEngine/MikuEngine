@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <DirectXColors.h>
@@ -444,9 +444,11 @@ namespace engine
         SystemManager::Get().GetPathfindingSystem().Update();
         SystemManager::Get().GetParticleSystem().Update();
 
-        // Physics 시뮬레이션
-        SystemManager::Get().GetPhysicsSystem().Update(Time::FixedDeltaTime());
-        SystemManager::Get().GetCollisionSystem().ProcessEvents();
+        // Physics 시뮬레이션 (내부에서 Fixed Timestep Accumulator 관리)
+        // - PhysicsSystem이 자체적으로 fixedDeltaTime 단위로 시뮬레이션
+        // - ScriptSystem.CallFixedUpdate()도 PhysicsSystem 내부에서 호출됨
+        // - CollisionSystem.ProcessEvents()도 PhysicsSystem 내부에서 호출됨
+        SystemManager::Get().GetPhysicsSystem().Update(Time::DeltaTime());
 
         SystemManager::Get().GetCameraSystem().Update();
 
@@ -456,6 +458,7 @@ namespace engine
 
         SystemManager::Get().GetUIEventSystem().Update();
 
+        SystemManager::Get().GetScriptSystem().CallLateUpdate();
     }
 
     LRESULT WinApp::MessageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

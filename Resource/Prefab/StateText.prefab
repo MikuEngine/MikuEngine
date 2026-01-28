@@ -1,10 +1,10 @@
 {
-    "Name": "Text_Sound",
+    "Name": "StateText",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "Text_Sound",
+            "Name": "StateText",
             "Active": true,
             "Components": [
                 {
@@ -31,8 +31,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -250.0,
-                        "y": -130.0
+                        "x": 0.0,
+                        "y": 0.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -52,19 +52,22 @@
                 {
                     "Type": "UIText",
                     "Active": true,
-                    "Layer": 2,
+                    "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "사운드",
+                    "Text": "UIText",
                     "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPx": 12,
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }

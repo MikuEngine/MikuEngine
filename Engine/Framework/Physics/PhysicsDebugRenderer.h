@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Utility/Singleton.h"
+#include "Framework/Object/Handle.h"
 
 #include <directxtk/PrimitiveBatch.h>
 #include <directxtk/VertexTypes.h>
@@ -46,8 +47,8 @@ namespace engine
         Vector4 m_collidingColor{ 1.0f, 0.3f, 0.0f, 1.0f };     // 주황 - 충돌 중
         Vector4 m_pivotColor{ 1.0f, 0.0f, 1.0f, 1.0f };         // 마젠타 - 피봇
 
-        // 충돌 중인 콜라이더 추적 (이번 프레임)
-        std::unordered_set<Collider*> m_collidingColliders;
+        // 충돌 중인 콜라이더 추적 (Handle 기반 - dangling pointer 방지)
+        std::unordered_set<Handle> m_collidingColliderHandles;
 
         bool m_isInitialized = false;
 

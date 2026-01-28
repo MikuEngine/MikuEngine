@@ -11,6 +11,8 @@ namespace engine
     private:
         std::vector<ScriptBase*> m_startScripts;
         std::vector<ScriptBase*> m_updateScripts;
+        std::vector<ScriptBase*> m_fixedUpdateScripts;
+        std::vector<ScriptBase*> m_lateUpdateScripts;
 
     public:
         void Register(ScriptBase* script, std::uint32_t eventFlags);
@@ -19,6 +21,8 @@ namespace engine
     public:
         void CallStart();
         void CallUpdate();
+        void CallFixedUpdate();
+        void CallLateUpdate();
 
     private:
         void AddScript(std::vector<ScriptBase*>& v, ScriptBase* script, ScriptEvent type);

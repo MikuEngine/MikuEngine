@@ -1,6 +1,7 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/TempMonster.h"
+#include "Script/CharacterScript/Monster/MonsterScript.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
@@ -75,10 +76,28 @@ namespace game
         if (m_isDying) return;
         if (!info.gameObject) return;
 
-        // 몬스터와 충돌했는지 확인
-        if (auto* monster = info.gameObject->GetComponent<TempMonster>())
+        // MonsterScript와 충돌했는지 확인 (우선 체크)
+        if (auto* monster = info.gameObject->GetComponent<MonsterScript>())
         {
-            monster->OnHit();
+            // 플레이어 총알 공격력: 10
+            monster->TakeDamage(10);
+
+            // dying 상태로 전환
+            m_isDying = true;
+            m_deathTimer = 0.0f;
+
+            // 속도 정지
+            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+            {
+                rb->SetLinearVelocity(engine::Vector3::Zero);
+            }
+            return;
+        }
+
+        // TempMonster와 충돌했는지 확인 (레거시 호환)
+        if (auto* tempMonster = info.gameObject->GetComponent<TempMonster>())
+        {
+            tempMonster->OnHit();
 
             // dying 상태로 전환
             m_isDying = true;

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -45,6 +45,7 @@ namespace game
         // 이동 설정
         // ─────────────────────────────────────────────
         float m_moveSpeed = 5.0f;
+        // m_velocityBlendFactor는 BaseControllerScript에서 상속 (기본값 0.5)
 
         // ─────────────────────────────────────────────
         // 발사 설정 (쿨다운/타이밍은 Player가 관리)
@@ -101,7 +102,8 @@ namespace game
         // ─────────────────────────────────────────────
         void CacheComponents() override;
         void ProcessInput() override;
-        void UpdateGameLogic() override;
+        void UpdateGameLogic() override;         // 비물리 로직 (타이머, 애니메이션 등)
+        void UpdatePhysicsLogic() override;      // 물리 로직 (이동, 회전)
         void OnStateEntered(const std::string& state) override;
 
         // ─────────────────────────────────────────────
@@ -126,8 +128,8 @@ namespace game
         // ─────────────────────────────────────────────
         // 액션 함수
         // ─────────────────────────────────────────────
-        void HandleMovement(float deltaTime);
-        void HandleShooting(float deltaTime);
+        void HandleMovement();           // FixedUpdate에서 호출 (FixedDeltaTime 사용)
+        void HandleShooting(float deltaTime);  // Update에서 호출 (DeltaTime 사용)
         void UpdateUpperBodyAim();
         float CalculateAimYaw() const;
 

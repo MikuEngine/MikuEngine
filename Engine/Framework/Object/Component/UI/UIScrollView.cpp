@@ -186,6 +186,9 @@ namespace engine
 		if (!m_scrollbarName.empty())
 			SetScrollbarByName(m_scrollbarName);
 
+		if (m_viewportRT)
+			m_viewportSize = m_viewportRT->GetSize();
+
 		// 레이아웃 적용
 		ApplyLayout();
 
@@ -283,8 +286,7 @@ namespace engine
 			m_viewportRT->SetAnchorMax({ 0.0f, 0.0f });
 			m_viewportRT->SetPivot({ 0.0f, 0.0f });
 			m_viewportRT->SetAnchoredPosition({ 0.0f, 0.0f });
-			m_viewportRT->SetWidth(m_viewportSize);
-			m_viewportRT->SetHeight(m_viewportSize);
+			m_viewportRT->SetSize(m_viewportSize.x, m_viewportSize.y);
 		}
 
 		if (m_contentRT)
@@ -303,11 +305,11 @@ namespace engine
 				sbRT->SetAnchorMax({ 0.0f, 0.0f });
 				sbRT->SetPivot({ 0.0f, 0.0f });
 
-				const float x = m_viewportSize + m_scrollbarGap;
+				const float x = m_viewportSize.x + m_scrollbarGap;
 				sbRT->SetAnchoredPosition({ x, 0.0f });
 
 				sbRT->SetWidth(m_scrollbarWidth);
-				sbRT->SetHeight(m_viewportSize);
+				sbRT->SetHeight(m_viewportSize.y);
 			}
 		}
 	}

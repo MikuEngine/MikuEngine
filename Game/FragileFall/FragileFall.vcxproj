@@ -158,13 +158,22 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Script\AimPointer.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\BossPatternBase.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\BossPatternManager.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossPillar.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossShieldEffect.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_PillarShield.cpp" />
+    <ClCompile Include="Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
+    <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedGreen.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\SceneController_Play.cpp" />
     <ClCompile Include="Script\SceneController_Main.cpp" />
+    <ClCompile Include="Script\StateTextRenderer.cpp" />
     <ClCompile Include="Script\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UIHoverScale.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
@@ -184,13 +193,22 @@
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="Script\AimPointer.h" />
+    <ClInclude Include="Script\Boss\BossPattern\BossPatternBase.h" />
+    <ClInclude Include="Script\Boss\BossPattern\BossPatternManager.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossPillar.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossShieldEffect.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_PillarShield.h" />
+    <ClInclude Include="Script\Boss\BossScript.h" />
+    <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
+    <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />
     <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedGreen.h" />
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\SceneController_Lobby.h" />
     <ClInclude Include="Script\SceneController_Play.h" />
     <ClInclude Include="Script\SceneController_Main.h" />
+    <ClInclude Include="Script\StateTextRenderer.h" />
     <ClInclude Include="Script\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UIHoverScale.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />

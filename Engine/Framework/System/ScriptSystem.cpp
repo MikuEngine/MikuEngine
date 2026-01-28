@@ -14,12 +14,24 @@ namespace engine
         {
             AddScript(m_updateScripts, script, ScriptEvent::Update);
         }
+
+        if (eventFlags & (1U << static_cast<int>(ScriptEvent::FixedUpdate)))
+        {
+            AddScript(m_fixedUpdateScripts, script, ScriptEvent::FixedUpdate);
+        }
+
+        if (eventFlags & (1U << static_cast<int>(ScriptEvent::LateUpdate)))
+        {
+            AddScript(m_lateUpdateScripts, script, ScriptEvent::LateUpdate);
+        }
     }
 
     void ScriptSystem::Unregister(ScriptBase* script)
     {
         RemoveScript(m_startScripts, script, ScriptEvent::Start);
         RemoveScript(m_updateScripts, script, ScriptEvent::Update);
+        RemoveScript(m_fixedUpdateScripts, script, ScriptEvent::FixedUpdate);
+        RemoveScript(m_lateUpdateScripts, script, ScriptEvent::LateUpdate);
     }
 
     void ScriptSystem::CallStart()
@@ -56,6 +68,42 @@ namespace engine
             }
 
             script->Update();
+        }
+    }
+
+    void ScriptSystem::CallFixedUpdate()
+    {
+        for (auto& script : m_fixedUpdateScripts)
+        {
+            if (!script->IsActive())
+            {
+                continue;
+            }
+
+            if (script->m_systemIndices[static_cast<size_t>(ScriptEvent::Start)] != -1)
+            {
+                continue;
+            }
+
+            script->FixedUpdate();
+        }
+    }
+
+    void ScriptSystem::CallLateUpdate()
+    {
+        for (auto& script : m_lateUpdateScripts)
+        {
+            if (!script->IsActive())
+            {
+                continue;
+            }
+
+            if (script->m_systemIndices[static_cast<size_t>(ScriptEvent::Start)] != -1)
+            {
+                continue;
+            }
+
+            script->LateUpdate();
         }
     }
 

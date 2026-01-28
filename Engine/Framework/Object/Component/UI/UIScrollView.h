@@ -81,9 +81,10 @@ namespace engine
 		float m_scrollbarDragSpeed = 1.0f;	// 스크롤 감도
 
 		float m_contentHeight = 500.0f;
-		float m_viewportSize = 500.0f;   // 정사각형 한 변
 		float m_scrollbarWidth = 20.0f;
 		float m_scrollbarGap = 0.0f;     // 뷰포트-바 간격
+
+		Vector2 m_viewportSize = { 500.0f, 500.0f };
 
 		std::string m_contentName = "Content";
 		std::string m_viewportName = "Viewport";

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -42,12 +42,19 @@ namespace game
         void InitializeAnimations() override;
         void InitializeBullet() override;
         
-        // 상태별 행동 (코드 가독성을 위한 명시적 오버라이드)
+        // 상태별 행동 - 비물리 (Update에서 호출)
         void UpdateStateBasedBehavior(const std::string& state, float deltaTime) override;
-        void ExecuteEngageBehavior(float deltaTime) override;
-        void ExecuteIdleBehavior() override;
-        void ExecuteFragileBehavior() override;
-        void ExecuteDeadBehavior() override;
+        void ExecuteEngageBehaviorNonPhysics(float deltaTime) override;
+        void ExecuteIdleBehaviorNonPhysics() override;
+        void ExecuteFragileBehaviorNonPhysics() override;
+        void ExecuteDeadBehaviorNonPhysics() override;
+        
+        // 상태별 행동 - 물리 (FixedUpdate에서 호출)
+        void UpdatePhysicsStateBasedBehavior(const std::string& state) override;
+        void ExecuteEngageBehaviorPhysics() override;
+        void ExecuteIdleBehaviorPhysics() override;
+        void ExecuteFragileBehaviorPhysics() override;
+        void ExecuteDeadBehaviorPhysics() override;
         
         // 상태 진입 콜백
         void OnStateEntered(const std::string& state) override;

@@ -1,0 +1,16 @@
+MonsterID,Type,Tier,Difficulty
+1,Green Slime,1,10
+2,Blue Slime,2,25
+3,Red Slime,3,45
+4,White Slime,4,70
+5,Black Slime,5,100
+6,Green Mushroom,1,12
+7,Blue Mushroom,2,27
+8,Red Mushroom,3,47
+9,White Mushroom,4,72
+10,Black Mushroom,5,102
+11,Green Bat,1,15
+12,Blue Bat,2,30
+13,Red Bat,3,50
+14,White Bat,4,75
+15,Black Bat,5,105

@@ -1,7 +1,8 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PhysicsSystem.h"
 
 #include "Framework/System/SystemManager.h"
+#include "Framework/system/ScriptSystem.h"
 #include "Framework/Physics/PhysicsUtility.h"
 #include "Framework/Physics/CollisionSystem.h"
 #include "Framework/Object/Component/Rigidbody.h"
@@ -31,7 +32,12 @@ namespace engine
             return;
         }
 
-        // 기본 재질 해제
+        // 재질 해제
+        if (m_slipperyMaterial)
+        {
+            m_slipperyMaterial->release();
+            m_slipperyMaterial = nullptr;
+        }
         if (m_defaultMaterial)
         {
             m_defaultMaterial->release();
@@ -147,8 +153,14 @@ namespace engine
             return;
         }
 
-        // 6. 기본 재질 생성
+        // 6. 재질 생성
+        // 기본 재질 (일반 충돌)
         m_defaultMaterial = m_physics->createMaterial(0.5f, 0.5f, 0.1f);
+        
+        // 미끄러운 재질 (캐릭터 간 충돌, 벽 미끄러짐용)
+        // - 매우 낮은 마찰: 물체가 서로 미끄러지듯 이동
+        // - 낮은 반발: 튕기지 않음
+        m_slipperyMaterial = m_physics->createMaterial(0.05f, 0.02f, 0.0f);
 
         // 7. 레이어 매트릭스 기본 설정
         m_layerMatrix.SetupDefault();
@@ -189,6 +201,9 @@ namespace engine
         
         // 솔버 설정
         sceneDesc.solverType = physx::PxSolverType::ePGS;
+        
+        // 참고: Solver Iterations는 Scene 레벨이 아닌 Actor 레벨에서 설정됨
+        // Rigidbody::CreatePxActor()에서 setSolverIterationCounts() 호출
 
         // PxScene 생성
         physx::PxScene* pxScene = m_physics->createScene(sceneDesc);
@@ -289,7 +304,9 @@ namespace engine
         // 1. Transform → PhysX 동기화 (Kinematic, 수동 이동)
         SyncTransformsToPhysics(scene);
 
-        // 2. Fixed Timestep 시뮬레이션
+        // 2. Fixed Timestep 시뮬레이션 (단일 Accumulator 패턴)
+        // - PhysicsSystem이 fixed timestep의 유일한 관리자
+        // - ScriptSystem.CallFixedUpdate()도 여기서 호출
         float& accumulator = scene->GetPhysicsAccumulator();
         accumulator += deltaTime;
         
@@ -297,13 +314,21 @@ namespace engine
         while (accumulator >= m_settings.fixedTimeStep && 
                steps < m_settings.maxSubSteps)
         {
+            // Script FixedUpdate 호출 (물리 시뮬레이션 전)
+            SystemManager::Get().GetScriptSystem().CallFixedUpdate();
+            
+            // Physics 시뮬레이션
             Simulate(scene, m_settings.fixedTimeStep);
             accumulator -= m_settings.fixedTimeStep;
             steps++;
         }
 
-        // 3. PhysX → Transform 동기화 (Dynamic)
-        SyncPhysicsToTransforms(scene);
+        // 3. PhysX → Transform 동기화 (시뮬레이션이 실행된 경우만)
+        // 참고: getActiveActors는 simulate/fetchResults 후에만 유효한 결과 반환
+        if (steps > 0)
+        {
+            SyncPhysicsToTransforms(scene);
+        }
 
         // 4. 충돌 이벤트 처리
         SystemManager::Get().GetCollisionSystem().ProcessEvents();
@@ -683,8 +708,14 @@ namespace engine
 
         for (physx::PxU32 i = 0; i < nbActiveActors; ++i)
         {
+            // 안전 체크: Actor 포인터 유효성
+            if (!activeActors[i]) continue;
+            
             physx::PxRigidDynamic* dynamic = activeActors[i]->is<physx::PxRigidDynamic>();
             if (!dynamic) continue;
+
+            // 안전 체크: Actor가 여전히 Scene에 있는지 확인
+            if (!dynamic->getScene()) continue;
 
             // Kinematic은 스킵 (엔진이 제어)
             if (dynamic->getRigidBodyFlags() & physx::PxRigidBodyFlag::eKINEMATIC)

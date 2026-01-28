@@ -122,7 +122,7 @@ namespace engine
             // Enemy ↔ Enemy: 충돌 안 함 (적끼리 밀치지 않음)
             SetCollision(Enemy, Enemy, true);
 
-            SetCollision(Enemy, Environment, false);
+            SetCollision(Enemy, Environment, true);
             
             // ═══════════════════════════════════════
             // EnemyProjectile 충돌 규칙
