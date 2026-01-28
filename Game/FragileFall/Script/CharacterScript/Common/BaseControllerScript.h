@@ -56,12 +56,16 @@ namespace game
         engine::AnimFSM* m_animFSM = nullptr;
 
         // ─────────────────────────────────────────────
-        // 물리 이동 설정
+        // 물리 이동 설정 (AddForce 기반)
         // ─────────────────────────────────────────────
-        // 속도 블렌딩 계수 (0.0 = 완전 물리, 1.0 = 완전 덮어쓰기)
-        // - 높을수록 즉각적인 반응, 낮을수록 물리 응답 보존
-        // - 충돌 시 penetration 방지를 위해 0.5 권장
-        float m_velocityBlendFactor = 0.5f;
+        // 가속도: 높을수록 빠르게 최대 속도에 도달 (권장: 50~100)
+        float m_movementAcceleration = 80.0f;
+        
+        // 감속도: 입력이 없을 때 감속 속도 (권장: 가속도와 동일하거나 높게)
+        float m_movementDeceleration = 100.0f;
+        
+        // 최대 속도 초과 시 브레이크 계수 (권장: 10~20)
+        float m_maxSpeedBrakeFactor = 15.0f;
 
         // ─────────────────────────────────────────────
         // FSM 타입 별칭 및 헬퍼 (가독성 향상)
@@ -209,11 +213,34 @@ namespace game
         void StopRotation();
 
         // ─────────────────────────────────────────────
+        // 이동 유틸리티 (AddForce 기반)
+        // - SetLinearVelocity 대신 AddForce 사용으로 충돌 응답 보존
+        // ─────────────────────────────────────────────
+        
+        // 이동 방향으로 힘을 가하고 최대 속도 제한
+        // - direction: 이동 방향 (정규화됨)
+        // - maxSpeed: 최대 속도
+        void ApplyMovementForce(const engine::Vector3& direction, float maxSpeed);
+        
+        // 감속 (입력 없을 때 또는 정지할 때)
+        void ApplyBrakingForce();
+        
+        // 최대 속도 제한 (부드러운 브레이크 방식)
+        void ClampToMaxSpeed(float maxSpeed);
+
+        // ─────────────────────────────────────────────
         // 컴포넌트 캐싱
         // ─────────────────────────────────────────────
         virtual void CacheComponents();
         void CacheFSMComponents();
         void RegisterFSMCallbacks();
+
+        // ─────────────────────────────────────────────
+        // 직렬화 (자식 클래스에서 호출)
+        // ─────────────────────────────────────────────
+        void OnGui() override;
+        void Save(engine::json& j) const override;
+        void Load(const engine::json& j) override;
         
     private:
         // Rigidbody 캐시 (회전 함수에서 사용)

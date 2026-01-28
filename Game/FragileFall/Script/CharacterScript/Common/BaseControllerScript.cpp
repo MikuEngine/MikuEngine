@@ -266,6 +266,94 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // 이동 유틸리티 (AddForce 기반)
+    // - SetLinearVelocity 대신 AddForce 사용으로 충돌 응답 보존
+    // ═══════════════════════════════════════════════════════════════
+    
+    void BaseControllerScript::ApplyMovementForce(const engine::Vector3& direction, float maxSpeed)
+    {
+        if (!m_cachedRigidbody)
+        {
+            m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
+        }
+        
+        if (!m_cachedRigidbody || !m_cachedRigidbody->IsDynamic())
+        {
+            return;
+        }
+        
+        // 현재 수평 속도 (Y축 무시)
+        engine::Vector3 currentVel = m_cachedRigidbody->GetLinearVelocity();
+        engine::Vector3 horizontalVel(currentVel.x, 0.0f, currentVel.z);
+        
+        // 목표 속도
+        engine::Vector3 targetVel = direction * maxSpeed;
+        
+        // 속도 차이 기반 가속
+        engine::Vector3 velDiff = targetVel - horizontalVel;
+        
+        // Acceleration 모드로 힘 적용 (질량 무시)
+        // 높은 가속도로 빠르게 목표 속도에 도달
+        m_cachedRigidbody->AddForce(velDiff * m_movementAcceleration, engine::ForceMode::Acceleration);
+        
+        // 최대 속도 초과 시 부드러운 브레이크
+        ClampToMaxSpeed(maxSpeed);
+    }
+    
+    void BaseControllerScript::ApplyBrakingForce()
+    {
+        if (!m_cachedRigidbody)
+        {
+            m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
+        }
+        
+        if (!m_cachedRigidbody || !m_cachedRigidbody->IsDynamic())
+        {
+            return;
+        }
+        
+        // 현재 수평 속도 (Y축 무시)
+        engine::Vector3 currentVel = m_cachedRigidbody->GetLinearVelocity();
+        engine::Vector3 horizontalVel(currentVel.x, 0.0f, currentVel.z);
+        
+        if (horizontalVel.LengthSquared() < 0.01f)
+        {
+            // 이미 거의 정지 상태면 완전 정지
+            m_cachedRigidbody->SetLinearVelocity(engine::Vector3(0.0f, currentVel.y, 0.0f));
+            return;
+        }
+        
+        // 현재 속도의 반대 방향으로 감속 힘 적용
+        engine::Vector3 brakeForce = -horizontalVel * m_movementDeceleration;
+        m_cachedRigidbody->AddForce(brakeForce, engine::ForceMode::Acceleration);
+    }
+    
+    void BaseControllerScript::ClampToMaxSpeed(float maxSpeed)
+    {
+        if (!m_cachedRigidbody)
+        {
+            return;
+        }
+        
+        engine::Vector3 currentVel = m_cachedRigidbody->GetLinearVelocity();
+        float horizontalSpeedSq = currentVel.x * currentVel.x + currentVel.z * currentVel.z;
+        float maxSpeedSq = maxSpeed * maxSpeed;
+        
+        // 최대 속도의 110%를 초과하면 부드럽게 브레이크
+        if (horizontalSpeedSq > maxSpeedSq * 1.21f)  // 1.1^2 = 1.21
+        {
+            float horizontalSpeed = sqrtf(horizontalSpeedSq);
+            float overSpeed = horizontalSpeed - maxSpeed;
+            
+            // 초과 속도에 비례한 브레이크 힘
+            engine::Vector3 brakeDir(-currentVel.x, 0.0f, -currentVel.z);
+            brakeDir.Normalize();
+            
+            m_cachedRigidbody->AddForce(brakeDir * overSpeed * m_maxSpeedBrakeFactor, engine::ForceMode::Acceleration);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // 컴포넌트 캐싱
     // ═══════════════════════════════════════════════════════════════
     void BaseControllerScript::CacheComponents()
@@ -332,5 +420,43 @@ namespace game
         transition.conditionType = conditionType;
         
         m_logicFSM->AddTransition(fromState, transition);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 직렬화
+    // ═══════════════════════════════════════════════════════════════
+    
+    void BaseControllerScript::OnGui()
+    {
+        ImGui::Separator();
+        ImGui::Text("=== Movement Physics (Base) ===");
+        ImGui::DragFloat("Movement Accel", &m_movementAcceleration, 1.0f, 1.0f, 200.0f);
+        ImGui::DragFloat("Movement Decel", &m_movementDeceleration, 1.0f, 1.0f, 200.0f);
+        ImGui::DragFloat("Max Speed Brake", &m_maxSpeedBrakeFactor, 0.5f, 1.0f, 50.0f);
+    }
+    
+    void BaseControllerScript::Save(engine::json& j) const
+    {
+        // 부모 클래스의 Save 호출 (Object::Save → Type, Active 저장)
+        engine::Object::Save(j);
+        
+        // BaseControllerScript 고유 데이터
+        j["MovementAcceleration"] = m_movementAcceleration;
+        j["MovementDeceleration"] = m_movementDeceleration;
+        j["MaxSpeedBrakeFactor"] = m_maxSpeedBrakeFactor;
+    }
+    
+    void BaseControllerScript::Load(const engine::json& j)
+    {
+        // 부모 클래스의 Load 호출 (Object::Load → Active 로드)
+        engine::Object::Load(j);
+        
+        // BaseControllerScript 고유 데이터 (선택적 로드 - 기존 씬 파일 호환)
+        if (j.contains("MovementAcceleration"))
+            m_movementAcceleration = j["MovementAcceleration"].get<float>();
+        if (j.contains("MovementDeceleration"))
+            m_movementDeceleration = j["MovementDeceleration"].get<float>();
+        if (j.contains("MaxSpeedBrakeFactor"))
+            m_maxSpeedBrakeFactor = j["MaxSpeedBrakeFactor"].get<float>();
     }
 }

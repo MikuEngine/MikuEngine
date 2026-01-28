@@ -1,6 +1,6 @@
 {
     "Name": "Prototype_Play",
-    "NumGameObjects": 21,
+    "NumGameObjects": 22,
     "GameObjects": [
         {
             "ID": 0,
@@ -64,6 +64,9 @@
                 {
                     "Type": "PlayerControllerScript",
                     "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
                     "MoveSpeed": 13.0,
                     "FireRate": 0.30000001192092896,
                     "BulletSpeed": 13.0,
@@ -4128,1390 +4131,6 @@
                             "Cost": 1.0
                         },
                         {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
                             "Walkable": true,
                             "Cost": 1.0
                         },
@@ -5960,263 +4579,7 @@
                             "Cost": 1.0
                         },
                         {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
                             "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
                             "Cost": 1.0
                         },
                         {
@@ -6472,98 +4835,6 @@
                             "Cost": 1.0
                         },
                         {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
                             "Walkable": true,
                             "Cost": 1.0
                         },
@@ -6716,78 +4987,6 @@
                             "Cost": 1.0
                         },
                         {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
                             "Walkable": true,
                             "Cost": 1.0
                         },
@@ -6877,30 +5076,6 @@
                         },
                         {
                             "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": true,
-                            "Cost": 1.0
-                        },
-                        {
-                            "Walkable": false,
                             "Cost": 1.0
                         },
                         {
@@ -7156,19 +5331,1335 @@
                             "Cost": 1.0
                         },
                         {
-                            "Walkable": false,
+                            "Walkable": true,
                             "Cost": 1.0
                         },
                         {
-                            "Walkable": false,
+                            "Walkable": true,
                             "Cost": 1.0
                         },
                         {
-                            "Walkable": false,
+                            "Walkable": true,
                             "Cost": 1.0
                         },
                         {
-                            "Walkable": false,
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
                             "Cost": 1.0
                         },
                         {
@@ -8180,6 +7671,30 @@
                             "Cost": 1.0
                         },
                         {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
                             "Walkable": true,
                             "Cost": 1.0
                         },
@@ -8193,6 +7708,494 @@
                         },
                         {
                             "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": true,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
+                            "Cost": 1.0
+                        },
+                        {
+                            "Walkable": false,
                             "Cost": 1.0
                         },
                         {
@@ -11691,6 +11694,9 @@
                 {
                     "Type": "MonsterDullGray",
                     "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
                     "Hp": 100,
                     "AttackRange": 10.0,
                     "MoveSpeed": 0.0,
@@ -11951,6 +11957,9 @@
                 {
                     "Type": "MonsterDullGray",
                     "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
                     "Hp": 100,
                     "AttackRange": 10.0,
                     "MoveSpeed": 0.0,
@@ -12794,6 +12803,9 @@
                 {
                     "Type": "MonsterDullGray",
                     "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
                     "Hp": 100,
                     "AttackRange": 10.0,
                     "MoveSpeed": 0.0,
@@ -13139,6 +13151,143 @@
         },
         {
             "ID": 18,
+            "Name": "StateTextCanvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                },
+                {
+                    "Type": "StateTextRenderer",
+                    "Active": true,
+                    "PrefabName": "StateText",
+                    "WorldOffset": {
+                        "x": 0.0,
+                        "y": 2.0,
+                        "z": 0.0
+                    },
+                    "HideWhenOffscreen": true
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "Name": "StateText",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": true,
+                    "Text": "UIText",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 30,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 20,
             "Name": "MonPG",
             "Active": true,
             "Components": [
@@ -13146,9 +13295,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 6.800000190734863,
+                        "x": -21.799999237060547,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": -12.699999809265137
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -13165,6 +13314,9 @@
                 {
                     "Type": "MonsterPointedGreen",
                     "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
                     "Hp": 10,
                     "AttackRange": 5.0,
                     "MoveSpeed": 8.0,
@@ -13185,11 +13337,11 @@
                     "Type": "Rigidbody",
                     "Active": true,
                     "type": 0,
-                    "mass": 500.0,
+                    "mass": 5.0,
                     "linearDamping": 15.0,
                     "angularDamping": 30.0,
                     "useGravity": false,
-                    "constraints": 0
+                    "constraints": 42
                 },
                 {
                     "Type": "SkeletalAnimator",
@@ -13399,17 +13551,17 @@
             ]
         },
         {
-            "ID": 19,
-            "Name": "StateTextCanvas",
+            "ID": 21,
+            "Name": "MonPG_2",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
+                        "x": 16.399999618530273,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": 8.100000381469727
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -13418,120 +13570,247 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
+                        "x": 0.014999999664723873,
+                        "y": 0.014999999664723873,
+                        "z": 0.014999999664723873
+                    }
+                },
+                {
+                    "Type": "MonsterPointedGreen",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "Hp": 10,
+                    "AttackRange": 5.0,
+                    "MoveSpeed": 8.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 1.0,
+                    "BulletLifetime": 3.0,
+                    "DetectionRange": 55.0,
+                    "AttackAnimationDuration": 1.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead"
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 5.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 30.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Dead",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageAttack",
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageMove",
+                            "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageStop",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Fragile",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "Base Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Armature",
+                                "mixamorig:Hips",
+                                "mixamorig:Spine",
+                                "mixamorig:RightUpLeg",
+                                "mixamorig:LeftUpLeg",
+                                "mixamorig:Spine1",
+                                "mixamorig:RightLeg",
+                                "mixamorig:LeftLeg",
+                                "mixamorig:Spine2",
+                                "mixamorig:RightFoot",
+                                "mixamorig:LeftFoot",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:RightToeBase",
+                                "mixamorig:LeftToeBase",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:RightToe_End",
+                                "mixamorig:LeftToe_End",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:RightToe_End_end",
+                                "mixamorig:LeftToe_End_end",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
+                        },
+                        {
+                            "Name": "New Layer",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": []
+                        }
+                    ]
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 10.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.0540541410446167,
                         "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
-                },
-                {
-                    "Type": "StateTextRenderer",
-                    "Active": true,
-                    "PrefabName": "StateText",
-                    "WorldOffset": {
-                        "x": 0.0,
-                        "y": 2.0,
-                        "z": 0.0
-                    },
-                    "HideWhenOffscreen": true
-                }
-            ]
-        },
-        {
-            "ID": 20,
-            "Name": "StateText",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "Scale": {
+                    "MaterialEmissive": {
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0
-                    }
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
-                    "Type": "RectTransform",
+                    "Type": "CapsuleCollider",
                     "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
+                    "center": [
+                        0.0,
+                        1.350000023841858,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "radius": 1.1100000143051147,
+                    "height": 2.799999952316284
                 },
                 {
-                    "Type": "UIText",
+                    "Type": "PathfindingAgent",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 2,
-                    "RaycastTarget": true,
-                    "Text": "UIText",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 30,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "PathUpdateInterval": 0.10000000149011612,
+                    "WaypointReachDistance": 0.10000000149011612,
+                    "TargetMoveThreshold": 0.5
                 }
             ]
         }

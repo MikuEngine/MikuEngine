@@ -1,17 +1,17 @@
 {
-    "Name": "MonDG_1",
+    "Name": "MonPG",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "MonDG_1",
+            "Name": "MonPG",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -6.099999904632568,
+                        "x": 6.800000190734863,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -28,41 +28,65 @@
                     }
                 },
                 {
-                    "Type": "MonsterDullGray",
+                    "Type": "MonsterPointedGreen",
                     "Active": true,
-                    "Hp": 100.0,
-                    "AttackRange": 10.0,
-                    "MoveSpeed": 0.0,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "EnableCollisionDirectionCheck": true,
+                    "Hp": 10,
+                    "AttackRange": 5.0,
+                    "MoveSpeed": 8.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 1.0,
                     "BulletLifetime": 3.0,
+                    "DetectionRange": 55.0,
+                    "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
-                    "AnimName_Attack": "Attack",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead"
                 },
                 {
                     "Type": "Rigidbody",
                     "Active": true,
                     "type": 0,
-                    "mass": 200.0,
-                    "linearDamping": 10.0,
-                    "angularDamping": 56.0,
+                    "mass": 500.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 30.0,
                     "useGravity": false,
-                    "constraints": 0
+                    "constraints": 42
                 },
                 {
                     "Type": "SkeletalAnimator",
                     "Active": true,
                     "Animations": [
                         {
-                            "Name": "Attack",
-                            "Path": "Resource/Animation/TestPunch.fbx",
+                            "Name": "Dead",
+                            "Path": "Resource/Animation/TestIdle.fbx",
                             "Notifies": []
                         },
                         {
-                            "Name": "Dead",
+                            "Name": "EngageAttack",
                             "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageMove",
+                            "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageStop",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Fragile",
+                            "Path": "Resource/Animation/TestIdle.fbx",
                             "Notifies": []
                         },
                         {
@@ -73,7 +97,7 @@
                     ],
                     "Layers": [
                         {
-                            "Name": "New Layer",
+                            "Name": "Base Layer",
                             "Weight": 1.0,
                             "BlendMode": 0,
                             "MaskBones": [
@@ -171,6 +195,12 @@
                     "Active": true
                 },
                 {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
                     "Type": "AnimFSM",
                     "Active": true,
                     "BaseLayerIndex": 0,
@@ -183,12 +213,6 @@
                     "AnimStates": []
                 },
                 {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/TestBot.fbx",
@@ -197,8 +221,8 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 0.0,
+                        "x": 0.0540541410446167,
+                        "y": 1.0,
                         "z": 0.0,
                         "w": 1.0
                     },
@@ -211,14 +235,15 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CastShadow": false,
+                    "CullMode": 1
                 },
                 {
-                    "Type": "BoxCollider",
+                    "Type": "CapsuleCollider",
                     "Active": true,
                     "center": [
                         0.0,
-                        1.2000000476837158,
+                        1.350000023841858,
                         0.0
                     ],
                     "rotation": [
@@ -227,13 +252,18 @@
                         0.0
                     ],
                     "isTrigger": false,
-                    "syncWithTransform": true,
+                    "syncWithTransform": false,
                     "layer": 2,
-                    "size": [
-                        60.0,
-                        160.0,
-                        60.0
-                    ]
+                    "materialType": 1,
+                    "radius": 1.1100000143051147,
+                    "height": 2.799999952316284
+                },
+                {
+                    "Type": "PathfindingAgent",
+                    "Active": true,
+                    "PathUpdateInterval": 0.10000000149011612,
+                    "WaypointReachDistance": 0.10000000149011612,
+                    "TargetMoveThreshold": 0.5
                 }
             ]
         }
