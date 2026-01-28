@@ -52,38 +52,7 @@ namespace game
 			return;
 		}
 
-		// ─────────────────────────────────────────────
-		// Mass 강제 설정 (플레이어와의 충돌 시 밀림 방지)
-		// Scene 파일의 값보다 우선 적용됨
-		// - 이동하지 않는 몬스터 (moveSpeed == 0): 1500
-		// - 이동하는 몬스터: 100
-		// ─────────────────────────────────────────────
-		float mass = (m_moveSpeed <= 0.0f) ? 15000.0f : 500.0f;
-		m_rigidbody->SetMass(mass);
-		m_rigidbody->SetAngularDamping(55.0f);
-		m_rigidbody->SetLinearDamping(10.0f);
-
-		// Rigidbody 제약 설정 (m_moveSpeed 기준 자동 판단)
-		// Dynamic Rigidbody의 예기치 않은 동작(높이 변화, 넘어짐) 방지
-		using namespace engine;
-		RigidbodyConstraints constraints;
-
-		if (m_moveSpeed <= 0.0f)
-		{
-			// 이동 불가 몬스터: 위치 완전 고정 (X, Y, Z), 회전은 Y축만 허용
-			constraints = RigidbodyConstraints::FreezePosition |
-				RigidbodyConstraints::FreezeRotationX |
-				RigidbodyConstraints::FreezeRotationZ;
-		}
-		else
-		{
-			// 이동 가능 몬스터: 높이(Y) 고정, XZ 이동 가능, 회전은 Y축만 허용
-			constraints = RigidbodyConstraints::FreezePositionY |
-				RigidbodyConstraints::FreezeRotationX |
-				RigidbodyConstraints::FreezeRotationZ;
-		}
-
-		m_rigidbody->SetConstraints(constraints);
+		// Rigidbody Mass, Damping, Constraints는 씬 파일에서 로드됨
 
 		// Dynamic Rigidbody 설정 확인
 		if (!m_rigidbody->IsDynamic())
@@ -215,6 +184,7 @@ namespace game
 
 	// ═══════════════════════════════════════════════════════════════
 	// 이동 (PathfindingAgent 활용) - FixedUpdate에서 호출
+	// AddForce 기반으로 충돌 응답 보존
 	// ═══════════════════════════════════════════════════════════════
 	void MonsterScript::MoveTowardsPlayer()
 	{
@@ -273,11 +243,8 @@ namespace game
 
 		RotateToDirection(direction, 0.0f);  // deltaTime 불필요 (물리 엔진이 처리)
 		
-		// 속도 블렌딩 적용 (충돌 시 penetration 방지)
-		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
-		engine::Vector3 desiredVel = direction * m_moveSpeed;
-		engine::Vector3 finalVel = engine::Vector3::Lerp(currentVel, desiredVel, m_velocityBlendFactor);
-		m_rigidbody->SetLinearVelocity(finalVel);
+		// AddForce 기반 이동 (충돌 응답 보존)
+		ApplyMovementForce(direction, m_moveSpeed);
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -415,7 +382,8 @@ namespace game
 		if (m_rigidbody)
 		{
 			StopRotation();
-			m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
+			// AddForce 기반 감속 (충돌 응답 보존)
+			ApplyBrakingForce();
 		}
 	}
 
@@ -619,6 +587,9 @@ namespace game
 		ImGui::Text("Fire Timer: %.2f", m_fireTimer);
 
 		ImGui::Unindent();
+
+		// BaseControllerScript의 OnGui 호출 (이동 물리 설정)
+		BaseControllerScript::OnGui();
 
 		ImGui::Spacing();
 		ImGui::Spacing();

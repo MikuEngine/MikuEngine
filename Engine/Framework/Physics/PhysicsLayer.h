@@ -109,9 +109,7 @@ namespace engine
             SetCollision(Player, Projectile, false);
             
             // Projectile ↔ Projectile: 충돌 안 함
-            SetCollision(Projectile, Projectile, false);
-
-            SetCollision(Player, Environment, true);
+            SetCollision(Projectile, Projectile, false);            
             
             // Player ↔ Enemy: 충돌함
             // (기본값 All이므로 별도 설정 불필요)
@@ -119,10 +117,7 @@ namespace engine
             // Enemy ↔ Projectile: 충돌함
             // (기본값 All이므로 별도 설정 불필요)
             
-            // Enemy ↔ Enemy: 충돌 안 함 (적끼리 밀치지 않음)
-            SetCollision(Enemy, Enemy, true);
-
-            SetCollision(Enemy, Environment, true);
+            // Enemy ↔ Enemy: 충돌  
             
             // ═══════════════════════════════════════
             // EnemyProjectile 충돌 규칙

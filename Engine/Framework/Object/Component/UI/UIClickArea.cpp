@@ -1,8 +1,32 @@
 ﻿#include "EnginePCH.h"
 #include "UIClickArea.h"
 
+#include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/Component/UI/UIScrollView.h"
+
 namespace engine
 {
+	namespace
+	{
+		static engine::UIScrollView* FindScrollViewInParents(engine::GameObject* from)
+		{
+			if (!from) return nullptr;
+			engine::Transform* t = from->GetTransform();
+			while (t)
+			{
+				engine::GameObject* go = t->GetGameObject();
+				if (go)
+				{
+					if (auto* sv = go->GetComponent<engine::UIScrollView>())
+						return sv;
+				}
+				t = t->GetParent();
+			}
+			return nullptr;
+		}
+	}
+
 	void UIClickArea::Initialize()
 	{
 		UIElement::Initialize();
@@ -46,6 +70,15 @@ namespace engine
 	{
 		if (!m_interactable) return;
 		for (auto& f : m_onClick) f(mouseButton);
+	}
+
+	void UIClickArea::OnScroll(const Vector2& mousePos, float wheelDelta)
+	{
+		if (auto* sv = FindScrollViewInParents(GetGameObject()))
+		{
+			if (sv->HitTestPoint(mousePos))
+				sv->OnScroll(mousePos, wheelDelta);
+		}
 	}
 
 	void UIClickArea::Save(json& j) const

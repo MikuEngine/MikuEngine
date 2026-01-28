@@ -357,13 +357,11 @@ namespace game
 		}
 
 		engine::Vector3 moveDir = GetMoveInputDirection();
-		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
 
 		if (moveDir.LengthSquared() < 0.0001f)
 		{
-			// 입력 없으면 블렌딩으로 감속 (충돌 응답 보존)
-			engine::Vector3 blendedVel = engine::Vector3::Lerp(currentVel, engine::Vector3::Zero, m_velocityBlendFactor);
-			m_rigidbody->SetLinearVelocity(blendedVel);
+			// 입력 없으면 감속 (AddForce 기반, 충돌 응답 보존)
+			ApplyBrakingForce();
 			return;
 		}
 
@@ -371,10 +369,8 @@ namespace game
 		moveDir.Normalize();
 		m_lastMoveDirection = moveDir;
 
-		// 속도 블렌딩: 목표 속도 + 물리 응답 보존
-		engine::Vector3 desiredVelocity = moveDir * m_moveSpeed;
-		engine::Vector3 finalVelocity = engine::Vector3::Lerp(currentVel, desiredVelocity, m_velocityBlendFactor);
-		m_rigidbody->SetLinearVelocity(finalVelocity);
+		// AddForce 기반 이동 (충돌 응답 보존)
+		ApplyMovementForce(moveDir, m_moveSpeed);
 	}
 
 	void PlayerControllerScript::HandleShooting(float deltaTime)
@@ -875,6 +871,9 @@ namespace game
 		}
 		
 		ImGui::Unindent();
+		
+		// BaseControllerScript의 OnGui 호출 (이동 물리 설정)
+		BaseControllerScript::OnGui();
 		
 		ImGui::Spacing();
 		ImGui::Spacing();
