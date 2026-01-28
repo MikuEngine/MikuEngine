@@ -2,20 +2,27 @@
 #include "UpgradeController.h"
 #include "UpgradeNodeView.h"
 
+#include <Framework/Object/GameObject/GameObject.h>
+#include <Framework/Object/Component/UI/UISlider.h>
+
 namespace game
 {
     void UpgradeController::Awake()
     {
         BindButton("Btn_Attack", [this] { SetCategory(UpgradeCategory::Attack); });
-        BindButton("Btn_Defense", [this] { SetCategory(UpgradeCategory::Defense); });
+        BindButton("Btn_Skill", [this] { SetCategory(UpgradeCategory::Skill); });
         BindButton("Btn_Life", [this] { SetCategory(UpgradeCategory::Life); });
-        BindButton("Btn_Stamina", [this] { SetCategory(UpgradeCategory::Stamina); });
+        BindButton("Btn_Move", [this] { SetCategory(UpgradeCategory::Move); });
     }
 
     void UpgradeController::Start()
     {
         BuildDefaultTreeIfEmpty();
         ApplyCategoryFilter();
+
+        auto* go = engine::GameObject::Find("Scrollbar");
+        if (go)
+            m_scrollBar = go->GetComponent<engine::UISlider>();
     }
 
     void UpgradeController::Update()
@@ -272,6 +279,9 @@ namespace game
         if (m_selected == c) return;
         m_selected = c;
         ApplyCategoryFilter();
+
+        if (m_scrollBar)
+            m_scrollBar->SetValue(0.0f, true);
     }
 
     void UpgradeController::ApplyCategoryFilter()
