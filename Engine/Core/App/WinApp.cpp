@@ -441,20 +441,11 @@ namespace engine
         SystemManager::Get().GetPathfindingSystem().Update();
         SystemManager::Get().GetParticleSystem().Update();
 
-        m_accumulatedDeltaTime += Time::DeltaTime();
-        const float fixedDeltaTime = Time::FixedDeltaTime(); // 60fps -> 0.0166666
-
-        while (m_accumulatedDeltaTime >= fixedDeltaTime)
-        {
-            m_accumulatedDeltaTime -= fixedDeltaTime;
-
-            SystemManager::Get().GetScriptSystem().CallFixedUpdate();
-            // Physics 시뮬레이션 (내부에서 CollisionSystem.ProcessEvents() 호출)
-            SystemManager::Get().GetPhysicsSystem().Update(fixedDeltaTime);
-        }
-
-        // 참고: CollisionSystem.ProcessEvents()는 PhysicsSystem.Update() 내부에서 호출됨
-        // 중복 호출 제거됨 (2024-01-28)
+        // Physics 시뮬레이션 (내부에서 Fixed Timestep Accumulator 관리)
+        // - PhysicsSystem이 자체적으로 fixedDeltaTime 단위로 시뮬레이션
+        // - ScriptSystem.CallFixedUpdate()도 PhysicsSystem 내부에서 호출됨
+        // - CollisionSystem.ProcessEvents()도 PhysicsSystem 내부에서 호출됨
+        SystemManager::Get().GetPhysicsSystem().Update(Time::DeltaTime());
 
         SystemManager::Get().GetCameraSystem().Update();
 

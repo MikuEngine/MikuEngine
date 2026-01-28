@@ -11,6 +11,15 @@ namespace engine
     class PhysicsMaterial;
 
     // ═══════════════════════════════════════════════════════════════
+    // 물리 재질 타입 (프리셋)
+    // ═══════════════════════════════════════════════════════════════
+    enum class PhysicsMaterialType : uint32_t
+    {
+        Default = 0,    // 일반 마찰 (0.5, 0.5, 0.1)
+        Slippery = 1    // 미끄러운 마찰 (0.05, 0.02, 0.0) - 캐릭터 간 충돌용
+    };
+
+    // ═══════════════════════════════════════════════════════════════
     // Collider 기반 클래스
     // 
     // - Rigidbody가 있으면: Rigidbody의 PxActor에 Shape 부착
@@ -43,6 +52,9 @@ namespace engine
         
         // 우선순위 (전투 시스템용)
         CollisionPriority m_collisionPriority = CollisionPriority::Default;
+        
+        // 물리 재질
+        PhysicsMaterialType m_materialType = PhysicsMaterialType::Slippery;  // 기본값: 미끄러운 재질
 
     public:
         Collider() = default;
@@ -84,6 +96,10 @@ namespace engine
         // 우선순위 (전투 시스템용)
         CollisionPriority GetCollisionPriority() const { return m_collisionPriority; }
         void SetCollisionPriority(CollisionPriority priority) { m_collisionPriority = priority; }
+
+        // 물리 재질
+        PhysicsMaterialType GetMaterialType() const { return m_materialType; }
+        void SetMaterialType(PhysicsMaterialType type);
 
         // 월드 회전 무시 여부 (Sphere, Capsule은 true)
         virtual bool IgnoresWorldRotation() const { return false; }

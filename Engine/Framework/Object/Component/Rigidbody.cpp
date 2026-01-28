@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Rigidbody.h"
 
 #include "Common/Utility/StaticMemoryPool.h"
@@ -785,6 +785,15 @@ namespace engine
                 dynamic->setMass(m_mass);
                 dynamic->setLinearDamping(m_linearDamping);
                 dynamic->setAngularDamping(m_angularDamping);
+                
+                // Solver Iterations 설정 (충돌 해결 정확도)
+                // - Position Iterations: penetration 해결 반복 횟수
+                // - Velocity Iterations: 마찰/반발 정확도
+                const auto& settings = SystemManager::Get().GetPhysicsSystem().GetSettings();
+                dynamic->setSolverIterationCounts(
+                    settings.solverIterations,           // 기본값: 6
+                    settings.velocitySolverIterations    // 기본값: 2 (권장)
+                );
 
                 m_actor = dynamic;
             }

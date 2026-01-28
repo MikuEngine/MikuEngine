@@ -272,7 +272,12 @@ namespace game
 		direction.Normalize();
 
 		RotateToDirection(direction, 0.0f);  // deltaTime 불필요 (물리 엔진이 처리)
-		m_rigidbody->SetLinearVelocity(direction * m_moveSpeed);
+		
+		// 속도 블렌딩 적용 (충돌 시 penetration 방지)
+		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+		engine::Vector3 desiredVel = direction * m_moveSpeed;
+		engine::Vector3 finalVel = engine::Vector3::Lerp(currentVel, desiredVel, m_velocityBlendFactor);
+		m_rigidbody->SetLinearVelocity(finalVel);
 	}
 
 	// ═══════════════════════════════════════════════════════════════

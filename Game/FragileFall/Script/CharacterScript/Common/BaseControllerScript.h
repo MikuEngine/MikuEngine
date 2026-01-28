@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -54,6 +54,14 @@ namespace game
         // ─────────────────────────────────────────────
         engine::LogicFSM* m_logicFSM = nullptr;
         engine::AnimFSM* m_animFSM = nullptr;
+
+        // ─────────────────────────────────────────────
+        // 물리 이동 설정
+        // ─────────────────────────────────────────────
+        // 속도 블렌딩 계수 (0.0 = 완전 물리, 1.0 = 완전 덮어쓰기)
+        // - 높을수록 즉각적인 반응, 낮을수록 물리 응답 보존
+        // - 충돌 시 penetration 방지를 위해 0.5 권장
+        float m_velocityBlendFactor = 0.5f;
 
         // ─────────────────────────────────────────────
         // FSM 타입 별칭 및 헬퍼 (가독성 향상)

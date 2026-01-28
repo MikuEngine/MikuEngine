@@ -357,12 +357,13 @@ namespace game
 		}
 
 		engine::Vector3 moveDir = GetMoveInputDirection();
+		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
 
 		if (moveDir.LengthSquared() < 0.0001f)
 		{
-			// 입력 없으면 속도만 정지 (Y축은 유지)
-			engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
-			m_rigidbody->SetLinearVelocity(engine::Vector3(0.0f, currentVel.y, 0.0f));
+			// 입력 없으면 블렌딩으로 감속 (충돌 응답 보존)
+			engine::Vector3 blendedVel = engine::Vector3::Lerp(currentVel, engine::Vector3::Zero, m_velocityBlendFactor);
+			m_rigidbody->SetLinearVelocity(blendedVel);
 			return;
 		}
 
@@ -370,10 +371,10 @@ namespace game
 		moveDir.Normalize();
 		m_lastMoveDirection = moveDir;
 
-		// XZ 평면 속도 설정, Y축 속도는 유지 (중력/점프용)
-		engine::Vector3 targetVelocity = moveDir * m_moveSpeed;
-		targetVelocity.y = m_rigidbody->GetLinearVelocity().y;
-		m_rigidbody->SetLinearVelocity(targetVelocity);
+		// 속도 블렌딩: 목표 속도 + 물리 응답 보존
+		engine::Vector3 desiredVelocity = moveDir * m_moveSpeed;
+		engine::Vector3 finalVelocity = engine::Vector3::Lerp(currentVel, desiredVelocity, m_velocityBlendFactor);
+		m_rigidbody->SetLinearVelocity(finalVelocity);
 	}
 
 	void PlayerControllerScript::HandleShooting(float deltaTime)
