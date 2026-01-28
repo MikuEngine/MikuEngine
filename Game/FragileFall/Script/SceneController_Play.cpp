@@ -100,7 +100,7 @@ namespace game
 
     void SceneController_Play::Update()
     {
-        if (engine::Input::IsKeyPressed(engine::Keys::Escape))
+        if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
             if (m_isOptionOpen) { Back(); return; }
             if (m_isGiveupOpen) { CheckBackToMain(false); return; }
@@ -112,6 +112,7 @@ namespace game
 
         if (engine::Input::IsKeyPressed(engine::Keys::F5))
         {
+            m_isDead = true;
             m_failPanel->SetActive(true);
         }
     }
