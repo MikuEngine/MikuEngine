@@ -2,6 +2,7 @@
 #include "UpgradeNodeView.h"
 #include "Framework/Object/Component/UI/UIClickArea.h"
 #include "UpgradeController.h"
+
 namespace game
 {
     void UpgradeNodeView::Awake()
@@ -23,8 +24,11 @@ namespace game
                 if (mouseButton != 0) return;
 
                 if (sys)
-                    sys->ApplyUpgrade(m_nodeId);
+                    sys->SelectNode(m_nodeId);
             });
+
+        m_image = go->GetComponent<engine::UIImage>();
+        if (m_image) return;
     }
 
     void UpgradeNodeView::OnGui()
@@ -154,8 +158,29 @@ namespace game
         engine::JsonGet(j, "Emerald", m_emerald);
     }
 
-    void UpgradeNodeView::SetVisualState(bool unlocked, bool purchased)
+    void UpgradeNodeView::SetVisualState(bool unlocked, bool purchased, bool selected)
     {
-        //
+        if (!m_image) return;
+
+        engine::Vector4 color = m_baseColor;
+        if (purchased)
+        {
+            // 구매 완료: 살짝 어둡게
+            color *= 0.6f;
+        }
+        else if (!unlocked)
+        {
+            // 잠김: 회색
+            color = { 0.4f, 0.4f, 0.4f, 1.0f };
+        }
+        else if (selected)
+        {
+            // 선택됨: 강조
+            color.x = std::min(color.x * 1.3f, 1.0f);
+            color.y = std::min(color.y * 1.3f, 1.0f);
+            color.z = std::min(color.z * 1.3f, 1.0f);
+        }
+
+        m_image->SetColor(color);
     }
 }

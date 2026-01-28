@@ -38,6 +38,19 @@ namespace game
         if (m_spawnedPillars.empty())
         {
             m_intervalTimer += deltaTime;
+
+            if (!m_shieldEffects.empty())
+            {
+                for (auto e : m_shieldEffects)
+                {
+                    if (e)
+                    {
+                        e->Destroy();
+                    }
+                }
+
+                m_shieldEffects.clear();
+            }
         }
 
         // 간격이 지나면 기둥 재생성
@@ -104,6 +117,17 @@ namespace game
                 m_spawnedPillars.push_back(pillarPtr);
                 boss->OnPillarCreated(pillarPtr);
             }
+        }
+
+        auto bossPos = boss->GetTransform()->GetLocalPosition();
+        for (int i = 0; i < 3; ++i)
+        {
+            auto offset = engine::Vector3(-3.0f + i * 3.0f, 0.0f, -2.0f);
+
+            auto go = engine::Prefab::Instantiate("BossShieldEffect");
+            go->GetTransform()->SetLocalPosition(bossPos + offset);
+
+            m_shieldEffects.push_back(go);
         }
     }
 

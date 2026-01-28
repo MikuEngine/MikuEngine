@@ -1,12 +1,11 @@
 ﻿#include "GamePCH.h"
 #include "BossPattern_SphereProjectile.h"
 
-#include <Framework/Scene/SceneManager.h>
-#include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
-#include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include <Framework/Asset/Prefab.h>
 
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossScript.h"
 #include "Script/Boss/BossPattern/Components/BossProjectile.h"
 
@@ -46,10 +45,10 @@ namespace game
 
     void BossPattern_SphereProjectile::FireProjectile(BossScript* boss)
     {
-        if (!boss || !boss->GetGameObject()) return;
-
-        auto* scene = engine::SceneManager::Get().GetScene();
-        if (!scene) return;
+        if (!boss)
+        {
+            return;
+        }
 
         auto* bossTransform = boss->GetGameObject()->GetTransform();
         if (!bossTransform) return;
@@ -78,18 +77,13 @@ namespace game
 
         // 투사체 GameObject 생성
         std::string projectileName = "BossProjectile_" + std::to_string(rand());
-        auto* projectileGO = scene->CreateGameObject(projectileName);
-        if (!projectileGO) return;
+        auto projectileGO = engine::Prefab::Instantiate("BossBigBulletProjectile");
 
         // Transform 설정
-        auto* projectileTransform = projectileGO->GetTransform();
-        if (projectileTransform)
-        {
-            projectileTransform->SetLocalPosition(bossPos);
-        }
-
+        projectileGO->GetTransform()->SetLocalPosition(bossPos);
+        
         // BossProjectile 스크립트 추가
-        auto* projectileScript = projectileGO->AddComponent<BossProjectile>();
+        auto* projectileScript = projectileGO->GetComponent<BossProjectile>();
         if (projectileScript)
         {
             projectileScript->Setup(

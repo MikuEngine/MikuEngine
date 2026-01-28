@@ -49,6 +49,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -75,6 +76,10 @@
                         4.0,
                         1.0
                     ]
+                },
+                {
+                    "Type": "BossPillar",
+                    "Active": true
                 }
             ]
         }
