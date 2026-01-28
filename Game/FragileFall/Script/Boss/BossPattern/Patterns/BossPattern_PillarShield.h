@@ -8,16 +8,6 @@ namespace game
     class BossScript;
     class BossPillar;
 
-    // ═══════════════════════════════════════════════════════════════
-    // BossPattern_PillarShield - 기둥 쉴드 패턴 (독립 패턴)
-    // 
-    // 기능:
-    //   - N초마다 기둥 생성
-    //   - 기둥이 모두 파괴되지 않으면 보스에게 데미지 차단
-    // 
-    // 특징:
-    //   - 유일한 독립 패턴 (다른 패턴들과 독립적으로 시간 기반 실행)
-    // ═══════════════════════════════════════════════════════════════
     class BossPattern_PillarShield :
         public BossPatternBase
     {

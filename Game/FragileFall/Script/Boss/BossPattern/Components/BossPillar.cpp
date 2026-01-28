@@ -1,12 +1,10 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BossPillar.h"
-#include "../../BossScript.h"
+
+#include "Script/Boss/BossScript.h"
 
 namespace game
 {
-    // ═══════════════════════════════════════════════════════════════
-    // 생명주기
-    // ═══════════════════════════════════════════════════════════════
     void BossPillar::Awake()
     {
     }
@@ -23,9 +21,6 @@ namespace game
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 데미지 처리
-    // ═══════════════════════════════════════════════════════════════
     void BossPillar::TakeDamage(int damage)
     {
         if (m_isDestroyed) return;
@@ -37,9 +32,6 @@ namespace game
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 파괴 처리
-    // ═══════════════════════════════════════════════════════════════
     void BossPillar::OnDestroyed()
     {
         if (m_isDestroyed) return;

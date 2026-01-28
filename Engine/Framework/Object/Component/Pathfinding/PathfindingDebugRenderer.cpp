@@ -292,11 +292,17 @@ namespace engine
     void PathfindingDebugRenderer::OnGui()
     {
         if (!ImGui::CollapsingHeader("Pathfinding Debug"))
+        {
             return;
+        }
+
+        ImGui::PushID(this);
 
         ImGui::Checkbox("Enabled", &m_enabled);
         ImGui::Checkbox("Show Grid", &m_showGrid);
         ImGui::Checkbox("Show Path", &m_showPath);
         ImGui::Checkbox("Show Unwalkable", &m_showUnwalkable);
+
+        ImGui::PopID();
     }
 }

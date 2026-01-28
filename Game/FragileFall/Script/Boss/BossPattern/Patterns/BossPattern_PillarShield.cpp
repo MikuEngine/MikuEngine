@@ -1,17 +1,15 @@
 ﻿#include "GamePCH.h"
 #include "BossPattern_PillarShield.h"
-#include "../../BossScript.h"
-#include "../Components/BossPillar.h"
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/Transform.h>
 
+#include "Script/Boss/BossScript.h"
+#include "Script/Boss/BossPattern/Components/BossPillar.h"
+
 namespace game
 {
-    // ═══════════════════════════════════════════════════════════════
-    // 패턴 실행
-    // ═══════════════════════════════════════════════════════════════
     void BossPattern_PillarShield::Start(BossScript* boss)
     {
         if (!boss) return;
@@ -53,9 +51,6 @@ namespace game
         m_intervalTimer = 0.0f;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 기둥 생성
-    // ═══════════════════════════════════════════════════════════════
     void BossPattern_PillarShield::SpawnPillars(BossScript* boss)
     {
         if (!boss) return;
@@ -73,8 +68,7 @@ namespace game
         {
             if (pillar && pillar->GetGameObject())
             {
-                // TODO: GameObject 파괴 또는 비활성화
-                // pillar->GetGameObject()->Destroy();
+                pillar->GetGameObject()->Destroy();
             }
         }
         m_spawnedPillars.clear();
@@ -119,9 +113,6 @@ namespace game
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 기둥 상태 체크
-    // ═══════════════════════════════════════════════════════════════
     void BossPattern_PillarShield::CheckPillarsStatus(BossScript* boss)
     {
         if (!boss) return;

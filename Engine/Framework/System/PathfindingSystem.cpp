@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PathfindingSystem.h"
 
 #include <queue>
@@ -96,7 +96,7 @@ namespace engine
         result.path = StringPull(result.rawPath);
         result.optimizedNodeCount = result.nodeCount;
 
-        //result.path = SmoothPath(result.path, 2);  // 2회 반복
+        //result.path = SmoothPath(result.path, 2);  // 자꾸 파고들어서 일단 끔
 
         // 스냅했을 경우 첫 웨이포인트를 실제 현재 위치로 (들락날락 방지)
         if (usedSnap && !result.path.empty())

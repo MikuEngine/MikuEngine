@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BossShieldEffect.h"
 
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
@@ -6,9 +6,6 @@
 
 namespace game
 {
-    // ═══════════════════════════════════════════════════════════════
-    // 생명주기
-    // ═══════════════════════════════════════════════════════════════
     void BossShieldEffect::Awake()
     {
         if (GetGameObject())
@@ -24,7 +21,17 @@ namespace game
         float deltaTime = engine::Time::DeltaTime();
         m_pulseTimer += deltaTime * m_pulseSpeed;
 
-        // TODO: 쉴드 이펙트 애니메이션 (펄스, 회전 등)
-        // 예: 스케일 펄스, 알파 펄스 등
+        // 쉴드 이펙트 애니메이션 (펄스 효과)
+        // 스케일을 펄스로 변경 (1.0 ~ 1.1 사이)
+        float pulseScale = 1.0f + 0.1f * (0.5f + 0.5f * std::sinf(m_pulseTimer));
+
+        auto* transform = GetGameObject()->GetTransform();
+        if (transform)
+        {
+            engine::Vector3 currentScale = transform->GetLocalScale();
+            transform->SetLocalScale(engine::Vector3(pulseScale, pulseScale, pulseScale));
+        }
+
+        // TODO: 알파 펄스, 회전 등 추가 효과
     }
 }
