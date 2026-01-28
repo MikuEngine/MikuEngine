@@ -13158,7 +13158,7 @@
                     "Active": true,
                     "Hp": 10,
                     "AttackRange": 5.0,
-                    "MoveSpeed": 0.0,
+                    "MoveSpeed": 8.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 1.0,
@@ -13178,7 +13178,7 @@
                     "type": 0,
                     "mass": 500.0,
                     "linearDamping": 15.0,
-                    "angularDamping": 55.0,
+                    "angularDamping": 30.0,
                     "useGravity": false,
                     "constraints": 0
                 },

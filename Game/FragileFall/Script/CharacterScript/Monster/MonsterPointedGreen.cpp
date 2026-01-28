@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterPointedGreen.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -21,9 +21,9 @@ namespace game
 
         // PointedGreen 고유 스탯 설정
         m_Hp = 10;
-        m_AttackRange = 7.0f;
+        m_AttackRange = 2.0f;
         m_detectionRange = 40.0f;
-        m_moveSpeed = 0.3f;  // 이동 가능
+        m_moveSpeed = 5.0f;  // 이동 가능
         m_rotationSpeed = 3.0f * 3.14159f;  // 360도/초 (라디안)
         m_fireRate = 3.0f;
         m_fireTimer = m_fireRate;
