@@ -35,7 +35,9 @@ namespace engine
         gridMap->WorldToGrid(end, endX, endZ);
 
         bool usedSnap = false;
+        bool usedEndSnap = false;
         const Vector3 originalStart = start;
+        const Vector3 originalEnd = end;
 
         // start가 unwalkable이면 가장 가까운 walkable 셀로 스냅 (스무딩으로 살짝 파고든 경우 대응)
         if (gridMap->IsValid(startX, startZ) && !gridMap->IsWalkable(startX, startZ))
@@ -51,20 +53,35 @@ namespace engine
             usedSnap = true;
         }
 
+        // end가 unwalkable이면 가장 가까운 walkable 셀로 스냅 (플레이어가 장애물 위에 있을 때 대응)
+        if (gridMap->IsValid(endX, endZ) && !gridMap->IsWalkable(endX, endZ))
+        {
+            int snapX, snapZ;
+            if (!FindNearestWalkable(gridMap, endX, endZ, snapX, snapZ))
+            {
+                result.success = false;
+                return result;
+            }
+            endX = snapX;
+            endZ = snapZ;
+            usedEndSnap = true;
+        }
+
         // 직선으로 이동 가능하면 바로 반환 (스냅된 start 기준으로 검사)
         Vector3 lineStart = usedSnap ? gridMap->GridToWorld(startX, startZ) : start;
-        if (IsLineWalkable(lineStart, end))
+        Vector3 lineEnd = usedEndSnap ? gridMap->GridToWorld(endX, endZ) : end;
+        if (IsLineWalkable(lineStart, lineEnd))
         {
             result.success = true;
-            result.path = { originalStart, end };
+            result.path = { originalStart, lineEnd };
             result.rawPath = result.path;
-            result.totalDistance = directDistance;
+            result.totalDistance = Vector3::Distance(originalStart, lineEnd);
             result.nodeCount = 2;
             result.optimizedNodeCount = 2;
             return result;
         }
 
-        // A* 알고리즘 실행 (스냅된 start 사용)
+        // A* 알고리즘 실행 (스냅된 start와 end 사용)
         result.rawPath = FindPathAStar(startX, startZ, endX, endZ);
 
         if (result.rawPath.empty())
@@ -79,11 +96,14 @@ namespace engine
         result.path = StringPull(result.rawPath);
         result.optimizedNodeCount = result.nodeCount;
 
-        result.path = SmoothPath(result.path, 2);  // 2회 반복
+        //result.path = SmoothPath(result.path, 2);  // 2회 반복
 
         // 스냅했을 경우 첫 웨이포인트를 실제 현재 위치로 (들락날락 방지)
         if (usedSnap && !result.path.empty())
             result.path[0] = originalStart;
+
+        // end를 스냅했을 경우 마지막 웨이포인트를 스냅된 위치로 유지 (장애물을 파고들지 않도록)
+        // (이미 FindPathAStar에서 스냅된 end로 경로를 찾았으므로 마지막 점은 자동으로 스냅된 위치)
 
         // 거리 계산
         for (size_t i = 1; i < result.path.size(); ++i)
