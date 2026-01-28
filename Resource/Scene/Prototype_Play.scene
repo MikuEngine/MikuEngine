@@ -13220,8 +13220,13 @@
                     "IndicatorOffset": {
                         "x": 0.0,
                         "y": 1.5,
-                        "z": 0.0
-                    }
+                        "z": -0.5
+                    },
+                    "LinePrefabName": "IndicatorLine",
+                    "LinePlayerOffset": 1.0,
+                    "LineMonsterOffset": 1.5,
+                    "LineBaseLength": 0.5,
+                    "LineHeight": 0.6000000238418579
                 }
             ]
         }

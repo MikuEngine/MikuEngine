@@ -13,17 +13,19 @@ namespace engine
 namespace game
 {
     class MonsterScript;
+    class PlayerControllerScript;
 
     // ═══════════════════════════════════════════════════════════════
     // ExecutionIndicatorManager - Fragile 몬스터 처형 인디케이터 관리
     // 
     // 기능:
     //   - Fragile 상태의 몬스터 위에 마우스 호버 시 인디케이터 표시
+    //   - 플레이어-몬스터 연결 라인 표시
     //   - 마우스 우클릭 시 Y축 회전 애니메이션 후 몬스터 Dead 상태 전이
     // 
     // 사용법:
     //   - 씬에 빈 GameObject 생성 후 이 스크립트 추가
-    //   - ExcutionIndicator 프리팹 필요
+    //   - ExcutionIndicator 프리팹 필요 (자식으로 IndicatorLine 포함)
     // ═══════════════════════════════════════════════════════════════
     class ExecutionIndicatorManager :
         public engine::Script<ExecutionIndicatorManager>
@@ -40,12 +42,28 @@ namespace game
         engine::Vector3 m_indicatorOffset{ 0.0f, 0.1f, 0.0f };  // 몬스터 위 오프셋
 
         // ─────────────────────────────────────────────
+        // 라인 설정
+        // ─────────────────────────────────────────────
+        std::string m_linePrefabName = "IndicatorLine";  // 라인 프리팹 이름
+        float m_linePlayerOffset = 0.5f;    // 플레이어-라인 간 오프셋 거리
+        float m_lineMonsterOffset = 0.5f;   // 라인-몬스터 간 오프셋 거리
+        float m_lineBaseLength = 1.0f;      // 스케일 1일 때 라인의 월드 길이
+        float m_lineHeight = 0.5f;          // 라인의 Y 높이
+
+        // ─────────────────────────────────────────────
         // 런타임 상태
         // ─────────────────────────────────────────────
         engine::Ptr<engine::Camera> m_mainCamera;
         engine::Ptr<engine::GameObject> m_indicatorInstance;
         engine::Ptr<engine::Transform> m_indicatorTransform;
         engine::Ptr<MonsterScript> m_hoveredMonster;
+        
+        // 플레이어 참조
+        engine::Ptr<PlayerControllerScript> m_player;
+        
+        // 라인 인스턴스
+        engine::Ptr<engine::GameObject> m_lineInstance;
+        engine::Ptr<engine::Transform> m_lineTransform;
         
         // 회전 애니메이션 상태
         bool m_isExecuting = false;
@@ -71,6 +89,13 @@ namespace game
         void DestroyIndicatorInstance();
         void ShowIndicator(engine::Transform* targetTransform);
         void HideIndicator();
+        
+        // 라인 관련
+        void CreateLineInstance();
+        void DestroyLineInstance();
+        void UpdateLine(const engine::Vector3& monsterPos);
+        void ShowLine();
+        void HideLine();
         
         // 마우스 호버 처리
         MonsterScript* GetFragileMonsterUnderMouse();

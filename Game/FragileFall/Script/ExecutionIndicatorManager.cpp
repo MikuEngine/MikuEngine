@@ -1,7 +1,8 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "ExecutionIndicatorManager.h"
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
 #include <Core/System/Input.h>
 #include <Core/System/MyTime.h>
@@ -35,6 +36,17 @@ namespace game
         if (!m_mainCamera)
         {
             LOG_PRINT("[ExecutionIndicatorManager] WARNING: MainCamera not found!");
+        }
+
+        // 플레이어 찾기
+        if (auto* playerGO = engine::GameObject::Find("Player"))
+        {
+            m_player = playerGO->GetComponent<PlayerControllerScript>();
+        }
+
+        if (!m_player)
+        {
+            LOG_PRINT("[ExecutionIndicatorManager] WARNING: Player not found!");
         }
     }
 
@@ -71,6 +83,14 @@ namespace game
             if (m_indicatorInstance && fragileMonster->GetTransform())
             {
                 ShowIndicator(fragileMonster->GetTransform());
+                
+                // 라인 업데이트
+                if (m_player && m_lineInstance)
+                {
+                    engine::Vector3 monsterPos = fragileMonster->GetTransform()->GetWorldPosition();
+                    UpdateLine(monsterPos);
+                    ShowLine();
+                }
             }
 
             // 우클릭 시 처형 시작
@@ -86,6 +106,7 @@ namespace game
             {
                 m_hoveredMonster = nullptr;
                 HideIndicator();
+                HideLine();
             }
         }
     }
@@ -99,7 +120,7 @@ namespace game
         engine::GameObject* indicator = engine::Prefab::Instantiate(m_indicatorPrefabName);
         if (!indicator)
         {
-            LOG_PRINT("[ExecutionIndicatorManager] ERROR: Failed to instantiate prefab '%s'", m_indicatorPrefabName.c_str());
+            LOG_PRINT("[ExecutionIndicatorManager] ERROR: Failed to instantiate prefab '{}'", m_indicatorPrefabName);
             return;
         }
 
@@ -108,10 +129,16 @@ namespace game
 
         // 초기에는 숨김
         indicator->SetActive(false);
+
+        // 라인도 생성
+        CreateLineInstance();
     }
 
     void ExecutionIndicatorManager::DestroyIndicatorInstance()
     {
+        // 라인 먼저 제거
+        DestroyLineInstance();
+
         if (m_indicatorInstance)
         {
             m_indicatorInstance->Destroy();
@@ -140,6 +167,117 @@ namespace game
             m_indicatorInstance->SetActive(false);
         }
     }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 라인 관련 함수
+    // ═══════════════════════════════════════════════════════════════
+
+    void ExecutionIndicatorManager::CreateLineInstance()
+    {
+        // 기존 인스턴스가 있으면 제거
+        DestroyLineInstance();
+
+        // 프리팹 인스턴스화
+        engine::GameObject* line = engine::Prefab::Instantiate(m_linePrefabName);
+        if (!line)
+        {
+            LOG_PRINT("[ExecutionIndicatorManager] WARNING: Failed to instantiate line prefab '{}'", m_linePrefabName);
+            return;
+        }
+
+        m_lineInstance = line;
+        m_lineTransform = line->GetTransform();
+
+        // 초기에는 숨김
+        line->SetActive(false);
+    }
+
+    void ExecutionIndicatorManager::DestroyLineInstance()
+    {
+        if (m_lineInstance)
+        {
+            m_lineInstance->Destroy();
+            m_lineInstance = nullptr;
+            m_lineTransform = nullptr;
+        }
+    }
+
+    void ExecutionIndicatorManager::UpdateLine(const engine::Vector3& monsterPos)
+    {
+        if (!m_lineTransform || !m_player) return;
+
+        engine::Transform* playerTransform = m_player->GetTransform();
+        if (!playerTransform) return;
+
+        // 플레이어 위치
+        engine::Vector3 playerPos = playerTransform->GetWorldPosition();
+        playerPos.y = m_lineHeight;  // Y 높이 고정
+
+        // 몬스터 위치 (Y 높이 고정)
+        engine::Vector3 targetPos = monsterPos;
+        targetPos.y = m_lineHeight;
+
+        // 방향과 거리 계산
+        engine::Vector3 direction = targetPos - playerPos;
+        float distance = direction.Length();
+
+        if (distance < 0.001f) return;  // 너무 가까우면 무시
+
+        direction.Normalize();
+
+        // 45도 탑뷰 시점 보정: X축 방향일 때 오프셋 100%, Z축 방향일 때 90%
+        // 배율 = 0.9 + 0.1 * |direction.x|
+        float offsetMultiplier = 0.9f + 0.1f * std::abs(direction.x);
+        float adjustedPlayerOffset = m_linePlayerOffset * offsetMultiplier;
+        float adjustedMonsterOffset = m_lineMonsterOffset * offsetMultiplier;
+
+        // 라인 위치: 플레이어와 몬스터의 중간점 (피벗이 중앙이므로)
+        engine::Vector3 midPoint = (playerPos + targetPos) * 0.5f;
+        m_lineTransform->SetLocalPosition(midPoint);
+
+        // 라인 회전 (로컬 Y축이 direction을 향하도록)
+        // 스프라이트가 X축 90도로 눕혀져 있어서 로컬 Y축이 Forward
+        // XZ 평면에서 방향 각도 계산 (Y축 회전만)
+        float yAngle = std::atan2(direction.x, direction.z);
+
+        // X축 90도 눕힘 + Y축 방향 회전
+        // CreateFromYawPitchRoll(yaw, pitch, roll) = (Y축, X축, Z축)
+        engine::Quaternion rotation = engine::Quaternion::CreateFromYawPitchRoll(
+            yAngle,                     // Y축 회전 (방향)
+            DirectX::XM_PIDIV2,         // X축 90도 (눕힘)
+            0.0f                        // Z축 회전 없음
+        );
+        m_lineTransform->SetLocalRotation(rotation);
+
+        // 라인 스케일 (Y축만 조정 - 양방향으로 늘어나므로)
+        // 실제 라인 길이 = 거리 - 보정된 양쪽 오프셋
+        float lineLength = distance - adjustedPlayerOffset - adjustedMonsterOffset;
+        if (lineLength < 0.0f) lineLength = 0.0f;
+
+        float yScale = lineLength / m_lineBaseLength;
+        engine::Vector3 currentScale = m_lineTransform->GetLocalScale();
+        m_lineTransform->SetLocalScale(engine::Vector3(currentScale.x, yScale, currentScale.z));
+    }
+
+    void ExecutionIndicatorManager::ShowLine()
+    {
+        if (m_lineInstance)
+        {
+            m_lineInstance->SetActive(true);
+        }
+    }
+
+    void ExecutionIndicatorManager::HideLine()
+    {
+        if (m_lineInstance)
+        {
+            m_lineInstance->SetActive(false);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 마우스 호버 처리
+    // ═══════════════════════════════════════════════════════════════
 
     MonsterScript* ExecutionIndicatorManager::GetFragileMonsterUnderMouse()
     {
@@ -249,8 +387,9 @@ namespace game
     {
         m_isExecuting = false;
 
-        // 인디케이터 숨김
+        // 인디케이터와 라인 숨김
         HideIndicator();
+        HideLine();
 
         // 몬스터 Dead 상태로 전이
         if (m_executingMonster)
@@ -271,9 +410,19 @@ namespace game
         ImGui::DragFloat3("Indicator Offset", &m_indicatorOffset.x, 0.1f);
 
         ImGui::Separator();
+        ImGui::Text("Line Settings:");
+        ImGui::InputText("Line Prefab", &m_linePrefabName);
+        ImGui::DragFloat("Line Player Offset", &m_linePlayerOffset, 0.1f, 0.0f, 10.0f);
+        ImGui::DragFloat("Line Monster Offset", &m_lineMonsterOffset, 0.1f, 0.0f, 10.0f);
+        ImGui::DragFloat("Line Base Length", &m_lineBaseLength, 0.1f, 0.01f, 10.0f);
+        ImGui::DragFloat("Line Height", &m_lineHeight, 0.1f, 0.0f, 10.0f);
+
+        ImGui::Separator();
         ImGui::Text("Runtime Info:");
         ImGui::Text("Hovered Monster: %s", m_hoveredMonster ? "Yes" : "No");
         ImGui::Text("Is Executing: %s", m_isExecuting ? "Yes" : "No");
+        ImGui::Text("Player Found: %s", m_player ? "Yes" : "No");
+        ImGui::Text("Line Instance: %s", m_lineInstance ? "Yes" : "No");
         if (m_isExecuting)
         {
             ImGui::Text("Execution Progress: %.1f%%", (m_executionTimer / m_rotationDuration) * 100.0f);
@@ -287,6 +436,13 @@ namespace game
         j["RotationDuration"] = m_rotationDuration;
         j["RaycastMaxDistance"] = m_raycastMaxDistance;
         j["IndicatorOffset"] = m_indicatorOffset;
+
+        // 라인 설정
+        j["LinePrefabName"] = m_linePrefabName;
+        j["LinePlayerOffset"] = m_linePlayerOffset;
+        j["LineMonsterOffset"] = m_lineMonsterOffset;
+        j["LineBaseLength"] = m_lineBaseLength;
+        j["LineHeight"] = m_lineHeight;
     }
 
     void ExecutionIndicatorManager::Load(const engine::json& j)
@@ -296,5 +452,12 @@ namespace game
         engine::JsonGet(j, "RotationDuration", m_rotationDuration);
         engine::JsonGet(j, "RaycastMaxDistance", m_raycastMaxDistance);
         engine::JsonGet(j, "IndicatorOffset", m_indicatorOffset);
+
+        // 라인 설정
+        engine::JsonGet(j, "LinePrefabName", m_linePrefabName);
+        engine::JsonGet(j, "LinePlayerOffset", m_linePlayerOffset);
+        engine::JsonGet(j, "LineMonsterOffset", m_lineMonsterOffset);
+        engine::JsonGet(j, "LineBaseLength", m_lineBaseLength);
+        engine::JsonGet(j, "LineHeight", m_lineHeight);
     }
 }
