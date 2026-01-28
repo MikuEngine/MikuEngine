@@ -41,8 +41,9 @@ namespace game
         void RefreshNodeVisuals();
 
     private:
-        void BuildDefaultTreeIfEmpty();
+        void BuildNodeTree();
         void RecomputeUnlocked();
+        void AutoRegisterNodesFromContent(const std::string& contentRootName);
         
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
 

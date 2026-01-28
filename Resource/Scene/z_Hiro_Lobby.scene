@@ -4255,7 +4255,7 @@
         {
             "ID": 56,
             "ParentID": 55,
-            "Name": "Content",
+            "Name": "UpgradeContent",
             "Active": true,
             "Components": [
                 {
@@ -4393,7 +4393,7 @@
             "ID": 58,
             "ParentID": 56,
             "Name": "Node(2)",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -4480,7 +4480,7 @@
             "ID": 59,
             "ParentID": 56,
             "Name": "Node(3)",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -4567,7 +4567,7 @@
             "ID": 60,
             "ParentID": 56,
             "Name": "Node(4)",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -4897,13 +4897,7 @@
                     "Ruby": 100,
                     "Sapphire": 100,
                     "Emerald": 100,
-                    "Purchased": [],
-                    "NodeObjects": [
-                        "Node(1)",
-                        "Node(2)",
-                        "Node(3)",
-                        "Node(4)"
-                    ]
+                    "Purchased": []
                 }
             ]
         }
