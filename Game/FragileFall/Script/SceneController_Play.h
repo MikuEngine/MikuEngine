@@ -35,6 +35,8 @@ namespace game
         void OpenOption();
         void BackToPlay();
         void BackToMain();
+        void BackToLobby();
+        void BackToRestart();
 
         void Back();
 
@@ -57,5 +59,6 @@ namespace game
         engine::GameObject* m_blocker = nullptr;
 
         engine::GameObject* m_realGiveupPopUp = nullptr;
+        engine::GameObject* m_failPanel = nullptr;
     };
 }

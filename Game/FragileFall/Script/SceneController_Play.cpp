@@ -52,6 +52,10 @@ namespace game
         BindButton("OK_Button", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->BackToMain(); });
         BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->CheckBackToMain(false); });
 
+        // If Dead
+        BindButton("ToLobby_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->BackToLobby(); });
+        BindButton("Restart_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->BackToRestart(); });
+
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->OnBGMChanged(v); });
         BindSlider("UI_SFXSlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->OnSFXChanged(v); });
@@ -71,6 +75,9 @@ namespace game
 
         m_realGiveupPopUp = engine::GameObject::Find("UI_RealGiveupPopUp");
         if (m_realGiveupPopUp) m_realGiveupPopUp->SetActive(false);
+
+        m_failPanel = engine::GameObject::Find("Panel_Fail");
+        if (m_failPanel) m_failPanel->SetActive(false);
 
         m_isMenuOpen = false;
         m_isOptionOpen = false;
@@ -101,6 +108,11 @@ namespace game
             if (m_isMenuOpen) { SetMenuOpen(false);   return; }
 
             SetMenuOpen(true);
+        }
+
+        if (engine::Input::IsKeyPressed(engine::Keys::F5))
+        {
+            m_failPanel->SetActive(true);
         }
     }
 
@@ -188,7 +200,17 @@ namespace game
 
     void SceneController_Play::BackToMain()
     {
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Title");
+        engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
+    }
+
+    void SceneController_Play::BackToLobby()
+    {
+        engine::SceneManager::Get().ChangeScene("z_Hiro_Lobby");
+    }
+
+    void SceneController_Play::BackToRestart()
+    {
+        engine::SceneManager::Get().ChangeScene("z_Hiro_Play");
     }
 
     void SceneController_Play::Back()
