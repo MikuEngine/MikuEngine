@@ -36,6 +36,7 @@
 #include "Framework/Object/Component/Light/LightDebugRenderer.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/CollisionSystem.h"
+#include "Framework/Object/Component/Socket/SocketDebugRenderer.h"
 
 #include "Framework/Asset/Prefab.h"
 
@@ -1096,6 +1097,7 @@ namespace engine
         PhysicsDebugRenderer::Get().OnGui();
         PathfindingDebugRenderer::Get().OnGui();
         LightDebugRenderer::Get().OnGui();
+		SocketDebugRenderer::Get().OnGui();
 
         ImGui::End();
     }

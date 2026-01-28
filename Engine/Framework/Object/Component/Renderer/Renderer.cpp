@@ -1,9 +1,11 @@
 ﻿#include "EnginePCH.h"
 #include "Renderer.h"
 
+#include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/Component/Animator/SkeletalAnimator.h"
 
 namespace engine
 {
@@ -20,6 +22,156 @@ namespace engine
 	void Renderer::Initialize()
 	{
 		SystemManager::Get().GetRenderSystem().Register(this);
+	}
+
+	void Renderer::DrawSocketEditor()
+	{
+		static Vector3 s_tempEuler = Vector3::Zero;
+		static int s_editingIndex = -1;
+
+		if (ImGui::CollapsingHeader("Socket Editor", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			if (ImGui::Button("Add New Socket"))
+			{
+				Socket* newSocket = new Socket();
+				newSocket->name = "New Socket " + std::to_string(m_socketInstances.size());
+				newSocket->localScale = Vector3::One;
+				newSocket->localRotation = Quaternion::Identity;
+				newSocket->localPosition = Vector3::Zero;
+				newSocket->UpdateLocalMatrix();
+
+				SocketInstance newInstance;
+				newInstance.info = newSocket;
+				newInstance.worldMatrix = Matrix::Identity;
+				m_socketInstances.push_back(newInstance);
+			}
+
+			for (size_t i = 0; i < m_socketInstances.size(); ++i)
+			{
+				auto& instance = m_socketInstances[i];
+				Socket* socket = const_cast<Socket*>(instance.info);
+				auto animator = GetGameObject()->GetComponent<SkeletalAnimator>();
+
+				ImGui::PushID(static_cast<int>(i));
+
+				std::string nodeLabel = (socket->name.empty() ? "New Socket" : socket->name) + "###SocketNode_" + std::to_string(i);
+				if (ImGui::TreeNode(nodeLabel.c_str()))
+				{
+					bool changed = false;
+
+					if (ImGui::InputText("Socket Name", &socket->name)) { changed = true; }
+
+					if (animator)
+					{
+						const char* preview =
+							socket->parentBoneName.empty()
+							? "<None>"
+							: socket->parentBoneName.c_str();
+
+						if (ImGui::BeginCombo("Select Bone##BoneSelect", preview))
+						{
+							const auto& skeleton = animator->GetSkeleton();
+							for (const auto& bone : skeleton)
+							{
+								bool isSelected = (socket->parentBoneName == bone.name);
+
+								if (ImGui::Selectable(bone.name.c_str(), isSelected))
+								{
+									Matrix oldWorld = instance.worldMatrix;
+									socket->parentBoneName = bone.name;
+
+									Matrix newBoneWorld = animator->GetBoneWorldMatrix(bone.name);
+									socket->localMatrix = oldWorld * newBoneWorld.Invert();
+
+									socket->DecomposeLocalMatrix();
+
+									UpdateSockets();
+								}
+
+								if (isSelected)
+									ImGui::SetItemDefaultFocus();
+							}
+							ImGui::EndCombo();
+						}
+					}
+					else
+					{
+						if (ImGui::InputText("Parent Bone", &socket->parentBoneName))
+						{
+							changed = true;
+							socket->localPosition = Vector3::Zero;
+							socket->UpdateLocalMatrix();
+							UpdateSockets();
+						}
+					}
+
+					ImGui::Separator();
+
+					changed |= ImGui::DragFloat3("Pos", &socket->localPosition.x, 0.05f);
+
+					if (s_editingIndex != static_cast<int>(i))
+					{
+						s_tempEuler = socket->localRotation.ToEuler();
+						s_editingIndex = static_cast<int>(i);
+					}
+
+					if (ImGui::DragFloat3("Rot", &s_tempEuler.x, 0.5f))
+					{
+						socket->localRotation = Quaternion::CreateFromYawPitchRoll(
+							ToRadian(s_tempEuler.y),
+							ToRadian(s_tempEuler.x),
+							ToRadian(s_tempEuler.z)
+						);
+						changed = true;
+					}
+
+					changed |= ImGui::DragFloat3("Scale", &socket->localScale.x, 0.05f);
+
+					if (changed)
+					{
+						socket->UpdateLocalMatrix();
+						UpdateSockets();
+					}
+
+					if (ImGui::Button("Save All Sockets"))
+					{
+						SaveSocketData();
+					}
+
+					ImGui::TreePop();
+				}
+				ImGui::PopID();
+			}
+		}
+	}
+
+	void Renderer::SaveSocketData()
+	{
+		std::string modelName = GetGameObject()->GetName();
+		std::string filePath = "Resource/Data/Socket/" + modelName + ".socketdata";
+
+		std::vector<Socket> socketsToSave;
+		for (const auto& instance : m_socketInstances)
+		{
+			if (instance.info)
+				socketsToSave.push_back(*(instance.info));
+		}
+
+		SocketData saver;
+		saver.SetSockets(socketsToSave);
+		saver.Save(filePath);
+
+		LOG_INFO("Socket data saved to: {}", filePath);
+	}
+
+	void Renderer::UpdateSockets()
+	{
+		Matrix world = GetTransform()->GetWorld();
+
+		for (auto& instance : m_socketInstances)
+		{
+			instance.worldMatrix = instance.info->localMatrix * world;
+		}
 	}
 
 	Matrix Renderer::GetSocketWorldMatrix(const std::string& name) const

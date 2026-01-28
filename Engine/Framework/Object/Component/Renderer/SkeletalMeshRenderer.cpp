@@ -25,6 +25,7 @@
 #include "Framework/Object/Component/Animator/SkeletalAnimator.h"
 #include "Core/Graphics/Data/ShaderSlotTypes.h"
 #include "Common/Utility/StaticMemoryPool.h"
+#include "Editor/EditorManager.h"
 
 namespace engine
 {
@@ -215,10 +216,17 @@ namespace engine
 
     void SkeletalMeshRenderer::Update()
     {
-        // Animator에서 행렬 가져오기
         auto animator = GetGameObject()->GetComponent<SkeletalAnimator>();
         if (animator)
         {
+
+#ifdef _DEBUG
+            if (EditorManager::Get().GetEditorState() == EditorState::Edit)
+            {
+                animator->Update();
+            }
+#endif
+
             std::memcpy(
                 m_boneTransformData.boneTransform,
                 animator->GetFinalBoneMatrices().data(),
@@ -229,6 +237,8 @@ namespace engine
             // 애니메이터 없으면 Identity?
             // (Initialize에서 이미 초기화됨)
         }
+
+        UpdateSockets();
     }
 
     bool SkeletalMeshRenderer::HasRenderType(RenderType type) const
@@ -628,10 +638,24 @@ namespace engine
 
     void SkeletalMeshRenderer::UpdateSockets()
     {
+        if (!m_skeletonData) return;
+
+        auto animator = GetGameObject()->GetComponent<SkeletalAnimator>();
+        if (!animator) return;
+
+        Matrix objectWorld = GetTransform()->GetWorld();
+
         for (auto& instance : m_socketInstances)
         {
-            int boneIndex = m_skeletonData->GetBoneIndexByBoneName(instance.info->parentBoneName);
-            instance.worldMatrix = instance.info->localMatrix * m_boneTransformData.boneTransform[boneIndex] * GetTransform()->GetWorld();
+            if (!instance.info->parentBoneName.empty())
+            {
+                Matrix boneWorldMatrix = animator->GetBoneWorldMatrix(instance.info->parentBoneName);
+                instance.worldMatrix = instance.info->localMatrix * boneWorldMatrix;
+            }
+            else
+            {
+                instance.worldMatrix = instance.info->localMatrix * objectWorld;
+            }
         }
     }
 
@@ -756,6 +780,8 @@ namespace engine
             }
         }
         
+        DrawSocketEditor();
+
         ImGui::Unindent();
         
         ImGui::Spacing();

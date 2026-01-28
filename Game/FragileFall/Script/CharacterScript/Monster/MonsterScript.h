@@ -168,6 +168,12 @@ namespace game
         virtual void OnFragile();
         virtual void OnDeath();
         
+    public:
+        // ─────────────────────────────────────────────
+        // 외부 데미지 처리 (총알 등에서 호출)
+        // ─────────────────────────────────────────────
+        void TakeDamage(int damage);
+        
         bool m_isFragile = false;
         bool m_isDead = false;
 

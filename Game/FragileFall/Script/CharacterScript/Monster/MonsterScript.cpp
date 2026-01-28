@@ -500,6 +500,24 @@ namespace game
 		// GetGameObject()->Destroy(deathAnimDuration);
 	}
 
+	void MonsterScript::TakeDamage(int damage)
+	{
+		// 이미 Fragile 또는 Dead 상태이면 무시
+		std::string currentState = GetCurrentState();
+		if (currentState == "Fragile" || currentState == "Dead")
+		{
+			return;
+		}
+
+		m_Hp -= damage;
+		if (m_Hp < 0)
+		{
+			m_Hp = 0;
+		}
+
+		// 체력 체크는 CheckHealth()에서 자동으로 처리됨
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 컴포넌트 검증
 	// ═══════════════════════════════════════════════════════════════

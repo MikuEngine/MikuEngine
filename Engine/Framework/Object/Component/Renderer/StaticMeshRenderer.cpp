@@ -78,6 +78,11 @@ namespace engine
         SystemManager::Get().GetRenderSystem().Register(this);
     }
 
+    void StaticMeshRenderer::Update()
+    {
+        UpdateSockets();
+    }
+
     void StaticMeshRenderer::SetMesh(const std::string& meshFilePath)
     {
         if (m_isInitialized)
@@ -293,6 +298,8 @@ namespace engine
                 ImGui::TreePop();
             }
         }
+
+        DrawSocketEditor();
     }
 
     void StaticMeshRenderer::Save(json& j) const
