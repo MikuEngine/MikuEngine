@@ -26,7 +26,7 @@ namespace engine
 
 	struct SocketInstance
 	{
-		const Socket* info;
+		const Socket* info = nullptr;
 		Matrix worldMatrix;
 	};
 
@@ -39,6 +39,7 @@ namespace engine
 		std::array<std::int32_t, static_cast<size_t>(RenderType::Count)> m_systemIndices;
 
 	protected:
+		std::string m_emptyPath = "";
 		std::shared_ptr<SocketData> m_socketData;
 		std::vector<SocketInstance> m_socketInstances;
 
@@ -62,11 +63,15 @@ namespace engine
 
 		void DrawSocketEditor();
 		void SaveSocketData();
+		void LoadSocketData();
 
 		virtual void UpdateSockets();
-		virtual Matrix GetSocketWorldMatrix(const std::string& name) const;
 
+		virtual Matrix GetSocketWorldMatrix(const std::string& name) const;
 		const std::vector<SocketInstance>& GetSocketInstances() const { return m_socketInstances; }
+		virtual const std::string& GetMeshPath() const { return m_emptyPath; }
+
+		void ClearSockets();
 
 	private:
 		friend class RenderSystem;

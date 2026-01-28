@@ -244,6 +244,26 @@
                         1.0,
                         1.0
                     ]
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "AimPointer",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
+                    },
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
                 }
             ]
         },

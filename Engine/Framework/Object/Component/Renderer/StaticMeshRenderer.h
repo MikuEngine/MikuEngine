@@ -93,6 +93,8 @@ namespace engine
         // 장애물 반투명 설정 (스크립트에서 호출)
         void SetObstacleAlpha(bool enable, float alpha);
 
+        const std::string& GetMeshPath() const override;
+
     public:
         void OnGui() override;
         void Save(json& j) const override;

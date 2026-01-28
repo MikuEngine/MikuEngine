@@ -95,7 +95,7 @@ namespace engine
         void SetCullMode(CullMode cullMode);
 
         std::shared_ptr<SkeletonData> GetSkeletonData() const;
-        const std::string& GetMeshPath() const;
+        const std::string& GetMeshPath() const override;
 
         // 런타임 머티리얼 색상 조작
         void SetBaseColor(const Vector4& color) { m_materialBaseColor = color; }
