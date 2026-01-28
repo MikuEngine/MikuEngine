@@ -8,10 +8,8 @@ namespace game
 {
     void BossShieldEffect::Awake()
     {
-        if (GetGameObject())
-        {
-            m_shieldMesh = GetGameObject()->GetComponent<engine::StaticMeshRenderer>();
-        }
+        m_shieldMesh = GetGameObject()->GetComponent<engine::StaticMeshRenderer>();
+        m_shieldMesh->SetObstacleAlpha(true, 0.3f);
     }
 
     void BossShieldEffect::Update()

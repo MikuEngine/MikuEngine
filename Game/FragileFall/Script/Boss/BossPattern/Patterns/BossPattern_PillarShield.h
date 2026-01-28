@@ -7,6 +7,7 @@ namespace game
 {
     class BossScript;
     class BossPillar;
+    class BossShieldEffect;
 
     class BossPattern_PillarShield :
         public BossPatternBase
@@ -14,9 +15,9 @@ namespace game
     private:
         float m_interval = 10.0f;  // 10초마다 실행
         float m_intervalTimer = 0.0f;  // 간격 타이머
-        int m_pillarCount = 4;  // 생성할 기둥 개수
-        float m_pillarSpawnRadius = 8.0f;  // 기둥 생성 반경
+        int m_pillarCount = 2;  // 생성할 기둥 개수
         std::vector<engine::Ptr<BossPillar>> m_spawnedPillars;  // 생성된 기둥들
+        std::vector<engine::Ptr<BossShieldEffect>> m_shieldEffects;  // 생성된 기둥들
 
     public:
         void Start(BossScript* boss) override;
