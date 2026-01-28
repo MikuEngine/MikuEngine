@@ -20,7 +20,7 @@ namespace game
         float m_pulseSpeed = 2.0f;  // 펄스 속도
 
     public:
-        void Awake() override;
+        void Start() override;
         void Update() override;
     };
 }

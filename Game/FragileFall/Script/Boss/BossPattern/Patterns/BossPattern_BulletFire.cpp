@@ -1,8 +1,6 @@
 ﻿#include "GamePCH.h"
 #include "BossPattern_BulletFire.h"
 
-#include <Framework/Scene/SceneManager.h>
-#include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 #include <Framework/Asset/Prefab.h>

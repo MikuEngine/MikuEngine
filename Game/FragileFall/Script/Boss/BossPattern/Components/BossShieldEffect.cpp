@@ -6,10 +6,10 @@
 
 namespace game
 {
-    void BossShieldEffect::Awake()
+    void BossShieldEffect::Start()
     {
         m_shieldMesh = GetGameObject()->GetComponent<engine::StaticMeshRenderer>();
-        m_shieldMesh->SetObstacleAlpha(true, 0.3f);
+        m_shieldMesh->SetObstacleAlpha(true, 0.5f);
     }
 
     void BossShieldEffect::Update()
@@ -21,7 +21,7 @@ namespace game
 
         // 쉴드 이펙트 애니메이션 (펄스 효과)
         // 스케일을 펄스로 변경 (1.0 ~ 1.1 사이)
-        float pulseScale = 1.0f + 0.1f * (0.5f + 0.5f * std::sinf(m_pulseTimer));
+        float pulseScale = 0.7f + 0.3f * (0.5f + 0.5f * std::sinf(m_pulseTimer));
 
         auto* transform = GetGameObject()->GetTransform();
         if (transform)

@@ -1,10 +1,10 @@
 {
-    "Name": "Bullet",
+    "Name": "BossBigBulletProjectile",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "Bullet",
+            "Name": "BossBigBulletProjectile",
             "Active": true,
             "Components": [
                 {
@@ -22,43 +22,10 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.5,
-                        "y": 0.5,
-                        "z": 0.5
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     }
-                },
-                {
-                    "Type": "BulletPlayer",
-                    "Active": true
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 0.0,
-                    "angularDamping": 100.0,
-                    "useGravity": false,
-                    "constraints": 0
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": true,
-                    "layer": 3,
-                    "materialType": 1,
-                    "radius": 0.5
                 },
                 {
                     "Type": "StaticMeshRenderer",
@@ -69,9 +36,9 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.0,
-                        "y": 1.0,
-                        "z": 0.20077204704284668,
+                        "x": 0.8648648262023926,
+                        "y": 0.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
@@ -80,12 +47,16 @@
                         "z": 1.0
                     },
                     "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
+                    "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
+                    "MaterialEmissiveIntensity": 0.0,
+                    "OverrideMaterial": true,
                     "CastShadow": false,
                     "CullMode": 1
+                },
+                {
+                    "Type": "BossProjectile",
+                    "Active": true
                 }
             ]
         }
