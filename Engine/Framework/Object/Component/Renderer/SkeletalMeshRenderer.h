@@ -69,6 +69,7 @@ namespace engine
         float m_materialRoughness = 0.0f;
         float m_materialMetalness = 0.0f;
         float m_materialAmbientOcclusion = 1.0f;
+        float m_materialEmissiveIntensity = 1.0f;
         bool m_overrideMaterial = false;
         bool m_castShadow = false;
         CullMode m_cullMode = CullMode::Back;
