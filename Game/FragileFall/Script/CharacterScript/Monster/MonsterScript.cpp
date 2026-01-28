@@ -226,37 +226,37 @@ namespace game
 		engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
 		engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
 
-		// PathfindingAgent 자동 경로 업데이트 (FixedDeltaTime 사용)
+		// PathfindingAgent 자동 경로 업데이트 (FixedUpdate 기반 - 즉시 계산)
 		float fixedDeltaTime = engine::Time::FixedDeltaTime();
-		m_pathfindingAgent->UpdatePathfinding(fixedDeltaTime, playerPos);
+		m_pathfindingAgent->UpdatePathfindingFixed(fixedDeltaTime, playerPos);
 
 		engine::Vector3 nextWaypoint;
 		engine::Vector3 direction;
 
-		if (!m_pathfindingAgent->HasPath())
+		// waypoint 가져오기 시도
+		bool hasValidWaypoint = m_pathfindingAgent->HasPath() && 
+		                        m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
+
+		if (!hasValidWaypoint)
 		{
-			// 경로가 없으면 직접 이동
+			// 경로가 없거나 유효한 waypoint가 없으면 직접 이동
 			direction = CalculateDirectionToPlayer();
 		}
 		else
 		{
-			m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
-
 			engine::Vector3 toCurrentWaypoint = nextWaypoint - currentPos;
-
 			toCurrentWaypoint.y = 0.0f;
 
 			if (toCurrentWaypoint.LengthSquared() > 0.0001f)
 			{
 				toCurrentWaypoint.Normalize();
+				direction = toCurrentWaypoint;
 			}
 			else
 			{
-				return;
+				// waypoint에 거의 도달했으면 직접 이동으로 폴백
+				direction = CalculateDirectionToPlayer();
 			}
-
-			direction = toCurrentWaypoint;
-
 		}
 
 		// ─────────────────────────────────────────────

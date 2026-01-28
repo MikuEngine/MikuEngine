@@ -64,7 +64,7 @@
                 {
                     "Type": "PlayerControllerScript",
                     "Active": true,
-                    "MoveSpeed": 11.0,
+                    "MoveSpeed": 13.0,
                     "FireRate": 0.30000001192092896,
                     "BulletSpeed": 13.0,
                     "BulletLifetime": 3.0,
@@ -352,6 +352,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 0,
+                    "materialType": 1,
                     "radius": 1.2899999618530273,
                     "height": 3.7899999618530273
                 }
@@ -11891,6 +11892,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 2,
+                    "materialType": 1,
                     "size": [
                         0.6000000238418579,
                         2.5999999046325684,
@@ -11913,6 +11915,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -12149,6 +12152,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 2,
+                    "materialType": 1,
                     "size": [
                         0.6000000238418579,
                         2.5999999046325684,
@@ -12468,6 +12472,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 4,
+                    "materialType": 1,
                     "size": [
                         2.4000000953674316,
                         1.840000033378601,
@@ -12598,6 +12603,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 4,
+                    "materialType": 1,
                     "size": [
                         1.100000023841858,
                         1.090000033378601,
@@ -12674,6 +12680,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 4,
+                    "materialType": 1,
                     "size": [
                         3.0,
                         2.0,
@@ -12750,6 +12757,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 4,
+                    "materialType": 1,
                     "size": [
                         1.059999942779541,
                         1.059999942779541,
@@ -12987,6 +12995,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 2,
+                    "materialType": 1,
                     "size": [
                         0.6000000238418579,
                         2.5999999046325684,
@@ -13376,15 +13385,16 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 2,
+                    "materialType": 1,
                     "radius": 1.1100000143051147,
                     "height": 2.799999952316284
                 },
                 {
                     "Type": "PathfindingAgent",
                     "Active": true,
-                    "PathUpdateInterval": 1.0,
-                    "WaypointReachDistance": 0.20000000298023224,
-                    "TargetMoveThreshold": 1.0
+                    "PathUpdateInterval": 0.10000000149011612,
+                    "WaypointReachDistance": 0.10000000149011612,
+                    "TargetMoveThreshold": 0.5
                 }
             ]
         }
