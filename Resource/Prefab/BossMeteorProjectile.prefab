@@ -1,10 +1,10 @@
 {
-    "Name": "BossBullet",
+    "Name": "BossMeteorProjectile",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "BossBullet",
+            "Name": "BossMeteorProjectile",
             "Active": true,
             "Components": [
                 {
@@ -22,17 +22,10 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.30000001192092896,
-                        "y": 0.30000001192092896,
-                        "z": 0.30000001192092896
+                        "x": 2.5,
+                        "y": 2.5,
+                        "z": 2.5
                     }
-                },
-                {
-                    "Type": "BossBullet",
-                    "Active": true,
-                    "Speed": 1.0,
-                    "Damage": 20.0,
-                    "Lifetime": 5.0
                 },
                 {
                     "Type": "StaticMeshRenderer",
@@ -43,9 +36,9 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 1.0,
+                        "x": 0.6795363426208496,
                         "y": 0.0,
-                        "z": 0.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
@@ -59,24 +52,6 @@
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 0,
-                    "radius": 0.14000000059604645
                 }
             ]
         }

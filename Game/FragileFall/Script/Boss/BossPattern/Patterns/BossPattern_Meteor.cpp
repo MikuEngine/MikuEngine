@@ -1,17 +1,46 @@
 ﻿#include "GamePCH.h"
 #include "BossPattern_Meteor.h"
 
-#include <Framework/Scene/SceneManager.h>
-#include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Asset/Prefab.h>
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
+#include "Script/Boss/BossPattern/Components/BossBullet.h"
 
 namespace game
 {
+    namespace
+    {
+        struct XZDirections
+        {
+            static constexpr float kDiag = 0.70710678f;
+
+            static constexpr engine::Vector3 Forward{ 0.0f, 0.0f,  1.0f }; // 앞 (+Z)
+            static constexpr engine::Vector3 Backward{ 0.0f, 0.0f, -1.0f }; // 뒤 (-Z)
+            static constexpr engine::Vector3 Left{ -1.0f, 0.0f,  0.0f }; // 좌 (-X)
+            static constexpr engine::Vector3 Right{ 1.0f, 0.0f,  0.0f }; // 우 (+X)
+
+            static constexpr engine::Vector3 ForwardLeft{ -kDiag, 0.0f,  kDiag };
+            static constexpr engine::Vector3 ForwardRight{ kDiag, 0.0f,  kDiag };
+            static constexpr engine::Vector3 BackLeft{ -kDiag, 0.0f, -kDiag };
+            static constexpr engine::Vector3 BackRight{ kDiag, 0.0f, -kDiag };
+        };
+
+        static constexpr std::array<engine::Vector3, 8> g_offsets8{
+            XZDirections::Forward,
+            XZDirections::ForwardRight,
+            XZDirections::Right,
+            XZDirections::BackRight,
+            XZDirections::Backward,
+            XZDirections::BackLeft,
+            XZDirections::Left,
+            XZDirections::ForwardLeft
+        };
+    }
+
     void BossPattern_Meteor::Start(BossScript* boss)
     {
         if (!boss) return;
@@ -59,13 +88,7 @@ namespace game
 
     void BossPattern_Meteor::SpawnMeteors(BossScript* boss)
     {
-        if (!boss || !boss->GetGameObject()) return;
-
-        auto* scene = engine::SceneManager::Get().GetScene();
-        if (!scene) return;
-
-        auto* bossTransform = boss->GetGameObject()->GetTransform();
-        if (!bossTransform) return;
+        auto bossTransform = boss->GetTransform();
 
         engine::Vector3 bossPos = bossTransform->GetWorldPosition();
 
@@ -80,35 +103,35 @@ namespace game
         // 운석 생성
         for (int i = 0; i < m_meteorCount; ++i)
         {
-            // 랜덤 위치 생성 (보스 중심 기준 반경 내)
-            float angle = static_cast<float>(i) * (360.0f / m_meteorCount) * 3.14159f / 180.0f;
-            float radius = m_spawnRadius * (0.5f + (static_cast<float>(rand() % 100) / 100.0f) * 0.5f);  // 50%~100% 반경
-
             engine::Vector3 spawnPos(
-                bossPos.x + std::cosf(angle) * radius,
-                bossPos.y + m_fallHeight,
-                bossPos.z + std::sinf(angle) * radius
+                engine::Random::Float(m_spawnPosMin.x, m_spawnPosMax.z),
+                m_fallHeight,
+                engine::Random::Float(m_spawnPosMin.z, m_spawnPosMax.z)
             );
 
             // 목표 위치 (지면)
             engine::Vector3 targetPos = spawnPos;
-            targetPos.y = bossPos.y;  // 보스와 같은 높이 (지면)
+            targetPos.y = 0.0f;  // 보스와 같은 높이 (지면)
 
             // 운석 GameObject 생성
             std::string meteorName = "BossMeteor_" + std::to_string(i) + "_" + std::to_string(rand());
-            auto* meteorGO = scene->CreateGameObject(meteorName);
-            if (!meteorGO) continue;
+            auto meteorGO = engine::Prefab::Instantiate("BossMeteorProjectile");
+            meteorGO->SetName(meteorName);
 
             // Transform 설정
-            auto* meteorTransform = meteorGO->GetTransform();
-            if (meteorTransform)
-            {
-                meteorTransform->SetLocalPosition(spawnPos);
-            }
+            meteorGO->GetTransform()->SetLocalPosition(spawnPos);
+
+            auto warningGO = engine::Prefab::Instantiate("BossMeteorWarning");
+            warningGO->SetName(meteorName+ "_warning");
+
+            engine::Vector3 warningPos = spawnPos;
+            warningPos.y = 0.01f;
+            warningGO->GetTransform()->SetLocalPosition(warningPos);
 
             // MeteorData 추가
             MeteorData meteorData;
             meteorData.meteorGO = engine::Ptr<engine::GameObject>(meteorGO);
+            meteorData.warningGO = engine::Ptr<engine::GameObject>(warningGO);
             meteorData.targetPos = targetPos;
             meteorData.elapsedTime = 0.0f;
             meteorData.hasLanded = false;
@@ -162,13 +185,13 @@ namespace game
                     float fallDistance = m_fallSpeed * fallTime;
 
                     engine::Vector3 startPos = currentPos;
-                    startPos.y = boss->GetGameObject()->GetTransform()->GetWorldPosition().y + m_fallHeight;
+                    startPos.y = m_fallHeight;
 
                     float totalDistance = m_fallHeight;
                     float progress = std::min(fallDistance / totalDistance, 1.0f);
 
                     // Lerp 직접 구현 (Vector3::Lerp가 없을 수 있음)
-                    engine::Vector3 newPos = startPos + (meteor.targetPos - startPos) * progress;
+                    engine::Vector3 newPos = engine::Vector3::Lerp(startPos, meteor.targetPos, progress);
                     transform->SetLocalPosition(newPos);
 
                     // 착지 체크
@@ -181,8 +204,21 @@ namespace game
                         // auto* player = boss->GetTargetPlayer();
                         // if (player && ...) { player->TakeDamage(static_cast<int>(m_meteorDamage)); }
 
+                        for (auto& dir : g_offsets8)
+                        {
+                            auto go = engine::Prefab::Instantiate("BossBulletProjectile");
+                            go->GetTransform()->SetLocalPosition(meteor.meteorGO->GetTransform()->GetLocalPosition() + engine::Vector3(0.0f, 1.0f, 0.0f));
+
+                            auto bullet = go->GetComponent<BossBullet>();
+                            if (bullet)
+                            {
+                                bullet->Setup(dir, m_bulletSpeed, m_bulletDamage, m_bulletLifetime);
+                            }
+                        }
+
                         // 운석 파괴 (약간의 지연 후)
                         meteor.meteorGO->Destroy();
+                        meteor.warningGO->Destroy();
                         return true;  // 제거
                     }
 

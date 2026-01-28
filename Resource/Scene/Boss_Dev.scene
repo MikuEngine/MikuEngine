@@ -238,6 +238,7 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 0,
+                    "materialType": 1,
                     "size": [
                         1.0,
                         1.0,

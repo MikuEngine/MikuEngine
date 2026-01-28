@@ -111,7 +111,7 @@ namespace game
             // 탄환 GameObject 생성
             std::string bulletName = "BossBullet_" + std::to_string(i);
 
-            auto bulletGO = engine::Prefab::Instantiate("BossBullet");
+            auto bulletGO = engine::Prefab::Instantiate("BossBulletProjectile");
             bulletGO->SetName(bulletName);
 
             // Transform 설정
