@@ -543,6 +543,7 @@ namespace engine
         m_deviceContext->ClearRenderTargetView(m_pickingIdBuffer->GetRawRTV(), clearColor);
         m_deviceContext->ClearDepthStencilView(m_gameDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         m_deviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+        m_deviceContext->OMSetDepthStencilState(nullptr, 0);
     }
 
     unsigned int GraphicsDevice::EndDrawPickingPass(int mouseX, int mouseY)
