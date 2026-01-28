@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Title",
-    "NumGameObjects": 47,
+    "NumGameObjects": 48,
     "GameObjects": [
         {
             "ID": 0,
@@ -3449,6 +3449,46 @@
                         "w": 0.1764705926179886
                     },
                     "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 47,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "AudioSource",
+                    "Active": true,
+                    "ClipName": "Suki_Yuki_Maji_Magic.mp3",
+                    "IsLoop": true,
+                    "Is3D": false,
+                    "PlayOnAwake": true,
+                    "Volume": 1.0,
+                    "MinDist": 1.0,
+                    "MaxDist": 500.0,
+                    "UseRandom": false,
+                    "RandomClips": []
                 }
             ]
         }

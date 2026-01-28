@@ -371,6 +371,8 @@ namespace engine
         bool is3D = false;
         std::string groupName = option;
 
+        LOG_PRINT("[CreateSound] filename='{}' option='{}'", filename, option);
+
         if (option.find("BGM") != std::string::npos)
         {
             is3D = false;
@@ -379,11 +381,11 @@ namespace engine
         {
             is3D = false;
         }
-        else if (option == "2D")
-        {
-            is3D = false;
-            groupName = "Master";
-        }
+        //else if (option == "2D")
+        //{
+        //    is3D = false;
+        //    groupName = "Master";
+        //}
 
         FMOD::ChannelGroup* targetGroup = GetOrCreateChannelGroup(groupName);
 
@@ -536,7 +538,7 @@ namespace engine
         m_listenerUp = up;
     }
 
-    void SoundSystem::Play(const std::string& key, float volume, float pitch)
+    void SoundSystem::Play(const std::string& key, const std::string& option, float volume, float pitch)
     {
         Sound* targetSound = nullptr;
 
@@ -550,7 +552,7 @@ namespace engine
         }
         else
         {
-            auto soundData = AssetManager::Get().GetOrCreateSoundData(key, "SFX", LifeScope::Scene);
+            auto soundData = AssetManager::Get().GetOrCreateSoundData(key, option, LifeScope::Scene);
 
             if (soundData)
             {

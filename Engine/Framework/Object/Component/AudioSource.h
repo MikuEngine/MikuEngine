@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
 #include "Framework/Object/Component/ComponentFactory.h"
@@ -32,6 +32,7 @@ namespace engine
         std::string m_clipName;                     // 재생할 사운드 파일 키값
         std::shared_ptr<SoundData> m_soundData;     // 로드된 사운드 리소스 데이터
 		std::vector<std::string> m_randomClipNames; // 랜덤 후보 리스트
+        std::string m_bus = "SFX";                  // 기본 로드 옵션
 
         bool m_playOnAwake = false;
         bool m_isLoop = false;
