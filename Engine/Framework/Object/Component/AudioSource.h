@@ -86,9 +86,11 @@ namespace engine
         void SetForceStopState();
         void SetFadeInTime(float time) { m_fadeInTime = time; }
         void SetFadeOutTime(float time) { m_fadeOutTime = time; }
+        void SetBus(std::string busName) { m_bus = busName; }
 
         Sound* GetSoundResource() const;
         FMOD::Channel* GetChannel() const { return m_currentChannel; }
+        std::string GetBus() const { return m_bus; }
         bool Is3D() const { return m_is3D; }
         bool IsPlaying() const { return m_isPlaying; }
 
