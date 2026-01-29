@@ -6,8 +6,13 @@
 
 namespace engine
 {
-    void SocketAttachment::Update()
+    SocketAttachment::~SocketAttachment()
     {
+        if (m_targetRenderer != nullptr)
+        {
+            m_targetRenderer->UnregisterAttachedObject(GetGameObject());
+            m_targetRenderer = nullptr;
+        }
     }
 
     void SocketAttachment::SetSocket(Renderer* renderer, const std::string& socketName)

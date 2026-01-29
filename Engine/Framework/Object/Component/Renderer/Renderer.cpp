@@ -6,6 +6,7 @@
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/Animator/SkeletalAnimator.h"
+#include "Framework/Object/Component/Socket/SocketAttachment.h"
 
 namespace engine
 {
@@ -17,6 +18,21 @@ namespace engine
 	Renderer::~Renderer()
 	{
 		SystemManager::Get().GetRenderSystem().Unregister(this);
+
+		for (auto& attached : m_attachedObjects)
+		{
+			if (attached.obj)
+			{
+				auto attachment = attached.obj->GetComponent<SocketAttachment>();
+				if (attachment)
+				{
+					attachment->NotifyTargetRendererDestroyed();
+				}
+			}
+		}
+		m_attachedObjects.clear();
+
+		ClearSockets();
 	}
 
 	void Renderer::Initialize()
@@ -33,7 +49,7 @@ namespace engine
 		{
 			if (ImGui::Button("Add New Socket"))
 			{
-				Socket* newSocket = new Socket();
+				auto newSocket = std::make_shared<Socket>();
 				newSocket->name = "New Socket " + std::to_string(m_socketInstances.size());
 				newSocket->localScale = Vector3::One;
 				newSocket->localRotation = Quaternion::Identity;
@@ -55,7 +71,7 @@ namespace engine
 			for (size_t i = 0; i < m_socketInstances.size(); ++i)
 			{
 				auto& instance = m_socketInstances[i];
-				Socket* socket = const_cast<Socket*>(instance.info);
+				auto socket = instance.info.get();
 				auto animator = GetGameObject()->GetComponent<SkeletalAnimator>();
 
 				ImGui::PushID(static_cast<int>(i));
@@ -181,7 +197,6 @@ namespace engine
 
 				if (pendingDelete)
 				{
-					delete instance.info;
 					m_socketInstances.erase(m_socketInstances.begin() + i);
 					--i;
 					continue;
@@ -248,7 +263,7 @@ namespace engine
 		for (const auto& s : loadedSockets)
 		{
 			SocketInstance instance;
-			instance.info = new Socket(s);
+			instance.info = std::make_shared<Socket>(s);
 			instance.worldMatrix = Matrix::Identity;
 			tempInstances.push_back(instance);
 		}
@@ -299,11 +314,6 @@ namespace engine
 
 	void Renderer::ClearSockets()
 	{
-		for (auto& instance : m_socketInstances)
-		{
-			delete instance.info;
-			instance.info = nullptr;
-		}
 		m_socketInstances.clear();
 	}
 
