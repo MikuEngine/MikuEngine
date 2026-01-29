@@ -23,11 +23,13 @@ namespace engine
 		std::string m_textureFilePath;
 		std::string m_vsFilePath;
 		std::string m_psFilePath;
+		std::string m_outlinePSFilePath;
 		std::shared_ptr<Texture> m_texture;
 
 		std::shared_ptr<VertexShader> m_vs;
 		std::shared_ptr<PixelShader>  m_ps;
-		std::shared_ptr<InputLayout> m_inputLayout;
+		std::shared_ptr<PixelShader>  m_outlinePS;
+		std::shared_ptr<InputLayout>  m_inputLayout;
 
 		std::shared_ptr<VertexBuffer> m_vertexBuffer;
 		std::shared_ptr<IndexBuffer> m_indexBuffer;

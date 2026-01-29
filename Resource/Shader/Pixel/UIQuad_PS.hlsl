@@ -93,47 +93,9 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     // Texture Sample
     float2 uv = input.texCoord;
     float4 tex = g_texBlit.Sample(g_samLinear, uv);
-    float4 baseCol = tex * g_uiColor;
-    
-    // Outline
-    float4 outCol = baseCol;
-    
-    if (g_outlineEnabled > 0.5 && g_outlineThickness > 0.0)
-    {
-        const float aCenter = baseCol.a;
-        if (aCenter < 0.001)
-        {
-            uint w, h;
-            g_texBlit.GetDimensions(w, h);
+    float4 finalColor = tex * g_uiColor;
+   
+    finalColor.rgb = LinearToSRGB(finalColor.rgb);
 
-            // thickness(px) -> uv offset
-            float2 texel = float2(1.0 / max(1u, w), 1.0 / max(1u, h));
-            float2 d = texel * g_outlineThickness;
-
-            // 주변 알파 최대값(4방향 + 대각선 4방향)
-            float aMax = 0.0;
-
-            aMax = max(aMax, g_texBlit.Sample(g_samLinear, uv + float2(d.x, 0.0)).a);
-            aMax = max(aMax, g_texBlit.Sample(g_samLinear, uv + float2(-d.x, 0.0)).a);
-            aMax = max(aMax, g_texBlit.Sample(g_samLinear, uv + float2(0.0, d.y)).a);
-            aMax = max(aMax, g_texBlit.Sample(g_samLinear, uv + float2(0.0, -d.y)).a);
-
-            aMax = max(aMax, g_texBlit.Sample(g_samLinear, uv + float2(d.x, d.y)).a);
-            aMax = max(aMax, g_texBlit.Sample(g_samLinear, uv + float2(-d.x, d.y)).a);
-            aMax = max(aMax, g_texBlit.Sample(g_samLinear, uv + float2(d.x, -d.y)).a);
-            aMax = max(aMax, g_texBlit.Sample(g_samLinear, uv + float2(-d.x, -d.y)).a);
-
-            // 주변에 불투명 픽셀이 있으면 outline 출력
-            if (aMax > 0.001)
-            {
-                outCol = g_outlineColor;
-                // 가장자리에서 부드럽게: 주변 알파를 이용해 outline 알파 스케일
-                outCol.a *= saturate(aMax);
-            }
-        }
-    }
-    
-    outCol.rgb = LinearToSRGB(outCol.rgb);
-
-    return outCol;
+    return finalColor;
 }
