@@ -2525,7 +2525,7 @@
             "ID": 34,
             "ParentID": 14,
             "Name": "UI_UpgradePopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -4592,7 +4592,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/Pikachu.png",
+                    "TexturePath": "Resource/Texture/UI/Image/AmethystShard.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
@@ -4782,7 +4782,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/Miku.png",
+                    "TexturePath": "Resource/Texture/UI/Image/DarkEssence.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
@@ -5583,9 +5583,9 @@
                     "Parent": [],
                     "Name": "공격력 증가",
                     "Desc": "윤석님의 공격력이 10% 증가합니다.",
-                    "Ruby": 1,
-                    "Sapphire": 1,
-                    "Emerald": 1
+                    "Ruby": 10,
+                    "Sapphire": 0,
+                    "Emerald": 0
                 }
             ]
         },
@@ -5672,10 +5672,10 @@
                         0
                     ],
                     "Name": "더욱 강해져라",
-                    "Desc": "강해진건가?",
-                    "Ruby": 2,
+                    "Desc": "치명타 + 5%",
+                    "Ruby": 10,
                     "Sapphire": 2,
-                    "Emerald": 2
+                    "Emerald": 0
                 }
             ]
         },
@@ -5999,9 +5999,9 @@
                     "Parent": [],
                     "Name": "기술로 강해짐",
                     "Desc": "제발 사줘",
-                    "Ruby": 6,
-                    "Sapphire": 6,
-                    "Emerald": 6
+                    "Ruby": 10,
+                    "Sapphire": 0,
+                    "Emerald": 0
                 },
                 {
                     "Type": "UIImage",
@@ -6342,9 +6342,9 @@
                     "Parent": [],
                     "Name": "오옹",
                     "Desc": "ㄴㅇㅅ",
-                    "Ruby": 1,
-                    "Sapphire": 2,
-                    "Emerald": 1
+                    "Ruby": 10,
+                    "Sapphire": 0,
+                    "Emerald": 0
                 },
                 {
                     "Type": "UIImage",
@@ -6956,8 +6956,8 @@
                     "Parent": [],
                     "Name": "한개만",
                     "Desc": "필요함",
-                    "Ruby": 0,
-                    "Sapphire": 1,
+                    "Ruby": 10,
+                    "Sapphire": 0,
                     "Emerald": 0
                 },
                 {
@@ -7046,9 +7046,9 @@
                     ],
                     "Name": "이러면 됨?",
                     "Desc": "4 0 4",
-                    "Ruby": 4,
-                    "Sapphire": 0,
-                    "Emerald": 4
+                    "Ruby": 10,
+                    "Sapphire": 1,
+                    "Emerald": 0
                 },
                 {
                     "Type": "UIImage",
@@ -7534,6 +7534,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",

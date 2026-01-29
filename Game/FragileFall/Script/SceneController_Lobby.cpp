@@ -164,8 +164,7 @@ namespace game
 
     void SceneController_Lobby::EnterPlay()
     {
-        LOG_PRINT("EnterPlay");
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Play");
+        engine::SceneManager::Get().ChangeScene("Prototype_Play");
     }
 
     void SceneController_Lobby::OpenUpgrade()
@@ -175,13 +174,11 @@ namespace game
 
     void SceneController_Lobby::OpenOption()
     {
-        LOG_PRINT("OpenOption");
         SetOptionOpen(true);
     }
 
     void SceneController_Lobby::BackToMain()
     {
-        LOG_PRINT("BackToMain");
         engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
     }
 
