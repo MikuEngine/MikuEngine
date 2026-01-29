@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include "Script/AimPointer.h"
@@ -766,6 +766,16 @@ namespace game
 			//   5. 에임 회전방향으로 하체 회전
 			// ─────────────────────────────────────────────
 			
+			// 이동 시작 감지: 정지→이동 전환 시 에임 추적 리셋
+			if (!m_wasMoving)
+			{
+				// 정지 상태에서 이동 시작
+				// m_prevAimDirection을 현재 에임 방향으로 리셋
+				// → 오래된 값으로 인한 잘못된 aimCross 방지
+				m_prevAimDirection = aimDir;
+				m_aimCrossProductSmoothed = 0.0f;
+			}
+			
 			// 이동 시작 시 정지 상태 목표 리셋
 			m_idleTargetValid = false;
 			
@@ -775,17 +785,78 @@ namespace game
 			// 이동 방향과 에임 방향의 각도 차이 확인
 			float dotMoveAim = moveDir.x * aimDir.x + moveDir.z * aimDir.z;
 			
-			// 90도 이하 (dot >= 0): 이동 방향 = 트랜스폼 포워드 (앞으로 걷기)
-			// 90도 초과 (dot < 0): 이동 방향의 반대 = 트랜스폼 포워드 (뒤로 걷기)
-			if (dotMoveAim >= 0.0f)
+			// ─────────────────────────────────────────────
+			// Front/Back 전환에 히스테리시스 적용
+			// - 90도 경계에서 진동 방지
+			// - Front→Back: 확실히 100도 이상 (dot < -0.17)
+			// - Back→Front: 확실히 80도 이하 (dot > +0.17)
+			// ─────────────────────────────────────────────
+			constexpr float HYSTERESIS_THRESHOLD = 0.17f;  // ~10도 여유
+			
+			if (m_isWalkingBackward)
 			{
-				// 90도 이하: 이동 방향이 트랜스폼 포워드
-				targetDir = moveDir;
+				// 현재 Back 상태: Front로 전환하려면 확실히 80도 이하여야 함
+				if (dotMoveAim > HYSTERESIS_THRESHOLD)
+				{
+					m_isWalkingBackward = false;
+				}
 			}
 			else
 			{
-				// 90도 초과: 이동 방향의 반대가 트랜스폼 포워드
+				// 현재 Front 상태: Back으로 전환하려면 확실히 100도 이상이어야 함
+				if (dotMoveAim < -HYSTERESIS_THRESHOLD)
+				{
+					m_isWalkingBackward = true;
+				}
+			}
+			
+			// Front/Back에 따라 targetDir 결정
+			if (m_isWalkingBackward)
+			{
+				// Back: 이동 방향의 반대가 트랜스폼 포워드
 				targetDir = -moveDir;
+			}
+			else
+			{
+				// Front: 이동 방향이 트랜스폼 포워드
+				targetDir = moveDir;
+			}
+			
+			// ─────────────────────────────────────────────
+			// [DEBUG] 입력 변화 시 로그 출력
+			// ─────────────────────────────────────────────
+			static engine::Vector3 s_prevMoveDir = engine::Vector3::Zero;
+			static engine::Vector3 s_prevTargetDir = engine::Vector3::Zero;
+			
+			// moveDir이 변했을 때만 로그 출력
+			float moveDirChange = (moveDir - s_prevMoveDir).LengthSquared();
+			if (moveDirChange > 0.01f)
+			{
+				engine::Vector3 currentDir(
+					sinf(m_currentRotationAngle),
+					0.0f,
+					cosf(m_currentRotationAngle)
+				);
+				float dotCurrentTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
+				float angleToTargetDeg = engine::ToDegree(acosf(std::clamp(dotCurrentTarget, -1.0f, 1.0f)));
+				float targetCross = currentDir.z * targetDir.x - currentDir.x * targetDir.z;
+				float aimCross = GetAimRotationDirection();
+				
+				LOG_PRINT("[MoveDir Changed]");
+				LOG_PRINT("  moveDir: ({}, {}) -> ({}, {})", 
+					s_prevMoveDir.x, s_prevMoveDir.z, moveDir.x, moveDir.z);
+				LOG_PRINT("  aimDir: ({}, {})", aimDir.x, aimDir.z);
+				LOG_PRINT("  dotMoveAim: {}, isBackward: {}", 
+					dotMoveAim, m_isWalkingBackward ? "true" : "false");
+				LOG_PRINT("  targetDir: ({}, {}) -> ({}, {})", 
+					s_prevTargetDir.x, s_prevTargetDir.z, targetDir.x, targetDir.z);
+				LOG_PRINT("  currentDir: ({}, {}), currentAngle: {} deg", 
+					currentDir.x, currentDir.z, engine::ToDegree(m_currentRotationAngle));
+				LOG_PRINT("  angleToTarget: {} deg, targetCross: {}, aimCross: {}",
+					angleToTargetDeg, targetCross, aimCross);
+				
+				s_prevMoveDir = moveDir;
+				s_prevTargetDir = targetDir;
 			}
 
 			// ─────────────────────────────────────────────
@@ -941,20 +1012,36 @@ namespace game
 			// - 정확하고 즉각적인 회전
 			// ═══════════════════════════════════════════════════════════════
 			
-			// 이동 중일 때 에임 회전 방향 참고 (Front-Back 전환 시 올바른 방향 유지)
-			float aimCross = GetAimRotationDirection();
-			constexpr float AIM_MOVE_THRESHOLD = 0.001f;
+			// ─────────────────────────────────────────────
+			// 회전 방향 결정:
+			// - 기본: targetCross (최단 경로)
+			// - Front/Back 전환 시에만: aimCross (에임 회전 방향)
+			// 
+			// aimCross는 targetDir이 180도 뒤집힐 때만 의미 있음
+			// 단순 이동 방향 변화(45도 등)에서는 targetCross가 정확
+			// ─────────────────────────────────────────────
+			static engine::Vector3 s_prevTargetDirForRotation = engine::Vector3::Zero;
+			float targetDirDot = s_prevTargetDirForRotation.x * targetDir.x + 
+			                     s_prevTargetDirForRotation.z * targetDir.z;
 			
-			if (isMoving && std::abs(aimCross) > AIM_MOVE_THRESHOLD)
+			// targetDir이 거의 반대 방향이면 Front/Back 전환 (dot < -0.5 ≈ 120도 이상 변화)
+			bool isFrontBackSwitch = targetDirDot < -0.5f;
+			
+			float aimCross = GetAimRotationDirection();
+			constexpr float AIM_MOVE_THRESHOLD = 0.01f;  // 임계값 상향 (노이즈 방지)
+			
+			if (isMoving && isFrontBackSwitch && std::abs(aimCross) > AIM_MOVE_THRESHOLD)
 			{
-				// 이동 중 + 에임이 움직이면: 에임 회전방향 따라감
+				// Front/Back 전환 + 에임이 움직이면: 에임 회전방향 따라감
 				rotationSign = (aimCross > 0.0f) ? 1.0f : -1.0f;
 			}
 			else
 			{
-				// 정지 또는 에임 멈춤: 최단 경로
+				// 그 외 모든 경우: 최단 경로
 				rotationSign = (targetCross > 0.0f) ? 1.0f : -1.0f;
 			}
+			
+			s_prevTargetDirForRotation = targetDir;
 			
 			float fixedDelta = engine::Time::FixedDeltaTime();
 			float rotationStep = rotationSign * m_rotationSpeed * fixedDelta;
@@ -1032,7 +1119,8 @@ namespace game
 			m_currentRotationAngle = euler.y;
 		}
 
-	
+		// 다음 프레임을 위해 이동 상태 저장
+		m_wasMoving = isMoving;
 	}
 
 	// ═══════════════════════════════════════════════════════════════

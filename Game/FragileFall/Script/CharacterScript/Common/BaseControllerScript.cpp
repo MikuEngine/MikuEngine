@@ -180,7 +180,10 @@ namespace game
 
         if (!m_cachedRigidbody || targetDirection.LengthSquared() < 0.0001f)
         {
-            if (m_cachedRigidbody) m_cachedRigidbody->SetAngularVelocity(engine::Vector3::Zero);
+            if (m_cachedRigidbody && m_cachedRigidbody->IsDynamic())
+            {
+                m_cachedRigidbody->SetAngularVelocity(engine::Vector3::Zero);
+            }
             return;
         }
 
@@ -207,21 +210,55 @@ namespace game
 
         engine::Vector3 cross = currentForward.Cross(targetDir); 
         float rotationSign = (cross.y >= 0.0f) ? -1.0f : 1.0f;
-
         float angleDiff = acosf(std::clamp(dot, -1.0f, 1.0f));
-        
-        const float rotationSpeed = 3.5f;  // 2.0f → 3.5f (75% 증가)
-        float proportional = rotationSign * angleDiff * rotationSpeed;
-        
-        engine::Vector3 currentAngVel = m_cachedRigidbody->GetAngularVelocity();
-        float derivative = -currentAngVel.y * 0.5f;
-        
-        float targetAngularVelocity = proportional + derivative;
-        
-        const float maxAngularSpeed = 8.0f;  // 5.0f → 8.0f (60% 증가)
-        targetAngularVelocity = std::clamp(targetAngularVelocity, -maxAngularSpeed, maxAngularSpeed);
 
-        m_cachedRigidbody->SetAngularVelocity(engine::Vector3(0.0f, targetAngularVelocity, 0.0f));
+        // ═══════════════════════════════════════════════════════════════
+        // 리지드바디 타입에 따라 분기
+        // ═══════════════════════════════════════════════════════════════
+        if (m_cachedRigidbody->IsKinematic())
+        {
+            // ─────────────────────────────────────────────
+            // Kinematic: 직접 트랜스폼 회전
+            // ─────────────────────────────────────────────
+            const float rotationSpeed = 5.0f;  // rad/sec
+            float fixedDelta = engine::Time::FixedDeltaTime();
+            float rotationStep = -rotationSign * rotationSpeed * fixedDelta;  // 부호 반전 (좌표계 차이)
+            
+            // 오버슈트 방지
+            if (std::abs(rotationStep) > angleDiff)
+            {
+                rotationStep = -rotationSign * angleDiff;
+            }
+            
+            // 현재 회전 가져오기
+            engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
+            engine::Vector3 euler = currentRot.ToEuler();
+            
+            // Y축 회전 적용
+            euler.y += rotationStep;
+            
+            // 새 회전 설정
+            engine::Quaternion newRot = engine::Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z);
+            GetTransform()->SetLocalRotation(newRot);
+        }
+        else
+        {
+            // ─────────────────────────────────────────────
+            // Dynamic: Angular Velocity 기반 회전
+            // ─────────────────────────────────────────────
+            const float rotationSpeed = 3.5f;
+            float proportional = rotationSign * angleDiff * rotationSpeed;
+            
+            engine::Vector3 currentAngVel = m_cachedRigidbody->GetAngularVelocity();
+            float derivative = -currentAngVel.y * 0.5f;
+            
+            float targetAngularVelocity = proportional + derivative;
+            
+            const float maxAngularSpeed = 8.0f;
+            targetAngularVelocity = std::clamp(targetAngularVelocity, -maxAngularSpeed, maxAngularSpeed);
+
+            m_cachedRigidbody->SetAngularVelocity(engine::Vector3(0.0f, targetAngularVelocity, 0.0f));
+        }
     }
 
     bool BaseControllerScript::IsLookingAtTarget(engine::GameObject* target) const
@@ -259,7 +296,8 @@ namespace game
             m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
         }
 
-        if (m_cachedRigidbody)
+        // Kinematic은 각속도가 없으므로 Dynamic만 처리
+        if (m_cachedRigidbody && m_cachedRigidbody->IsDynamic())
         {
             m_cachedRigidbody->SetAngularVelocity(engine::Vector3::Zero);
         }
