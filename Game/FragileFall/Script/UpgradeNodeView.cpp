@@ -181,6 +181,6 @@ namespace game
             color.z = std::min(color.z * 1.3f, 1.0f);
         }
 
-        m_image->SetColor(color);
+        m_image->SetOutline(true, 5.0f, color);
     }
 }

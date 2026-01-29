@@ -23,11 +23,13 @@ namespace engine
 		std::string m_textureFilePath;
 		std::string m_vsFilePath;
 		std::string m_psFilePath;
+		std::string m_outlinePSFilePath;
 		std::shared_ptr<Texture> m_texture;
 
 		std::shared_ptr<VertexShader> m_vs;
 		std::shared_ptr<PixelShader>  m_ps;
-		std::shared_ptr<InputLayout> m_inputLayout;
+		std::shared_ptr<PixelShader>  m_outlinePS;
+		std::shared_ptr<InputLayout>  m_inputLayout;
 
 		std::shared_ptr<VertexBuffer> m_vertexBuffer;
 		std::shared_ptr<IndexBuffer> m_indexBuffer;
@@ -49,6 +51,10 @@ namespace engine
 
 		Vector4 m_mask0 = Vector4(0, 0, 0, 0);
 		Vector4 m_mask1 = Vector4(0, 0, 0, 0);
+
+		bool m_outlineEnabled = false;
+		float m_outlineThickness = 0.0f;
+		Vector4 m_outlineColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	public:
 		UIImage() = default;
@@ -81,6 +87,8 @@ namespace engine
 		void SetMask1(const Vector4& v) { m_mask1 = v; m_dirty = true; }
 		const Vector4& GetMask0() const { return m_mask0; }
 		const Vector4& GetMask1() const { return m_mask1; }
+
+		void SetOutline(bool enabe, float thickness, const Vector4& color);
 
 	public:
 		bool HasRenderType(RenderType type) const override;

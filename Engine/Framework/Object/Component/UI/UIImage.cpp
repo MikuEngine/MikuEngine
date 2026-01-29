@@ -39,9 +39,11 @@ namespace engine
 
 		m_vsFilePath = "Resource/Shader/Vertex/UIQuad_VS.hlsl";
 		m_psFilePath = "Resource/Shader/Pixel/UIQuad_PS.hlsl";
+		m_outlinePSFilePath = "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl";
 
 		m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
 		m_ps = ResourceManager::Get().GetOrCreatePixelShader(m_psFilePath);
+		m_outlinePS = ResourceManager::Get().GetOrCreatePixelShader(m_outlinePSFilePath);
 
 		m_vertexBuffer = ResourceManager::Get().GetGeometryVertexBuffer("DefaultQuad");
 		m_indexBuffer = ResourceManager::Get().GetGeometryIndexBuffer("DefaultQuad");
@@ -113,9 +115,6 @@ namespace engine
 			dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
 
-		dc->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
-		dc->PSSetShader(m_ps->GetRawShader(), nullptr, 0);
-
 		// State
 		{
 			float blendFactor[4] = { 0, 0, 0, 0 };
@@ -131,7 +130,88 @@ namespace engine
 				dc->OMSetDepthStencilState(nullptr, 0);
 		}
 
-		// ConstantBuffer
+		// Texture/Sampler
+		{
+			ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
+			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
+
+			auto samp = m_sampler ? m_sampler->GetSamplerState().GetAddressOf() : nullptr;
+			if (samp)
+				dc->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, samp);
+		}
+
+		// Outline Pass
+		if (m_outlineEnabled && m_outlineThickness > 0.0f)
+		{
+			// 1) Quad 크기 확장
+			const float pxW = rect.w * scale.x;
+			const float pxH = rect.h * scale.y;
+
+			float t = m_outlineThickness;
+
+			const float o_pxW = pxW + t * 2.0f;
+			const float o_pxH = pxH + t * 2.0f;
+
+			const float cx = pxX + pxW * 0.5f;
+			const float cy = pxY + pxH * 0.5f;
+
+			const float o_tx = (cx / vp.Width) * 2.0f - 1.0f;
+			const float o_ty = 1.0f - (cy / vp.Height) * 2.0f;
+
+			const float o_sx = (o_pxW / vp.Width) * 2.0f;
+			const float o_sy = (o_pxH / vp.Height) * 2.0f;
+
+			// 2) Outline 전용 CB
+			CbUIElement cbUI = {};
+			cbUI.clip = DirectX::XMMatrixTranspose(
+				DirectX::XMMatrixScaling(o_sx, o_sy, 1.0f) *
+				DirectX::XMMatrixTranslation(o_tx, o_ty, 0.0f)
+			);
+
+			float expandU = (o_pxW - pxW) / o_pxW * 0.5f;
+			float expandV = (o_pxH - pxH) / o_pxH * 0.5f;
+
+			Vector4 cr = m_clipRect;
+			if (cr.z <= cr.x || cr.w <= cr.y)
+				cr = Vector4(0, 0, vp.Width, vp.Height);
+
+			cbUI.color = Vector4(1, 1, 1, 1);          // PS에서 discard/outline만 사용
+			cbUI.uv = Vector4(
+				-expandU,
+				-expandV,
+				1.0f + expandU * 2.0f,
+				1.0f + expandV * 2.0f
+			);;
+
+			cbUI.clipRect = cr;
+			cbUI.maskMode = static_cast<uint32_t>(m_maskMode);
+			cbUI.mask0 = m_mask0;
+			cbUI.mask1 = m_mask1;
+
+			cbUI.outlineEnabled = 1.0f;
+			cbUI.outlineThickness = m_outlineThickness;
+			cbUI.outlineColor = m_outlineColor;
+
+			dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
+			dc->VSSetConstantBuffers(
+				static_cast<UINT>(ConstantBufferSlot::UIElement),
+				1,
+				m_uiCB->GetBuffer().GetAddressOf()
+			);
+
+			dc->PSSetConstantBuffers(
+				static_cast<UINT>(ConstantBufferSlot::UIElement),
+				1,
+				m_uiCB->GetBuffer().GetAddressOf()
+			);
+
+			dc->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
+			dc->PSSetShader(m_outlinePS->GetRawShader(), nullptr, 0);
+
+			dc->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
+		}
+
+		// Texture
 		{
 			CbUIElement cbUI{};
 			cbUI.clip = DirectX::XMMatrixTranspose(
@@ -154,25 +234,19 @@ namespace engine
 			cbUI.mask0 = m_mask0;
 			cbUI.mask1 = m_mask1;
 
+			cbUI.outlineEnabled = m_outlineEnabled;
+			cbUI.outlineThickness = m_outlineThickness;
+			cbUI.outlineColor = m_outlineColor;
+
 			dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 			dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
 			dc->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
+
+			dc->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
+			dc->PSSetShader(m_ps->GetRawShader(), nullptr, 0);
+
+			dc->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
 		}
-
-		// Texture/Sampler
-		{
-			ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
-			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
-
-			auto samp = m_sampler ? m_sampler->GetSamplerState().GetAddressOf() : nullptr;
-			if (samp)
-				dc->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, samp);
-		}
-
-		dc->RSSetState(nullptr);
-		dc->RSSetViewports(1, &vp);
-
-		dc->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
 
 		// SRV unbind
 		{
@@ -228,6 +302,13 @@ namespace engine
 		return m_color;
 	}
 
+	void UIImage::SetOutline(bool enable, float thickness, const Vector4& color)
+	{
+		m_outlineEnabled = enable;
+		m_outlineThickness = thickness;
+		m_outlineColor = color;
+	}
+
 	bool UIImage::HasRenderType(RenderType type) const
 	{
 		return type == RenderType::Screen;
@@ -279,6 +360,7 @@ namespace engine
 		j["TexturePath"] = m_textureFilePath;
 		j["VSFilePath"] = m_vsFilePath;
 		j["PSFilePath"] = m_psFilePath;
+		j["OutlinePSFilePath"] = m_outlinePSFilePath;
 
 		j["Color"] = m_color; 
 		j["AlphaBlend"] = m_useAlphaBlend;
@@ -291,6 +373,7 @@ namespace engine
 		JsonGet(j, "TexturePath", m_textureFilePath);
 		JsonGet(j, "VSFilePath", m_vsFilePath);
 		JsonGet(j, "PSFilePath", m_psFilePath);
+		JsonGet(j, "OutlinePSFilePath", m_outlinePSFilePath);
 
 		JsonGet(j, "Color", m_color);
 		JsonGet(j, "AlphaBlend", m_useAlphaBlend);

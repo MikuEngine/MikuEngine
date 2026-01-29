@@ -832,6 +832,7 @@
     <FxCompile Include="Shader\Pixel\DeferredSpotLight_Toon_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\Particle_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\Particle_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\UIQuadOutline_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

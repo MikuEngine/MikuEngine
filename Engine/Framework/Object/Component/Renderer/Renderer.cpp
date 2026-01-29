@@ -165,6 +165,12 @@ namespace engine
 						{
 							socket->UpdateLocalMatrix();
 							UpdateSockets();
+
+							auto renderer = GetGameObject()->GetComponent<Renderer>();
+							if (renderer)
+							{
+								renderer->Update();
+							}
 						}
 					}
 

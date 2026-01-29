@@ -315,10 +315,28 @@ namespace engine
 		if (!target) return;
 		if (std::fabs(mouse.wheelDelta) < 1e-6f) return;
 
-		if (UIInteractable* it = AsInteractable(target))
+		UIElement* cur = target;
+
+		while (cur)
 		{
-			if (it->IsScrollEnabled())
-				it->OnScroll(mouse.position, mouse.wheelDelta);
+			if (UIInteractable* it = AsInteractable(cur))
+			{
+				if (it->IsScrollEnabled())
+				{
+					it->OnScroll(mouse.position, mouse.wheelDelta);
+					return;
+				}
+			}
+
+			// 2) 부모로 이동
+			GameObject* go = cur->GetGameObject();
+			Transform* tr = go ? go->GetTransform() : nullptr;
+			Transform* parent = tr ? tr->GetParent() : nullptr;
+
+			if (!parent) break;
+
+			GameObject* pgo = parent->GetGameObject();
+			cur = pgo ? pgo->GetComponent<UIElement>() : nullptr;
 		}
 	}
 }

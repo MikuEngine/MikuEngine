@@ -90,11 +90,12 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             discard;
     }
 
-    float4 tex = g_texBlit.Sample(g_samLinear, input.texCoord);
+    // Texture Sample
+    float2 uv = input.texCoord;
+    float4 tex = g_texBlit.Sample(g_samLinear, uv);
+    float4 finalColor = tex * g_uiColor;
+   
+    finalColor.rgb = LinearToSRGB(finalColor.rgb);
 
-    float4 final = tex * g_uiColor;
-    
-    final.rgb = LinearToSRGB(final.rgb);
-    
-    return final;
+    return finalColor;
 }
