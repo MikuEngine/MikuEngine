@@ -90,6 +90,39 @@ namespace engine
 
         std::unordered_set<CollisionPair, CollisionPairHash> m_activeCollisionPairs;
 
+        // ═══════════════════════════════════════
+        // Trigger-Trigger 쌍 추적 (PhysX가 지원하지 않음)
+        // PhysX는 Trigger-Trigger 간 충돌 이벤트를 발생시키지 않으므로
+        // 수동으로 오버랩을 체크하여 이벤트 발생
+        // ═══════════════════════════════════════
+        struct TriggerTriggerPair
+        {
+            Handle triggerAHandle;
+            Handle triggerBHandle;
+
+            bool operator==(const TriggerTriggerPair& rhs) const
+            {
+                // 순서 무관하게 비교
+                return (triggerAHandle == rhs.triggerAHandle && triggerBHandle == rhs.triggerBHandle) ||
+                       (triggerAHandle == rhs.triggerBHandle && triggerBHandle == rhs.triggerAHandle);
+            }
+        };
+
+        struct TriggerTriggerPairHash
+        {
+            size_t operator()(const TriggerTriggerPair& p) const
+            {
+                size_t h1 = std::hash<uint64_t>()(
+                    (static_cast<uint64_t>(p.triggerAHandle.index) << 32) | p.triggerAHandle.generation);
+                size_t h2 = std::hash<uint64_t>()(
+                    (static_cast<uint64_t>(p.triggerBHandle.index) << 32) | p.triggerBHandle.generation);
+                // 순서 무관하게 해싱
+                return h1 < h2 ? (h1 ^ (h2 << 1)) : (h2 ^ (h1 << 1));
+            }
+        };
+
+        std::unordered_set<TriggerTriggerPair, TriggerTriggerPairHash> m_activeTriggerTriggerPairs;
+
     public:
         // ═══════════════════════════════════════
         // 이벤트 처리 (프레임 끝에서 호출)
@@ -135,8 +168,14 @@ namespace engine
 
         std::vector<ContactPoint> FlipContactNormals(const std::vector<ContactPoint>& contacts);
         TriggerPair MakeTriggerPair(Collider* trigger, Collider* other);
+        TriggerTriggerPair MakeTriggerTriggerPair(Collider* a, Collider* b);
 
         void NotifyScriptsCollision(GameObject* go, const CollisionInfo& info, CollisionEventType eventType);
         void NotifyScriptsTrigger(GameObject* go, const CollisionInfo& info, TriggerEventType eventType);
+
+        // Trigger-Trigger 충돌 처리 (PhysX가 지원하지 않으므로 수동 처리)
+        void CheckTriggerTriggerOverlaps(Scene* scene);
+        bool CheckGeometryOverlap(Collider* a, Collider* b);
+        bool ShouldCollideLayers(Collider* a, Collider* b) const;
     };
 }
