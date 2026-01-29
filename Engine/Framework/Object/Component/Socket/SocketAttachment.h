@@ -17,11 +17,10 @@ namespace engine
 
     public:
         SocketAttachment() = default;
-        ~SocketAttachment() = default;
-
-        void Update() override;
+        virtual ~SocketAttachment();
 
         void SetSocket(Renderer* renderer, const std::string& socketName);
+        void NotifyTargetRendererDestroyed() { m_targetRenderer = nullptr; }
 
     public:
         void OnGui() override;

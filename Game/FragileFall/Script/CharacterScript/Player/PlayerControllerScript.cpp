@@ -928,10 +928,9 @@ namespace game
 			return;
 		}
 
-		// 7. 회전 방향 결정 (최단 경로)
+		// 7. 회전 방향 결정
 		float targetCross = currentDir.z * targetDir.x - currentDir.x * targetDir.z;
-		// DirectX 왼손좌표계에서 +가 시계방향
-		float rotationSign = (targetCross > 0.0f) ? 1.0f : -1.0f;
+		float rotationSign;
 
 		// 8. 회전 적용
 		if (m_useForceSetRotation)
@@ -941,6 +940,21 @@ namespace game
 			// - 물리 엔진의 각속도/관성 무시
 			// - 정확하고 즉각적인 회전
 			// ═══════════════════════════════════════════════════════════════
+			
+			// 이동 중일 때 에임 회전 방향 참고 (Front-Back 전환 시 올바른 방향 유지)
+			float aimCross = GetAimRotationDirection();
+			constexpr float AIM_MOVE_THRESHOLD = 0.001f;
+			
+			if (isMoving && std::abs(aimCross) > AIM_MOVE_THRESHOLD)
+			{
+				// 이동 중 + 에임이 움직이면: 에임 회전방향 따라감
+				rotationSign = (aimCross > 0.0f) ? 1.0f : -1.0f;
+			}
+			else
+			{
+				// 정지 또는 에임 멈춤: 최단 경로
+				rotationSign = (targetCross > 0.0f) ? 1.0f : -1.0f;
+			}
 			
 			float fixedDelta = engine::Time::FixedDeltaTime();
 			float rotationStep = rotationSign * m_rotationSpeed * fixedDelta;
