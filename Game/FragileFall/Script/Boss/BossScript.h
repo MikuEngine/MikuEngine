@@ -6,6 +6,7 @@ namespace engine
 {
     class StaticMeshRenderer;
     class Transform;
+    class UIText;
 }
 
 namespace game
@@ -30,8 +31,8 @@ namespace game
         };
 
     private:
-        float m_maxHp = 10000.0f;
-        float m_currentHp = 10000.0f;
+        float m_maxHp = 300.0f;
+        float m_currentHp = 300.0f;
 
         BossColor m_currentColor = BossColor::Red;
 
@@ -40,13 +41,15 @@ namespace game
         std::vector<engine::Ptr<BossPillar>> m_activePillars;
 
         // pattern
-        std::unique_ptr<BossPatternManager> m_patternManager;
+        std::unique_ptr<BossPatternManager> m_patternManager = nullptr;
 
         // 간단한 움직임용 수정 게임오브젝트
         std::vector<engine::Ptr<engine::GameObject>> m_crystalMeshGameObjects;  // 보스 수정 메쉬들
 
         // player
-        engine::Ptr<PlayerControllerScript> m_targetPlayer;
+        engine::Ptr<PlayerControllerScript> m_targetPlayer = nullptr;
+
+        engine::Ptr<engine::UIText> m_hpText = nullptr;
 
         bool m_canBeCrystallized = true;  // 구체 패턴의 투사체 결정화 가능 여부
 

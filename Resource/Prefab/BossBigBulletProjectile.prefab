@@ -57,6 +57,72 @@
                 {
                     "Type": "BossProjectile",
                     "Active": true
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 1,
+                    "radius": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "ProjectilePicking",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 7,
+                    "materialType": 1,
+                    "radius": 0.5
                 }
             ]
         }

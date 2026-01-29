@@ -4,6 +4,7 @@
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
+#include "Script/Boss/BossPattern/Components/BossProjectile.h"
 
 #include <Core/System/Input.h>
 #include <Core/System/MyTime.h>
@@ -371,6 +372,26 @@ namespace game
                 }
                 transform = transform->GetParent();
             }
+
+            transform = hit.gameObject->GetTransform();
+            while (transform)
+            {
+                engine::GameObject* go = transform->GetGameObject();
+                if (go)
+                {
+                    BossProjectile* projectile = go->GetComponent<BossProjectile>();
+                    if (projectile)
+                    {
+                        // 결정화된 상태인지 확인
+                        if (projectile->IsCrystallized())
+                        {
+                            return go;
+                        }
+                        break;
+                    }
+                }
+                transform = transform->GetParent();
+            }
         }
 
         return nullptr;
@@ -503,6 +524,11 @@ namespace game
             if (auto* capsuleCollider = monsterGO->GetComponent<engine::CapsuleCollider>())
             {
                 capsuleCollider->SetIsTrigger(true);
+            }
+
+            if (auto comp = m_executingGameObject->GetComponent<BossProjectile>())
+            {
+                comp->Execute();
             }
         }
 
