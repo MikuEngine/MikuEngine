@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Lobby",
-    "NumGameObjects": 74,
+    "NumGameObjects": 75,
     "GameObjects": [
         {
             "ID": 0,
@@ -155,6 +155,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -258,6 +259,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -439,6 +441,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -620,6 +623,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -801,6 +805,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1041,6 +1046,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -1170,6 +1176,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1279,6 +1286,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1578,6 +1586,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1645,6 +1654,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1712,6 +1722,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1861,6 +1872,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1928,6 +1940,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1995,6 +2008,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2144,6 +2158,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2211,6 +2226,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2278,6 +2294,7 @@
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2568,6 +2585,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2648,6 +2666,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2722,6 +2741,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2825,6 +2845,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3006,6 +3027,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3187,6 +3209,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3368,6 +3391,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3520,6 +3544,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3666,6 +3691,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 0.7142857313156128,
                         "y": 0.6094870567321777,
@@ -3812,6 +3838,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 0.3667953610420227,
                         "y": 0.3667953610420227,
@@ -4059,6 +4086,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -4272,6 +4300,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 0.6988416910171509,
                         "y": 0.6421788334846497,
@@ -4396,6 +4425,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -4471,6 +4501,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 0.0,
@@ -4558,6 +4589,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 0.0,
@@ -4647,6 +4679,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 0.0,
@@ -4736,6 +4769,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 0.0,
@@ -4825,6 +4859,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -4912,10 +4947,11 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 0.0,
-                        "y": 0.20077228546142578,
-                        "z": 1.0,
+                        "y": 0.1782921999692917,
+                        "z": 0.8880308866500854,
                         "w": 1.0
                     },
                     "AlphaBlend": true
@@ -5001,10 +5037,11 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.49420851469039917,
-                        "y": 0.49420851469039917,
-                        "z": 0.49420851469039917,
+                        "x": 0.0,
+                        "y": 0.1764705926179886,
+                        "z": 0.886274516582489,
                         "w": 1.0
                     },
                     "AlphaBlend": true
@@ -5090,10 +5127,11 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.49420851469039917,
-                        "y": 0.49420851469039917,
-                        "z": 0.49420851469039917,
+                        "x": 0.0,
+                        "y": 0.1764705926179886,
+                        "z": 0.886274516582489,
                         "w": 1.0
                     },
                     "AlphaBlend": true
@@ -5164,6 +5202,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -5238,6 +5277,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -5387,6 +5427,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 0.5366795063018799,
                         "y": 0.5366795063018799,
@@ -5454,6 +5495,7 @@
                     "TexturePath": "None",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 0.6557004451751709,
                         "y": 0.4250383675098419,
@@ -5557,6 +5599,7 @@
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -5677,6 +5720,93 @@
                     "Sapphire": 100,
                     "Emerald": 100,
                     "Purchased": []
+                }
+            ]
+        },
+        {
+            "ID": 74,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 0,
+                    "NodeId": 0,
+                    "Parent": [],
+                    "Name": "",
+                    "Desc": "",
+                    "Ruby": 100,
+                    "Sapphire": 100,
+                    "Emerald": 100
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.49420851469039917,
+                        "y": 0.49420851469039917,
+                        "z": 0.49420851469039917,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
                 }
             ]
         }

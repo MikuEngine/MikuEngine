@@ -2,6 +2,13 @@
 
 #define MAX_OUTLINE_RADIUS 4
 
+static const uint UI_MASK_RECT = 1u;
+
+bool InsideRect(float2 p, float4 r)
+{
+    return (p.x >= r.x && p.y >= r.y && p.x <= r.z && p.y <= r.w);
+}
+
 // 알파 샘플 (UV 범위 밖은 0으로 처리)
 float AlphaAt(float2 uv)
 {
@@ -15,6 +22,15 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
 {
     float2 uv = input.texCoord;
 
+    float2 p = input.position.xy;
+    
+    // Mask
+    if (g_uiMaskMode == UI_MASK_RECT)
+    {
+        if (!InsideRect(p, g_uiClipRect))
+            discard;
+    }
+    
     // 중심 픽셀 알파
     float centerAlpha = AlphaAt(uv);
 
