@@ -221,6 +221,7 @@
     <ClCompile Include="Framework\Object\Component\Component.cpp" />
     <ClCompile Include="Framework\Object\Component\ComponentFactory.cpp" />
     <ClCompile Include="Framework\Object\Component\Light\Light.cpp" />
+    <ClCompile Include="Framework\Object\Component\Renderer\DebugRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\Renderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Script.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\SkeletalMeshRenderer.cpp" />
@@ -360,6 +361,7 @@
     <ClInclude Include="Framework\Object\Component\Component.h" />
     <ClInclude Include="Framework\Object\Component\ComponentFactory.h" />
     <ClInclude Include="Framework\Object\Component\Light\Light.h" />
+    <ClInclude Include="Framework\Object\Component\Renderer\DebugRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\Renderer.h" />
     <ClInclude Include="Framework\Object\Component\Script.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\SkeletalMeshRenderer.h" />

@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <DirectXColors.h>
@@ -27,6 +27,7 @@
 #include "Framework/System/ParticleSystem.h"
 #include "Framework/System/PathfindingSystem.h"
 #include "Editor/EditorManager.h"
+#include "Framework/Object/Component/Renderer/DebugRenderer.h"
 #include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
 #include "Framework/Physics/PhysicsDebugRenderer.h"
 #include "Framework/Object/Component/Light/LightDebugRenderer.h"
@@ -220,6 +221,7 @@ namespace engine
 
 #ifdef _DEBUG
         // 디버그 렌더러 초기화
+		DebugRenderer::Get().Initialize();
         PathfindingDebugRenderer::Get().Initialize();
         PhysicsDebugRenderer::Get().Initialize();
         LightDebugRenderer::Get().Initialize();
@@ -260,6 +262,7 @@ namespace engine
         PhysicsDebugRenderer::Get().Shutdown();
         LightDebugRenderer::Get().Shutdown();
 		SocketDebugRenderer::Get().Shutdown();
+		DebugRenderer::Get().Shutdown();
         // VFS 언마운트
         VirtualFileSystem::Get().Unmount();
     }

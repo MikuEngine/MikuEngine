@@ -4,12 +4,17 @@
 #include <fstream>
 #include <filesystem>
 
-#include "Common/Utility/StringHelper.h"
+#include "Framework/Asset/SoundData.h"
+// #include "Common/Utility/StringHelper.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Asset/AssetManager.h"
-#include "Framework/Asset/SoundData.h"
 #include "Core/System/VirtualFileSystem.h"
+#include "Framework/Object/Component/Renderer/DebugRenderer.h"
+#include "Framework/System/SystemManager.h"
+#include "Framework/System/CameraSystem.h"
+#include "Framework/Object/Component/Camera.h"
+
 #include "fmod.hpp"
 #include "fmod_errors.h"
 
@@ -186,10 +191,19 @@ namespace engine
     void SoundSystem::Register(AudioSource* source)
     {
         System<AudioSource>::Register(source);
+
+        if (source)
+        {
+            m_registeredAudioSources.insert(source);
+        }
     }
 
     void SoundSystem::Unregister(AudioSource* source)
     {
+        if (source)
+        {
+            m_registeredAudioSources.erase(source);
+        }
         System<AudioSource>::Unregister(source);
     }
 
@@ -213,10 +227,103 @@ namespace engine
         }
     }
 
+    void SoundSystem::Render()
+    {
+        if (!m_showDebugRanges) return;
+
+        for (AudioSource* source : m_registeredAudioSources)
+        {
+            if (!source || !source->IsActive() || !source->Is3D())
+                continue;
+
+            Transform* tr = source->GetTransform();
+            if (!tr) continue;
+
+            Vector3 center = tr->GetWorldPosition();
+            float minR = source->GetMinDistance();
+            float maxR = source->GetMaxDistance();
+
+            auto Draw3DSphere = [&](const Vector3& pos, float radius, const DirectX::XMVECTOR& color)
+                {
+                    DebugRenderer::Get().DrawRing(pos, radius, Vector3::Up, color);
+                    DebugRenderer::Get().DrawRing(pos, radius, Vector3::Forward, color);
+                    DebugRenderer::Get().DrawRing(pos, radius, Vector3::Right, color);
+
+                    Vector3 diag1 = Vector3(1.0f, 0.0f, 1.0f);
+                    diag1.Normalize();
+                    DebugRenderer::Get().DrawRing(pos, radius, diag1, color);
+
+                    Vector3 diag2 = Vector3(1.0f, 0.0f, -1.0f);
+                    diag2.Normalize();
+                    DebugRenderer::Get().DrawRing(pos, radius, diag2, color);
+                };
+
+            Draw3DSphere(center, std::max(0.1f, minR), DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 0.8f));
+            Draw3DSphere(center, std::max(0.1f, maxR), DirectX::XMVectorSet(0.3f, 0.3f, 0.3f, 0.8f));
+        }
+    }
+
     void SoundSystem::Update()
     {
         if (!m_pSystem)
             return;
+
+        bool listenerUpdated = false;
+
+        if (m_listenerTarget && m_listenerTarget->IsActive())
+        {
+            Transform* tr = m_listenerTarget->GetTransform();
+            if (tr)
+            {
+                m_listenerPos = tr->GetWorldPosition();
+                listenerUpdated = true;
+            }
+        }
+
+        if (!listenerUpdated)
+        {
+            auto& cameraSystem = SystemManager::Get().GetCameraSystem();
+            auto mainCam = cameraSystem.GetMainCamera();
+            if (mainCam)
+            {
+                Transform* tr = mainCam->GetTransform();
+                if (tr)
+                {
+                    m_listenerPos = tr->GetWorldPosition();
+                }
+            }
+        }
+
+        // Up, Forward vector 쿼터뷰라 고정
+        m_listenerForward = Vector3(0.0f, 0.0f, 1.0f);
+        m_listenerUp = Vector3(0.0f, 1.0f, 0.0f);
+
+        if (m_listenerForward.LengthSquared() <= FLT_EPSILON)
+        {
+            m_listenerForward = Vector3(0.0f, 0.0f, 1.0f);
+        }
+        else
+        {
+            m_listenerForward.Normalize();
+        }
+
+        if (m_listenerUp.LengthSquared() <= FLT_EPSILON)
+        {
+            m_listenerUp = Vector3(0.0f, 1.0f, 0.0f);
+        }
+        else
+        {
+            m_listenerUp.Normalize();
+        }
+
+        float dot = m_listenerForward.Dot(m_listenerUp);
+        if (abs(dot) > 0.99f)
+        {
+            m_listenerUp = Vector3::UnitX.Cross(m_listenerForward);
+            if (m_listenerUp.LengthSquared() <= FLT_EPSILON)
+                m_listenerUp = Vector3::UnitZ.Cross(m_listenerForward);
+            m_listenerUp.Normalize();
+        }
 
         FMOD_VECTOR pos = ToFmodVector(m_listenerPos);
         FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
@@ -226,49 +333,48 @@ namespace engine
         // 리스너 0번 업데이트 (메인 카메라)
         m_pSystem->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
 
+
         // 등록된 AudioSource 컴포넌트들의 위치 업데이트
         for (AudioSource* source : m_components)
         {
-            // 컴포넌트가 활성화 상태이고, 3D 사운드인 경우에만 위치 갱신
-            if (source->IsActive() && source->Is3D())
-            {
-                Sound* sound = source->GetSoundResource();
+            source->Update();
 
-                // 현재 재생 중인 사운드가 있다면 위치 동기화
-                // (GameObject의 Transform을 가져와서 FMOD 채널에 적용)
-                if (sound)
+            if (source->IsActive() && source->Is3D() && source->IsPlaying())
+            {
+                FMOD::Channel* channel = source->GetChannel();
+                Transform* transform = source->GetGameObject()->GetTransform();
+
+                if (channel && transform)
                 {
-                    Transform* transform = source->GetGameObject()->GetTransform();
-                    sound->Update3DPosition(transform->GetWorldPosition());
+                    FMOD_VECTOR sourcePos = ToFmodVector(transform->GetWorldPosition());
+                    FMOD_VECTOR sourceVel = { 0.0f, 0.0f, 0.0f };
+
+                    channel->set3DAttributes(&sourcePos, &sourceVel);
                 }
             }
 
-        source->Update();
-
-        if (source->IsPlaying())
-        {
-            FMOD::Channel* channel = source->GetChannel();
-
-            if (channel == nullptr)
+            if (source->IsPlaying())
             {
-                source->SetForceStopState();
-                continue;
-            }
+                FMOD::Channel* channel = source->GetChannel();
 
-            bool isFmodPlaying = false;
-            FMOD_RESULT res = channel->isPlaying(&isFmodPlaying);
+                if (channel == nullptr)
+                {
+                    source->SetForceStopState();
+                    continue;
+                }
 
-            // 채널 소멸 후 핸들 유효하지 않음
-            if (res == FMOD_ERR_INVALID_HANDLE)
-            {
-                source->SetForceStopState();
+                bool isFmodPlaying = false;
+                FMOD_RESULT res = channel->isPlaying(&isFmodPlaying);
+
+                if (res == FMOD_ERR_INVALID_HANDLE)
+                {
+                    source->SetForceStopState();
+                }
+                else if (res == FMOD_OK && !isFmodPlaying)
+                {
+                    source->SetForceStopState();
+                }
             }
-            // 일시정지거나 막 끝난 직후
-            else if (res == FMOD_OK && !isFmodPlaying)
-            {
-                source->SetForceStopState();
-            }
-        }
         }
 
         // 콜백 리스트 처리 (재생 끝난 사운드 콜백 호출)
@@ -369,24 +475,13 @@ namespace engine
     Sound* SoundSystem::CreateSound(const std::string &filename, const std::string &option)
     {
         bool isBGM = (option.find("BGM") != std::string::npos);
-        bool is3D = false;
+        bool is3D = true;
         std::string groupName = option;
 
-        LOG_PRINT("[CreateSound] filename='{}' option='{}'", filename, option);
-
-        if (option.find("BGM") != std::string::npos)
-        {
-            is3D = false;
-        } 
-        else if (option.find("UI") != std::string::npos)
+        if (isBGM || option.find("UI") != std::string::npos || option == "2D")
         {
             is3D = false;
         }
-        //else if (option == "2D")
-        //{
-        //    is3D = false;
-        //    groupName = "Master";
-        //}
 
         FMOD::ChannelGroup* targetGroup = GetOrCreateChannelGroup(groupName);
 
@@ -501,12 +596,6 @@ namespace engine
 
             delete sound;
             return nullptr;
-        }
-
-        if (is3D)
-        {
-            // 1미터부터 소리감쇄, 500미터 이후로는 안 들림
-            sound->m_pSound->set3DMinMaxDistance(1.0f, 500.0f);
         }
 
         return sound;

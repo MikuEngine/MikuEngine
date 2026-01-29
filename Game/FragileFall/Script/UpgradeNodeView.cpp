@@ -1,17 +1,26 @@
 ﻿#include "GamePCH.h"
 #include "UpgradeNodeView.h"
-#include "Framework/Object/Component/UI/UIClickArea.h"
 #include "UpgradeController.h"
 
 namespace game
 {
+    namespace
+    {
+        static int GetLocal(int id) { return id % 100; }
+        static int MakeNodeId(UpgradeCategory cat, int local)
+        {
+            local = std::clamp(local, 0, 99);
+            return (int)cat + local; // cat = 100/200/...
+        }
+    }
+
     void UpgradeNodeView::Awake()
     {
         auto* go = GetGameObject();
         if (!go) return;
 
-        auto* click = go->GetComponent<engine::UIClickArea>();
-        if (!click) return;
+        m_click = go->GetComponent<engine::UIClickArea>();
+        if (!m_click) return;
 
         auto* sysGo = engine::GameObject::Find("UpgradeController");
         if (!sysGo) return;
@@ -19,7 +28,7 @@ namespace game
         auto* sys = sysGo->GetComponent<game::UpgradeController>();
         if (!sys) return;
 
-        click->AddOnClick([this, sys](int mouseButton)
+        m_click->AddOnClick([this, sys](int mouseButton)
             {
                 if (mouseButton != 0) return;
 
@@ -28,26 +37,66 @@ namespace game
             });
 
         m_image = go->GetComponent<engine::UIImage>();
-        if (m_image) return;
+        if (!m_image) return;
+
+        NormalizeIdsByCategory();
     }
 
     void UpgradeNodeView::OnGui()
     {
         static const char* kCats[] = { "Attack", "Skill", "Survive", "Move" };
-        int c = (int)m_category;
-        if (ImGui::Combo("Category", &c, kCats, IM_ARRAYSIZE(kCats)))
-            m_category = (UpgradeCategory)c;
 
-        ImGui::InputInt("NodeId", &m_nodeId);
+        auto ToIndex = [](UpgradeCategory cat) -> int
+            {
+                switch (cat)
+                {
+                case UpgradeCategory::Attack: return 0;
+                case UpgradeCategory::Skill:  return 1;
+                case UpgradeCategory::Life:   return 2;
+                case UpgradeCategory::Move:   return 3;
+                default: return 0;
+                }
+            };
+
+        auto FromIndex = [](int idx) -> UpgradeCategory
+            {
+                switch (idx)
+                {
+                case 0: return UpgradeCategory::Attack;
+                case 1: return UpgradeCategory::Skill;
+                case 2: return UpgradeCategory::Life;
+                case 3: return UpgradeCategory::Move;
+                default: return UpgradeCategory::Attack;
+                }
+            };
+
+        int c = ToIndex(m_category);
+        if (ImGui::Combo("Category", &c, kCats, IM_ARRAYSIZE(kCats)))
+        {
+            m_category = FromIndex(c);
+            NormalizeIdsByCategory();
+        }
+
+        int local = GetLocal(m_nodeId);
+
+        if (ImGui::InputInt("Node LocalId (0~99)", &local))
+        {
+            m_nodeId = MakeNodeId(m_category, local);
+            NormalizeIdsByCategory(); // 부모도 함께 보정할 거면 유지
+        }
+
 
         ImGui::Text("Parents");
         for (int i = 0; i < (int)m_parents.size(); ++i)
         {
             ImGui::PushID(i);
 
-            int v = m_parents[i];
-            if (ImGui::InputInt("##Parent", &v))
+            int vLocal = GetLocal(m_parents[i]);
+
+            if (ImGui::InputInt("##Parent", &vLocal))
             {
+                int v = MakeNodeId(m_category, vLocal);
+
                 // 자기 자신 금지
                 if (v != m_nodeId)
                 {
@@ -81,23 +130,24 @@ namespace game
         ImGui::Separator();
 
 
-        ImGui::InputInt("New Parent", &m_newParent);
+        int newLocal = m_newParent % 100;               // 표시/입력은 local
+        if (ImGui::InputInt("New Parent (0~99)", &newLocal))
+        {
+            newLocal = std::clamp(newLocal, 0, 99);
+            m_newParent = MakeNodeId(m_category, newLocal); // 내부는 full id로 유지
+        }
 
         bool canAdd = (m_newParent != m_nodeId);
         for (int pid : m_parents)
         {
-            if (pid == m_newParent)
-            {
-                canAdd = false;
-                break;
-            }
+            if (pid == m_newParent) { canAdd = false; break; }
         }
 
         if (!canAdd) ImGui::BeginDisabled(true);
         if (ImGui::Button("+ Add Parent"))
         {
             m_parents.push_back(m_newParent);
-            m_newParent = 0;
+            m_newParent = MakeNodeId(m_category, 0);
         }
         if (!canAdd) ImGui::EndDisabled();
 
@@ -113,7 +163,15 @@ namespace game
     {
         Object::Save(j);
 
-        j["Category"] = (int)m_category;
+        int idx = 0;
+        switch (m_category)
+        {
+        case UpgradeCategory::Attack: idx = 0; break;
+        case UpgradeCategory::Skill:  idx = 1; break;
+        case UpgradeCategory::Life:   idx = 2; break;
+        case UpgradeCategory::Move:   idx = 3; break;
+        }
+        j["Category"] = idx;
         j["NodeId"] = m_nodeId;
 
         engine::json parents = engine::json::array();
@@ -133,10 +191,17 @@ namespace game
     {
         Object::Load(j);
 
-        int c = 0;
-        engine::JsonGet(j, "Category", c);
+        int idx = 0;
+        engine::JsonGet(j, "Category", idx);
+        idx = std::clamp(idx, 0, 3);
 
-        m_category = (UpgradeCategory)c;
+        switch (idx)
+        {
+        case 0: m_category = UpgradeCategory::Attack; break;
+        case 1: m_category = UpgradeCategory::Skill;  break;
+        case 2: m_category = UpgradeCategory::Life;   break;
+        case 3: m_category = UpgradeCategory::Move;   break;
+        }
 
         engine::JsonGet(j, "NodeId", m_nodeId);
 
@@ -155,29 +220,53 @@ namespace game
         engine::JsonGet(j, "Emerald", m_emerald);
     }
 
-    void UpgradeNodeView::SetVisualState(bool unlocked, bool purchased, bool selected)
+    void UpgradeNodeView::SetVisualState(NodeState s)
     {
         if (!m_image) return;
 
-        engine::Vector4 color = m_baseColor;
-        if (purchased)
+        engine::Vector4 fill = m_baseColor;
+        engine::Vector4 outline = { 0,0,0,0 };
+        bool outlineOn = false;
+
+        m_click->SetInteractable(s != NodeState::Disabled);
+
+        switch (s)
         {
-            // 강화 완료: 노란색
-            color = {1.0f, 238 / 255.0f, 24 / 255.0f, 1.0f};
-        }
-        else if (!unlocked)
-        {
-            // 잠김: 회색
-            color = { 0.4f, 0.4f, 0.4f, 1.0f };
-        }
-        else if (selected)
-        {
-            // 선택됨: 강조
-            color.x = std::min(color.x * 1.3f, 1.0f);
-            color.y = std::min(color.y * 1.3f, 1.0f);
-            color.z = std::min(color.z * 1.3f, 1.0f);
+        case NodeState::Purchased:
+            fill = m_baseColor;
+            outline = { 1.0f, 238 / 255.0f, 24 / 255.0f, 1.0f }; // 노랑
+            outlineOn = true;
+            break;
+
+        case NodeState::Selected:
+            fill = m_baseColor;
+            outline = { 0.0f, 180 / 255.0f, 230 / 255.0f, 1.0f }; // 파랑
+            outlineOn = true;
+            break;
+
+        case NodeState::Active:
+            fill = m_baseColor;
+            outline = { 0.4f, 0.4f, 0.4f, 1.0f }; // 회색 테두리
+            outlineOn = true;
+            break;
+
+        case NodeState::Disabled:
+            fill = { 0.4f, 0.4f, 0.4f, 1.0f };    // 전체 회색
+            outlineOn = false;
+            break;
         }
 
-        m_image->SetOutline(true, 5.0f, color);
+        m_image->SetColor(fill);
+        m_image->SetOutline(outlineOn, 5.0f, outline);
+    }
+
+    void UpgradeNodeView::NormalizeIdsByCategory()
+    {
+        m_nodeId = MakeNodeId(m_category, m_nodeId % 100);
+
+        for (int& pid : m_parents)
+            pid = MakeNodeId(m_category, pid % 100);
+
+        m_newParent = std::clamp(m_newParent, 0, 99);
     }
 }

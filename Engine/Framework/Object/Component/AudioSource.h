@@ -91,6 +91,8 @@ namespace engine
         Sound* GetSoundResource() const;
         FMOD::Channel* GetChannel() const { return m_currentChannel; }
         std::string GetBus() const { return m_bus; }
+        float GetMinDistance() const { return m_minDistance; }
+        float GetMaxDistance() const { return m_maxDistance; }
         bool Is3D() const { return m_is3D; }
         bool IsPlaying() const { return m_isPlaying; }
 
