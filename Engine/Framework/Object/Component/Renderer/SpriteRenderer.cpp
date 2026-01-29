@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "SpriteRenderer.h"
 
 #include <filesystem>
@@ -35,16 +35,6 @@ void to_json(nlohmann::ordered_json& j, engine::MaterialRenderType type)
 void from_json(const nlohmann::ordered_json& j, engine::MaterialRenderType& type)
 {
     type = static_cast<engine::MaterialRenderType>(j.at("RenderType"));
-}
-
-void to_json(nlohmann::ordered_json& j, engine::CullMode mode)
-{
-    j = nlohmann::ordered_json{ "CullMode", static_cast<int>(mode) };
-}
-
-void from_json(const nlohmann::ordered_json& j, engine::CullMode& mode)
-{
-    mode = static_cast<engine::CullMode>(j.at("CullMode"));
 }
 
 void to_json(nlohmann::ordered_json& j, engine::BillboardType type)

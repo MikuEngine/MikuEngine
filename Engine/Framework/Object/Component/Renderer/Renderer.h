@@ -73,6 +73,17 @@ namespace engine
 
 		void ClearSockets();
 
+
+		inline void to_json(nlohmann::ordered_json& j, engine::CullMode mode)
+		{
+			j = nlohmann::ordered_json{ "CullMode", static_cast<int>(mode) };
+		}
+
+		inline void from_json(const nlohmann::ordered_json& j, engine::CullMode& mode)
+		{
+			mode = static_cast<engine::CullMode>(j.at("CullMode"));
+		}
+
 	private:
 		friend class RenderSystem;
 	};

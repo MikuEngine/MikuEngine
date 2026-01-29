@@ -117,8 +117,10 @@ namespace engine
             ImGui::OpenPopup(label);
         }
 
+        ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+
         // 팝업 ID가 겹치지 않게 label 사용
-        if (ImGui::BeginPopupModal(label, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        if (ImGui::BeginPopupModal(label, nullptr, 0))
         {
             if (ImGui::Button("Cancel"))
             {
@@ -126,7 +128,8 @@ namespace engine
             }
             ImGui::Separator();
 
-            ImGui::BeginChild("FileList", ImVec2(400, 300), true);
+            ImGui::BeginChild("FileList", ImVec2(0, 0), true);
+
             if (fs::exists(basePath))
             {
                 for (const auto& entry : fs::recursive_directory_iterator(basePath))

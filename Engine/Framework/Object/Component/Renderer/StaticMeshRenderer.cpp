@@ -69,7 +69,21 @@ namespace engine
 
         m_inputLayout = m_vs->GetOrCreateInputLayout<CommonVertex>();
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
-        m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidBack);
+        
+        switch (m_cullMode)
+        {
+        case CullMode::None:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidNone);
+            break;
+
+        case CullMode::Back:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidBack);
+            break;
+
+        case CullMode::Front:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidFront);
+            break;
+        }
 
         m_objectConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
         m_materialConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Material", sizeof(CbMaterial));
@@ -345,11 +359,7 @@ namespace engine
         JsonGet(j, "MaterialEmissiveIntensity", m_materialEmissiveIntensity);
         JsonGet(j, "OverrideMaterial", m_overrideMaterial);
         JsonGet(j, "CastShadow", m_castShadow);
-        if (j.contains("CullMode"))
-        {
-            m_cullMode = static_cast<CullMode>(j.at("CullMode").get<int>());
-            SetCullMode(m_cullMode);
-        }
+        JsonGet(j, "CullMode", m_cullMode);
 
         Refresh();
     }
