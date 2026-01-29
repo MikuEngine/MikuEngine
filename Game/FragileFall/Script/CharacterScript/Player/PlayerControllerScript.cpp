@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include "Script/AimPointer.h"
@@ -535,6 +535,52 @@ namespace game
 		return angleDeg;
 	}
 
+	float PlayerControllerScript::GetForwardAimDirAngle() const
+	{
+		// ═══════════════════════════════════════════════════════════════
+		// 오브젝트 트랜스폼 y축 회전 + 상체 스켈레톤 회전 → degree 반환
+		// 스크립트 레벨 함수 사용하지 않고 직접 계산
+		// ═══════════════════════════════════════════════════════════════
+
+		// 1. 오브젝트 트랜스폼의 y축 회전 (라디안 → degree)
+		float transformYawDeg = engine::ToDegree(m_currentRotationAngle);
+
+		// 2. 상체 스켈레톤 회전 (에임포인터 방향과 하체 방향의 차이) - 직접 계산
+		if (!m_aimPointer || !GetTransform())
+		{
+			return transformYawDeg;
+		}
+
+		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+		engine::Vector3 aimPos = m_aimPointer->GetWorldPosition();
+
+		engine::Vector3 toAim = aimPos - playerPos;
+		toAim.y = 0.0f;
+
+		if (toAim.LengthSquared() < 0.0001f)
+		{
+			return transformYawDeg;
+		}
+
+		toAim.Normalize();
+
+		// 하체 forward 방향 (트랜스폼 회전 적용)
+		engine::Vector3 forward = engine::Vector3::UnitZ;
+		engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
+		forward = engine::Vector3::Transform(forward, playerRot);
+		forward.y = 0.0f;
+		forward.Normalize();
+
+		// 상대 각도 계산 (하체 기준 상체 회전)
+		float dotProduct = forward.Dot(toAim);
+		engine::Vector3 crossProduct = forward.Cross(toAim);
+		float upperBodyYawRad = atan2f(crossProduct.y, dotProduct);
+		float upperBodyYawDeg = engine::ToDegree(upperBodyYawRad);
+
+		// 합산하여 반환
+		return transformYawDeg + upperBodyYawDeg;
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 애니메이션 제어
 	// ═══════════════════════════════════════════════════════════════
@@ -645,23 +691,134 @@ namespace game
 		if (!m_rigidbody || !m_rigidbody->IsDynamic()) return;
 
 		// ═══════════════════════════════════════════════════════════════
-		// 완전 벡터 기반 회전 (FixedUpdate에서 호출됨)
+		// 키보드 이동방향 기반 회전
+		// 
+		// 로직:
+		//   1. 트랜스폼은 키보드 이동방향으로 빠르게 회전 (ForwardAimDir과 무관)
+		//   2. 단, ForwardAimDir과 이동방향이 90도 이상 차이나면
+		//      → 뒷걸음질 상태 → 트랜스폼을 180도 뒤집어서 회전
 		// ═══════════════════════════════════════════════════════════════
-		
-		UpdateAimTracking();
 
-		// ─────────────────────────────────────────────
-		// 1. 현재 캐릭터 방향 벡터 (각도에서 계산)
-		// ─────────────────────────────────────────────
+		// 1. ForwardAimDir (에임포인터 방향) 계산
+		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+		engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
+		aimDir.y = 0.0f;
+		if (aimDir.LengthSquared() < 0.0001f) return;
+		aimDir.Normalize();
+
+		// 2. 키보드 이동 방향 확인
+		engine::Vector3 moveDir = GetMoveInputDirection();
+		bool isMoving = moveDir.LengthSquared() > 0.0001f;
+
+		engine::Vector3 targetDir;
+
+		if (isMoving)
+		{
+			// ─────────────────────────────────────────────
+			// 이동 중: 이동방향 기준 회전
+			// ─────────────────────────────────────────────
+			moveDir.y = 0.0f;
+			moveDir.Normalize();
+
+			// 이동방향과 에임방향의 각도 차이 확인
+			float dotMoveAim = moveDir.x * aimDir.x + moveDir.z * aimDir.z;
+			
+			// 목표 방향 결정
+			// - dot < 0 이면 90도 이상 차이 → 뒷걸음질 → 트랜스폼은 -moveDir (180도 뒤집기)
+			// - dot >= 0 이면 90도 미만 → 앞으로 걷기 → 트랜스폼은 moveDir
+			targetDir = (dotMoveAim < 0.0f) ? -moveDir : moveDir;
+		}
+		else
+		{
+			// ─────────────────────────────────────────────
+			// 정지 상태: 8방향 중 ForwardAimDir과 가장 가까운 방향으로 회전
+			// ─────────────────────────────────────────────
+			static const engine::Vector3 directions8[8] = {
+				engine::Vector3( 0.0f, 0.0f,  1.0f),  // N  (0도)
+				engine::Vector3( 0.707f, 0.0f,  0.707f),  // NE (45도)
+				engine::Vector3( 1.0f, 0.0f,  0.0f),  // E  (90도)
+				engine::Vector3( 0.707f, 0.0f, -0.707f),  // SE (135도)
+				engine::Vector3( 0.0f, 0.0f, -1.0f),  // S  (180도)
+				engine::Vector3(-0.707f, 0.0f, -0.707f),  // SW (225도)
+				engine::Vector3(-1.0f, 0.0f,  0.0f),  // W  (270도)
+				engine::Vector3(-0.707f, 0.0f,  0.707f),  // NW (315도)
+			};
+
+			// 가장 가까운 방향 찾기 (내적이 가장 큰 방향)
+			float maxDot = -2.0f;
+			int bestIdx = 0;
+			for (int i = 0; i < 8; ++i)
+			{
+				float dot = aimDir.x * directions8[i].x + aimDir.z * directions8[i].z;
+				if (dot > maxDot)
+				{
+					maxDot = dot;
+					bestIdx = i;
+				}
+			}
+			targetDir = directions8[bestIdx];
+		}
+
+		// 5. 현재 캐릭터 방향 벡터
 		engine::Vector3 currentDir(
 			sinf(m_currentRotationAngle),
 			0.0f,
 			cosf(m_currentRotationAngle)
 		);
 
-		// ─────────────────────────────────────────────
+		// 6. 목표 도달 확인 (내적으로)
+		float dotToTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
+
+		// 데드존: 거의 같은 방향이면 회전 정지 (0.999 ≈ 2.5도)
+		if (dotToTarget > 0.999f)
+		{
+			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+			return;
+		}
+
+		// 7. 회전 방향 결정 (최단 경로)
+		float targetCross = currentDir.z * targetDir.x - currentDir.x * targetDir.z;
+		// 모델이 -Z 방향이라 부호 반전
+		float rotationSign = (targetCross > 0.0f) ? -1.0f : 1.0f;
+
+		// 8. 속도 감쇠 적용 (목표에 가까울수록 감속 → 진동 방지)
+		float angleToTarget = acosf(std::clamp(dotToTarget, -1.0f, 1.0f));
+		constexpr float SMOOTH_THRESHOLD = 0.5f;  // ~28도, 이 각도 이하에서 감속 시작
+		float speedScale = std::min(1.0f, angleToTarget / SMOOTH_THRESHOLD);
+
+		// 최소 속도 컷오프 (너무 느리면 정지)
+		constexpr float MIN_SPEED_SCALE = 0.1f;
+		if (speedScale < MIN_SPEED_SCALE)
+		{
+			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+			return;
+		}
+
+		// 9. 회전 적용
+		float angularVelocity = rotationSign * m_rotationSpeed * speedScale;
+		m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
+
+		// 각도 동기화
+		engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
+		engine::Vector3 euler = currentRot.ToEuler();
+		m_currentRotationAngle = euler.y;
+
+		/*
+		// ═══════════════════════════════════════════════════════════════
+		// [기존 로직 - 주석처리]
+		// 완전 벡터 기반 회전 (FixedUpdate에서 호출됨)
+		// ═══════════════════════════════════════════════════════════════
+		
+		UpdateAimTracking();
+
+		// 1. 현재 캐릭터 방향 벡터 (각도에서 계산)
+		engine::Vector3 currentDir(
+			sinf(m_currentRotationAngle),
+			0.0f,
+			cosf(m_currentRotationAngle)
+		);
+
 		// 2. 목표 방향 벡터 결정
-		// ─────────────────────────────────────────────
 		engine::Vector3 moveDir = GetMoveInputDirection();
 		bool isMoving = moveDir.LengthSquared() > 0.001f;
 		
@@ -690,9 +847,7 @@ namespace game
 		
 		targetDir.Normalize();
 
-		// ─────────────────────────────────────────────
 		// 3. 목표 도달 확인 (내적으로)
-		// ─────────────────────────────────────────────
 		float dotToTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
 		
 		// 거의 같은 방향이면 회전 불필요
@@ -702,9 +857,7 @@ namespace game
 			return;
 		}
 
-		// ─────────────────────────────────────────────
 		// 4. 회전 방향 결정 (외적 기반, 조건 분기 없음)
-		// ─────────────────────────────────────────────
 		
 		// 에임 이동 방향 (외적으로 계산됨)
 		float aimCross = GetAimRotationDirection();
@@ -728,9 +881,7 @@ namespace game
 			rotationSign = (targetCross > 0.0f) ? -1.0f : 1.0f;
 		}
 
-		// ─────────────────────────────────────────────
 		// 5. 회전 적용 (Dynamic Rigidbody: Angular Velocity 사용)
-		// ─────────────────────────────────────────────
 		float rotationSpeed = 10.0f;  // rad/sec
 		
 		float angularVelocity = rotationSign * rotationSpeed;
@@ -740,6 +891,7 @@ namespace game
 		engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
 		engine::Vector3 euler = currentRot.ToEuler();
 		m_currentRotationAngle = euler.y;
+		*/
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -887,6 +1039,7 @@ namespace game
 		ImGui::Separator();
 		ImGui::Text("Movement:");
 		ImGui::DragFloat("Move Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
+		ImGui::DragFloat("Rotation Speed (rad/s)", &m_rotationSpeed, 0.5f, 1.0f, 30.0f);
 
 		// 발사 설정
 		ImGui::Separator();
@@ -921,6 +1074,7 @@ namespace game
 		ImGui::Text("Runtime Info:");
 		ImGui::Text("Animation State: %s", GetAnimationState().c_str());
 		ImGui::Text("Is Moving Backward: %s", IsMovingBackward() ? "Yes" : "No");
+		ImGui::Text("Forward Aim Dir Angle: %.2f deg", GetForwardAimDirAngle());
 
 		if (m_aimPointer)
 		{
@@ -964,6 +1118,7 @@ namespace game
 	{
 		BaseControllerScript::Save(j);
 		j["MoveSpeed"] = m_moveSpeed;
+		j["RotationSpeed"] = m_rotationSpeed;
 		j["FireRate"] = m_fireRate;
 		j["BulletSpeed"] = m_bulletSpeed;
 		j["BulletLifetime"] = m_bulletLifetime;
@@ -987,6 +1142,8 @@ namespace game
 
 		if (j.contains("MoveSpeed"))
 			m_moveSpeed = j["MoveSpeed"].get<float>();
+		if (j.contains("RotationSpeed"))
+			m_rotationSpeed = j["RotationSpeed"].get<float>();
 		if (j.contains("FireRate"))
 			m_fireRate = j["FireRate"].get<float>();
 		if (j.contains("BulletSpeed"))

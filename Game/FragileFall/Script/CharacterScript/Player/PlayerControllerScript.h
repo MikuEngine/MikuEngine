@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -45,6 +45,7 @@ namespace game
         // 이동 설정
         // ─────────────────────────────────────────────
         float m_moveSpeed = 5.0f;
+        float m_rotationSpeed = 10.0f;  // 회전 속도 (rad/sec)
         // 이동 가속/감속 설정은 BaseControllerScript에서 상속
         // (m_movementAcceleration, m_movementDeceleration, m_maxSpeedBrakeFactor)
 
@@ -90,7 +91,7 @@ namespace game
 
         // 캐릭터의 정면으로 사용할 벡터 == 현재 조준 방향
         // 오브젝트 트랜스폼과 관계 없음
-        engine::Vector3 m_playerAimingDir = engine::Vector3(0.0f, 0.0f, -1.0f);
+        engine::Vector3 m_ForwardAimDir = engine::Vector3(0.0f, 0.0f, -1.0f);
         
         // 현재 캐릭터 하체 회전 각도 (라디안)
         float m_currentRotationAngle = 0.0f;
@@ -142,6 +143,7 @@ namespace game
         void HandleShooting(float deltaTime);  // Update에서 호출 (DeltaTime 사용)
         void UpdateUpperBodyAim();
         float CalculateAimYaw() const;
+        float GetForwardAimDirAngle() const;  // 트랜스폼 y축 회전 + 상체 회전 → degree 반환
 
         // ─────────────────────────────────────────────
         // 애니메이션 제어
