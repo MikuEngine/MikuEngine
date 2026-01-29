@@ -14,7 +14,7 @@ namespace engine
     private:
         bool m_enabled = true;
         bool m_showAxis = true;
-        float m_axisLength = 15.0f;
+        float m_axisLength = 0.2f;
 
         std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> m_batch;
         std::unique_ptr<DirectX::BasicEffect> m_effect;

@@ -21,7 +21,6 @@
     <ClCompile Include="Script\TestScript.cpp" />
     <ClCompile Include="GamePCH.cpp" />
     <ClCompile Include="App\TestGameApp.cpp" />
-    <ClCompile Include="Script\TestSound.cpp" />
     <ClCompile Include="Script\TestShootingPlayer.cpp" />
     <ClCompile Include="Script\BulletPlayer.cpp" />
     <ClCompile Include="Script\BulletFactory.cpp" />
@@ -33,6 +32,7 @@
     <ClCompile Include="Script\UpgradeNodeView.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\CSVReaderTest.cpp" />
+    <ClCompile Include="Script\TestSocketShooting.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -50,7 +50,6 @@
     <ClInclude Include="Script\Test2.h" />
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
-    <ClInclude Include="Script\TestSound.h" />
     <ClInclude Include="Script\TestShootingPlayer.h" />
     <ClInclude Include="Script\BulletPlayer.h" />
     <ClInclude Include="Script\BulletFactory.h" />
@@ -64,6 +63,7 @@
     <ClInclude Include="Script\UpgradeNodeView.h" />
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\CSVReaderTest.h" />
+    <ClInclude Include="Script\TestSocketShooting.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\TestHeader.hlsli" />
