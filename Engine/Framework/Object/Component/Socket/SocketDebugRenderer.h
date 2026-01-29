@@ -12,7 +12,7 @@ namespace engine
         public Singleton<SocketDebugRenderer>
     {
     private:
-        bool m_enabled = true;
+        bool m_enabled = false;
         bool m_showAxis = true;
         float m_axisLength = 5.0f;
 
