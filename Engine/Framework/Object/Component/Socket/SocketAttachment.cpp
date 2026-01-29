@@ -8,17 +8,19 @@ namespace engine
 {
     void SocketAttachment::Update()
     {
-        if (m_targetRenderer && !m_socketName.empty())
-        {
-            Matrix socketMatrix = m_targetRenderer->GetSocketWorldMatrix(m_socketName);
-            GetTransform()->SetWorldMatrix(socketMatrix);
-        }
     }
 
     void SocketAttachment::SetSocket(Renderer* renderer, const std::string& socketName)
     {
+        if (m_targetRenderer) m_targetRenderer->UnregisterAttachedObject(GetGameObject());
+
         m_targetRenderer = renderer;
         m_socketName = socketName;
+
+        if (m_targetRenderer)
+        {
+            m_targetRenderer->RegisterAttachedObject(GetGameObject(), m_socketName);
+        }
     }
 
     void SocketAttachment::OnGui()

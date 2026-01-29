@@ -3,10 +3,10 @@
 
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
-#include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/Renderer/SkeletalMeshRenderer.h"
 #include "Framework/Object/Component/Renderer/StaticMeshRenderer.h"
 #include "Framework/Object/Component/Particle/ParticleEffect.h"
+#include "Framework/Object/Component/Socket/SocketAttachment.h"
 #include "Core/System/Input.h"
 
 namespace game
@@ -21,45 +21,29 @@ namespace game
             m_gun = scene->FindGameObject(m_gunName);
             m_muzzleFlash = scene->FindGameObject(m_muzzleFlashName);
         }
+
+        if (m_player && m_gun)
+        {
+            auto playerRenderer = m_player->GetComponent<engine::SkeletalMeshRenderer>();
+            auto gunAttachment = m_gun->AddComponent<engine::SocketAttachment>();
+            if (playerRenderer && gunAttachment)
+            {
+                gunAttachment->SetSocket(playerRenderer, "Socket_LeftHand");
+            }
+        }
+        if (m_gun && m_muzzleFlash)
+        {
+            auto gunRenderer = m_gun->GetComponent<engine::StaticMeshRenderer>();
+            auto muzzleAttachment = m_muzzleFlash->AddComponent<engine::SocketAttachment>();
+            if (gunRenderer && muzzleAttachment)
+            {
+                muzzleAttachment->SetSocket(gunRenderer, "Socket_Gun_Fire");
+            }
+        }
     }
 
     void TestSocketShooting::Update()
     {
-        if (m_player && m_gun)
-        {
-            auto renderer = m_player->GetComponent<engine::SkeletalMeshRenderer>();
-            if (renderer)
-            {
-                engine::Matrix handMatrix = renderer->GetSocketWorldMatrix("Socket_LeftHand");
-
-                // 소켓 행렬 분해 (위치와 회전만 필요)
-                engine::Vector3 socketPos, socketScale;
-                engine::Quaternion socketRot;
-                handMatrix.Decompose(socketScale, socketRot, socketPos);
-
-                auto gunTransform = m_gun->GetTransform();
-
-                engine::Vector3 currentGunScale = gunTransform->GetLocalScale();
-                engine::Matrix newGunWorld =
-                    engine::Matrix::CreateScale(currentGunScale) * engine::Matrix::CreateFromQuaternion(socketRot) * engine::Matrix::CreateTranslation(socketPos);
-
-                gunTransform->SetWorldMatrix(newGunWorld);
-
-                auto gunRenderer = m_gun->GetComponent<engine::StaticMeshRenderer>();
-                if (gunRenderer) gunRenderer->UpdateSockets();
-            }
-        }
-
-        if (m_gun && m_muzzleFlash)
-        {
-            auto renderer = m_gun->GetComponent<engine::StaticMeshRenderer>();
-            if (renderer)
-            {
-                engine::Matrix muzzleMatrix = renderer->GetSocketWorldMatrix("socket_gun_fire");
-                m_muzzleFlash->GetTransform()->SetWorldMatrix(muzzleMatrix);
-            }
-        }
-
         if (engine::Input::IsKeyPressed(engine::Keys::Space))
         {
             if (m_muzzleFlash)

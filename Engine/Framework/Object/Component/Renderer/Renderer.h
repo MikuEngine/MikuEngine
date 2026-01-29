@@ -24,12 +24,6 @@ namespace engine
 		Front
 	};
 
-	struct SocketInstance
-	{
-		const Socket* info = nullptr;
-		Matrix worldMatrix;
-	};
-
 	class Renderer :
 		public Component
 	{
@@ -42,6 +36,7 @@ namespace engine
 		std::string m_emptyPath = "";
 		std::shared_ptr<SocketData> m_socketData;
 		std::vector<SocketInstance> m_socketInstances;
+		std::vector<AttachedSocketObject> m_attachedObjects;
 
 	public:
 		Renderer();
@@ -64,15 +59,16 @@ namespace engine
 		void DrawSocketEditor();
 		void SaveSocketData();
 		void LoadSocketData();
+		void ClearSockets();
+
+		void RegisterAttachedObject(GameObject* obj, const std::string& socketName);
+		void UnregisterAttachedObject(GameObject* obj);
 
 		virtual void UpdateSockets();
 
 		virtual Matrix GetSocketWorldMatrix(const std::string& name) const;
 		const std::vector<SocketInstance>& GetSocketInstances() const { return m_socketInstances; }
 		virtual const std::string& GetMeshPath() const { return m_emptyPath; }
-
-		void ClearSockets();
-
 
 		inline void to_json(nlohmann::ordered_json& j, engine::CullMode mode)
 		{

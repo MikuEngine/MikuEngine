@@ -23,6 +23,7 @@
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/GameObject/GameObject.h"
 #include "Common/Utility/StaticMemoryPool.h"
 
 namespace engine
@@ -810,6 +811,14 @@ namespace engine
             if (!instance.info) continue;
 
             instance.worldMatrix = instance.info->localMatrix * transform->GetWorld();
+        }
+
+        for (auto& attached : m_attachedObjects)
+        {
+            if (!attached.obj) continue;
+
+            Matrix socketWorld = GetSocketWorldMatrix(attached.socketName);
+            attached.obj->GetTransform()->SetWorldMatrix(socketWorld);
         }
     }
 
