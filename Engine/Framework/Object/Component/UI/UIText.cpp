@@ -195,6 +195,34 @@ namespace engine
 			float baseLineY = rect.y + yOffset + asc;
 
 			// 3) 상태 세팅(IA/VS/PS/Blend/DS/Sampler/Viewport)
+
+			dc->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+
+			// IA
+			{
+				UINT stride = m_vertexBuffer->GetBufferStride();
+				UINT offset = 0;
+				ID3D11Buffer* vb = m_vertexBuffer->GetRawBuffer();
+				dc->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+				dc->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
+				dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			}
+
+			// State
+			{
+				float blendFactor[4] = { 0, 0, 0, 0 };
+
+				if (m_useAlphaBlend && m_blend)
+					dc->OMSetBlendState(m_blend->GetBlendState().Get(), blendFactor, 0xffffffff);
+				else
+					dc->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
+
+				if (m_depthNone)
+					dc->OMSetDepthStencilState(m_depthNone->GetDepthStencilState().Get(), 0);
+				else
+					dc->OMSetDepthStencilState(nullptr, 0);
+			}
+
 			const char* p = textBegin;
 			while (p < textEnd)
 			{
@@ -274,6 +302,9 @@ namespace engine
 					dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 					dc->VSSetConstantBuffers((UINT)ConstantBufferSlot::UIElement, 1, m_uiCB->GetBuffer().GetAddressOf());
 					dc->PSSetConstantBuffers((UINT)ConstantBufferSlot::UIElement, 1, m_uiCB->GetBuffer().GetAddressOf());
+
+					dc->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
+					dc->PSSetShader(m_ps->GetRawShader(), nullptr, 0);
 				}
 
 				// SRV (drawFont + dg.page!)

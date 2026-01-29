@@ -33,7 +33,7 @@ namespace game
 
     void UpgradeNodeView::OnGui()
     {
-        static const char* kCats[] = { "Attack", "Skill", "Life", "Move" };
+        static const char* kCats[] = { "Attack", "Skill", "Survive", "Move" };
         int c = (int)m_category;
         if (ImGui::Combo("Category", &c, kCats, IM_ARRAYSIZE(kCats)))
             m_category = (UpgradeCategory)c;
@@ -136,9 +136,6 @@ namespace game
         int c = 0;
         engine::JsonGet(j, "Category", c);
 
-        if (c < 0 || c >= (int)UpgradeCategory::COUNT)
-            c = 0;
-
         m_category = (UpgradeCategory)c;
 
         engine::JsonGet(j, "NodeId", m_nodeId);
@@ -165,8 +162,8 @@ namespace game
         engine::Vector4 color = m_baseColor;
         if (purchased)
         {
-            // 구매 완료: 살짝 어둡게
-            color *= 0.6f;
+            // 강화 완료: 노란색
+            color = {1.0f, 238 / 255.0f, 24 / 255.0f, 1.0f};
         }
         else if (!unlocked)
         {

@@ -22,6 +22,23 @@ namespace game
             for (engine::Transform* c : t->GetChildren())
                 CollectUpgradeNodesRecursive(c, out);
         }
+
+        static int MakeNodeId(UpgradeCategory cat, int localIndex)
+        {
+            // localIndex: 0,1,2...
+            return (int)cat + localIndex;
+        }
+
+        static UpgradeCategory GetCategoryFromId(int id)
+        {
+            const int base = (id / 100) * 100;
+            return (UpgradeCategory)base;
+        }
+
+        static int GetLocalIndexFromId(int id)
+        {
+            return (id % 100);
+        }
     }
 
     void UpgradeController::Awake()
@@ -64,18 +81,6 @@ namespace game
         }
 
         ImGui::Text("Wallet: Ruby=%d Sapphire=%d Emerald=%d", m_ruby, m_sapphire, m_emerald);
-
-        for (auto& [id, view] : m_views)
-        {
-            ImGui::PushID(id);
-            ImGui::Text("Node %d : %s", id, view ? view->m_name.c_str() : "(null)");
-            ImGui::SameLine();
-            if (ImGui::Button("Try Upgrade"))
-            {
-                ApplyUpgrade(id);
-            }
-            ImGui::PopID();
-        }
     }
 
     void UpgradeController::Save(engine::json& j) const
@@ -346,11 +351,15 @@ namespace game
 
     void UpgradeController::ApplyCategoryFilter()
     {
+        LOG_PRINT("[Filter] selected={}", (int)m_selected);
+
         for (auto* go : m_nodeObjects)
         {
             if (!go) continue;
             auto* view = go->GetComponent<UpgradeNodeView>();
             if (!view) continue;
+
+            LOG_PRINT("[Filter] node={} cat={} ", view->m_nodeId, (int)view->m_category);
 
             const bool show = (view->m_category == m_selected);
             go->SetActive(show);
