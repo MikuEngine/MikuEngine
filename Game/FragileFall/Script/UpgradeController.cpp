@@ -2,6 +2,8 @@
 #include "UpgradeController.h"
 #include "UpgradeNodeView.h"
 
+#include <Framework/System/SoundSystem.h>
+
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/UI/UISlider.h>
 #include <Framework/Object/Component/UI/UIImage.h>
@@ -336,7 +338,8 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick(std::move(cb));
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        if (cb) cb(); });
     }
 
     void UpgradeController::SetCategory(UpgradeCategory c)
