@@ -4,6 +4,8 @@
 
 namespace engine
 {
+	class GameObject;
+
     struct Socket
     {
         std::string name;
@@ -15,6 +17,18 @@ namespace engine
 
         void UpdateLocalMatrix();
         void DecomposeLocalMatrix();
+    };
+
+    struct SocketInstance
+    {
+        const Socket* info = nullptr;
+        Matrix worldMatrix;
+    };
+
+    struct AttachedSocketObject
+    {
+        GameObject* obj;
+        std::string socketName;
     };
 
     class SocketData : public AssetData

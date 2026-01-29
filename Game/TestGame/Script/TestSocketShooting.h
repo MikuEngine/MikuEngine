@@ -22,9 +22,9 @@ namespace game
 
     private:
         // 조립에 필요한 오브젝트들
-        engine::GameObject* m_player = nullptr;     // SkeletalMesh를 가진 플레이어
-        engine::GameObject* m_gun = nullptr;        // 총 오브젝트
-        engine::GameObject* m_muzzleFlash = nullptr; // 총구 파티클 오브젝트
+        engine::GameObject* m_player = nullptr;
+        engine::GameObject* m_gun = nullptr;
+        engine::GameObject* m_muzzleFlash = nullptr;
 
         // 에디터에서 선택하기 위한 ID 저장용
         std::string m_playerName = "Player";

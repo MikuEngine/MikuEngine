@@ -274,6 +274,14 @@ namespace engine
 
 			instance.worldMatrix = instance.info->localMatrix * world;
 		}
+
+		for (auto& attached : m_attachedObjects)
+		{
+			if (!attached.obj) continue;
+
+			Matrix socketWorld = GetSocketWorldMatrix(attached.socketName);
+			attached.obj->GetTransform()->SetWorldMatrix(socketWorld);
+		}
 	}
 
 	Matrix Renderer::GetSocketWorldMatrix(const std::string& name) const
@@ -288,6 +296,7 @@ namespace engine
 
 		return GetTransform()->GetWorld();
 	}
+
 	void Renderer::ClearSockets()
 	{
 		for (auto& instance : m_socketInstances)
@@ -296,5 +305,19 @@ namespace engine
 			instance.info = nullptr;
 		}
 		m_socketInstances.clear();
+	}
+
+	void Renderer::RegisterAttachedObject(GameObject* obj, const std::string& socketName)
+	{
+		UnregisterAttachedObject(obj);
+		m_attachedObjects.push_back({ obj, socketName });
+	}
+
+	void Renderer::UnregisterAttachedObject(GameObject* obj)
+	{
+		auto it = std::remove_if(m_attachedObjects.begin(), m_attachedObjects.end(),
+			[obj](const AttachedSocketObject& target) { return target.obj == obj; });
+
+		m_attachedObjects.erase(it, m_attachedObjects.end());
 	}
 }

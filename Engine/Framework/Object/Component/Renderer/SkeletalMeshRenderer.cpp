@@ -666,6 +666,14 @@ namespace engine
                 instance.worldMatrix = instance.info->localMatrix * GetTransform()->GetWorld();
             }
         }
+
+        for (auto& attached : m_attachedObjects)
+        {
+            if (!attached.obj) continue;
+
+            Matrix socketWorld = GetSocketWorldMatrix(attached.socketName);
+            attached.obj->GetTransform()->SetWorldMatrix(socketWorld);
+        }
     }
 
     void SkeletalMeshRenderer::Save(json& j) const

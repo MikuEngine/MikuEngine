@@ -126,7 +126,7 @@ namespace engine
         {
             ImGui::Checkbox("Enabled", &m_enabled);
             ImGui::Checkbox("Show Axis", &m_showAxis);
-            ImGui::DragFloat("Axis Length", &m_axisLength, 0.01f, 0.01f, 5.0f);
+            ImGui::DragFloat("Axis Length", &m_axisLength, 0.1f, 0.01f, 15.0f);
         }
     }
 }
