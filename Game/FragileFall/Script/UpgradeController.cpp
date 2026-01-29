@@ -26,10 +26,10 @@ namespace game
 
     void UpgradeController::Awake()
     {
-        BindClickArea("Area_Attack", [self = engine::Ptr<UpgradeController>(this)](int mouseButton) {if (self) self->SetCategory(UpgradeCategory::Attack); });
-        BindClickArea("Area_Skill", [self = engine::Ptr<UpgradeController>(this)](int mouseButton) {if (self) self->SetCategory(UpgradeCategory::Skill); });
-        BindClickArea("Area_Life", [self = engine::Ptr<UpgradeController>(this)](int mouseButton) {if (self) self->SetCategory(UpgradeCategory::Life); });
-        BindClickArea("Area_Move", [self = engine::Ptr<UpgradeController>(this)](int mouseButton) {if (self) self->SetCategory(UpgradeCategory::Move);});
+        BindButton("Btn_Attack", [self = engine::Ptr<UpgradeController>(this)]() {if (self) self->SetCategory(UpgradeCategory::Attack); });
+        BindButton("Btn_Skill", [self = engine::Ptr<UpgradeController>(this)]() {if (self) self->SetCategory(UpgradeCategory::Skill); });
+        BindButton("Btn_Survive", [self = engine::Ptr<UpgradeController>(this)]() {if (self) self->SetCategory(UpgradeCategory::Life); });
+        BindButton("Btn_Move", [self = engine::Ptr<UpgradeController>(this)]() {if (self) self->SetCategory(UpgradeCategory::Move);});
         
         BindButton("Btn_Upgrade", [self = engine::Ptr<UpgradeController>(this)]() {if (!self)return; if (self->m_selectedNodeId == 0) return; self->ApplyUpgrade(self->m_selectedNodeId); });
     }
