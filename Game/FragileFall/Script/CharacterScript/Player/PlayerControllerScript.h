@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -87,6 +87,10 @@ namespace game
         // 마지막 이동 방향 (캐릭터가 서있는 방향)
         // 초기값: -Z 방향 (아래쪽)
         engine::Vector3 m_lastMoveDirection = engine::Vector3(0.0f, 0.0f, -1.0f);
+
+        // 캐릭터의 정면으로 사용할 벡터 == 현재 조준 방향
+        // 오브젝트 트랜스폼과 관계 없음
+        engine::Vector3 m_playerAimingDir = engine::Vector3(0.0f, 0.0f, -1.0f);
         
         // 현재 캐릭터 하체 회전 각도 (라디안)
         float m_currentRotationAngle = 0.0f;

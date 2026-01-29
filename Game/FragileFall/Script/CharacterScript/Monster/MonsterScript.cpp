@@ -339,7 +339,20 @@ namespace game
 
 	void MonsterScript::ExecuteDeadBehaviorNonPhysics()
 	{
-		// 비물리 Dead 처리
+		// Dead 상태 타이머 처리
+		if (m_deathTimerStarted)
+		{
+			m_deathTimer += engine::Time::DeltaTime();
+			
+			if (m_deathTimer >= m_deathDelay)
+			{
+				// 2초 후 오브젝트 파괴
+				if (GetGameObject())
+				{
+					GetGameObject()->Destroy();
+				}
+			}
+		}
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -472,9 +485,11 @@ namespace game
 
 	void MonsterScript::OnDeath()
 	{
-		// TODO: Dead 애니메이션 재생 후 일정 시간 후 파괴
-		// float deathAnimDuration = 2.0f;
-		// GetGameObject()->Destroy(deathAnimDuration);
+		// Dead 상태 진입 시 파괴 타이머 시작
+		m_deathTimer = 0.0f;
+		m_deathTimerStarted = true;
+		
+		// 추후 Death 애니메이션이나 이펙트 재생 가능
 	}
 
 	// ═══════════════════════════════════════════════════════════════

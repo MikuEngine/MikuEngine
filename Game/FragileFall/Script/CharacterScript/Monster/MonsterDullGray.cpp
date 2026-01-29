@@ -155,7 +155,8 @@ namespace game
 
     void MonsterDullGray::ExecuteDeadBehaviorNonPhysics()
     {
-        // 비물리 Dead 처리
+        // 부모 클래스의 Dead 타이머 처리 (2초 후 Destroy)
+        MonsterScript::ExecuteDeadBehaviorNonPhysics();
     }
 
     // ═══════════════════════════════════════════════════════════════

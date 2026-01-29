@@ -184,6 +184,13 @@ namespace game
         virtual void OnDeath();
         
         // ─────────────────────────────────────────────
+        // Dead 상태 후 파괴 타이머
+        // ─────────────────────────────────────────────
+        float m_deathTimer = 0.0f;
+        float m_deathDelay = 2.0f;  // Dead 상태 후 파괴까지 대기 시간 (초)
+        bool m_deathTimerStarted = false;
+        
+        // ─────────────────────────────────────────────
         // 피격 효과
         // ─────────────────────────────────────────────
         void StartHitFlash();

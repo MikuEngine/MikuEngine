@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include "Script/AimPointer.h"
@@ -517,7 +517,8 @@ namespace game
 
 		toAim.Normalize();
 
-		// 플레이어 전방 (+Z)
+		// 플레이어 전방은 오브젝트 트랜스폼의 Foward를 쓰지 않고, 현재 조준 방향을 사용한다.
+		//
 		engine::Vector3 forward = engine::Vector3::UnitZ;
 		engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
 		forward = engine::Vector3::Transform(forward, playerRot);

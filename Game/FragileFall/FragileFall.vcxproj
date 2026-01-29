@@ -194,6 +194,7 @@
     <ClCompile Include="Script\CharacterScript\Monster\MonsterDullGray.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
+    <ClCompile Include="Script\CheckRotateScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -239,6 +240,7 @@
     <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h" />
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
     <ClInclude Include="Script\UpgradeTypes.h" />
+    <ClInclude Include="Script\CheckRotateScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">
