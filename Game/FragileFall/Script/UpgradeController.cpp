@@ -2,9 +2,12 @@
 #include "UpgradeController.h"
 #include "UpgradeNodeView.h"
 
+#include <Framework/System/SoundSystem.h>
+
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/UI/UISlider.h>
 #include <Framework/Object/Component/UI/UIImage.h>
+#include <Framework/Object/Component/UI/UIText.h>
 
 namespace game
 {
@@ -57,6 +60,23 @@ namespace game
         if (go)
             m_scrollBar = go->GetComponent<engine::UISlider>();
 
+        auto* nameGO = engine::GameObject::Find("Text_UpgradeName");
+        if (nameGO) m_nameText = nameGO->GetComponent<engine::UIText>();
+
+        auto* descGO = engine::GameObject::Find("Text_UpgradeDesc");
+        if (descGO) m_descText = descGO->GetComponent<engine::UIText>();
+
+        auto* item1GO = engine::GameObject::Find("Text_Item1Count");
+        if (item1GO) m_item1Count = item1GO->GetComponent<engine::UIText>();
+
+        auto* item2GO = engine::GameObject::Find("Text_Item2Count");
+        if (item2GO) m_item2Count = item2GO->GetComponent<engine::UIText>();
+
+        auto* item3GO = engine::GameObject::Find("Text_Item3Count");
+        if (item3GO) m_item3Count = item3GO->GetComponent<engine::UIText>();
+
+        ClearSelectedInfoUI();
+
         AutoRegisterNodesFromContent("Content");
 
         BuildNodeTree();
@@ -65,7 +85,9 @@ namespace game
 
     void UpgradeController::Update()
     {
-
+        m_item1Count->SetText(std::to_string(m_ruby));
+        m_item2Count->SetText(std::to_string(m_sapphire));
+        m_item3Count->SetText(std::to_string(m_emerald));
     }
 
     void UpgradeController::OnGui()
@@ -182,6 +204,7 @@ namespace game
         m_selectedNodeId = nodeId;
 
         RefreshNodeVisuals();
+        UpdateSelectedInfoUI();
     }
 
     void UpgradeController::RefreshNodeVisuals()
@@ -194,7 +217,14 @@ namespace game
             const bool unlocked = (m_unlocked.find(id) != m_unlocked.end()) ? m_unlocked[id] : false;
             const bool selected = (id == m_selectedNodeId);
 
-            view->SetVisualState(unlocked, purchased, selected);
+            UpgradeNodeView::NodeState s;
+
+            if (purchased) s = UpgradeNodeView::NodeState::Purchased;
+            else if (!unlocked) s = UpgradeNodeView::NodeState::Disabled;
+            else if (selected) s = UpgradeNodeView::NodeState::Selected;
+            else s = UpgradeNodeView::NodeState::Active;
+
+            view->SetVisualState(s);
         }
     }
 
@@ -308,42 +338,21 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick(std::move(cb));
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        if (cb) cb(); });
     }
 
     void UpgradeController::SetCategory(UpgradeCategory c)
     {
         if (m_selected == c) return;
         m_selected = c;
+        
+        m_selectedNodeId = 0;
+        ClearSelectedInfoUI();
+        RefreshNodeVisuals();
+
         ApplyCategoryFilter();
-
-        for (auto& [cat, go] : m_categoryArea)
-        {
-            if (!go) continue;
-
-            auto* img = go->GetComponent<engine::UIImage>();
-            if (!img) continue;
-
-            const auto base = GetCategoryColor(cat);
-            const bool selected = (cat == m_selected);
-
-            engine::Vector4 color = base;
-
-            if (selected)
-            {
-                // 강조
-                color.x = std::min(color.x * 1.3f, 1.0f);
-                color.y = std::min(color.y * 1.3f, 1.0f);
-                color.z = std::min(color.z * 1.3f, 1.0f);
-            }
-            else
-            {
-                // 비선택
-                color *= 0.5f;
-            }
-
-            img->SetColor(color);
-        }
+        RefreshNodeVisuals();
 
         if (m_scrollBar)
             m_scrollBar->SetValue(0.0f, true);
@@ -376,5 +385,33 @@ namespace game
         }
 
         return { 1,1,1,1 }; // fallback
+    }
+
+    void UpgradeController::UpdateSelectedInfoUI()
+    {
+        if (m_selectedNodeId == 0)
+        {
+            ClearSelectedInfoUI();
+            return;
+        }
+
+        auto it = m_views.find(m_selectedNodeId);
+
+        UpgradeNodeView* view = it->second;
+
+        if (it == m_views.end() || !it->second)
+        {
+            ClearSelectedInfoUI();
+            return;
+        }
+
+        if (m_nameText) m_nameText->SetText(view->m_name);
+        if (m_descText) m_descText->SetText(view->m_desc);
+    }
+
+    void UpgradeController::ClearSelectedInfoUI()
+    {
+        if (m_nameText) m_nameText->SetText("");
+        if (m_descText) m_descText->SetText("");
     }
 }

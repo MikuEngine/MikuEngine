@@ -1,8 +1,8 @@
 ﻿#include "GamePCH.h"
 #include "BossProjectile.h"
 
-#include <Framework/Object/Component/Transform.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Asset/Prefab.h>
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossScript.h"
@@ -27,16 +27,25 @@ namespace game
         // 수명 체크
         if (m_elapsedTime >= m_lifetime)
         {
-            if (GetGameObject())
+            GetGameObject()->Destroy();
+
+            if (!m_pillarCrystalizedPieces.empty())
             {
-                GetGameObject()->Destroy();
+                for (auto& e : m_pillarCrystalizedPieces)
+                {
+                    if (e)
+                    {
+                        e->Destroy();
+                    }
+                }
             }
+
             m_isDestroyed = true;
             return;
         }
 
         // 결정화 상태가 아니면 이동
-        if (!m_isCrystallized)
+        if (!m_isCrystallized || m_isReflecting)
         {
             auto* transform = GetGameObject()->GetTransform();
             if (transform)
@@ -44,6 +53,19 @@ namespace game
                 engine::Vector3 currentPos = transform->GetWorldPosition();
                 engine::Vector3 newPos = currentPos + m_direction * m_speed * deltaTime;
                 transform->SetLocalPosition(newPos);
+
+                if (m_isReflecting && !m_pillarCrystalizedPieces.empty())
+                {
+                    for (auto& e : m_pillarCrystalizedPieces)
+                    {
+                        if (e)
+                        {
+                            e->GetTransform()->SetLocalPosition(newPos);
+                        }
+                        
+                    }
+                }
+
             }
         }
     }
@@ -80,26 +102,36 @@ namespace game
         if (!m_canBeCrystallized || m_isCrystallized) return;
 
         m_isCrystallized = true;
-        // 이동 정지 (Update에서 처리됨)
 
-        // TODO: 결정화 이펙트 표시
-        // 예: 색상 변경, 파티클 이펙트 등
+        for (int i = 0; i < 10; ++i)
+        {
+            auto go = engine::Prefab::Instantiate("PillarCrystalizedPiece");
+
+            auto pos = GetTransform()->GetLocalPosition();
+
+            float rotY = engine::Random::Float(0.0f, 360.f);
+            float rotX = engine::Random::Float(30.0f, 60.0f);
+
+            go->GetTransform()->SetLocalPosition(pos);
+            go->GetTransform()->SetLocalRotation(engine::Vector3(rotX, rotY, 0.0f));
+
+            m_pillarCrystalizedPieces.push_back(go);
+        }
     }
 
     void BossProjectile::OnExecutionReflected(const engine::Vector3& direction)
     {
         if (!m_isCrystallized) return;  // 결정화된 상태에서만 반사 가능
 
-        // 방향 설정 (보스 방향으로)
         float length = direction.Length();
         if (length > 0.001f)
         {
             m_direction = direction / length;
         }
 
-        // 결정화 해제 및 이동 재개
-        m_isCrystallized = false;
+        //  이동 재개
         m_canBeCrystallized = false;  // 한 번 반사되면 다시 결정화 불가
+        m_isReflecting = true;
 
         // 데미지 증가 (반사된 투사체는 큰 데미지)
         m_damage = 200.0f;
@@ -110,41 +142,110 @@ namespace game
         // TODO: 반사 이펙트 표시
     }
 
+    void BossProjectile::Execute()
+    {
+        if (!m_isCrystallized) return;  // 결정화된 상태에서만 처형 가능
+
+        // 플레이어 위치 가져오기
+        engine::Vector3 playerPos;
+        bool hasPlayer = false;
+
+        if (m_boss)
+        {
+            auto player = m_boss->GetTargetPlayer();
+            if (player)
+            {
+                auto playerTr = player->GetTransform();
+                if (playerTr)
+                {
+                    playerPos = playerTr->GetWorldPosition();
+                    hasPlayer = true;
+                }
+            }
+        }
+
+        // 구체 위치
+        engine::Vector3 projectilePos = GetTransform()->GetWorldPosition();
+
+        // 플레이어->구체 방향 계산
+        engine::Vector3 direction = projectilePos - playerPos;
+        float length = direction.Length();
+        if (length > 0.001f && hasPlayer)
+        {
+            direction = direction / length;
+        }
+        else
+        {
+            // 플레이어를 찾을 수 없으면 보스 방향으로 (기존 로직)
+            if (m_boss && m_boss->GetGameObject())
+            {
+                engine::Vector3 bossPos = m_boss->GetGameObject()->GetTransform()->GetWorldPosition();
+                direction = bossPos - projectilePos;
+                length = direction.Length();
+                if (length > 0.001f)
+                {
+                    direction = direction / length;
+                }
+                else
+                {
+                    direction = engine::Vector3(0.0f, 0.0f, 1.0f);  // 기본 방향
+                }
+            }
+            else
+            {
+                direction = engine::Vector3(0.0f, 0.0f, 1.0f);  // 기본 방향
+            }
+        }
+
+        // 반사 처리
+        OnExecutionReflected(direction);
+    }
+
     void BossProjectile::OnTriggerEnter(const engine::CollisionInfo& info)
     {
         if (m_isDestroyed) return;
 
         if (!info.gameObject) return;
 
-        // 플레이어와 충돌
-        auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
-        if (player)
-        {
-            // TODO: 플레이어에게 데미지 주기
-            // player->TakeDamage(static_cast<int>(m_damage));
-
-            // 투사체 파괴
-            if (GetGameObject())
+        if (!m_isCrystallized)
+        {// 플레이어와 충돌
+            auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
+            if (player)
             {
+                // TODO: 플레이어에게 데미지 주기
+                // player->TakeDamage(static_cast<int>(m_damage));
+
                 GetGameObject()->Destroy();
+
+                m_isDestroyed = true;
+                return;
             }
-            m_isDestroyed = true;
-            return;
         }
 
         // 보스와 충돌 (반사된 투사체만)
-        if (m_boss && info.gameObject == m_boss->GetGameObject())
+        if (m_isReflecting)
         {
-            // 보스에게 큰 데미지
-            m_boss->OnExecutionReflected(m_direction);
-
-            // 투사체 파괴
-            if (GetGameObject())
+            if (auto boss = info.gameObject->GetComponent<BossScript>())
             {
+                // 보스에게 큰 데미지
+                boss->OnExecutionReflected(m_direction);
+
                 GetGameObject()->Destroy();
+
+                if (!m_pillarCrystalizedPieces.empty())
+                {
+                    for (auto& e : m_pillarCrystalizedPieces)
+                    {
+                        if (e)
+                        {
+                            e->Destroy();
+                        }
+                    }
+                }
+
+                m_isDestroyed = true;
+                return;
             }
-            m_isDestroyed = true;
-            return;
         }
     }
 }

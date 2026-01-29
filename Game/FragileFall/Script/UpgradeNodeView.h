@@ -2,6 +2,7 @@
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/UI/UIImage.h>
+#include <Framework/Object/Component/UI/UIClickArea.h>
 
 #include "UpgradeTypes.h"
 
@@ -13,6 +14,15 @@ namespace game
         REGISTER_SCRIPT(UpgradeNodeView, Script)
 
     public:
+        enum class NodeState
+        {
+            Purchased,
+            Selected,
+            Active,
+            Disabled
+        };
+
+    public:
         void Awake() override;
         //void Start() override;
         //void Update() override;
@@ -22,7 +32,9 @@ namespace game
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
 
-        void SetVisualState(bool unlocked, bool purchased, bool selected);
+        void SetVisualState(NodeState s);
+
+        void NormalizeIdsByCategory();
 
     public:
         UpgradeCategory m_category = UpgradeCategory::Attack;
@@ -43,5 +55,6 @@ namespace game
     private:
         engine::Vector4 m_baseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
         engine::UIImage* m_image = nullptr;
+        engine::UIClickArea* m_click = nullptr;
     };
 }

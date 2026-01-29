@@ -86,7 +86,7 @@
         {
             "ID": 1,
             "ParentID": 0,
-            "Name": "GameObject",
+            "Name": "PillarPicking",
             "Active": true,
             "Components": [
                 {

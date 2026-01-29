@@ -2,10 +2,9 @@
 #include "BossScript.h"
 
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
-#include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
+#include <Framework/Object/Component/UI/UIText.h>
 
-#include "Script/Boss/BossScript.h"
 #include "Script/Boss/BossPattern/BossPatternManager.h"
 #include "Script/Boss/BossPattern/Patterns/BossPattern_PillarShield.h"
 #include "Script/Boss/BossPattern/Patterns/BossPattern_BulletFire.h"
@@ -22,10 +21,14 @@ namespace game
 
     void BossScript::Awake()
     {
+        auto go = engine::GameObject::Find("UI_BossHP");
+        m_hpText = go->GetComponent<engine::UIText>();
     }
 
     void BossScript::Start()
     {
+        m_hpText->SetText(std::format("HP: {}", m_currentHp));
+
         InitializeCrystalMeshes();
         InitializePatterns();
 
@@ -103,6 +106,8 @@ namespace game
         {
             m_currentHp = 0;
         }
+
+        m_hpText->SetText(std::format("HP: {}", m_currentHp));
     }
 
     void BossScript::CheckHealth()
