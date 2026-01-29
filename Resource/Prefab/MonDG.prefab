@@ -11,7 +11,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -10.100000381469727,
+                        "x": -12.399999618530273,
                         "y": 0.0,
                         "z": 3.4000000953674316
                     },
@@ -48,7 +48,7 @@
                 {
                     "Type": "Rigidbody",
                     "Active": true,
-                    "type": 0,
+                    "type": 1,
                     "mass": 500.0,
                     "linearDamping": 10.0,
                     "angularDamping": 10.0,
@@ -220,29 +220,6 @@
                     "CullMode": 1
                 },
                 {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        1.2000000476837158,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 1,
-                    "size": [
-                        0.6000000238418579,
-                        2.5999999046325684,
-                        0.6000000238418579
-                    ]
-                },
-                {
                     "Type": "UIText",
                     "Active": true,
                     "Layer": 0,
@@ -263,6 +240,26 @@
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.440000057220459,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "radius": 1.100000023841858,
+                    "height": 3.5
                 }
             ]
         },

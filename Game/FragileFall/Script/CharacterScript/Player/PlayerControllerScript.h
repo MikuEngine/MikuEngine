@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -106,6 +106,12 @@ namespace game
         // 정지 상태 목표 방향 (90도씩 양자화된 회전용)
         engine::Vector3 m_idleTargetDir = engine::Vector3(0.0f, 0.0f, 1.0f);
         bool m_idleTargetValid = false;  // 목표가 유효한지
+        
+        // 이동 상태 (Front/Back) - 히스테리시스용
+        bool m_isWalkingBackward = false;
+        
+        // 이전 프레임 이동 상태 (이동 시작 감지용)
+        bool m_wasMoving = false;
         
         // ─────────────────────────────────────────────
         // 에임 방향 추적 (벡터 기반 - 각도 래핑 문제 회피)
