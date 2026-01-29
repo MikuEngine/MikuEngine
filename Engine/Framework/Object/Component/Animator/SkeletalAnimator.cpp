@@ -570,6 +570,12 @@ namespace engine
             bone.model = boneOffsets[bone.index] * bone.combined;
             m_finalBoneMatrices[bone.index] = bone.model.Transpose();
         }
+
+        auto renderer = GetGameObject()->GetComponent<SkeletalMeshRenderer>();
+        if (renderer)
+        {
+            renderer->UpdateSockets();
+        }
     }
 
     void SkeletalAnimator::DrawTimeline(const std::string& animName)
@@ -1232,31 +1238,82 @@ namespace engine
     {
         if (m_skeleton.empty())
         {
-            if (auto renderer = GetGameObject()->GetComponent<SkeletalMeshRenderer>())
+            auto renderer = GetGameObject()->GetComponent<SkeletalMeshRenderer>();
+            if (!renderer) return;
+
+            m_skeletonData = renderer->GetSkeletonData();
+            if (!m_skeletonData) return;
+
+            m_skeletonData->SetupSkeletonInstance(m_skeleton);
+        }
+
+        if (m_skeleton.empty()) return;
+
+        for (auto& layer : m_layers)
+        {
+            if (layer.mask.empty())
+                layer.mask.assign(m_skeleton.size(), 0);
+
+            if (!layer.pendingMaskBones.empty())
             {
-                m_skeletonData = renderer->GetSkeletonData(); // 캐싱
-                if (m_skeletonData)
-                {
-                    m_skeletonData->SetupSkeletonInstance(m_skeleton);
-                }
+                SetLayerMaskInternal(layer, layer.pendingMaskBones);
+                layer.pendingMaskBones.clear();
             }
         }
 
-        if (!m_skeleton.empty())
-        {
-            for (auto& layer : m_layers)
-            {
-                if (layer.mask.empty())
-                {
-                    layer.mask.assign(m_skeleton.size(), 0);
-                }
+        const auto& boneOffsets = m_skeletonData->GetBoneOffsets();
 
-                if (!layer.pendingMaskBones.empty())
+        for (size_t i = 0; i < m_skeleton.size(); ++i)
+        {
+            auto& bone = m_skeleton[i];
+
+            Vector3 finalPos = bone.local.Translation();
+            Quaternion finalRot = Quaternion::CreateFromRotationMatrix(bone.local);
+            Vector3 finalScale = Vector3::One;
+
+            for (size_t layerIndex = 0; layerIndex < m_layers.size(); ++layerIndex)
+            {
+                auto& layer = m_layers[layerIndex];
+                if (!layer.current.active || !layer.current.data) continue;
+
+                if (!layer.mask.empty() && (i >= layer.mask.size() || layer.mask[i] == 0))
+                    continue;
+
+                Vector3 curPos, curScale;
+                Quaternion curRot;
+
+                if (EvaluateBone(layer.current, bone.name, layer.current.time, curPos, curRot, curScale))
                 {
-                    SetLayerMaskInternal(layer, layer.pendingMaskBones);
-                    layer.pendingMaskBones.clear();
+                    if (layerIndex == 0)
+                    {
+                        finalPos = curPos;
+                        finalRot = curRot;
+                        finalScale = curScale;
+                    }
                 }
             }
+
+            if (auto iter = m_proceduralRotations.find(static_cast<int>(i)); iter != m_proceduralRotations.end())
+            {
+                finalRot = finalRot * iter->second;
+            }
+
+            Matrix localAnim = Matrix::CreateScale(finalScale) *
+                Matrix::CreateFromQuaternion(finalRot) *
+                Matrix::CreateTranslation(finalPos);
+
+            if (bone.parentIndex != -1)
+                bone.combined = localAnim * m_skeleton[bone.parentIndex].combined;
+            else
+                bone.combined = localAnim;
+
+            bone.model = boneOffsets[bone.index] * bone.combined;
+            m_finalBoneMatrices[bone.index] = bone.model.Transpose();
+        }
+
+        if (auto renderer = GetGameObject()->GetComponent<SkeletalMeshRenderer>())
+        {
+            renderer->Update();
         }
     }
 
