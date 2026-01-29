@@ -36,6 +36,7 @@
 #include "Editor/EditorManager.h"
 #include "Editor/EditorCamera.h"
 
+#include "Framework/Object/Component/Renderer/DebugRenderer.h"
 #include "Framework/Physics/PhysicsDebugRenderer.h"
 #include "Framework/Object/Component/Pathfinding/PathfindingDebugRenderer.h"
 #include "Framework/Object/Component/Light/LightDebugRenderer.h"
@@ -503,6 +504,12 @@ namespace engine
             PathfindingDebugRenderer::Get().Render(view, projection);
             LightDebugRenderer::Get().Render(view, projection);
             SocketDebugRenderer::Get().Render(view, projection);
+
+            DebugRenderer::Get().Begin(view, projection);
+            {
+                SoundSystem::Get().Render();
+            }
+            DebugRenderer::Get().End();
         }
         graphics.EndDrawDebugPass();
 #endif

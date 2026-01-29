@@ -6,9 +6,14 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/SoundData.h"
 #include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/GameObject/GameObject.h"
 #include "Editor/EditorManager.h"
+#include "Framework/System/SystemManager.h"
+#include "Framework/System/CameraSystem.h"
+#include "Framework/Object/Component/Camera.h"
 #include "Common/Utility/EditorHelper.h"
 #include "fmod.hpp"
+
 
 // "Audio Files\0*.wav;*.mp3;*.ogg;*.flac\0All Files\0*.*\0";
 
@@ -151,6 +156,7 @@ namespace engine
             if (tr)
             {
                 m_currentChannel = soundResource->Play3D(tr->GetWorldPosition(), m_isLoop);
+                m_currentChannel->setMode(FMOD_3D_LINEARROLLOFF);
                 m_isPlaying = true;
             }
         }
@@ -170,7 +176,6 @@ namespace engine
                 cg->getName(n, 128);
             }
 
-
             // 그룹 할당
             if (soundResource->m_pChannelGroup)
             {
@@ -188,6 +193,10 @@ namespace engine
                 }
             }
 
+            if (m_is3D)
+            {
+                m_currentChannel->set3DMinMaxDistance(m_minDistance, m_maxDistance);
+            }
 
             if (m_useRandom)
             {
@@ -341,10 +350,20 @@ namespace engine
     {
         if (m_is3D != enable)
         {
+            bool wasPlaying = m_isPlaying;
+
+            if (m_fadeState != FadeState::None) wasPlaying = false;
+
             m_is3D = enable;
+
             if (!m_clipName.empty())
             {
                 SetClip(m_clipName);
+            }
+
+            if (wasPlaying)
+            {
+                Play();
             }
         }
     }
@@ -507,58 +526,49 @@ namespace engine
                 }
             }
 
-            bool is3d = m_is3D;
-            if (ImGui::Checkbox("Is 3D", &is3d)) Set3D(is3d);
-
-            ImGui::BeginDisabled(currentState == EditorState::Play);
-            ImGui::Checkbox("Play On Awake", &m_playOnAwake);
-            ImGui::EndDisabled();
-            
-
-            float vol = m_volume;
-            float inputWidth = 50.0f;
-            float sliderWidth = ImGui::GetContentRegionAvail().x - inputWidth - ImGui::GetStyle().ItemSpacing.x - 90.0f;
-            ImGui::SetNextItemWidth(sliderWidth);
-            bool sliderChanged = ImGui::SliderFloat("##VolumeSlider", &vol, 0.0f, 1.0f, "");
-
-            ImGui::SameLine();
-
-            ImGui::SetNextItemWidth(inputWidth);
-            bool inputChanged = ImGui::InputFloat("Volume", &vol, 0.0f, 0.0f, "%.2f");
-
-            if (sliderChanged || inputChanged)
-            {
-                if (vol < 0.0f) vol = 0.0f;
-                if (vol > 1.0f) vol = 1.0f;
-
-                SetVolume(vol);
-            }
-
-            ImGui::SetNextItemWidth(sliderWidth);
-            sliderChanged = ImGui::SliderFloat("##FadeInSlider", &m_fadeInTime, 0.0f, 5.0f, "");
-            ImGui::SameLine();
-            ImGui::SetNextItemWidth(inputWidth);
-            inputChanged = ImGui::InputFloat("Fade In (sec)", &m_fadeInTime, 0.0f, 0.0f, "%.1f");
-
-            if (sliderChanged || inputChanged)
-            {
-                if (m_fadeInTime < 0.0f) m_fadeInTime = 0.0f;
-            }
-
-            ImGui::SetNextItemWidth(sliderWidth);
-            sliderChanged = ImGui::SliderFloat("##FadeOutSlider", &m_fadeOutTime, 0.0f, 5.0f, "");
-
-            ImGui::SameLine();
-            ImGui::SetNextItemWidth(inputWidth);
-            inputChanged = ImGui::InputFloat("Fade Out (sec)", &m_fadeOutTime, 0.0f, 0.0f, "%.1f");
-
-            if (sliderChanged || inputChanged)
-            {
-                if (m_fadeOutTime < 0.0f) m_fadeOutTime = 0.0f;
-            }
+            ImGui::Checkbox("is3D", &m_is3D);
 
             if (m_is3D)
             {
+                GameObject* listener = SoundSystem::Get().GetListenerTarget();
+                if (listener)
+                {
+                    ImGui::TextColored(ImVec4(0, 1, 0, 1), "Listener: Target [%s]", listener->GetName().c_str());
+                }
+                else
+                {
+                    ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1), "Listener: Main Camera (Default)");
+                }
+
+                Vector3 listenerPos = Vector3::Zero;
+                if (listener)
+                {
+                    listenerPos = listener->GetTransform()->GetWorldPosition();
+                }
+                else
+                {
+                    auto mainCam = SystemManager::Get().GetCameraSystem().GetMainCamera();
+                    if (mainCam)
+                    {
+                        listenerPos = mainCam->GetTransform()->GetWorldPosition();
+                    }
+                }
+
+                Transform* myTr = GetTransform();
+                if (myTr)
+                {
+                    float dist = Vector3::Distance(listenerPos, myTr->GetWorldPosition());
+
+                    if (dist > m_maxDistance)
+                    {
+                        ImGui::TextColored(ImVec4(1, 0, 0, 1), "Distance: %.1f (Muted)", dist);
+                    }
+                    else
+                    {
+                        ImGui::Text("Distance: %.1f", dist);
+                    }
+                }
+
                 ImGui::Spacing();
                 ImGui::Indent(10.0f);
 
@@ -567,6 +577,25 @@ namespace engine
 
                 ImGui::Unindent(10.0f);
             }
+
+            ImGui::BeginDisabled(currentState == EditorState::Play);
+            ImGui::Checkbox("Play On Awake", &m_playOnAwake);
+            ImGui::EndDisabled();
+            
+
+            ImGui::Spacing();
+            ImGui::Indent(10.0f);
+
+            float vol = m_volume;
+            if (ImGui::DragFloat("Volume", &vol, 0.01f, 0.0f, 1.0f, "%.2f"))
+            {
+                SetVolume(vol);
+            }
+
+            ImGui::DragFloat("Fade In (sec)", &m_fadeInTime, 0.1f, 0.0f, 60.0f, "%.1f");
+            ImGui::DragFloat("Fade Out (sec)", &m_fadeOutTime, 0.1f, 0.0f, 60.0f, "%.1f");
+
+            ImGui::Unindent(10.0f);
 
             ImGui::TreePop();
         }

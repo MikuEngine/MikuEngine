@@ -57,6 +57,8 @@ namespace engine
         friend class Singleton<SoundSystem>;
         friend class Sound;
         friend class SoundData;
+        friend class GameObject;
+		friend class Transform;
 
     private:
         SoundSystem() = default;
@@ -65,9 +67,11 @@ namespace engine
     private:
         FMOD::System* m_pSystem = nullptr;
 
-        //std::map<std::string, Sound*> m_sounds;
         std::map<std::string, FMOD::ChannelGroup *> m_channelGroups;
         std::map<std::string, std::vector<Sound*>> m_SoundQues;
+		std::set<AudioSource*> m_registeredAudioSources;            // 씬에 활성화 된 AudioSource 컴포넌트들
+
+        GameObject* m_listenerTarget = nullptr;
 
         // FMOD 리스너(듣는 사람) 정보
         Vector3 m_listenerPos = { 0, 0, 0 };
@@ -82,15 +86,12 @@ namespace engine
         int m_selectedSoundIndex = 0;
         int m_index = 0;
 
-    private:
-        void ApplyVolumes();
-        static float Clamp01(float v);
-
-    private:
         float m_master = 1.0f;
         float m_bgm = 1.0f;
         float m_sfx = 1.0f;
         bool  m_mute = false;
+
+        bool m_showDebugRanges = true;
 
     public:
         bool Initialize();
@@ -99,6 +100,7 @@ namespace engine
         void Register(AudioSource* source) override;
         void Unregister(AudioSource* source) override;
 
+        void Render();
         void Update();
         void StopAll();
         void OnGameStart();
@@ -109,17 +111,21 @@ namespace engine
 
         void RefreshSoundList();
 
-        // FMOD Listener 설정 (CameraSystem에서 Main Camera 정보를 받아와서 호출해줘야 함)
-        void SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up);
-
         void Play(const std::string& key, const std::string& option, float volume = 1.0f, float pitch = 1.0f);
 
-        // Setter, Getter
+        // FMOD Listener 설정 (CameraSystem에서 Main Camera 정보를 받아와서 호출해줘야 함)
+        void SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up);
         void SetMasterVolume(float v);
         void SetBGMVolume(float v);
         void SetSFXVolume(float v);
         void SetMute(bool mute);
+		void SetShowDebugSoundColliders(bool show) { m_showDebugRanges = show; }
+        void SetListenerTarget(GameObject* target) { m_listenerTarget = target; }
 
+        void ApplyVolumes();
+        static float Clamp01(float v);
+
+        GameObject* GetListenerTarget() const { return m_listenerTarget; }
         float GetMasterVolume() const { return m_master; }
         float GetBGMVolume() const { return m_bgm; }
         float GetSFXVolume() const { return m_sfx; }
