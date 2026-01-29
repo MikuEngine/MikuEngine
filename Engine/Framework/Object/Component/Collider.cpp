@@ -336,7 +336,7 @@ namespace engine
         UpdateLocalPose();
 
         // 독립 Static Actor 생성
-        CreateOwnedStaticActor();
+        //CreateOwnedStaticActor();
     }
 
     // ═══════════════════════════════════════════════════════════════

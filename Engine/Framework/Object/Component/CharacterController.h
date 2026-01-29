@@ -41,7 +41,7 @@ namespace engine
 
     class CharacterController : public Component
     {
-        REGISTER_COMPONENT(CharacterController, Component)
+        DEFINE_COMPONENT_TYPE(CharacterController, Component)
 
     private:
         physx::PxController* m_controller = nullptr;
