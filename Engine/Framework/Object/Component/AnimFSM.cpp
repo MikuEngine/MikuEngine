@@ -176,15 +176,24 @@ namespace engine
         m_spineBoneName = boneName;
     }
 
+    void AnimFSM::OffsetCurrentYaw(float offsetDegrees)
+    {
+        // 하체 회전 보정: 하체가 회전한 만큼 m_currentYaw를 조정
+        // 이렇게 하면 상체가 월드 기준으로 같은 방향을 유지함
+        m_currentYaw += offsetDegrees;
+        
+        // -180 ~ 180 범위로 정규화 (선택사항)
+        while (m_currentYaw > 180.0f) m_currentYaw -= 360.0f;
+        while (m_currentYaw < -180.0f) m_currentYaw += 360.0f;
+    }
+
     void AnimFSM::UpdateProceduralAim()
     {
         if (!m_enableProceduralAim) return;
         
-        float dt = Time::DeltaTime();
-        
-        // 부드러운 보간
-        m_currentYaw = std::lerp(m_currentYaw, m_upperBodyYaw, m_aimLerpSpeed * dt);
-        m_currentPitch = std::lerp(m_currentPitch, m_upperBodyPitch, m_aimLerpSpeed * dt);
+        // 보간 없이 즉시 적용
+        m_currentYaw = m_upperBodyYaw;
+        m_currentPitch = m_upperBodyPitch;
         
         ApplyProceduralRotation();
     }

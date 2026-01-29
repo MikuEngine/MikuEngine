@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -95,6 +95,17 @@ namespace game
         
         // 현재 캐릭터 하체 회전 각도 (라디안)
         float m_currentRotationAngle = 0.0f;
+        
+        // ─────────────────────────────────────────────
+        // 회전 방식 선택
+        // true: ForceSetRotation 기반 (직접 트랜스폼 제어, 권장)
+        // false: Angular Velocity 기반 (물리 기반, 회전속도 12.0f, AngularDamping 10 권장)
+        // ─────────────────────────────────────────────
+        bool m_useForceSetRotation = true;
+        
+        // 정지 상태 목표 방향 (90도씩 양자화된 회전용)
+        engine::Vector3 m_idleTargetDir = engine::Vector3(0.0f, 0.0f, 1.0f);
+        bool m_idleTargetValid = false;  // 목표가 유효한지
         
         // ─────────────────────────────────────────────
         // 에임 방향 추적 (벡터 기반 - 각도 래핑 문제 회피)

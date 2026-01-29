@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include "Script/AimPointer.h"
@@ -54,6 +54,7 @@ namespace game
 		if (GetTransform())
 		{
 			m_currentRotationAngle = atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z) + 3.14159f;
+			
 			engine::Quaternion initialRot = engine::Quaternion::CreateFromAxisAngle(
 				engine::Vector3::UnitY, 
 				m_currentRotationAngle
@@ -218,7 +219,7 @@ namespace game
 
 		// 애니메이션 업데이트 (비물리)
 		UpdateAnimation();
-		UpdateUpperBodyAim();
+		// 주의: UpdateUpperBodyAim()은 FixedUpdate(UpdatePhysicsLogic)로 이동됨
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -236,6 +237,7 @@ namespace game
 		// 물리 기반 행동 실행
 		if (CanMove())    HandleMovement();
 		UpdateLowerBodyRotation();  // 매 FixedUpdate 호출 (이동 방향에 따라 회전)
+		UpdateUpperBodyAim();       // FixedUpdate로 이동 (물리와 싱크)
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -499,7 +501,47 @@ namespace game
 			return;
 		}
 
-		float yaw = CalculateAimYaw();
+		// ═══════════════════════════════════════════════════════════════
+		// 상체 회전 로직 (월드 기준, FixedUpdate에서 호출)
+		// 
+		// 핵심: 하체 회전량 보정 없이, 매 프레임 트랜스폼 포워드와 에임 방향의
+		//       차이를 직접 계산하여 상체 Yaw로 설정
+		// → 모든 계산이 같은 시점(FixedUpdate)에서 이루어져 싱크 문제 해결
+		// ═══════════════════════════════════════════════════════════════
+
+		// 1. 에임 방향 계산 (월드 기준)
+		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+		engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
+		aimDir.y = 0.0f;
+		if (aimDir.LengthSquared() < 0.0001f) return;
+		aimDir.Normalize();
+
+		// 2. 현재 트랜스폼 포워드 (하체 방향)
+		engine::Vector3 forward = engine::Vector3::UnitZ;
+		engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
+		forward = engine::Vector3::Transform(forward, playerRot);
+		forward.y = 0.0f;
+		forward.Normalize();
+
+		// 3. 트랜스폼 포워드와 에임 방향의 각도 차이 계산 (상체 Yaw)
+		float dotProduct = forward.Dot(aimDir);
+		engine::Vector3 crossProduct = forward.Cross(aimDir);
+		float yawRad = atan2f(crossProduct.y, dotProduct);
+		float yaw = engine::ToDegree(yawRad);
+
+		// 4. 상체 회전 데드존 (미세한 진동 방지)
+		// ±2도 이내면 0으로 처리
+		constexpr float UPPER_BODY_DEADZONE = 2.0f;
+		if (std::abs(yaw) < UPPER_BODY_DEADZONE)
+		{
+			yaw = 0.0f;
+		}
+
+		// 5. 상체 회전 범위 제한 (±90도)
+		// 이 범위를 벗어나면 하체가 회전해야 함 (UpdateLowerBodyRotation에서 처리)
+		// 여기서는 범위 내로 클램핑하지 않고, 그대로 전달
+		// (하체가 제대로 회전하면 자연스럽게 ±90도 이내가 됨)
+		
 		m_animFSM->SetUpperBodyYaw(yaw);
 	}
 
@@ -516,8 +558,7 @@ namespace game
 		if (toAim.LengthSquared() < 0.0001f) return 0.0f;
 
 		toAim.Normalize();
-
-		// 플레이어 전방은 오브젝트 트랜스폼의 Foward를 쓰지 않고, 현재 조준 방향을 사용한다.
+		
 		//
 		engine::Vector3 forward = engine::Vector3::UnitZ;
 		engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
@@ -601,13 +642,13 @@ namespace game
 		moveDir.y = 0.0f;
 		moveDir.Normalize();
 
-		// 내적을 이용한 각도 계산
+		// 내적을 이용한 각도 판정
+		// dot >= 0: 90도 이하 (앞으로 걷기)
+		// dot < 0: 90도 초과 (뒤로 걷기)
 		float dot = aimDir.Dot(moveDir);
-		float angleRad = acosf(std::clamp(dot, -1.0f, 1.0f));
-		float angleDeg = engine::ToDegree(angleRad);
-
-		// ±90도 이상 차이나면 뒤로 걷기
-		return angleDeg >= 90.0f;
+		
+		// 90도 초과하면 뒤로 걷기
+		return dot < 0.0f;
 	}
 
 	std::string PlayerControllerScript::GetAnimationState() const
@@ -715,48 +756,156 @@ namespace game
 		if (isMoving)
 		{
 			// ─────────────────────────────────────────────
-			// 이동 중: 이동방향 기준 회전
+			// 이동 중: 연속 방향 기반 회전
+			// 
+			// 로직:
+			//   1. 입력 벡터를 그대로 이동 방향으로 사용 
+			//   2. 이동 방향과 에임 방향의 각도 차이 계산
+			//   3. 90도 이하: 이동 방향 = 트랜스폼 포워드 (WalkForward)
+			//   4. 90도 초과: 이동 방향의 반대 = 트랜스폼 포워드 (WalkBackward)
+			//   5. 에임 회전방향으로 하체 회전
 			// ─────────────────────────────────────────────
+			
+			// 이동 시작 시 정지 상태 목표 리셋
+			m_idleTargetValid = false;
+			
 			moveDir.y = 0.0f;
 			moveDir.Normalize();
 
-			// 이동방향과 에임방향의 각도 차이 확인
+			// 이동 방향과 에임 방향의 각도 차이 확인
 			float dotMoveAim = moveDir.x * aimDir.x + moveDir.z * aimDir.z;
 			
-			// 목표 방향 결정
-			// - dot < 0 이면 90도 이상 차이 → 뒷걸음질 → 트랜스폼은 -moveDir (180도 뒤집기)
-			// - dot >= 0 이면 90도 미만 → 앞으로 걷기 → 트랜스폼은 moveDir
-			targetDir = (dotMoveAim < 0.0f) ? -moveDir : moveDir;
+			// 90도 이하 (dot >= 0): 이동 방향 = 트랜스폼 포워드 (앞으로 걷기)
+			// 90도 초과 (dot < 0): 이동 방향의 반대 = 트랜스폼 포워드 (뒤로 걷기)
+			if (dotMoveAim >= 0.0f)
+			{
+				// 90도 이하: 이동 방향이 트랜스폼 포워드
+				targetDir = moveDir;
+			}
+			else
+			{
+				// 90도 초과: 이동 방향의 반대가 트랜스폼 포워드
+				targetDir = -moveDir;
+			}
+
+			// ─────────────────────────────────────────────
+			// 90도 이상 회전 필요 시 추가 검증 (Angular Velocity 방식 전용)
+			// 에임이 급격히 바뀌었으면 (캐릭터가 에임을 지나칠 때) 
+			// 이번 프레임 회전 스킵 (빙글 도는 현상 방지)
+			// ForceSetRotation 방식에서는 관성이 없으므로 이 검증 불필요
+			// ─────────────────────────────────────────────
+			if (!m_useForceSetRotation)
+			{
+				engine::Vector3 currentDir(
+					sinf(m_currentRotationAngle),
+					0.0f,
+					cosf(m_currentRotationAngle)
+				);
+				float dotCurrentTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
+				
+				// 90도 이상 회전이 필요한 경우 (dot < 0)
+				if (dotCurrentTarget < 0.0f)
+				{
+					// 에임 방향 변화량 체크 (이전 프레임 대비)
+					float dotAimChange = m_prevAimDirection.x * aimDir.x + m_prevAimDirection.z * aimDir.z;
+					
+					// 에임이 급격히 바뀌었으면 (60도 이상 변화, dot < 0.5) 이번 프레임 스킵
+					constexpr float RAPID_AIM_CHANGE_THRESHOLD = 0.5f;  // ~60도
+					if (dotAimChange < RAPID_AIM_CHANGE_THRESHOLD)
+					{
+						// 에임 변화가 급격함 → 이번 프레임은 회전 안 함
+						m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+						// 에임 방향만 업데이트하고 리턴
+						m_prevAimDirection = aimDir;
+						return;
+					}
+				}
+			}
+
+			// 에임 회전방향 추적 (하체 회전방향 결정용)
+			UpdateAimTracking();
 		}
 		else
 		{
 			// ─────────────────────────────────────────────
-			// 정지 상태: 8방향 중 ForwardAimDir과 가장 가까운 방향으로 회전
+			// 정지 상태:
+			// - 트랜스폼 포워드는 연속된 값을 가질 수 있음
+			// - 에임포워드와 트랜스폼 포워드의 각도 차이가 90도 초과 시:
+			//   → 목표 방향을 업데이트 (현재 기준 ±90도)
+			// - 90도 이하: 기존 목표 방향 유지
+			// - 목표 방향으로 계속 회전
 			// ─────────────────────────────────────────────
-			static const engine::Vector3 directions8[8] = {
-				engine::Vector3( 0.0f, 0.0f,  1.0f),  // N  (0도)
-				engine::Vector3( 0.707f, 0.0f,  0.707f),  // NE (45도)
-				engine::Vector3( 1.0f, 0.0f,  0.0f),  // E  (90도)
-				engine::Vector3( 0.707f, 0.0f, -0.707f),  // SE (135도)
-				engine::Vector3( 0.0f, 0.0f, -1.0f),  // S  (180도)
-				engine::Vector3(-0.707f, 0.0f, -0.707f),  // SW (225도)
-				engine::Vector3(-1.0f, 0.0f,  0.0f),  // W  (270도)
-				engine::Vector3(-0.707f, 0.0f,  0.707f),  // NW (315도)
-			};
-
-			// 가장 가까운 방향 찾기 (내적이 가장 큰 방향)
-			float maxDot = -2.0f;
-			int bestIdx = 0;
-			for (int i = 0; i < 8; ++i)
+			
+			// 현재 트랜스폼 포워드
+			engine::Vector3 currentDir(
+				sinf(m_currentRotationAngle),
+				0.0f,
+				cosf(m_currentRotationAngle)
+			);
+			
+			// 에임방향과 트랜스폼 포워드의 각도 차이 확인
+			float dotAimCurrent = aimDir.x * currentDir.x + aimDir.z * currentDir.z;
+			float angleToAimRad = acosf(std::clamp(dotAimCurrent, -1.0f, 1.0f));
+			float angleToAimDeg = engine::ToDegree(angleToAimRad);
+			
+			// 90도 초과 시에만 새 목표 방향 계산
+			constexpr float IDLE_ROTATION_THRESHOLD = 90.0f;
+			if (angleToAimDeg > IDLE_ROTATION_THRESHOLD)
 			{
-				float dot = aimDir.x * directions8[i].x + aimDir.z * directions8[i].z;
-				if (dot > maxDot)
+				// 현재 트랜스폼 기준으로 에임이 왼쪽인지 오른쪽인지 확인
+				float crossY = currentDir.z * aimDir.x - currentDir.x * aimDir.z;
+				
+				// 현재 트랜스폼의 90도 회전 방향 계산
+				if (crossY > 0.0f)
 				{
-					maxDot = dot;
-					bestIdx = i;
+					// 에임이 오른쪽 → 시계방향 90도 회전
+					m_idleTargetDir = engine::Vector3(
+						currentDir.z,   // cos(θ-90) = sin(θ)
+						0.0f,
+						-currentDir.x   // sin(θ-90) = -cos(θ)
+					);
 				}
+				else
+				{
+					// 에임이 왼쪽 → 반시계방향 90도 회전
+					m_idleTargetDir = engine::Vector3(
+						-currentDir.z,  // cos(θ+90) = -sin(θ)
+						0.0f,
+						currentDir.x    // sin(θ+90) = cos(θ)
+					);
+				}
+				m_idleTargetValid = true;
 			}
-			targetDir = directions8[bestIdx];
+			
+			// 목표가 유효하고, 현재 목표에 도달하지 않았으면 계속 회전
+			if (m_idleTargetValid)
+			{
+				float dotToIdleTarget = currentDir.x * m_idleTargetDir.x + currentDir.z * m_idleTargetDir.z;
+				
+				// 목표 도달 확인 (0.999 ≈ 2.5도)
+				if (dotToIdleTarget > 0.999f)
+				{
+					// 목표 도달 → 정지
+					if (!m_useForceSetRotation)
+					{
+						m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+					}
+					m_idleTargetValid = false;  // 목표 완료
+					return;
+				}
+				
+				// 목표 방향으로 회전
+				targetDir = m_idleTargetDir;
+			}
+			else
+			{
+				// 목표 없음 → 회전 안함
+				if (!m_useForceSetRotation)
+				{
+					m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+				}
+				return;
+			}
 		}
 
 		// 5. 현재 캐릭터 방향 벡터
@@ -772,126 +921,118 @@ namespace game
 		// 데드존: 거의 같은 방향이면 회전 정지 (0.999 ≈ 2.5도)
 		if (dotToTarget > 0.999f)
 		{
-			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+			if (!m_useForceSetRotation)
+			{
+				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+			}
 			return;
 		}
 
-		// 7. 회전 방향 결정 (최단 경로)
+		// 7. 회전 방향 결정
 		float targetCross = currentDir.z * targetDir.x - currentDir.x * targetDir.z;
-		// 모델이 -Z 방향이라 부호 반전
-		float rotationSign = (targetCross > 0.0f) ? -1.0f : 1.0f;
-
-		// 8. 속도 감쇠 적용 (목표에 가까울수록 감속 → 진동 방지)
-		float angleToTarget = acosf(std::clamp(dotToTarget, -1.0f, 1.0f));
-		constexpr float SMOOTH_THRESHOLD = 0.5f;  // ~28도, 이 각도 이하에서 감속 시작
-		float speedScale = std::min(1.0f, angleToTarget / SMOOTH_THRESHOLD);
-
-		// 최소 속도 컷오프 (너무 느리면 정지)
-		constexpr float MIN_SPEED_SCALE = 0.1f;
-		if (speedScale < MIN_SPEED_SCALE)
-		{
-			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-			return;
-		}
-
-		// 9. 회전 적용
-		float angularVelocity = rotationSign * m_rotationSpeed * speedScale;
-		m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
-
-		// 각도 동기화
-		engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
-		engine::Vector3 euler = currentRot.ToEuler();
-		m_currentRotationAngle = euler.y;
-
-		/*
-		// ═══════════════════════════════════════════════════════════════
-		// [기존 로직 - 주석처리]
-		// 완전 벡터 기반 회전 (FixedUpdate에서 호출됨)
-		// ═══════════════════════════════════════════════════════════════
-		
-		UpdateAimTracking();
-
-		// 1. 현재 캐릭터 방향 벡터 (각도에서 계산)
-		engine::Vector3 currentDir(
-			sinf(m_currentRotationAngle),
-			0.0f,
-			cosf(m_currentRotationAngle)
-		);
-
-		// 2. 목표 방향 벡터 결정
-		engine::Vector3 moveDir = GetMoveInputDirection();
-		bool isMoving = moveDir.LengthSquared() > 0.001f;
-		
-		engine::Vector3 targetDir;
-		
-		if (isMoving)
-		{
-			moveDir.y = 0.0f;
-			moveDir.Normalize();
-			targetDir = IsMovingBackward() ? -moveDir : moveDir;
-		}
-		else
-		{
-			// Idle: 에임 방향과 마지막 이동 방향 비교 (벡터 내적 사용)
-			engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-			engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
-			aimDir.y = 0.0f;
-			aimDir.Normalize();
-
-			// 마지막 이동 방향과 에임 방향의 내적
-			float dotWithLast = m_lastMoveDirection.x * aimDir.x + m_lastMoveDirection.z * aimDir.z;
-			
-			// 내적 < 0 이면 에임이 뒤쪽 (90도 이상) → 반대 방향으로 서기
-			targetDir = (dotWithLast < 0.0f) ? -m_lastMoveDirection : m_lastMoveDirection;
-		}
-		
-		targetDir.Normalize();
-
-		// 3. 목표 도달 확인 (내적으로)
-		float dotToTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
-		
-		// 거의 같은 방향이면 회전 불필요
-		if (dotToTarget > 0.9999f)
-		{
-			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-			return;
-		}
-
-		// 4. 회전 방향 결정 (외적 기반, 조건 분기 없음)
-		
-		// 에임 이동 방향 (외적으로 계산됨)
-		float aimCross = GetAimRotationDirection();
-		
-		// 현재→목표 외적 (최단 경로 방향)
-		float targetCross = currentDir.z * targetDir.x - currentDir.x * targetDir.z;
-		
-		// 회전 방향 결정:
-		// - 에임이 움직이고 있으면 → 에임 방향 따라감
-		// - 에임이 멈춰있으면 → 최단 경로 (현재→목표 외적)
-		// 주의: 모델이 -Z 방향이라 +180도 보정 → 외적 부호 반전 필요
 		float rotationSign;
-		if (std::abs(aimCross) > 0.001f)
+
+		// 8. 회전 적용
+		if (m_useForceSetRotation)
 		{
-			// 에임이 움직이는 방향으로 (부호 반전)
-			rotationSign = (aimCross > 0.0f) ? -1.0f : 1.0f;
+			// ═══════════════════════════════════════════════════════════════
+			// ForceSetRotation 기반 (직접 트랜스폼 제어)
+			// - 물리 엔진의 각속도/관성 무시
+			// - 정확하고 즉각적인 회전
+			// ═══════════════════════════════════════════════════════════════
+			
+			// 이동 중일 때 에임 회전 방향 참고 (Front-Back 전환 시 올바른 방향 유지)
+			float aimCross = GetAimRotationDirection();
+			constexpr float AIM_MOVE_THRESHOLD = 0.001f;
+			
+			if (isMoving && std::abs(aimCross) > AIM_MOVE_THRESHOLD)
+			{
+				// 이동 중 + 에임이 움직이면: 에임 회전방향 따라감
+				rotationSign = (aimCross > 0.0f) ? 1.0f : -1.0f;
+			}
+			else
+			{
+				// 정지 또는 에임 멈춤: 최단 경로
+				rotationSign = (targetCross > 0.0f) ? 1.0f : -1.0f;
+			}
+			
+			float fixedDelta = engine::Time::FixedDeltaTime();
+			float rotationStep = rotationSign * m_rotationSpeed * fixedDelta;
+			
+			// 목표까지 남은 각도 계산 (라디안)
+			float angleToTarget = acosf(std::clamp(dotToTarget, -1.0f, 1.0f));
+			
+			// 오버슈트 방지: 남은 각도보다 회전량이 크면 목표에 정확히 맞춤
+			if (std::abs(rotationStep) > angleToTarget)
+			{
+				// 목표 방향으로 직접 설정
+				m_currentRotationAngle = atan2f(targetDir.x, targetDir.z);
+			}
+			else
+			{
+				m_currentRotationAngle += rotationStep;
+			}
+			
+			// 각도 정규화 (-π ~ π)
+			while (m_currentRotationAngle > 3.14159f) m_currentRotationAngle -= 6.28318f;
+			while (m_currentRotationAngle < -3.14159f) m_currentRotationAngle += 6.28318f;
+			
+			// 회전 적용
+			engine::Quaternion newRot = engine::Quaternion::CreateFromAxisAngle(
+				engine::Vector3::UnitY,
+				m_currentRotationAngle
+			);
+			m_rigidbody->ForceSetRotation(newRot, true);  // 각속도 리셋
 		}
 		else
 		{
-			// 에임이 멈춰있으면 최단 경로 (부호 반전)
-			rotationSign = (targetCross > 0.0f) ? -1.0f : 1.0f;
+			// ═══════════════════════════════════════════════════════════════
+			// Angular Velocity 기반 (물리 기반)
+			// - 권장 설정: m_rotationSpeed = 12.0f, AngularDamping = 10
+			// - 물리적 관성/감쇠 적용
+			// ═══════════════════════════════════════════════════════════════
+			
+			// 에임 회전방향 우선, 없으면 최단 경로
+			float aimCross = GetAimRotationDirection();
+			constexpr float AIM_MOVE_THRESHOLD = 0.001f;
+
+			if (isMoving && std::abs(aimCross) > AIM_MOVE_THRESHOLD)
+			{
+				// 이동 중 + 에임이 움직이면: 에임 회전방향 따라감
+				// PhysX(오른손좌표계)와 DirectX(왼손좌표계) 차이로 부호 반전
+				rotationSign = (aimCross > 0.0f) ? -1.0f : 1.0f;
+			}
+			else
+			{
+				// 정지 또는 에임 멈춤: 최단 경로
+				// PhysX(오른손좌표계)와 DirectX(왼손좌표계) 차이로 부호 반전
+				rotationSign = (targetCross > 0.0f) ? -1.0f : 1.0f;
+			}
+
+			// 목표까지 남은 각도 계산 (라디안)
+			float angleToTarget = acosf(std::clamp(dotToTarget, -1.0f, 1.0f));
+			
+			// 감쇠: 목표 근처에서 속도 줄이기
+			constexpr float SMOOTH_THRESHOLD = 0.6f;
+			constexpr float MIN_SPEED_SCALE = 0.05f;
+			
+			float speedScale = 1.0f;
+			if (angleToTarget < SMOOTH_THRESHOLD)
+			{
+				speedScale = angleToTarget / SMOOTH_THRESHOLD;  // 0~1 범위
+				speedScale = std::max(speedScale, MIN_SPEED_SCALE);
+			}
+			
+			float angularVelocity = rotationSign * m_rotationSpeed * speedScale;
+			m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
+
+			// 각도 동기화
+			engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
+			engine::Vector3 euler = currentRot.ToEuler();
+			m_currentRotationAngle = euler.y;
 		}
 
-		// 5. 회전 적용 (Dynamic Rigidbody: Angular Velocity 사용)
-		float rotationSpeed = 10.0f;  // rad/sec
-		
-		float angularVelocity = rotationSign * rotationSpeed;
-		m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
-		
-		// 각도 동기화 (다음 FixedUpdate에서 정확한 계산을 위해)
-		engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
-		engine::Vector3 euler = currentRot.ToEuler();
-		m_currentRotationAngle = euler.y;
-		*/
+	
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -905,6 +1046,7 @@ namespace game
 		// ═══════════════════════════════════════════════════════════════
 		// 벡터 기반 에임 추적 (각도 래핑 문제 회피)
 		// 외적(Cross Product)을 사용하여 회전 방향 결정
+		// 스무딩 없이 즉시 반응
 		// ═══════════════════════════════════════════════════════════════
 		
 		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
@@ -930,9 +1072,8 @@ namespace game
 		// ─────────────────────────────────────────────
 		float crossY = m_prevAimDirection.z * currentAimDir.x - m_prevAimDirection.x * currentAimDir.z;
 		
-		// 스무딩 적용 (빠른 반응을 위해 높은 값)
-		constexpr float SMOOTHING = 0.4f;
-		m_aimCrossProductSmoothed = m_aimCrossProductSmoothed * (1.0f - SMOOTHING) + crossY * SMOOTHING;
+		// 스무딩 없이 직접 저장 (데드존은 사용처에서 처리)
+		m_aimCrossProductSmoothed = crossY;
 		
 		m_prevAimDirection = currentAimDir;
 	}

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 #include <unordered_map>
@@ -80,7 +80,7 @@ namespace engine
         float m_upperBodyPitch = 0.0f;
         float m_maxYaw = 70.0f;
         float m_maxPitch = 45.0f;
-        float m_aimLerpSpeed = 10.0f;
+        float m_aimLerpSpeed = 30.0f;  // 빠른 반응을 위해 증가 (기존 10.0f)
         float m_currentYaw = 0.0f;
         float m_currentPitch = 0.0f;
         std::string m_spineBoneName = "mixamorig:Spine1";
@@ -141,6 +141,11 @@ namespace engine
         void SetUpperBodyAim(float yawDegrees, float pitchDegrees);
         void SetAimLimits(float maxYaw, float maxPitch);
         void SetSpineBoneName(const std::string& boneName);
+        
+        // 현재 Yaw를 오프셋 (하체 회전 보정용)
+        // 하체가 회전한 만큼 m_currentYaw를 조정하여 상체가 월드 기준으로 고정되도록 함
+        void OffsetCurrentYaw(float offsetDegrees);
+        float GetCurrentYaw() const { return m_currentYaw; }
 
         // ─────────────────────────────────────────────
         // 상태 조회 및 제어
