@@ -50,6 +50,10 @@ namespace engine
 		Vector4 m_mask0 = Vector4(0, 0, 0, 0);
 		Vector4 m_mask1 = Vector4(0, 0, 0, 0);
 
+		bool m_outlineEnabled = false;
+		float m_outlineThickness = 0.0f;
+		Vector4 m_outlineColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+
 	public:
 		UIImage() = default;
 		~UIImage() override = default;
@@ -81,6 +85,8 @@ namespace engine
 		void SetMask1(const Vector4& v) { m_mask1 = v; m_dirty = true; }
 		const Vector4& GetMask0() const { return m_mask0; }
 		const Vector4& GetMask1() const { return m_mask1; }
+
+		void SetOutline(bool enabe, float thickness, const Vector4& color);
 
 	public:
 		bool HasRenderType(RenderType type) const override;

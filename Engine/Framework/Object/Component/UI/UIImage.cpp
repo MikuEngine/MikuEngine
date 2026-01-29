@@ -154,6 +154,10 @@ namespace engine
 			cbUI.mask0 = m_mask0;
 			cbUI.mask1 = m_mask1;
 
+			cbUI.outlineEnabled = m_outlineEnabled;
+			cbUI.outlineThickness = m_outlineThickness;
+			cbUI.outlineColor = m_outlineColor;
+
 			dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 			dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
 			dc->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
@@ -226,6 +230,13 @@ namespace engine
 	const Vector4& UIImage::GetColor() const
 	{
 		return m_color;
+	}
+
+	void UIImage::SetOutline(bool enable, float thickness, const Vector4& color)
+	{
+		m_outlineEnabled = enable;
+		m_outlineThickness = thickness;
+		m_outlineColor = color;
 	}
 
 	bool UIImage::HasRenderType(RenderType type) const

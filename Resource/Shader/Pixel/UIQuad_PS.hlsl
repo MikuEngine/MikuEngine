@@ -91,7 +91,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     }
 
     // Texture Sample
-    float uv = input.texCoord;
+    float2 uv = input.texCoord;
     float4 tex = g_texBlit.Sample(g_samLinear, uv);
     float4 baseCol = tex * g_uiColor;
     
