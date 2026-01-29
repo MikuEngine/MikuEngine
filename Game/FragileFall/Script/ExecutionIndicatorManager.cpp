@@ -1,8 +1,9 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "ExecutionIndicatorManager.h"
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include "Script/Boss/BossPattern/Components/BossPillar.h"
 
 #include <Core/System/Input.h>
 #include <Core/System/MyTime.h>
@@ -74,15 +75,15 @@ namespace game
         }
 
         // 마우스 아래의 Fragile 몬스터 확인
-        MonsterScript* fragileMonster = GetFragileMonsterUnderMouse();
+        engine::GameObject* fragileMonster = GetFragileMonsterUnderMouse();
 
         if (fragileMonster)
         {
             // Fragile 몬스터 위에 마우스가 있음
-            if (m_hoveredMonster.Get() != fragileMonster)
+            if (m_hoveredGameObject.Get() != fragileMonster)
             {
                 // 새로운 몬스터로 변경
-                m_hoveredMonster = fragileMonster;
+                m_hoveredGameObject = fragileMonster;
                 
                 // 인디케이터/라인 인스턴스 생성
                 if (!m_indicatorInstance)
@@ -125,9 +126,9 @@ namespace game
         else
         {
             // Fragile 몬스터 위에 마우스가 없음
-            if (m_hoveredMonster)
+            if (m_hoveredGameObject)
             {
-                m_hoveredMonster = nullptr;
+                m_hoveredGameObject = nullptr;
                 HideIndicator();
                 HideLine();
             }
@@ -302,7 +303,7 @@ namespace game
     // 마우스 호버 처리
     // ═══════════════════════════════════════════════════════════════
 
-    MonsterScript* ExecutionIndicatorManager::GetFragileMonsterUnderMouse()
+    engine::GameObject* ExecutionIndicatorManager::GetFragileMonsterUnderMouse()
     {
         // 모든 레이어에 대해 RaycastAll 수행
         std::vector<engine::RaycastHit> allHits;
@@ -341,7 +342,28 @@ namespace game
                         // Fragile 상태인지 확인 (거리 체크는 Update에서 별도 처리)
                         if (monster->m_isFragile && !monster->m_isDead)
                         {
-                            return monster;
+                            return go;
+                        }
+                        // MonsterScript를 찾았지만 Fragile이 아니면 다음 히트로
+                        break;
+                    }
+                }
+                transform = transform->GetParent();
+            }
+
+            transform = hit.gameObject->GetTransform();
+            while (transform)
+            {
+                engine::GameObject* go = transform->GetGameObject();
+                if (go)
+                {
+                    BossPillar* pillar = go->GetComponent<BossPillar>();
+                    if (pillar)
+                    {
+                        // Fragile 상태인지 확인 (거리 체크는 Update에서 별도 처리)
+                        if (pillar->IsCrystalized() && !pillar->IsPendingKill())
+                        {
+                            return go;
                         }
                         // MonsterScript를 찾았지만 Fragile이 아니면 다음 히트로
                         break;
@@ -358,12 +380,12 @@ namespace game
     // 거리 계산 헬퍼
     // ═══════════════════════════════════════════════════════════════
 
-    float ExecutionIndicatorManager::GetDistanceToMonster(MonsterScript* monster) const
+    float ExecutionIndicatorManager::GetDistanceToMonster(engine::GameObject* target) const
     {
-        if (!monster || !m_player) return FLT_MAX;
+        if (!target || !m_player) return FLT_MAX;
         
         engine::Transform* playerTransform = m_player->GetTransform();
-        engine::Transform* monsterTransform = monster->GetTransform();
+        engine::Transform* monsterTransform = target->GetTransform();
         
         if (!playerTransform || !monsterTransform) return FLT_MAX;
         
@@ -373,17 +395,17 @@ namespace game
         return (monsterPos - playerPos).Length();
     }
 
-    bool ExecutionIndicatorManager::IsMonsterInExecutionRange(MonsterScript* monster) const
+    bool ExecutionIndicatorManager::IsMonsterInExecutionRange(engine::GameObject* target) const
     {
         if (!m_player) return false;
-        return GetDistanceToMonster(monster) <= m_player->GetExecutionRange();
+        return GetDistanceToMonster(target) <= m_player->GetExecutionRange();
     }
 
-    void ExecutionIndicatorManager::StartExecution(MonsterScript* monster)
+    void ExecutionIndicatorManager::StartExecution(engine::GameObject* target)
     {
-        if (!monster || m_isExecuting || m_isDashing || !m_player) return;
+        if (!target || m_isExecuting || m_isDashing || !m_player) return;
 
-        m_executingMonster = monster;
+        m_executingGameObject = target;
 
         // ─────────────────────────────────────────────
         // 플레이어 Execution 스테이트로 전이 (순간이동은 대시에서 처리)
@@ -410,7 +432,7 @@ namespace game
 
     void ExecutionIndicatorManager::UpdateDash(float deltaTime)
     {
-        if (!m_isDashing || !m_executingMonster) return;
+        if (!m_isDashing || !m_executingGameObject) return;
 
         m_dashTimer += deltaTime;
 
@@ -424,10 +446,10 @@ namespace game
 
     void ExecutionIndicatorManager::PerformDash()
     {
-        if (!m_executingMonster || !m_player) return;
+        if (!m_executingGameObject || !m_player) return;
 
         engine::Transform* playerTransform = m_player->GetTransform();
-        engine::Transform* monsterTransform = m_executingMonster->GetTransform();
+        engine::Transform* monsterTransform = m_executingGameObject->GetTransform();
         
         if (!playerTransform || !monsterTransform) return;
 
@@ -462,12 +484,12 @@ namespace game
 
     void ExecutionIndicatorManager::FinishDash()
     {
-        if (!m_executingMonster || !m_player) return;
+        if (!m_executingGameObject || !m_player) return;
 
         // ─────────────────────────────────────────────
         // 몬스터의 모든 콜라이더를 트리거로 변경 (최종 순간이동 직전)
         // ─────────────────────────────────────────────
-        engine::GameObject* monsterGO = m_executingMonster->GetGameObject();
+        engine::GameObject* monsterGO = m_executingGameObject.Get();
         if (monsterGO)
         {
             if (auto* boxCollider = monsterGO->GetComponent<engine::BoxCollider>())
@@ -487,7 +509,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 몬스터 위치로 최종 순간이동
         // ─────────────────────────────────────────────
-        engine::Transform* monsterTransform = m_executingMonster->GetTransform();
+        engine::Transform* monsterTransform = m_executingGameObject->GetTransform();
         if (monsterTransform)
         {
             engine::Vector3 monsterPos = monsterTransform->GetWorldPosition();
@@ -548,7 +570,7 @@ namespace game
         }
 
         // 몬스터가 파괴되었는지 확인
-        if (!m_executingMonster)
+        if (!m_executingGameObject)
         {
             // 몬스터가 사라짐, 처형 취소
             m_isExecuting = false;
@@ -565,9 +587,16 @@ namespace game
         HideLine();
 
         // 몬스터 Dead 상태로 전이
-        if (m_executingMonster)
+        if (m_executingGameObject)
         {
-            m_executingMonster->TriggerDeath();
+            if (auto comp = m_executingGameObject->GetComponent<MonsterScript>())
+            {
+                comp->TriggerDeath();
+            }
+            else if (auto comp = m_executingGameObject->GetComponent<BossPillar>())
+            {
+                comp->Execute();
+            }
         }
 
         // 플레이어 Execution 상태 종료
@@ -581,8 +610,8 @@ namespace game
         }
 
         // 상태 초기화
-        m_executingMonster = nullptr;
-        m_hoveredMonster = nullptr;
+        m_executingGameObject = nullptr;
+        m_hoveredGameObject = nullptr;
     }
 
     void ExecutionIndicatorManager::OnGui()
@@ -608,7 +637,7 @@ namespace game
 
         ImGui::Separator();
         ImGui::Text("Runtime Info:");
-        ImGui::Text("Hovered Monster: %s", m_hoveredMonster ? "Yes" : "No");
+        ImGui::Text("Hovered Monster: %s", m_hoveredGameObject ? "Yes" : "No");
         ImGui::Text("Is Dashing: %s", m_isDashing ? "Yes" : "No");
         ImGui::Text("Is Executing: %s", m_isExecuting ? "Yes" : "No");
         ImGui::Text("Player Found: %s", m_player ? "Yes" : "No");

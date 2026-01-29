@@ -46,6 +46,8 @@ namespace game
         float m_deathDelay = 0.05f;
         float m_deathTimer = 0.0f;
 
+        float m_damage = 10.0f;
+
     public:
         // ─────────────────────────────────────────────
         // 초기화 (Factory에서 호출)

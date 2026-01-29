@@ -12,23 +12,27 @@ namespace game
         REGISTER_SCRIPT(BossPillar, Script)
 
     private:
-        int m_hp = 100;
-        int m_maxHp = 100;
+        float m_hp = 30.0f;
+        float m_maxHp = 30.0f;
         engine::Ptr<BossScript> m_boss;
-        bool m_isDestroyed = false;
+        std::vector<engine::Ptr<engine::GameObject>> m_pillarCrystalizedPieces;
+
+        bool m_isCrystalized = false;
 
     public:
-        void Awake() override;
-        void Start() override;
         void Update() override;
 
-        void TakeDamage(int damage);
-        void OnDestroyed();
-        bool IsDestroyed() const { return m_isDestroyed; }
+        void TakeDamage(float damage);
+        void Execute();
+
+        bool IsCrystalized();
 
         void SetBoss(engine::Ptr<BossScript> boss) { m_boss = boss; }
-        void SetHP(int hp) { m_hp = hp; m_maxHp = hp; }
-        int GetHP() const { return m_hp; }
-        int GetMaxHP() const { return m_maxHp; }
+        void SetHP(float hp) { m_hp = hp; m_maxHp = hp; }
+        float GetHP() const { return m_hp; }
+        float GetMaxHP() const { return m_maxHp; }
+
+    private:
+        void OnCrystalized();
     };
 }

@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -529,7 +529,7 @@ namespace game
 		m_skeletalMeshRenderer->SetBaseColor(m_originalColor);
 	}
 
-	void MonsterScript::TakeDamage(int damage)
+	void MonsterScript::TakeDamage(float damage)
 	{
 		// 이미 Fragile 또는 Dead 상태이면 무시
 		std::string currentState = GetCurrentState();
@@ -625,7 +625,7 @@ namespace game
 		// 스탯
 		ImGui::Separator();
 		ImGui::Text("Stats:");
-		ImGui::DragInt("HP", &m_Hp, 1, 1, 10);
+		ImGui::DragFloat("HP", &m_Hp, 0.1f, 1.0f, 10000.0f);
 		ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.1f, 15.0f);
 
 		// 설정
@@ -681,7 +681,7 @@ namespace game
 	{
 		BaseControllerScript::Load(j);
 
-		m_Hp = j.value("Hp", 100);
+		m_Hp = j.value("Hp", 100.0f);
 		m_AttackRange = j.value("AttackRange", 10.0f);
 		m_moveSpeed = j.value("MoveSpeed", 0.0f);
 		m_rotationSpeed = j.value("RotationSpeed", 2.0f);

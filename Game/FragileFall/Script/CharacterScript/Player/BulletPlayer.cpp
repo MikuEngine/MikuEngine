@@ -1,10 +1,13 @@
-#include "GamePCH.h"
-#include "Script/CharacterScript/Player/BulletPlayer.h"
-#include "Script/CharacterScript/Monster/TempMonster.h"
-#include "Script/CharacterScript/Monster/MonsterScript.h"
+﻿#include "GamePCH.h"
+#include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
+
+#include "Script/CharacterScript/Monster/TempMonster.h"
+#include "Script/CharacterScript/Monster/MonsterScript.h"
+#include "Script/Boss/BossPattern/Components/BossPillar.h"
+#include "Script/Boss/BossScript.h"
 
 namespace game
 {
@@ -79,8 +82,39 @@ namespace game
         // MonsterScript와 충돌했는지 확인 (우선 체크)
         if (auto* monster = info.gameObject->GetComponent<MonsterScript>())
         {
-            // 플레이어 총알 공격력: 10
-            monster->TakeDamage(10);
+            monster->TakeDamage(m_damage);
+
+            // dying 상태로 전환
+            m_isDying = true;
+            m_deathTimer = 0.0f;
+
+            // 속도 정지
+            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+            {
+                rb->SetLinearVelocity(engine::Vector3::Zero);
+            }
+            return;
+        }
+
+        if (auto* pillar = info.gameObject->GetComponent<BossPillar>())
+        {
+            pillar->TakeDamage(m_damage);
+
+            // dying 상태로 전환
+            m_isDying = true;
+            m_deathTimer = 0.0f;
+
+            // 속도 정지
+            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+            {
+                rb->SetLinearVelocity(engine::Vector3::Zero);
+            }
+            return;
+        }
+
+        if (auto* boss = info.gameObject->GetComponent<BossScript>())
+        {
+            boss->TakeDamage(m_damage);
 
             // dying 상태로 전환
             m_isDying = true;

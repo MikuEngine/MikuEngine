@@ -1,10 +1,10 @@
 {
-    "Name": "Bullet",
+    "Name": "PillarCrystalizedPiece",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "Bullet",
+            "Name": "PillarCrystalizedPiece",
             "Active": true,
             "Components": [
                 {
@@ -22,70 +22,41 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.5,
-                        "y": 0.5,
-                        "z": 0.5
+                        "x": 0.30000001192092896,
+                        "y": 0.30000001192092896,
+                        "z": 0.30000001192092896
                     }
-                },
-                {
-                    "Type": "BulletPlayer",
-                    "Active": true
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 0.0,
-                    "angularDamping": 100.0,
-                    "useGravity": false,
-                    "constraints": 0
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": true,
-                    "layer": 0,
-                    "materialType": 1,
-                    "radius": 0.5
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.0,
-                        "y": 1.0,
-                        "z": 0.20077204704284668,
+                        "x": 0.8416986465454102,
+                        "y": 0.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
+                        "x": 0.5405406951904297,
+                        "y": 0.0,
                         "z": 1.0
                     },
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
+                    "MaterialEmissiveIntensity": 10.130000114440918,
+                    "OverrideMaterial": true,
                     "CastShadow": false,
                     "CullMode": 1
+                },
+                {
+                    "Type": "BossPillarCrystalizedPiece",
+                    "Active": true
                 }
             ]
         }

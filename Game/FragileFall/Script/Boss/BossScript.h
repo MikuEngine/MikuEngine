@@ -30,8 +30,8 @@ namespace game
         };
 
     private:
-        int m_maxHp = 10000;
-        int m_currentHp = 10000;
+        float m_maxHp = 10000.0f;
+        float m_currentHp = 10000.0f;
 
         BossColor m_currentColor = BossColor::Red;
 
@@ -67,7 +67,7 @@ namespace game
         void OnPatternStarted(const std::string& patternName);
         void OnPatternFinished(const std::string& patternName);
 
-        void TakeDamage(int damage);
+        void TakeDamage(float damage);
         void CheckHealth();
         void OnDeath();
 
@@ -81,8 +81,8 @@ namespace game
         BossColor GetCurrentColor() const { return m_currentColor; }
         std::string GetColorName() const;
 
-        int GetCurrentHP() const { return m_currentHp; }
-        int GetMaxHP() const { return m_maxHp; }
+        float GetCurrentHP() const { return m_currentHp; }
+        float GetMaxHP() const { return m_maxHp; }
 
         engine::Ptr<PlayerControllerScript> GetTargetPlayer() const;
 
