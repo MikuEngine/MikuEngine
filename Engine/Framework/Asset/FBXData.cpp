@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "FBXData.h"
 
 #include <assimp/Importer.hpp>
@@ -130,7 +130,16 @@ namespace engine
         m_skeleton = std::make_shared<SkeletonData>();
         m_skeleton->Create(scene);
 
-        bool isRigid = scene->mMeshes[0]->mNumBones == 0;
+        bool isRigid = true;
+        for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
+        {
+            if (scene->mMeshes[i]->mNumBones > 0)
+            {
+                isRigid = false;
+
+                break;
+            }
+        }
 
         // mesh 생성
         m_skeletalMesh = std::make_shared<SkeletalMeshData>();

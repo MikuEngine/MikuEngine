@@ -72,7 +72,21 @@ namespace engine
 
         // 샘플러
         m_samplerState = ResourceManager::Get().GetDefaultSamplerState(DefaultSamplerType::Linear);
-        m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidBack);
+        
+        switch (m_cullMode)
+        {
+        case CullMode::None:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidNone);
+            break;
+
+        case CullMode::Back:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidBack);
+            break;
+
+        case CullMode::Front:
+            m_rasterizerState = ResourceManager::Get().GetDefaultRasterizerState(DefaultRasterizerType::SolidFront);
+            break;
+        }
 
         // 셰이더 로드 (기본)
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
@@ -293,6 +307,7 @@ namespace engine
         deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
         deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
         deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+        deviceContext->RSSetState(m_rasterizerState->GetRawRasterizerState());
 
         // Sampler
         deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
@@ -713,6 +728,7 @@ namespace engine
         JsonGet(j, "MaterialEmissiveIntensity", m_materialEmissiveIntensity);
         JsonGet(j, "OverrideMaterial", m_overrideMaterial);
         JsonGet(j, "CastShadow", m_castShadow);
+        JsonGet(j, "CullMode", m_cullMode);
         if (j.contains("CullMode"))
         {
             m_cullMode = static_cast<CullMode>(j.at("CullMode").get<int>());
