@@ -52,6 +52,9 @@ namespace game
 
         engine::Vector4 GetCategoryColor(UpgradeCategory c) const;
 
+        void UpdateSelectedInfoUI();
+        void ClearSelectedInfoUI();
+
     private:
         std::vector<engine::GameObject*> m_nodeObjects;
         std::unordered_map<UpgradeCategory, engine::GameObject*> m_categoryArea;
@@ -72,10 +75,7 @@ namespace game
     private:
         // GameObject
         engine::UISlider* m_scrollBar = nullptr;
-
-        engine::UIClickArea* m_attackArea = nullptr;
-        engine::UIClickArea* m_skillArea = nullptr;
-        engine::UIClickArea* m_LifeArea = nullptr;
-        engine::UIClickArea* m_MoveArea = nullptr;
+        engine::UIText* m_nameText = nullptr;
+        engine::UIText* m_descText = nullptr;
     };
 }
