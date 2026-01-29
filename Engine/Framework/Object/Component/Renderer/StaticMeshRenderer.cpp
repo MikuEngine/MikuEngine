@@ -328,6 +328,7 @@ namespace engine
         Object::Save(j);
 
         j["MeshFilePath"] = m_meshFilePath;
+        j["SocketFilePath"] = m_socketFilePath;
         j["VSFilePath"] = m_vsFilePath;
         j["OpaquePSFilePath"] = m_opaquePSFilePath;
         j["CutoutPSFilePath"] = m_cutoutPSFilePath;
@@ -348,6 +349,7 @@ namespace engine
         Object::Load(j);
 
         JsonGet(j,"MeshFilePath", m_meshFilePath);
+        JsonGet(j, "SocketFilePath", m_socketFilePath);
         JsonGet(j,"VSFilePath", m_vsFilePath);
         JsonGet(j,"OpaquePSFilePath", m_opaquePSFilePath);
         JsonGet(j,"CutoutPSFilePath", m_cutoutPSFilePath);
@@ -842,7 +844,7 @@ namespace engine
 
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
 
-        if (!m_meshFilePath.empty())
+        if (!m_socketFilePath.empty() || !m_meshFilePath.empty())
         {
             LoadSocketData();
         }

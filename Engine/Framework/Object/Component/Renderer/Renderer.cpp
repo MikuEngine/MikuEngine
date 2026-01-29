@@ -4,6 +4,7 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
+#include "Framework/Asset/AssetManager.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/Animator/SkeletalAnimator.h"
 #include "Framework/Object/Component/Socket/SocketAttachment.h"
@@ -242,34 +243,29 @@ namespace engine
 
 	void Renderer::LoadSocketData()
 	{
-		const std::string& meshPath = GetMeshPath();
-		if (meshPath.empty()) return;
-
-		std::string filePath = "Resource/Data/Socket/" + std::filesystem::path(meshPath).filename().string() + ".socketdata";
-
-		SocketData loader;
-		loader.Create(filePath);
-
-		const auto& loadedSockets = loader.GetSockets();
-		if (loadedSockets.empty())
+		if (m_socketFilePath.empty())
 		{
-			ClearSockets();
-			return;
+			const std::string& meshPath = GetMeshPath();
+			if (meshPath.empty()) return;
+			m_socketFilePath = "Resource/Data/Socket/" + std::filesystem::path(meshPath).filename().string() + ".socketdata";
 		}
 
-		std::vector<SocketInstance> tempInstances;
-		tempInstances.reserve(loadedSockets.size());
+		m_socketData = AssetManager::Get().GetOrCreateSocketData(m_socketFilePath, LifeScope::Scene);
 
-		for (const auto& s : loadedSockets)
+		if (!m_socketData) return;
+
+		const auto& originSockets = m_socketData->GetSockets();
+
+		m_socketInstances.clear();
+		m_socketInstances.reserve(originSockets.size());
+
+		for (const auto& s : originSockets)
 		{
 			SocketInstance instance;
 			instance.info = std::make_shared<Socket>(s);
 			instance.worldMatrix = Matrix::Identity;
-			tempInstances.push_back(instance);
+			m_socketInstances.push_back(instance);
 		}
-
-		ClearSockets();
-		m_socketInstances = std::move(tempInstances);
 
 		UpdateSockets();
 	}
