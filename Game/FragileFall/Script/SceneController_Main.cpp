@@ -4,6 +4,8 @@
 #include <Core/App/AppContext.h>
 #include <Core/App/WinApp.h>
 
+#include <Framework/System/SoundSystem.h>
+
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIButton.h>
 #include "UIPopUpAnimator.h"
@@ -118,7 +120,8 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick(std::move(cb));
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        if (cb) cb(); });
     }
 
     void SceneController_Main::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)

@@ -1,6 +1,6 @@
 {
     "Name": "SocketNotifyTest",
-    "NumGameObjects": 3,
+    "NumGameObjects": 4,
     "GameObjects": [
         {
             "ID": 0,
@@ -11,15 +11,15 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": 55.599998474121094,
-                        "z": -166.39999389648438
+                        "x": 7.699999809265137,
+                        "y": 2.799999952316284,
+                        "z": 1.2000000476837158
                     },
                     "Rotation": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": -0.7071067690849304,
                         "z": 0.0,
-                        "w": 1.0
+                        "w": 0.7071067094802856
                     },
                     "Scale": {
                         "x": 1.0,
@@ -38,7 +38,7 @@
         },
         {
             "ID": 1,
-            "Name": "GameObject",
+            "Name": "Player",
             "Active": true,
             "Components": [
                 {
@@ -56,64 +56,78 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.5,
-                        "y": 0.5,
-                        "z": 0.5
+                        "x": 0.019999999552965164,
+                        "y": 0.019999999552965164,
+                        "z": 0.019999999552965164
                     }
                 },
                 {
-                    "Type": "SkeletalMeshRenderer",
+                    "Type": "AimPointer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/SkinningTest.fbx",
-                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
                     },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 10.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 10.0,
+                    "angularDamping": 20.0,
+                    "useGravity": false,
+                    "constraints": 42
                 },
                 {
                     "Type": "SkeletalAnimator",
                     "Active": true,
                     "Animations": [
                         {
-                            "Name": "1",
+                            "Name": "Fire",
                             "Path": "Resource/Animation/TestForward.fbx",
                             "Notifies": []
                         },
                         {
-                            "Name": "2",
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkBackward",
                             "Path": "Resource/Animation/TestBackward.fbx",
                             "Notifies": []
                         },
                         {
-                            "Name": "3",
-                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Name": "WalkForward",
+                            "Path": "Resource/Animation/TestForward.fbx",
                             "Notifies": []
-                        },
-                        {
-                            "Name": "4",
-                            "Path": "Resource/Animation/TestPunch.fbx",
-                            "Notifies": [
-                                {
-                                    "Name": "PunchSound",
-                                    "Time": 0.5769599080085754
-                                }
-                            ]
                         }
                     ],
                     "Layers": [
@@ -122,6 +136,7 @@
                             "Weight": 1.0,
                             "BlendMode": 0,
                             "MaskBones": [
+                                "Armature",
                                 "mixamorig:Hips",
                                 "mixamorig:Spine",
                                 "mixamorig:RightUpLeg",
@@ -145,6 +160,9 @@
                                 "mixamorig:HeadTop_End",
                                 "mixamorig:RightForeArm",
                                 "mixamorig:LeftForeArm",
+                                "mixamorig:RightToe_End_end",
+                                "mixamorig:LeftToe_End_end",
+                                "mixamorig:HeadTop_End_end",
                                 "mixamorig:RightHand",
                                 "mixamorig:LeftHand",
                                 "mixamorig:RightHandThumb1",
@@ -186,12 +204,22 @@
                                 "mixamorig:LeftHandIndex4",
                                 "mixamorig:LeftHandMiddle4",
                                 "mixamorig:LeftHandRing4",
-                                "mixamorig:LeftHandPinky4"
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
                             ]
                         },
                         {
-                            "Name": "Upper Body",
-                            "Weight": 1.0,
+                            "Name": "New Layer",
+                            "Weight": 0.0,
                             "BlendMode": 0,
                             "MaskBones": [
                                 "mixamorig:Spine",
@@ -206,6 +234,7 @@
                                 "mixamorig:HeadTop_End",
                                 "mixamorig:RightForeArm",
                                 "mixamorig:LeftForeArm",
+                                "mixamorig:HeadTop_End_end",
                                 "mixamorig:RightHand",
                                 "mixamorig:LeftHand",
                                 "mixamorig:RightHandThumb1",
@@ -247,14 +276,78 @@
                                 "mixamorig:LeftHandIndex4",
                                 "mixamorig:LeftHandMiddle4",
                                 "mixamorig:LeftHandRing4",
-                                "mixamorig:LeftHandPinky4"
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
                             ]
                         }
                     ]
                 },
                 {
-                    "Type": "AnimationPlayer",
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 0.7413126826286316,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.8629999756813049,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "BulletFactory",
                     "Active": true
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.7599999904632568,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 1,
+                    "materialType": 1,
+                    "radius": 1.2899999618530273,
+                    "height": 3.7899999618530273
+                },
+                {
+                    "Type": "TestSocketShooting",
+                    "Active": true,
+                    "PlayerName": "Player",
+                    "GunName": "GunObject",
+                    "MuzzleFlashName": "ParticleObject"
                 }
             ]
         },
@@ -286,7 +379,9 @@
                 {
                     "Type": "ParticleEffect",
                     "Active": true,
-                    "IsPlaying": true,
+                    "IsPlaying": false,
+                    "AutoDestroy": false,
+                    "Duration": 0.0,
                     "Emitters": [
                         {
                             "TexturePath": "Resource/Texture/DefaultParticle.png",
@@ -352,6 +447,60 @@
                             ]
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "Name": "GunObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.20000000298023224,
+                        "y": 0.20000000298023224,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
                 }
             ]
         }

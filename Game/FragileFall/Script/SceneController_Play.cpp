@@ -4,6 +4,8 @@
 #include <Core/App/AppContext.h>
 #include <Core/App/WinApp.h>
 
+#include <Framework/System/SoundSystem.h>
+
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIButton.h>
 #include "UIPopUpAnimator.h"
@@ -102,10 +104,12 @@ namespace game
     {
         if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
-            if (m_isOptionOpen) { Back(); return; }
-            if (m_isGiveupOpen) { CheckBackToMain(false); return; }
+            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
 
-            if (m_isMenuOpen) { SetMenuOpen(false);   return; }
+            if (m_isOptionOpen) { Back(); engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
+            if (m_isGiveupOpen) { CheckBackToMain(false); engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
+
+            if (m_isMenuOpen) { SetMenuOpen(false);  engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
 
             SetMenuOpen(true);
         }
@@ -139,7 +143,8 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick(std::move(cb));
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        if (cb) cb(); });
     }
 
     void SceneController_Play::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)

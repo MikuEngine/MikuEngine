@@ -4,11 +4,14 @@
 #include <Core/App/AppContext.h>
 #include <Core/App/WinApp.h>
 
+#include <Framework/System/SoundSystem.h>
+
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Framework/Object/Component/RectTransform.h>
 #include "UIPopUpAnimator.h"
+
 
 namespace game
 {
@@ -99,7 +102,9 @@ namespace game
     void SceneController_Lobby::Update()
     {
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
+        {
             HandleEscape();
+        }
     }
 
     void SceneController_Lobby::OnGui()
@@ -131,7 +136,8 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick(std::move(cb));
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        if (cb) cb(); });
     }
 
     void SceneController_Lobby::BindButton(const std::string& name, engine::UIButton::HoverCallback cb)
@@ -230,12 +236,14 @@ namespace game
         if (m_isOptionOpen)
         {
             SetOptionOpen(false);
+            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
             return;
         }
 
         if (m_isUpgradeOpen)
         {
             SetUpgradeOpen(false);
+            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
             return;
         }
     }

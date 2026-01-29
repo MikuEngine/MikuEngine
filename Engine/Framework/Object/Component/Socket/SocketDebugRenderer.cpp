@@ -124,7 +124,7 @@ namespace engine
     {
         if (ImGui::CollapsingHeader("Socket Debug"))
         {
-            ImGui::Checkbox("Enabled2", &m_enabled);
+            ImGui::Checkbox("Enabled", &m_enabled);
             ImGui::Checkbox("Show Axis", &m_showAxis);
             ImGui::DragFloat("Axis Length", &m_axisLength, 0.01f, 0.01f, 5.0f);
         }

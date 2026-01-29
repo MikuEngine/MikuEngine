@@ -799,9 +799,17 @@ namespace engine
 
     void StaticMeshRenderer::UpdateSockets()
     {
+        auto gameObject = GetGameObject();
+        if (!gameObject) return;
+
+        auto transform = GetTransform();
+        if (!transform) return;
+
         for (auto& instance : m_socketInstances)
         {
-            instance.worldMatrix = instance.info->localMatrix * GetTransform()->GetWorld();
+            if (!instance.info) continue;
+
+            instance.worldMatrix = instance.info->localMatrix * transform->GetWorld();
         }
     }
 
@@ -824,6 +832,11 @@ namespace engine
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
 
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
+
+        if (!m_meshFilePath.empty())
+        {
+            LoadSocketData();
+        }
 
         SystemManager::Get().GetRenderSystem().Register(this);
     }

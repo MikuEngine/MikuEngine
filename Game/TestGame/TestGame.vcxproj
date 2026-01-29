@@ -163,6 +163,7 @@
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\TempMonster.cpp" />
     <ClCompile Include="Script\TestShootingPlayer.cpp" />
+    <ClCompile Include="Script\TestSocketShooting.cpp" />
     <ClCompile Include="Script\TitleButtonController.cpp">
       <SubType>
       </SubType>
@@ -211,7 +212,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="App\TestGameApp.cpp" />
-    <ClCompile Include="Script\TestSound.cpp" />
     <ClCompile Include="Script\UIFollowTarget.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
     <ClCompile Include="Script\UpgradeNodeView.cpp" />
@@ -251,6 +251,7 @@
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\TempMonster.h" />
     <ClInclude Include="Script\TestShootingPlayer.h" />
+    <ClInclude Include="Script\TestSocketShooting.h" />
     <ClInclude Include="Script\TitleButtonController.h">
       <SubType>
       </SubType>
@@ -299,7 +300,6 @@
     </ClInclude>
     <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="Script\AnimationPlayer.h" />
-    <ClInclude Include="Script\TestSound.h" />
     <ClInclude Include="Script\UIFollowTarget.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />
     <ClInclude Include="Script\UpgradeNodeView.h" />
