@@ -43,6 +43,7 @@ namespace engine
         int m_selectedBuildSceneIndex = -1;
 
         bool m_shouldOpenUnsavedPopup = false;
+        bool m_showEditorUI = true;
 
     private:
         EditorManager();

@@ -91,7 +91,12 @@ namespace engine
 
     void EditorManager::Update()
     {
-        if (!ImGui::GetIO().WantCaptureMouse)
+        if (!ImGui::GetIO().WantCaptureKeyboard && Input::IsKeyReleased(Keys::H))
+        {
+            m_showEditorUI = !m_showEditorUI;
+        }
+
+        if (!m_showEditorUI || !ImGui::GetIO().WantCaptureMouse)
         {
             m_editorCamera->Update();
 
@@ -115,12 +120,15 @@ namespace engine
 
         graphics.BeginDrawGUIPass();
         {
-            DrawPlayController();
-            DrawEditorController();
-            DrawHierarchy();
-            DrawInspector();
-            DrawPrefabManager();
-            DrawDebugInfo();
+            if (m_showEditorUI)
+            {
+                DrawPlayController();
+                DrawEditorController();
+                DrawHierarchy();
+                DrawInspector();
+                DrawPrefabManager();
+                DrawDebugInfo();
+            }
         }
         graphics.EndDrawGUIPass();
     }

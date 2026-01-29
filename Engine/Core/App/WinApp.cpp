@@ -363,6 +363,8 @@ namespace engine
         Input::Update();
 
 #ifdef _DEBUG
+        EditorManager::Get().Update();
+
         switch (EditorManager::Get().GetEditorState())
         {
         case EditorState::Edit:
@@ -376,9 +378,7 @@ namespace engine
                     return;
                 }
             }
-            SceneManager::Get().ProcessPendingAdds(false);
-
-            EditorManager::Get().Update();
+            SceneManager::Get().ProcessPendingAdds(false);    
             break;
 
         case EditorState::Play:
@@ -386,7 +386,7 @@ namespace engine
             break;
 
         case EditorState::Pause:
-            EditorManager::Get().Update();
+            // EditorManager::Get().Update();
             break;
         }
 #else
