@@ -278,5 +278,8 @@
     <ClInclude Include="Script\CheckRotateScript.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Script\ItemType.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

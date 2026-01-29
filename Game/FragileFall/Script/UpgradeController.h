@@ -1,10 +1,12 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include <Framework/Object/Component/RectTransform.h>
 #include <Framework/Object/Component/UI/UIButton.h>
 #include <Framework/Object/Component/UI/UISlider.h>
 #include <Framework/Object/Component/UI/UIClickArea.h>
 #include "UpgradeTypes.h"
+#include "ItemType.h"
 
 namespace game
 {
@@ -15,7 +17,16 @@ namespace game
     {
         REGISTER_SCRIPT(UpgradeController, Script)
 
-    public:
+    private:
+        struct CostSlot
+        {
+            engine::GameObject* root = nullptr;
+            engine::RectTransform* rt = nullptr;
+            engine::UIImage* icon = nullptr;
+            engine::UIText* amount = nullptr;
+
+            engine::Vector2 basePos; // 슬롯 원래 위치(초기값)
+        };
 
     public:
         void Awake() override;
@@ -55,6 +66,12 @@ namespace game
         void UpdateSelectedInfoUI();
         void ClearSelectedInfoUI();
 
+        void BindCostSlots();
+        void HideAllCostSlots();
+        void LayoutCostSlotsCentered(int visibleCount);
+        void UpdateCostUI();
+        void SetSlotContent(int visibleIndex, ItemType type, int amount);
+
     private:
         std::vector<engine::GameObject*> m_nodeObjects;
         std::unordered_map<UpgradeCategory, engine::GameObject*> m_categoryArea;
@@ -71,6 +88,12 @@ namespace game
         int m_emerald = 100;
 
         int m_selectedNodeId = 0;
+
+        CostSlot m_costSlots[3];
+
+        float m_costGapX = 100.0f;
+
+        std::string m_texturePath[3] = {};
 
     private:
         // GameObject

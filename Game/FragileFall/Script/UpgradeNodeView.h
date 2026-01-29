@@ -5,6 +5,7 @@
 #include <Framework/Object/Component/UI/UIClickArea.h>
 
 #include "UpgradeTypes.h"
+#include "ItemType.h"
 
 namespace game
 {
@@ -36,6 +37,8 @@ namespace game
 
         void NormalizeIdsByCategory();
 
+        void BuildCostList(std::vector<ItemCost>& out) const;
+
     public:
         UpgradeCategory m_category = UpgradeCategory::Attack;
 
@@ -46,9 +49,9 @@ namespace game
         std::string m_name = "None";
         std::string m_desc = "Node";
 
-        int m_ruby = 100;
-        int m_sapphire = 100;
-        int m_emerald = 100;
+        int m_costRuby = 100;
+        int m_costSapphire = 100;
+        int m_costEmerald = 100;
 
         engine::Vector4 m_nodeColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
