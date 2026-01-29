@@ -77,5 +77,9 @@ namespace game
         engine::UISlider* m_scrollBar = nullptr;
         engine::UIText* m_nameText = nullptr;
         engine::UIText* m_descText = nullptr;
+
+        engine::UIText* m_item1Count = nullptr;
+        engine::UIText* m_item2Count = nullptr;
+        engine::UIText* m_item3Count = nullptr;
     };
 }

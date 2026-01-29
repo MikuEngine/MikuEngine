@@ -64,6 +64,15 @@ namespace game
         auto* descGO = engine::GameObject::Find("Text_UpgradeDesc");
         if (descGO) m_descText = descGO->GetComponent<engine::UIText>();
 
+        auto* item1GO = engine::GameObject::Find("Text_Item1Count");
+        if (item1GO) m_item1Count = item1GO->GetComponent<engine::UIText>();
+
+        auto* item2GO = engine::GameObject::Find("Text_Item2Count");
+        if (item2GO) m_item2Count = item2GO->GetComponent<engine::UIText>();
+
+        auto* item3GO = engine::GameObject::Find("Text_Item3Count");
+        if (item3GO) m_item3Count = item3GO->GetComponent<engine::UIText>();
+
         ClearSelectedInfoUI();
 
         AutoRegisterNodesFromContent("Content");
@@ -74,7 +83,9 @@ namespace game
 
     void UpgradeController::Update()
     {
-
+        m_item1Count->SetText(std::to_string(m_ruby));
+        m_item2Count->SetText(std::to_string(m_sapphire));
+        m_item3Count->SetText(std::to_string(m_emerald));
     }
 
     void UpgradeController::OnGui()
