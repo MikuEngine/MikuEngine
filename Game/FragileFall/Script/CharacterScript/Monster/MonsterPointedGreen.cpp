@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterPointedGreen.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -477,7 +477,7 @@ namespace game
         // 스탯
         ImGui::Separator();
         ImGui::Text("Stats:");
-        ImGui::DragInt("HP", &m_Hp, 1, 1, 100);
+        ImGui::DragFloat("HP", &m_Hp, 0.1f, 1.0f, 10000.0f);
         ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.0f, 50.0f);
         ImGui::DragFloat("Detection Range", &m_detectionRange, 0.1f, 0.0f, 50.0f);
 

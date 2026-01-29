@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -57,7 +57,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 몬스터 스탯 (자식 클래스에서 설정)
         // ─────────────────────────────────────────────
-        int m_Hp = 10;
+        float m_Hp = 10.0f;
         float m_AttackRange = 5.0f;
 
         // ─────────────────────────────────────────────
@@ -194,10 +194,10 @@ namespace game
         // ─────────────────────────────────────────────
         // 외부 데미지 처리 (총알 등에서 호출)
         // ─────────────────────────────────────────────
-        void TakeDamage(int damage);
+        void TakeDamage(float damage);
         
         // 체력 접근자
-        int GetHp() const { return m_Hp; }
+        float GetHp() const { return m_Hp; }
         
         bool m_isFragile = false;
         bool m_isDead = false;

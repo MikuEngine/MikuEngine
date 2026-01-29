@@ -90,7 +90,7 @@ namespace game
         // TODO: 패턴 종료 시 처리
     }
 
-    void BossScript::TakeDamage(int damage)
+    void BossScript::TakeDamage(float damage)
     {
         if (m_isShieldActive)
         {
@@ -125,7 +125,7 @@ namespace game
             std::remove_if(m_activePillars.begin(), m_activePillars.end(),
                 [](const engine::Ptr<BossPillar>& pillar) {
                     if (!pillar) return true;
-                    return pillar->IsDestroyed();
+                    return false;
                 }),
             m_activePillars.end()
         );

@@ -12,8 +12,8 @@ namespace game
     namespace
     {
         constexpr engine::Vector3 g_twoPillarPositions[2]{
-            engine::Vector3(-4.0f, 0.0f, 0.0f),
-            engine::Vector3(4.0f, 0.0f, 0.0f)
+            engine::Vector3(-4.0f, 1.0f, 0.0f),
+            engine::Vector3(4.0f, 1.0f, 0.0f)
         };
     }
 
@@ -112,7 +112,7 @@ namespace game
                 engine::Ptr<BossScript> bossPtr(boss);
 
                 pillarScript->SetBoss(bossPtr);
-                pillarScript->SetHP(100);  // TODO: 설정 가능하도록 변경
+                pillarScript->SetHP(30.0f);  // TODO: 설정 가능하도록 변경
 
                 m_spawnedPillars.push_back(pillarPtr);
                 boss->OnPillarCreated(pillarPtr);
@@ -140,7 +140,7 @@ namespace game
             std::remove_if(m_spawnedPillars.begin(), m_spawnedPillars.end(),
                 [](const engine::Ptr<BossPillar>& pillar) {
                     if (!pillar) return true;
-                    return pillar->IsDestroyed();
+                    return false;
                 }),
             m_spawnedPillars.end()
         );

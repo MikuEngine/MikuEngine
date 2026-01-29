@@ -12,7 +12,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.7999999523162842,
+                        "y": 1.0,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -22,9 +22,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 4.0,
-                        "z": 1.0
+                        "x": 2.0,
+                        "y": 2.0,
+                        "z": 2.0
                     }
                 },
                 {
@@ -67,19 +67,70 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": true,
+                    "isTrigger": false,
                     "syncWithTransform": false,
-                    "layer": 2,
+                    "layer": 0,
                     "materialType": 1,
                     "size": [
-                        1.0,
-                        4.0,
-                        1.0
+                        2.0,
+                        2.0,
+                        2.0
                     ]
                 },
                 {
                     "Type": "BossPillar",
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 7,
+                    "materialType": 1,
+                    "size": [
+                        2.0,
+                        2.0,
+                        2.0
+                    ]
                 }
             ]
         }

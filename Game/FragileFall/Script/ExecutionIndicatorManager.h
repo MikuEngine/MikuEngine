@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Ptr.h>
@@ -56,7 +56,7 @@ namespace game
         engine::Ptr<engine::Camera> m_mainCamera;
         engine::Ptr<engine::GameObject> m_indicatorInstance;
         engine::Ptr<engine::Transform> m_indicatorTransform;
-        engine::Ptr<MonsterScript> m_hoveredMonster;
+        engine::Ptr<engine::GameObject> m_hoveredGameObject;
         
         // 플레이어 참조
         engine::Ptr<PlayerControllerScript> m_player;
@@ -69,7 +69,7 @@ namespace game
         bool m_isExecuting = false;
         float m_executionTimer = 0.0f;
         engine::Quaternion m_initialRotation;
-        engine::Ptr<MonsterScript> m_executingMonster;
+        engine::Ptr<engine::GameObject> m_executingGameObject;
 
         // ─────────────────────────────────────────────
         // 대시 순간이동 설정
@@ -104,15 +104,15 @@ namespace game
         // 라인 관련
         void CreateLineInstance();
         void DestroyLineInstance();
-        void UpdateLine(const engine::Vector3& monsterPos);
+        void UpdateLine(const engine::Vector3& targetPos);
         void ShowLine();
         void HideLine();
         
         // 마우스 호버 처리
-        MonsterScript* GetFragileMonsterUnderMouse();
+        engine::GameObject* GetFragileMonsterUnderMouse();
         
         // 처형 애니메이션
-        void StartExecution(MonsterScript* monster);
+        void StartExecution(engine::GameObject* target);
         void UpdateExecution(float deltaTime);
         void FinishExecution();
         
@@ -122,7 +122,7 @@ namespace game
         void FinishDash();
         
         // 거리 계산 헬퍼
-        float GetDistanceToMonster(MonsterScript* monster) const;
-        bool IsMonsterInExecutionRange(MonsterScript* monster) const;
+        float GetDistanceToMonster(engine::GameObject* target) const;
+        bool IsMonsterInExecutionRange(engine::GameObject* target) const;
     };
 }

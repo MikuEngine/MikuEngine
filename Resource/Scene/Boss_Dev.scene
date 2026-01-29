@@ -1,6 +1,6 @@
 {
     "Name": "Boss_Dev",
-    "NumGameObjects": 6,
+    "NumGameObjects": 7,
     "GameObjects": [
         {
             "ID": 0,
@@ -189,7 +189,8 @@
                     "AnimName_Idle": "Idle",
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
-                    "AnimName_Fire": "Fire"
+                    "AnimName_Fire": "Fire",
+                    "ExecutionRange": 10.0
                 },
                 {
                     "Type": "StaticMeshRenderer",
@@ -362,6 +363,53 @@
                     "HeightRatio": 0.8999999761581421,
                     "ShadowBias": 0.004999999888241291,
                     "CastShadows": true
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "ExecutionManager",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ExecutionIndicatorManager",
+                    "Active": true,
+                    "IndicatorPrefabName": "ExcutionIndicator",
+                    "RotationDuration": 1.5,
+                    "RaycastMaxDistance": 1000.0,
+                    "IndicatorOffset": {
+                        "x": 0.0,
+                        "y": 0.10000000149011612,
+                        "z": 0.0
+                    },
+                    "LinePrefabName": "IndicatorLine",
+                    "LinePlayerOffset": 0.5,
+                    "LineMonsterOffset": 0.5,
+                    "LineBaseLength": 1.0,
+                    "LineHeight": 0.5,
+                    "DashDistance": 2.0,
+                    "DashInterval": 0.15000000596046448,
+                    "FinalDashThreshold": 2.5
                 }
             ]
         }
