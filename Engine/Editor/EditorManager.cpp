@@ -899,6 +899,14 @@ namespace engine
                 else
                 {
                     tr->OnGui();
+                    if (tr->IsDirtyThisFrame())
+                    {
+                        auto renderer = m_selectedObject->GetComponent<engine::Renderer>();
+                        if (renderer)
+                        {
+                            renderer->UpdateSockets();
+                        }
+                    }
                 }
             }
         }
