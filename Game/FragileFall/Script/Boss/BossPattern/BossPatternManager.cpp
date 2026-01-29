@@ -33,6 +33,7 @@ namespace game
     void BossPatternManager::SetIndependentPattern(BossPatternBase* pattern)
     {
         m_independentPattern = pattern;
+        m_independentPattern->Start(m_boss);
     }
 
     void BossPatternManager::Update(float deltaTime)

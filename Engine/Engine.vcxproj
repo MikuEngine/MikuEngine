@@ -173,6 +173,7 @@
     <ClCompile Include="Core\Graphics\Resource\MaterialHelper.cpp" />
     <ClCompile Include="Common\Utility\Profiling.cpp" />
     <ClCompile Include="Common\Utility\StringHelper.cpp" />
+    <ClCompile Include="Common\Utility\MousePicking.cpp" />
     <ClCompile Include="Core\App\UserSettingsLoader.cpp" />
     <ClCompile Include="Core\Graphics\Device\GraphicsDevice.cpp" />
     <ClCompile Include="Core\Graphics\Resource\BlendState.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Common\Utility\Profiling.h" />
     <ClInclude Include="Common\Utility\Singleton.h" />
     <ClInclude Include="Common\Utility\StringHelper.h" />
+    <ClInclude Include="Common\Utility\MousePicking.h" />
     <ClInclude Include="Core\App\UserSettingsLoader.h" />
     <ClInclude Include="Core\App\UserSettings.h" />
     <ClInclude Include="Core\Graphics\Data\ConstantBufferTypes.h" />

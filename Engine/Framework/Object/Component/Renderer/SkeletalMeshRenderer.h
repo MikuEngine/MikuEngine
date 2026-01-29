@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Resource/Texture.h"
@@ -69,6 +69,7 @@ namespace engine
         float m_materialRoughness = 0.0f;
         float m_materialMetalness = 0.0f;
         float m_materialAmbientOcclusion = 1.0f;
+        float m_materialEmissiveIntensity = 1.0f;
         bool m_overrideMaterial = false;
         bool m_castShadow = false;
         CullMode m_cullMode = CullMode::Back;
@@ -96,6 +97,10 @@ namespace engine
 
         std::shared_ptr<SkeletonData> GetSkeletonData() const;
         const std::string& GetMeshPath() const override;
+
+        // 런타임 머티리얼 색상 조작
+        void SetBaseColor(const Vector4& color) { m_materialBaseColor = color; }
+        const Vector4& GetBaseColor() const { return m_materialBaseColor; }
 
         void OnGui() override;
         void Save(json& j) const override;

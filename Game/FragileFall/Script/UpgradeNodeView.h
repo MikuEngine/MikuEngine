@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include <Framework/Object/Component/UI/UIImage.h>
+
 #include "UpgradeTypes.h"
 
 namespace game
@@ -20,7 +22,7 @@ namespace game
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
 
-        void SetVisualState(bool unlocked, bool purchased);
+        void SetVisualState(bool unlocked, bool purchased, bool selected);
 
     public:
         UpgradeCategory m_category = UpgradeCategory::Attack;
@@ -35,5 +37,11 @@ namespace game
         int m_ruby = 100;
         int m_sapphire = 100;
         int m_emerald = 100;
+
+        engine::Vector4 m_nodeColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+    private:
+        engine::Vector4 m_baseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+        engine::UIImage* m_image = nullptr;
     };
 }

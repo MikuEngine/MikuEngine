@@ -1,10 +1,10 @@
 {
-    "Name": "Bullet",
+    "Name": "BossPillar",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "Bullet",
+            "Name": "BossPillar",
             "Active": true,
             "Components": [
                 {
@@ -12,7 +12,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": 1.7999999523162842,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -22,48 +22,15 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.5,
-                        "y": 0.5,
-                        "z": 0.5
+                        "x": 1.0,
+                        "y": 4.0,
+                        "z": 1.0
                     }
-                },
-                {
-                    "Type": "BulletPlayer",
-                    "Active": true
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 0.0,
-                    "angularDamping": 100.0,
-                    "useGravity": false,
-                    "constraints": 0
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": true,
-                    "layer": 3,
-                    "materialType": 1,
-                    "radius": 0.5
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -71,7 +38,7 @@
                     "MaterialBaseColor": {
                         "x": 0.0,
                         "y": 1.0,
-                        "z": 0.20077204704284668,
+                        "z": 0.3397681713104248,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
@@ -86,6 +53,33 @@
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "size": [
+                        1.0,
+                        4.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "BossPillar",
+                    "Active": true
                 }
             ]
         }

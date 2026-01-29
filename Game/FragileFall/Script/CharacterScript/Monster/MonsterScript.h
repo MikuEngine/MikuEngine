@@ -8,6 +8,7 @@ namespace engine
 {
     class Rigidbody;
     class SkeletalAnimator;
+    class SkeletalMeshRenderer;
     class PathfindingAgent;
 }
 
@@ -15,6 +16,7 @@ namespace game
 {
     class BulletFactory;
     class PlayerControllerScript;
+    class ExecutionIndicatorManager;  // friend 선언용 전방 선언
 
     // ═══════════════════════════════════════════════════════════════
     // MonsterScript - 몬스터 공통 기반 클래스
@@ -33,6 +35,9 @@ namespace game
     class MonsterScript : public BaseControllerScript
     {
         REGISTER_SCRIPT(MonsterScript, BaseControllerScript)
+
+        // ExecutionIndicatorManager가 TriggerDeath() 등에 접근할 수 있도록 허용
+        friend class ExecutionIndicatorManager;
 
     protected:
         // ─────────────────────────────────────────────
@@ -69,6 +74,16 @@ namespace game
         // ─────────────────────────────────────────────
         float m_fireTimer = 0.0f;
         bool m_fsmInitialized = false;
+        
+        // ─────────────────────────────────────────────
+        // 피격 효과 (Hit Flash)
+        // ─────────────────────────────────────────────
+        engine::SkeletalMeshRenderer* m_skeletalMeshRenderer = nullptr;
+        float m_hitFlashTimer = 0.0f;
+        float m_hitFlashDuration = 0.2f;         // 피격 효과 지속 시간 (초)
+        engine::Vector4 m_originalColor{ 1.0f, 1.0f, 1.0f, 1.0f };
+        engine::Vector4 m_hitFlashColor{ 1.0f, 1.0f, 1.0f, 1.0f };  // 흰색
+        bool m_isHitFlashing = false;
         
         // ─────────────────────────────────────────────
         // 애니메이션 이름 (자식 클래스에서 설정)
@@ -168,11 +183,21 @@ namespace game
         virtual void OnFragile();
         virtual void OnDeath();
         
+        // ─────────────────────────────────────────────
+        // 피격 효과
+        // ─────────────────────────────────────────────
+        void StartHitFlash();
+        void UpdateHitFlash(float deltaTime);
+        void EndHitFlash();
+        
     public:
         // ─────────────────────────────────────────────
         // 외부 데미지 처리 (총알 등에서 호출)
         // ─────────────────────────────────────────────
         void TakeDamage(int damage);
+        
+        // 체력 접근자
+        int GetHp() const { return m_Hp; }
         
         bool m_isFragile = false;
         bool m_isDead = false;

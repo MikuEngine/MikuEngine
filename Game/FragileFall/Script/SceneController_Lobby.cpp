@@ -50,6 +50,7 @@ namespace game
         BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->BackToMain(); });
         BindButton("UI_BackToHub", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->BackToHub(); });
         BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->Back(); });
+        BindButton("UI_CloseButton_Upgrade", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->HandleEscape(); });
 
         BindButton("UI_EnterPlay", [self = engine::Ptr<SceneController_Lobby>(this)](bool) {if (self) self->ShowEffect(); });
 
@@ -68,7 +69,10 @@ namespace game
         if (m_blocker) m_blocker->SetActive(false);
 
         m_groupSelect = engine::GameObject::Find("UIGroup_Select");
+        if (m_groupSelect) m_groupSelect->SetActive(true);
+
         m_upgradePopUp = engine::GameObject::Find("UI_UpgradePopUp");
+        if (m_upgradePopUp) m_upgradePopUp->SetActive(false);
 
         m_isOptionOpen = false;
         m_isUpgradeOpen = false;
@@ -172,7 +176,7 @@ namespace game
     void SceneController_Lobby::BackToMain()
     {
         LOG_PRINT("BackToMain");
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Title");
+        engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
     }
 
     void SceneController_Lobby::BackToHub()
@@ -217,8 +221,8 @@ namespace game
             m_upgradePopUp->SetActive(open);
         }
 
-        if (m_groupSelect)
-            m_groupSelect->SetActive(!open);
+        //if (m_groupSelect)
+        //    m_groupSelect->SetActive(!open);
     }
 
     void SceneController_Lobby::HandleEscape()

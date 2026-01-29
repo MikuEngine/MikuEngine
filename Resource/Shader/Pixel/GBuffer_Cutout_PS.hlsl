@@ -26,7 +26,7 @@ PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input, bool isFrontFace : SV_IsFrontFace
     {
         output.baseColor = g_materialBaseColor;
         output.baseColor.a *= g_materialAlpha; // 장애물 반투명 적용
-        output.emissive = 0.0f;
+        output.emissive.rgb = g_materialEmissive * g_materialEmissiveIntensity;
         output.orm.r = g_materialAmbientOcclusion;
         output.orm.g = g_materialRoughness;
         output.orm.b = g_materialMetalness;

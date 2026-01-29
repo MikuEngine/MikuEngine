@@ -1,10 +1,10 @@
 {
-    "Name": "ButtonPrefab",
+    "Name": "Button_Prefab",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "ButtonPrefab",
+            "Name": "Button_Prefab",
             "Active": true,
             "Components": [
                 {
@@ -56,9 +56,10 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "",
+                    "SpritePressed": "",
+                    "SpriteDisabled": "",
+                    "TintOnly": true,
                     "TintNormal": {
                         "x": 1.0,
                         "y": 1.0,
@@ -66,15 +67,15 @@
                         "w": 1.0
                     },
                     "TintHover": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
                         "w": 1.0
                     },
                     "TintPressed": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
                         "w": 1.0
                     },
                     "TintDisabled": {
@@ -87,7 +88,7 @@
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "Layer": 0,
+                    "Layer": 1,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
@@ -133,8 +134,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 25.0,
-                        "y": 10.0
+                        "x": 0.0,
+                        "y": 0.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -154,10 +155,10 @@
                 {
                     "Type": "UIText",
                     "Active": true,
-                    "Layer": 0,
+                    "Layer": 1,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "Button",
+                    "Text": "버튼",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 50,
                     "Color": {
@@ -167,6 +168,9 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
                 }

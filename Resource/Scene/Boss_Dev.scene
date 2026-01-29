@@ -83,6 +83,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
@@ -140,7 +141,8 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "OverrideMaterial": true,
+                    "MaterialEmissiveIntensity": 0.0,
+                    "OverrideMaterial": false,
                     "CastShadow": true,
                     "CullMode": 1
                 }
@@ -174,9 +176,12 @@
                 {
                     "Type": "PlayerControllerScript",
                     "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
                     "MoveSpeed": 5.0,
-                    "FireRate": 0.20000000298023224,
-                    "BulletSpeed": 1.0,
+                    "FireRate": 1.2000000476837158,
+                    "BulletSpeed": 11.0,
                     "BulletLifetime": 3.0,
                     "AimPointerObjectName": "AimPointer",
                     "EnableUpperBodyAim": true,
@@ -208,6 +213,7 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": true,
                     "CullMode": 1

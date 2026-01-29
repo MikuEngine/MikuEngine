@@ -184,6 +184,11 @@ cbuffer UIElement : register(b10)
     
     float4 g_uiMask0;
     float4 g_uiMask1;
+    
+    float g_outlineThickness;
+    float g_outlineEnabled;
+    float2 __uipad1;
+    float4 g_outlineColor;
 };
 
 cbuffer ShadowPoint : register(b11)

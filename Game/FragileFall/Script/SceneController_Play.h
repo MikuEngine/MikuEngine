@@ -35,6 +35,8 @@ namespace game
         void OpenOption();
         void BackToPlay();
         void BackToMain();
+        void BackToLobby();
+        void BackToRestart();
 
         void Back();
 
@@ -50,6 +52,8 @@ namespace game
         bool m_isOptionOpen = false;
         bool m_isGiveupOpen = false;
 
+        bool m_isDead = false;
+
     private:
         // GameObject
         engine::GameObject* m_menuPopUp = nullptr;
@@ -57,5 +61,6 @@ namespace game
         engine::GameObject* m_blocker = nullptr;
 
         engine::GameObject* m_realGiveupPopUp = nullptr;
+        engine::GameObject* m_failPanel = nullptr;
     };
 }
