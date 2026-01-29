@@ -154,9 +154,9 @@ namespace game
         ImGui::InputText("Name", &m_name);
         ImGui::InputTextMultiline("Desc", &m_desc);
 
-        ImGui::InputInt("Ruby", &m_ruby);
-        ImGui::InputInt("Sapphire", &m_sapphire);
-        ImGui::InputInt("Emerald", &m_emerald);
+        ImGui::InputInt("Ruby", &m_costRuby);
+        ImGui::InputInt("Sapphire", &m_costSapphire);
+        ImGui::InputInt("Emerald", &m_costEmerald);
     }
 
     void UpgradeNodeView::Save(engine::json& j) const
@@ -182,9 +182,9 @@ namespace game
         j["Name"] = m_name;
         j["Desc"] = m_desc;
 
-        j["Ruby"] = m_ruby;
-        j["Sapphire"] = m_sapphire;
-        j["Emerald"] = m_emerald;
+        j["Ruby"] = m_costRuby;
+        j["Sapphire"] = m_costSapphire;
+        j["Emerald"] = m_costEmerald;
     }
 
     void UpgradeNodeView::Load(const engine::json& j)
@@ -215,9 +215,9 @@ namespace game
         engine::JsonGet(j, "Name", m_name);
         engine::JsonGet(j, "Desc", m_desc);
 
-        engine::JsonGet(j, "Ruby", m_ruby);
-        engine::JsonGet(j, "Sapphire", m_sapphire);
-        engine::JsonGet(j, "Emerald", m_emerald);
+        engine::JsonGet(j, "Ruby", m_costRuby);
+        engine::JsonGet(j, "Sapphire", m_costSapphire);
+        engine::JsonGet(j, "Emerald", m_costEmerald);
     }
 
     void UpgradeNodeView::SetVisualState(NodeState s)
@@ -268,5 +268,19 @@ namespace game
             pid = MakeNodeId(m_category, pid % 100);
 
         m_newParent = std::clamp(m_newParent, 0, 99);
+    }
+
+    void UpgradeNodeView::BuildCostList(std::vector<ItemCost>& out) const
+    {
+        out.clear();
+
+        if (m_costRuby > 0)
+            out.push_back({ ItemType::Ruby, m_costRuby });
+
+        if (m_costSapphire > 0)
+            out.push_back({ ItemType::Sapphire, m_costSapphire });
+
+        if (m_costEmerald > 0)
+            out.push_back({ ItemType::Emerald, m_costEmerald });
     }
 }

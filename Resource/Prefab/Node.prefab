@@ -32,7 +32,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": -150.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -80,9 +80,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
+                        "x": 0.9806950092315674,
                         "y": 1.0,
-                        "z": 0.24710416793823242,
+                        "z": 0.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true

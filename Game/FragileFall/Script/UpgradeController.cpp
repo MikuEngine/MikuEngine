@@ -42,6 +42,46 @@ namespace game
         {
             return (id % 100);
         }
+
+        static std::array<int, 3> GetSlotMap(int count)
+        {
+            // count: 1~3
+            if (count == 1) return { 1, -1, -1 }; // 중앙
+            if (count == 2) return { 0,  2, -1 }; // 좌우
+            return { 0, 1, 2 };                   // 전부
+        }
+
+        static engine::GameObject* FindChildGO(engine::GameObject* parent, const char* name)
+        {
+            if (!parent) return nullptr;
+
+            auto* pt = parent->GetTransform();
+            if (!pt) return nullptr;
+
+            for (engine::Transform* ct : pt->GetChildren())
+            {
+                if (!ct) continue;
+
+                auto* cgo = ct->GetGameObject();
+                if (!cgo) continue;
+
+                if (cgo->GetName() == name)
+                    return cgo;
+            }
+            return nullptr;
+        }
+
+        static int ItemIndex(ItemType t)
+        {
+            switch (t)
+            {
+            case ItemType::Ruby: return 0;
+            case ItemType::Sapphire: return 1;
+            case ItemType::Emerald: return 2;
+            default: return 0;
+            }
+        }
+
     }
 
     void UpgradeController::Awake()
@@ -81,6 +121,9 @@ namespace game
 
         BuildNodeTree();
         ApplyCategoryFilter();
+
+        BindCostSlots();
+        HideAllCostSlots();
     }
 
     void UpgradeController::Update()
@@ -167,9 +210,9 @@ namespace game
 
         const auto* view = itV->second;
 
-        if (m_ruby < view->m_ruby) return false;
-        if (m_sapphire < view->m_sapphire) return false;
-        if (m_emerald < view->m_emerald) return false;
+        if (m_ruby < view->m_costRuby) return false;
+        if (m_sapphire < view->m_costSapphire) return false;
+        if (m_emerald < view->m_costEmerald) return false;
 
         return true;
     }
@@ -181,9 +224,9 @@ namespace game
 
         auto* view = m_views[nodeId];
 
-        m_ruby -= view->m_ruby;
-        m_sapphire -= view->m_sapphire;
-        m_emerald -= view->m_emerald;
+        m_ruby -= view->m_costRuby;
+        m_sapphire -= view->m_costSapphire;
+        m_emerald -= view->m_costEmerald;
 
         m_purchased[nodeId] = true;
 
@@ -205,6 +248,7 @@ namespace game
 
         RefreshNodeVisuals();
         UpdateSelectedInfoUI();
+        UpdateCostUI();
     }
 
     void UpgradeController::RefreshNodeVisuals()
@@ -231,8 +275,6 @@ namespace game
     void UpgradeController::BuildNodeTree()
     {
         m_views.clear();
-
-        LOG_PRINT("[Upgrade] Collected={}", (int)m_nodeObjects.size());
 
         for (auto* go : m_nodeObjects)
         {
@@ -344,13 +386,12 @@ namespace game
 
     void UpgradeController::SetCategory(UpgradeCategory c)
     {
-        if (m_selected == c) return;
-        m_selected = c;
-        
         m_selectedNodeId = 0;
         ClearSelectedInfoUI();
-        RefreshNodeVisuals();
+        HideAllCostSlots();
 
+        m_selected = c;
+        
         ApplyCategoryFilter();
         RefreshNodeVisuals();
 
@@ -360,15 +401,11 @@ namespace game
 
     void UpgradeController::ApplyCategoryFilter()
     {
-        LOG_PRINT("[Filter] selected={}", (int)m_selected);
-
         for (auto* go : m_nodeObjects)
         {
             if (!go) continue;
             auto* view = go->GetComponent<UpgradeNodeView>();
             if (!view) continue;
-
-            LOG_PRINT("[Filter] node={} cat={} ", view->m_nodeId, (int)view->m_category);
 
             const bool show = (view->m_category == m_selected);
             go->SetActive(show);
@@ -412,6 +449,109 @@ namespace game
     void UpgradeController::ClearSelectedInfoUI()
     {
         if (m_nameText) m_nameText->SetText("");
-        if (m_descText) m_descText->SetText("");
+        if (m_descText) m_descText->SetText("강화할 스킬을 선택해주세요.");
+    }
+
+    void UpgradeController::BindCostSlots()
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            const std::string slotName = std::format("CostSlot{}", i);
+            auto* go = engine::GameObject::Find(slotName);
+            if (!go) continue;
+
+            m_costSlots[i].root = go;
+            m_costSlots[i].rt = go->GetComponent<engine::RectTransform>();
+
+            if (m_costSlots[i].rt)
+                m_costSlots[i].basePos = m_costSlots[i].rt->GetAnchoredPosition();
+
+            // 자식에서 찾기 : Icon, Amount
+            if (auto* iconGO = FindChildGO(go, "Icon"))
+            {
+                m_costSlots[i].icon = iconGO->GetComponent<engine::UIImage>();
+                m_texturePath[i] = m_costSlots[i].icon->GetTexturePath();
+            }
+
+            if (auto* amountGO = FindChildGO(go, "Amount"))
+                m_costSlots[i].amount = amountGO->GetComponent<engine::UIText>();
+        }
+    }
+
+    void UpgradeController::HideAllCostSlots()
+    {
+        for (auto& s : m_costSlots)
+            if (s.root) s.root->SetActive(false);
+    }
+
+    void UpgradeController::LayoutCostSlotsCentered(int visibleCount)
+    {
+        visibleCount = std::clamp(visibleCount, 0, 3);
+        // startX: 가운데 기준으로 왼쪽으로 밀어주는 값
+        const float startX = -0.5f * (visibleCount - 1) * m_costGapX;
+
+        for (int i = 0; i < 3; ++i)
+        {
+            auto& s = m_costSlots[i];
+            if (!s.root || !s.rt)
+                continue;
+
+            if (i < visibleCount)
+            {
+                s.root->SetActive(true);
+
+                engine::Vector2 pos = s.basePos; // y 유지
+                pos.x = s.basePos.x + (startX + i * m_costGapX);
+                s.rt->SetAnchoredPosition(pos);
+            }
+            else
+            {
+                s.root->SetActive(false);
+            }
+        }
+    }
+
+    void UpgradeController::UpdateCostUI()
+    {
+        HideAllCostSlots();
+
+        if (m_selectedNodeId == 0)
+            return;
+
+        auto it = m_views.find(m_selectedNodeId);
+        if (it == m_views.end() || !it->second)
+            return;
+
+        UpgradeNodeView* view = it->second;
+
+        std::vector<ItemCost> costs;
+        view->BuildCostList(costs);
+
+        const int n = (int)costs.size();
+        if (n == 0)
+        {
+            return;
+        }
+
+        LayoutCostSlotsCentered(n);
+
+        for (int i = 0; i < n; ++i)
+            SetSlotContent(i, costs[i].type, costs[i].amount);
+    }
+
+    void UpgradeController::SetSlotContent(int visibleIndex, ItemType type, int amount)
+    {
+        if (visibleIndex < 0 || visibleIndex >= 3) return;
+
+        auto& s = m_costSlots[visibleIndex];
+
+        if (s.icon)
+        {
+            const int idx = ItemIndex(type);
+            s.icon->SetTexture(m_texturePath[idx]);
+        }
+
+        if (s.amount)
+            s.amount->SetText(std::to_string(amount));
     }
 }

@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Lobby",
-    "NumGameObjects": 90,
+    "NumGameObjects": 98,
     "GameObjects": [
         {
             "ID": 0,
@@ -2525,7 +2525,7 @@
             "ID": 34,
             "ParentID": 14,
             "Name": "UI_UpgradePopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -4491,7 +4491,7 @@
         {
             "ID": 59,
             "ParentID": 58,
-            "Name": "Image_Item1",
+            "Name": "CostSlot0",
             "Active": true,
             "Components": [
                 {
@@ -4518,8 +4518,58 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -100.0,
+                        "x": 0.0,
                         "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 60,
+            "ParentID": 59,
+            "Name": "Icon",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -15.0
                     },
                     "Width": 50.0,
                     "Height": 50.0,
@@ -4557,9 +4607,9 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 58,
-            "Name": "Image_Item2",
+            "ID": 61,
+            "ParentID": 59,
+            "Name": "Amount",
             "Active": true,
             "Components": [
                 {
@@ -4588,6 +4638,128 @@
                     "AnchoredPosition": {
                         "x": 0.0,
                         "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 62,
+            "ParentID": 58,
+            "Name": "CostSlot1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 63,
+            "ParentID": 62,
+            "Name": "Icon",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -15.0
                     },
                     "Width": 50.0,
                     "Height": 50.0,
@@ -4625,9 +4797,9 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 58,
-            "Name": "Image_Item3",
+            "ID": 64,
+            "ParentID": 62,
+            "Name": "Amount",
             "Active": true,
             "Components": [
                 {
@@ -4654,8 +4826,130 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 100.0,
+                        "x": 0.0,
                         "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 65,
+            "ParentID": 58,
+            "Name": "CostSlot2",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 66,
+            "ParentID": 65,
+            "Name": "Icon",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -15.0
                     },
                     "Width": 50.0,
                     "Height": 50.0,
@@ -4693,7 +4987,79 @@
             ]
         },
         {
-            "ID": 62,
+            "ID": 67,
+            "ParentID": 65,
+            "Name": "Amount",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 68,
             "ParentID": 34,
             "Name": "UI_CloseButton_Upgrade",
             "Active": true,
@@ -4803,8 +5169,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 62,
+            "ID": 69,
+            "ParentID": 68,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -4875,7 +5241,7 @@
             ]
         },
         {
-            "ID": 64,
+            "ID": 70,
             "ParentID": 34,
             "Name": "UI_ScrollView",
             "Active": true,
@@ -4943,8 +5309,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 64,
+            "ID": 71,
+            "ParentID": 70,
             "Name": "Viewport",
             "Active": true,
             "Components": [
@@ -5011,8 +5377,8 @@
             ]
         },
         {
-            "ID": 66,
-            "ParentID": 65,
+            "ID": 72,
+            "ParentID": 71,
             "Name": "Content",
             "Active": true,
             "Components": [
@@ -5061,8 +5427,8 @@
             ]
         },
         {
-            "ID": 67,
-            "ParentID": 66,
+            "ID": 73,
+            "ParentID": 72,
             "Name": "AttackNodes",
             "Active": true,
             "Components": [
@@ -5136,8 +5502,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 67,
+            "ID": 74,
+            "ParentID": 73,
             "Name": "Attack",
             "Active": true,
             "Components": [
@@ -5224,8 +5590,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 67,
+            "ID": 75,
+            "ParentID": 73,
             "Name": "Attack",
             "Active": true,
             "Components": [
@@ -5314,8 +5680,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 67,
+            "ID": 76,
+            "ParentID": 73,
             "Name": "Attack",
             "Active": true,
             "Components": [
@@ -5404,8 +5770,8 @@
             ]
         },
         {
-            "ID": 71,
-            "ParentID": 67,
+            "ID": 77,
+            "ParentID": 73,
             "Name": "Attack",
             "Active": true,
             "Components": [
@@ -5495,8 +5861,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 66,
+            "ID": 78,
+            "ParentID": 72,
             "Name": "SkillNodes",
             "Active": true,
             "Components": [
@@ -5570,8 +5936,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 72,
+            "ID": 79,
+            "ParentID": 78,
             "Name": "Skill",
             "Active": true,
             "Components": [
@@ -5658,8 +6024,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 72,
+            "ID": 80,
+            "ParentID": 78,
             "Name": "Skill",
             "Active": true,
             "Components": [
@@ -5748,8 +6114,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 72,
+            "ID": 81,
+            "ParentID": 78,
             "Name": "Skill",
             "Active": true,
             "Components": [
@@ -5838,8 +6204,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 66,
+            "ID": 82,
+            "ParentID": 72,
             "Name": "SurviveNodes",
             "Active": true,
             "Components": [
@@ -5913,8 +6279,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 76,
+            "ID": 83,
+            "ParentID": 82,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -6001,8 +6367,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 76,
+            "ID": 84,
+            "ParentID": 82,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -6091,8 +6457,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 76,
+            "ID": 85,
+            "ParentID": 82,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -6181,8 +6547,8 @@
             ]
         },
         {
-            "ID": 80,
-            "ParentID": 76,
+            "ID": 86,
+            "ParentID": 82,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -6272,8 +6638,8 @@
             ]
         },
         {
-            "ID": 81,
-            "ParentID": 76,
+            "ID": 87,
+            "ParentID": 82,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -6362,8 +6728,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 76,
+            "ID": 88,
+            "ParentID": 82,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -6452,8 +6818,8 @@
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 66,
+            "ID": 89,
+            "ParentID": 72,
             "Name": "MoveNodes",
             "Active": true,
             "Components": [
@@ -6527,8 +6893,186 @@
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 64,
+            "ID": 90,
+            "ParentID": 89,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -150.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 400,
+                    "Parent": [],
+                    "Name": "한개만",
+                    "Desc": "필요함",
+                    "Ruby": 0,
+                    "Sapphire": 1,
+                    "Emerald": 0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.9806950092315674,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 91,
+            "ParentID": 89,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -150.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 401,
+                    "Parent": [
+                        400
+                    ],
+                    "Name": "이러면 됨?",
+                    "Desc": "4 0 4",
+                    "Ruby": 4,
+                    "Sapphire": 0,
+                    "Emerald": 4
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.9806950092315674,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                }
+            ]
+        },
+        {
+            "ID": 92,
+            "ParentID": 70,
             "Name": "Scrollbar",
             "Active": true,
             "Components": [
@@ -6609,8 +7153,8 @@
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 84,
+            "ID": 93,
+            "ParentID": 92,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -6677,8 +7221,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 84,
+            "ID": 94,
+            "ParentID": 92,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -6745,7 +7289,7 @@
             ]
         },
         {
-            "ID": 87,
+            "ID": 95,
             "ParentID": 34,
             "Name": "Btn_Upgrade",
             "Active": true,
@@ -6855,8 +7399,8 @@
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 87,
+            "ID": 96,
+            "ParentID": 95,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -6927,7 +7471,7 @@
             ]
         },
         {
-            "ID": 89,
+            "ID": 97,
             "Name": "UpgradeController",
             "Active": true,
             "Components": [
