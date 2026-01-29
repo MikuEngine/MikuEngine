@@ -226,9 +226,6 @@ namespace game
         {
             m_upgradePopUp->SetActive(open);
         }
-
-        //if (m_groupSelect)
-        //    m_groupSelect->SetActive(!open);
     }
 
     void SceneController_Lobby::HandleEscape()
