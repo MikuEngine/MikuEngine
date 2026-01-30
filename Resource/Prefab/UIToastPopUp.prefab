@@ -8,22 +8,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIImage",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "None",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -48,6 +50,24 @@
                     }
                 },
                 {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
+                },
+                {
                     "Type": "UIPanel",
                     "Active": true,
                     "Layer": 0,
@@ -57,10 +77,11 @@
                 {
                     "Type": "UIToastAnimator",
                     "Active": true,
-                    "EnterSlideOffsetX": 600.0,
-                    "EnterDuration": 0.18000000715255737,
-                    "MoveDuration": 0.11999999731779099,
-                    "FadeDuration": 0.20000000298023224
+                    "EnterSlideOffsetX": 100.0,
+                    "EnterDuration": 0.3499999940395355,
+                    "MoveDuration": 0.15000000596046448,
+                    "FadeInDuration": 0.4000000059604645,
+                    "FadeOutDuration": 0.20000000298023224
                 }
             ]
         },
@@ -71,22 +92,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIImage",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "TexturePath": "None",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 0.7861961126327515,
-                        "y": 0.7915058135986328,
-                        "z": 0.5164651870727539,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -109,6 +132,24 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.7861961126327515,
+                        "y": 0.7915058135986328,
+                        "z": 0.5164651870727539,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true
                 }
             ]
         },
@@ -119,26 +160,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "토가 17세 사인: 결정화",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 20,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -161,6 +200,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "토가 17세 사인: 결정화",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 20,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         }

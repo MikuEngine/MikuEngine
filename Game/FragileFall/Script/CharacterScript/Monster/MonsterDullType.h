@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -6,12 +6,15 @@
 namespace game
 {
     // ═══════════════════════════════════════════════════════════════
-    // MonsterDullGray - DullGray 몬스터 구현 
+    // MonsterDulltype - 둔탁 공격 몬스터 구현 
+    // 
+    // 특징:
+    //   - 제자리에 고정되어 플레이어를 공격
     // ═══════════════════════════════════════════════════════════════
 
-    class MonsterDullGray : public MonsterScript
+    class MonsterDullType : public MonsterScript
     {
-        REGISTER_SCRIPT(MonsterDullGray, MonsterScript)
+        REGISTER_SCRIPT(MonsterDullType, MonsterScript)
 
     private:
         // ─────────────────────────────────────────────

@@ -12641,7 +12641,7 @@
                     }
                 },
                 {
-                    "Type": "MonsterDullGray",
+                    "Type": "MonsterDullType",
                     "Active": true,
                     "MovementAcceleration": 80.0,
                     "MovementDeceleration": 100.0,
@@ -12960,7 +12960,7 @@
                     }
                 },
                 {
-                    "Type": "MonsterPointedGreen",
+                    "Type": "MonsterPointedType",
                     "Active": true,
                     "MovementAcceleration": 80.0,
                     "MovementDeceleration": 100.0,
@@ -13424,7 +13424,8 @@
                     "SpawnPos": {
                         "x": 660.0,
                         "y": -400.0
-                    }
+                    },
+                    "MaxQueue": 3
                 }
             ]
         },

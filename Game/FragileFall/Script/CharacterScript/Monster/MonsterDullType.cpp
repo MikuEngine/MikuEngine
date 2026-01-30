@@ -1,5 +1,5 @@
 ﻿#include "GamePCH.h"
-#include "MonsterDullGray.h"
+#include "MonsterDullType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
 
@@ -13,13 +13,13 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 생명주기
     // ═══════════════════════════════════════════════════════════════
-    void MonsterDullGray::Awake()
+    void MonsterDullType::Awake()
     {
         MonsterScript::Awake();
         // 스탯은 씬 파일에서 로드됨 (Load 함수 참조)
     }
 
-    void MonsterDullGray::Start()
+    void MonsterDullType::Start()
     {
         MonsterScript::Start();
 
@@ -33,7 +33,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // FSM 초기화
     // ═══════════════════════════════════════════════════════════════
-    void MonsterDullGray::InitializeFSM()
+    void MonsterDullType::InitializeFSM()
     {
         if (!m_logicFSM) return;
 
@@ -77,7 +77,7 @@ namespace game
         m_logicFSM->InitializeCurrentState();  // 기본 상태로 설정
     }
 
-    void MonsterDullGray::InitializeAnimFSM()
+    void MonsterDullType::InitializeAnimFSM()
     {
         if (!m_animFSM) return;
 
@@ -96,7 +96,7 @@ namespace game
         m_animFSM->AddSplitState("Dead",    m_animName_Dead, false, "", false, 0.0f, 0.1f);  // Dead는 루프 안 함
     }
 
-    void MonsterDullGray::InitializeAnimations()
+    void MonsterDullType::InitializeAnimations()
     {
         if (!m_skeletalAnimator) return;
 
@@ -106,7 +106,7 @@ namespace game
         // 여기서는 이름만 연결
     }
 
-    void MonsterDullGray::InitializeBullet()
+    void MonsterDullType::InitializeBullet()
     {
         m_bulletParams.type = BulletType::Linear;
         m_bulletParams.speed = m_bulletSpeed;
@@ -117,7 +117,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 상태별 행동 - 비물리 (Update에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void MonsterDullGray::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
+    void MonsterDullType::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
     {
         if (state == "Engage")
         {
@@ -137,23 +137,23 @@ namespace game
         }
     }
 
-    void MonsterDullGray::ExecuteEngageBehaviorNonPhysics(float deltaTime)
+    void MonsterDullType::ExecuteEngageBehaviorNonPhysics(float deltaTime)
     {
         // 공격 타이머 및 발사 (비물리)
         Attack(deltaTime);
     }
 
-    void MonsterDullGray::ExecuteIdleBehaviorNonPhysics()
+    void MonsterDullType::ExecuteIdleBehaviorNonPhysics()
     {
         // 비물리 Idle 처리
     }
 
-    void MonsterDullGray::ExecuteFragileBehaviorNonPhysics()
+    void MonsterDullType::ExecuteFragileBehaviorNonPhysics()
     {
         // Fragile 상태: 아무 행동도 하지 않음 (Execution 대기)
     }
 
-    void MonsterDullGray::ExecuteDeadBehaviorNonPhysics()
+    void MonsterDullType::ExecuteDeadBehaviorNonPhysics()
     {
         // 부모 클래스의 Dead 타이머 처리 (2초 후 Destroy)
         MonsterScript::ExecuteDeadBehaviorNonPhysics();
@@ -162,7 +162,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 상태별 행동 - 물리 (FixedUpdate에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void MonsterDullGray::UpdatePhysicsStateBasedBehavior(const std::string& state)
+    void MonsterDullType::UpdatePhysicsStateBasedBehavior(const std::string& state)
     {
         if (state == "Engage")
         {
@@ -182,23 +182,23 @@ namespace game
         }
     }
 
-    void MonsterDullGray::ExecuteEngageBehaviorPhysics()
+    void MonsterDullType::ExecuteEngageBehaviorPhysics()
     {
         // 회전 (물리)
         RotateTowardsPlayer();
     }
 
-    void MonsterDullGray::ExecuteIdleBehaviorPhysics()
+    void MonsterDullType::ExecuteIdleBehaviorPhysics()
     {
         StopRotation();
     }
 
-    void MonsterDullGray::ExecuteFragileBehaviorPhysics()
+    void MonsterDullType::ExecuteFragileBehaviorPhysics()
     {
         // Fragile 상태: 물리적으로 정지
     }
 
-    void MonsterDullGray::ExecuteDeadBehaviorPhysics()
+    void MonsterDullType::ExecuteDeadBehaviorPhysics()
     {
         StopAllMovement();
     }
@@ -206,7 +206,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 상태 진입 콜백
     // ═══════════════════════════════════════════════════════════════
-    void MonsterDullGray::OnStateEntered(const std::string& state)
+    void MonsterDullType::OnStateEntered(const std::string& state)
     {
         if (state == "Fragile")
         {
@@ -227,7 +227,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 공격
     // ═══════════════════════════════════════════════════════════════
-    void MonsterDullGray::Attack(float deltaTime)
+    void MonsterDullType::Attack(float deltaTime)
     {
         if (m_fireTimer > 0.0f)
         {
@@ -261,11 +261,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // GUI / 직렬화
     // ═══════════════════════════════════════════════════════════════
-    void MonsterDullGray::OnGui()
+    void MonsterDullType::OnGui()
     {
         ImGui::Indent();
         
-        ImGui::Text("MonsterDullGray:");
+        ImGui::Text("MonsterDullType:");
 
         // ─────────────────────────────────────────────
         // 컴포넌트 검증 (에디터 화면에서도 체크)
@@ -422,7 +422,7 @@ namespace game
         ImGui::Spacing();
     }
 
-    void MonsterDullGray::Save(engine::json& j) const
+    void MonsterDullType::Save(engine::json& j) const
     {
         MonsterScript::Save(j);
         
@@ -432,7 +432,7 @@ namespace game
         j["AnimName_Dead"] = m_animName_Dead;
     }
 
-    void MonsterDullGray::Load(const engine::json& j)
+    void MonsterDullType::Load(const engine::json& j)
     {
         MonsterScript::Load(j);
         

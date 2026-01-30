@@ -71,7 +71,7 @@ namespace engine
 
         void Initialize() override;
         void Update();
-        //void Awake() override;
+        void Awake() override;
         void OnDestroy() override;
 
         void Play(EventCallBack callback = nullptr, float fadeInDuration = 0.0f);

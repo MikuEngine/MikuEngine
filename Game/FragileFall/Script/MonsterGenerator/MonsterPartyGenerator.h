@@ -86,6 +86,8 @@ namespace game
         const MonsterData* FindMonsterByDifficulty(int difficulty) const;
         int GetMinDifficulty() const;
         std::vector<int> GetMonstersWithDifficulty(int difficulty) const;
+        std::vector<int> GetMonstersByType(AttackType type) const;
+
         
         // ─────────────────────────────────────────────
         // 상태 조회
