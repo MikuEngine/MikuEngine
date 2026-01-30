@@ -136,7 +136,7 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
         if (cb) cb(); });
     }
 
@@ -230,14 +230,14 @@ namespace game
         if (m_isOptionOpen)
         {
             SetOptionOpen(false);
-            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
             return;
         }
 
         if (m_isUpgradeOpen)
         {
             SetUpgradeOpen(false);
-            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
             return;
         }
     }
