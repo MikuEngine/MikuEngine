@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Lobby",
-    "NumGameObjects": 99,
+    "NumGameObjects": 100,
     "GameObjects": [
         {
             "ID": 0,
@@ -16,10 +16,10 @@
                         "z": -5.900000095367432
                     },
                     "Rotation": {
-                        "x": 0.0,
-                        "y": -0.13052619993686676,
-                        "z": 0.0,
-                        "w": 0.9914448857307434
+                        "x": -0.06737957894802094,
+                        "y": -0.2581885755062103,
+                        "z": -0.018054302781820297,
+                        "w": 0.9635729193687439
                     },
                     "Scale": {
                         "x": 1.0,
@@ -121,7 +121,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 100.0,
+                        "x": 120.0,
                         "y": -30.0
                     },
                     "Width": 0.0,
@@ -7525,9 +7525,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 7.5,
+                        "x": 15.0,
                         "y": 1.0,
-                        "z": 5.300000190734863
+                        "z": 10.0
                     }
                 },
                 {
@@ -7557,6 +7557,80 @@
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 99,
+            "Name": "PlayerPreview",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.5799999833106995,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.9961947202682495,
+                        "z": 0.0,
+                        "w": 0.0871557965874672
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/TestChar222.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/TestChar222.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "TestElbow",
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": []
+                        }
+                    ]
                 }
             ]
         }
