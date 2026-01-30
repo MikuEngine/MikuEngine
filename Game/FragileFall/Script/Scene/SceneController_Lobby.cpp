@@ -10,7 +10,7 @@
 #include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Framework/Object/Component/RectTransform.h>
-#include "UIPopUpAnimator.h"
+#include "Script/UI/UIPopUpAnimator.h"
 
 
 namespace game
