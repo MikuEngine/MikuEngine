@@ -6,7 +6,7 @@
 
 namespace engine
 {
-
+    class UIProgressBar;
 }
 
 namespace game
@@ -17,9 +17,19 @@ namespace game
         REGISTER_SCRIPT(LoadingOverlay, Script)
 
     public:
-        //void Awake() override;
+        void Awake() override;
         //void Start() override;
         //void Update() override;
+
+    public:
+        void Show();
+        void Hide();
+        void SetProgress(float t);
+
+    private:
+        engine::UIProgressBar* m_bar = nullptr;
+        float m_progress = 0.0f;
+        bool m_visible = false;
 
     public:
         void OnGui() override;
