@@ -10,6 +10,8 @@
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/UI/UIImage.h"
 
+#include "Framework/Object/Component/Canvas.h"
+
 namespace engine
 {
 	namespace
@@ -89,6 +91,30 @@ namespace engine
 			const float v = (pos01 - min01) / (max01 - min01);
 			return std::clamp(v, 0.0f, 1.0f);
 		}
+
+		static Vector2 ScreenToUI(const Vector2& screenPos, const Canvas* c)
+		{
+			// Canvas가 없으면 기존 좌표 그대로
+			if (!c) return screenPos;
+
+			auto& gd = GraphicsDevice::Get();
+			const D3D11_VIEWPORT vp = gd.GetViewport();
+
+			const Vector2 ref = c->GetReferenceResolution();
+			const Vector2 s = c->GetUIScale();
+			const Vector2 o = c->GetUIOffset();
+
+			// screen(px) -> ref space
+			Vector2 ui;
+			ui.x = (screenPos.x / vp.Width) * ref.x;
+			ui.y = (screenPos.y / vp.Height) * ref.y;
+
+			// offset/scale 반영(렌더와 동일 좌표계로 맞추기)
+			ui.x = (ui.x - o.x) / s.x;
+			ui.y = (ui.y - o.y) / s.y;
+
+			return ui;
+		}
 	}
 
 	void UISlider::Initialize()
@@ -123,19 +149,22 @@ namespace engine
 
 	bool UISlider::HitTestPoint(const Vector2& p) const
 	{
-		if (UIElement::HitTestPoint(p))
+		const Canvas* c = GetCanvasInParent();
+		const Vector2 uiP = ScreenToUI(p, c);
+
+		if (UIElement::HitTestPoint(uiP))
 			return true;
 
 		if (m_handle)
 		{
 			if (RectTransform* hrt = m_handle->GetRectTransform())
 			{
-				auto& gd = GraphicsDevice::Get();
-				const D3D11_VIEWPORT vp = gd.GetViewport();
-				UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+				if (!c) return false;
+				const Vector2 ref = c->GetReferenceResolution();
+				UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 
 				const UIRect hr = hrt->GetWorldRectResolved(rootRect);
-				if (PointInRect(p, hr))
+				if (PointInRect(uiP, hr))
 					return true;
 			}
 		}
@@ -330,19 +359,19 @@ namespace engine
 		if (bgChanged)
 		{
 			if (!m_bgSprite.empty()) m_background->SetTexture(m_bgSprite);
-			m_bgSprite = m_background->GetTexturePath();
+			if (m_background) m_bgSprite = m_background->GetTexturePath();
 		}
 
 		if (fillChanged)
 		{
 			if (!m_fillSprite.empty()) m_fill->SetTexture(m_fillSprite);
-			m_fillSprite = m_fill->GetTexturePath();
+			if (m_fill) m_fillSprite = m_fill->GetTexturePath();
 		}
 
 		if (handleChanged)
 		{
 			if (!m_handleSprite.empty()) m_handle->SetTexture(m_handleSprite);
-			m_handleSprite = m_handle->GetTexturePath();
+			if (m_handle) m_handleSprite = m_handle->GetTexturePath();
 		}
 
 		if (changed)
@@ -385,9 +414,11 @@ namespace engine
 			if (!rootRT || !fillRT) return;
 
 			// (화면 픽셀 좌표) 루트 Rect 계산
-			auto& gd = GraphicsDevice::Get();
-			const D3D11_VIEWPORT vp = gd.GetViewport();
-			UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+			Canvas* c = GetCanvasInParent();
+			if (!c) return;
+			const Vector2 ref = c->GetReferenceResolution();
+			UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+
 			const UIRect barRect = rootRT->GetWorldRectResolved(rootRect);
 
 			if (m_fillMode == FillMode::AnchorResize)
@@ -488,13 +519,14 @@ namespace engine
 		RectTransform* rootRT = GetRectTransform();
 		if (!rootRT) return;
 
-		auto& gd2 = GraphicsDevice::Get();
-		const D3D11_VIEWPORT vp2 = gd2.GetViewport();
-		UIRect rootRect2{ 0.0f, 0.0f, vp2.Width, vp2.Height };
+		Canvas* c = GetCanvasInParent();
+		if (!c) return;
+		const Vector2 ref = c->GetReferenceResolution();
+		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 
-		const UIRect barRect2 = rootRT->GetWorldRectResolved(rootRect2);
+		const UIRect barRect2 = rootRT->GetWorldRectResolved(rootRect);
 
-		const UIRect handleRect2 = handleRT->GetWorldRectResolved(rootRect2);
+		const UIRect handleRect2 = handleRT->GetWorldRectResolved(rootRect);
 
 		float min01 = 0.0f, max01 = 1.0f;
 		ComputeHandleRange01(barRect2, handleRect2, m_direction, min01, max01);
@@ -670,11 +702,16 @@ namespace engine
 		RectTransform* rt = GetRectTransform();
 		if (!rt) return;
 
-		auto& gd = GraphicsDevice::Get();
-		const D3D11_VIEWPORT vp = gd.GetViewport();
-		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+		Canvas* c = GetCanvasInParent();
+		if (!c) return;
+
+		const Vector2 ref = c->GetReferenceResolution();
+		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 
 		const UIRect barRect = rt->GetWorldRectResolved(rootRect);
+
+		const Vector2 uiMouse = ScreenToUI(mousePos, c);
+
 		float min01 = 0.0f, max01 = 1.0f;
 
 		if (m_handle)
@@ -695,16 +732,16 @@ namespace engine
 		switch (m_direction)
 		{
 		case Direction::LeftToRight:
-			t = (barRect.w > 1e-6f) ? (mousePos.x - barRect.x) / barRect.w : 0.0f;
+			t = (barRect.w > 1e-6f) ? (uiMouse.x - barRect.x) / barRect.w : 0.0f;
 			break;
 		case Direction::RightToLeft:
-			t = (barRect.w > 1e-6f) ? 1.0f - (mousePos.x - barRect.x) / barRect.w : 0.0f;
+			t = (barRect.w > 1e-6f) ? 1.0f - (uiMouse.x - barRect.x) / barRect.w : 0.0f;
 			break;
 		case Direction::BottomToTop:
-			t = (barRect.h > 1e-6f) ? (mousePos.y - barRect.y) / barRect.h : 0.0f;
+			t = (barRect.h > 1e-6f) ? (uiMouse.y - barRect.y) / barRect.h : 0.0f;
 			break;
 		case Direction::TopToBottom:
-			t = (barRect.h > 1e-6f) ? 1.0f - (mousePos.y - barRect.y) / barRect.h : 0.0f;
+			t = (barRect.h > 1e-6f) ? 1.0f - (uiMouse.y - barRect.y) / barRect.h : 0.0f;
 			break;
 		}
 
@@ -719,12 +756,14 @@ namespace engine
 		RectTransform* rtHandle = m_handle->GetRectTransform();
 		if (!rtHandle) return false;
 
-		auto& gd = GraphicsDevice::Get();
+		const Canvas* c = GetCanvasInParent();
+		if (!c) return false;
 
-		const D3D11_VIEWPORT vp = gd.GetViewport();
-		UIRect rootRect{ 0.0f, 0.0f, vp.Width, vp.Height };
+		const Vector2 ref = c->GetReferenceResolution();
+		const Vector2 uiMouse = ScreenToUI(mousePos, c);
+		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 
 		const UIRect hr = rtHandle->GetWorldRectResolved(rootRect);
-		return PointInRect(mousePos, hr);
+		return PointInRect(uiMouse, hr);
 	}
 }
