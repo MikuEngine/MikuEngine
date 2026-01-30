@@ -669,26 +669,30 @@ namespace engine
 
         for (auto& instance : m_socketInstances)
         {
-            if (!instance.info) continue;
-
-            if (!instance.info->parentBoneName.empty())
+            if (!instance.info.parentBoneName.empty())
             {
-                Matrix boneWorldMatrix = animator->GetBoneWorldMatrix(instance.info->parentBoneName);
-                instance.worldMatrix = instance.info->localMatrix * boneWorldMatrix;
+                Matrix boneWorldMatrix = animator->GetBoneWorldMatrix(instance.info.parentBoneName);
+                instance.worldMatrix = instance.info.localMatrix * boneWorldMatrix;
             }
             else
             {
-                instance.worldMatrix = instance.info->localMatrix * GetTransform()->GetWorld();
+                instance.worldMatrix = instance.info.localMatrix * GetTransform()->GetWorld();
             }
         }
 
-        for (auto& attached : m_attachedObjects)
+        for (auto it = m_attachedObjects.begin(); it != m_attachedObjects.end(); )
         {
-            if (!attached.obj) continue;
-
-            Matrix socketWorld = GetSocketWorldMatrix(attached.socketName);
-            attached.obj->GetTransform()->SetWorldMatrix(socketWorld);
-        }
+            if (it->obj)
+            {
+                Matrix socketWorld = GetSocketWorldMatrix(it->socketName);
+                it->obj->GetTransform()->SetWorldMatrix(socketWorld);
+                ++it;
+            }
+            else
+            {
+                it = m_attachedObjects.erase(it);
+            }
+        } 
     }
 
     void SkeletalMeshRenderer::Save(json& j) const

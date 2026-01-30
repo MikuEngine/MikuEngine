@@ -175,9 +175,6 @@ namespace game
         }
 
         UpdateBlocker();
-
-        // TODO : 시간 멈춤 / 재개 구현
-        //engine::Time::SetTimeScale()
     }
 
     void SceneController_Play::OpenMenu()
@@ -216,7 +213,7 @@ namespace game
 
     void SceneController_Play::BackToRestart()
     {
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Play");
+        engine::SceneManager::Get().ChangeScene("Prototype_Play");
     }
 
     void SceneController_Play::Back()
@@ -228,7 +225,10 @@ namespace game
     void SceneController_Play::UpdateBlocker()
     {
         if (!m_blocker) return;
-        m_blocker->SetActive(m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen);
+        const bool paused = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen);
+
+        m_blocker->SetActive(paused);
+        engine::Time::SetTimeScale(0, paused ? 0.0f : 1.0f);
     }
 
     void SceneController_Play::OnBGMChanged(float v)

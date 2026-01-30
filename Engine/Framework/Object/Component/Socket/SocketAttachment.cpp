@@ -8,16 +8,18 @@ namespace engine
 {
     SocketAttachment::~SocketAttachment()
     {
-        if (m_targetRenderer != nullptr)
+        if (m_targetRenderer)
         {
             m_targetRenderer->UnregisterAttachedObject(GetGameObject());
-            m_targetRenderer = nullptr;
         }
     }
 
     void SocketAttachment::SetSocket(Renderer* renderer, const std::string& socketName)
     {
-        if (m_targetRenderer) m_targetRenderer->UnregisterAttachedObject(GetGameObject());
+        if (m_targetRenderer)
+        {
+            m_targetRenderer->UnregisterAttachedObject(GetGameObject());
+        }
 
         m_targetRenderer = renderer;
         m_socketName = socketName;
@@ -26,6 +28,11 @@ namespace engine
         {
             m_targetRenderer->RegisterAttachedObject(GetGameObject(), m_socketName);
         }
+    }
+
+    void SocketAttachment::NotifyTargetRendererDestroyed()
+    {
+        m_targetRenderer = nullptr;
     }
 
     void SocketAttachment::OnGui()
