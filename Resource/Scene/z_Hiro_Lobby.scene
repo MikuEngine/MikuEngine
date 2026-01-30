@@ -7611,7 +7611,7 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 0
                 },
                 {
                     "Type": "SkeletalAnimator",

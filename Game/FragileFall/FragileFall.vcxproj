@@ -173,6 +173,7 @@
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp" />
     <ClCompile Include="Script\Boss\BossScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
+    <ClCompile Include="Script\LoadingOverlay.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Script\Boss\BossScript.h" />
     <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
     <ClInclude Include="Script\ItemType.h" />
+    <ClInclude Include="Script\LoadingOverlay.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />

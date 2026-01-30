@@ -10,6 +10,13 @@ namespace game
         return { a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t };
     }
 
+    static float Clamp01(float v)
+    {
+        if (v < 0.0f) return 0.0f;
+        if (v > 1.0f) return 1.0f;
+        return v;
+    }
+
     void UIToastAnimator::Awake()
     {
 
@@ -25,61 +32,67 @@ namespace game
 
         if (!m_inited)
         {
-            CacheTargets();
+            CacheTargets();       // baseA 확보
             m_inited = true;
         }
+
+        // 기본 상태: 완전히 보이게(원하시면 0으로 바꿔도 됨)
+        m_enterAlpha = 1.0f;
+        m_fadeAlpha = 1.0f;
+        ApplyAlphaCombined();
     }
 
     void UIToastAnimator::Update()
     {
         if (!m_rt) return;
 
+        const float dt = engine::Time::UnscaledDeltaTime();
+
+        // 1) 이동(Enter/Move) 처리
         if (m_animating)
         {
-            m_time += engine::Time::UnscaledDeltaTime();
+            m_time += dt;
             float t = (m_duration > 0.0f) ? (m_time / m_duration) : 1.0f;
-            if (t > 1.0f) t = 1.0f;
+            t = Clamp01(t);
 
             m_rt->SetAnchoredPosition(Lerp(m_fromPos, m_toPos, t));
+
+            if (m_entering)
+                m_enterAlpha = 1.0f - (1.0f - t) * (1.0f - t);
 
             if (t >= 1.0f)
             {
                 m_animating = false;
                 m_rt->SetAnchoredPosition(m_toPos);
+
+                if (m_entering) m_enterAlpha = 1.0f;
+
+                m_entering = false;
             }
         }
 
+        // 2) 페이드(FadeIn/FadeOut) 처리
         if (m_fading)
         {
-            m_fadeTime += engine::Time::UnscaledDeltaTime();
-            float t = (m_fadeDuration > 0.0f) ? (m_fadeTime / m_fadeDuration) : 1.0f;
-            if (t > 1.0f) t = 1.0f;
+            m_fadeTime += dt;
 
-            const float a = 1.0f - t;
+            const float dur = m_fadeModeIn ? m_fadeInDuration : m_fadeOutDuration;
+            float t = (dur > 0.0f) ? (m_fadeTime / dur) : 1.0f;
+            t = Clamp01(t);
 
-            // baseA를 곱해서 원래 알파 비율 유지
-            for (auto& trg : m_alphaTargets)
-            {
-                if (trg.text)
-                {
-                    auto c = trg.text->GetColor();
-                    c.w = trg.baseA * a;
-                    trg.text->SetColor(c);
-                }
-                if (trg.image)
-                {
-                    auto c = trg.image->GetColor();
-                    c.w = trg.baseA * a;
-                    trg.image->SetColor(c);
-                }
-            }
+            m_fadeAlpha = m_fadeModeIn ? t : (1.0f - t);
 
             if (t >= 1.0f)
             {
                 m_fading = false;
-                m_finished = true;
+
+                if (!m_fadeModeIn)
+                    m_finished = true;
             }
         }
+
+        // 3) 알파 적용은 여기서 딱 1번만
+        ApplyAlphaCombined();
     }
 
     void UIToastAnimator::OnGui()
@@ -87,7 +100,8 @@ namespace game
         ImGui::DragFloat("Enter Slide Offset X", &m_enterSlideOffsetX, 1.0f, 0.0f, 2000.0f);
         ImGui::DragFloat("Enter Duration", &m_enterDuration, 0.01f, 0.01f, 2.0f);
         ImGui::DragFloat("Move Duration", &m_moveDuration, 0.01f, 0.01f, 2.0f);
-        ImGui::DragFloat("Fade Duration", &m_fadeDuration, 0.01f, 0.01f, 2.0f);
+        ImGui::DragFloat("FadeIn Duration", &m_fadeInDuration, 0.01f, 0.01f, 2.0f);
+        ImGui::DragFloat("FadeOut Duration", &m_fadeOutDuration, 0.01f, 0.01f, 2.0f);
     }
 
     void UIToastAnimator::Save(engine::json& j) const
@@ -96,7 +110,8 @@ namespace game
         j["EnterSlideOffsetX"] = m_enterSlideOffsetX;
         j["EnterDuration"] = m_enterDuration;
         j["MoveDuration"] = m_moveDuration;
-        j["FadeDuration"] = m_fadeDuration;
+        j["FadeInDuration"] = m_fadeInDuration;
+        j["FadeOutDuration"] = m_fadeOutDuration;
     }
 
     void UIToastAnimator::Load(const engine::json& j)
@@ -105,7 +120,8 @@ namespace game
         engine::JsonGet(j, "EnterSlideOffsetX", m_enterSlideOffsetX);
         engine::JsonGet(j, "EnterDuration", m_enterDuration);
         engine::JsonGet(j, "MoveDuration", m_moveDuration);
-        engine::JsonGet(j, "FadeDuration", m_fadeDuration);
+        engine::JsonGet(j, "FadeInDuration", m_fadeInDuration);
+        engine::JsonGet(j, "FadeOutDuration", m_fadeOutDuration);
     }
 
     void UIToastAnimator::PlayEnter(const engine::Vector2& targetPos)
@@ -127,7 +143,9 @@ namespace game
             m_inited = true;
         }
 
+        // Enter 시작
         m_finished = false;
+        m_entering = true;
 
         m_toPos = targetPos;
         m_fromPos = { targetPos.x + m_enterSlideOffsetX, targetPos.y };
@@ -136,31 +154,22 @@ namespace game
         m_time = 0.0f;
         m_animating = true;
 
-        // 들어올 때는 알파 원복
-        for (auto& trg : m_alphaTargets)
-        {
-            if (trg.text)
-            {
-                auto c = trg.text->GetColor();
-                c.w = trg.baseA;
-                trg.text->SetColor(c);
-            }
-            if (trg.image)
-            {
-                auto c = trg.image->GetColor();
-                c.w = trg.baseA;
-                trg.image->SetColor(c);
-            }
-        }
+        // Enter 페이드인 켜져있으면 0에서 시작
+        //m_enterAlpha = (m_fadeInOnEnter ? 0.0f : 1.0f);
+
+        m_enterAlpha = 0.0f;
+        m_fadeAlpha = 1.0f;
 
         m_rt->SetAnchoredPosition(m_fromPos);
+        ApplyAlphaCombined();
     }
 
     void UIToastAnimator::MoveTo(const engine::Vector2& targetPos, float durationOverride)
     {
-        if (!m_rt)  return;
+        if (!m_rt) return;
 
         m_finished = false;
+        m_entering = false;
 
         m_fromPos = m_rt->GetAnchoredPosition();
         m_toPos = targetPos;
@@ -168,73 +177,79 @@ namespace game
         m_duration = (durationOverride > 0.0f) ? durationOverride : m_moveDuration;
         m_time = 0.0f;
         m_animating = true;
+
+        // Move는 알파에 영향 없음
+        m_enterAlpha = 1.0f;
     }
 
-    void UIToastAnimator::PlayFadeOut(float durationOverride)
+    void UIToastAnimator::FadeIn(float durationOverride)
     {
-        if (m_finished) return;
-        if (m_fading) return;
-
         if (!m_inited)
         {
             CacheTargets();
             m_inited = true;
         }
 
-        // 페이드 시작
-        m_fading = true;
         m_finished = false;
+        m_fading = true;
+        m_fadeModeIn = true;
         m_fadeTime = 0.0f;
 
         if (durationOverride > 0.0f)
-            m_fadeDuration = durationOverride;
+            m_fadeInDuration = durationOverride;
 
-        // 혹시 이전에 알파가 0에 가까웠던 상태를 대비해, 시작 알파를 원복하고 시작
-        for (auto& trg : m_alphaTargets)
+        m_fadeAlpha = 0.0f;
+        ApplyAlphaCombined();
+    }
+
+    void UIToastAnimator::FadeOut(float durationOverride)
+    {
+        if (!m_inited)
         {
-            if (trg.text)
-            {
-                auto c = trg.text->GetColor();
-                c.w = trg.baseA;
-                trg.text->SetColor(c);
-            }
-            if (trg.image)
-            {
-                auto c = trg.image->GetColor();
-                c.w = trg.baseA;
-                trg.image->SetColor(c);
-            }
+            CacheTargets();
+            m_inited = true;
         }
+
+        m_finished = false;
+        m_fading = true;
+        m_fadeModeIn = false;
+        m_fadeTime = 0.0f;
+
+        if (durationOverride > 0.0f)
+            m_fadeOutDuration = durationOverride;
+
+        m_fadeAlpha = 1.0f;
+        ApplyAlphaCombined();
     }
 
     void UIToastAnimator::SetText(const std::string& text)
     {
         auto* go = GetGameObject();
-        if (!go) return;
+        auto* txt = go->GetComponent<engine::UIText>();
+        if (!txt) return;
 
-        // 자식에서 첫 UIText 찾기(DFS)
-        auto* root = go->GetTransform();
-        if (!root) return;
+        txt->SetText(text);
+    }
 
-        std::vector<engine::Transform*> stack;
-        stack.push_back(root);
+    // 최종 알파 = baseA * (enterAlpha * fadeAlpha)
+    void UIToastAnimator::ApplyAlphaCombined()
+    {
+        const float a = Clamp01(m_enterAlpha) * Clamp01(m_fadeAlpha);
 
-        while (!stack.empty())
+        for (auto& trg : m_alphaTargets)
         {
-            engine::Transform* cur = stack.back();
-            stack.pop_back();
-
-            if (auto* cgo = cur->GetGameObject())
+            if (trg.text)
             {
-                if (auto* t = cgo->GetComponent<engine::UIText>())
-                {
-                    t->SetText(text);
-                    return;
-                }
+                auto c = trg.text->GetColor();
+                c.w = trg.baseA * a;
+                trg.text->SetColor(c);
             }
-
-            for (auto* ch : cur->GetChildren())
-                stack.push_back(ch);
+            if (trg.image)
+            {
+                auto c = trg.image->GetColor();
+                c.w = trg.baseA * a;
+                trg.image->SetColor(c);
+            }
         }
     }
 
@@ -251,32 +266,6 @@ namespace game
         CaptureBaseAlphaRecursive(tr);
     }
 
-    void UIToastAnimator::SetAlphaRecursive(engine::Transform* t, float a)
-    {
-        if (!t) return;
-
-        auto* go = t->GetGameObject();
-        if (go)
-        {
-            if (auto* text = go->GetComponent<engine::UIText>())
-            {
-                auto c = text->GetColor();
-                c.w = a;
-                text->SetColor(c);
-            }
-
-            if (auto* img = go->GetComponent<engine::UIImage>())
-            {
-                auto c = img->GetColor();
-                c.w = a;
-                img->SetColor(c);
-            }
-        }
-
-        for (auto* c : t->GetChildren())
-            SetAlphaRecursive(c, a);
-    }
-
     void UIToastAnimator::CaptureBaseAlphaRecursive(engine::Transform* t)
     {
         if (!t) return;
@@ -288,7 +277,11 @@ namespace game
             {
                 AlphaTarget at;
                 at.text = text;
+
+                // 원본 알파 캐시: 0이면 1로 보정 (재사용/초기 숨김에도 안전)
                 at.baseA = text->GetColor().w;
+                if (at.baseA <= 0.0001f) at.baseA = 1.0f;
+
                 m_alphaTargets.push_back(at);
             }
 
@@ -296,7 +289,10 @@ namespace game
             {
                 AlphaTarget at;
                 at.image = img;
+
                 at.baseA = img->GetColor().w;
+                if (at.baseA <= 0.0001f) at.baseA = 1.0f;
+
                 m_alphaTargets.push_back(at);
             }
         }

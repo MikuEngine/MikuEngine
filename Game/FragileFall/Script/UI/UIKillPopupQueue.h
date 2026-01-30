@@ -52,6 +52,6 @@ namespace game
 
         float m_spacing = 110.0f;
         float m_lifeTime = 3.0f;
-        int m_maxQueue = 6;
+        int m_maxQueue = 3;
     };
 }

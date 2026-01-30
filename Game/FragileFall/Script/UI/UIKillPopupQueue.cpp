@@ -48,6 +48,7 @@ namespace game
         ImGui::DragFloat("LifeTime", &m_lifeTime);
         ImGui::DragFloat("Spacing", &m_spacing);
         ImGui::DragFloat2("Origin Offset", &m_spawnPos.x);
+        ImGui::DragInt("MaxQueue", &m_maxQueue);
     }
 
     void UIKillPopupQueue::Save(engine::json& j) const
@@ -56,6 +57,7 @@ namespace game
         j["LifeTime"] = m_lifeTime;
         j["Spacing"] = m_spacing;
         j["SpawnPos"] = m_spawnPos;
+        j["MaxQueue"] = m_maxQueue;
     }
 
     void UIKillPopupQueue::Load(const engine::json& j)
@@ -64,6 +66,7 @@ namespace game
         engine::JsonGet(j, "LifeTime", m_lifeTime);
         engine::JsonGet(j, "Spacing", m_spacing);
         engine::JsonGet(j, "SpawnPos", m_spawnPos);
+        engine::JsonGet(j, "MaxQueue", m_maxQueue);
     }
 
     void UIKillPopupQueue::PushKill(const std::string& text, const std::string& iconKey)
@@ -153,7 +156,7 @@ namespace game
             if (age >= m_lifeTime)
             {
                 top.exiting = true;
-                anim->PlayFadeOut();
+                anim->FadeOut();
             }
         }
     }
