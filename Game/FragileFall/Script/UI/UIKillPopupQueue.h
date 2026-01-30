@@ -30,6 +30,7 @@ namespace game
             engine::Ptr<engine::GameObject> go;
             engine::TimePoint born;
             bool exiting = false;
+            bool visible = true;
         };
 
         std::deque<Item> m_items;
@@ -41,7 +42,10 @@ namespace game
         engine::Vector2 CalcTargetPos(size_t index) const;
         
         void TryStartExitTop();
+        void TryUnlockAndShow();
         void CleanupTopIfFinished();
+
+        bool HasHiddenItems();
 
     private:
         engine::GameObject* m_canvas = nullptr;
@@ -53,5 +57,7 @@ namespace game
         float m_spacing = 110.0f;
         float m_lifeTime = 3.0f;
         int m_maxQueue = 3;
+
+        bool m_locked = false;
     };
 }

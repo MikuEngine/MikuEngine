@@ -41,6 +41,7 @@ namespace game
 
         TryStartExitTop();
         CleanupTopIfFinished();
+        TryUnlockAndShow();
     }
 
     void UIKillPopupQueue::OnGui()
@@ -73,8 +74,11 @@ namespace game
     {
         if (!m_canvas) return;
 
-        // 최대 큐 제한
-        if ((int)m_items.size() >= m_maxQueue) return;
+        int visibleCount = 0;
+        for (auto& it : m_items)
+            if (it.visible && it.go) visibleCount++;
+
+        const bool willOverflow = (visibleCount >= m_maxQueue);
 
         // 프리팹 생성
         engine::Ptr<engine::GameObject> go = engine::Prefab::Instantiate(m_prefabKey);
@@ -98,6 +102,17 @@ namespace game
         item.go = go;
         item.born = engine::Time::GetTimestamp();
         item.exiting = false;
+
+        if (m_locked || willOverflow)
+        {
+            m_locked = true;
+            item.visible = false;
+            go->SetActive(false);
+            m_items.push_back(item);
+            return;
+        }
+
+        item.visible = true;
         m_items.push_back(item);
 
         Reflow(false);
@@ -108,21 +123,21 @@ namespace game
 
     void UIKillPopupQueue::Reflow(bool instant)
     {
-        float y = m_spawnPos.y;
-
-        for (size_t i = 0; i < m_items.size(); ++i)
+        int idx = 0;
+        for (auto& it : m_items)
         {
-            auto& it = m_items[i];
-            if (!it.go) continue;
+            if (!it.go || !it.visible) continue;
 
             auto* rt = it.go->GetComponent<engine::RectTransform>();
             auto* anim = it.go->GetComponent<game::UIToastAnimator>();
             if (!rt || !anim) continue;
 
-            engine::Vector2 target{ m_spawnPos.x, m_spawnPos.y + (float)i * m_spacing };
+            engine::Vector2 target = CalcTargetPos((size_t)idx);
 
             if (instant) rt->SetAnchoredPosition(target);
             else         anim->MoveTo(target);
+
+            idx++;
         }
     }
 
@@ -161,6 +176,42 @@ namespace game
         }
     }
 
+    void UIKillPopupQueue::TryUnlockAndShow()
+    {
+        // 화면에 보이는 게 아직 있으면 아무것도 하지 않음
+        int visibleAlive = 0;
+        for (auto& it : m_items)
+            if (it.visible && it.go) visibleAlive++;
+
+        if (visibleAlive > 0) return;
+
+        // 화면이 비었으니, 다음 배치를 꺼낸다(최대 m_maxQueue개)
+        int spawned = 0;
+        for (size_t i = 0; i < m_items.size() && spawned < m_maxQueue; ++i)
+        {
+            auto& it = m_items[i];
+            if (!it.go) continue;
+            if (it.visible) continue; // 숨겨둔 것만
+
+            it.visible = true;
+            it.exiting = false;
+            it.born = engine::Time::GetTimestamp();
+
+            it.go->SetActive(true);
+
+            if (auto* anim = it.go->GetComponent<game::UIToastAnimator>())
+            {
+                const engine::Vector2 target = CalcTargetPos((size_t)spawned);
+                anim->PlayEnter(target);
+            }
+
+            spawned++;
+        }
+
+        // 더 남아있으면 잠금 유지, 다 꺼냈으면 잠금 해제
+        m_locked = HasHiddenItems();
+    }
+
     void UIKillPopupQueue::CleanupTopIfFinished()
     {
         while (!m_items.empty() && !m_items.front().go)
@@ -191,5 +242,11 @@ namespace game
             m_items.pop_front();
             Reflow(false);
         }
+    }
+    bool UIKillPopupQueue::HasHiddenItems()
+    {
+        for (auto& it : m_items)
+            if (it.go && !it.visible) return true;
+        return false;
     }
 }
