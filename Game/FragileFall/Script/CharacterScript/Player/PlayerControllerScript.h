@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -52,9 +52,13 @@ namespace game
         // ─────────────────────────────────────────────
         // 대쉬 설정
         // ─────────────────────────────────────────────
-        float m_dashDuration = 1.0f;                    // 대쉬 지속 시간 (초)
-        float m_dashInitialSpeedMultiplier = 3.0f;      // 초기 속도 배율 (m_moveSpeed 기준)
-        float m_dashCooldown = 2.0f;                    // 대쉬 쿨다운 (초)
+        float m_dashDuration = 0.3f;                    // 대쉬 지속 시간 (초)
+        float m_dashInitialSpeedMultiplier = 6.0f;      // 초기 속도 배율 (m_moveSpeed 기준)
+        float m_dashCooldown = 0.2f;                    // 대쉬 쿨다운 (초)
+        int m_MaxDashCount = 3;
+        int m_CurrentDashCount = 3;
+        float m_dashRechargeTime = 1.0f;
+        float m_dashRechargeTimer = 1.0f;
 
         // ─────────────────────────────────────────────
         // 대쉬 런타임 상태
