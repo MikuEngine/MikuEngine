@@ -175,7 +175,6 @@
     <ClCompile Include="Script\Boss\BossScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterRoundType.cpp" />
-    <ClCompile Include="Script\LoadingOverlay.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
@@ -184,7 +183,6 @@
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
-    <ClCompile Include="Script\Scene\SceneLoadController.cpp" />
     <ClCompile Include="Script\StateTextRenderer.cpp" />
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
     <ClCompile Include="Script\TimeScalerTest.cpp" />
@@ -228,7 +226,6 @@
     <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
     <ClInclude Include="Script\CharacterScript\Monster\MonsterRoundType.h" />
     <ClInclude Include="Script\ItemType.h" />
-    <ClInclude Include="Script\LoadingOverlay.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />
@@ -237,7 +234,6 @@
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />
     <ClInclude Include="Script\Scene\SceneController_Main.h" />
-    <ClInclude Include="Script\Scene\SceneLoadController.h" />
     <ClInclude Include="Script\StateTextRenderer.h" />
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />
     <ClInclude Include="Script\TimeScalerTest.h" />
