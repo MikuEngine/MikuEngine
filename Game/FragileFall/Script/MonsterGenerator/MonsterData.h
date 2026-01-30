@@ -35,20 +35,20 @@ namespace game
     {
         int MonsterID;
         std::string MonsterName;
-        std::string Type;
-        int Tier;
+        AttackType Type;
+        MonsterTier Tier;
         int Difficulty;
         
         // 기본 생성자
         MonsterData()
             : MonsterID(0)
-            , Type("")
-            , Tier(0)
+            , Type(AttackType::Dull)
+            , Tier(MonsterTier::Gray)
             , Difficulty(0)
         {}
         
         // 파라미터 생성자
-        MonsterData(int id, const std::string& type, int tier, int difficulty)
+        MonsterData(int id, AttackType type, MonsterTier tier, int difficulty)
             : MonsterID(id)
             , Type(type)
             , Tier(tier)

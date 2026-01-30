@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterPartyGenerator.h"
 #include <Common/Debug/Debug.h>
 #include <algorithm>
@@ -39,7 +39,7 @@ namespace game
         // CSV 파서 함수 정의
         auto parser = [](const std::vector<std::string>& fields, MonsterData& out) -> bool
         {
-            if (fields.size() != 4)
+            if (fields.size() != 5)
             {
                 return false;
             }
@@ -47,9 +47,10 @@ namespace game
             try
             {
                 out.MonsterID = std::stoi(fields[0]);
-                out.Type = fields[1];
-                out.Tier = std::stoi(fields[2]);
-                out.Difficulty = std::stoi(fields[3]);
+                out.MonsterName = fields[1];
+                out.Type = static_cast<AttackType>(std::stoi(fields[2]));
+                out.Tier = static_cast<MonsterTier>(std::stoi(fields[3]));
+                out.Difficulty = std::stoi(fields[4]);
                 return true;
             }
             catch (...)
@@ -410,5 +411,19 @@ namespace game
             }
         }
         return result;
+    }
+    std::vector<int> MonsterPartyGenerator::GetMonstersByType(AttackType type) const
+    {
+        std::vector<int> result;
+        for (const auto& monster : m_monsterDB)
+        {
+            if (monster.Type == type)
+            {
+                result.push_back(monster.MonsterID);
+            }
+        }
+
+
+        return std::vector<int>();
     }
 }
