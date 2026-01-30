@@ -94,6 +94,8 @@ namespace engine
         if (!ImGui::GetIO().WantCaptureKeyboard && Input::IsKeyReleased(Keys::H))
         {
             m_showEditorUI = !m_showEditorUI;
+
+            m_selectedObject = nullptr;
         }
 
         m_editorCamera->Update();
@@ -145,9 +147,9 @@ namespace engine
     {
         auto& graphics = GraphicsDevice::Get();
 
-        graphics.BeginDrawGUIPass();
+        if (m_showEditorUI)
         {
-            if (m_showEditorUI)
+            graphics.BeginDrawGUIPass();
             {
                 DrawPlayController();
                 DrawEditorController();
@@ -157,8 +159,8 @@ namespace engine
                 DrawGizmoToolbar();
                 DrawDebugInfo();
             }
+            graphics.EndDrawGUIPass();
         }
-        graphics.EndDrawGUIPass();
     }
 
     void EditorManager::Shutdown()
@@ -1285,7 +1287,10 @@ namespace engine
 
     void EditorManager::DrawEditorGrid()
     {
-        m_editorGrid->Draw();
+        if (m_showEditorUI)
+        {
+            m_editorGrid->Draw();
+        }
     }
 
     void EditorManager::ValidateSettingsList()
