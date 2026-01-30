@@ -19,7 +19,8 @@ namespace game
     { 
         Dull,
         Pointed,
-        Round
+        Round,
+        Max
     };
     
     enum class MonsterTier
@@ -28,9 +29,34 @@ namespace game
         Green,
         Blue,
         Red,
-        Purple
+        Purple,
+        Max
     };
-    
+
+    inline const char* GetAttackTypeStr(AttackType type)
+    {
+        switch (type)
+        {
+        case AttackType::Dull:    return "Dull";
+        case AttackType::Pointed: return "Pointed";
+        case AttackType::Round:   return "Round";
+        default:                  return "None";
+        }
+    }
+
+    inline const char* GetMonsterTierStr(MonsterTier tier)
+    {
+        switch (tier)
+        {
+        case MonsterTier::Gray:   return "Gray";
+        case MonsterTier::Green:  return "Green";
+        case MonsterTier::Blue:   return "Blue";
+        case MonsterTier::Red:    return "Red";
+        case MonsterTier::Purple: return "Purple";
+        default:                  return "None";
+        }
+    }
+
     struct MonsterData
     {
         int MonsterID;

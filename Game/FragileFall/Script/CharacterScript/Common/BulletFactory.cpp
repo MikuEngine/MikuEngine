@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
@@ -143,6 +143,31 @@ namespace game
                   position.x, position.y, position.z);
     }
 
+    void BulletFactory::ParabolicFireMonster(const engine::Vector3& position, const engine::Vector3& direction, const BulletParams& params)
+    {
+        auto go = engine::Prefab::Instantiate("ParabolicFireMonster");
+        if (!go)
+        {
+            LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'ParabolicMovement' prefab!");
+            return;
+        }
+
+        go->GetTransform()->SetLocalPosition(position);
+
+        auto movement = CreateMovement(params);
+        movement->Initialize(direction, params.speed);
+
+        auto* bullet = go->GetComponent<BulletMonster>();
+
+        if (!bullet)
+        {
+            LOG_PRINT("[BulletFactory] ERROR: 'ParabolicFireMonster' prefab missing BulletMonster component!");
+            return;
+        }
+
+        bullet->Setup(std::move(movement), params.lifetime);
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // Movement 생성 (Strategy 패턴)
     // ═══════════════════════════════════════════════════════════════
@@ -151,12 +176,12 @@ namespace game
         switch (params.type)
         {
         case BulletType::Linear:
+            return std::make_unique<LinearMovement>();
+        case BulletType::Parabolic:
+            return std::make_unique<ParabolicMovement> (params.gravity);
         default:
             return std::make_unique<LinearMovement>();
-
         // 추후 구현:
-        // case BulletType::Parabolic:
-        //     return std::make_unique<ParabolicMovement>(params.gravity);
         // case BulletType::Spiral:
         //     return std::make_unique<SpiralMovement>(params.spiralRadius, params.spiralFrequency);
         // case BulletType::Homing:

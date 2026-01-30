@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Transform.h>
 #include <memory>
@@ -63,8 +63,49 @@ namespace game
     };
 
     // ═══════════════════════════════════════════════════════════════
+	// ParabolicMovement - 포물선 이동
+    // 
+    //  포물선 궤적을 따라 이동하는 총알
+    // ═══════════════════════════════════════════════════════════════
+
+    class ParabolicMovement : public IBulletMovement
+    {
+    private:
+        engine::Vector3 m_velocity = engine::Vector3::Zero;
+		float m_gravity = 9.81f;
+
+    public:
+        ParabolicMovement(float gravity) : m_gravity(gravity) {}
+
+        void Initialize(const engine::Vector3& direction, float speed) override
+        {
+            m_velocity = direction * speed;
+        }
+
+        void Update(engine::Transform* transform, float deltaTime) override
+        {
+            m_velocity.y -= m_gravity * deltaTime;
+
+            engine::Vector3 currentPos = transform->GetLocalPosition();
+            currentPos += m_velocity * deltaTime;
+
+            transform->SetLocalPosition(currentPos);
+
+            // 진행 방향을 바라보도록 회전 업데이트
+            if (m_velocity.LengthSquared() > 0.001f)
+            {
+                // 속도 벡터 방향으로 정렬 로직 추가 가능
+            }
+        }
+
+        engine::Vector3 GetVelocity() const override
+        {
+            return m_velocity;
+        }
+	};
+
+    // ═══════════════════════════════════════════════════════════════
     // 추후 구현 예정:
-    // - ParabolicMovement: 포물선 (곡사)
     // - SpiralMovement: 나선 궤도
     // - HomingMovement: 유도 미사일
     // ═══════════════════════════════════════════════════════════════

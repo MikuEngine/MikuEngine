@@ -8,8 +8,7 @@ namespace game
     enum class BulletType
     {
         Linear,     // 직선 이동
-        // 추후 확장:
-        // Parabolic,  // 포물선 (곡사)
+        Parabolic,  // 포물선 (곡사)
         // Spiral,     // 나선 궤도
         // Homing,     // 유도
     };
@@ -38,9 +37,9 @@ namespace game
         float lifetime = 3.0f;      // 총알 수명 (초)
         int damage = 0;
         // ─────────────────────────────────────────────
-        // 포물선용 (추후 구현)
+        // 포물선용
         // ─────────────────────────────────────────────
-        // float gravity = 9.8f;
+        float gravity = 9.8f;
 
         // ─────────────────────────────────────────────
         // 나선용 (추후 구현)
