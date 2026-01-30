@@ -10,6 +10,8 @@
 #include <Framework/Object/Component/UI/UIButton.h>
 #include "UIPopUpAnimator.h"
 
+#include "Manager/TimeScaler.h"
+
 namespace game
 {
     namespace
@@ -227,7 +229,8 @@ namespace game
         const bool paused = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen);
 
         m_blocker->SetActive(paused);
-        engine::Time::SetTimeScale(0, paused ? 0.0f : 1.0f);
+
+        paused ? TimeScaler::StopWorld(): TimeScaler::PlayWorld();
     }
 
     void SceneController_Play::OnBGMChanged(float v)
