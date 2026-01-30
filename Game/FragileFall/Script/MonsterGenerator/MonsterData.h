@@ -10,7 +10,7 @@ namespace game
     // CSV 형식: MonsterID, Type, Tier, Difficulty
     // 용도: CSV에서 파싱한 몬스터 정보 저장
     // 
-	// Type: Dull, Sharp, Round 등
+	// Type: Dull(둔탁), Pointed(뾰족), Round(동글) 등
 	// Tier: 0(Gray), 1(Green), 2(Blue), 3(Red), 4(Purple)
     // 
     // ═══════════════════════════════════════════════════════════════
