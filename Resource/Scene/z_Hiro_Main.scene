@@ -316,7 +316,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 100.0,
+                        "x": 120.0,
                         "y": -70.0
                     },
                     "Width": 0.0,
