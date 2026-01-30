@@ -141,7 +141,10 @@
     <ClCompile Include="Script\CheckRotateScript.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\UIKillPopupAnimator.cpp">
+    <ClCompile Include="Script\UIKillPopupQueue.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\UIToastAnimator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -284,7 +287,10 @@
     <ClInclude Include="Script\ItemType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\UIKillPopupAnimator.h">
+    <ClInclude Include="Script\UIKillPopupQueue.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\UIToastAnimator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
