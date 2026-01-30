@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <filesystem>
 
@@ -200,6 +200,9 @@ namespace engine
 
         void BeginDrawPickingPass();
         unsigned int EndDrawPickingPass(int mouseX, int mouseY);
+
+        void BeginDrawLoadingToFinalBuffer();
+        void EndDrawLoadingToFinalBuffer();
 
         void EndDraw();
 

@@ -241,6 +241,7 @@
     <ClCompile Include="Framework\System\CameraSystem.cpp" />
     <ClCompile Include="Framework\System\EnvironmentSystem.cpp" />
     <ClCompile Include="Framework\System\LightSystem.cpp" />
+    <ClCompile Include="Framework\System\LoadingScreenRenderer.cpp" />
     <ClCompile Include="Framework\System\ParticleSystem.cpp" />
     <ClCompile Include="Framework\System\PathfindingSystem.cpp" />
     <ClCompile Include="Framework\System\PostProcessingSystem.cpp" />
@@ -255,6 +256,7 @@
     </ClCompile>
     <ClCompile Include="Core\App\WinApp.cpp" />
     <ClCompile Include="Framework\Physics\CollisionSystem.cpp" />
+    <ClCompile Include="Framework\Physics\CollisionTypes.cpp" />
     <ClCompile Include="Framework\Physics\PhysicsCallback.cpp" />
     <ClCompile Include="Framework\Physics\PhysicsDebugRenderer.cpp" />
     <ClCompile Include="Framework\Physics\PhysicsMaterial.cpp" />
@@ -381,6 +383,7 @@
     <ClInclude Include="Framework\System\CameraSystem.h" />
     <ClInclude Include="Framework\System\EnvironmentSystem.h" />
     <ClInclude Include="Framework\System\LightSystem.h" />
+    <ClInclude Include="Framework\System\LoadingScreenRenderer.h" />
     <ClInclude Include="Framework\System\ParticleSystem.h" />
     <ClInclude Include="Framework\System\PathfindingSystem.h" />
     <ClInclude Include="Framework\System\PostProcessingSystem.h" />
@@ -699,6 +702,7 @@
     </FxCompile>
     <FxCompile Include="Shader\Vertex\UIQuad_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

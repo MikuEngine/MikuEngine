@@ -1,0 +1,53 @@
+{
+    "Name": "ExcutionIndicatorManager",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "ExcutionIndicatorManager",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ExecutionIndicatorManager",
+                    "Active": true,
+                    "IndicatorPrefabName": "ExcutionIndicator",
+                    "RotationDuration": 1.5,
+                    "RaycastMaxDistance": 1000.0,
+                    "IndicatorOffset": {
+                        "x": 0.0,
+                        "y": 1.5,
+                        "z": -0.5
+                    },
+                    "LinePrefabName": "IndicatorLine",
+                    "LinePlayerOffset": 1.0,
+                    "LineMonsterOffset": 1.5,
+                    "LineBaseLength": 0.5,
+                    "LineHeight": 0.6000000238418579,
+                    "DashDistance": 3.0,
+                    "DashInterval": 0.10000000149011612,
+                    "FinalDashThreshold": 2.5
+                }
+            ]
+        }
+    ]
+}

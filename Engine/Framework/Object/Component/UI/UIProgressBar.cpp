@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "UIProgressBar.h"
 
 #include "Framework/Scene/Scene.h"
@@ -189,18 +189,6 @@ namespace engine
 				rt->SetAnchoredPosition({ 0.0f, 0.0f });
 				rt->SetSize(0.0f, 0.0f);
 			}
-		}
-
-		// 기본 크기
-		if (m_shape == Shape::Radial)
-		{
-			GetRectTransform()->SetSize(200, 200);
-		}
-		else
-		{
-			bool horizontal = (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft);
-			if (horizontal) GetRectTransform()->SetSize(300, 50);
-			else            GetRectTransform()->SetSize(50, 300);
 		}
 
 		m_dirty = true;

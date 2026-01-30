@@ -7,9 +7,14 @@
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
+#include <Framework/Object/Component/Collider.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
+#include <Framework/System/SystemManager.h>
+#include <Framework/Physics/PhysicsSystem.h>
+#include <Framework/Physics/PhysicsLayer.h>
+#include <Framework/Physics/CollisionTypes.h>
 #include <Engine/Core/System/Input.h>
 #include <Engine/Core/System/MyTime.h>
 
@@ -42,7 +47,7 @@ namespace game
 		if (m_animFSM)
 		{
 			InitializeAnimFSM();
-			
+
 			// Procedural Aim 활성화
 			if (m_enableUpperBodyAim)
 			{
@@ -50,28 +55,14 @@ namespace game
 			}
 		}
 
-		// 초기 회전 설정 (-Z 방향 모델이므로 +180도 보정)
-		if (GetTransform())
+		// Dynamic Rigidbody의 경우의 초기화 추가
+		if (m_rigidbody && m_rigidbody->IsDynamic())
 		{
-			m_currentRotationAngle = atan2f(m_lastMoveDirection.x, m_lastMoveDirection.z) + 3.14159f;
-			
-			engine::Quaternion initialRot = engine::Quaternion::CreateFromAxisAngle(
-				engine::Vector3::UnitY, 
-				m_currentRotationAngle
-			);
-			
-			// Dynamic Rigidbody의 경우 초기 회전도 Rigidbody를 통해 설정
-			if (m_rigidbody && m_rigidbody->IsDynamic())
-			{
-				GetTransform()->SetLocalRotation(initialRot);  // 초기화는 직접 설정 가능
-				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);  // 각속도 초기화
-			}
-			else
-			{
-				GetTransform()->SetLocalRotation(initialRot);
-			}
+			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);  // 각속도 초기화
 		}
+
 	}
+
 
 	// ═══════════════════════════════════════════════════════════════
 	// 컴포넌트 캐싱
@@ -116,23 +107,10 @@ namespace game
 		}
 
 		// ─────────────────────────────────────────────
-		// BulletFactory: 같은 오브젝트 또는 씬에서 검색
+		// BulletFactory: 같은 오브젝트에서 검색
 		// ─────────────────────────────────────────────
 		m_bulletFactory = GetGameObject()->GetComponent<BulletFactory>();
-		//if (!m_bulletFactory)
-		//{
-		//	auto* scene = engine::SceneManager::Get().GetScene();
-		//	if (scene)
-		//	{
-		//		if (auto* factoryGO = scene->FindGameObject("BulletFactory"))
-		//		{
-		//			m_bulletFactory = factoryGO->GetComponent<BulletFactory>();
-		//		}
-		//	}
-		//}
-		// 참고: m_fireRate, m_bulletSpeed 등 파라미터 값은 
-		// 여기서 설정하지 않음. Load()에서 읽어온 값 또는 
-		// 헤더의 초기값이 사용됨.
+
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -142,6 +120,11 @@ namespace game
 	{
 		// 처형 중에는 이동 불가
 		if (IsInState("Execution"))
+		{
+			return false;
+		}
+		// 대쉬 중에는 일반 이동 불가 (대쉬 방향으로만 이동)
+		if (IsInState("Dash"))
 		{
 			return false;
 		}
@@ -155,7 +138,21 @@ namespace game
 		{
 			return false;
 		}
+		// 대쉬 중에는 공격 불가
+		if (IsInState("Dash"))
+		{
+			return false;
+		}
 		return true;
+	}
+
+	void PlayerControllerScript::CheckForwardBack(engine::Vector3& forward, engine::Vector3& aimDir)
+	{
+		engine::Vector3 fo = forward;
+		engine::Vector3 aim = aimDir;
+
+		float dot = fo.Dot(aim);
+		m_isBackward = dot < 0.01f ? true : false;
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -171,18 +168,39 @@ namespace game
 			return;
 		}
 
+		// Dash 상태에서는 입력 무시 (대쉬 방향 고정)
+		if (IsInState("Dash"))
+		{
+			return;
+		}
+
 		// ─────────────────────────────────────────────
-		// 1. 이동 입력 → FSM 파라미터
+		// 1. 이동 입력 → FSM 파라미터 + 마우스 조작에 의한 캐릭터 상하체 로테이션
 		// ─────────────────────────────────────────────
-		engine::Vector3 moveDir = GetMoveInputDirection();
-		bool isMoving = moveDir.LengthSquared() > 0.0001f;
+
+		// 입력된 키에 따라 단위벡터를 전달받지만, 이동에 따른 트랜스폼의 회전방향은 여기서 계산하지 않는다.
+		// 오로지 이동할지 말지, 어느 방향으로 이동할지만 결정. 이동 방향 변경으로 인한 트랜스폼 회전은 다른곳에서
+		m_inputMoveDir = GetMoveInputDirection();
+		engine::Vector3 inputDir = m_inputMoveDir;
+
+		// 이 함수에서 m_currentLogicalMoveVector를 업데이트하고, 바로 아래에서 이 변수로 조건체크한다.
+		// 입력이 변경되든 말든, 현재 프레임에서는 한번 유효성을 판단한 변수로만 이동 여부를 업데이트
+		UpdateLogicalMoveExistence(inputDir);
+
+		m_isMoving = m_currentLogicalMoveVector.LengthSquared() > 0.0001f ? true : false;
+
+		//다음프레임까지 동일한 값의 변수로 조건 판단(굳이 이렇게까지 해야하나 싶긴 한데)
+		bool isMoving = m_isMoving;
+		engine::Vector3 fixedInputDir = m_currentLogicalMoveVector;
 
 		m_logicFSM->SetParameter("IsMoving", isMoving);
+
 		if (isMoving)
 		{
-			m_logicFSM->SetParameter("MoveX", moveDir.x);
-			m_logicFSM->SetParameter("MoveZ", moveDir.z);
-		}
+			m_logicFSM->SetParameter("MoveX", fixedInputDir.x);
+			m_logicFSM->SetParameter("MoveZ", fixedInputDir.z);
+		}	
+
 
 		// ─────────────────────────────────────────────
 		// 2. 공격 입력 → FSM 파라미터
@@ -198,7 +216,25 @@ namespace game
 
 		// Held → 파라미터 (상태 유지용)
 		m_logicFSM->SetParameter("IsShooting", isMouseHeld);
+
+		// ─────────────────────────────────────────────
+		// 3. 대쉬 입력 (좌측 Shift)
+		// - 이동 중일 때만 대쉬 가능
+		// - 쿨다운이 끝났을 때만 대쉬 가능
+		// ─────────────────────────────────────────────
+		bool isShiftPressed = engine::Input::IsKeyPressed(engine::Keys::LeftShift);
+		bool isSpaceBarPressed = engine::Input::IsKeyPressed(engine::Keys::Space);
+
+		bool isDashAble = m_logicFSM->GetCurrentState() != "Execution" && m_logicFSM->GetCurrentState() != "Dash" && m_logicFSM->GetCurrentState() != "Dead";
+
+		if ((isShiftPressed || isSpaceBarPressed) && isMoving && m_dashCooldownTimer <= 0.0f)
+		{
+			// 대쉬 시작 트리거
+			m_logicFSM->SetTrigger("StartDash");
+			StartDash();
+		}
 	}
+
 
 	// ═══════════════════════════════════════════════════════════════
 	// 게임 로직 - 비물리 (상태 확인 후 행동 실행)
@@ -206,13 +242,46 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::UpdateGameLogic()
 	{
+		float deltaTime = engine::Time::DeltaTime();
+		
+		// 이동관련 변수는 ProcessInput에서,
+		// 플레이어의 로직상 좌표와 회전 관련 요소는 여기서 업데이트한다.
+
+		UpdateLogicalPosition();
+		m_objectLogicalFoward = GetTransform()->GetForward();
+		m_objectLogicalFoward.y = 0;
+		m_objectLogicalFoward.Normalize();
+
+		engine::Vector3 playerPos = m_objectLogicalPosition;
+		engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
+		
+		if (aimDir.LengthSquared() > 0.0001f)
+		{
+			CheckForwardBack(m_objectLogicalFoward, aimDir);
+
+			engine::Vector3 finalDir = aimDir;
+
+			finalDir = m_isBackward ? finalDir * -1.0 : finalDir * 1.0;
+
+			CalcLogicalRotateAngle(finalDir);
+		}
+		engine::Vector3 rv = m_angleToRotateLogical;
+
+		RotateToDirection(rv, m_rotationSpeed);
+
+		// ─────────────────────────────────────────────
+		// 대쉬 쿨다운 타이머 (항상 실행)
+		// ─────────────────────────────────────────────
+		if (m_dashCooldownTimer > 0.0f)
+		{
+			m_dashCooldownTimer -= deltaTime;
+		}
+
 		// Execution 상태에서는 행동 로직 스킵
 		if (IsInState("Execution"))
 		{
 			return;
 		}
-
-		float deltaTime = engine::Time::DeltaTime();
 
 		// 비물리 행동 실행 (타이머, 애니메이션 등)
 		if (CanAttack())  HandleShooting(deltaTime);
@@ -234,10 +303,49 @@ namespace game
 			return;
 		}
 
+		// Dash 상태에서는 대쉬 처리
+		if (IsInState("Dash"))
+		{
+			HandleDash();
+			// 대쉬 중에는 회전 안함 (방향 고정)
+			return;
+		}
+
+		// ═══════════════════════════════════════════════════════════════
+		// SphereCast 기반 지형 파고들기 방지 (Walk, WalkShoot 상태)
+		// ═══════════════════════════════════════════════════════════════
+		m_environmentBlockDetected = false;
+		
+		if (CanMove() && m_isMoving)
+		{
+			// 현재 이동 방향으로 SphereCast
+			engine::Vector3 wallNormal;
+			if (CheckEnvironmentBlock(m_currentLogicalMoveVector, wallNormal))
+			{
+				m_environmentBlockDetected = true;
+				m_lastBlockNormal = wallNormal;
+				
+				// 벽 슬라이딩 방향 계산
+				engine::Vector3 slideDir = CalculateSlidingDirection(m_currentLogicalMoveVector, wallNormal);
+				
+				if (slideDir.LengthSquared() > 0.0001f)
+				{
+					// 슬라이딩 방향으로 이동 (벽과 평행)
+					m_currentLogicalMoveVector = slideDir;
+				}
+				else
+				{
+					// 정면 충돌 - 이동 불가
+					m_currentLogicalMoveVector = engine::Vector3::Zero;
+				}
+			}
+		}
+
 		// 물리 기반 행동 실행
-		if (CanMove())    HandleMovement();
-		UpdateLowerBodyRotation();  // 매 FixedUpdate 호출 (이동 방향에 따라 회전)
-		UpdateUpperBodyAim();       // FixedUpdate로 이동 (물리와 싱크)
+		if (CanMove())
+		{
+			HandleMovement(m_moveSpeed);
+		}
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -247,7 +355,7 @@ namespace game
 	{
 		// 하이브리드 패턴에서는 FSM 상태를 주로 애니메이션 트리거로 사용
 		// 필요시 상태별 초기화 로직 추가
-		
+
 		if (state == "Execution")
 		{
 			// 처형 상태 진입 시 이동 정지
@@ -256,6 +364,59 @@ namespace game
 				m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
 				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
 			}
+
+			// 대쉬 중이었다면 대쉬 강제 종료
+			if (m_isDashing)
+			{
+				m_isDashing = false;
+				m_dashElapsedTime = 0.0f;
+				m_dashCollisionDecayBoost = 1.0f;
+			}
+		}
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 충돌 콜백 - 대쉬 충돌 감쇠
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::OnCollisionStay(const engine::CollisionInfo& info)
+	{
+		// 대쉬 중이 아니면 무시
+		if (!m_isDashing)
+		{
+			return;
+		}
+
+		// 이미 감쇠 부스트가 적용되었으면 스킵 (중복 적용 방지)
+		if (m_dashCollisionDecayBoost > 1.0f)
+		{
+			return;
+		}
+
+		// 접촉점에서 노말 정보 추출
+		if (info.contacts.empty())
+		{
+			return;
+		}
+
+		// 첫 번째 접촉점의 노말 사용 (여러 접촉점이 있으면 평균을 낼 수도 있음)
+		engine::Vector3 collisionNormal = info.contacts[0].normal;
+		collisionNormal.y = 0.0f;  // 수평 방향만 고려
+		
+		if (collisionNormal.LengthSquared() < 0.0001f)
+		{
+			return;
+		}
+		collisionNormal.Normalize();
+
+		// 대쉬 방향과 충돌 노말의 dot product 계산
+		// 노말은 충돌면에서 바깥쪽을 향하므로, -normal과 대쉬 방향을 비교
+		// dot > threshold면 대쉬 방향으로 벽을 향해 돌진하는 상황
+		float dot = m_dashDirection.Dot(-collisionNormal);
+
+		if (dot > m_dashCollisionDotThreshold)
+		{
+			// 정면 충돌 감지 → 감쇠 부스트 적용
+			m_dashCollisionDecayBoost = m_dashCollisionDecayMultiplier;
 		}
 	}
 
@@ -271,7 +432,7 @@ namespace game
 		if (monsterTransform)
 		{
 			engine::Vector3 targetPos = monsterTransform->GetWorldPosition();
-			
+
 			// Dynamic Rigidbody가 있으면 ForceSetPosition 사용 (물리 엔진 즉시 적용)
 			if (m_rigidbody && m_rigidbody->IsDynamic())
 			{
@@ -301,6 +462,7 @@ namespace game
 		AddFSMState("Walk");
 		AddFSMState("IdleShoot");
 		AddFSMState("WalkShoot");
+		AddFSMState("Dash");         // 대쉬 상태
 		AddFSMState("Execution");    // 처형 상태
 
 		m_logicFSM->UpdateStateMap();
@@ -327,12 +489,23 @@ namespace game
 		AddFSMTransition("WalkShoot", "Walk", "IsShooting", BoolFalse());
 
 		// ─────────────────────────────────────────────
+		// 대쉬 전이 (Walk, WalkShoot -> Dash)
+		// Idle, IdleShoot에서는 대쉬 불가 (이동 입력 필요)
+		// ─────────────────────────────────────────────
+		AddFSMTransition("Walk", "Dash", "StartDash", Trigger());
+		AddFSMTransition("WalkShoot", "Dash", "StartDash", Trigger());
+
+		// Dash -> Walk (대쉬 종료)
+		AddFSMTransition("Dash", "Walk", "DashComplete", Trigger());
+
+		// ─────────────────────────────────────────────
 		// 처형 전이 (모든 상태 -> Execution)
 		// ─────────────────────────────────────────────
 		AddFSMTransition("Idle", "Execution", "ExecuteMonster", Trigger());
 		AddFSMTransition("Walk", "Execution", "ExecuteMonster", Trigger());
 		AddFSMTransition("IdleShoot", "Execution", "ExecuteMonster", Trigger());
 		AddFSMTransition("WalkShoot", "Execution", "ExecuteMonster", Trigger());
+		AddFSMTransition("Dash", "Execution", "ExecuteMonster", Trigger());
 
 		// Execution -> Idle (처형 완료 트리거)
 		AddFSMTransition("Execution", "Idle", "ExecutionComplete", Trigger());
@@ -356,15 +529,15 @@ namespace game
 		// ─────────────────────────────────────────────
 
 		// 비공격 상태: 상체 레이어 비활성화 (하체 애니메이션이 전체에 적용)
-		m_animFSM->AddSplitState("Idle",           m_animName_Idle,         true,  "",      false, 0.0f, 0.1f);
-		m_animFSM->AddSplitState("WalkForward",    m_animName_WalkForward,  true,  "",      false, 0.0f, 0.1f);
-		m_animFSM->AddSplitState("WalkBackward",   m_animName_WalkBackward, true,  "",      false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("Idle", m_animName_Idle, true, "", false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("WalkForward", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("WalkBackward", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
 
 		// 공격 상태: 상체 레이어 비활성화 (Fire할 때 직접 Fire 애니메이션 재생)
 		// 상체 웨이트 0 → Fire 시 PlayUpperBodyAnimation으로 활성화
-		m_animFSM->AddSplitState("IdleShoot",          m_animName_Idle,         true,  "",      false, 0.0f, 0.1f);
-		m_animFSM->AddSplitState("WalkForwardShoot",   m_animName_WalkForward,  true,  "",      false, 0.0f, 0.1f);
-		m_animFSM->AddSplitState("WalkBackwardShoot",  m_animName_WalkBackward, true,  "",      false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("IdleShoot", m_animName_Idle, true, "", false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
+		m_animFSM->AddSplitState("WalkBackwardShoot", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
 	}
 
 	void PlayerControllerScript::InitializeAnimations()
@@ -379,17 +552,17 @@ namespace game
 		//   3. WalkBackward: 후진 애니메이션
 		//   4. Fire: 발사 애니메이션 (상체)
 		// ─────────────────────────────────────────────
-		
+
 		// 기존 애니메이션 클리어는 하지 않음 (이미 로드된 애니메이션 유지)
 		// m_skeletalAnimator->ClearAnimations();
-		
+
 		// 애니메이션 등록 (필요한 경우 파일 경로에서 로드)
 		// 주의: 실제 구현에서는 SkeletalAnimator의 API에 맞게 수정 필요
 		// 예시: m_skeletalAnimator->LoadAnimation(m_animName_Idle, "path/to/idle.anim");
-		
+
 		// 현재는 이미 SkeletalAnimator에 애니메이션이 로드되어 있다고 가정하고,
 		// 멤버 변수로 설정된 이름을 사용하여 참조만 함
-		
+
 		// 필요시 여기서 애니메이션 검증 가능
 		// if (!m_skeletalAnimator->HasAnimation(m_animName_Idle))
 		// {
@@ -418,31 +591,259 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 액션 함수 - 물리 (FixedUpdate에서 호출)
+	// 대쉬 처리
 	// ═══════════════════════════════════════════════════════════════
-	void PlayerControllerScript::HandleMovement()
+	void PlayerControllerScript::StartDash()
 	{
-		// Dynamic Rigidbody 전용 (Kinematic은 KinematicHelperScript 사용)
-		if (!m_rigidbody || !m_rigidbody->IsDynamic())
-		{
-			return;
-		}
-
+		// 현재 이동 방향을 대쉬 방향으로 고정
 		engine::Vector3 moveDir = GetMoveInputDirection();
-
 		if (moveDir.LengthSquared() < 0.0001f)
 		{
-			// 입력 없으면 감속 (AddForce 기반, 충돌 응답 보존)
-			ApplyBrakingForce();
+			// 이동 입력이 없으면 대쉬 불가 (안전 장치)
 			return;
 		}
 
 		moveDir.y = 0.0f;
 		moveDir.Normalize();
-		m_lastMoveDirection = moveDir;
 
-		// AddForce 기반 이동 (충돌 응답 보존)
-		ApplyMovementForce(moveDir, m_moveSpeed);
+		m_dashDirection = moveDir;
+		m_isDashing = true;
+		m_dashElapsedTime = 0.0f;
+		m_dashCollisionDecayBoost = 1.0f;  // 충돌 감쇠 배율 초기화
+
+		// ═══════════════════════════════════════════════════════════════
+		// SphereCast로 대쉬 방향에 벽이 있는지 확인
+		// 벽이 있으면 초기 속도를 감소시킴
+		// ═══════════════════════════════════════════════════════════════
+		engine::Vector3 wallNormal;
+		m_dashWallDetectedOnStart = CheckEnvironmentBlock(m_dashDirection, wallNormal);
+	}
+
+	void PlayerControllerScript::EndDash()
+	{
+		m_isDashing = false;
+		m_dashElapsedTime = 0.0f;
+		m_dashCooldownTimer = m_dashCooldown;  // 쿨다운 시작
+		m_dashCollisionDecayBoost = 1.0f;      // 충돌 감쇠 배율 리셋
+		m_dashWallDetectedOnStart = false;     // 벽 감지 상태 리셋
+
+		// FSM 상태 전이 (Dash → Walk)
+		if (m_logicFSM)
+		{
+			m_logicFSM->SetTrigger("DashComplete");
+		}
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// SphereCast 기반 지형 파고들기 방지
+	// QueryFilter를 사용하여 자기 자신 제외 + Environment 레이어만 감지
+	// ═══════════════════════════════════════════════════════════════
+	bool PlayerControllerScript::CheckEnvironmentBlock(const engine::Vector3& direction, engine::Vector3& outNormal)
+	{
+		// 유효하지 않은 방향이면 리턴
+		if (direction.LengthSquared() < 0.0001f)
+		{
+			return false;
+		}
+
+		// 이동 방향 정규화 (XZ 평면)
+		engine::Vector3 checkDir = direction;
+		checkDir.y = 0.0f;
+		checkDir.Normalize();
+
+		// 플레이어 위치 (허리 높이에서 캐스트)
+		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+		playerPos.y += 1.0f;
+
+		// ═══════════════════════════════════════════════════════════════
+		// QueryFilter 설정:
+		// - 자기 자신(플레이어) 제외
+		// - Environment 레이어만 감지
+		// - 바닥/천장 무시 (벽만 감지)
+		// ═══════════════════════════════════════════════════════════════
+		engine::QueryFilter filter;
+		filter.ignoreObject = GetGameObject();                         // 자기 자신 제외
+		filter.layerMask = engine::PhysicsLayer::Mask::EnvironmentMask; // Environment만
+		filter.ignoreFloor = true;                                     // 바닥 무시
+		filter.ignoreCeiling = true;                                   // 천장 무시
+		filter.floorCeilingThreshold = 0.5f;
+
+		// SphereCast 수행
+		engine::RaycastHit hit;
+		engine::PhysicsSystem& physicsSystem = engine::SystemManager::Get().GetPhysicsSystem();
+		
+		bool hasHit = physicsSystem.SphereCast(
+			playerPos,
+			m_sphereCastRadius,
+			checkDir,
+			m_sphereCastDistance,
+			hit,
+			filter
+		);
+
+		// 디버그 (필요시 주석 해제)
+		// if (hasHit && hit.gameObject)
+		// {
+		// 	LOG_PRINT("[SphereCast] Hit: {} | Normal: ({:.2f}, {:.2f}, {:.2f}) | Distance: {:.3f}",
+		// 		hit.gameObject->GetName(), hit.normal.x, hit.normal.y, hit.normal.z, hit.distance);
+		// }
+
+		if (hasHit)
+		{
+			// 벽의 노말 저장 (XZ 평면)
+			outNormal = hit.normal;
+			outNormal.y = 0.0f;
+			if (outNormal.LengthSquared() > 0.0001f)
+			{
+				outNormal.Normalize();
+			}
+			else
+			{
+				// XZ 평면에서 유효한 노말이 없으면 무시
+				return false;
+			}
+			
+			return true;
+		}
+
+		return false;
+	}
+
+	engine::Vector3 PlayerControllerScript::CalculateSlidingDirection(
+		const engine::Vector3& moveDir, 
+		const engine::Vector3& wallNormal)
+	{
+		// 벽 슬라이딩: 이동 방향에서 벽에 수직인 성분만 제거
+		// slideDir = moveDir - (moveDir · wallNormal) × wallNormal
+		
+		engine::Vector3 normalizedMove = moveDir;
+		normalizedMove.y = 0.0f;
+		if (normalizedMove.LengthSquared() < 0.0001f)
+		{
+			return engine::Vector3::Zero;
+		}
+		normalizedMove.Normalize();
+
+		engine::Vector3 normalizedWall = wallNormal;
+		normalizedWall.y = 0.0f;
+		if (normalizedWall.LengthSquared() < 0.0001f)
+		{
+			return normalizedMove;  // 노말이 없으면 원래 방향 유지
+		}
+		normalizedWall.Normalize();
+
+		// 벽을 향하는 성분 계산
+		float dot = normalizedMove.Dot(normalizedWall);
+		
+		// 벽에서 멀어지는 방향이면 슬라이딩 불필요
+		if (dot >= 0.0f)
+		{
+			return normalizedMove;
+		}
+
+		// 벽에 수직인 성분 제거
+		engine::Vector3 slideDir = normalizedMove - normalizedWall * dot;
+		
+		if (slideDir.LengthSquared() > 0.0001f)
+		{
+			slideDir.Normalize();
+		}
+		else
+		{
+			// 정면 충돌 시 슬라이딩 불가
+			slideDir = engine::Vector3::Zero;
+		}
+
+		return slideDir;
+	}
+
+	float PlayerControllerScript::CalculateDashSpeed() const
+	{
+		// ═══════════════════════════════════════════════════════════════
+		// 지수 감쇠 공식: v(t) = v_initial × e^(-decay × t)
+		// 
+		// 조건: 1초 후에 정확히 기본 속도(m_moveSpeed)로 돌아와야 함
+		// v(1) = v_initial × e^(-decay) = m_moveSpeed
+		// 
+		// v_initial = m_moveSpeed × multiplier
+		// e^(-decay) = 1 / multiplier
+		// decay = ln(multiplier)
+		// 
+		// 충돌 감쇠: decay에 m_dashCollisionDecayBoost를 곱해서 빠르게 감속
+		// 벽 감지: 대쉬 시작 시 벽이 감지되면 초기 속도 감소
+		// ═══════════════════════════════════════════════════════════════
+
+		float multiplier = m_dashInitialSpeedMultiplier;
+		
+		// 대쉬 시작 시 벽이 감지되었으면 초기 속도 배율 감소
+		if (m_dashWallDetectedOnStart)
+		{
+			multiplier *= m_dashWallSpeedMultiplier;
+			// multiplier가 1보다 작으면 decay가 음수가 되어 속도가 증가하므로 최소 1.01로 제한
+			multiplier = std::max(multiplier, 1.01f);
+		}
+		
+		float decay = logf(multiplier);  // ln(multiplier)
+
+		// 충돌 시 감쇠 배율 적용 (벽/적에 부딪히면 빠르게 감속)
+		decay *= m_dashCollisionDecayBoost;
+
+		// 시간 정규화 (0~1 범위로)
+		float normalizedTime = m_dashElapsedTime / m_dashDuration;
+		normalizedTime = std::clamp(normalizedTime, 0.0f, 1.0f);
+
+		// 지수 감쇠 속도 계산
+		float initialSpeed = m_moveSpeed * multiplier;
+		float currentSpeed = initialSpeed * expf(-decay * normalizedTime);
+
+		// 최소 속도는 기본 이동 속도
+		return std::max(currentSpeed, m_moveSpeed);
+	}
+
+	void PlayerControllerScript::HandleDash()
+	{
+		if (!m_isDashing || !m_rigidbody || !m_rigidbody->IsDynamic())
+		{
+			return;
+		}
+
+		float fixedDelta = engine::Time::FixedDeltaTime();
+
+		// 대쉬 경과 시간 업데이트
+		m_dashElapsedTime += fixedDelta;
+
+		// 대쉬 종료 조건: 지속 시간 초과
+		if (m_dashElapsedTime >= m_dashDuration)
+		{
+			EndDash();
+			return;
+		}
+
+		// ═══════════════════════════════════════════════════════════════
+		// 대쉬 중 SphereCast로 벽 감지 - 히트 시 속도 감쇠
+		// ═══════════════════════════════════════════════════════════════
+		engine::Vector3 wallNormal;
+		if (CheckEnvironmentBlock(m_dashDirection, wallNormal))
+		{
+			// 벽에 충돌 - 속도를 m_dashWallSpeedMultiplier 비율로 감쇠
+			float reducedSpeed = CalculateDashSpeed() * m_dashWallSpeedMultiplier;
+			engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+			engine::Vector3 reducedVelocity = m_dashDirection * reducedSpeed;
+			reducedVelocity.y = currentVel.y;
+			m_rigidbody->SetLinearVelocity(reducedVelocity);
+			return;
+		}
+
+		// 현재 대쉬 속도 계산 (지수 감쇠)
+		float dashSpeed = CalculateDashSpeed();
+
+		// 대쉬 방향으로 속도 설정
+		// SetLinearVelocity 대신 목표 속도로 즉시 설정 (대쉬는 즉각적인 이동)
+		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+		engine::Vector3 dashVelocity = m_dashDirection * dashSpeed;
+		dashVelocity.y = currentVel.y;  // Y축(중력) 속도 유지
+
+		m_rigidbody->SetLinearVelocity(dashVelocity);
 	}
 
 	void PlayerControllerScript::HandleShooting(float deltaTime)
@@ -493,169 +894,18 @@ namespace game
 		// 참고: 마우스를 떼도 타이머를 초기화하지 않음
 		// 연타로 쿨다운을 우회하는 것을 방지
 	}
-
-	void PlayerControllerScript::UpdateUpperBodyAim()
-	{
-		if (!m_enableUpperBodyAim || !m_animFSM || !m_aimPointer)
-		{
-			return;
-		}
-
-		// ═══════════════════════════════════════════════════════════════
-		// 상체 회전 로직 (월드 기준, FixedUpdate에서 호출)
-		// 
-		// 핵심: 하체 회전량 보정 없이, 매 프레임 트랜스폼 포워드와 에임 방향의
-		//       차이를 직접 계산하여 상체 Yaw로 설정
-		// → 모든 계산이 같은 시점(FixedUpdate)에서 이루어져 싱크 문제 해결
-		// ═══════════════════════════════════════════════════════════════
-
-		// 1. 에임 방향 계산 (월드 기준)
-		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-		engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
-		aimDir.y = 0.0f;
-		if (aimDir.LengthSquared() < 0.0001f) return;
-		aimDir.Normalize();
-
-		// 2. 현재 트랜스폼 포워드 (하체 방향)
-		engine::Vector3 forward = engine::Vector3::UnitZ;
-		engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
-		forward = engine::Vector3::Transform(forward, playerRot);
-		forward.y = 0.0f;
-		forward.Normalize();
-
-		// 3. 트랜스폼 포워드와 에임 방향의 각도 차이 계산 (상체 Yaw)
-		float dotProduct = forward.Dot(aimDir);
-		engine::Vector3 crossProduct = forward.Cross(aimDir);
-		float yawRad = atan2f(crossProduct.y, dotProduct);
-		float yaw = engine::ToDegree(yawRad);
-
-		// 4. 상체 회전 데드존 (미세한 진동 방지)
-		// ±2도 이내면 0으로 처리
-		constexpr float UPPER_BODY_DEADZONE = 2.0f;
-		if (std::abs(yaw) < UPPER_BODY_DEADZONE)
-		{
-			yaw = 0.0f;
-		}
-
-		// 5. 상체 회전 범위 제한 (±90도)
-		// 이 범위를 벗어나면 하체가 회전해야 함 (UpdateLowerBodyRotation에서 처리)
-		// 여기서는 범위 내로 클램핑하지 않고, 그대로 전달
-		// (하체가 제대로 회전하면 자연스럽게 ±90도 이내가 됨)
 		
-		m_animFSM->SetUpperBodyYaw(yaw);
-	}
-
-	float PlayerControllerScript::CalculateAimYaw() const
-	{
-		if (!m_aimPointer) return 0.0f;
-
-		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-		engine::Vector3 aimPos = m_aimPointer->GetWorldPosition();
-
-		engine::Vector3 toAim = aimPos - playerPos;
-		toAim.y = 0.0f;
-
-		if (toAim.LengthSquared() < 0.0001f) return 0.0f;
-
-		toAim.Normalize();
-		
-		//
-		engine::Vector3 forward = engine::Vector3::UnitZ;
-		engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
-		forward = engine::Vector3::Transform(forward, playerRot);
-		forward.y = 0.0f;
-		forward.Normalize();
-
-		// 상대 각도 계산
-		float dotProduct = forward.Dot(toAim);
-		engine::Vector3 crossProduct = forward.Cross(toAim);
-
-		float angleRad = atan2f(crossProduct.y, dotProduct);
-		float angleDeg = engine::ToDegree(angleRad);
-
-		return angleDeg;
-	}
-
-	float PlayerControllerScript::GetForwardAimDirAngle() const
-	{
-		// ═══════════════════════════════════════════════════════════════
-		// 오브젝트 트랜스폼 y축 회전 + 상체 스켈레톤 회전 → degree 반환
-		// 스크립트 레벨 함수 사용하지 않고 직접 계산
-		// ═══════════════════════════════════════════════════════════════
-
-		// 1. 오브젝트 트랜스폼의 y축 회전 (라디안 → degree)
-		float transformYawDeg = engine::ToDegree(m_currentRotationAngle);
-
-		// 2. 상체 스켈레톤 회전 (에임포인터 방향과 하체 방향의 차이) - 직접 계산
-		if (!m_aimPointer || !GetTransform())
-		{
-			return transformYawDeg;
-		}
-
-		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-		engine::Vector3 aimPos = m_aimPointer->GetWorldPosition();
-
-		engine::Vector3 toAim = aimPos - playerPos;
-		toAim.y = 0.0f;
-
-		if (toAim.LengthSquared() < 0.0001f)
-		{
-			return transformYawDeg;
-		}
-
-		toAim.Normalize();
-
-		// 하체 forward 방향 (트랜스폼 회전 적용)
-		engine::Vector3 forward = engine::Vector3::UnitZ;
-		engine::Quaternion playerRot = GetTransform()->GetWorldRotation();
-		forward = engine::Vector3::Transform(forward, playerRot);
-		forward.y = 0.0f;
-		forward.Normalize();
-
-		// 상대 각도 계산 (하체 기준 상체 회전)
-		float dotProduct = forward.Dot(toAim);
-		engine::Vector3 crossProduct = forward.Cross(toAim);
-		float upperBodyYawRad = atan2f(crossProduct.y, dotProduct);
-		float upperBodyYawDeg = engine::ToDegree(upperBodyYawRad);
-
-		// 합산하여 반환
-		return transformYawDeg + upperBodyYawDeg;
-	}
 
 	// ═══════════════════════════════════════════════════════════════
 	// 애니메이션 제어
 	// ═══════════════════════════════════════════════════════════════
-	bool PlayerControllerScript::IsMovingBackward() const
-	{
-		if (!m_aimPointer) return false;
-
-		engine::Vector3 moveDir = GetMoveInputDirection();
-		if (moveDir.LengthSquared() < 0.0001f) return false;
-
-		// 에임포인터 방향 벡터 (플레이어 기준)
-		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-		engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
-		aimDir.y = 0.0f;
-		aimDir.Normalize();
-
-		// 이동 방향 벡터
-		moveDir.y = 0.0f;
-		moveDir.Normalize();
-
-		// 내적을 이용한 각도 판정
-		// dot >= 0: 90도 이하 (앞으로 걷기)
-		// dot < 0: 90도 초과 (뒤로 걷기)
-		float dot = aimDir.Dot(moveDir);
-		
-		// 90도 초과하면 뒤로 걷기
-		return dot < 0.0f;
-	}
+	
 
 	std::string PlayerControllerScript::GetAnimationState() const
 	{
-		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.0001f;
+		bool isMoving = m_currentLogicalMoveVector.LengthSquared() > 0.0001f;
 		bool isShooting = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
-		bool isBackward = IsMovingBackward();
+		bool isBackward = m_isBackward;
 
 		if (!isMoving && !isShooting)
 			return "Idle";
@@ -683,7 +933,7 @@ namespace game
 		std::string logicState = m_logicFSM ? m_logicFSM->GetCurrentState() : "Idle";
 		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.0001f;
 		bool isShooting = (logicState == "IdleShoot" || logicState == "WalkShoot");
-		bool isBackward = IsMovingBackward();
+		bool isBackward = m_isBackward;
 
 		// AnimFSM 상태 결정 (InitializeAnimFSM에서 등록한 상태명과 일치해야 함)
 		std::string animState;
@@ -725,453 +975,9 @@ namespace game
 		m_animFSM->SetAnimState(animState);
 	}
 
-	void PlayerControllerScript::UpdateLowerBodyRotation()
-	{
-		// Dynamic Rigidbody 전용 (Kinematic은 KinematicHelperScript 사용)
-		if (!GetGameObject() || !GetTransform() || !m_aimPointer) return;
-		if (!m_rigidbody || !m_rigidbody->IsDynamic()) return;
 
-		// ═══════════════════════════════════════════════════════════════
-		// 키보드 이동방향 기반 회전
-		// 
-		// 로직:
-		//   1. 트랜스폼은 키보드 이동방향으로 빠르게 회전 (ForwardAimDir과 무관)
-		//   2. 단, ForwardAimDir과 이동방향이 90도 이상 차이나면
-		//      → 뒷걸음질 상태 → 트랜스폼을 180도 뒤집어서 회전
-		// ═══════════════════════════════════════════════════════════════
-
-		// 1. ForwardAimDir (에임포인터 방향) 계산
-		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-		engine::Vector3 aimDir = m_aimPointer->GetDirectionFrom(playerPos);
-		aimDir.y = 0.0f;
-		if (aimDir.LengthSquared() < 0.0001f) return;
-		aimDir.Normalize();
-
-		// 2. 키보드 이동 방향 확인
-		engine::Vector3 moveDir = GetMoveInputDirection();
-		bool isMoving = moveDir.LengthSquared() > 0.0001f;
-
-		engine::Vector3 targetDir;
-
-		if (isMoving)
-		{
-			// ─────────────────────────────────────────────
-			// 이동 중: 연속 방향 기반 회전
-			// 
-			// 로직:
-			//   1. 입력 벡터를 그대로 이동 방향으로 사용 
-			//   2. 이동 방향과 에임 방향의 각도 차이 계산
-			//   3. 90도 이하: 이동 방향 = 트랜스폼 포워드 (WalkForward)
-			//   4. 90도 초과: 이동 방향의 반대 = 트랜스폼 포워드 (WalkBackward)
-			//   5. 에임 회전방향으로 하체 회전
-			// ─────────────────────────────────────────────
-			
-			// 이동 시작 감지: 정지→이동 전환 시 에임 추적 리셋
-			if (!m_wasMoving)
-			{
-				// 정지 상태에서 이동 시작
-				// m_prevAimDirection을 현재 에임 방향으로 리셋
-				// → 오래된 값으로 인한 잘못된 aimCross 방지
-				m_prevAimDirection = aimDir;
-				m_aimCrossProductSmoothed = 0.0f;
-			}
-			
-			// 이동 시작 시 정지 상태 목표 리셋
-			m_idleTargetValid = false;
-			
-			moveDir.y = 0.0f;
-			moveDir.Normalize();
-
-			// 이동 방향과 에임 방향의 각도 차이 확인
-			float dotMoveAim = moveDir.x * aimDir.x + moveDir.z * aimDir.z;
-			
-			// ─────────────────────────────────────────────
-			// Front/Back 전환에 히스테리시스 적용
-			// - 90도 경계에서 진동 방지
-			// - Front→Back: 확실히 100도 이상 (dot < -0.17)
-			// - Back→Front: 확실히 80도 이하 (dot > +0.17)
-			// ─────────────────────────────────────────────
-			constexpr float HYSTERESIS_THRESHOLD = 0.17f;  // ~10도 여유
-			
-			if (m_isWalkingBackward)
-			{
-				// 현재 Back 상태: Front로 전환하려면 확실히 80도 이하여야 함
-				if (dotMoveAim > HYSTERESIS_THRESHOLD)
-				{
-					m_isWalkingBackward = false;
-				}
-			}
-			else
-			{
-				// 현재 Front 상태: Back으로 전환하려면 확실히 100도 이상이어야 함
-				if (dotMoveAim < -HYSTERESIS_THRESHOLD)
-				{
-					m_isWalkingBackward = true;
-				}
-			}
-			
-			// Front/Back에 따라 targetDir 결정
-			if (m_isWalkingBackward)
-			{
-				// Back: 이동 방향의 반대가 트랜스폼 포워드
-				targetDir = -moveDir;
-			}
-			else
-			{
-				// Front: 이동 방향이 트랜스폼 포워드
-				targetDir = moveDir;
-			}
-			
-			// ─────────────────────────────────────────────
-			// [DEBUG] 입력 변화 시 로그 출력
-			// ─────────────────────────────────────────────
-			static engine::Vector3 s_prevMoveDir = engine::Vector3::Zero;
-			static engine::Vector3 s_prevTargetDir = engine::Vector3::Zero;
-			
-			// moveDir이 변했을 때만 로그 출력
-			float moveDirChange = (moveDir - s_prevMoveDir).LengthSquared();
-			if (moveDirChange > 0.01f)
-			{
-				engine::Vector3 currentDir(
-					sinf(m_currentRotationAngle),
-					0.0f,
-					cosf(m_currentRotationAngle)
-				);
-				float dotCurrentTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
-				float angleToTargetDeg = engine::ToDegree(acosf(std::clamp(dotCurrentTarget, -1.0f, 1.0f)));
-				float targetCross = currentDir.z * targetDir.x - currentDir.x * targetDir.z;
-				float aimCross = GetAimRotationDirection();
-				
-				LOG_PRINT("[MoveDir Changed]");
-				LOG_PRINT("  moveDir: ({}, {}) -> ({}, {})", 
-					s_prevMoveDir.x, s_prevMoveDir.z, moveDir.x, moveDir.z);
-				LOG_PRINT("  aimDir: ({}, {})", aimDir.x, aimDir.z);
-				LOG_PRINT("  dotMoveAim: {}, isBackward: {}", 
-					dotMoveAim, m_isWalkingBackward ? "true" : "false");
-				LOG_PRINT("  targetDir: ({}, {}) -> ({}, {})", 
-					s_prevTargetDir.x, s_prevTargetDir.z, targetDir.x, targetDir.z);
-				LOG_PRINT("  currentDir: ({}, {}), currentAngle: {} deg", 
-					currentDir.x, currentDir.z, engine::ToDegree(m_currentRotationAngle));
-				LOG_PRINT("  angleToTarget: {} deg, targetCross: {}, aimCross: {}",
-					angleToTargetDeg, targetCross, aimCross);
-				
-				s_prevMoveDir = moveDir;
-				s_prevTargetDir = targetDir;
-			}
-
-			// ─────────────────────────────────────────────
-			// 90도 이상 회전 필요 시 추가 검증 (Angular Velocity 방식 전용)
-			// 에임이 급격히 바뀌었으면 (캐릭터가 에임을 지나칠 때) 
-			// 이번 프레임 회전 스킵 (빙글 도는 현상 방지)
-			// ForceSetRotation 방식에서는 관성이 없으므로 이 검증 불필요
-			// ─────────────────────────────────────────────
-			if (!m_useForceSetRotation)
-			{
-				engine::Vector3 currentDir(
-					sinf(m_currentRotationAngle),
-					0.0f,
-					cosf(m_currentRotationAngle)
-				);
-				float dotCurrentTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
-				
-				// 90도 이상 회전이 필요한 경우 (dot < 0)
-				if (dotCurrentTarget < 0.0f)
-				{
-					// 에임 방향 변화량 체크 (이전 프레임 대비)
-					float dotAimChange = m_prevAimDirection.x * aimDir.x + m_prevAimDirection.z * aimDir.z;
-					
-					// 에임이 급격히 바뀌었으면 (60도 이상 변화, dot < 0.5) 이번 프레임 스킵
-					constexpr float RAPID_AIM_CHANGE_THRESHOLD = 0.5f;  // ~60도
-					if (dotAimChange < RAPID_AIM_CHANGE_THRESHOLD)
-					{
-						// 에임 변화가 급격함 → 이번 프레임은 회전 안 함
-						m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-						// 에임 방향만 업데이트하고 리턴
-						m_prevAimDirection = aimDir;
-						return;
-					}
-				}
-			}
-
-			// 에임 회전방향 추적 (하체 회전방향 결정용)
-			UpdateAimTracking();
-		}
-		else
-		{
-			// ─────────────────────────────────────────────
-			// 정지 상태:
-			// - 트랜스폼 포워드는 연속된 값을 가질 수 있음
-			// - 에임포워드와 트랜스폼 포워드의 각도 차이가 90도 초과 시:
-			//   → 목표 방향을 업데이트 (현재 기준 ±90도)
-			// - 90도 이하: 기존 목표 방향 유지
-			// - 목표 방향으로 계속 회전
-			// ─────────────────────────────────────────────
-			
-			// 현재 트랜스폼 포워드
-			engine::Vector3 currentDir(
-				sinf(m_currentRotationAngle),
-				0.0f,
-				cosf(m_currentRotationAngle)
-			);
-			
-			// 에임방향과 트랜스폼 포워드의 각도 차이 확인
-			float dotAimCurrent = aimDir.x * currentDir.x + aimDir.z * currentDir.z;
-			float angleToAimRad = acosf(std::clamp(dotAimCurrent, -1.0f, 1.0f));
-			float angleToAimDeg = engine::ToDegree(angleToAimRad);
-			
-			// 90도 초과 시에만 새 목표 방향 계산
-			constexpr float IDLE_ROTATION_THRESHOLD = 90.0f;
-			if (angleToAimDeg > IDLE_ROTATION_THRESHOLD)
-			{
-				// 현재 트랜스폼 기준으로 에임이 왼쪽인지 오른쪽인지 확인
-				float crossY = currentDir.z * aimDir.x - currentDir.x * aimDir.z;
-				
-				// 현재 트랜스폼의 90도 회전 방향 계산
-				if (crossY > 0.0f)
-				{
-					// 에임이 오른쪽 → 시계방향 90도 회전
-					m_idleTargetDir = engine::Vector3(
-						currentDir.z,   // cos(θ-90) = sin(θ)
-						0.0f,
-						-currentDir.x   // sin(θ-90) = -cos(θ)
-					);
-				}
-				else
-				{
-					// 에임이 왼쪽 → 반시계방향 90도 회전
-					m_idleTargetDir = engine::Vector3(
-						-currentDir.z,  // cos(θ+90) = -sin(θ)
-						0.0f,
-						currentDir.x    // sin(θ+90) = cos(θ)
-					);
-				}
-				m_idleTargetValid = true;
-			}
-			
-			// 목표가 유효하고, 현재 목표에 도달하지 않았으면 계속 회전
-			if (m_idleTargetValid)
-			{
-				float dotToIdleTarget = currentDir.x * m_idleTargetDir.x + currentDir.z * m_idleTargetDir.z;
-				
-				// 목표 도달 확인 (0.999 ≈ 2.5도)
-				if (dotToIdleTarget > 0.999f)
-				{
-					// 목표 도달 → 정지
-					if (!m_useForceSetRotation)
-					{
-						m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-					}
-					m_idleTargetValid = false;  // 목표 완료
-					return;
-				}
-				
-				// 목표 방향으로 회전
-				targetDir = m_idleTargetDir;
-			}
-			else
-			{
-				// 목표 없음 → 회전 안함
-				if (!m_useForceSetRotation)
-				{
-					m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-				}
-				return;
-			}
-		}
-
-		// 5. 현재 캐릭터 방향 벡터
-		engine::Vector3 currentDir(
-			sinf(m_currentRotationAngle),
-			0.0f,
-			cosf(m_currentRotationAngle)
-		);
-
-		// 6. 목표 도달 확인 (내적으로)
-		float dotToTarget = currentDir.x * targetDir.x + currentDir.z * targetDir.z;
-
-		// 데드존: 거의 같은 방향이면 회전 정지 (0.999 ≈ 2.5도)
-		if (dotToTarget > 0.999f)
-		{
-			if (!m_useForceSetRotation)
-			{
-				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
-			}
-			return;
-		}
-
-		// 7. 회전 방향 결정
-		float targetCross = currentDir.z * targetDir.x - currentDir.x * targetDir.z;
-		float rotationSign;
-
-		// 8. 회전 적용
-		if (m_useForceSetRotation)
-		{
-			// ═══════════════════════════════════════════════════════════════
-			// ForceSetRotation 기반 (직접 트랜스폼 제어)
-			// - 물리 엔진의 각속도/관성 무시
-			// - 정확하고 즉각적인 회전
-			// ═══════════════════════════════════════════════════════════════
-			
-			// ─────────────────────────────────────────────
-			// 회전 방향 결정:
-			// - 기본: targetCross (최단 경로)
-			// - Front/Back 전환 시에만: aimCross (에임 회전 방향)
-			// 
-			// aimCross는 targetDir이 180도 뒤집힐 때만 의미 있음
-			// 단순 이동 방향 변화(45도 등)에서는 targetCross가 정확
-			// ─────────────────────────────────────────────
-			static engine::Vector3 s_prevTargetDirForRotation = engine::Vector3::Zero;
-			float targetDirDot = s_prevTargetDirForRotation.x * targetDir.x + 
-			                     s_prevTargetDirForRotation.z * targetDir.z;
-			
-			// targetDir이 거의 반대 방향이면 Front/Back 전환 (dot < -0.5 ≈ 120도 이상 변화)
-			bool isFrontBackSwitch = targetDirDot < -0.5f;
-			
-			float aimCross = GetAimRotationDirection();
-			constexpr float AIM_MOVE_THRESHOLD = 0.01f;  // 임계값 상향 (노이즈 방지)
-			
-			if (isMoving && isFrontBackSwitch && std::abs(aimCross) > AIM_MOVE_THRESHOLD)
-			{
-				// Front/Back 전환 + 에임이 움직이면: 에임 회전방향 따라감
-				rotationSign = (aimCross > 0.0f) ? 1.0f : -1.0f;
-			}
-			else
-			{
-				// 그 외 모든 경우: 최단 경로
-				rotationSign = (targetCross > 0.0f) ? 1.0f : -1.0f;
-			}
-			
-			s_prevTargetDirForRotation = targetDir;
-			
-			float fixedDelta = engine::Time::FixedDeltaTime();
-			float rotationStep = rotationSign * m_rotationSpeed * fixedDelta;
-			
-			// 목표까지 남은 각도 계산 (라디안)
-			float angleToTarget = acosf(std::clamp(dotToTarget, -1.0f, 1.0f));
-			
-			// 오버슈트 방지: 남은 각도보다 회전량이 크면 목표에 정확히 맞춤
-			if (std::abs(rotationStep) > angleToTarget)
-			{
-				// 목표 방향으로 직접 설정
-				m_currentRotationAngle = atan2f(targetDir.x, targetDir.z);
-			}
-			else
-			{
-				m_currentRotationAngle += rotationStep;
-			}
-			
-			// 각도 정규화 (-π ~ π)
-			while (m_currentRotationAngle > 3.14159f) m_currentRotationAngle -= 6.28318f;
-			while (m_currentRotationAngle < -3.14159f) m_currentRotationAngle += 6.28318f;
-			
-			// 회전 적용
-			engine::Quaternion newRot = engine::Quaternion::CreateFromAxisAngle(
-				engine::Vector3::UnitY,
-				m_currentRotationAngle
-			);
-			m_rigidbody->ForceSetRotation(newRot, true);  // 각속도 리셋
-		}
-		else
-		{
-			// ═══════════════════════════════════════════════════════════════
-			// Angular Velocity 기반 (물리 기반)
-			// - 권장 설정: m_rotationSpeed = 12.0f, AngularDamping = 10
-			// - 물리적 관성/감쇠 적용
-			// ═══════════════════════════════════════════════════════════════
-			
-			// 에임 회전방향 우선, 없으면 최단 경로
-			float aimCross = GetAimRotationDirection();
-			constexpr float AIM_MOVE_THRESHOLD = 0.001f;
-
-			if (isMoving && std::abs(aimCross) > AIM_MOVE_THRESHOLD)
-			{
-				// 이동 중 + 에임이 움직이면: 에임 회전방향 따라감
-				// PhysX(오른손좌표계)와 DirectX(왼손좌표계) 차이로 부호 반전
-				rotationSign = (aimCross > 0.0f) ? -1.0f : 1.0f;
-			}
-			else
-			{
-				// 정지 또는 에임 멈춤: 최단 경로
-				// PhysX(오른손좌표계)와 DirectX(왼손좌표계) 차이로 부호 반전
-				rotationSign = (targetCross > 0.0f) ? -1.0f : 1.0f;
-			}
-
-			// 목표까지 남은 각도 계산 (라디안)
-			float angleToTarget = acosf(std::clamp(dotToTarget, -1.0f, 1.0f));
-			
-			// 감쇠: 목표 근처에서 속도 줄이기
-			constexpr float SMOOTH_THRESHOLD = 0.6f;
-			constexpr float MIN_SPEED_SCALE = 0.05f;
-			
-			float speedScale = 1.0f;
-			if (angleToTarget < SMOOTH_THRESHOLD)
-			{
-				speedScale = angleToTarget / SMOOTH_THRESHOLD;  // 0~1 범위
-				speedScale = std::max(speedScale, MIN_SPEED_SCALE);
-			}
-			
-			float angularVelocity = rotationSign * m_rotationSpeed * speedScale;
-			m_rigidbody->SetAngularVelocity(engine::Vector3(0.0f, angularVelocity, 0.0f));
-
-			// 각도 동기화
-			engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
-			engine::Vector3 euler = currentRot.ToEuler();
-			m_currentRotationAngle = euler.y;
-		}
-
-		// 다음 프레임을 위해 이동 상태 저장
-		m_wasMoving = isMoving;
-	}
-
-	// ═══════════════════════════════════════════════════════════════
-	// 에임 추적 유틸리티
-	// ═══════════════════════════════════════════════════════════════
 	
-	void PlayerControllerScript::UpdateAimTracking()
-	{
-		if (!m_aimPointer || !GetTransform()) return;
-		
-		// ═══════════════════════════════════════════════════════════════
-		// 벡터 기반 에임 추적 (각도 래핑 문제 회피)
-		// 외적(Cross Product)을 사용하여 회전 방향 결정
-		// 스무딩 없이 즉시 반응
-		// ═══════════════════════════════════════════════════════════════
-		
-		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-		engine::Vector3 currentAimDir = m_aimPointer->GetDirectionFrom(playerPos);
-		currentAimDir.y = 0.0f;
-		
-		if (currentAimDir.LengthSquared() < 0.001f) return;
-		currentAimDir.Normalize();
-		
-		if (!m_aimTrackingInitialized)
-		{
-			m_prevAimDirection = currentAimDir;
-			m_aimCrossProductSmoothed = 0.0f;
-			m_aimTrackingInitialized = true;
-			return;
-		}
-		
-		// ─────────────────────────────────────────────
-		// 외적으로 회전 방향 계산 (Y 성분만 사용)
-		// 정확한 외적 공식: (prev × current).y = prev.z * curr.x - prev.x * curr.z
-		//   양수 = current가 prev의 시계 방향 (오른쪽으로 회전)
-		//   음수 = current가 prev의 반시계 방향 (왼쪽으로 회전)
-		// ─────────────────────────────────────────────
-		float crossY = m_prevAimDirection.z * currentAimDir.x - m_prevAimDirection.x * currentAimDir.z;
-		
-		// 스무딩 없이 직접 저장 (데드존은 사용처에서 처리)
-		m_aimCrossProductSmoothed = crossY;
-		
-		m_prevAimDirection = currentAimDir;
-	}
 
-	float PlayerControllerScript::GetAimRotationDirection() const
-	{
-		// 양수: 에임이 시계 방향으로 이동 중 (CW, 오른쪽, 각도 증가)
-		// 음수: 에임이 반시계 방향으로 이동 중 (CCW, 왼쪽, 각도 감소)
-		return m_aimCrossProductSmoothed;
-	}
 
 	// ═══════════════════════════════════════════════════════════════
 	// 에디터 검증
@@ -1214,7 +1020,7 @@ namespace game
 	void PlayerControllerScript::OnGui()
 	{
 		ImGui::Indent();
-		
+
 		ImGui::Text("PlayerControllerScript:");
 
 		// ─────────────────────────────────────────────
@@ -1222,7 +1028,7 @@ namespace game
 		// ─────────────────────────────────────────────
 		ImGui::Separator();
 		ImGui::Text("=== Component Validation ===");
-		
+
 		// 에디터 모드를 위한 실시간 컴포넌트 검색 (같은 GameObject 내에서만 검색)
 		engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
 		engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
@@ -1230,10 +1036,10 @@ namespace game
 		engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
 		AimPointer* aimPointer = m_aimPointer ? m_aimPointer : (GetGameObject() ? GetGameObject()->GetComponent<AimPointer>() : nullptr);
 		BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
-		
+
 		// 전체 유효성 검사
 		bool allValid = rigidbody && skeletalAnimator && aimPointer && bulletFactory && animFSM && logicFSM;
-		
+
 		if (allValid)
 		{
 			ImGui::TextColored(ImVec4(0, 1, 0, 1), "[OK] All components are valid!");
@@ -1247,19 +1053,19 @@ namespace game
 		ImGui::Indent();
 		ImGui::Text("Rigidbody:         %s", rigidbody ? "[OK]" : "[MISSING]");
 		if (!rigidbody) ImGui::SameLine(); if (!rigidbody) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-		
+
 		ImGui::Text("SkeletalAnimator:  %s", skeletalAnimator ? "[OK]" : "[MISSING]");
 		if (!skeletalAnimator) ImGui::SameLine(); if (!skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-		
+
 		ImGui::Text("AimPointer:        %s", aimPointer ? "[OK]" : "[MISSING]");
 		if (!aimPointer) ImGui::SameLine(); if (!aimPointer) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-		
+
 		ImGui::Text("BulletFactory:     %s", bulletFactory ? "[OK]" : "[MISSING]");
 		if (!bulletFactory) ImGui::SameLine(); if (!bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-		
+
 		ImGui::Text("AnimFSM:           %s", animFSM ? "[OK]" : "[MISSING]");
 		if (!animFSM) ImGui::SameLine(); if (!animFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-		
+
 		ImGui::Text("LogicFSM:          %s", logicFSM ? "[OK]" : "[MISSING]");
 		if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 		ImGui::Unindent();
@@ -1269,6 +1075,76 @@ namespace game
 		ImGui::Text("Movement:");
 		ImGui::DragFloat("Move Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
 		ImGui::DragFloat("Rotation Speed (rad/s)", &m_rotationSpeed, 0.5f, 1.0f, 30.0f);
+
+		// 대쉬 설정
+		ImGui::Separator();
+		ImGui::Text("Dash:");
+		ImGui::DragFloat("Dash Duration (sec)", &m_dashDuration, 0.1f, 0.1f, 3.0f);
+		ImGui::DragFloat("Dash Speed Multiplier", &m_dashInitialSpeedMultiplier, 0.1f, 1.5f, 10.0f);
+		ImGui::DragFloat("Dash Cooldown (sec)", &m_dashCooldown, 0.1f, 0.0f, 10.0f);
+
+		// 대쉬 충돌 감쇠 설정
+		ImGui::Separator();
+		ImGui::Text("Dash Collision Decay:");
+		ImGui::DragFloat("Collision Decay Multiplier", &m_dashCollisionDecayMultiplier, 0.5f, 1.0f, 20.0f);
+		ImGui::DragFloat("Collision Dot Threshold", &m_dashCollisionDotThreshold, 0.05f, 0.0f, 1.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("0.0 = 90 deg, 0.3 = ~72 deg, 0.5 = 60 deg, 0.7 = ~45 deg");
+		}
+
+		// SphereCast 설정 (지형 파고들기 방지)
+		ImGui::Separator();
+		ImGui::Text("SphereCast (Environment Block):");
+		ImGui::DragFloat("SphereCast Radius", &m_sphereCastRadius, 0.05f, 0.1f, 2.0f);
+		ImGui::DragFloat("SphereCast Distance", &m_sphereCastDistance, 0.05f, 0.1f, 2.0f);
+		ImGui::DragFloat("Dash Wall Speed %%", &m_dashWallSpeedMultiplier, 0.01f, 0.0001f, 1.0f, "%.2f");
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Wall detected at dash start: initial speed multiplier (0.1 = 10%%)");
+		}
+		
+		// SphereCast 런타임 상태
+		if (m_environmentBlockDetected)
+		{
+			ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "Environment Block: DETECTED");
+			ImGui::Text("  Normal: (%.2f, %.2f)", m_lastBlockNormal.x, m_lastBlockNormal.z);
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Environment Block: Clear");
+		}
+
+		// 대쉬 런타임 정보
+		ImGui::Separator();
+		ImGui::Text("Dash State: %s", m_isDashing ? "DASHING" : "Ready");
+		if (m_dashCooldownTimer > 0.0f)
+		{
+			ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "Cooldown: %.1f sec", m_dashCooldownTimer);
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Cooldown: Ready");
+		}
+		if (m_isDashing)
+		{
+			float dashSpeed = CalculateDashSpeed();
+			ImGui::Text("Current Dash Speed: %.1f", dashSpeed);
+			ImGui::Text("Dash Progress: %.0f%%", (m_dashElapsedTime / m_dashDuration) * 100.0f);
+			
+			// 벽 감지 상태 표시
+			if (m_dashWallDetectedOnStart)
+			{
+				ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "Wall Detected at Start: Speed reduced to %.0f%%", 
+					m_dashWallSpeedMultiplier * 100.0f);
+			}
+			
+			// 충돌 감쇠 상태 표시
+			if (m_dashCollisionDecayBoost > 1.0f)
+			{
+				ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1), "Collision Decay Active: %.1fx", m_dashCollisionDecayBoost);
+			}
+		}
 
 		// 발사 설정
 		ImGui::Separator();
@@ -1294,7 +1170,7 @@ namespace game
 		ImGui::Separator();
 		ImGui::Text("References:");
 		ImGui::InputText("AimPointer Object", &m_aimPointerObjectName);
-		
+
 		// 기타
 		ImGui::Separator();
 		ImGui::Checkbox("Enable Upper Body Aim", &m_enableUpperBodyAim);
@@ -1302,38 +1178,15 @@ namespace game
 		ImGui::Separator();
 		ImGui::Text("Runtime Info:");
 		ImGui::Text("Animation State: %s", GetAnimationState().c_str());
-		ImGui::Text("Is Moving Backward: %s", IsMovingBackward() ? "Yes" : "No");
-		ImGui::Text("Forward Aim Dir Angle: %.2f deg", GetForwardAimDirAngle());
+		ImGui::Text("Is Moving Backward: %s", m_isBackward ? "Yes" : "No");
+		//ImGui::Text("Forward Aim Dir Angle: %.2f deg", GetForwardAimDirAngle());
 
-		if (m_aimPointer)
-		{
-			ImGui::Separator();
-			ImGui::Text("=== Rotation Debug ===");
-			
-			// 에임 외적 (회전 방향 결정에 사용)
-			float aimCross = GetAimRotationDirection();
-			
-			// 큰 글씨로 현재 상태 표시
-			if (std::abs(aimCross) > 0.001f)
-			{
-				if (aimCross > 0.0f)
-					ImGui::TextColored(ImVec4(0,1,0,1), ">>> CW (시계방향) >>>");
-				else
-					ImGui::TextColored(ImVec4(1,1,0,1), "<<< CCW (반시계) <<<");
-			}
-			else
-			{
-				ImGui::TextColored(ImVec4(0.5f,0.5f,0.5f,1), "--- NEUTRAL ---");
-			}
-			
-			ImGui::Text("Aim Cross: %.4f", aimCross);
-		}
-		
+
 		ImGui::Unindent();
-		
+
 		// BaseControllerScript의 OnGui 호출 (이동 물리 설정)
 		BaseControllerScript::OnGui();
-		
+
 		ImGui::Spacing();
 		ImGui::Spacing();
 		ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
@@ -1354,15 +1207,29 @@ namespace game
 		j["AimPointerObjectName"] = m_aimPointerObjectName;
 		j["EnableUpperBodyAim"] = m_enableUpperBodyAim;
 		j["FSMInitialized"] = m_fsmInitialized;
-		
+
 		// 애니메이션 이름 저장
 		j["AnimName_Idle"] = m_animName_Idle;
 		j["AnimName_WalkForward"] = m_animName_WalkForward;
 		j["AnimName_WalkBackward"] = m_animName_WalkBackward;
 		j["AnimName_Fire"] = m_animName_Fire;
-		
+
 		// 처형 설정
 		j["ExecutionRange"] = m_executionRange;
+
+		// 대쉬 설정
+		j["DashDuration"] = m_dashDuration;
+		j["DashInitialSpeedMultiplier"] = m_dashInitialSpeedMultiplier;
+		j["DashCooldown"] = m_dashCooldown;
+
+		// 대쉬 충돌 감쇠 설정
+		j["DashCollisionDecayMultiplier"] = m_dashCollisionDecayMultiplier;
+		j["DashCollisionDotThreshold"] = m_dashCollisionDotThreshold;
+
+		// SphereCast 설정 (지형 파고들기 방지)
+		j["SphereCastRadius"] = m_sphereCastRadius;
+		j["SphereCastDistance"] = m_sphereCastDistance;
+		j["DashWallSpeedMultiplier"] = m_dashWallSpeedMultiplier;
 	}
 
 	void PlayerControllerScript::Load(const engine::json& j)
@@ -1385,7 +1252,7 @@ namespace game
 			m_enableUpperBodyAim = j["EnableUpperBodyAim"].get<bool>();
 		if (j.contains("FSMInitialized"))
 			m_fsmInitialized = j["FSMInitialized"].get<bool>();
-		
+
 		// 애니메이션 이름 로드
 		if (j.contains("AnimName_Idle"))
 			m_animName_Idle = j["AnimName_Idle"].get<std::string>();
@@ -1395,9 +1262,31 @@ namespace game
 			m_animName_WalkBackward = j["AnimName_WalkBackward"].get<std::string>();
 		if (j.contains("AnimName_Fire"))
 			m_animName_Fire = j["AnimName_Fire"].get<std::string>();
-		
+
 		// 처형 설정
 		if (j.contains("ExecutionRange"))
 			m_executionRange = j["ExecutionRange"].get<float>();
+
+		// 대쉬 설정
+		if (j.contains("DashDuration"))
+			m_dashDuration = j["DashDuration"].get<float>();
+		if (j.contains("DashInitialSpeedMultiplier"))
+			m_dashInitialSpeedMultiplier = j["DashInitialSpeedMultiplier"].get<float>();
+		if (j.contains("DashCooldown"))
+			m_dashCooldown = j["DashCooldown"].get<float>();
+
+		// 대쉬 충돌 감쇠 설정
+		if (j.contains("DashCollisionDecayMultiplier"))
+			m_dashCollisionDecayMultiplier = j["DashCollisionDecayMultiplier"].get<float>();
+		if (j.contains("DashCollisionDotThreshold"))
+			m_dashCollisionDotThreshold = j["DashCollisionDotThreshold"].get<float>();
+
+		// SphereCast 설정 (지형 파고들기 방지)
+		if (j.contains("SphereCastRadius"))
+			m_sphereCastRadius = j["SphereCastRadius"].get<float>();
+		if (j.contains("SphereCastDistance"))
+			m_sphereCastDistance = j["SphereCastDistance"].get<float>();
+		if (j.contains("DashWallSpeedMultiplier"))
+			m_dashWallSpeedMultiplier = j["DashWallSpeedMultiplier"].get<float>();
 	}
 }

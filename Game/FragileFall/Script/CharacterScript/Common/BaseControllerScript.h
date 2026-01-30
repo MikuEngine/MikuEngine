@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -187,13 +187,34 @@ namespace game
         bool IsInState(const std::string& stateName) const;
         bool IsInAnyState(const std::initializer_list<std::string>& states) const;
 
+
+        // 내가 짜집기한 유틸리티
+        // 현재 트랜스폼(실제가 아닌 계산용) 업데이트 유틸리티
+        void UpdateLogicalPosition();        
+        void UpdateLogicalMoveExistence(engine::Vector3& inputMoveDir);
+        void CalcLogicalRotateAngle(engine::Vector3& target);
+
+        //void MoveStopProtocol();
+
+        engine::Vector3 m_objectLogicalPosition;
+        engine::Vector3 m_objectLogicalFoward;
+        engine::Vector3 m_currentLogicalMoveVector;
+        engine::Vector3 m_currentAimingDir;
+
+        bool m_isToRotate = false;
+        float m_rotateSign = 0.0;
+        engine::Vector3 m_angleToRotateLogical = { 0.0f,0.0f,0.0f };
+        
+
+        bool m_isMoving = false;
+
         // ─────────────────────────────────────────────
-        // 방향 유틸리티
-        // - SkeletalAnimator가 FBX를 180도 회전시킴
-        // - GetForwardDirection(): +Z = 모델의 실제 앞 방향
+        // 방향 유틸리티                
         // ─────────────────────────────────────────────
         engine::Vector3 GetForwardDirection() const;
         engine::Vector3 GetForwardDirectionReverse() const;
+        
+        
 
         // ─────────────────────────────────────────────
         // 대상(Target) 유틸리티 - 범용 함수
@@ -205,8 +226,10 @@ namespace game
         // ─────────────────────────────────────────────
         // 회전 유틸리티 - 범용 함수
         // ─────────────────────────────────────────────
-        void RotateTowardsTarget(engine::GameObject* target, float deltaTime);
-        void RotateToDirection(const engine::Vector3& targetDirection, float deltaTime);
+        void RotateTowardsTarget(engine::GameObject* target, float rotationSpeed);
+        // 목표 방향으로 Y축 회전 (Z+가 전방)
+        // - rotationSpeed: 회전 속도 (rad/sec)
+        void RotateToDirection(const engine::Vector3& targetDirection, float rotationSpeed);
         bool IsLookingAtTarget(engine::GameObject* target) const;
         bool IsLookingAtDirection(const engine::Vector3& targetDirection) const;
         
@@ -216,6 +239,10 @@ namespace game
         // 이동 유틸리티 (AddForce 기반)
         // - SetLinearVelocity 대신 AddForce 사용으로 충돌 응답 보존
         // ─────────────────────────────────────────────
+        
+        // 이동 처리 (m_currentLogicalMoveVector와 m_isMoving 기반)
+        // - maxSpeed: 최대 이동 속도
+        void HandleMovement(float maxSpeed);
         
         // 이동 방향으로 힘을 가하고 최대 속도 제한
         // - direction: 이동 방향 (정규화됨)
