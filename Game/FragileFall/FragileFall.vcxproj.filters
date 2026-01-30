@@ -1,327 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="App\Main.cpp" />
+    <ClCompile Include="App\FragileFall.cpp" />
+    <ClCompile Include="GamePCH.cpp" />
+    <ClCompile Include="Manager\LoadingScreenDrawer.cpp" />
+    <ClCompile Include="Manager\TimeScaler.cpp" />
+    <ClCompile Include="Script\AimPointer.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\BossPatternBase.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\BossPatternManager.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossBullet.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossPillar.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossPillarCrystalizedPiece.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossProjectile.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossShieldEffect.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_BulletFire.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Meteor.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_PillarShield.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp" />
+    <ClCompile Include="Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterRoundType.cpp" />
+    <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
+    <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
+    <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedType.cpp" />
+    <ClCompile Include="Script\PathfindTest.cpp" />
+    <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
+    <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
+    <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
+    <ClCompile Include="Script\StateTextRenderer.cpp" />
+    <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
+    <ClCompile Include="Script\TimeScalerTest.cpp" />
+    <ClCompile Include="Script\UI\UIFollowWorldTarget.cpp" />
+    <ClCompile Include="Script\UI\UIHoverScale.cpp" />
+    <ClCompile Include="Script\UI\UIKillPopupQueue.cpp" />
+    <ClCompile Include="Script\UI\UIPopUpAnimator.cpp" />
+    <ClCompile Include="Script\UI\UIToastAnimator.cpp" />
+    <ClCompile Include="Script\UpgradeNodeView.cpp" />
+    <ClCompile Include="Script\UpgradeController.cpp" />
+    <ClCompile Include="Script\CharacterScript\Common\BaseControllerScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Common\BulletFactory.cpp" />
+    <ClCompile Include="Script\CharacterScript\Player\BulletPlayer.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\BulletMonster.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterDullType.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp" />
+    <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
+    <ClCompile Include="Script\CheckRotateScript.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App\Main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GamePCH.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="App\FragileFall.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\AimPointer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Common\BaseControllerScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Common\BulletFactory.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Player\BulletPlayer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\BulletMonster.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterDullType.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Scene\SceneController_Play.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Scene\SceneController_Lobby.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Scene\SceneController_Main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\UI\UIFollowWorldTarget.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\UI\UIPopUpAnimator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\UpgradeNodeView.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\UpgradeController.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\PathfindTest.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\UI\UIHoverScale.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedType.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\BossPatternBase.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\BossPatternManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Components\BossPillar.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Components\BossShieldEffect.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_PillarShield.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\StateTextRenderer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\ExecutionIndicatorManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Components\BossBullet.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Components\BossProjectile.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_BulletFire.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Meteor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\Boss\BossPattern\Components\BossPillarCrystalizedPiece.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CheckRotateScript.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\UI\UIKillPopupQueue.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\UI\UIToastAnimator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\TimeScaler.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\TimeScalerTest.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterRoundType.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Script\LoadingOverlay.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\LoadingScreenDrawer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GamePCH.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="App\ComponentRegistry.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="App\FragileFall.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\AimPointer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Common\BaseControllerScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Common\BulletFactory.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Common\BulletMovement.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Common\BulletParams.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Player\BulletPlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\BulletMonster.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterDullType.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Scene\SceneController_Play.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Scene\SceneController_Lobby.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Scene\SceneController_Main.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UI\UIFollowWorldTarget.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UI\UIPopUpAnimator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UpgradeNodeView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UpgradeController.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\PathfindTest.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UpgradeTypes.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\MonsterGenerator\MonsterData.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UI\UIHoverScale.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedType.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\BossPatternBase.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\BossPatternManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_PillarShield.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Components\BossPillar.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Components\BossShieldEffect.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\StateTextRenderer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\ExecutionIndicatorManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Components\BossBullet.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Components\BossProjectile.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_BulletFire.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Meteor.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\Boss\BossPattern\Components\BossPillarCrystalizedPiece.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CheckRotateScript.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\ItemType.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UI\UIKillPopupQueue.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\UI\UIToastAnimator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\TimeScaler.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\TimeScalerTest.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterRoundType.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Script\LoadingOverlay.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\LoadingScreenDrawer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
+    <ClInclude Include="App\ComponentRegistry.h" />
+    <ClInclude Include="App\FragileFall.h" />
+    <ClInclude Include="GamePCH.h" />
+    <ClInclude Include="Manager\LoadingScreenDrawer.h" />
+    <ClInclude Include="Manager\TimeScaler.h" />
+    <ClInclude Include="Script\AimPointer.h" />
+    <ClInclude Include="Script\Boss\BossPattern\BossPatternBase.h" />
+    <ClInclude Include="Script\Boss\BossPattern\BossPatternManager.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossBullet.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossPillar.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossPillarCrystalizedPiece.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossProjectile.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossShieldEffect.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_BulletFire.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Meteor.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_PillarShield.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h" />
+    <ClInclude Include="Script\Boss\BossScript.h" />
+    <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterRoundType.h" />
+    <ClInclude Include="Script\ItemType.h" />
+    <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
+    <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
+    <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedType.h" />
+    <ClInclude Include="Script\PathfindTest.h" />
+    <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
+    <ClInclude Include="Script\Scene\SceneController_Play.h" />
+    <ClInclude Include="Script\Scene\SceneController_Main.h" />
+    <ClInclude Include="Script\StateTextRenderer.h" />
+    <ClInclude Include="Script\ExecutionIndicatorManager.h" />
+    <ClInclude Include="Script\TimeScalerTest.h" />
+    <ClInclude Include="Script\UI\UIFollowWorldTarget.h" />
+    <ClInclude Include="Script\UI\UIHoverScale.h" />
+    <ClInclude Include="Script\UI\UIKillPopupQueue.h" />
+    <ClInclude Include="Script\UI\UIPopUpAnimator.h" />
+    <ClInclude Include="Script\UI\UIToastAnimator.h" />
+    <ClInclude Include="Script\UpgradeNodeView.h" />
+    <ClInclude Include="Script\UpgradeController.h" />
+    <ClInclude Include="Script\CharacterScript\Common\BaseControllerScript.h" />
+    <ClInclude Include="Script\CharacterScript\Common\BulletFactory.h" />
+    <ClInclude Include="Script\CharacterScript\Common\BulletMovement.h" />
+    <ClInclude Include="Script\CharacterScript\Common\BulletParams.h" />
+    <ClInclude Include="Script\CharacterScript\Player\BulletPlayer.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\BulletMonster.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterScript.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterDullType.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h" />
+    <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
+    <ClInclude Include="Script\UpgradeTypes.h" />
+    <ClInclude Include="Script\CheckRotateScript.h" />
   </ItemGroup>
 </Project>
