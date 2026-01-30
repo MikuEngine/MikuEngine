@@ -45,6 +45,8 @@ namespace engine
     namespace
     {
         nlohmann::ordered_json g_tempScene;
+
+        std::filesystem::path g_editorSettingsPath{ "EditorSettings.config" };
     }
 
     EditorManager::EditorManager() = default;
@@ -62,14 +64,32 @@ namespace engine
         RefreshSceneFileCache();
         ValidateSettingsList();
 
+        LoadEditorSettings();
+
         bool sceneLoaded = false;
 
-        if (!m_projectSettings.sceneList.empty())
+        if (auto iter = m_editorSettings.find("LastScene"); iter != m_editorSettings.end())
+        {
+            std::string path = "Resource/Scene/" + std::string(*iter) + ".scene";
+            if (std::filesystem::exists(path))
+            {
+                SceneManager::Get().ChangeScene(*iter);
+
+                LoadSceneEditorData(*iter);
+
+                sceneLoaded = true;
+            }
+        }
+
+        if (!sceneLoaded && !m_projectSettings.sceneList.empty())
         {
             std::string path = "Resource/Scene/" + m_projectSettings.sceneList[0] + ".scene";
             if (std::filesystem::exists(path))
             {
                 SceneManager::Get().ChangeScene(m_projectSettings.sceneList[0]);
+
+                LoadSceneEditorData(m_projectSettings.sceneList[0]);
+
                 sceneLoaded = true;
             }
         }
@@ -77,6 +97,9 @@ namespace engine
         if (!sceneLoaded && !m_cachedSceneFiles.empty())
         {
             SceneManager::Get().ChangeScene(m_cachedSceneFiles[0]);
+
+            LoadSceneEditorData(m_cachedSceneFiles[0]);
+
             sceneLoaded = true;
         }
 
@@ -174,6 +197,12 @@ namespace engine
 
     void EditorManager::Shutdown()
     {
+        auto sceneName = SceneManager::Get().GetScene()->GetName();
+        m_editorSettings["LastScene"] = sceneName;
+
+        SaveSceneEditorData(sceneName);
+        SaveEditorSettings();
+
         m_editorGrid.reset(); // 그래픽 리소스 있어서 해제 필요
     }
 
@@ -473,6 +502,14 @@ namespace engine
                         list.erase(it);
                         m_projectSettings.Save();
                     }
+
+                    if (m_editorSettings.contains(m_sceneToDelete))
+                    {
+                        m_editorSettings.erase(m_sceneToDelete);
+
+                        SaveEditorSettings();
+                    }
+
                     // 4. 캐시 갱신
                     RefreshSceneFileCache();
                     // 5. ★ 현재 씬을 삭제했다면? => 대안 씬 로드
@@ -482,6 +519,8 @@ namespace engine
                         {
                             // 다른 파일이 있으면 첫 번째 것 로드 (변경사항 체크 없이 강제 로드)
                             SceneManager::Get().ChangeScene(m_cachedSceneFiles[0]);
+
+                            LoadSceneEditorData(m_cachedSceneFiles[0]);
                         }
                         else
                         {
@@ -569,6 +608,16 @@ namespace engine
                         }
                         RefreshSceneFileCache();
                         ImGui::CloseCurrentPopup();
+
+                        if (m_editorSettings.contains(m_sceneToRename))
+                        {
+                            // 기존 설정 데이터를 새 이름으로 복사
+                            m_editorSettings[std::string(renameBuf)] = m_editorSettings[m_sceneToRename];
+                            // 기존 키 삭제
+                            m_editorSettings.erase(m_sceneToRename);
+
+                            SaveEditorSettings();
+                        }
                     }
                     m_sceneToRename.clear();
                 }
@@ -597,11 +646,17 @@ namespace engine
                     // 다음 씬 로드
                     if (m_nextScenePending == "NEW_SCENE")
                     {
+                        SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
                         CreateNewScene();
                     }
                     else
                     {
+                        SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
                         SceneManager::Get().ChangeScene(m_nextScenePending);
+
+                        LoadSceneEditorData(m_nextScenePending);
                     }
 
                     m_nextScenePending.clear();
@@ -620,7 +675,11 @@ namespace engine
                     }
                     else
                     {
+                        SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
                         SceneManager::Get().ChangeScene(m_nextScenePending);
+
+                        LoadSceneEditorData(m_nextScenePending);
                     }
 
                     m_nextScenePending.clear();
@@ -1397,8 +1456,12 @@ namespace engine
         }
         else
         {
+            SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
             SceneManager::Get().ChangeScene(nextSceneName);
             m_selectedObject = nullptr;
+
+            LoadSceneEditorData(nextSceneName);
         }
     }
 
@@ -1412,7 +1475,8 @@ namespace engine
         }
         else
         {
-            // 깨끗하면 바로 생성
+            SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
             CreateNewScene();
         }
     }
@@ -1423,6 +1487,7 @@ namespace engine
         // 선택된 오브젝트 해제
         m_selectedObject = nullptr;
     }
+
     void EditorManager::RefreshPrefabCache()
     {
         m_cachedPrefabFiles.clear();
@@ -1441,5 +1506,66 @@ namespace engine
                 m_cachedPrefabFiles.push_back(entry.path().stem().string());
             }
         }
+    }
+
+    void EditorManager::LoadEditorSettings()
+    {
+        std::ifstream file{ g_editorSettingsPath };
+        if (file.is_open())
+        {
+            try
+            {
+                file >> m_editorSettings;
+            }
+            catch (...)
+            {
+                LOG_INFO("Editor setting 파일 오류");
+            }
+        }
+    }
+
+    void EditorManager::SaveEditorSettings()
+    {
+        std::ofstream file{ g_editorSettingsPath };
+        if (file.is_open())
+        {
+            file << m_editorSettings.dump(4);
+        }
+    }
+
+    void EditorManager::SaveSceneEditorData(const std::string& sceneName)
+    {
+        if (sceneName.empty())
+        {
+            return;
+        }
+
+        json sceneData;
+
+        m_editorCamera->SaveEditorData(sceneData["Camera"]);
+        LightDebugRenderer::Get().SaveEditorData(sceneData["LightDebug"]);
+        PhysicsDebugRenderer::Get().SaveEditorData(sceneData["PhysicsDebug"]);
+        PathfindingDebugRenderer::Get().SaveEditorData(sceneData["PathfindingDebug"]);
+        SocketDebugRenderer::Get().SaveEditorData(sceneData["SocketDebug"]);
+
+        m_editorSettings[sceneName] = sceneData;
+    }
+
+    void EditorManager::LoadSceneEditorData(const std::string& sceneName)
+    {
+        // 해당 씬의 데이터를 가져오거나, 없으면 빈 객체({})로 시작
+        json sceneData = json::object();
+
+        if (m_editorSettings.contains(sceneName))
+        {
+            sceneData = m_editorSettings[sceneName];
+        }
+
+        m_editorCamera->LoadEditorData(sceneData.value("Camera", json::object()));
+
+        LightDebugRenderer::Get().LoadEditorData(sceneData.value("LightDebug", json::object()));
+        PhysicsDebugRenderer::Get().LoadEditorData(sceneData.value("PhysicsDebug", json::object()));
+        PathfindingDebugRenderer::Get().LoadEditorData(sceneData.value("PathfindingDebug", json::object()));
+        SocketDebugRenderer::Get().LoadEditorData(sceneData.value("SocketDebug", json::object()));
     }
 }

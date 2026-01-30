@@ -41,6 +41,9 @@ namespace engine
         std::string m_sceneToDelete;
         std::string m_sceneToRename;
 
+        // editor setting
+        json m_editorSettings;
+
         // prefab
         std::vector<std::string> m_cachedPrefabFiles;
         std::string m_prefabOverwriteTarget;
@@ -87,6 +90,12 @@ namespace engine
         void RequestNewScene();
         void CreateNewScene();
         void RefreshPrefabCache();
+
+        void LoadEditorSettings();
+        void SaveEditorSettings();
+
+        void SaveSceneEditorData(const std::string& sceneName);
+        void LoadSceneEditorData(const std::string& sceneName);
 
     private:
         friend class Singleton<EditorManager>;

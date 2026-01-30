@@ -41,6 +41,10 @@ namespace engine
 
         void OnGui();
 
+        // 에디터 상태 저장용
+        void SaveEditorData(json& j) const;
+        void LoadEditorData(const json& j);
+
     private:
         void DrawLine(const Vector3& start, const Vector3& end, const DirectX::XMVECTOR& color);
         void DrawSocket(const Matrix& worldMatrix);

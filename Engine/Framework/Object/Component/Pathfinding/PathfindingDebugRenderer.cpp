@@ -305,4 +305,29 @@ namespace engine
 
         ImGui::PopID();
     }
+
+    // 에디터 상태 저장용
+    void PathfindingDebugRenderer::SaveEditorData(json& j) const
+    {
+        j["Enable"] = m_enabled;
+        j["ShowGrid"] = m_showGrid;
+        j["ShowPath"] = m_showPath;
+        j["ShowUnwalkable"] = m_showUnwalkable;
+        j["GridLineColor"] = m_gridLineColor;
+        j["PathColor"] = m_pathColor;
+        j["UnwalkableColor"] = m_unwalkableColor;
+        j["WaypointColor"] = m_waypointColor;
+    }
+
+    void PathfindingDebugRenderer::LoadEditorData(const json& j)
+    {
+        JsonGet(j, "Enable", m_enabled, false);
+        JsonGet(j, "ShowGrid", m_showGrid, true);
+        JsonGet(j, "ShowPath", m_showPath, true);
+        JsonGet(j, "ShowUnwalkable", m_showUnwalkable, true);
+        JsonGet(j, "GridLineColor", m_gridLineColor, { 0.5f, 0.5f, 0.5f, 1.0f });
+        JsonGet(j, "PathColor", m_pathColor, { 0.0f, 1.0f, 0.0f, 1.0f });
+        JsonGet(j, "UnwalkableColor", m_unwalkableColor, { 1.0f, 0.0f, 0.0f, 1.0f });
+        JsonGet(j, "WaypointColor", m_waypointColor, { 1.0f, 1.0f, 0.0f, 1.0f });
+    }
 }

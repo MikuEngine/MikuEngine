@@ -129,4 +129,19 @@ namespace engine
             ImGui::DragFloat("Axis Length", &m_axisLength, 0.1f, 0.01f, 15.0f);
         }
     }
+
+    // 에디터 상태 저장용
+    void SocketDebugRenderer::SaveEditorData(json& j) const
+    {
+        j["Enable"] = m_enabled;
+        j["ShowAxis"] = m_showAxis;
+        j["AxisLength"] = m_axisLength;
+    }
+
+    void SocketDebugRenderer::LoadEditorData(const json& j)
+    {
+        JsonGet(j, "Enable", m_enabled, false);
+        JsonGet(j, "ShowAxis", m_showAxis, true);
+        JsonGet(j, "AxisLength", m_axisLength, 5.0f);
+    }
 }
