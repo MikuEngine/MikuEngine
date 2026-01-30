@@ -171,6 +171,7 @@ namespace engine
         }
 
         ApplyVolumes();
+
         return true;
     }
 
@@ -224,6 +225,21 @@ namespace engine
             {
                 masterGroup->stop();
             }
+        }
+    }
+
+    void SoundSystem::StopSceneSounds()
+    {
+        auto bgmIt = m_channelGroups.find("BGM");
+        if (bgmIt != m_channelGroups.end() && bgmIt->second)
+        {
+            bgmIt->second->stop();
+        }
+
+        auto sfxIt = m_channelGroups.find("SFX");
+        if (sfxIt != m_channelGroups.end() && sfxIt->second)
+        {
+            sfxIt->second->stop();
         }
     }
 
@@ -603,6 +619,21 @@ namespace engine
 
     void SoundSystem::CreateRandomSound(const std::string& groupName, const std::vector<std::string>& filePaths, const std::string& option, LifeScope scope)
     {
+        FMOD::ChannelGroup* targetGroup = nullptr;
+
+        if (option.find("UI") != std::string::npos)
+        {
+            targetGroup = m_channelGroups["UI"];
+        }
+        else if (option.find("BGM") != std::string::npos)
+        {
+            targetGroup = m_channelGroups["BGM"];
+        }
+        else
+        {
+            targetGroup = m_channelGroups["SFX"];
+        }
+
         std::vector<Sound*> soundList;
 
         for (const auto& path : filePaths)
@@ -611,7 +642,14 @@ namespace engine
 
             if (soundData && soundData->GetSound())
             {
-                soundList.push_back(soundData->GetSound());
+                Sound* snd = soundData->GetSound();
+
+                if (targetGroup)
+                {
+                    snd->m_pChannelGroup = targetGroup;
+                }
+
+                soundList.push_back(snd);
             }
         }
 
@@ -628,7 +666,7 @@ namespace engine
         m_listenerUp = up;
     }
 
-    void SoundSystem::Play(const std::string& key, const std::string& option, float volume, float pitch)
+    void SoundSystem::Play(const std::string& key, const std::string& option, float volume, float pitch, LifeScope scope)
     {
         Sound* targetSound = nullptr;
 
@@ -642,7 +680,7 @@ namespace engine
         }
         else
         {
-            auto soundData = AssetManager::Get().GetOrCreateSoundData(key, option, LifeScope::Scene);
+            auto soundData = AssetManager::Get().GetOrCreateSoundData(key, option, scope);
 
             if (soundData)
             {
@@ -670,6 +708,7 @@ namespace engine
         }
     }
 
+    void SoundSystem::PlayUI(const std::string name, float vol) { Play(name, "SFX", vol, 1.0f, LifeScope::Global); }
     void SoundSystem::SetMasterVolume(float v) { m_master = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetBGMVolume(float v) { m_bgm = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetSFXVolume(float v) { m_sfx = Clamp01(v); ApplyVolumes(); }

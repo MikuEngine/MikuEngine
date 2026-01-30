@@ -53,7 +53,7 @@ namespace engine
 
             if (isPlaying)
             {
-                SoundSystem::Get().StopAll();
+                SoundSystem::Get().StopSceneSounds();
                 SoundSystem::Get().OnGameStart();
 
                 m_scene->Clear(true);

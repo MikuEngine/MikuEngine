@@ -104,12 +104,11 @@ namespace game
     {
         if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
-            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
 
-            if (m_isOptionOpen) { Back(); engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
-            if (m_isGiveupOpen) { CheckBackToMain(false); engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
-
-            if (m_isMenuOpen) { SetMenuOpen(false);  engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
+            if (m_isOptionOpen) { Back(); return; }
+            if (m_isGiveupOpen) { CheckBackToMain(false); return; }
+            if (m_isMenuOpen) { SetMenuOpen(false); return; }
 
             SetMenuOpen(true);
         }
@@ -143,7 +142,7 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
         if (cb) cb(); });
     }
 
