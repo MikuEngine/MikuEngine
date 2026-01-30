@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -6,7 +6,7 @@
 namespace game
 {
     // ═══════════════════════════════════════════════════════════════
-    // MonsterPointedGreen - PointedGreen 몬스터 구현
+    // MonsterSharpType - 뾰족 공격 몬스터 구현
     // 
     // 특징:
     //   - 감지 거리 내에 플레이어 진입 시 추적 시작
@@ -14,9 +14,9 @@ namespace game
     //   - 공격 모션 중 이동 불가
     // ═══════════════════════════════════════════════════════════════
 
-    class MonsterPointedGreen : public MonsterScript
+    class MonsterSharpType : public MonsterScript
     {
-        REGISTER_SCRIPT(MonsterPointedGreen, MonsterScript)
+        REGISTER_SCRIPT(MonsterSharpType, MonsterScript)
 
     private:
         // ─────────────────────────────────────────────

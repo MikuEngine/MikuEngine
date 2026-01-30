@@ -59,7 +59,7 @@ namespace game
                             {
                                 difficulty += data.Difficulty;
 
-                                LOG_PRINT("생성될 몬스터 ID: {}, 타입: {}, 티어(색상): {}, 난이도: {}", data.MonsterID, data.Type, data.Tier, data.Difficulty);
+                                LOG_PRINT("생성될 몬스터 ID: {}, 몬스터 이름: {} ,공격타입: {}, 티어(색상): {}, 난이도: {}", data.MonsterID, data.MonsterName, data.Type, data.Tier, data.Difficulty);
 
                                 break;
                             }

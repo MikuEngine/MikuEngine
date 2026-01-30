@@ -42,7 +42,7 @@
     <ClCompile Include="Script\CharacterScript\Monster\MonsterScript.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterDullGray.cpp">
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterDullType.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp">
@@ -84,7 +84,7 @@
     <ClCompile Include="Script\UI\UIHoverScale.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedGreen.cpp">
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterSharpType.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp">
@@ -153,6 +153,9 @@
     <ClCompile Include="Script\TimeScalerTest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterRoundType.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamePCH.h">
@@ -188,7 +191,7 @@
     <ClInclude Include="Script\CharacterScript\Monster\MonsterScript.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterDullGray.h">
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterDullType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h">
@@ -233,7 +236,7 @@
     <ClInclude Include="Script\UI\UIHoverScale.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedGreen.h">
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterSharpType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h">
@@ -303,6 +306,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\TimeScalerTest.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterRoundType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

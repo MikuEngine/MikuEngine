@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 
@@ -9,10 +9,32 @@ namespace game
     // 
     // CSV 형식: MonsterID, Type, Tier, Difficulty
     // 용도: CSV에서 파싱한 몬스터 정보 저장
+    // 
+	// Type: Dull, Sharp, Round 등
+	// Tier: 0(Gray), 1(Green), 2(Blue), 3(Red), 4(Purple)
+    // 
     // ═══════════════════════════════════════════════════════════════
+    
+    enum class AttackType
+    { 
+        Dull,
+        Sharp,
+        Round
+    };
+    
+    enum class MonsterTier
+    { 
+        Gray,
+        Green,
+        Blue,
+        Red,
+        Purple
+    };
+    
     struct MonsterData
     {
         int MonsterID;
+        std::string MonsterName;
         std::string Type;
         int Tier;
         int Difficulty;
