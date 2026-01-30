@@ -33,6 +33,7 @@ namespace engine
 		std::array<std::int32_t, static_cast<size_t>(RenderType::Count)> m_systemIndices;
 
 	protected:
+		std::string m_socketFilePath;
 		std::string m_emptyPath = "";
 		std::shared_ptr<SocketData> m_socketData;
 		std::vector<SocketInstance> m_socketInstances;

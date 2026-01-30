@@ -808,7 +808,7 @@
                     "Active": true,
                     "IsPlaying": true,
                     "AutoDestroy": true,
-                    "Duration": 3.0,
+                    "Duration": 29.600000381469727,
                     "Emitters": [
                         {
                             "TexturePath": "Resource/Texture/DefaultParticle.png",
@@ -868,7 +868,7 @@
                                 {
                                     "Time": 0.0,
                                     "Count": 200,
-                                    "Cycles": 1,
+                                    "Cycles": 0,
                                     "Interval": 0.0
                                 }
                             ]
@@ -7015,6 +7015,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -7069,6 +7070,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -7130,6 +7132,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -7191,6 +7194,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -7252,6 +7256,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -7313,6 +7318,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -7374,6 +7380,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -7403,6 +7410,10 @@
                     "PathUpdateInterval": 0.10000000149011612,
                     "WaypointReachDistance": 0.5,
                     "TargetMoveThreshold": 1.0
+                },
+                {
+                    "Type": "TimeScalerTest",
+                    "Active": true
                 }
             ]
         },

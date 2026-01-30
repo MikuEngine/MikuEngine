@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <filesystem>
 
@@ -30,6 +30,9 @@ namespace engine
         std::filesystem::path m_settingFilePath;
         UserSettings m_userSettings;
         ViewportTransformData m_viewportData;
+
+        std::vector<std::function<void()>> m_onGameplayUpdateCallbacks;
+        std::vector<std::function<void()>> m_onShutdownCallbacks;
 
         UINT m_classStyle = 0;
         DWORD m_windowStyle = 0;

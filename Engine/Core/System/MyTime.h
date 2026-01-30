@@ -14,6 +14,8 @@ namespace engine
         static void SetTimeScale(size_t scaleSlot, float timeScale);
         static void SetFixedDeltaTime(float fixedDeltaTime);
 
+        static float GetTimeScale(size_t scaleSlot);
+
         static TimePoint GetTimestamp();
         static TimePoint GetAccumulatedTimeS(const TimePoint& timePoint, int seconds);
         static TimePoint GetAccumulatedTimeM(const TimePoint& timePoint, long long milliseconds);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Common/Utility/Singleton.h"
 #include "Framework/Object/Handle.h"
@@ -82,6 +82,10 @@ namespace engine
 
         // GUI
         void OnGui();
+
+        // 에디터 상태 저장용
+        void SaveEditorData(json& j) const;
+        void LoadEditorData(const json& j);
 
     private:
         void RenderColliders();

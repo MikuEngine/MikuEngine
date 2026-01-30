@@ -55,6 +55,12 @@ namespace game
         std::string m_targetPlayerObjectName = "Player";
 
         // ─────────────────────────────────────────────
+        // 몬스터 분류 정보
+        // ─────────────────────────────────────────────
+        AttackType m_attackType = AttackType::Dull;
+		MonsterTier m_monsterTier = MonsterTier::Gray;
+
+        // ─────────────────────────────────────────────
         // 몬스터 스탯 (자식 클래스에서 설정)
         // ─────────────────────────────────────────────
         float m_Hp = 10.0f;
@@ -204,6 +210,8 @@ namespace game
         void TakeDamage(float damage);
         
         // 체력 접근자
+        AttackType GetAttackType() const { return m_attackType; }
+		MonsterTier GetMonsterTier() const { return m_monsterTier; }
         float GetHp() const { return m_Hp; }
         
         bool m_isFragile = false;

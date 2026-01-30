@@ -6,6 +6,7 @@
 #include <d3dcompiler.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
+#include <ImGuizmo.h>
 
 #include "Common/Utility/Profiling.h"
 #include "Core/Graphics/Data/Vertex.h"
@@ -522,6 +523,10 @@ namespace engine
         ImGui_ImplWin32_NewFrame();
 
         ImGui::NewFrame();
+
+        ImGuizmo::BeginFrame();
+        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+        ImGuizmo::AllowAxisFlip(false);
     }
 
     void GraphicsDevice::EndDrawGUIPass()
@@ -544,6 +549,17 @@ namespace engine
         m_deviceContext->ClearDepthStencilView(m_gameDepthBuffer->GetRawDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         m_deviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
         m_deviceContext->OMSetDepthStencilState(nullptr, 0);
+    }
+
+    void GraphicsDevice::BeginDrawLoadingToFinalBuffer()
+    {
+        m_deviceContext->RSSetViewports(1, &m_gameViewport);
+        m_deviceContext->OMSetRenderTargets(1, m_finalBuffer->GetRTV().GetAddressOf(), nullptr);
+    }
+
+    void GraphicsDevice::EndDrawLoadingToFinalBuffer()
+    {
+        m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
     }
 
     unsigned int GraphicsDevice::EndDrawPickingPass(int mouseX, int mouseY)
@@ -706,6 +722,12 @@ namespace engine
             // 메모리에서 Blob 생성
             HR_CHECK(D3DCreateBlob(csoData.size(), &blobOut));
             std::memcpy(blobOut->GetBufferPointer(), csoData.data(), csoData.size());
+
+            // 2. 데이터 확인 (앞부분 4바이트가 'DXBC'인지 확인 - 정상적인 셰이더 파일 시그니처)
+            uint32_t magic = *reinterpret_cast<uint32_t*>(csoData.data());
+            if (magic != 0x43425844) { // 'DXBC'
+                LOG_ERROR("올바른 DXBC 형식이 아닙니다: {}", csoPath.string());
+            }
         }
         else
         {

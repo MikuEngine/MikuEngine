@@ -33,5 +33,9 @@ namespace engine
 
         void SetPosition(const Vector3& position);
         void SetCameraInfo(float fov, float aspect, float nearZ, float farZ);
+
+        // 에디터 상태 저장용
+        void SaveEditorData(json& j) const;
+        void LoadEditorData(const json& j);
     };
 }

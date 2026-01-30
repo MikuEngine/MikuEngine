@@ -40,6 +40,8 @@ namespace game
 
         void Back();
 
+        void Fail();
+
         void UpdateBlocker();
 
         // Slider

@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SceneManager.h"
 
 #include "Framework/Scene/Scene.h"
@@ -6,6 +6,7 @@
 #include "Framework/Asset/AssetManager.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Framework/System/SoundSystem.h"
+#include "Framework/System/LoadingScreenRenderer.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/Physics/PhysicsSystem.h"
 #include "Framework/Physics/CollisionSystem.h"
@@ -27,9 +28,10 @@ namespace engine
         m_scene.reset();
     }
 
-    void SceneManager::ChangeScene(const std::string& name)
+    void SceneManager::ChangeScene(const std::string& name, bool async)
     {
         m_nextSceneName = name;
+        m_loadSceneAsync = async;
         m_isSceneChanged = true;
     }
 
@@ -53,12 +55,28 @@ namespace engine
 
             if (isPlaying)
             {
-                SoundSystem::Get().StopAll();
+                SoundSystem::Get().StopSceneSounds();
                 SoundSystem::Get().OnGameStart();
 
                 m_scene->Clear(true);
 
-                PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName);
+                if (m_loadSceneAsync)
+                {
+                    if (!PreloadManager::Get().IsGlobalLoaded())
+                    {
+                        m_pendingSceneAfterGlobal = m_nextSceneName;
+                        PreloadManager::Get().LoadGlobalAsync();
+                    }
+                    else
+                    {
+                        PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName);
+                    }
+                }
+                else
+                {
+                    PreloadManager::Get().LoadGlobalSync();
+                    PreloadManager::Get().LoadSceneResourceSync(m_nextSceneName);
+                }
             }
             else
             {
@@ -75,6 +93,13 @@ namespace engine
         {
             if (!PreloadManager::Get().IsLoading())
             {
+                if (!m_pendingSceneAfterGlobal.empty())
+                {
+                    PreloadManager::Get().LoadSceneResourceAsync(m_pendingSceneAfterGlobal);
+                    m_pendingSceneAfterGlobal.clear();
+                    return;
+                }
+
                 m_scene->Load();
 
                 // 물리 씬 생성 (씬 로드 후)
@@ -94,8 +119,7 @@ namespace engine
         if (m_sceneState == SceneState::Loading)
         {
             float progress = PreloadManager::Get().GetProgress();
-
-            LOG_PRINT("loading progress: {}", progress);
+            LoadingScreenRenderer::Get().Render(progress);
         }
     }
 

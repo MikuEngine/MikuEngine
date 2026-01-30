@@ -328,6 +328,7 @@ namespace engine
         Object::Save(j);
 
         j["MeshFilePath"] = m_meshFilePath;
+        j["SocketFilePath"] = m_socketFilePath;
         j["VSFilePath"] = m_vsFilePath;
         j["OpaquePSFilePath"] = m_opaquePSFilePath;
         j["CutoutPSFilePath"] = m_cutoutPSFilePath;
@@ -348,6 +349,7 @@ namespace engine
         Object::Load(j);
 
         JsonGet(j,"MeshFilePath", m_meshFilePath);
+        JsonGet(j, "SocketFilePath", m_socketFilePath);
         JsonGet(j,"VSFilePath", m_vsFilePath);
         JsonGet(j,"OpaquePSFilePath", m_opaquePSFilePath);
         JsonGet(j,"CutoutPSFilePath", m_cutoutPSFilePath);
@@ -808,17 +810,21 @@ namespace engine
 
         for (auto& instance : m_socketInstances)
         {
-            if (!instance.info) continue;
-
-            instance.worldMatrix = instance.info->localMatrix * transform->GetWorld();
+            instance.worldMatrix = instance.info.localMatrix * transform->GetWorld();
         }
 
-        for (auto& attached : m_attachedObjects)
+        for (auto it = m_attachedObjects.begin(); it != m_attachedObjects.end(); )
         {
-            if (!attached.obj) continue;
-
-            Matrix socketWorld = GetSocketWorldMatrix(attached.socketName);
-            attached.obj->GetTransform()->SetWorldMatrix(socketWorld);
+            if (it->obj)
+            {
+                Matrix socketWorld = GetSocketWorldMatrix(it->socketName);
+                it->obj->GetTransform()->SetWorldMatrix(socketWorld);
+                ++it;
+            }
+            else
+            {
+                it = m_attachedObjects.erase(it);
+            }
         }
     }
 
@@ -842,7 +848,7 @@ namespace engine
 
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
 
-        if (!m_meshFilePath.empty())
+        if (!m_socketFilePath.empty() || !m_meshFilePath.empty())
         {
             LoadSocketData();
         }

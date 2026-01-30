@@ -30,6 +30,8 @@ namespace game
         void StartGame();
         void OpenOption();
         void OpenCredit();
+        void CheckQuit(bool open);
+        void BackToMain();
         void QuitGame();
         void Back();
 
@@ -50,8 +52,11 @@ namespace game
         engine::GameObject* m_creditPopUp = nullptr;
         engine::GameObject* m_blocker = nullptr;
 
+        engine::GameObject* m_realQuitPopUp = nullptr;
+
         bool m_bound = false;
         bool m_isOptionOpen = false;
         bool m_isCreditOpen = false;
+        bool m_isQuitOpen = false;
     };
 }

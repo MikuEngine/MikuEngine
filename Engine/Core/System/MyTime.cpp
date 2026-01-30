@@ -53,6 +53,13 @@ namespace engine
         g_fixedDeltaTime = fixedDeltaTime;
     }
 
+    float Time::GetTimeScale(size_t scaleSlot)
+    {
+        assert(scaleSlot < g_timeScales.size());
+
+        return g_timeScales[scaleSlot];
+    }
+
     TimePoint Time::GetTimestamp()
     {
         return Clock::now();

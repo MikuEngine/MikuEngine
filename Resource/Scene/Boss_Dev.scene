@@ -65,6 +65,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -116,13 +117,10 @@
                     }
                 },
                 {
-                    "Type": "BossScript",
-                    "Active": true
-                },
-                {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -197,29 +195,10 @@
                     }
                 },
                 {
-                    "Type": "PlayerControllerScript",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "MoveSpeed": 5.0,
-                    "RotationSpeed": 10.0,
-                    "FireRate": 1.2000000476837158,
-                    "BulletSpeed": 11.0,
-                    "BulletLifetime": 3.0,
-                    "AimPointerObjectName": "AimPointer",
-                    "EnableUpperBodyAim": true,
-                    "FSMInitialized": false,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_WalkForward": "WalkForward",
-                    "AnimName_WalkBackward": "WalkBackward",
-                    "AnimName_Fire": "Fire",
-                    "ExecutionRange": 10.0
-                },
-                {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -414,26 +393,6 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                },
-                {
-                    "Type": "ExecutionIndicatorManager",
-                    "Active": true,
-                    "IndicatorPrefabName": "ExcutionIndicator",
-                    "RotationDuration": 1.5,
-                    "RaycastMaxDistance": 1000.0,
-                    "IndicatorOffset": {
-                        "x": 0.0,
-                        "y": 0.10000000149011612,
-                        "z": 0.0
-                    },
-                    "LinePrefabName": "IndicatorLine",
-                    "LinePlayerOffset": 0.5,
-                    "LineMonsterOffset": 0.5,
-                    "LineBaseLength": 1.0,
-                    "LineHeight": 0.5,
-                    "DashDistance": 2.0,
-                    "DashInterval": 0.15000000596046448,
-                    "FinalDashThreshold": 2.5
                 }
             ]
         },

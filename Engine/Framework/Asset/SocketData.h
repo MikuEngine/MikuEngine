@@ -21,13 +21,13 @@ namespace engine
 
     struct SocketInstance
     {
-        std::shared_ptr<Socket> info;
+        Socket info;
         Matrix worldMatrix;
     };
 
     struct AttachedSocketObject
     {
-        GameObject* obj;
+        Ptr<GameObject> obj;
         std::string socketName;
     };
 

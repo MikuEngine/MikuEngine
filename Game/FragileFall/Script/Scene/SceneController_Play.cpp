@@ -8,7 +8,9 @@
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIButton.h>
-#include "UIPopUpAnimator.h"
+#include "Script/UI/UIPopUpAnimator.h"
+
+#include "Manager/TimeScaler.h"
 
 namespace game
 {
@@ -83,6 +85,9 @@ namespace game
 
         m_isMenuOpen = false;
         m_isOptionOpen = false;
+        m_isDead = false;
+
+        if (!m_isDead) TimeScaler::PlayWorld();
 
         auto& app = engine::AppContext::GetApp();
         const auto& s = app.GetUserSettings();
@@ -104,20 +109,18 @@ namespace game
     {
         if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
-            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
 
-            if (m_isOptionOpen) { Back(); engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
-            if (m_isGiveupOpen) { CheckBackToMain(false); engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
-
-            if (m_isMenuOpen) { SetMenuOpen(false);  engine::SoundSystem::Get().Play("UI_Click_Random", "SFX"); return; }
+            if (m_isOptionOpen) { Back(); return; }
+            if (m_isGiveupOpen) { CheckBackToMain(false); return; }
+            if (m_isMenuOpen) { SetMenuOpen(false); return; }
 
             SetMenuOpen(true);
         }
 
         if (engine::Input::IsKeyPressed(engine::Keys::F5))
         {
-            m_isDead = true;
-            m_failPanel->SetActive(true);
+            Fail();
         }
     }
 
@@ -143,7 +146,7 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
         if (cb) cb(); });
     }
 
@@ -175,9 +178,6 @@ namespace game
         }
 
         UpdateBlocker();
-
-        // TODO : 시간 멈춤 / 재개 구현
-        //engine::Time::SetTimeScale()
     }
 
     void SceneController_Play::OpenMenu()
@@ -216,7 +216,7 @@ namespace game
 
     void SceneController_Play::BackToRestart()
     {
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Play");
+        engine::SceneManager::Get().ChangeScene("Prototype_Play");
     }
 
     void SceneController_Play::Back()
@@ -225,10 +225,21 @@ namespace game
         SetMenuOpen(true);
     }
 
+    void SceneController_Play::Fail()
+    {
+        m_isDead = true;
+        m_failPanel->SetActive(true);
+        TimeScaler::StopWorld();
+    }
+
     void SceneController_Play::UpdateBlocker()
     {
         if (!m_blocker) return;
-        m_blocker->SetActive(m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen);
+        const bool paused = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen);
+
+        m_blocker->SetActive(paused);
+
+        paused ? TimeScaler::StopWorld(): TimeScaler::PlayWorld();
     }
 
     void SceneController_Play::OnBGMChanged(float v)

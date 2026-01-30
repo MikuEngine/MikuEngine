@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 337.0,
-                        "y": 127.0,
-                        "z": 1.2000000476837158
+                        "x": 88.80000305175781,
+                        "y": 34.70000076293945,
+                        "z": 8.899999618530273
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -56,9 +56,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.20000000298023224,
+                        "y": 0.20000000298023224,
+                        "z": 0.20000000298023224
                     }
                 },
                 {
@@ -295,6 +295,7 @@
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/TestBot.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -479,6 +480,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",

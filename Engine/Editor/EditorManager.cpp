@@ -45,6 +45,8 @@ namespace engine
     namespace
     {
         nlohmann::ordered_json g_tempScene;
+
+        std::filesystem::path g_editorSettingsPath{ "EditorSettings.config" };
     }
 
     EditorManager::EditorManager() = default;
@@ -62,14 +64,32 @@ namespace engine
         RefreshSceneFileCache();
         ValidateSettingsList();
 
+        LoadEditorSettings();
+
         bool sceneLoaded = false;
 
-        if (!m_projectSettings.sceneList.empty())
+        if (auto iter = m_editorSettings.find("LastScene"); iter != m_editorSettings.end())
+        {
+            std::string path = "Resource/Scene/" + std::string(*iter) + ".scene";
+            if (std::filesystem::exists(path))
+            {
+                SceneManager::Get().ChangeScene(*iter);
+
+                LoadSceneEditorData(*iter);
+
+                sceneLoaded = true;
+            }
+        }
+
+        if (!sceneLoaded && !m_projectSettings.sceneList.empty())
         {
             std::string path = "Resource/Scene/" + m_projectSettings.sceneList[0] + ".scene";
             if (std::filesystem::exists(path))
             {
                 SceneManager::Get().ChangeScene(m_projectSettings.sceneList[0]);
+
+                LoadSceneEditorData(m_projectSettings.sceneList[0]);
+
                 sceneLoaded = true;
             }
         }
@@ -77,6 +97,9 @@ namespace engine
         if (!sceneLoaded && !m_cachedSceneFiles.empty())
         {
             SceneManager::Get().ChangeScene(m_cachedSceneFiles[0]);
+
+            LoadSceneEditorData(m_cachedSceneFiles[0]);
+
             sceneLoaded = true;
         }
 
@@ -91,21 +114,64 @@ namespace engine
 
     void EditorManager::Update()
     {
-        if (!ImGui::GetIO().WantCaptureMouse)
+        if (!ImGui::GetIO().WantCaptureKeyboard && Input::IsKeyReleased(Keys::H))
         {
-            m_editorCamera->Update();
+            m_showEditorUI = !m_showEditorUI;
 
+            m_selectedObject = nullptr;
+        }
+
+        m_editorCamera->Update();
+
+        if (m_showEditorUI && !ImGui::GetIO().WantCaptureMouse)
+        {
             if (Input::IsMousePressed(Buttons::LEFT))
             {
                 Vector2 pos = Input::GetMousePosition();
 
-                GameObject* gameObject = SystemManager::Get().GetRenderSystem().PickObject(
-                    static_cast<int>(pos.x), static_cast<int>(pos.y));
+                GameObject* gameObject = SystemManager::Get().GetRenderSystem().PickObject( static_cast<int>(pos.x), static_cast<int>(pos.y));
                 if (gameObject != nullptr)
                 {
                     SetSelectedObject(gameObject);
                 }
             }
+        }
+
+        if (!ImGui::GetIO().WantCaptureKeyboard && !Input::IsMouseHeld(Buttons::RIGHT))
+        {
+            // 1. 이동 모드
+            if (ImGui::IsKeyPressed(ImGuiKey_W))
+            {
+                GizmoState::CurrentOperation = ImGuizmo::TRANSLATE;
+            }
+
+            // 2. 회전 모드
+            if (ImGui::IsKeyPressed(ImGuiKey_E))
+            {
+                GizmoState::CurrentOperation = ImGuizmo::ROTATE;
+            }
+
+            // 3. 스케일 모드 (선택 시 즉시 LOCAL로 변경)
+            if (ImGui::IsKeyPressed(ImGuiKey_R))
+            {
+                GizmoState::CurrentOperation = ImGuizmo::SCALE;
+                GizmoState::CurrentMode = ImGuizmo::LOCAL;
+            }
+
+            // 4. 좌표계 토글 (현재 스케일 모드가 아닐 때만 작동)
+            if (ImGui::IsKeyPressed(ImGuiKey_Q))
+            {
+                if (GizmoState::CurrentOperation != ImGuizmo::SCALE)
+                {
+                    GizmoState::CurrentMode = (GizmoState::CurrentMode == ImGuizmo::LOCAL)
+                        ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
+                }
+            }
+        }
+
+        // [강제 가드 로직] 혹시 모를 예외 상황 방지
+        if (GizmoState::CurrentOperation == ImGuizmo::SCALE) {
+            GizmoState::CurrentMode = ImGuizmo::LOCAL;
         }
     }
 
@@ -113,20 +179,30 @@ namespace engine
     {
         auto& graphics = GraphicsDevice::Get();
 
-        graphics.BeginDrawGUIPass();
+        if (m_showEditorUI)
         {
-            DrawPlayController();
-            DrawEditorController();
-            DrawHierarchy();
-            DrawInspector();
-            DrawPrefabManager();
-            DrawDebugInfo();
+            graphics.BeginDrawGUIPass();
+            {
+                DrawPlayController();
+                DrawEditorController();
+                DrawHierarchy();
+                DrawInspector();
+                DrawPrefabManager();
+                DrawGizmoToolbar();
+                DrawDebugInfo();
+            }
+            graphics.EndDrawGUIPass();
         }
-        graphics.EndDrawGUIPass();
     }
 
     void EditorManager::Shutdown()
     {
+        auto sceneName = SceneManager::Get().GetScene()->GetName();
+        m_editorSettings["LastScene"] = sceneName;
+
+        SaveSceneEditorData(sceneName);
+        SaveEditorSettings();
+
         m_editorGrid.reset(); // 그래픽 리소스 있어서 해제 필요
     }
 
@@ -426,6 +502,14 @@ namespace engine
                         list.erase(it);
                         m_projectSettings.Save();
                     }
+
+                    if (m_editorSettings.contains(m_sceneToDelete))
+                    {
+                        m_editorSettings.erase(m_sceneToDelete);
+
+                        SaveEditorSettings();
+                    }
+
                     // 4. 캐시 갱신
                     RefreshSceneFileCache();
                     // 5. ★ 현재 씬을 삭제했다면? => 대안 씬 로드
@@ -435,6 +519,8 @@ namespace engine
                         {
                             // 다른 파일이 있으면 첫 번째 것 로드 (변경사항 체크 없이 강제 로드)
                             SceneManager::Get().ChangeScene(m_cachedSceneFiles[0]);
+
+                            LoadSceneEditorData(m_cachedSceneFiles[0]);
                         }
                         else
                         {
@@ -522,6 +608,16 @@ namespace engine
                         }
                         RefreshSceneFileCache();
                         ImGui::CloseCurrentPopup();
+
+                        if (m_editorSettings.contains(m_sceneToRename))
+                        {
+                            // 기존 설정 데이터를 새 이름으로 복사
+                            m_editorSettings[std::string(renameBuf)] = m_editorSettings[m_sceneToRename];
+                            // 기존 키 삭제
+                            m_editorSettings.erase(m_sceneToRename);
+
+                            SaveEditorSettings();
+                        }
                     }
                     m_sceneToRename.clear();
                 }
@@ -550,11 +646,17 @@ namespace engine
                     // 다음 씬 로드
                     if (m_nextScenePending == "NEW_SCENE")
                     {
+                        SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
                         CreateNewScene();
                     }
                     else
                     {
+                        SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
                         SceneManager::Get().ChangeScene(m_nextScenePending);
+
+                        LoadSceneEditorData(m_nextScenePending);
                     }
 
                     m_nextScenePending.clear();
@@ -573,7 +675,11 @@ namespace engine
                     }
                     else
                     {
+                        SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
                         SceneManager::Get().ChangeScene(m_nextScenePending);
+
+                        LoadSceneEditorData(m_nextScenePending);
                     }
 
                     m_nextScenePending.clear();
@@ -899,6 +1005,14 @@ namespace engine
                 else
                 {
                     tr->OnGui();
+                    if (tr->IsDirtyThisFrame())
+                    {
+                        auto renderer = m_selectedObject->GetComponent<engine::Renderer>();
+                        if (renderer)
+                        {
+                            renderer->UpdateSockets();
+                        }
+                    }
                 }
             }
         }
@@ -1213,9 +1327,50 @@ namespace engine
         ImGui::End();
     }
 
+    void EditorManager::DrawGizmoToolbar()
+    {
+        ImGui::Begin("Gizmo Tools", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+        // Operation 선택
+        if (ImGui::RadioButton("Translate (W)", GizmoState::CurrentOperation == ImGuizmo::TRANSLATE))
+        {
+            GizmoState::CurrentOperation = ImGuizmo::TRANSLATE;
+        }
+
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Rotate (E)", GizmoState::CurrentOperation == ImGuizmo::ROTATE))
+        {
+            GizmoState::CurrentOperation = ImGuizmo::ROTATE;
+        }
+
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Scale (R)", GizmoState::CurrentOperation == ImGuizmo::SCALE))
+        {
+            GizmoState::CurrentOperation = ImGuizmo::SCALE;
+        }
+
+        ImGui::Separator();
+
+        // Mode 선택
+        if (ImGui::RadioButton("Local", GizmoState::CurrentMode == ImGuizmo::LOCAL))
+        {
+            GizmoState::CurrentMode = ImGuizmo::LOCAL;
+        }
+        ImGui::SameLine();
+        if (ImGui::RadioButton("World", GizmoState::CurrentMode == ImGuizmo::WORLD))
+        {
+            GizmoState::CurrentMode = ImGuizmo::WORLD;
+        }
+
+        ImGui::End();
+    }
+
     void EditorManager::DrawEditorGrid()
     {
-        m_editorGrid->Draw();
+        if (m_showEditorUI)
+        {
+            m_editorGrid->Draw();
+        }
     }
 
     void EditorManager::ValidateSettingsList()
@@ -1301,8 +1456,12 @@ namespace engine
         }
         else
         {
+            SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
             SceneManager::Get().ChangeScene(nextSceneName);
             m_selectedObject = nullptr;
+
+            LoadSceneEditorData(nextSceneName);
         }
     }
 
@@ -1316,7 +1475,8 @@ namespace engine
         }
         else
         {
-            // 깨끗하면 바로 생성
+            SaveSceneEditorData(SceneManager::Get().GetScene()->GetName());
+
             CreateNewScene();
         }
     }
@@ -1327,6 +1487,7 @@ namespace engine
         // 선택된 오브젝트 해제
         m_selectedObject = nullptr;
     }
+
     void EditorManager::RefreshPrefabCache()
     {
         m_cachedPrefabFiles.clear();
@@ -1345,5 +1506,66 @@ namespace engine
                 m_cachedPrefabFiles.push_back(entry.path().stem().string());
             }
         }
+    }
+
+    void EditorManager::LoadEditorSettings()
+    {
+        std::ifstream file{ g_editorSettingsPath };
+        if (file.is_open())
+        {
+            try
+            {
+                file >> m_editorSettings;
+            }
+            catch (...)
+            {
+                LOG_INFO("Editor setting 파일 오류");
+            }
+        }
+    }
+
+    void EditorManager::SaveEditorSettings()
+    {
+        std::ofstream file{ g_editorSettingsPath };
+        if (file.is_open())
+        {
+            file << m_editorSettings.dump(4);
+        }
+    }
+
+    void EditorManager::SaveSceneEditorData(const std::string& sceneName)
+    {
+        if (sceneName.empty())
+        {
+            return;
+        }
+
+        json sceneData;
+
+        m_editorCamera->SaveEditorData(sceneData["Camera"]);
+        LightDebugRenderer::Get().SaveEditorData(sceneData["LightDebug"]);
+        PhysicsDebugRenderer::Get().SaveEditorData(sceneData["PhysicsDebug"]);
+        PathfindingDebugRenderer::Get().SaveEditorData(sceneData["PathfindingDebug"]);
+        SocketDebugRenderer::Get().SaveEditorData(sceneData["SocketDebug"]);
+
+        m_editorSettings[sceneName] = sceneData;
+    }
+
+    void EditorManager::LoadSceneEditorData(const std::string& sceneName)
+    {
+        // 해당 씬의 데이터를 가져오거나, 없으면 빈 객체({})로 시작
+        json sceneData = json::object();
+
+        if (m_editorSettings.contains(sceneName))
+        {
+            sceneData = m_editorSettings[sceneName];
+        }
+
+        m_editorCamera->LoadEditorData(sceneData.value("Camera", json::object()));
+
+        LightDebugRenderer::Get().LoadEditorData(sceneData.value("LightDebug", json::object()));
+        PhysicsDebugRenderer::Get().LoadEditorData(sceneData.value("PhysicsDebug", json::object()));
+        PathfindingDebugRenderer::Get().LoadEditorData(sceneData.value("PathfindingDebug", json::object()));
+        SocketDebugRenderer::Get().LoadEditorData(sceneData.value("SocketDebug", json::object()));
     }
 }

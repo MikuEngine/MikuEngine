@@ -10,7 +10,7 @@
 #include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Framework/Object/Component/RectTransform.h>
-#include "UIPopUpAnimator.h"
+#include "Script/UI/UIPopUpAnimator.h"
 
 
 namespace game
@@ -136,7 +136,7 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
         if (cb) cb(); });
     }
 
@@ -164,8 +164,7 @@ namespace game
 
     void SceneController_Lobby::EnterPlay()
     {
-        LOG_PRINT("EnterPlay");
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Play");
+        engine::SceneManager::Get().ChangeScene("Prototype_Play");
     }
 
     void SceneController_Lobby::OpenUpgrade()
@@ -175,13 +174,11 @@ namespace game
 
     void SceneController_Lobby::OpenOption()
     {
-        LOG_PRINT("OpenOption");
         SetOptionOpen(true);
     }
 
     void SceneController_Lobby::BackToMain()
     {
-        LOG_PRINT("BackToMain");
         engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
     }
 
@@ -233,14 +230,14 @@ namespace game
         if (m_isOptionOpen)
         {
             SetOptionOpen(false);
-            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
             return;
         }
 
         if (m_isUpgradeOpen)
         {
             SetUpgradeOpen(false);
-            engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
             return;
         }
     }

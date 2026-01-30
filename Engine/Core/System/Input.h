@@ -18,6 +18,10 @@ namespace engine
         static void Initialize(HWND hWnd);
         static void Update();
 
+        static void SetMouseSensitivity(float v);
+        static void SetInvertY(bool v);
+
+        //
         static bool IsKeyHeld(DirectX::Keyboard::Keys key);
         static bool IsKeyPressed(DirectX::Keyboard::Keys key);
         static bool IsKeyReleased(DirectX::Keyboard::Keys key);
@@ -34,5 +38,9 @@ namespace engine
 
         static float GetMouseWheelDelta();
         static float GetMouseWheelNotch();
+
+    private:
+        static inline float m_mouseSensitivity = 1.0f;
+        static inline bool  m_invertY = false;
     };
 }

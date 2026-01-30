@@ -13,68 +13,69 @@ namespace engine
 
             const Vector2 mouseDelta = Input::GetMouseDelta();
 
-            m_yaw += mouseDelta.x * m_rotationSpeed;
-            m_pitch += mouseDelta.y * m_rotationSpeed;
+            if (mouseDelta.x != 0.0f || mouseDelta.y != 0.0f)
+            {
+                m_yaw += mouseDelta.x * m_rotationSpeed;
+                m_pitch += mouseDelta.y * m_rotationSpeed;
 
-            constexpr float limit = ToRadian(89.9f);
-            m_pitch = std::clamp(m_pitch, -limit, limit);
-            m_isDirty = true;
+                constexpr float limit = ToRadian(89.9f);
+                m_pitch = std::clamp(m_pitch, -limit, limit);
+
+                m_isDirty = true;
+            }
         }
         else
         {
-            engine::Input::SetMouseMode(DirectX::Mouse::Mode::MODE_ABSOLUTE);
+            Input::SetMouseMode(DirectX::Mouse::Mode::MODE_ABSOLUTE);
         }
 
         const Matrix rotationMatrix = Matrix::CreateFromYawPitchRoll(m_yaw, m_pitch, 0.0f);
-
         const Vector3 forward = Vector3::Transform(Vector3::UnitZ, rotationMatrix);
         const Vector3 right = Vector3::Transform(Vector3::UnitX, rotationMatrix);
-        const Vector3 up = Vector3::Transform(Vector3::UnitY, rotationMatrix);
+        // const Vector3 up   = Vector3::Transform(Vector3::UnitY, rotationMatrix);
 
-        Vector3 moveDir = Vector3::Zero;
-
-        if (Input::IsKeyHeld(Keys::W))
+        if (Input::IsMouseHeld(Buttons::RIGHT))
         {
-            moveDir += forward;
-        }
+            Vector3 moveDir = Vector3::Zero;
 
-        if (Input::IsKeyHeld(Keys::S))
-        {
-            moveDir -= forward;
-        }
-
-        if (Input::IsKeyHeld(Keys::D))
-        {
-            moveDir += right;
-        }
-
-        if (Input::IsKeyHeld(Keys::A))
-        {
-            moveDir -= right;
-        }
-
-        if (Input::IsKeyHeld(Keys::E))
-        {
-            moveDir += Vector3::UnitY;
-        }
-
-        if (Input::IsKeyHeld(Keys::Q))
-        {
-            moveDir -= Vector3::UnitY;
-        }
-
-        if (moveDir != Vector3::Zero)
-        {
-            moveDir.Normalize();
-
-            float speed = m_moveSpeed;
-            if (Input::IsKeyHeld(Keys::LeftShift))
+            if (Input::IsKeyHeld(Keys::W))
             {
-                speed *= 2.0f;
+                moveDir += forward;
+            }
+            if (Input::IsKeyHeld(Keys::S))
+            {
+                moveDir -= forward;
+            }
+            if (Input::IsKeyHeld(Keys::D))
+            {
+                moveDir += right;
+            }
+            if (Input::IsKeyHeld(Keys::A))
+            {
+                moveDir -= right;
+            }
+            if (Input::IsKeyHeld(Keys::E))
+            {
+                moveDir += Vector3::UnitY;
+            }
+            if (Input::IsKeyHeld(Keys::Q))
+            {
+                moveDir -= Vector3::UnitY;
             }
 
-            m_position += moveDir * speed * deltaTime;
-            m_isDirty = true;
+            if (moveDir != Vector3::Zero)
+            {
+                moveDir.Normalize();
+
+                float speed = m_moveSpeed;
+                if (Input::IsKeyHeld(Keys::LeftShift))
+                {
+                    speed *= 2.0f;
+                }
+
+                m_position += moveDir * speed * deltaTime;
+                m_isDirty = true;
+            }
         }
 
         if (m_isDirty)
@@ -119,6 +120,11 @@ namespace engine
             m_isDirty = true;
         }
 
+        if (ImGui::DragFloat("FOV", &m_fov, 0.1f, 1.0f, 170.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+        {
+            m_isDirty = true;
+        }
+
         ImGui::PopID();
     }
 
@@ -155,6 +161,35 @@ namespace engine
         m_aspectRatio = aspect;
         m_near = nearZ;
         m_far = farZ;
+
+        m_isDirty = true;
+    }
+
+    // 에디터 상태 저장용
+    void EditorCamera::SaveEditorData(json& j) const
+    {
+        j["Position"] = m_position;
+        j["Yaw"] = m_yaw;
+        j["Pitch"] = m_pitch;
+        j["FOV"] = m_fov;
+        j["AspectRatio"] = m_aspectRatio;
+        j["Near"] = m_near;
+        j["Far"] = m_far;
+        j["MoveSpeed"] = m_moveSpeed;
+        j["RotationSpeed"] = m_rotationSpeed;
+    }
+
+    void EditorCamera::LoadEditorData(const json& j)
+    {
+        JsonGet(j, "Position", m_position, { 0.0f, 0.0f, -10.0f });
+        JsonGet(j, "Yaw", m_yaw, 0.0f);
+        JsonGet(j, "Pitch", m_pitch, 0.0f);
+        JsonGet(j, "FOV", m_fov, 90.0f);
+        JsonGet(j, "AspectRatio", m_aspectRatio, 16.0f / 9.0f);
+        JsonGet(j, "Near", m_near, 0.1f);
+        JsonGet(j, "Far", m_far, 10000.0f);
+        JsonGet(j, "MoveSpeed", m_moveSpeed, 10.0f);
+        JsonGet(j, "RotationSpeed", m_rotationSpeed, 0.002f);
 
         m_isDirty = true;
     }

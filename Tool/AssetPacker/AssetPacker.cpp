@@ -16,6 +16,7 @@
 
 namespace fs = std::filesystem;
 
+#pragma pack(push, 1)
 // VirtualFileSystem.h와 반드시 일치해야 함
 struct PackHeader
 {
@@ -33,6 +34,8 @@ struct FileEntry
     uint64_t uncompressedSize;  // 원본 크기
     char path[256];
 };
+
+#pragma pack(pop)
 
 uint64_t HashPath(const std::string& path)
 {

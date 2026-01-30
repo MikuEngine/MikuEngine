@@ -2,15 +2,19 @@
 #include "Transform.h"
 
 #include <imgui.h>
+#include <ImGuizmo.h>
 
 #include "Common/Math/MathUtility.h"
 #include "Common/Utility/JsonHelper.h"
 #include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/TransformSystem.h"
+#include "Framework/System/CameraSystem.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Object/Component/RectTransform.h"
 #include "Framework/Object/Component/Collider.h"
+#include "Editor/EditorManager.h"
+#include "Editor/EditorCamera.h"
 
 namespace engine
 {
@@ -459,6 +463,32 @@ namespace engine
         ImGui::PopStyleColor();
         ImGui::Spacing();
         ImGui::Spacing();
+
+        Matrix worldMatrix = GetWorld();
+        Matrix view;
+        Matrix proj;
+
+        if (EditorManager::Get().GetEditorState() != EditorState::Play)
+        {
+            auto camera = EditorManager::Get().GetEditorCamera();
+            view = camera->GetView();
+            proj = camera->GetProjection();
+        }
+        else
+        {
+            auto camera = SystemManager::Get().GetCameraSystem().GetMainCamera();
+            view = camera->GetView();
+            proj = camera->GetProjection();
+        }
+
+        if (ImGuizmo::Manipulate(
+            &view._11, &proj._11,
+            GizmoState::CurrentOperation,
+            GizmoState::CurrentMode,
+            &worldMatrix._11))
+        {
+            SetWorldMatrix(worldMatrix);
+        }
     }
 
     void Transform::Save(json& j) const

@@ -8,7 +8,7 @@
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIButton.h>
-#include "UIPopUpAnimator.h"
+#include "Script/UI/UIPopUpAnimator.h"
 
 namespace game
 {
@@ -48,9 +48,12 @@ namespace game
         BindButton("UI_StartButton", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->StartGame();});
         BindButton("UI_OptionButton", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->OpenOption();});
         BindButton("UI_CreditButton", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->OpenCredit();});
-        BindButton("UI_QuitButton", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->QuitGame();});
+        BindButton("UI_QuitButton", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->CheckQuit(true);});
         BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->Back();});
         BindButton("UI_CloseButton_Credit", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->Back();});
+
+        BindButton("OK_Button", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->QuitGame(); });
+        BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Main>(this)] {if (self) self->CheckQuit(false); });
 
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Main>(this)](float v) {if (self) self->OnBGMChanged(v); });
@@ -69,8 +72,12 @@ namespace game
         m_blocker = engine::GameObject::Find("Panel_Blocker");
         if (m_blocker) m_blocker->SetActive(false);
 
+        m_realQuitPopUp = engine::GameObject::Find("UI_RealQuitPopUp");
+        if (m_realQuitPopUp) m_realQuitPopUp->SetActive(false);
+
         m_isOptionOpen = false;
         m_isCreditOpen = false;
+        m_isQuitOpen = false;
 
         auto& app = engine::AppContext::GetApp();
         const auto& s = app.GetUserSettings();
@@ -93,7 +100,15 @@ namespace game
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
             if (m_isOptionOpen || m_isCreditOpen)
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Click_Random");
                 Back();
+            }
+            else
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+                m_isQuitOpen ? CheckQuit(false) : CheckQuit(true);
+            }
         }
     }
 
@@ -120,7 +135,7 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().Play("UI_Click_Random", "SFX");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
         if (cb) cb(); });
     }
 
@@ -142,23 +157,32 @@ namespace game
 
     void SceneController_Main::OpenOption()
     {
-        LOG_PRINT("OpenOption");
-
         SetOptionOpen(true);
         SetCreditOpen(false);
     }
 
     void SceneController_Main::OpenCredit()
     {
-        LOG_PRINT("OpenCredit");
-
         SetCreditOpen(true);
         SetOptionOpen(false);
     }
 
+    void SceneController_Main::CheckQuit(bool open)
+    {
+        m_isQuitOpen = open;
+        m_realQuitPopUp->SetActive(open);
+
+        UpdateBlocker();
+    }
+
+    void SceneController_Main::BackToMain()
+    {
+
+    }
+
     void SceneController_Main::QuitGame()
     {
-        LOG_PRINT("QuitGame");
+        PostQuitMessage(0);
     }
 
     void SceneController_Main::Back()
@@ -229,6 +253,6 @@ namespace game
     void SceneController_Main::UpdateBlocker()
     {
         if (!m_blocker) return;
-        m_blocker->SetActive(m_isOptionOpen || m_isCreditOpen);
+        m_blocker->SetActive(m_isOptionOpen || m_isCreditOpen || m_isQuitOpen);
     }
 }

@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PhysicsDebugRenderer.h"
 
 #include "Framework/System/SystemManager.h"
@@ -175,6 +175,28 @@ namespace engine
                 ImGui::Unindent();
             }
         }
+    }
+
+    void PhysicsDebugRenderer::SaveEditorData(json& j) const
+    {
+        j["Enable"] = m_enabled;
+        j["ShowPivot"] = m_showPivot;
+        j["ColliderColor"] = m_colliderColor;
+        j["TriggerColor"] = m_triggerColor;
+        j["ControllerColor"] = m_controllerColor;
+        j["CollidingColor"] = m_collidingColor;
+        j["PivotColor"] = m_pivotColor;
+    }
+
+    void PhysicsDebugRenderer::LoadEditorData(const json& j)
+    {
+        JsonGet(j, "Enable", m_enabled, false);
+        JsonGet(j, "ShowPivot", m_showPivot, false);
+        JsonGet(j, "ColliderColor", m_colliderColor, { 0.0f, 1.0f, 0.0f, 1.0f });
+        JsonGet(j, "TriggerColor", m_triggerColor, { 0.0f, 0.5f, 1.0f, 1.0f });
+        JsonGet(j, "ControllerColor", m_controllerColor, { 1.0f, 1.0f, 0.0f, 1.0f });
+        JsonGet(j, "CollidingColor", m_collidingColor, { 1.0f, 0.3f, 0.0f, 1.0f });
+        JsonGet(j, "PivotColor", m_pivotColor, { 1.0f, 0.0f, 1.0f, 1.0f });
     }
 
     void PhysicsDebugRenderer::RenderColliders()

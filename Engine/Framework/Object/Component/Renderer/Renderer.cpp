@@ -4,6 +4,7 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/RenderSystem.h"
+#include "Framework/Asset/AssetManager.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/Component/Animator/SkeletalAnimator.h"
 #include "Framework/Object/Component/Socket/SocketAttachment.h"
@@ -49,12 +50,12 @@ namespace engine
 		{
 			if (ImGui::Button("Add New Socket"))
 			{
-				auto newSocket = std::make_shared<Socket>();
-				newSocket->name = "New Socket " + std::to_string(m_socketInstances.size());
-				newSocket->localScale = Vector3::One;
-				newSocket->localRotation = Quaternion::Identity;
-				newSocket->localPosition = Vector3::Zero;
-				newSocket->UpdateLocalMatrix();
+				Socket newSocket;
+				newSocket.name = "New Socket " + std::to_string(m_socketInstances.size());
+				newSocket.localScale = Vector3::One;
+				newSocket.localRotation = Quaternion::Identity;
+				newSocket.localPosition = Vector3::Zero;
+				newSocket.UpdateLocalMatrix();
 
 				SocketInstance newInstance;
 				newInstance.info = newSocket;
@@ -71,20 +72,20 @@ namespace engine
 			for (size_t i = 0; i < m_socketInstances.size(); ++i)
 			{
 				auto& instance = m_socketInstances[i];
-				auto socket = instance.info.get();
+				auto& socket = instance.info;
 				auto animator = GetGameObject()->GetComponent<SkeletalAnimator>();
 
 				ImGui::PushID(static_cast<int>(i));
 
 				bool pendingDelete = false;
-				std::string nodeLabel = (socket->name.empty() ? "New Socket" : socket->name) + "###SocketNode_" + std::to_string(i);
+				std::string nodeLabel = (socket.name.empty() ? "New Socket" : socket.name) + "###SocketNode_" + std::to_string(i);
 
 				if (ImGui::TreeNode(nodeLabel.c_str()))
 				{
 					bool changed = false;
 
 					ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 35);
-					if (ImGui::InputText("##SocketNameInput", &socket->name)) { changed = true; }
+					if (ImGui::InputText("##SocketNameInput", &socket.name)) { changed = true; }
 
 					ImGui::SameLine();
 					if (ImGui::Button("X"))
@@ -96,24 +97,24 @@ namespace engine
 					{
 						if (animator)
 						{
-							const char* preview = socket->parentBoneName.empty() ? "<None>" : socket->parentBoneName.c_str();
+							const char* preview = socket.parentBoneName.empty() ? "<None>" : socket.parentBoneName.c_str();
 
 							if (ImGui::BeginCombo("Select Bone##BoneSelect", preview))
 							{
 								const auto& skeleton = animator->GetSkeleton();
 								for (const auto& bone : skeleton)
 								{
-									bool isSelected = (socket->parentBoneName == bone.name);
+									bool isSelected = (socket.parentBoneName == bone.name);
 
 									if (ImGui::Selectable(bone.name.c_str(), isSelected))
 									{
 										Matrix oldWorld = instance.worldMatrix;
-										socket->parentBoneName = bone.name;
+										socket.parentBoneName = bone.name;
 
 										Matrix newBoneWorld = animator->GetBoneWorldMatrix(bone.name);
-										socket->localMatrix = oldWorld * newBoneWorld.Invert();
+										socket.localMatrix = oldWorld * newBoneWorld.Invert();
 
-										socket->DecomposeLocalMatrix();
+										socket.DecomposeLocalMatrix();
 
 										UpdateSockets();
 									}
@@ -127,34 +128,34 @@ namespace engine
 						}
 						else
 						{
-							if (ImGui::InputText("Parent Bone", &socket->parentBoneName))
+							if (ImGui::InputText("Parent Bone", &socket.parentBoneName))
 							{
 								changed = true;
-								socket->localPosition = Vector3::Zero;
-								socket->UpdateLocalMatrix();
+								socket.localPosition = Vector3::Zero;
+								socket.UpdateLocalMatrix();
 								UpdateSockets();
 							}
 						}
 						
 						ImGui::Separator();
 
-						changed |= ImGui::DragFloat3("Pos", &socket->localPosition.x, 0.05f);
+						changed |= ImGui::DragFloat3("Pos", &socket.localPosition.x, 0.05f);
 						ImGui::SameLine();
 						if (ImGui::Button("Reset##Pos"))
 						{
-							socket->localPosition = Vector3::Zero;
+							socket.localPosition = Vector3::Zero;
 							changed = true;
 						}
 
 						if (s_editingIndex != static_cast<int>(i))
 						{
-							s_tempEuler = socket->localRotation.ToEuler() * (180.0f / DirectX::XM_PI);
+							s_tempEuler = socket.localRotation.ToEuler() * (180.0f / DirectX::XM_PI);
 							s_editingIndex = static_cast<int>(i);
 						}
 
 						if (ImGui::DragFloat3("Rot", &s_tempEuler.x, 0.5f))
 						{
-							socket->localRotation = Quaternion::CreateFromYawPitchRoll(
+							socket.localRotation = Quaternion::CreateFromYawPitchRoll(
 								ToRadian(s_tempEuler.y),
 								ToRadian(s_tempEuler.x),
 								ToRadian(s_tempEuler.z)
@@ -164,22 +165,22 @@ namespace engine
 						ImGui::SameLine();
 						if (ImGui::Button("Reset##Rot"))
 						{
-							socket->localRotation = Quaternion::Identity;
+							socket.localRotation = Quaternion::Identity;
 							s_tempEuler = Vector3::Zero;
 							changed = true;
 						}
 
-						changed |= ImGui::DragFloat3("Scale", &socket->localScale.x, 0.05f);
+						changed |= ImGui::DragFloat3("Scale", &socket.localScale.x, 0.05f);
 						ImGui::SameLine();
 						if (ImGui::Button("Reset##Scale"))
 						{
-							socket->localScale = Vector3::One;
+							socket.localScale = Vector3::One;
 							changed = true;
 						}
 
 						if (changed)
 						{
-							socket->UpdateLocalMatrix();
+							socket.UpdateLocalMatrix();
 							UpdateSockets();
 
 							auto renderer = GetGameObject()->GetComponent<Renderer>();
@@ -231,8 +232,7 @@ namespace engine
 		std::vector<Socket> socketsToSave;
 		for (const auto& instance : m_socketInstances)
 		{
-			if (instance.info)
-				socketsToSave.push_back(*(instance.info));
+			socketsToSave.push_back(instance.info);
 		}
 
 		SocketData saver;
@@ -242,34 +242,29 @@ namespace engine
 
 	void Renderer::LoadSocketData()
 	{
-		const std::string& meshPath = GetMeshPath();
-		if (meshPath.empty()) return;
-
-		std::string filePath = "Resource/Data/Socket/" + std::filesystem::path(meshPath).filename().string() + ".socketdata";
-
-		SocketData loader;
-		loader.Create(filePath);
-
-		const auto& loadedSockets = loader.GetSockets();
-		if (loadedSockets.empty())
+		if (m_socketFilePath.empty())
 		{
-			ClearSockets();
-			return;
+			const std::string& meshPath = GetMeshPath();
+			if (meshPath.empty()) return;
+			m_socketFilePath = "Resource/Data/Socket/" + std::filesystem::path(meshPath).filename().string() + ".socketdata";
 		}
 
-		std::vector<SocketInstance> tempInstances;
-		tempInstances.reserve(loadedSockets.size());
+		m_socketData = AssetManager::Get().GetOrCreateSocketData(m_socketFilePath, LifeScope::Scene);
 
-		for (const auto& s : loadedSockets)
+		if (!m_socketData) return;
+
+		const auto& originSockets = m_socketData->GetSockets();
+
+		m_socketInstances.clear();
+		m_socketInstances.reserve(originSockets.size());
+
+		for (const auto& s : originSockets)
 		{
 			SocketInstance instance;
-			instance.info = std::make_shared<Socket>(s);
+			instance.info = s;
 			instance.worldMatrix = Matrix::Identity;
-			tempInstances.push_back(instance);
+			m_socketInstances.push_back(instance);
 		}
-
-		ClearSockets();
-		m_socketInstances = std::move(tempInstances);
 
 		UpdateSockets();
 	}
@@ -285,17 +280,21 @@ namespace engine
 
 		for (auto& instance : m_socketInstances)
 		{
-			if (instance.info == nullptr) continue;
-
-			instance.worldMatrix = instance.info->localMatrix * world;
+			instance.worldMatrix = instance.info.localMatrix * world;
 		}
 
-		for (auto& attached : m_attachedObjects)
+		for (auto it = m_attachedObjects.begin(); it != m_attachedObjects.end(); )
 		{
-			if (!attached.obj) continue;
-
-			Matrix socketWorld = GetSocketWorldMatrix(attached.socketName);
-			attached.obj->GetTransform()->SetWorldMatrix(socketWorld);
+			if (it->obj)
+			{
+				Matrix socketWorld = GetSocketWorldMatrix(it->socketName);
+				it->obj->GetTransform()->SetWorldMatrix(socketWorld);
+				++it;
+			}
+			else
+			{
+				it = m_attachedObjects.erase(it);
+			}
 		}
 	}
 
@@ -303,7 +302,7 @@ namespace engine
 	{
 		for (const auto& instance : m_socketInstances)
 		{
-			if (instance.info->name == name)
+			if (instance.info.name == name)
 			{
 				return instance.worldMatrix;
 			}

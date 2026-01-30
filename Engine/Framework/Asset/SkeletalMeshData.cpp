@@ -120,21 +120,45 @@ namespace engine
                     m_indices.push_back(mesh->mFaces[j].mIndices[2]);
                 }
 
-                for (unsigned int j = 0; j < mesh->mNumBones; ++j)
+                if (mesh->mNumBones > 0)
                 {
-                    const aiBone* bone = mesh->mBones[j];
-                    const std::string boneName{ bone->mName.C_Str() };
-
-                    const unsigned int boneIndex = skeletonData->GetBoneIndexByBoneName(boneName);
-
-                    skeletonData->SetBoneOffset(Matrix(&bone->mOffsetMatrix.a1).Transpose(), boneIndex);
-
-                    for (unsigned int k = 0; k < bone->mNumWeights; ++k)
+                    // 1. 기존 로직: 본이 있는 경우 정상적으로 가중치 할당
+                    for (unsigned int j = 0; j < mesh->mNumBones; ++j)
                     {
-                        unsigned int vertexId = bone->mWeights[k].mVertexId + m_meshSections[i].vertexOffset;
-                        float weight = bone->mWeights[k].mWeight;
+                        const aiBone* bone = mesh->mBones[j];
+                        const std::string boneName{ bone->mName.C_Str() };
 
-                        m_boneWeightVertices[vertexId].AddBoneData(boneIndex, weight);
+                        const unsigned int boneIndex = skeletonData->GetBoneIndexByBoneName(boneName);
+
+                        skeletonData->SetBoneOffset(Matrix(&bone->mOffsetMatrix.a1).Transpose(), boneIndex);
+
+                        for (unsigned int k = 0; k < bone->mNumWeights; ++k)
+                        {
+                            // vertexOffset은 m_meshSections[i]에서 가져와야 하는데, 
+                            // 현재 코드 문맥상 루프 바깥 i 인덱스를 참조해야 합니다.
+                            unsigned int vertexId = bone->mWeights[k].mVertexId + m_meshSections[i].vertexOffset;
+                            float weight = bone->mWeights[k].mWeight;
+
+                            m_boneWeightVertices[vertexId].AddBoneData(boneIndex, weight);
+                        }
+                    }
+                }
+                else
+                {
+                    // 2. 추가된 로직: 본이 없는 정적 메쉬(test_3 등) 처리
+                    // 강제로 루트 본(보통 0번 인덱스)에 모든 버텍스를 종속시킵니다.
+
+                    // 주의: 0번이 루트가 아니라면 skeletonData->GetBoneIndexByBoneName("RootName") 등을 사용해야 함
+                    unsigned int rootBoneIndex = 0;
+                    unsigned int startVertexOffset = m_meshSections[i].vertexOffset;
+
+                    for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
+                    {
+                        unsigned int vertexId = startVertexOffset + v;
+
+                        // 해당 버텍스를 0번 본(루트)에 100%(1.0f) 가중치로 할당
+                        // 이렇게 하면 캐릭터의 루트 움직임(이동/회전)을 그대로 따라다니게 됩니다.
+                        m_boneWeightVertices[vertexId].AddBoneData(rootBoneIndex, 1.0f);
                     }
                 }
             }

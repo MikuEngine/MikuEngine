@@ -1,17 +1,16 @@
 ﻿#include "EnginePCH.h"
 #include "AudioSource.h"
 
-#include "Common/Utility/StaticMemoryPool.h"
 #include "Framework/System/SoundSystem.h"
+#include "Framework/System/SystemManager.h"
+#include "Framework/System/CameraSystem.h"
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/SoundData.h"
 #include "Framework/Object/Component/Transform.h"
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Editor/EditorManager.h"
-#include "Framework/System/SystemManager.h"
-#include "Framework/System/CameraSystem.h"
-#include "Framework/Object/Component/Camera.h"
 #include "Common/Utility/EditorHelper.h"
+#include "Common/Utility/StaticMemoryPool.h"
 #include "fmod.hpp"
 
 
@@ -47,16 +46,6 @@ namespace engine
     void AudioSource::Initialize()
     {
         SoundSystem::Get().Register(this);
-
-        if (!m_clipName.empty())
-        {
-            SetClip(m_clipName);
-
-            if (m_playOnAwake && EditorManager::Get().GetEditorState() != EditorState::Edit)
-            {
-                Play();
-            }
-        }
     }
 
     void AudioSource::OnDestroy()
@@ -106,6 +95,19 @@ namespace engine
             {
                 Stop(m_scheduledFadeOutDuration);
                 m_isAutoStop = false;
+            }
+        }
+    }
+
+    void AudioSource::Awake()
+    {
+        if (!m_clipName.empty())
+        {
+            SetClip(m_clipName);
+
+            if (m_playOnAwake)
+            {
+                Play();
             }
         }
     }

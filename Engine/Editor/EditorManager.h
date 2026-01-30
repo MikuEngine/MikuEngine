@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <unordered_set>
+#include <ImGuizmo.h>
 
 #include "Core/System/ProjectSettings.h"
 #include "Framework/Object/Ptr.h"
@@ -10,6 +11,12 @@ namespace engine
     class GameObject;
     class EditorCamera;
     class EditorGrid;
+
+    namespace GizmoState
+    {
+        inline ImGuizmo::OPERATION CurrentOperation = ImGuizmo::TRANSLATE;
+        inline ImGuizmo::MODE CurrentMode = ImGuizmo::LOCAL;
+    }
 
     enum class EditorState
     {
@@ -34,6 +41,9 @@ namespace engine
         std::string m_sceneToDelete;
         std::string m_sceneToRename;
 
+        // editor setting
+        json m_editorSettings;
+
         // prefab
         std::vector<std::string> m_cachedPrefabFiles;
         std::string m_prefabOverwriteTarget;
@@ -43,6 +53,7 @@ namespace engine
         int m_selectedBuildSceneIndex = -1;
 
         bool m_shouldOpenUnsavedPopup = false;
+        bool m_showEditorUI = true;
 
     private:
         EditorManager();
@@ -70,6 +81,7 @@ namespace engine
         void DrawInspector();
         void DrawDebugInfo();
         void DrawPrefabManager();
+        void DrawGizmoToolbar();
 
         void ValidateSettingsList();
         void RefreshSceneFileCache();
@@ -78,6 +90,12 @@ namespace engine
         void RequestNewScene();
         void CreateNewScene();
         void RefreshPrefabCache();
+
+        void LoadEditorSettings();
+        void SaveEditorSettings();
+
+        void SaveSceneEditorData(const std::string& sceneName);
+        void LoadSceneEditorData(const std::string& sceneName);
 
     private:
         friend class Singleton<EditorManager>;

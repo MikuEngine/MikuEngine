@@ -448,4 +448,33 @@ namespace engine
 
         ImGui::PopID();
     }
+
+    // 에디터 상태 저장용
+    void LightDebugRenderer::SaveEditorData(json& j) const
+    {
+        j["Enable"] = m_enabled;
+        j["ShowDirectional"] = m_showDirectional;
+        j["ShowPoint"] = m_showPoint;
+        j["ShowSpot"] = m_showSpot;
+        j["ShowRange"] = m_showRange;
+        j["ShowDirection"] = m_showDirection;
+        j["DirectionalColor"] = m_directionalColor;
+        j["PointColor"] = m_pointColor;
+        j["SpotColor"] = m_spotColor;
+        j["RangeColor"] = m_rangeColor;
+    }
+
+    void LightDebugRenderer::LoadEditorData(const json& j)
+    {
+        JsonGet(j, "Enable", m_enabled, false);
+        JsonGet(j, "ShowDirectional", m_showDirectional, true);
+        JsonGet(j, "ShowPoint", m_showPoint, true);
+        JsonGet(j, "ShowSpot", m_showSpot, true);
+        JsonGet(j, "ShowRange", m_showRange, true);
+        JsonGet(j, "ShowDirection", m_showDirection, true);
+        JsonGet(j, "DirectionalColor", m_directionalColor, { 1.0f, 1.0f, 0.0f, 1.0f });
+        JsonGet(j, "PointColor", m_pointColor, { 0.0f, 1.0f, 1.0f, 1.0f });
+        JsonGet(j, "SpotColor", m_spotColor, { 1.0f, 0.5f, 0.0f, 1.0f });
+        JsonGet(j, "RangeColor", m_rangeColor, { 0.5f, 0.5f, 0.5f, 0.5f });
+    }
 }

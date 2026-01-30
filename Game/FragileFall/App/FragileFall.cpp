@@ -1,5 +1,10 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "FragileFall.h"
+
+#include "Manager/LoadingScreenDrawer.h"
+#include "Manager/TimeScaler.h"
+#include <Engine/Framework/Scene/SceneManager.h>
+#include <Engine/Framework/System/LoadingScreenRenderer.h>
 
 namespace game
 {
@@ -28,5 +33,26 @@ namespace game
 		m_windowName = "Fragile Fall";
 
 		engine::WinApp::Initialize();
+
+		engine::LoadingScreenRenderer::Get().SetRenderCallback([](float progress)
+			{
+				LoadingScreenDrawer::Draw(progress);
+			});
+
+		engine::SceneManager::Get().RegisterOnSceneLoaded([]()
+			{
+				static bool once = false;
+				if (!once)
+				{
+					once = true;
+					LoadingScreenDrawer::OnFirstLoadFinished();
+				}
+			});
+
+		m_onShutdownCallbacks.push_back([]() { LoadingScreenDrawer::OnShutdown(); });
+
+		TimeScaler::Initialize();
+
+		m_onGameplayUpdateCallbacks.push_back([]() { TimeScaler::Update(); });
 	}
 }

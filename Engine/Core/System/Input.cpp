@@ -61,6 +61,16 @@ namespace engine
         g_prevWheel = nowWheel;
     }
 
+    void Input::SetMouseSensitivity(float v)
+    {
+        m_mouseSensitivity = std::max(0.001f, v);
+    }
+
+    void Input::SetInvertY(bool v)
+    {
+        m_invertY = v;
+    }
+
     bool Input::IsKeyHeld(DirectX::Keyboard::Keys key)
     {
         return g_keyboardState.IsKeyDown(key);
