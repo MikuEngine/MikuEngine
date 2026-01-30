@@ -21,7 +21,7 @@ namespace engine
 
     struct SocketInstance
     {
-        std::shared_ptr<Socket> info;
+        Socket info;
         Matrix worldMatrix;
     };
 

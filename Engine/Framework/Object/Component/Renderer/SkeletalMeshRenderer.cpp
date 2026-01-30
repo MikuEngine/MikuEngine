@@ -669,16 +669,14 @@ namespace engine
 
         for (auto& instance : m_socketInstances)
         {
-            if (!instance.info) continue;
-
-            if (!instance.info->parentBoneName.empty())
+            if (!instance.info.parentBoneName.empty())
             {
-                Matrix boneWorldMatrix = animator->GetBoneWorldMatrix(instance.info->parentBoneName);
-                instance.worldMatrix = instance.info->localMatrix * boneWorldMatrix;
+                Matrix boneWorldMatrix = animator->GetBoneWorldMatrix(instance.info.parentBoneName);
+                instance.worldMatrix = instance.info.localMatrix * boneWorldMatrix;
             }
             else
             {
-                instance.worldMatrix = instance.info->localMatrix * GetTransform()->GetWorld();
+                instance.worldMatrix = instance.info.localMatrix * GetTransform()->GetWorld();
             }
         }
 

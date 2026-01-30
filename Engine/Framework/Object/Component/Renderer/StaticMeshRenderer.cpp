@@ -810,9 +810,7 @@ namespace engine
 
         for (auto& instance : m_socketInstances)
         {
-            if (!instance.info) continue;
-
-            instance.worldMatrix = instance.info->localMatrix * transform->GetWorld();
+            instance.worldMatrix = instance.info.localMatrix * transform->GetWorld();
         }
 
         for (auto& attached : m_attachedObjects)
