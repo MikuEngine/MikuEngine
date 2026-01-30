@@ -100,7 +100,15 @@ namespace game
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
             if (m_isOptionOpen || m_isCreditOpen)
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Click_Random");
                 Back();
+            }
+            else
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+                m_isQuitOpen ? CheckQuit(false) : CheckQuit(true);
+            }
         }
     }
 

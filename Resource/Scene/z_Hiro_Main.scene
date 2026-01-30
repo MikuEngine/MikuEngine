@@ -3953,7 +3953,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "예",
+                    "Text": "종료",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 50,
                     "Color": {
@@ -4129,7 +4129,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "아니오",
+                    "Text": "취소",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 50,
                     "Color": {
