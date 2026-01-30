@@ -31,6 +31,8 @@ namespace engine
         UserSettings m_userSettings;
         ViewportTransformData m_viewportData;
 
+        std::vector<std::function<void()>> m_onGameplayUpdateCallbacks;
+
         UINT m_classStyle = 0;
         DWORD m_windowStyle = 0;
         int m_x = 0;

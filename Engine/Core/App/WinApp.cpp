@@ -442,6 +442,12 @@ namespace engine
         SceneManager::Get().CallOnSceneStart();
 
         SystemManager::Get().GetScriptSystem().CallStart();
+
+        for (auto& callback : m_onGameplayUpdateCallbacks)
+        {
+            std::invoke(callback);
+        }
+
         SystemManager::Get().GetScriptSystem().CallUpdate();
 
         SystemManager::Get().GetPathfindingSystem().Update();

@@ -1,6 +1,8 @@
 ﻿#include "GamePCH.h"
 #include "FragileFall.h"
 
+#include "Manager/TimeScaler.h"
+
 namespace game
 {
 	engine::UserSettings g_defaultSettings{
@@ -28,5 +30,9 @@ namespace game
 		m_windowName = "Fragile Fall";
 
 		engine::WinApp::Initialize();
+
+		TimeScaler::Initialize();
+
+		m_onGameplayUpdateCallbacks.push_back([]() { TimeScaler::Update(); });
 	}
 }

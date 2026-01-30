@@ -157,6 +157,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Manager\TimeScaler.cpp" />
     <ClCompile Include="Script\AimPointer.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\BossPatternBase.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\BossPatternManager.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="Script\SceneController_Main.cpp" />
     <ClCompile Include="Script\StateTextRenderer.cpp" />
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
+    <ClCompile Include="Script\TimeScalerTest.cpp" />
     <ClCompile Include="Script\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UIHoverScale.cpp" />
     <ClCompile Include="Script\UIKillPopupQueue.cpp" />
@@ -203,6 +205,7 @@
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
+    <ClInclude Include="Manager\TimeScaler.h" />
     <ClInclude Include="Script\AimPointer.h" />
     <ClInclude Include="Script\Boss\BossPattern\BossPatternBase.h" />
     <ClInclude Include="Script\Boss\BossPattern\BossPatternManager.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="Script\SceneController_Main.h" />
     <ClInclude Include="Script\StateTextRenderer.h" />
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />
+    <ClInclude Include="Script\TimeScalerTest.h" />
     <ClInclude Include="Script\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UIHoverScale.h" />
     <ClInclude Include="Script\UIKillPopupQueue.h" />
