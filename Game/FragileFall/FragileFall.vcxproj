@@ -184,6 +184,7 @@
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
     <ClCompile Include="Script\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UIHoverScale.cpp" />
+    <ClCompile Include="Script\UIKillPopupAnimator.cpp" />
     <ClCompile Include="Script\UIPopUpAnimator.cpp" />
     <ClCompile Include="Script\UpgradeNodeView.cpp" />
     <ClCompile Include="Script\UpgradeController.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />
     <ClInclude Include="Script\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UIHoverScale.h" />
+    <ClInclude Include="Script\UIKillPopupAnimator.h" />
     <ClInclude Include="Script\UIPopUpAnimator.h" />
     <ClInclude Include="Script\UpgradeNodeView.h" />
     <ClInclude Include="Script\UpgradeController.h" />
