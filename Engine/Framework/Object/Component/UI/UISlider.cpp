@@ -91,6 +91,19 @@ namespace engine
 			const float v = (pos01 - min01) / (max01 - min01);
 			return std::clamp(v, 0.0f, 1.0f);
 		}
+
+		static UIRect GetViewportRootRect()
+		{
+			auto& gd = GraphicsDevice::Get();
+			const D3D11_VIEWPORT vp = gd.GetViewport();
+
+			UIRect r;
+			r.x = 0.0f;
+			r.y = 0.0f;
+			r.w = vp.Width;
+			r.h = vp.Height;
+			return r;
+		}
 	}
 
 	void UISlider::Initialize()
@@ -134,11 +147,9 @@ namespace engine
 		{
 			if (RectTransform* hrt = m_handle->GetRectTransform())
 			{
-				if (!c) return false;
-				const Vector2 ref = c->GetReferenceResolution();
-				UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
-
+				const UIRect rootRect = GetViewportRootRect();
 				const UIRect hr = hrt->GetWorldRectResolved(rootRect);
+
 				if (PointInRect(p, hr))
 					return true;
 			}
@@ -389,11 +400,7 @@ namespace engine
 			if (!rootRT || !fillRT) return;
 
 			// (화면 픽셀 좌표) 루트 Rect 계산
-			Canvas* c = GetCanvasInParent();
-			if (!c) return;
-			const Vector2 ref = c->GetReferenceResolution();
-			UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
-
+			const UIRect rootRect = GetViewportRootRect();
 			const UIRect barRect = rootRT->GetWorldRectResolved(rootRect);
 
 			if (m_fillMode == FillMode::AnchorResize)
@@ -494,13 +501,9 @@ namespace engine
 		RectTransform* rootRT = GetRectTransform();
 		if (!rootRT) return;
 
-		Canvas* c = GetCanvasInParent();
-		if (!c) return;
-		const Vector2 ref = c->GetReferenceResolution();
-		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+		const UIRect rootRect = GetViewportRootRect();
 
 		const UIRect barRect2 = rootRT->GetWorldRectResolved(rootRect);
-
 		const UIRect handleRect2 = handleRT->GetWorldRectResolved(rootRect);
 
 		float min01 = 0.0f, max01 = 1.0f;
@@ -677,12 +680,7 @@ namespace engine
 		RectTransform* rt = GetRectTransform();
 		if (!rt) return;
 
-		Canvas* c = GetCanvasInParent();
-		if (!c) return;
-
-		const Vector2 ref = c->GetReferenceResolution();
-		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
-
+		const UIRect rootRect = GetViewportRootRect();
 		const UIRect barRect = rt->GetWorldRectResolved(rootRect);
 
 		float min01 = 0.0f, max01 = 1.0f;
@@ -729,13 +727,9 @@ namespace engine
 		RectTransform* rtHandle = m_handle->GetRectTransform();
 		if (!rtHandle) return false;
 
-		const Canvas* c = GetCanvasInParent();
-		if (!c) return false;
-
-		const Vector2 ref = c->GetReferenceResolution();
-		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
-
+		const UIRect rootRect = GetViewportRootRect();
 		const UIRect hr = rtHandle->GetWorldRectResolved(rootRect);
+
 		return PointInRect(mousePos, hr);
 	}
 }
