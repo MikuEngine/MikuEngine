@@ -173,11 +173,12 @@
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp" />
     <ClCompile Include="Script\Boss\BossScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterRoundType.cpp" />
     <ClCompile Include="Script\LoadingOverlay.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedGreen.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedType.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
@@ -197,7 +198,7 @@
     <ClCompile Include="Script\CharacterScript\Player\BulletPlayer.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\BulletMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterScript.cpp" />
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterDullGray.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterDullType.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
     <ClCompile Include="Script\CheckRotateScript.cpp" />
@@ -222,12 +223,13 @@
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h" />
     <ClInclude Include="Script\Boss\BossScript.h" />
     <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterRoundType.h" />
     <ClInclude Include="Script\ItemType.h" />
     <ClInclude Include="Script\LoadingOverlay.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedGreen.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedType.h" />
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />
@@ -249,7 +251,7 @@
     <ClInclude Include="Script\CharacterScript\Player\BulletPlayer.h" />
     <ClInclude Include="Script\CharacterScript\Monster\BulletMonster.h" />
     <ClInclude Include="Script\CharacterScript\Monster\MonsterScript.h" />
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterDullGray.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterDullType.h" />
     <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h" />
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
     <ClInclude Include="Script\UpgradeTypes.h" />
