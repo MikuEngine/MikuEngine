@@ -255,6 +255,7 @@
     </ClCompile>
     <ClCompile Include="Core\App\WinApp.cpp" />
     <ClCompile Include="Framework\Physics\CollisionSystem.cpp" />
+    <ClCompile Include="Framework\Physics\CollisionTypes.cpp" />
     <ClCompile Include="Framework\Physics\PhysicsCallback.cpp" />
     <ClCompile Include="Framework\Physics\PhysicsDebugRenderer.cpp" />
     <ClCompile Include="Framework\Physics\PhysicsMaterial.cpp" />

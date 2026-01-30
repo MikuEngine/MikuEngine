@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BaseControllerScript.h"
 
 #include <Framework/Object/Component/LogicFSM.h>
@@ -165,99 +165,92 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 회전 유틸리티
     // ═══════════════════════════════════════════════════════════════
-    void BaseControllerScript::RotateTowardsTarget(engine::GameObject* target, float deltaTime)
+    void BaseControllerScript::RotateTowardsTarget(engine::GameObject* target, float rotationSpeed)
     {
         engine::Vector3 direction = CalculateDirectionToTarget(target);
-        RotateToDirection(direction, deltaTime);
+        RotateToDirection(direction, rotationSpeed);
     }
 
-    void BaseControllerScript::RotateToDirection(const engine::Vector3& targetDirection, float deltaTime)
+    void BaseControllerScript::RotateToDirection(const engine::Vector3& targetDirection, float rotationSpeed)
     {
+        // ═══════════════════════════════════════════════════════════════
+        // 목표 방향으로 Y축 회전 (Z+가 전방)
+        // - CalcLogicalRotateAngle()에서 계산된 멤버변수 활용
+        // - Kinematic: Transform 직접 회전
+        // - Dynamic: ForceSetRotation으로 직접 회전 (Kinematic처럼 동작)
+        // ═══════════════════════════════════════════════════════════════
+        
+        // CalcLogicalRotateAngle에서 회전이 불필요하다고 판단했으면 리턴
+        if (!m_isToRotate)
+        {
+            return;
+        }
+
+        // 유효하지 않은 방향이면 리턴
+        if (targetDirection.LengthSquared() < 0.0001f)
+        {
+            return;
+        }
+
+        // 목표 방향 정규화 (XZ 평면)
+        engine::Vector3 targetDir = targetDirection;
+        targetDir.y = 0.0f;
+        targetDir.Normalize();
+
+        // 현재 Forward 방향 (Z+가 전방)
+        engine::Vector3 currentForward = m_objectLogicalFoward;
+
+        // 남은 각도 계산 (오버슈트 방지용 - 매 프레임 계산 필요)
+        float dot = currentForward.Dot(targetDir);
+        dot = std::clamp(dot, -1.0f, 1.0f);
+        float angleDiff = acosf(dot);
+        
+        // 거의 같은 방향이면 회전 완료
+        const float THRESHOLD_ANGLE = 0.017f;  // 약 1도 (라디안)
+        if (angleDiff < THRESHOLD_ANGLE)
+        {
+            return;
+        }
+
+        // 프레임당 회전량 계산
+        float deltaTime = engine::Time::DeltaTime();
+        float rotationStep = rotationSpeed * deltaTime;
+        
+        // 오버슈트 방지: 남은 각도보다 더 돌지 않음
+        if (rotationStep > angleDiff)
+        {
+            rotationStep = angleDiff;
+        }
+        
+        // 최종 회전량 (CalcLogicalRotateAngle에서 계산된 m_rotateSign 사용)
+        // 부호 반전: ToEuler/CreateFromYawPitchRoll과 외적 기반 rotateSign의 좌표계 차이 보정
+        float finalRotation = m_rotateSign * rotationStep;
+
+        // 현재 회전에서 Y축 회전만 변경
+        engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
+        engine::Vector3 euler = currentRot.ToEuler();
+        euler.y += finalRotation;
+        
+        engine::Quaternion newRot = engine::Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z);
+
+        // ═══════════════════════════════════════════════════════════════
+        // Rigidbody 유무 및 타입에 따라 회전 적용
+        // ═══════════════════════════════════════════════════════════════
         if (!m_cachedRigidbody)
         {
             m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
         }
 
-        if (!m_cachedRigidbody || targetDirection.LengthSquared() < 0.0001f)
+        if (m_cachedRigidbody && m_cachedRigidbody->IsDynamic())
         {
-            if (m_cachedRigidbody && m_cachedRigidbody->IsDynamic())
-            {
-                m_cachedRigidbody->SetAngularVelocity(engine::Vector3::Zero);
-            }
-            return;
-        }
-
-        // 현재 Forward 방향 (+Z)
-        // SkeletalAnimator가 모델을 180도 회전시켜서 +Z가 실제 앞 방향
-        engine::Vector3 currentForward = GetForwardDirection();
-
-        engine::Vector3 targetDir = targetDirection;
-        
-        targetDir.y = 0.0f;        
-        targetDir.Normalize();
-
-        float dot = currentForward.Dot(targetDir);
-        
-        // Threshold 체크: 각도 차이가 작으면 회전 멈춤
-        const float ROTATION_THRESHOLD = 1.0f * 3.14159f / 180.0f;
-        const float dotThreshold = cosf(ROTATION_THRESHOLD);
-
-        if (dot >= dotThreshold)
-        {
-            StopRotation();
-            return;
-        }
-
-        engine::Vector3 cross = currentForward.Cross(targetDir); 
-        float rotationSign = (cross.y >= 0.0f) ? -1.0f : 1.0f;
-        float angleDiff = acosf(std::clamp(dot, -1.0f, 1.0f));
-
-        // ═══════════════════════════════════════════════════════════════
-        // 리지드바디 타입에 따라 분기
-        // ═══════════════════════════════════════════════════════════════
-        if (m_cachedRigidbody->IsKinematic())
-        {
-            // ─────────────────────────────────────────────
-            // Kinematic: 직접 트랜스폼 회전
-            // ─────────────────────────────────────────────
-            const float rotationSpeed = 5.0f;  // rad/sec
-            float fixedDelta = engine::Time::FixedDeltaTime();
-            float rotationStep = -rotationSign * rotationSpeed * fixedDelta;  // 부호 반전 (좌표계 차이)
-            
-            // 오버슈트 방지
-            if (std::abs(rotationStep) > angleDiff)
-            {
-                rotationStep = -rotationSign * angleDiff;
-            }
-            
-            // 현재 회전 가져오기
-            engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
-            engine::Vector3 euler = currentRot.ToEuler();
-            
-            // Y축 회전 적용
-            euler.y += rotationStep;
-            
-            // 새 회전 설정
-            engine::Quaternion newRot = engine::Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z);
-            GetTransform()->SetLocalRotation(newRot);
+            // Dynamic Rigidbody: ForceSetTransform 사용 (위치 유지, 회전만 변경)
+            engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+            m_cachedRigidbody->ForceSetTransform(currentPos, newRot, false, true);  // 각속도만 리셋
         }
         else
         {
-            // ─────────────────────────────────────────────
-            // Dynamic: Angular Velocity 기반 회전
-            // ─────────────────────────────────────────────
-            const float rotationSpeed = 3.5f;
-            float proportional = rotationSign * angleDiff * rotationSpeed;
-            
-            engine::Vector3 currentAngVel = m_cachedRigidbody->GetAngularVelocity();
-            float derivative = -currentAngVel.y * 0.5f;
-            
-            float targetAngularVelocity = proportional + derivative;
-            
-            const float maxAngularSpeed = 8.0f;
-            targetAngularVelocity = std::clamp(targetAngularVelocity, -maxAngularSpeed, maxAngularSpeed);
-
-            m_cachedRigidbody->SetAngularVelocity(engine::Vector3(0.0f, targetAngularVelocity, 0.0f));
+            // Kinematic 또는 Rigidbody 없음: Transform 직접 설정
+            GetTransform()->SetLocalRotation(newRot);
         }
     }
 
@@ -287,7 +280,82 @@ namespace game
         const float dotThreshold = cosf(ROTATION_THRESHOLD);
         
         return dot >= dotThreshold;
+        
     }
+
+    void BaseControllerScript::UpdateLogicalPosition()
+    {
+        engine::Vector3 pos = GetTransform()->GetWorldPosition();        
+        pos.y = 0.0f;         
+        m_objectLogicalPosition = pos;         
+    }
+
+
+
+    void BaseControllerScript::UpdateLogicalMoveExistence(engine::Vector3& inputMoveDir)
+    {        
+        if (inputMoveDir.LengthSquared() < 0.0001f)
+        {
+            m_currentLogicalMoveVector = engine::Vector3::Zero;
+            return;
+        }
+
+        engine::Vector3 tVec = inputMoveDir;
+        tVec.y = 0.0f;
+        tVec.Normalize();
+       
+        m_currentLogicalMoveVector = tVec;      
+    }
+
+    void BaseControllerScript::CalcLogicalRotateAngle(engine::Vector3& target)
+    {
+        engine::Vector3 newVec = target;
+
+        engine::Vector3 mFoward = m_objectLogicalFoward;
+
+        mFoward.Normalize();
+
+        float dot = mFoward.Dot(target);
+
+        if (dot > 0.9f)
+        {
+            m_angleToRotateLogical = engine::Vector3::Zero;
+            m_rotateSign = 0.0f;
+            m_isToRotate = false;
+            return;
+        }
+        
+        m_angleToRotateLogical = newVec;
+
+        engine::Vector3 t = mFoward.Cross(newVec);
+        float ty = t.y;
+
+        m_rotateSign =  ty > 0.00f ? 1.0f : -1.0f;
+
+        m_isToRotate = true;
+    }
+
+    void BaseControllerScript::HandleMovement(float maxSpeed)
+    {
+        // 이동 입력이 없으면 감속
+        if (!m_isMoving)
+        {
+            ApplyBrakingForce();
+            return;
+        }
+
+        // m_currentLogicalMoveVector는 ProcessInput에서 이미 계산된 정규화된 이동 방향
+        // ApplyMovementForce로 Rigidbody 기반 이동 (충돌 응답 보존)
+        ApplyMovementForce(m_currentLogicalMoveVector, maxSpeed);
+    }
+
+
+    //void BaseControllerScript::MoveStopProtocol()
+    //{
+    //    m_lowerBodyLogicalForward 
+    //    m_currentLogicalMoveDir
+    //}
+
 
     void BaseControllerScript::StopRotation()
     {

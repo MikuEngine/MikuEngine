@@ -160,6 +160,26 @@ namespace engine
             uint32_t layerMask = PhysicsLayer::Mask::All
         );
         
+        // QueryFilter를 사용하는 SphereCast (자기 자신 제외, 레이어 필터링 등)
+        bool SphereCast(
+            const Vector3& origin,
+            float radius,
+            const Vector3& direction,
+            float maxDistance,
+            RaycastHit& outHit,
+            const QueryFilter& filter
+        );
+        
+        // 모든 충돌을 반환하는 SphereCastAll (QueryFilter 사용)
+        bool SphereCastAll(
+            const Vector3& origin,
+            float radius,
+            const Vector3& direction,
+            float maxDistance,
+            std::vector<RaycastHit>& outHits,
+            const QueryFilter& filter
+        );
+        
         bool OverlapSphere(
             const Vector3& center,
             float radius,

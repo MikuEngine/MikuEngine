@@ -216,6 +216,9 @@
     <ClCompile Include="Framework\Physics\CollisionSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\Physics\CollisionTypes.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Framework\Physics\PhysicsCallback.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
