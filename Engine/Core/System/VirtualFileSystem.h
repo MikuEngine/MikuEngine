@@ -13,6 +13,7 @@
 
 namespace engine
 {
+#pragma pack(push, 1)
     // 패키지 파일 포맷 구조체
     struct PackHeader
     {
@@ -33,6 +34,7 @@ namespace engine
         // 압축 여부 확인 (저장된 크기가 원본보다 작으면 압축된 것)
         bool IsCompressed() const { return compressedSize != uncompressedSize; }
     };
+#pragma pack(pop)
 
     class VirtualFileSystem
     {

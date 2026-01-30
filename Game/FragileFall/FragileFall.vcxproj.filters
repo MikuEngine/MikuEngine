@@ -159,6 +159,9 @@
     <ClCompile Include="Script\LoadingOverlay.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Manager\LoadingScreenDrawer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Script\Scene\SceneLoadController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -318,6 +321,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\LoadingOverlay.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\LoadingScreenDrawer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\Scene\SceneLoadController.h">

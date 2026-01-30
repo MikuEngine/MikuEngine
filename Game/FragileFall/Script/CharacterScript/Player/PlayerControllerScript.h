@@ -44,10 +44,47 @@ namespace game
         // ─────────────────────────────────────────────
         // 이동 설정
         // ─────────────────────────────────────────────
-        float m_moveSpeed = 5.0f;
+        float m_moveSpeed = 13.0f;
         float m_rotationSpeed = 10.0f;  // 회전 속도 (rad/sec)
         // 이동 가속/감속 설정은 BaseControllerScript에서 상속
         // (m_movementAcceleration, m_movementDeceleration, m_maxSpeedBrakeFactor)
+
+        // ─────────────────────────────────────────────
+        // 대쉬 설정
+        // ─────────────────────────────────────────────
+        float m_dashDuration = 1.0f;                    // 대쉬 지속 시간 (초)
+        float m_dashInitialSpeedMultiplier = 3.0f;      // 초기 속도 배율 (m_moveSpeed 기준)
+        float m_dashCooldown = 2.0f;                    // 대쉬 쿨다운 (초)
+
+        // ─────────────────────────────────────────────
+        // 대쉬 런타임 상태
+        // ─────────────────────────────────────────────
+        bool m_isDashing = false;                       // 대쉬 중 여부
+        float m_dashCooldownTimer = 0.0f;               // 쿨다운 타이머
+        float m_dashElapsedTime = 0.0f;                 // 대쉬 경과 시간
+        engine::Vector3 m_dashDirection = engine::Vector3::Zero;  // 대쉬 방향 (시작 시 고정)
+
+        // ─────────────────────────────────────────────
+        // 대쉬 충돌 감쇠 시스템
+        // - 대쉬 중 벽/적과 충돌 시 감쇠 지수를 높여 빠르게 감속
+        // ─────────────────────────────────────────────
+        float m_dashCollisionDecayBoost = 1.0f;         // 충돌 시 감쇠 배율 (기본 1.0)
+        float m_dashCollisionDecayMultiplier = 5.0f;    // 충돌 감지 시 적용할 감쇠 배율
+        float m_dashCollisionDotThreshold = 0.3f;       // 정면 충돌 판정 임계값 (0.3 ≈ 72도)
+
+        // ─────────────────────────────────────────────
+        // SphereCast 기반 지형 파고들기 방지 시스템
+        // - 이동/대쉬 방향으로 SphereCast하여 Environment 레이어 감지
+        // - 감지 시 해당 방향 이동 차단 또는 대쉬 속도 감소
+        // ─────────────────────────────────────────────
+        float m_sphereCastRadius = 1.0f;                // SphereCast 반지름
+        float m_sphereCastDistance = 1.0f;              // SphereCast 감지 거리
+        float m_dashWallSpeedMultiplier = 0.1f;         // 벽 감지 시 대쉬 초기 속도 배율 (0.1 = 10%)
+        
+        // SphereCast 런타임 상태
+        bool m_environmentBlockDetected = false;        // 현재 프레임에서 Environment 감지 여부
+        bool m_dashWallDetectedOnStart = false;         // 대쉬 시작 시 벽 감지 여부
+        engine::Vector3 m_lastBlockNormal = engine::Vector3::Zero;  // 마지막으로 감지된 벽의 노말
 
         // ─────────────────────────────────────────────
         // 발사 설정 (쿨다운/타이밍은 Player가 관리)
@@ -111,14 +148,8 @@ namespace game
         bool m_isWalkingBackward = false;
         
         // 이전 프레임 이동 상태 (이동 시작 감지용)
-        bool m_wasMoving = false;
-        
-        // ─────────────────────────────────────────────
-        // 에임 방향 추적 (벡터 기반 - 각도 래핑 문제 회피)
-        // ─────────────────────────────────────────────
-        engine::Vector3 m_prevAimDirection = engine::Vector3(0.0f, 0.0f, 1.0f);  // 이전 에임 방향 (정규화)
-        float m_aimCrossProductSmoothed = 0.0f;       // 스무딩된 외적 값 (양수: 반시계, 음수: 시계)
-        bool m_aimTrackingInitialized = false;
+        bool m_wasMoving = false;       
+       
 
     public:
         void Awake() override;
@@ -140,6 +171,11 @@ namespace game
         bool CanMove() const override;
         bool CanAttack() const override;
 
+        // ─────────────────────────────────────────────
+        // 충돌 콜백 (대쉬 충돌 감쇠용)
+        // ─────────────────────────────────────────────
+        void OnCollisionStay(const engine::CollisionInfo& info) override;
+
     private:
         // ─────────────────────────────────────────────
         // 초기화
@@ -156,25 +192,54 @@ namespace game
         // ─────────────────────────────────────────────
         // 액션 함수
         // ─────────────────────────────────────────────
-        void HandleMovement();           // FixedUpdate에서 호출 (FixedDeltaTime 사용)
+        
+        void HandleDash();               // 대쉬 처리 (FixedUpdate에서 호출)
+        void StartDash();                // 대쉬 시작
+        void EndDash();                  // 대쉬 종료
+        float CalculateDashSpeed() const; // 현재 대쉬 속도 계산 (지수 감쇠)
         void HandleShooting(float deltaTime);  // Update에서 호출 (DeltaTime 사용)
-        void UpdateUpperBodyAim();
-        float CalculateAimYaw() const;
-        float GetForwardAimDirAngle() const;  // 트랜스폼 y축 회전 + 상체 회전 → degree 반환
+
+        // ─────────────────────────────────────────────
+        // SphereCast 기반 파고들기 방지
+        // ─────────────────────────────────────────────
+        // 이동 방향으로 SphereCast하여 Environment 레이어 감지
+        // 반환값: 벽 감지 시 true, 아니면 false
+        // outNormal: 감지된 벽의 노말 (슬라이딩 계산용)
+        bool CheckEnvironmentBlock(const engine::Vector3& direction, engine::Vector3& outNormal);
+        
+        // 벽 슬라이딩이 적용된 이동 방향 계산
+        // 벽에 수직인 성분만 제거하고 평행한 성분은 유지
+        engine::Vector3 CalculateSlidingDirection(const engine::Vector3& moveDir, const engine::Vector3& wallNormal);
+                
+        //void RotateToDirection(const engine::Vector3& targetDirection, float deltaTime);
+        
 
         // ─────────────────────────────────────────────
         // 애니메이션 제어
         // ─────────────────────────────────────────────
-        void UpdateAnimation();
-        void UpdateLowerBodyRotation();
-        bool IsMovingBackward() const;
+        void UpdateAnimation();             
         std::string GetAnimationState() const;
         
         // ─────────────────────────────────────────────
-        // 에임 추적 유틸리티
+        // 내가 직접 짜집기한 에임 추적, 회전, Forward-Back 스위칭 유틸리티
         // ─────────────────────────────────────────────
-        void UpdateAimTracking();             // 에임 각속도 업데이트
-        float GetAimRotationDirection() const; // 에임 회전 방향 (양수: 시계, 음수: 반시계)
+            
+        //void HandleMovement(float deltaTime);
+                     
+        engine::Vector3 m_inputMoveDir = engine::Vector3(0.0f, 0.0f, 0.0f);
+        engine::Vector3 m_playerLogicalForward;
+        engine::Vector3 m_targetRotateDirLowerbodyLogical;
+
+        void CheckForwardBack(engine::Vector3& forward, engine::Vector3& aimDir);
+        bool m_isBackward = false;        
+
+        engine::Vector3 m_prevAimDirection = engine::Vector3(0.0f, 0.0f, 1.0f);  // 이전 에임 방향 (정규화)
+        engine::Vector3 m_currentAimDir = engine::Vector3(0.0f, 0.0f, 1.0f);
+        engine::Vector3 m_targetAimDirection = engine::Vector3(0.0f, 0.0f, 1.0f);     
+
+        float m_aimCrossProduct = 0.0f;       // 현재 방향과 목표 방향의 외적 값 (양수: 반시계, 음수: 시계)
+        bool m_aimTrackingInitialized = false;
+
 
         // ─────────────────────────────────────────────
         // 에디터 검증

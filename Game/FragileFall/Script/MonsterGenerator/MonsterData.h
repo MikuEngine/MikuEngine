@@ -10,7 +10,7 @@ namespace game
     // CSV 형식: MonsterID, Type, Tier, Difficulty
     // 용도: CSV에서 파싱한 몬스터 정보 저장
     // 
-	// Type: Dull, Sharp, Round 등
+	// Type: Dull(둔탁), Pointed(뾰족), Round(동글) 등
 	// Tier: 0(Gray), 1(Green), 2(Blue), 3(Red), 4(Purple)
     // 
     // ═══════════════════════════════════════════════════════════════
@@ -35,20 +35,20 @@ namespace game
     {
         int MonsterID;
         std::string MonsterName;
-        std::string Type;
-        int Tier;
+        AttackType Type;
+        MonsterTier Tier;
         int Difficulty;
         
         // 기본 생성자
         MonsterData()
             : MonsterID(0)
-            , Type("")
-            , Tier(0)
+            , Type(AttackType::Dull)
+            , Tier(MonsterTier::Gray)
             , Difficulty(0)
         {}
         
         // 파라미터 생성자
-        MonsterData(int id, const std::string& type, int tier, int difficulty)
+        MonsterData(int id, AttackType type, MonsterTier tier, int difficulty)
             : MonsterID(id)
             , Type(type)
             , Tier(tier)

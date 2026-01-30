@@ -26,7 +26,7 @@ namespace game
                 // 파서 람다 만듦
                 auto parser = [](const std::vector<std::string>& fields, MonsterData& out)
                     {
-                        if (fields.size() != 4) // TestData의 기본 멤버 변수 개수랑 다르면 잘못된거
+                        if (fields.size() != 5) // TestData의 기본 멤버 변수 개수랑 다르면 잘못된거
                         {
                             return false;
                         }
@@ -34,9 +34,10 @@ namespace game
                         try
                         {
                             out.MonsterID = std::stoi(fields[0]);
-                            out.Type = fields[1];
-                            out.Tier = std::stoi(fields[2]);
-                            out.Difficulty = std::stoi(fields[3]);
+							out.MonsterName = fields[1];
+                            out.Type = static_cast<AttackType>(std::stoi(fields[2]));
+                            out.Tier = static_cast<MonsterTier>(std::stoi(fields[3]));
+                            out.Difficulty = std::stoi(fields[4]);
                         }
                         catch (...)
                         {
@@ -59,7 +60,7 @@ namespace game
                             {
                                 difficulty += data.Difficulty;
 
-                                LOG_PRINT("생성될 몬스터 ID: {}, 몬스터 이름: {} ,공격타입: {}, 티어(색상): {}, 난이도: {}", data.MonsterID, data.MonsterName, data.Type, data.Tier, data.Difficulty);
+                                LOG_PRINT("생성될 몬스터 ID: {}, 몬스터 이름: {} ,공격타입: {}, 티어(색상): {}, 난이도: {}", data.MonsterID, data.MonsterName, static_cast<int>(data.Type), static_cast<int>(data.Tier), data.Difficulty);
 
                                 break;
                             }

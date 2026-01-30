@@ -117,4 +117,31 @@ namespace engine
         Ptr<Rigidbody> rigidbody;
         Ptr<GameObject> gameObject;
     };
+
+    // ═══════════════════════════════════════════════════════════════
+    // 쿼리 필터 (Raycast, SphereCast 등에서 사용)
+    // 특정 오브젝트 제외 및 레이어 필터링 지원
+    // Ptr을 사용하여 댕글링 포인터 방지
+    // ═══════════════════════════════════════════════════════════════
+
+    struct QueryFilter
+    {
+        // 제외할 오브젝트 (자기 자신 등) - Ptr로 안전하게 관리
+        Ptr<GameObject> ignoreObject;
+        Ptr<Collider> ignoreCollider;
+        
+        // 레이어 마스크 (PhysicsLayer::Mask 사용)
+        uint32_t layerMask = 0xFFFFFFFF;  // 기본: 모든 레이어
+        
+        // 바닥/천장 필터링 (벽만 감지할 때 사용)
+        bool ignoreFloor = false;         // Y노말 > threshold 무시
+        bool ignoreCeiling = false;       // Y노말 < -threshold 무시
+        float floorCeilingThreshold = 0.5f;
+        
+        // 생성자 (구현은 CollisionTypes.cpp)
+        QueryFilter() = default;
+        QueryFilter(uint32_t mask);
+        QueryFilter(GameObject* ignore, uint32_t mask = 0xFFFFFFFF);
+        QueryFilter(Ptr<GameObject> ignore, uint32_t mask = 0xFFFFFFFF);
+    };
 }

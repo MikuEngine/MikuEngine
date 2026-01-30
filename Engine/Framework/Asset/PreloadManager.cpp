@@ -39,14 +39,84 @@ namespace engine
             LOG_ERROR("Preload.json 파일 열기 실패 - PreloadManager");
         }
 
-        JsonArrayForEach(m_preloadData, "Global",
-            [&](const json& asset)
-            {
-                this->LoadAsset(asset, true);
-            }
-        );
-
+        m_globalLoaded = false;
         m_isInitialized = true;
+    }
+
+    bool PreloadManager::IsGlobalLoaded() const
+    {
+        return m_globalLoaded;
+    }
+
+    void PreloadManager::LoadGlobalSync()
+    {
+        if (m_globalLoaded)
+        {
+            return;
+        }
+
+        if (!m_preloadData.contains("Global"))
+        {
+            m_globalLoaded = true;
+            return;
+        }
+
+        const auto& globalAssets = m_preloadData["Global"];
+        for (const auto& asset : globalAssets)
+        {
+            LoadAsset(asset, true);
+        }
+
+        m_globalLoaded = true;
+    }
+
+    void PreloadManager::LoadGlobalAsync()
+    {
+        if (m_globalLoaded || m_isLoading)
+        {
+            return;
+        }
+
+        if (!m_preloadData.contains("Global"))
+        {
+            m_globalLoaded = true;
+            return;
+        }
+
+        const auto& globalAssets = m_preloadData["Global"];
+        m_totalAssetsToLoad = static_cast<int>(globalAssets.size());
+        if (m_totalAssetsToLoad == 0)
+        {
+            m_globalLoaded = true;
+            return;
+        }
+
+        m_isLoading = true;
+        m_progress = 0.0f;
+        m_loadedAssetsCount = 0;
+        m_globalLoadingFuture = std::async(std::launch::async, &PreloadManager::LoadGlobalWorker, this);
+    }
+
+    void PreloadManager::LoadGlobalWorker()
+    {
+        if (!m_preloadData.contains("Global"))
+        {
+            m_globalLoaded = true;
+            m_isLoading = false;
+            return;
+        }
+
+        const auto& globalAssets = m_preloadData["Global"];
+        for (const auto& asset : globalAssets)
+        {
+            LoadAsset(asset, true);
+            ++m_loadedAssetsCount;
+            m_progress = m_loadedAssetsCount / static_cast<float>(m_totalAssetsToLoad);
+        }
+
+        m_progress = 1.0f;
+        m_globalLoaded = true;
+        m_isLoading = false;
     }
 
     void PreloadManager::LoadSceneResourceAsync(const std::string& sceneName)
@@ -73,12 +143,48 @@ namespace engine
             return;
         }
 
+        LoadGlobalSync();
+
         m_isLoading = true;
         m_progress = 0.0f;
         m_loadedAssetsCount = 0;
         m_totalAssetsToLoad = 0;
 
-        LoadSceneResourceWorker(sceneName);
+        if (!m_isInitialized || !m_preloadData.contains("Scenes"))
+        {
+            m_progress = 1.0f;
+            m_isLoading = false;
+            return;
+        }
+
+        const auto& scenes = m_preloadData["Scenes"];
+        if (!scenes.contains(sceneName))
+        {
+            m_progress = 1.0f;
+            m_isLoading = false;
+            return;
+        }
+
+        const auto& sceneAssets = scenes[sceneName];
+        m_totalAssetsToLoad = static_cast<int>(sceneAssets.size());
+
+        if (m_totalAssetsToLoad == 0)
+        {
+            m_progress = 1.0f;
+            m_isLoading = false;
+            return;
+        }
+
+        for (const auto& asset : sceneAssets)
+        {
+            LoadAsset(asset, false);
+
+            ++m_loadedAssetsCount;
+            m_progress = m_loadedAssetsCount / static_cast<float>(m_totalAssetsToLoad);
+        }
+
+        m_progress = 1.0f;
+        m_isLoading = false;
     }
 
     bool PreloadManager::IsLoading() const

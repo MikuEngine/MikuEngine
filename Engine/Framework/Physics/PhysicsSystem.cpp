@@ -505,6 +505,218 @@ namespace engine
         return outHit.hasHit;
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // QueryFilter를 사용하는 SphereCast
+    // 자기 자신 제외, 레이어 필터링, 바닥/천장 필터링 지원
+    // ═══════════════════════════════════════════════════════════════
+    bool PhysicsSystem::SphereCast(
+        const Vector3& origin,
+        float radius,
+        const Vector3& direction,
+        float maxDistance,
+        RaycastHit& outHit,
+        const QueryFilter& filter)
+    {
+        outHit = RaycastHit{};
+
+        physx::PxScene* pxScene = GetActivePxScene();
+        if (!pxScene) return false;
+
+        physx::PxVec3 pxOrigin = PhysicsUtility::ToPxVec3(origin);
+        physx::PxVec3 pxDir = PhysicsUtility::ToPxDirection(direction);
+        pxDir.normalize();
+
+        physx::PxSphereGeometry sphere(radius);
+        physx::PxTransform pose(pxOrigin);
+
+        // 모든 충돌을 수집하기 위해 멀티 히트 사용
+        const physx::PxU32 maxHits = 64;
+        physx::PxSweepHit hitBuffer[maxHits];
+        physx::PxSweepBuffer hits(hitBuffer, maxHits);
+
+        physx::PxQueryFilterData filterData;
+        filterData.flags = physx::PxQueryFlag::eSTATIC | physx::PxQueryFlag::eDYNAMIC;
+
+        bool hasHit = pxScene->sweep(
+            sphere, pose,
+            pxDir, maxDistance,
+            hits,
+            physx::PxHitFlag::eDEFAULT,
+            filterData
+        );
+
+        if (!hasHit) return false;
+
+        // 모든 히트를 순회하며 필터 조건에 맞는 가장 가까운 것 찾기
+        float closestDist = FLT_MAX;
+        physx::PxSweepHit* bestHit = nullptr;
+
+        // 블록 히트와 터치 히트 모두 확인
+        // filter의 Ptr을 로컬 raw pointer로 캐싱 (람다 캡처 시점에 유효성 검증)
+        Collider* ignoreCol = filter.ignoreCollider ? filter.ignoreCollider.Get() : nullptr;
+        GameObject* ignoreObj = filter.ignoreObject ? filter.ignoreObject.Get() : nullptr;
+        
+        auto processHit = [&](physx::PxSweepHit& hit) {
+            if (!hit.shape) return;
+
+            Collider* col = static_cast<Collider*>(hit.shape->userData);
+            if (!col) return;
+
+            // 제외할 오브젝트 확인 (캐싱된 포인터 사용)
+            if (ignoreCol && col == ignoreCol) return;
+            if (ignoreObj && col->GetGameObject() == ignoreObj) return;
+
+            // 레이어 마스크 확인
+            uint32_t layer = col->GetLayer();
+            uint32_t layerBit = (1u << layer);
+            if (!(filter.layerMask & layerBit)) return;
+
+            // 바닥/천장 필터링
+            Vector3 normal = PhysicsUtility::ToDirection(hit.normal);
+            if (filter.ignoreFloor && normal.y > filter.floorCeilingThreshold) return;
+            if (filter.ignoreCeiling && normal.y < -filter.floorCeilingThreshold) return;
+
+            // 가장 가까운 히트 업데이트
+            if (hit.distance < closestDist)
+            {
+                closestDist = hit.distance;
+                bestHit = &hit;
+            }
+        };
+
+        // 블록 히트 확인
+        if (hits.hasBlock)
+        {
+            processHit(hits.block);
+        }
+
+        // 터치 히트들 확인
+        for (physx::PxU32 i = 0; i < hits.nbTouches; ++i)
+        {
+            processHit(hits.touches[i]);
+        }
+
+        // 유효한 히트가 없으면 실패
+        if (!bestHit) return false;
+
+        // 결과 채우기
+        outHit.hasHit = true;
+        outHit.point = PhysicsUtility::ToVector3(bestHit->position);
+        outHit.normal = PhysicsUtility::ToDirection(bestHit->normal);
+        outHit.distance = bestHit->distance;
+
+        if (bestHit->shape)
+        {
+            Collider* col = static_cast<Collider*>(bestHit->shape->userData);
+            outHit.collider = Ptr<Collider>(col);
+            if (col)
+            {
+                outHit.rigidbody = Ptr<Rigidbody>(col->GetAttachedRigidbody());
+                outHit.gameObject = Ptr<GameObject>(col->GetGameObject());
+            }
+        }
+
+        return outHit.hasHit;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 모든 충돌을 반환하는 SphereCastAll (QueryFilter 사용)
+    // ═══════════════════════════════════════════════════════════════
+    bool PhysicsSystem::SphereCastAll(
+        const Vector3& origin,
+        float radius,
+        const Vector3& direction,
+        float maxDistance,
+        std::vector<RaycastHit>& outHits,
+        const QueryFilter& filter)
+    {
+        outHits.clear();
+
+        physx::PxScene* pxScene = GetActivePxScene();
+        if (!pxScene) return false;
+
+        physx::PxVec3 pxOrigin = PhysicsUtility::ToPxVec3(origin);
+        physx::PxVec3 pxDir = PhysicsUtility::ToPxDirection(direction);
+        pxDir.normalize();
+
+        physx::PxSphereGeometry sphere(radius);
+        physx::PxTransform pose(pxOrigin);
+
+        const physx::PxU32 maxHitCount = 64;
+        physx::PxSweepHit hitBuffer[maxHitCount];
+        physx::PxSweepBuffer hits(hitBuffer, maxHitCount);
+
+        physx::PxQueryFilterData filterData;
+        filterData.flags = physx::PxQueryFlag::eSTATIC | physx::PxQueryFlag::eDYNAMIC;
+
+        bool hasHit = pxScene->sweep(
+            sphere, pose,
+            pxDir, maxDistance,
+            hits,
+            physx::PxHitFlag::eDEFAULT,
+            filterData
+        );
+
+        if (!hasHit) return false;
+
+        // filter의 Ptr을 로컬 raw pointer로 캐싱 (람다 캡처 시점에 유효성 검증)
+        Collider* ignoreCol = filter.ignoreCollider ? filter.ignoreCollider.Get() : nullptr;
+        GameObject* ignoreObj = filter.ignoreObject ? filter.ignoreObject.Get() : nullptr;
+
+        auto processHit = [&](const physx::PxSweepHit& hit) {
+            if (!hit.shape) return;
+
+            Collider* col = static_cast<Collider*>(hit.shape->userData);
+            if (!col) return;
+
+            // 제외할 오브젝트 확인 (캐싱된 포인터 사용)
+            if (ignoreCol && col == ignoreCol) return;
+            if (ignoreObj && col->GetGameObject() == ignoreObj) return;
+
+            // 레이어 마스크 확인
+            uint32_t layer = col->GetLayer();
+            uint32_t layerBit = (1u << layer);
+            if (!(filter.layerMask & layerBit)) return;
+
+            // 바닥/천장 필터링
+            Vector3 normal = PhysicsUtility::ToDirection(hit.normal);
+            if (filter.ignoreFloor && normal.y > filter.floorCeilingThreshold) return;
+            if (filter.ignoreCeiling && normal.y < -filter.floorCeilingThreshold) return;
+
+            // 결과 추가
+            RaycastHit result;
+            result.hasHit = true;
+            result.point = PhysicsUtility::ToVector3(hit.position);
+            result.normal = normal;
+            result.distance = hit.distance;
+            result.collider = Ptr<Collider>(col);
+            result.rigidbody = Ptr<Rigidbody>(col->GetAttachedRigidbody());
+            result.gameObject = Ptr<GameObject>(col->GetGameObject());
+
+            outHits.push_back(result);
+        };
+
+        // 블록 히트 확인
+        if (hits.hasBlock)
+        {
+            processHit(hits.block);
+        }
+
+        // 터치 히트들 확인
+        for (physx::PxU32 i = 0; i < hits.nbTouches; ++i)
+        {
+            processHit(hits.touches[i]);
+        }
+
+        // 거리순 정렬
+        std::sort(outHits.begin(), outHits.end(),
+            [](const RaycastHit& a, const RaycastHit& b) {
+                return a.distance < b.distance;
+            });
+
+        return !outHits.empty();
+    }
+
     bool PhysicsSystem::OverlapSphere(
         const Vector3& center,
         float radius,
