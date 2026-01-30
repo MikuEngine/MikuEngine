@@ -117,20 +117,29 @@ namespace engine
         if (!ImGui::GetIO().WantCaptureKeyboard && !Input::IsMouseHeld(Buttons::RIGHT))
         {
             // 1. 이동 모드
-            if (ImGui::IsKeyPressed(ImGuiKey_W)) GizmoState::CurrentOperation = ImGuizmo::TRANSLATE;
+            if (ImGui::IsKeyPressed(ImGuiKey_W))
+            {
+                GizmoState::CurrentOperation = ImGuizmo::TRANSLATE;
+            }
 
             // 2. 회전 모드
-            if (ImGui::IsKeyPressed(ImGuiKey_E)) GizmoState::CurrentOperation = ImGuizmo::ROTATE;
+            if (ImGui::IsKeyPressed(ImGuiKey_E))
+            {
+                GizmoState::CurrentOperation = ImGuizmo::ROTATE;
+            }
 
             // 3. 스케일 모드 (선택 시 즉시 LOCAL로 변경)
-            if (ImGui::IsKeyPressed(ImGuiKey_R)) {
+            if (ImGui::IsKeyPressed(ImGuiKey_R))
+            {
                 GizmoState::CurrentOperation = ImGuizmo::SCALE;
                 GizmoState::CurrentMode = ImGuizmo::LOCAL;
             }
 
             // 4. 좌표계 토글 (현재 스케일 모드가 아닐 때만 작동)
-            if (ImGui::IsKeyPressed(ImGuiKey_Q)) {
-                if (GizmoState::CurrentOperation != ImGuizmo::SCALE) {
+            if (ImGui::IsKeyPressed(ImGuiKey_Q))
+            {
+                if (GizmoState::CurrentOperation != ImGuizmo::SCALE)
+                {
                     GizmoState::CurrentMode = (GizmoState::CurrentMode == ImGuizmo::LOCAL)
                         ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
                 }
@@ -1265,22 +1274,34 @@ namespace engine
 
         // Operation 선택
         if (ImGui::RadioButton("Translate (W)", GizmoState::CurrentOperation == ImGuizmo::TRANSLATE))
+        {
             GizmoState::CurrentOperation = ImGuizmo::TRANSLATE;
+        }
+
         ImGui::SameLine();
         if (ImGui::RadioButton("Rotate (E)", GizmoState::CurrentOperation == ImGuizmo::ROTATE))
+        {
             GizmoState::CurrentOperation = ImGuizmo::ROTATE;
+        }
+
         ImGui::SameLine();
         if (ImGui::RadioButton("Scale (R)", GizmoState::CurrentOperation == ImGuizmo::SCALE))
+        {
             GizmoState::CurrentOperation = ImGuizmo::SCALE;
+        }
 
         ImGui::Separator();
 
         // Mode 선택
         if (ImGui::RadioButton("Local", GizmoState::CurrentMode == ImGuizmo::LOCAL))
+        {
             GizmoState::CurrentMode = ImGuizmo::LOCAL;
+        }
         ImGui::SameLine();
         if (ImGui::RadioButton("World", GizmoState::CurrentMode == ImGuizmo::WORLD))
+        {
             GizmoState::CurrentMode = ImGuizmo::WORLD;
+        }
 
         ImGui::End();
     }
