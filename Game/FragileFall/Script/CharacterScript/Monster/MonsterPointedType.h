@@ -6,7 +6,7 @@
 namespace game
 {
     // ═══════════════════════════════════════════════════════════════
-    // MonsterSharpType - 뾰족 공격 몬스터 구현
+    // MonsterPointedType - 뾰족 공격 몬스터 구현
     // 
     // 특징:
     //   - 감지 거리 내에 플레이어 진입 시 추적 시작
@@ -14,9 +14,9 @@ namespace game
     //   - 공격 모션 중 이동 불가
     // ═══════════════════════════════════════════════════════════════
 
-    class MonsterSharpType : public MonsterScript
+    class MonsterPointedType : public MonsterScript
     {
-        REGISTER_SCRIPT(MonsterSharpType, MonsterScript)
+        REGISTER_SCRIPT(MonsterPointedType, MonsterScript)
 
     private:
         // ─────────────────────────────────────────────

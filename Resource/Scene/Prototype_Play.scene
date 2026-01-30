@@ -12960,7 +12960,7 @@
                     }
                 },
                 {
-                    "Type": "MonsterSharpType",
+                    "Type": "MonsterPointedType",
                     "Active": true,
                     "MovementAcceleration": 80.0,
                     "MovementDeceleration": 100.0,

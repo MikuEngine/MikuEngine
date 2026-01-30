@@ -177,7 +177,7 @@
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterSharpType.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedType.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
@@ -227,7 +227,7 @@
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterSharpType.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedType.h" />
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />

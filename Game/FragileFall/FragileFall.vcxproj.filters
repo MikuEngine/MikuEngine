@@ -84,7 +84,7 @@
     <ClCompile Include="Script\UI\UIHoverScale.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterSharpType.cpp">
+    <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedType.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp">
@@ -236,7 +236,7 @@
     <ClInclude Include="Script\UI\UIHoverScale.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterSharpType.h">
+    <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h">

@@ -1,5 +1,5 @@
 ﻿#include "GamePCH.h"
-#include "MonsterSharpType.h"
+#include "MonsterPointedType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
 
@@ -15,13 +15,13 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 생명주기
     // ═══════════════════════════════════════════════════════════════
-    void MonsterSharpType::Awake()
+    void MonsterPointedType::Awake()
     {
         MonsterScript::Awake();
         // 스탯은 씬 파일에서 로드됨 (Load 함수 참조)
     }
 
-    void MonsterSharpType::Start()
+    void MonsterPointedType::Start()
     {
         MonsterScript::Start();
 
@@ -43,7 +43,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // FSM 초기화
     // ═══════════════════════════════════════════════════════════════
-    void MonsterSharpType::InitializeFSM()
+    void MonsterPointedType::InitializeFSM()
     {
         if (!m_logicFSM) return;
 
@@ -116,7 +116,7 @@ namespace game
         m_logicFSM->InitializeCurrentState();  // 기본 상태로 설정
     }
 
-    void MonsterSharpType::InitializeAnimFSM()
+    void MonsterPointedType::InitializeAnimFSM()
     {
         if (!m_animFSM) return;
 
@@ -137,7 +137,7 @@ namespace game
         m_animFSM->AddSplitState("Dead",         m_animName_Dead, true, "", false, 0.0f, 0.1f);         // Idle 재생
     }
 
-    void MonsterSharpType::InitializeAnimations()
+    void MonsterPointedType::InitializeAnimations()
     {
         if (!m_skeletalAnimator) return;
 
@@ -147,7 +147,7 @@ namespace game
         // 여기서는 이름만 연결
     }
 
-    void MonsterSharpType::InitializeBullet()
+    void MonsterPointedType::InitializeBullet()
     {
         m_bulletParams.type = BulletType::Linear;
         m_bulletParams.speed = m_bulletSpeed;
@@ -158,7 +158,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 입력 처리 (FSM 파라미터 업데이트)
     // ═══════════════════════════════════════════════════════════════
-    void MonsterSharpType::ProcessInput()
+    void MonsterPointedType::ProcessInput()
     {
         if (!m_logicFSM) return;
 
@@ -184,7 +184,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 상태별 행동 - 비물리 (Update에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void MonsterSharpType::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
+    void MonsterPointedType::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
     {
         // 발사 쿨타임 감소 (모든 상태에서, 비물리)
         if (m_fireTimer > 0.0f)
@@ -218,33 +218,33 @@ namespace game
         }
     }
 
-    void MonsterSharpType::ExecuteEngageMoveBehaviorNonPhysics(float deltaTime)
+    void MonsterPointedType::ExecuteEngageMoveBehaviorNonPhysics(float deltaTime)
     {
         // 비물리 처리 (없음 - 이동은 물리에서 처리)
     }
 
-    void MonsterSharpType::ExecuteEngageStopBehaviorNonPhysics(float deltaTime)
+    void MonsterPointedType::ExecuteEngageStopBehaviorNonPhysics(float deltaTime)
     {
         // 비물리 처리 (없음 - 회전은 물리에서 처리)
     }
 
-    void MonsterSharpType::ExecuteEngageAttackBehaviorNonPhysics(float deltaTime)
+    void MonsterPointedType::ExecuteEngageAttackBehaviorNonPhysics(float deltaTime)
     {
         // 공격 타이머 및 발사 (비물리)
         Attack(deltaTime);
     }
 
-    void MonsterSharpType::ExecuteIdleBehaviorNonPhysics()
+    void MonsterPointedType::ExecuteIdleBehaviorNonPhysics()
     {
         // 비물리 Idle 처리
     }
 
-    void MonsterSharpType::ExecuteFragileBehaviorNonPhysics()
+    void MonsterPointedType::ExecuteFragileBehaviorNonPhysics()
     {
         // Fragile 상태: 아무 행동도 하지 않음 (Execution 대기)
     }
 
-    void MonsterSharpType::ExecuteDeadBehaviorNonPhysics()
+    void MonsterPointedType::ExecuteDeadBehaviorNonPhysics()
     {
         // 부모 클래스의 Dead 타이머 처리 (2초 후 Destroy)
         MonsterScript::ExecuteDeadBehaviorNonPhysics();
@@ -253,7 +253,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 상태별 행동 - 물리 (FixedUpdate에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void MonsterSharpType::UpdatePhysicsStateBasedBehavior(const std::string& state)
+    void MonsterPointedType::UpdatePhysicsStateBasedBehavior(const std::string& state)
     {
         if (state == "EngageMove")
         {
@@ -281,38 +281,38 @@ namespace game
         }
     }
 
-    void MonsterSharpType::ExecuteEngageMoveBehaviorPhysics()
+    void MonsterPointedType::ExecuteEngageMoveBehaviorPhysics()
     {
         // 플레이어를 향해 이동 (물리)
         MoveTowardsPlayer();
     }
 
-    void MonsterSharpType::ExecuteEngageStopBehaviorPhysics()
+    void MonsterPointedType::ExecuteEngageStopBehaviorPhysics()
     {
         // 공격 사거리 안에 있지만 쿨타임 중 - 정지하고 회전만 (물리)
         StopAllMovement();
         RotateTowardsPlayer();
     }
 
-    void MonsterSharpType::ExecuteEngageAttackBehaviorPhysics()
+    void MonsterPointedType::ExecuteEngageAttackBehaviorPhysics()
     {
         // 공격 중에는 이동 불가, 회전만 가능 (물리)
         StopAllMovement();
         RotateTowardsPlayer();
     }
 
-    void MonsterSharpType::ExecuteIdleBehaviorPhysics()
+    void MonsterPointedType::ExecuteIdleBehaviorPhysics()
     {
         StopAllMovement();
         StopRotation();
     }
 
-    void MonsterSharpType::ExecuteFragileBehaviorPhysics()
+    void MonsterPointedType::ExecuteFragileBehaviorPhysics()
     {
         // Fragile 상태: 물리적으로 정지
     }
 
-    void MonsterSharpType::ExecuteDeadBehaviorPhysics()
+    void MonsterPointedType::ExecuteDeadBehaviorPhysics()
     {
         StopAllMovement();
     }
@@ -320,7 +320,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 상태 진입 콜백
     // ═══════════════════════════════════════════════════════════════
-    void MonsterSharpType::OnStateEntered(const std::string& state)
+    void MonsterPointedType::OnStateEntered(const std::string& state)
     {
         if (state == "EngageAttack")
         {
@@ -361,7 +361,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 공격
     // ═══════════════════════════════════════════════════════════════
-    void MonsterSharpType::Attack(float deltaTime)
+    void MonsterPointedType::Attack(float deltaTime)
     {
         // 공격 애니메이션 타이머 업데이트
         m_attackAnimationTimer += deltaTime;
@@ -398,14 +398,14 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 행동 제한
     // ═══════════════════════════════════════════════════════════════
-    bool MonsterSharpType::CanMove() const
+    bool MonsterPointedType::CanMove() const
     {
         std::string state = GetCurrentState();
         // EngageStop, EngageAttack 상태에서는 이동 불가
         return state != "Fragile" && state != "Dead" && state != "EngageStop" && state != "EngageAttack";
     }
 
-    bool MonsterSharpType::CanAttack() const
+    bool MonsterPointedType::CanAttack() const
     {
         std::string state = GetCurrentState();
         return state == "EngageAttack" && state != "Fragile" && state != "Dead";
@@ -414,7 +414,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 헬퍼 함수
     // ═══════════════════════════════════════════════════════════════
-    bool MonsterSharpType::IsPlayerInDetectionRange() const
+    bool MonsterPointedType::IsPlayerInDetectionRange() const
     {
         return IsTargetInRange(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr, m_detectionRange);
     }
@@ -422,11 +422,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // GUI / 직렬화
     // ═══════════════════════════════════════════════════════════════
-    void MonsterSharpType::OnGui()
+    void MonsterPointedType::OnGui()
     {
         ImGui::Indent();
         
-        ImGui::Text("MonsterSharpType:");
+        ImGui::Text("MonsterPointedType:");
 
         // ─────────────────────────────────────────────
         // 컴포넌트 검증 (에디터 화면에서도 체크)
@@ -548,7 +548,7 @@ namespace game
         ImGui::Spacing();
     }
 
-    void MonsterSharpType::Save(engine::json& j) const
+    void MonsterPointedType::Save(engine::json& j) const
     {
         MonsterScript::Save(j);
         
@@ -562,7 +562,7 @@ namespace game
         j["AnimName_Dead"] = m_animName_Dead;
     }
 
-    void MonsterSharpType::Load(const engine::json& j)
+    void MonsterPointedType::Load(const engine::json& j)
     {
         MonsterScript::Load(j);
         

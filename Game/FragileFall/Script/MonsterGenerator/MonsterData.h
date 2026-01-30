@@ -18,7 +18,7 @@ namespace game
     enum class AttackType
     { 
         Dull,
-        Sharp,
+        Pointed,
         Round
     };
     
