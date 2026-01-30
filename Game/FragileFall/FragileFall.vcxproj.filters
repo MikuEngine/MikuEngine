@@ -51,19 +51,19 @@
     <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\SceneController_Play.cpp">
+    <ClCompile Include="Script\Scene\SceneController_Play.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\SceneController_Lobby.cpp">
+    <ClCompile Include="Script\Scene\SceneController_Lobby.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\SceneController_Main.cpp">
+    <ClCompile Include="Script\Scene\SceneController_Main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\UIFollowWorldTarget.cpp">
+    <ClCompile Include="Script\UI\UIFollowWorldTarget.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\UIPopUpAnimator.cpp">
+    <ClCompile Include="Script\UI\UIPopUpAnimator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\UpgradeNodeView.cpp">
@@ -81,7 +81,7 @@
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\UIHoverScale.cpp">
+    <ClCompile Include="Script\UI\UIHoverScale.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedGreen.cpp">
@@ -141,10 +141,10 @@
     <ClCompile Include="Script\CheckRotateScript.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\UIKillPopupQueue.cpp">
+    <ClCompile Include="Script\UI\UIKillPopupQueue.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Script\UIToastAnimator.cpp">
+    <ClCompile Include="Script\UI\UIToastAnimator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Manager\TimeScaler.cpp">
@@ -197,19 +197,19 @@
     <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\SceneController_Play.h">
+    <ClInclude Include="Script\Scene\SceneController_Play.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\SceneController_Lobby.h">
+    <ClInclude Include="Script\Scene\SceneController_Lobby.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\SceneController_Main.h">
+    <ClInclude Include="Script\Scene\SceneController_Main.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\UIFollowWorldTarget.h">
+    <ClInclude Include="Script\UI\UIFollowWorldTarget.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\UIPopUpAnimator.h">
+    <ClInclude Include="Script\UI\UIPopUpAnimator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\UpgradeNodeView.h">
@@ -230,7 +230,7 @@
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\UIHoverScale.h">
+    <ClInclude Include="Script\UI\UIHoverScale.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedGreen.h">
@@ -293,10 +293,10 @@
     <ClInclude Include="Script\ItemType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\UIKillPopupQueue.h">
+    <ClInclude Include="Script\UI\UIKillPopupQueue.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Script\UIToastAnimator.h">
+    <ClInclude Include="Script\UI\UIToastAnimator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Manager\TimeScaler.h">

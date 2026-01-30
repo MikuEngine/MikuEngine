@@ -8,7 +8,7 @@
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIButton.h>
-#include "UIPopUpAnimator.h"
+#include "Script/UI/UIPopUpAnimator.h"
 
 #include "Manager/TimeScaler.h"
 
