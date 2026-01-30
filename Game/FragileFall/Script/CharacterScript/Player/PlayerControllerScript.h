@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -40,6 +40,10 @@ namespace game
         engine::SkeletalAnimator* m_skeletalAnimator = nullptr;
         AimPointer* m_aimPointer = nullptr;
         BulletFactory* m_bulletFactory = nullptr;
+
+        //HP
+        int m_PlayerMaxHP = 10;
+        int m_PlayerCurrentHP = 10;
 
         // ─────────────────────────────────────────────
         // 이동 설정
@@ -255,6 +259,20 @@ namespace game
         // 처형 시스템 접근자
         // ─────────────────────────────────────────────
         float GetExecutionRange() const { return m_executionRange; }
+
+        // ─────────────────────────────────────────────
+        // 대쉬 시스템 접근자
+        // ─────────────────────────────────────────────
+        int GetMaxDashCount() const { return m_MaxDashCount; }
+        int GetCurrentDashCount() const { return m_CurrentDashCount; }
+        float GetDashRechargeTimer() const { return m_dashRechargeTimer; }
+        float GetDashRechargeTime() const { return m_dashRechargeTime; }
+
+        // ─────────────────────────────────────────────
+        // HP 시스템 접근자
+        // ─────────────────────────────────────────────
+        int GetMaxHp() const { return m_PlayerMaxHP; }
+        int GetCurrentHp() const { return m_PlayerCurrentHP; }
 
         // 처형 시작 (ExecutionIndicatorManager에서 호출)
         void StartExecution(engine::GameObject* targetMonster);

@@ -12344,7 +12344,7 @@
         {
             "ID": 13,
             "Name": "Player_Info_Indicator_UI",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -12687,7 +12687,10 @@
                     "ShowHpText": true,
                     "HpFontSize": 21,
                     "StateFontSize": 22,
-                    "HpTextYOffset": 23.0
+                    "HpTextYOffset": 23.0,
+                    "ShowDashText": true,
+                    "DashFontSize": 21,
+                    "DashTextYOffset": 60.0
                 }
             ]
         },

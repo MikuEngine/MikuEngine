@@ -1,8 +1,9 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "StateTextRenderer.h"
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Monster/MonsterScript.h"
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
 
@@ -57,6 +58,7 @@ namespace game
 
     void StateTextRenderer::Update()
     {
+#ifdef _DEBUG
         if (!m_mainCamera) return;
 
         // 파괴된 오브젝트 정리
@@ -67,6 +69,13 @@ namespace game
         {
             UpdateTrackedObject(tracked);
         }
+#else
+        // 릴리즈 빌드에서는 모든 텍스트 숨김
+        for (auto& tracked : m_trackedObjects)
+        {
+            SetTextVisible(tracked, false);
+        }
+#endif
     }
 
     void StateTextRenderer::FindAllControllers()
@@ -144,9 +153,11 @@ namespace game
         tracked.uiText = uiText;
         tracked.rectTransform = rectTransform;
         
-        // MonsterScript인 경우 체력 텍스트도 생성
+        // MonsterScript 또는 PlayerControllerScript인 경우 체력 텍스트도 생성
         MonsterScript* monster = dynamic_cast<MonsterScript*>(controller);
-        if (m_showHpText && monster)
+        PlayerControllerScript* player = dynamic_cast<PlayerControllerScript*>(controller);
+        
+        if (m_showHpText && (monster || player))
         {
             engine::GameObject* hpTextGO = engine::Prefab::Instantiate(m_prefabName);
             if (hpTextGO)
@@ -176,6 +187,40 @@ namespace game
                 else
                 {
                     hpTextGO->Destroy();
+                }
+            }
+        }
+        
+        // PlayerControllerScript인 경우 대쉬 텍스트도 생성
+        if (m_showDashText && player)
+        {
+            engine::GameObject* dashTextGO = engine::Prefab::Instantiate(m_prefabName);
+            if (dashTextGO)
+            {
+                if (GetGameObject() && GetGameObject()->GetTransform())
+                {
+                    dashTextGO->GetTransform()->SetParent(GetGameObject()->GetTransform(), false);
+                }
+                
+                engine::UIText* dashUiText = dashTextGO->GetComponent<engine::UIText>();
+                engine::RectTransform* dashRectTransform = dashTextGO->GetComponent<engine::RectTransform>();
+                
+                if (dashUiText && dashRectTransform)
+                {
+                    dashRectTransform->SetAnchorMin({ 0.0f, 0.0f });
+                    dashRectTransform->SetAnchorMax({ 0.0f, 0.0f });
+                    dashRectTransform->SetPivot({ 0.5f, 0.5f });
+                    
+                    dashUiText->SetFontPixelSize(m_dashFontSize);
+                    dashUiText->SetAlignH(engine::UITextAlignH::Center);
+                    
+                    tracked.dashTextObject = dashTextGO;
+                    tracked.dashUiText = dashUiText;
+                    tracked.dashRectTransform = dashRectTransform;
+                }
+                else
+                {
+                    dashTextGO->Destroy();
                 }
             }
         }
@@ -231,14 +276,30 @@ namespace game
 
         tracked.rectTransform->SetAnchoredPosition(finalPos);
         
-        // 체력 텍스트 업데이트 (MonsterScript인 경우)
+        // 체력 텍스트 업데이트 (MonsterScript 또는 PlayerControllerScript인 경우)
         if (tracked.hpUiText && tracked.hpRectTransform)
         {
-            MonsterScript* monster = dynamic_cast<MonsterScript*>(tracked.controller.Get());
-            if (monster)
+            std::string hpText;
+            
+            // 플레이어인 경우
+            PlayerControllerScript* player = dynamic_cast<PlayerControllerScript*>(tracked.controller.Get());
+            if (player)
             {
-                // 체력 텍스트 내용 설정
-                std::string hpText = "HP: " + std::to_string(monster->GetHp());
+                // "현재HP / 맥스HP" 형식
+                hpText = std::to_string(player->GetCurrentHp()) + " / " + std::to_string(player->GetMaxHp());
+            }
+            else
+            {
+                // 몬스터인 경우
+                MonsterScript* monster = dynamic_cast<MonsterScript*>(tracked.controller.Get());
+                if (monster)
+                {
+                    hpText = "HP: " + std::to_string(monster->GetHp());
+                }
+            }
+            
+            if (!hpText.empty())
+            {
                 tracked.hpUiText->SetText(hpText);
                 
                 // 체력 텍스트 위치 (상태 텍스트 위쪽)
@@ -247,6 +308,39 @@ namespace game
                     finalPos.y - m_hpTextYOffset  // 위로 올림 (스크린 좌표계에서 Y가 아래로 증가)
                 );
                 tracked.hpRectTransform->SetAnchoredPosition(hpPos);
+            }
+        }
+        
+        // 대쉬 텍스트 업데이트 (PlayerControllerScript인 경우)
+        if (tracked.dashUiText && tracked.dashRectTransform)
+        {
+            PlayerControllerScript* player = dynamic_cast<PlayerControllerScript*>(tracked.controller.Get());
+            if (player)
+            {
+                // 대쉬 카운트와 리차지 타이머 텍스트 생성 (소수점 3자리)
+                int currentDash = player->GetCurrentDashCount();
+                int maxDash = player->GetMaxDashCount();
+                float rechargeTimer = player->GetDashRechargeTimer();
+                
+                char buffer[64];
+                if (currentDash < maxDash)
+                {
+                    // 충전 중일 때 타이머 표시
+                    snprintf(buffer, sizeof(buffer), "Dash: %d/%d (%.3f)", currentDash, maxDash, rechargeTimer);
+                }
+                else
+                {
+                    // 최대치일 때 타이머 미표시
+                    snprintf(buffer, sizeof(buffer), "Dash: %d/%d", currentDash, maxDash);
+                }
+                tracked.dashUiText->SetText(buffer);
+                
+                // 대쉬 텍스트 위치 (상태 텍스트 위쪽, HP 텍스트보다 더 위)
+                const engine::Vector2 dashPos(
+                    finalPos.x,
+                    finalPos.y - m_dashTextYOffset  // 위로 올림
+                );
+                tracked.dashRectTransform->SetAnchoredPosition(dashPos);
             }
         }
         
@@ -269,6 +363,14 @@ namespace game
             engine::Vector4 hpColor = tracked.hpUiText->GetColor();
             hpColor.w = visible ? 1.0f : 0.0f;
             tracked.hpUiText->SetColor(hpColor);
+        }
+        
+        // 대쉬 텍스트 표시/숨김
+        if (tracked.dashUiText)
+        {
+            engine::Vector4 dashColor = tracked.dashUiText->GetColor();
+            dashColor.w = visible ? 1.0f : 0.0f;
+            tracked.dashUiText->SetColor(dashColor);
         }
     }
 
@@ -359,6 +461,12 @@ namespace game
         ImGui::DragInt("HP Font Size", &m_hpFontSize, 1, 12, 128);
         ImGui::DragInt("State Font Size", &m_stateFontSize, 1, 12, 128);
         ImGui::DragFloat("HP Text Y Offset", &m_hpTextYOffset, 1.0f, 0.0f, 100.0f);
+        
+        ImGui::Separator();
+        ImGui::Text("Dash Text Settings (Player Only):");
+        ImGui::Checkbox("Show Dash Text", &m_showDashText);
+        ImGui::DragInt("Dash Font Size", &m_dashFontSize, 1, 12, 128);
+        ImGui::DragFloat("Dash Text Y Offset", &m_dashTextYOffset, 1.0f, 0.0f, 200.0f);
 
         ImGui::Separator();
         ImGui::Text("Tracked Objects: %d", static_cast<int>(m_trackedObjects.size()));
@@ -379,6 +487,9 @@ namespace game
         j["HpFontSize"] = m_hpFontSize;
         j["StateFontSize"] = m_stateFontSize;
         j["HpTextYOffset"] = m_hpTextYOffset;
+        j["ShowDashText"] = m_showDashText;
+        j["DashFontSize"] = m_dashFontSize;
+        j["DashTextYOffset"] = m_dashTextYOffset;
     }
 
     void StateTextRenderer::Load(const engine::json& j)
@@ -391,5 +502,8 @@ namespace game
         engine::JsonGet(j, "HpFontSize", m_hpFontSize);
         engine::JsonGet(j, "StateFontSize", m_stateFontSize);
         engine::JsonGet(j, "HpTextYOffset", m_hpTextYOffset);
+        engine::JsonGet(j, "ShowDashText", m_showDashText);
+        engine::JsonGet(j, "DashFontSize", m_dashFontSize);
+        engine::JsonGet(j, "DashTextYOffset", m_dashTextYOffset);
     }
 }

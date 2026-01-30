@@ -51,6 +51,11 @@ namespace game
             engine::Ptr<engine::GameObject> hpTextObject;
             engine::Ptr<engine::UIText> hpUiText;
             engine::Ptr<engine::RectTransform> hpRectTransform;
+            
+            // 대쉬 텍스트 (PlayerControllerScript 전용)
+            engine::Ptr<engine::GameObject> dashTextObject;
+            engine::Ptr<engine::UIText> dashUiText;
+            engine::Ptr<engine::RectTransform> dashRectTransform;
         };
         std::vector<TrackedObject> m_trackedObjects;
 
@@ -73,6 +78,11 @@ namespace game
         int m_hpFontSize = 48;           // 체력 텍스트 폰트 크기
         int m_stateFontSize = 32;        // 상태 텍스트 폰트 크기
         float m_hpTextYOffset = 30.0f;   // 체력 텍스트가 상태 텍스트 위로 올라가는 픽셀
+        
+        // 대쉬 텍스트 설정 (플레이어 전용)
+        bool m_showDashText = true;
+        int m_dashFontSize = 36;         // 대쉬 텍스트 폰트 크기
+        float m_dashTextYOffset = 60.0f; // 대쉬 텍스트가 상태 텍스트 위로 올라가는 픽셀
 
         // ─────────────────────────────────────────────
         // 캐시된 뷰포트 정보

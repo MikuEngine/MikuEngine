@@ -221,13 +221,14 @@ namespace game
 		// 3. 대쉬 입력 (좌측 Shift)
 		// - 이동 중일 때만 대쉬 가능
 		// - 쿨다운이 끝났을 때만 대쉬 가능
+		// - 대쉬 카운트가 0보다 클 때만 대쉬 가능
 		// ─────────────────────────────────────────────
 		bool isShiftPressed = engine::Input::IsKeyPressed(engine::Keys::LeftShift);
 		bool isSpaceBarPressed = engine::Input::IsKeyPressed(engine::Keys::Space);
 
 		bool isDashAble = m_logicFSM->GetCurrentState() != "Execution" && m_logicFSM->GetCurrentState() != "Dash" && m_logicFSM->GetCurrentState() != "Dead";
 
-		if ((isShiftPressed || isSpaceBarPressed) && isMoving && m_dashCooldownTimer <= 0.0f)
+		if ((isShiftPressed || isSpaceBarPressed) && isMoving && m_dashCooldownTimer <= 0.0f && m_CurrentDashCount > 0)
 		{
 			// 대쉬 시작 트리거
 			m_logicFSM->SetTrigger("StartDash");
@@ -275,6 +276,31 @@ namespace game
 		if (m_dashCooldownTimer > 0.0f)
 		{
 			m_dashCooldownTimer -= deltaTime;
+		}
+
+		// ─────────────────────────────────────────────
+		// 대쉬 리차지 타이머
+		// - 카운트가 최대치 미만일 때만 작동
+		// - 타이머가 0이 되면 카운트 1 회복 후 타이머 리셋
+		// - 카운트가 최대치가 되면 타이머 초기화
+		// ─────────────────────────────────────────────
+		if (m_CurrentDashCount < m_MaxDashCount)
+		{
+			m_dashRechargeTimer -= deltaTime;
+			if (m_dashRechargeTimer <= 0.0f)
+			{
+				m_CurrentDashCount++;
+				if (m_CurrentDashCount < m_MaxDashCount)
+				{
+					// 아직 최대치가 아니면 타이머 재시작
+					m_dashRechargeTimer = m_dashRechargeTime;
+				}
+				else
+				{
+					// 최대치에 도달하면 타이머 리셋
+					m_dashRechargeTimer = m_dashRechargeTime;
+				}
+			}
 		}
 
 		// Execution 상태에서는 행동 로직 스킵
@@ -610,6 +636,22 @@ namespace game
 		m_isDashing = true;
 		m_dashElapsedTime = 0.0f;
 		m_dashCollisionDecayBoost = 1.0f;  // 충돌 감쇠 배율 초기화
+
+		// ═══════════════════════════════════════════════════════════════
+		// 대쉬 카운트 시스템
+		// - 대쉬 사용 시 카운트 감소
+		// - 카운트가 3 미만이 되면 리차지 타이머 시작
+		// ═══════════════════════════════════════════════════════════════
+		m_CurrentDashCount--;
+		if (m_CurrentDashCount < m_MaxDashCount)
+		{
+			// 리차지 타이머가 이미 작동 중이 아닌 경우에만 리셋
+			// (연속 대쉬 시 이미 카운트가 감소 중이면 타이머 유지)
+			if (m_CurrentDashCount == m_MaxDashCount - 1)
+			{
+				m_dashRechargeTimer = m_dashRechargeTime;  // 처음으로 감소했을 때만 타이머 시작
+			}
+		}
 
 		// ═══════════════════════════════════════════════════════════════
 		// SphereCast로 대쉬 방향에 벽이 있는지 확인
