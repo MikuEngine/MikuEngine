@@ -85,6 +85,9 @@ namespace game
 
         m_isMenuOpen = false;
         m_isOptionOpen = false;
+        m_isDead = false;
+
+        if (!m_isDead) TimeScaler::PlayWorld();
 
         auto& app = engine::AppContext::GetApp();
         const auto& s = app.GetUserSettings();
@@ -117,8 +120,7 @@ namespace game
 
         if (engine::Input::IsKeyPressed(engine::Keys::F5))
         {
-            m_isDead = true;
-            m_failPanel->SetActive(true);
+            Fail();
         }
     }
 
@@ -221,6 +223,13 @@ namespace game
     {
         SetOptionOpen(false);
         SetMenuOpen(true);
+    }
+
+    void SceneController_Play::Fail()
+    {
+        m_isDead = true;
+        m_failPanel->SetActive(true);
+        TimeScaler::StopWorld();
     }
 
     void SceneController_Play::UpdateBlocker()
