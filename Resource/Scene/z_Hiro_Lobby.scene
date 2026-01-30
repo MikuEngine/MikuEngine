@@ -121,8 +121,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 190.0,
-                        "y": -70.0
+                        "x": 100.0,
+                        "y": -30.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -2525,7 +2525,7 @@
             "ID": 34,
             "ParentID": 14,
             "Name": "UI_UpgradePopUp",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -4592,7 +4592,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/AmethystShard.png",
+                    "TexturePath": "Resource/Texture/Pikachu.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
@@ -4782,7 +4782,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/DarkEssence.png",
+                    "TexturePath": "Resource/Texture/Miku.png",
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
