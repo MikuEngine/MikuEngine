@@ -27,7 +27,7 @@ namespace engine
 
     struct AttachedSocketObject
     {
-        GameObject* obj;
+        Ptr<GameObject> obj;
         std::string socketName;
     };
 

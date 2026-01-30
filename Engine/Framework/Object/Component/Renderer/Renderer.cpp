@@ -283,12 +283,18 @@ namespace engine
 			instance.worldMatrix = instance.info.localMatrix * world;
 		}
 
-		for (auto& attached : m_attachedObjects)
+		for (auto it = m_attachedObjects.begin(); it != m_attachedObjects.end(); )
 		{
-			if (!attached.obj) continue;
-
-			Matrix socketWorld = GetSocketWorldMatrix(attached.socketName);
-			attached.obj->GetTransform()->SetWorldMatrix(socketWorld);
+			if (it->obj)
+			{
+				Matrix socketWorld = GetSocketWorldMatrix(it->socketName);
+				it->obj->GetTransform()->SetWorldMatrix(socketWorld);
+				++it;
+			}
+			else
+			{
+				it = m_attachedObjects.erase(it);
+			}
 		}
 	}
 

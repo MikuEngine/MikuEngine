@@ -9,10 +9,10 @@ namespace engine
     class SocketAttachment :
         public Script<SocketAttachment>
     {
-        REGISTER_SCRIPT(SocketAttachment, Script<SocketAttachment>)
+        REGISTER_SCRIPT(SocketAttachment, Script)
 
     private:
-        Renderer* m_targetRenderer = nullptr;
+        Ptr<Renderer> m_targetRenderer = nullptr;
         std::string m_socketName;
 
     public:
@@ -20,7 +20,7 @@ namespace engine
         virtual ~SocketAttachment();
 
         void SetSocket(Renderer* renderer, const std::string& socketName);
-        void NotifyTargetRendererDestroyed() { m_targetRenderer = nullptr; }
+        void NotifyTargetRendererDestroyed();
 
     public:
         void OnGui() override;
