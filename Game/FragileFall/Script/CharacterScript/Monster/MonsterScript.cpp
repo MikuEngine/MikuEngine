@@ -668,6 +668,8 @@ namespace game
 	{
 		BaseControllerScript::Save(j);
 
+		j["AttackType"] = static_cast<int>(m_attackType);
+		j["MonsterTier"] = static_cast<int>(m_monsterTier);
 		j["Hp"] = m_Hp;
 		j["AttackRange"] = m_AttackRange;
 		j["MoveSpeed"] = m_moveSpeed;
@@ -680,6 +682,9 @@ namespace game
 	void MonsterScript::Load(const engine::json& j)
 	{
 		BaseControllerScript::Load(j);
+
+		m_attackType = static_cast<AttackType>(j.value("AttackType", (int)AttackType::Dull));
+		m_monsterTier = static_cast<MonsterTier>(j.value("MonsterTier", (int)MonsterTier::Gray));
 
 		m_Hp = j.value("Hp", 100.0f);
 		m_AttackRange = j.value("AttackRange", 10.0f);

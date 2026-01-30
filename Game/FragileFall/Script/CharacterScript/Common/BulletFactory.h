@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "BulletParams.h"
@@ -36,6 +36,10 @@ namespace game
         void LinearFireMonster(const engine::Vector3& position,
                                const engine::Vector3& direction,
                                const BulletParams& params);
+
+        void ParabolicFireMonster(const engine::Vector3& position,
+                                  const engine::Vector3& direction,
+			                      const BulletParams& params);
 
     private:
         // ─────────────────────────────────────────────

@@ -12919,6 +12919,8 @@
                     "MovementAcceleration": 80.0,
                     "MovementDeceleration": 100.0,
                     "MaxSpeedBrakeFactor": 15.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
                     "Hp": 50.0,
                     "AttackRange": 15.0,
                     "MoveSpeed": 0.0,
@@ -13210,7 +13212,7 @@
         {
             "ID": 23,
             "Name": "MonPG",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -13238,6 +13240,8 @@
                     "MovementAcceleration": 80.0,
                     "MovementDeceleration": 100.0,
                     "MaxSpeedBrakeFactor": 15.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
                     "Hp": 80.0,
                     "AttackRange": 5.0,
                     "MoveSpeed": 8.0,

@@ -5,6 +5,7 @@
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
+#include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Physics/PhysicsLayer.h>
 
@@ -27,7 +28,30 @@ namespace game
         if (m_skeletalAnimator && !m_animName_Idle.empty())
         {
             m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
-        } 
+        }
+
+        // 테스트용
+		m_monsterTier = MonsterTier::Green;
+
+		// 테스트용 Tier별 색상 설정
+        switch (m_monsterTier)
+        {
+        case MonsterTier::Gray:
+			GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+			break;
+		case MonsterTier::Green:
+			GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+			break;
+		case MonsterTier::Blue:
+			GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+			break;
+		case MonsterTier::Red:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+			break;
+		case MonsterTier::Purple:
+			GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.0f, 0.5f, 1.0f));
+			break;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -245,17 +269,63 @@ namespace game
         //direction *= -1.0f;
 
         // 그냥 플레이어를 향해 발사.
+
         engine::Vector3 direction = CalculateDirectionToPlayer();
-
         engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
-        m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
 
-        if (m_skeletalAnimator && !m_animName_Attack.empty())
+        switch (m_monsterTier)
         {
-            m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-        }
+        case MonsterTier::Gray:
+            {
+            m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
 
-        m_fireTimer = m_fireRate;
+            if (m_skeletalAnimator && !m_animName_Attack.empty())
+            {
+                m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
+            }
+
+            m_fireTimer = m_fireRate;
+            break;
+            }
+		case MonsterTier::Green:
+            {
+            m_bulletParams.type = BulletType::Parabolic;
+            m_bulletParams.gravity = 9.81f;
+
+            engine::Vector3 startPos = firePosition;
+            engine::Vector3 targetPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+
+            // 수평 벡터와 거리 계산
+            engine::Vector3 diff = targetPos - startPos;
+            engine::Vector3 horizontalDiff = { diff.x, 0.0f, diff.z };
+            float distance = horizontalDiff.Length();
+
+            // 날아가는 시간 설정
+            float travelTime = 1.5f;
+
+            // 수평 속도 계산 (V = S / t)
+            float horizontalSpeed = distance / travelTime;
+            engine::Vector3 horizontalDir = horizontalDiff;
+            horizontalDir.Normalize();
+
+            // 수직 초기 속도 계산 (Vy = (dy + 0.5 * g * t^2) / t)
+            float dy = diff.y;
+            float verticalSpeed = (dy + 0.5f * m_bulletParams.gravity * travelTime * travelTime) / travelTime;
+
+            engine::Vector3 finalVelocity = (horizontalDir * horizontalSpeed) + (engine::Vector3::Up * verticalSpeed);
+            float finalSpeed = finalVelocity.Length();
+            finalVelocity.Normalize();
+
+            m_bulletParams.speed = finalSpeed;
+            m_bulletFactory->ParabolicFireMonster(startPos, finalVelocity, m_bulletParams);
+
+            m_fireTimer = m_fireRate;
+            break;
+            }
+        default:
+            m_fireTimer = m_fireRate;
+            break;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
