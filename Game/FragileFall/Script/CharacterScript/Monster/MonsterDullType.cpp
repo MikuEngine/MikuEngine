@@ -310,6 +310,45 @@ namespace game
         if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
         ImGui::Unindent();
 
+        // 공격 타입
+        ImGui::Separator();
+        ImGui::Text("Type:");
+        if (ImGui::BeginCombo("Attack Type", GetAttackTypeStr(m_attackType)))
+        {
+            for (int i = 0; i < (int)AttackType::Max; ++i)
+            {
+                AttackType currentType = (AttackType)i;
+                bool isSelected = (m_attackType == currentType);
+
+                if (ImGui::Selectable(GetAttackTypeStr(currentType), isSelected))
+                {
+                    m_attackType = currentType;
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        if (ImGui::BeginCombo("Monster Tier", GetMonsterTierStr(m_monsterTier)))
+        {
+            for (int i = 0; i < (int)MonsterTier::Max; ++i)
+            {
+                MonsterTier currentTier = (MonsterTier)i;
+                bool isSelected = (m_monsterTier == currentTier);
+
+                if (ImGui::Selectable(GetMonsterTierStr(currentTier), isSelected))
+                {
+                    m_monsterTier = currentTier;
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
         // 스탯
         ImGui::Separator();
         ImGui::Text("Stats:");
