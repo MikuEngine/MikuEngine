@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <unordered_set>
+#include <ImGuizmo.h>
 
 #include "Core/System/ProjectSettings.h"
 #include "Framework/Object/Ptr.h"
@@ -10,6 +11,12 @@ namespace engine
     class GameObject;
     class EditorCamera;
     class EditorGrid;
+
+    namespace GizmoState
+    {
+        inline ImGuizmo::OPERATION CurrentOperation = ImGuizmo::TRANSLATE;
+        inline ImGuizmo::MODE CurrentMode = ImGuizmo::LOCAL;
+    }
 
     enum class EditorState
     {
@@ -71,6 +78,7 @@ namespace engine
         void DrawInspector();
         void DrawDebugInfo();
         void DrawPrefabManager();
+        void DrawGizmoToolbar();
 
         void ValidateSettingsList();
         void RefreshSceneFileCache();

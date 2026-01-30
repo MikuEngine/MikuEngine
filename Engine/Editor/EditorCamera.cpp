@@ -7,6 +7,8 @@ namespace engine
     {
         const float deltaTime = Time::DeltaTime();
 
+        Vector3 forward = Vector3::UnitZ;
+
         if (Input::IsMouseHeld(Buttons::RIGHT))
         {
             Input::SetMouseMode(DirectX::Mouse::Mode::MODE_RELATIVE);
@@ -18,63 +20,63 @@ namespace engine
 
             constexpr float limit = ToRadian(89.9f);
             m_pitch = std::clamp(m_pitch, -limit, limit);
+            
+            const Matrix rotationMatrix = Matrix::CreateFromYawPitchRoll(m_yaw, m_pitch, 0.0f);
+
+            forward = Vector3::Transform(Vector3::UnitZ, rotationMatrix);
+            const Vector3 right = Vector3::Transform(Vector3::UnitX, rotationMatrix);
+            const Vector3 up = Vector3::Transform(Vector3::UnitY, rotationMatrix);
+
+            Vector3 moveDir = Vector3::Zero;
+
+            if (Input::IsKeyHeld(Keys::W))
+            {
+                moveDir += forward;
+            }
+
+            if (Input::IsKeyHeld(Keys::S))
+            {
+                moveDir -= forward;
+            }
+
+            if (Input::IsKeyHeld(Keys::D))
+            {
+                moveDir += right;
+            }
+
+            if (Input::IsKeyHeld(Keys::A))
+            {
+                moveDir -= right;
+            }
+
+            if (Input::IsKeyHeld(Keys::E))
+            {
+                moveDir += Vector3::UnitY;
+            }
+
+            if (Input::IsKeyHeld(Keys::Q))
+            {
+                moveDir -= Vector3::UnitY;
+            }
+
+            if (moveDir != Vector3::Zero)
+            {
+                moveDir.Normalize();
+
+                float speed = m_moveSpeed;
+                if (Input::IsKeyHeld(Keys::LeftShift))
+                {
+                    speed *= 2.0f;
+                }
+
+                m_position += moveDir * speed * deltaTime;
+            }
+
             m_isDirty = true;
         }
         else
         {
             engine::Input::SetMouseMode(DirectX::Mouse::Mode::MODE_ABSOLUTE);
-        }
-
-        const Matrix rotationMatrix = Matrix::CreateFromYawPitchRoll(m_yaw, m_pitch, 0.0f);
-
-        const Vector3 forward = Vector3::Transform(Vector3::UnitZ, rotationMatrix);
-        const Vector3 right = Vector3::Transform(Vector3::UnitX, rotationMatrix);
-        const Vector3 up = Vector3::Transform(Vector3::UnitY, rotationMatrix);
-
-        Vector3 moveDir = Vector3::Zero;
-
-        if (Input::IsKeyHeld(Keys::W))
-        {
-            moveDir += forward;
-        }
-
-        if (Input::IsKeyHeld(Keys::S))
-        {
-            moveDir -= forward;
-        }
-
-        if (Input::IsKeyHeld(Keys::D))
-        {
-            moveDir += right;
-        }
-
-        if (Input::IsKeyHeld(Keys::A))
-        {
-            moveDir -= right;
-        }
-
-        if (Input::IsKeyHeld(Keys::E))
-        {
-            moveDir += Vector3::UnitY;
-        }
-
-        if (Input::IsKeyHeld(Keys::Q))
-        {
-            moveDir -= Vector3::UnitY;
-        }
-
-        if (moveDir != Vector3::Zero)
-        {
-            moveDir.Normalize();
-
-            float speed = m_moveSpeed;
-            if (Input::IsKeyHeld(Keys::LeftShift))
-            {
-                speed *= 2.0f;
-            }
-
-            m_position += moveDir * speed * deltaTime;
-            m_isDirty = true;
         }
 
         if (m_isDirty)

@@ -6,6 +6,7 @@
 #include <d3dcompiler.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
+#include <ImGuizmo.h>
 
 #include "Common/Utility/Profiling.h"
 #include "Core/Graphics/Data/Vertex.h"
@@ -522,6 +523,10 @@ namespace engine
         ImGui_ImplWin32_NewFrame();
 
         ImGui::NewFrame();
+
+        ImGuizmo::BeginFrame();
+        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+        ImGuizmo::AllowAxisFlip(false);
     }
 
     void GraphicsDevice::EndDrawGUIPass()
