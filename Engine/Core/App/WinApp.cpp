@@ -208,7 +208,7 @@ namespace engine
 
         GraphicsDevice::Get().InitializeResources();
 
-        PreloadManager::Get().Initialize(); // preload 데이터 로드 및 global 리소스 로드
+        PreloadManager::Get().Initialize(); // preload 데이터 로드
 
         SceneManager::Get().Initialize();
 
@@ -245,11 +245,18 @@ namespace engine
 
     void WinApp::Shutdown()
     {
+        for (auto& callback : m_onShutdownCallbacks)
+        {
+            callback();
+        }
+
         ImGui_ImplDX11_Shutdown();
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
 
-        EditorManager::Get().Shutdown();       
+#ifdef _DEBUG
+        EditorManager::Get().Shutdown();
+#endif
         SceneManager::Get().Shutdown();
         AssetManager::Get().Shutdown();
         SoundSystem::Get().Shutdown();
@@ -257,12 +264,14 @@ namespace engine
         ResourceManager::Get().Cleanup();
         GraphicsDevice::Get().Shutdown();
 
+#ifdef _DEBUG
         // 디버그 렌더러 정리
         PathfindingDebugRenderer::Get().Shutdown();
         PhysicsDebugRenderer::Get().Shutdown();
         LightDebugRenderer::Get().Shutdown();
 		SocketDebugRenderer::Get().Shutdown();
 		DebugRenderer::Get().Shutdown();
+#endif
         // VFS 언마운트
         VirtualFileSystem::Get().Unmount();
     }
@@ -402,7 +411,15 @@ namespace engine
         if (SceneManager::Get().GetSceneState() == SceneState::Loading)
         {
             GraphicsDevice::Get().ClearAllViews();
-            SceneManager::Get().RenderLoadingScreen();
+#ifdef _DEBUG
+            // 에디터(Edit) 모드: 동기 로딩만 사용, 로딩 화면 미표시
+            if (EditorManager::Get().GetEditorState() != EditorState::Edit)
+#endif
+            {
+                GraphicsDevice::Get().BeginDrawLoadingToFinalBuffer();
+                SceneManager::Get().RenderLoadingScreen();
+                GraphicsDevice::Get().EndDrawLoadingToFinalBuffer();
+            }
 #ifdef _DEBUG
             EditorManager::Get().Render();
 #endif //_DEBUG

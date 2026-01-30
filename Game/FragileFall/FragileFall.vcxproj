@@ -157,6 +157,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Manager\LoadingScreenDrawer.cpp" />
     <ClCompile Include="Manager\TimeScaler.cpp" />
     <ClCompile Include="Script\AimPointer.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\BossPatternBase.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
+    <ClInclude Include="Manager\LoadingScreenDrawer.h" />
     <ClInclude Include="Manager\TimeScaler.h" />
     <ClInclude Include="Script\AimPointer.h" />
     <ClInclude Include="Script\Boss\BossPattern\BossPatternBase.h" />

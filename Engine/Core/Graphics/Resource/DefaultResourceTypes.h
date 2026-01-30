@@ -1,45 +1,48 @@
 ﻿#pragma once
 
-enum class DefaultTextureType
+namespace engine
 {
-    White,
-    Black,
-    Normal,
-    Count
-};
+    enum class DefaultTextureType
+    {
+        White,
+        Black,
+        Normal,
+        Count
+    };
 
-enum class DefaultSamplerType
-{
-    Point,
-    Linear,
-    Anisotropic,
-    Comparison,
-    Clamp,
-    Count
-};
+    enum class DefaultSamplerType
+    {
+        Point,
+        Linear,
+        Anisotropic,
+        Comparison,
+        Clamp,
+        Count
+    };
 
-enum class DefaultRasterizerType
-{
-    SolidBack,
-    SolidFront,
-    SolidNone,
-    Wireframe,
-    Count
-};
+    enum class DefaultRasterizerType
+    {
+        SolidBack,
+        SolidFront,
+        SolidNone,
+        Wireframe,
+        Count
+    };
 
-enum class DefaultDepthStencilType
-{
-    Less,
-    LessEqual,
-    DepthRead,
-    None,
-    Count
-};
+    enum class DefaultDepthStencilType
+    {
+        Less,
+        LessEqual,
+        DepthRead,
+        None,
+        Count
+    };
 
-enum class DefaultBlendType
-{
-    Disabled,
-    AlphaBlend,
-    Additive,
-    Count
-};
+    enum class DefaultBlendType
+    {
+        Disabled,
+        AlphaBlend,
+        Additive,
+        Count
+    };
+}

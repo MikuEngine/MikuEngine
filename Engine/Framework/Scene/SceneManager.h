@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <functional>
 
@@ -29,6 +29,8 @@ namespace engine
 
 
         std::string m_nextSceneName;
+        std::string m_pendingSceneAfterGlobal;
+        bool m_loadSceneAsync = true;
         SceneState m_sceneState = SceneState::Active;
         bool m_isSceneChanged = false;
         bool m_isSceneStarted = false;
@@ -42,7 +44,8 @@ namespace engine
         void Shutdown();
 
     public:
-        void ChangeScene(const std::string& name);
+        /// async == true: 비동기 로드, 로딩 화면 표시. async == false: 동기 로드, 로딩 화면 없음(옵션/스테이지선택 등 가벼운 씬용).
+        void ChangeScene(const std::string& name, bool async = true);
         void CheckSceneChanged(bool isPlaying);
         void ProcessResourceLoading();
         void RenderLoadingScreen();

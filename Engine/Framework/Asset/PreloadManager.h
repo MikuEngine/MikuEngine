@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <future>
 #include <atomic>
@@ -13,8 +13,10 @@ namespace engine
 	private:
 		json m_preloadData;
 		bool m_isInitialized = false;
+		std::atomic<bool> m_globalLoaded = false;
 
 		std::future<void> m_loadingFuture;
+		std::future<void> m_globalLoadingFuture;
 		std::atomic<bool> m_isLoading = false;
 
 		std::atomic<float> m_progress = 0.0f;
@@ -32,8 +34,13 @@ namespace engine
 		bool IsLoading() const;
 		float GetProgress() const;
 
+		bool IsGlobalLoaded() const;
+		void LoadGlobalAsync();
+		void LoadGlobalSync();
+
 	private:
 		void LoadSceneResourceWorker(const std::string& sceneName);
+		void LoadGlobalWorker();
 		void LoadAsset(const json& assetData, bool isGlobal);
 
 	private:
