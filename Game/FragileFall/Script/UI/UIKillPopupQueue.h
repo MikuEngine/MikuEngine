@@ -2,8 +2,13 @@
 
 #include <Framework/Object/Component/Script.h>
 
+#include "Script/UI/UIToastAnimator.h"
+#include <deque>
+
 namespace game
 {
+    class UIToastAnimator;
+
     class UIKillPopupQueue :
         public engine::Script<UIKillPopupQueue>
     {
@@ -20,15 +25,33 @@ namespace game
         void Load(const engine::json& j) override;
 
     private:
-        //void PushKill(const std::string& text);
+        struct Item
+        {
+            engine::Ptr<engine::GameObject> go;
+            engine::TimePoint born;
+            bool exiting = false;
+        };
+
+        std::deque<Item> m_items;
 
     private:
-        engine::GameObject* m_container = nullptr;
-        engine::GameObject* m_prefab = nullptr;
+        void PushKill(const std::string& text, const std::string& iconKey);
+
+        void Reflow(bool instant);
+        engine::Vector2 CalcTargetPos(size_t index) const;
+        
+        void TryStartExitTop();
+        void CleanupTopIfFinished();
+
+    private:
         engine::GameObject* m_canvas = nullptr;
 
-        float m_spacing = 6.0f;
-        float m_lifeTime = 1.2f;
+        std::string m_prefabKey = "UIToastPopUp";
+
+        engine::Vector2 m_spawnPos = { 660.0f, -400.0f };
+
+        float m_spacing = 110.0f;
+        float m_lifeTime = 3.0f;
         int m_maxQueue = 6;
     };
 }
