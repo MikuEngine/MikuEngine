@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Collider.h"
 
 #include "Framework/Object/Component/Rigidbody.h"
@@ -186,9 +186,6 @@ namespace engine
             
             switch (m_materialType)
             {
-            case PhysicsMaterialType::Slippery:
-                newMaterial = physicsSystem.GetSlipperyMaterial();
-                break;
             case PhysicsMaterialType::Default:
             default:
                 newMaterial = physicsSystem.GetDefaultMaterial();
@@ -385,17 +382,13 @@ namespace engine
         }
 
         // Material Type 콤보박스
-        const char* materialTypes[] = { "Default", "Slippery" };
-        int currentMaterial = static_cast<int>(m_materialType);
-        if (ImGui::Combo("Material", &currentMaterial, materialTypes, IM_ARRAYSIZE(materialTypes)))
-        {
-            SetMaterialType(static_cast<PhysicsMaterialType>(currentMaterial));
-        }
+        // Material Type 표시 (현재는 Default만 사용)
+        ImGui::Text("Material: Default");
         ImGui::SameLine();
         ImGui::TextDisabled("(?)");
         if (ImGui::IsItemHovered())
         {
-            ImGui::SetTooltip("Default: Normal friction (0.5)\nSlippery: Low friction (0.05) - for character collisions");
+            ImGui::SetTooltip("Default: Normal friction (0.5, 0.5, 0.1)");
         }
     }
 
@@ -506,9 +499,6 @@ namespace engine
         
         switch (m_materialType)
         {
-        case PhysicsMaterialType::Slippery:
-            material = physicsSystem.GetSlipperyMaterial();
-            break;
         case PhysicsMaterialType::Default:
         default:
             material = physicsSystem.GetDefaultMaterial();

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -108,14 +108,17 @@ namespace engine
             // 탑다운 슈팅 게임용 충돌 규칙
             // ═══════════════════════════════════════
             
+            SetCollision(Player, Player, false);
+
             // Player ↔ Projectile: 충돌 안 함 (자기 총알에 안 맞음)
             SetCollision(Player, Projectile, false);
             
             // Projectile ↔ Projectile: 충돌 안 함
             SetCollision(Projectile, Projectile, false); 
 
-            // Player ↔ Enemy: 충돌함
-            // (기본값 All이므로 별도 설정 불필요)
+            // Player ↔ Enemy: 충돌함 (PhysX가 충돌 처리)
+            // 플레이어 Dynamic + 몬스터 Kinematic = 플레이어가 몬스터에게 막힘
+            SetCollision(Player, Enemy, true);
             
             // Enemy ↔ Projectile: 충돌함
             // (기본값 All이므로 별도 설정 불필요)

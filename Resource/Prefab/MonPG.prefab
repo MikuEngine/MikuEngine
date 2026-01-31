@@ -5,7 +5,7 @@
             "ID": 0,
             "ParentID": -1,
             "Name": "MonPG",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -28,11 +28,15 @@
                     }
                 },
                 {
-                    "Type": "MonsterPointedGreen",
+                    "Type": "MonsterPointedType",
                     "Active": true,
                     "MovementAcceleration": 80.0,
                     "MovementDeceleration": 100.0,
                     "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
                     "Hp": 80.0,
                     "AttackRange": 5.0,
                     "MoveSpeed": 8.0,
@@ -215,6 +219,7 @@
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/TestBot.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",

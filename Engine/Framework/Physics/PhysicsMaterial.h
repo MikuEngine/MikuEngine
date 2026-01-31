@@ -63,29 +63,9 @@ namespace engine
             return { 0.5f, 0.5f, 0.1f };
         }
 
-        inline PhysicsMaterialDesc Ice()
-        {
-            return { 0.05f, 0.02f, 0.1f };  // 미끄러움
-        }
-
-        inline PhysicsMaterialDesc Rubber()
-        {
-            return { 0.9f, 0.8f, 0.8f };    // 높은 마찰, 탄성
-        }
-
-        inline PhysicsMaterialDesc Metal()
-        {
-            return { 0.4f, 0.3f, 0.3f };
-        }
-
-        inline PhysicsMaterialDesc Wood()
-        {
-            return { 0.5f, 0.4f, 0.2f };
-        }
-
-        inline PhysicsMaterialDesc Bouncy()
-        {
-            return { 0.3f, 0.3f, 0.95f };   // 매우 탄성적
-        }
+        // 추가 프리셋은 필요 시 정의 가능:
+        // inline PhysicsMaterialDesc Ice() { return { 0.05f, 0.02f, 0.1f }; }
+        // inline PhysicsMaterialDesc Rubber() { return { 0.9f, 0.8f, 0.8f }; }
+        // inline PhysicsMaterialDesc Metal() { return { 0.4f, 0.3f, 0.3f }; }
     }
 }

@@ -1,0 +1,66 @@
+{
+    "Name": "OverlappingGuard",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "OverlappingGuard",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 50.0,
+                        "y": 50.0,
+                        "z": 50.0
+                    }
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 10.0,
+                    "linearDamping": 10.0,
+                    "angularDamping": 10.0,
+                    "useGravity": false,
+                    "constraints": 58
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.809999942779541,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 1,
+                    "materialType": 1,
+                    "radius": 1.2699999809265137,
+                    "height": 5.46999979019165
+                },
+                {
+                    "yOffset": 0.0
+                }
+            ]
+        }
+    ]
+}

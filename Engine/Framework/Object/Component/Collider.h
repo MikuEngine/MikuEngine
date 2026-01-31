@@ -15,8 +15,7 @@ namespace engine
     // ═══════════════════════════════════════════════════════════════
     enum class PhysicsMaterialType : uint32_t
     {
-        Default = 0,    // 일반 마찰 (0.5, 0.5, 0.1)
-        Slippery = 1    // 미끄러운 마찰 (0.05, 0.02, 0.0) - 캐릭터 간 충돌용
+        Default = 0    // 일반 마찰 (0.5, 0.5, 0.1)
     };
 
     // ═══════════════════════════════════════════════════════════════
@@ -54,7 +53,7 @@ namespace engine
         CollisionPriority m_collisionPriority = CollisionPriority::Default;
         
         // 물리 재질
-        PhysicsMaterialType m_materialType = PhysicsMaterialType::Slippery;  // 기본값: 미끄러운 재질
+        PhysicsMaterialType m_materialType = PhysicsMaterialType::Default;  // 기본값: 일반 마찰
 
     public:
         Collider() = default;

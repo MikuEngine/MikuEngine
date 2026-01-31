@@ -1,6 +1,9 @@
 #include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
+#include <algorithm>  // std::remove_if
+#include <cmath>      // expf
+
 #include "Script/AimPointer.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
@@ -12,18 +15,15 @@
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 #include <Framework/System/SystemManager.h>
-#include <Framework/Physics/PhysicsSystem.h>
-#include <Framework/Physics/PhysicsLayer.h>
-#include <Framework/Physics/CollisionTypes.h>
 #include <Engine/Core/System/Input.h>
 #include <Engine/Core/System/MyTime.h>
 
 
 namespace game
 {
-	// ═══════════════════════════════════════════════════════════════
-	// 생명주기
-	// ═══════════════════════════════════════════════════════════════
+	// ???????????????????????????????????????????????????????????????
+	// ????
+	// ???????????????????????????????????????????????????????????????
 	void PlayerControllerScript::Awake()
 	{
 		BaseControllerScript::Awake();
@@ -32,6 +32,13 @@ namespace game
 	void PlayerControllerScript::Start()
 	{
 		BaseControllerScript::Start();
+
+		// ═══════════════════════════════════════════════════════════════
+		// Dynamic Rigidbody 설정 (회전 제약)
+		// - PhysX가 이동/충돌 담당
+		// - 회전은 스크립트가 직접 제어
+		// ═══════════════════════════════════════════════════════════════
+		SetupDynamicRigidbody();
 
 		// 애니메이션 초기화 (SkeletalAnimator에 애니메이션 등록)
 		InitializeAnimations();
@@ -43,7 +50,7 @@ namespace game
 			m_fsmInitialized = true;
 		}
 
-		// AnimFSM 초기화 (상/하체 분리 상태 매핑)
+		// AnimFSM 초기화 (상태/애니메이션 매핑 등록)
 		if (m_animFSM)
 		{
 			InitializeAnimFSM();
@@ -54,15 +61,145 @@ namespace game
 				m_animFSM->SetProceduralAimEnabled(true);
 			}
 		}
-
-		// Dynamic Rigidbody의 경우의 초기화 추가
-		if (m_rigidbody && m_rigidbody->IsDynamic())
-		{
-			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);  // 각속도 초기화
-		}
-
 	}
 
+	// ═══════════════════════════════════════════════════════════════
+	// Dynamic Rigidbody 설정
+	// - Y축 이동 동결: 탑다운 게임에서 바닥 아래로 떨어지지 않도록
+	// - 회전 동결: 물리 엔진이 회전에 개입하지 않도록
+	// - 스크립트에서 Transform.SetRotation()으로 직접 회전 제어
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::SetupDynamicRigidbody()
+	{
+		if (!m_rigidbody) return;
+		
+		// Dynamic Rigidbody 확인
+		if (!m_rigidbody->IsDynamic())
+		{
+			// 경고: Dynamic이 아니면 물리 충돌 처리 불가
+			return;
+		}
+		
+		// Y축 이동 동결 + 모든 회전 동결
+		// FreezePositionY (2) + FreezeRotation (56) = 58
+		engine::RigidbodyConstraints constraints = static_cast<engine::RigidbodyConstraints>(
+			static_cast<int>(engine::RigidbodyConstraints::FreezePositionY) |
+			static_cast<int>(engine::RigidbodyConstraints::FreezeRotation)
+		);
+		m_rigidbody->SetConstraints(constraints);
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 회전 속도 강제 0 (안전 장치)
+	// - 매 FixedUpdate에서 호출하여 물리 회전 방지
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::ForceStopRotation()
+	{
+		if (m_rigidbody && m_rigidbody->IsDynamic())
+		{
+			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+		}
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 충돌 콜백 (PhysX → CollisionSystem → Script)
+	// - 매 프레임 갱신 방식 (댕글링/고스팅 방지)
+	// - OnCollisionStay에서만 노말 수집 (Stay는 실제 충돌 중일 때만 호출)
+	// - FixedUpdate 시작 시 클리어하므로 죽은 오브젝트 문제 없음
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::OnCollisionEnter(const engine::CollisionInfo& info)
+	{
+		// Enter는 무시 - Stay에서 처리
+		// (Enter 직후 바로 Stay가 호출되므로 중복 방지)
+	}
+
+	void PlayerControllerScript::OnCollisionStay(const engine::CollisionInfo& info)
+	{
+		// 충돌 유지 중: 노말 수집
+		for (const auto& contact : info.contacts)
+		{
+			// 노말 반전: A→B 방향이므로, 플레이어 입장에서는 반대 방향
+			engine::Vector3 normal = -contact.normal;
+			normal.y = 0.0f;  // 수평 성분만
+			if (normal.LengthSquared() > 0.0001f)
+			{
+				normal.Normalize();
+				
+				// 비슷한 노말이 이미 있는지 확인 (중복 방지)
+				bool found = false;
+				for (const auto& existing : m_frameCollisionNormals)
+				{
+					if (existing.Dot(normal) > 0.9f)
+					{
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					m_frameCollisionNormals.push_back(normal);
+				}
+			}
+		}
+	}
+
+	void PlayerControllerScript::OnCollisionExit(const engine::CollisionInfo& info)
+	{
+		// Exit는 무시 - 매 프레임 클리어 방식이므로 자동 처리됨
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 충돌 기반 이동 제한
+	// ═══════════════════════════════════════════════════════════════
+	bool PlayerControllerScript::IsMovingIntoCollision(const engine::Vector3& moveDirection) const
+	{
+		if (!m_isColliding || m_frameCollisionNormals.empty())
+		{
+			return false;
+		}
+		
+		engine::Vector3 moveDir = moveDirection;
+		moveDir.y = 0.0f;
+		if (moveDir.LengthSquared() < 0.0001f)
+		{
+			return false;
+		}
+		moveDir.Normalize();
+		
+		// 어느 하나의 충돌 노말 방향으로 이동하려 하면 true
+		for (const auto& normal : m_frameCollisionNormals)
+		{
+			float dot = moveDir.Dot(normal);
+			if (dot > 0.1f)  // 충돌 방향으로 이동 시도
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	engine::Vector3 PlayerControllerScript::RemoveCollisionComponent(const engine::Vector3& velocity) const
+	{
+		if (!m_isColliding || m_frameCollisionNormals.empty())
+		{
+			return velocity;
+		}
+		
+		engine::Vector3 result = velocity;
+		
+		// 각 충돌 노말 방향의 속도 성분 제거
+		for (const auto& normal : m_frameCollisionNormals)
+		{
+			float dot = result.Dot(normal);
+			if (dot > 0.0f)  // 충돌 방향으로 이동하는 성분만 제거
+			{
+				result -= normal * dot;
+			}
+		}
+		
+		return result;
+	}
 
 	// ═══════════════════════════════════════════════════════════════
 	// 컴포넌트 캐싱
@@ -76,22 +213,22 @@ namespace game
 		m_rigidbody = GetGameObject()->GetComponent<engine::Rigidbody>();
 		m_skeletalAnimator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
 
-		// ─────────────────────────────────────────────
-		// AimPointer: 씬에서 검색 (UI 팀과 공유 가능)
-		// ─────────────────────────────────────────────
-		// 먼저 같은 오브젝트에서 찾기 (하위 호환성)
+		// ?????????????????????????????????????????????
+		// AimPointer: ??? ?? (UI ?? ?? ??)
+		// ?????????????????????????????????????????????
+		// ?? ?? ?????? ?? (?? ???)
 		m_aimPointer = GetGameObject()->GetComponent<AimPointer>();
 		if (!m_aimPointer)
 		{
 			auto* scene = engine::SceneManager::Get().GetScene();
 			if (scene)
 			{
-				// 설정된 이름의 오브젝트에서 검색
+				// ??? ??? ?????? ??
 				if (auto* aimGO = scene->FindGameObject(m_aimPointerObjectName))
 				{
 					m_aimPointer = aimGO->GetComponent<AimPointer>();
 				}
-				// 이름에 "AimPointer"가 포함된 오브젝트 검색 (폴백)
+				// ??? "AimPointer"? ??? ???? ?? (??)
 				if (!m_aimPointer)
 				{
 					for (const auto& go : scene->GetGameObjects())
@@ -106,24 +243,24 @@ namespace game
 			}
 		}
 
-		// ─────────────────────────────────────────────
-		// BulletFactory: 같은 오브젝트에서 검색
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// BulletFactory: ?? ?????? ??
+		// ?????????????????????????????????????????????
 		m_bulletFactory = GetGameObject()->GetComponent<BulletFactory>();
 
 	}
 
-	// ═══════════════════════════════════════════════════════════════
-	// 행동 제한 (하이브리드 패턴 핵심)
-	// ═══════════════════════════════════════════════════════════════
+	// ???????????????????????????????????????????????????????????????
+	// ?? ?? (????? ?? ??)
+	// ???????????????????????????????????????????????????????????????
 	bool PlayerControllerScript::CanMove() const
 	{
-		// 처형 중에는 이동 불가
+		// ?? ??? ?? ??
 		if (IsInState("Execution"))
 		{
 			return false;
 		}
-		// 대쉬 중에는 일반 이동 불가 (대쉬 방향으로만 이동)
+		// ?? ??? ?? ?? ?? (?? ????? ??)
 		if (IsInState("Dash"))
 		{
 			return false;
@@ -133,12 +270,12 @@ namespace game
 
 	bool PlayerControllerScript::CanAttack() const
 	{
-		// 처형 중에는 공격 불가
+		// ?? ??? ?? ??
 		if (IsInState("Execution"))
 		{
 			return false;
 		}
-		// 대쉬 중에는 공격 불가
+		// ?? ??? ?? ??
 		if (IsInState("Dash"))
 		{
 			return false;
@@ -155,41 +292,41 @@ namespace game
 		m_isBackward = dot < 0.01f ? true : false;
 	}
 
-	// ═══════════════════════════════════════════════════════════════
-	// 입력 처리 (입력 → FSM 파라미터)
-	// ═══════════════════════════════════════════════════════════════
+	// ???????????????????????????????????????????????????????????????
+	// ?? ?? (?? ? FSM ????)
+	// ???????????????????????????????????????????????????????????????
 	void PlayerControllerScript::ProcessInput()
 	{
 		if (!m_logicFSM) return;
 
-		// Execution 상태에서는 모든 입력 무시
+		// Execution ????? ?? ?? ??
 		if (IsInState("Execution"))
 		{
 			return;
 		}
 
-		// Dash 상태에서는 입력 무시 (대쉬 방향 고정)
+		// Dash ????? ?? ?? (?? ?? ??)
 		if (IsInState("Dash"))
 		{
 			return;
 		}
 
-		// ─────────────────────────────────────────────
-		// 1. 이동 입력 → FSM 파라미터 + 마우스 조작에 의한 캐릭터 상하체 로테이션
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// 1. ?? ?? ? FSM ???? + ??? ??? ?? ??? ??? ????
+		// ?????????????????????????????????????????????
 
-		// 입력된 키에 따라 단위벡터를 전달받지만, 이동에 따른 트랜스폼의 회전방향은 여기서 계산하지 않는다.
-		// 오로지 이동할지 말지, 어느 방향으로 이동할지만 결정. 이동 방향 변경으로 인한 트랜스폼 회전은 다른곳에서
+		// ??? ?? ?? ????? ?????, ??? ?? ????? ????? ??? ???? ???.
+		// ??? ???? ??, ?? ???? ????? ??. ?? ?? ???? ?? ???? ??? ?????
 		m_inputMoveDir = GetMoveInputDirection();
 		engine::Vector3 inputDir = m_inputMoveDir;
 
-		// 이 함수에서 m_currentLogicalMoveVector를 업데이트하고, 바로 아래에서 이 변수로 조건체크한다.
-		// 입력이 변경되든 말든, 현재 프레임에서는 한번 유효성을 판단한 변수로만 이동 여부를 업데이트
+		// ? ???? m_currentLogicalMoveVector? ??????, ?? ???? ? ??? ??????.
+		// ??? ???? ??, ?? ?????? ?? ???? ??? ???? ?? ??? ????
 		UpdateLogicalMoveExistence(inputDir);
 
 		m_isMoving = m_currentLogicalMoveVector.LengthSquared() > 0.0001f ? true : false;
 
-		//다음프레임까지 동일한 값의 변수로 조건 판단(굳이 이렇게까지 해야하나 싶긴 한데)
+		//??????? ??? ?? ??? ?? ??(?? ????? ???? ?? ??)
 		bool isMoving = m_isMoving;
 		engine::Vector3 fixedInputDir = m_currentLogicalMoveVector;
 
@@ -202,27 +339,27 @@ namespace game
 		}	
 
 
-		// ─────────────────────────────────────────────
-		// 2. 공격 입력 → FSM 파라미터
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// 2. ?? ?? ? FSM ????
+		// ?????????????????????????????????????????????
 		bool isMousePressed = engine::Input::IsMousePressed(engine::Input::Buttons::LEFT);
 		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
 
-		// Pressed → 트리거 (상태 전이용)
+		// Pressed ? ??? (?? ???)
 		if (isMousePressed)
 		{
 			m_logicFSM->SetTrigger("Attack");
 		}
 
-		// Held → 파라미터 (상태 유지용)
+		// Held ? ???? (?? ???)
 		m_logicFSM->SetParameter("IsShooting", isMouseHeld);
 
-		// ─────────────────────────────────────────────
-		// 3. 대쉬 입력 (좌측 Shift)
-		// - 이동 중일 때만 대쉬 가능
-		// - 쿨다운이 끝났을 때만 대쉬 가능
-		// - 대쉬 카운트가 0보다 클 때만 대쉬 가능
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// 3. ?? ?? (?? Shift)
+		// - ?? ?? ?? ?? ??
+		// - ???? ??? ?? ?? ??
+		// - ?? ???? 0?? ? ?? ?? ??
+		// ?????????????????????????????????????????????
 		bool isShiftPressed = engine::Input::IsKeyPressed(engine::Keys::LeftShift);
 		bool isSpaceBarPressed = engine::Input::IsKeyPressed(engine::Keys::Space);
 
@@ -230,23 +367,23 @@ namespace game
 
 		if ((isShiftPressed || isSpaceBarPressed) && isMoving && m_dashCooldownTimer <= 0.0f && m_CurrentDashCount > 0)
 		{
-			// 대쉬 시작 트리거
+			// ?? ?? ???
 			m_logicFSM->SetTrigger("StartDash");
 			StartDash();
 		}
 	}
 
 
-	// ═══════════════════════════════════════════════════════════════
-	// 게임 로직 - 비물리 (상태 확인 후 행동 실행)
-	// Update()에서 호출됨 (DeltaTime 기반)
-	// ═══════════════════════════════════════════════════════════════
+	// ???????????????????????????????????????????????????????????????
+	// ?? ?? - ??? (?? ?? ? ?? ??)
+	// Update()?? ??? (DeltaTime ??)
+	// ???????????????????????????????????????????????????????????????
 	void PlayerControllerScript::UpdateGameLogic()
 	{
 		float deltaTime = engine::Time::DeltaTime();
 		
-		// 이동관련 변수는 ProcessInput에서,
-		// 플레이어의 로직상 좌표와 회전 관련 요소는 여기서 업데이트한다.
+		// ???? ??? ProcessInput??,
+		// ????? ??? ??? ?? ?? ??? ??? ??????.
 
 		UpdateLogicalPosition();
 		m_objectLogicalFoward = GetTransform()->GetForward();
@@ -270,20 +407,20 @@ namespace game
 
 		RotateToDirection(rv, m_rotationSpeed);
 
-		// ─────────────────────────────────────────────
-		// 대쉬 쿨다운 타이머 (항상 실행)
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// ?? ??? ??? (?? ??)
+		// ?????????????????????????????????????????????
 		if (m_dashCooldownTimer > 0.0f)
 		{
 			m_dashCooldownTimer -= deltaTime;
 		}
 
-		// ─────────────────────────────────────────────
-		// 대쉬 리차지 타이머
-		// - 카운트가 최대치 미만일 때만 작동
-		// - 타이머가 0이 되면 카운트 1 회복 후 타이머 리셋
-		// - 카운트가 최대치가 되면 타이머 초기화
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// ?? ??? ???
+		// - ???? ??? ??? ?? ??
+		// - ???? 0? ?? ??? 1 ?? ? ??? ??
+		// - ???? ???? ?? ??? ???
+		// ?????????????????????????????????????????????
 		if (m_CurrentDashCount < m_MaxDashCount)
 		{
 			m_dashRechargeTimer -= deltaTime;
@@ -292,157 +429,161 @@ namespace game
 				m_CurrentDashCount++;
 				if (m_CurrentDashCount < m_MaxDashCount)
 				{
-					// 아직 최대치가 아니면 타이머 재시작
+					// ?? ???? ??? ??? ???
 					m_dashRechargeTimer = m_dashRechargeTime;
 				}
 				else
 				{
-					// 최대치에 도달하면 타이머 리셋
+					// ???? ???? ??? ??
 					m_dashRechargeTimer = m_dashRechargeTime;
 				}
 			}
 		}
 
-		// Execution 상태에서는 행동 로직 스킵
+		// Execution ????? ?? ?? ??
 		if (IsInState("Execution"))
 		{
 			return;
 		}
 
-		// 비물리 행동 실행 (타이머, 애니메이션 등)
+		// ??? ?? ?? (???, ????? ?)
 		if (CanAttack())  HandleShooting(deltaTime);
 
-		// 애니메이션 업데이트 (비물리)
+		// ????? ???? (???)
 		UpdateAnimation();
-		// 주의: UpdateUpperBodyAim()은 FixedUpdate(UpdatePhysicsLogic)로 이동됨
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 물리 로직 - FixedUpdate()에서 호출됨 (FixedDeltaTime 기반)
-	// Rigidbody 이동, 회전 등
+	// 물리 로직 - FixedUpdate()에서 호출됨 (FixedDeltaTime 사용)
+	// Dynamic Rigidbody: PhysX가 충돌 처리, AddForce로 이동
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::UpdatePhysicsLogic()
 	{
-		// Execution 상태에서는 물리 로직 스킵 (이동, 회전 모두 막음)
+		// ═══════════════════════════════════════════════════════════════
+		// 프레임 시작: 이전 프레임의 충돌 노말로 상태 결정 후 클리어
+		// - OnCollisionStay는 FixedUpdate 후에 호출됨
+		// - 이전 프레임에서 수집된 노말을 사용
+		// ═══════════════════════════════════════════════════════════════
+		m_isColliding = !m_frameCollisionNormals.empty();
+		
+		// Execution 상태에서는 물리 로직 스킵 (이동, 회전 모두 정지)
 		if (IsInState("Execution"))
 		{
+			m_frameCollisionNormals.clear();  // 클리어
 			return;
 		}
 
-		// Dash 상태에서는 대쉬 처리
+		// Dash 상태에서는 대쉬 전용 처리
 		if (IsInState("Dash"))
 		{
 			HandleDash();
-			// 대쉬 중에는 회전 안함 (방향 고정)
+			m_frameCollisionNormals.clear();  // 클리어
 			return;
 		}
 
 		// ═══════════════════════════════════════════════════════════════
-		// SphereCast 기반 지형 파고들기 방지 (Walk, WalkShoot 상태)
+		// 충돌 기반 이동 제한 (이전 프레임의 충돌 노말 사용)
+		// - 충돌 방향으로 이동 시도 시 해당 성분 제거
+		// - 정지 판정: 밀어내기 힘 적용
+		// - 슬라이딩 판정: 감속된 속도로 미끄러짐
 		// ═══════════════════════════════════════════════════════════════
-		m_environmentBlockDetected = false;
+		bool isSliding = false;
 		
-		if (CanMove() && m_isMoving)
+		if (m_isColliding && m_isMoving)
 		{
-			// 현재 이동 방향으로 SphereCast
-			engine::Vector3 wallNormal;
-			if (CheckEnvironmentBlock(m_currentLogicalMoveVector, wallNormal))
+			// 충돌 방향 성분 제거
+			engine::Vector3 adjustedMoveDir = RemoveCollisionComponent(m_currentLogicalMoveVector);
+			
+			// 조정된 방향이 거의 0이면 정지 판정
+			if (adjustedMoveDir.LengthSquared() < 0.01f)
 			{
-				m_environmentBlockDetected = true;
-				m_lastBlockNormal = wallNormal;
+				m_currentLogicalMoveVector = engine::Vector3::Zero;
+				m_isMoving = false;
 				
-				// 벽 슬라이딩 방향 계산
-				engine::Vector3 slideDir = CalculateSlidingDirection(m_currentLogicalMoveVector, wallNormal);
-				
-				if (slideDir.LengthSquared() > 0.0001f)
+				// 정지 판정: 충돌 노말 방향으로 밀어내기 (벽에서 살짝 밀려남)
+				if (m_rigidbody && m_rigidbody->IsDynamic() && m_collisionPushBackForce > 0.0f)
 				{
-					// 슬라이딩 방향으로 이동 (벽과 평행)
-					m_currentLogicalMoveVector = slideDir;
+					// 평균 충돌 노말 계산
+					engine::Vector3 avgNormal = engine::Vector3::Zero;
+					for (const auto& normal : m_frameCollisionNormals)
+					{
+						avgNormal += normal;
+					}
+					if (!m_frameCollisionNormals.empty())
+					{
+						avgNormal /= static_cast<float>(m_frameCollisionNormals.size());
+						if (avgNormal.LengthSquared() > 0.0001f)
+						{
+							avgNormal.Normalize();
+							// 충돌 반대 방향 (노말 방향)으로 약한 밀어내기
+							engine::Vector3 pushBack = avgNormal * m_collisionPushBackForce;
+							m_rigidbody->AddForce(pushBack, engine::ForceMode::Impulse);
+						}
+					}
 				}
-				else
-				{
-					// 정면 충돌 - 이동 불가
-					m_currentLogicalMoveVector = engine::Vector3::Zero;
-				}
+			}
+			else
+			{
+				// 슬라이딩 판정: 방향 조정
+				adjustedMoveDir.Normalize();
+				m_currentLogicalMoveVector = adjustedMoveDir;
+				isSliding = true;
 			}
 		}
 
-		// 물리 기반 행동 실행
+		// ═══════════════════════════════════════════════════════════════
+		// 이동 처리 (BaseControllerScript::HandleMovement)
+		// - Dynamic: AddForce 기반, PhysX가 충돌 자동 처리
+		// - 슬라이딩 시 감속된 속도로 이동
+		// ═══════════════════════════════════════════════════════════════
 		if (CanMove())
 		{
-			HandleMovement(m_moveSpeed);
+			float effectiveSpeed = m_moveSpeed;
+			if (isSliding)
+			{
+				effectiveSpeed *= m_slidingSpeedMultiplier;
+			}
+			HandleMovement(effectiveSpeed);
 		}
+
+		// ═══════════════════════════════════════════════════════════════
+		// 회전 속도 강제 0 (안전 장치)
+		// - FreezeRotation 제약이 있어도 외부 충격으로 회전 가능
+		// - 매 프레임 각속도 0으로 강제
+		// ═══════════════════════════════════════════════════════════════
+		ForceStopRotation();
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 프레임 끝: 충돌 노말 클리어 (다음 OnCollisionStay에서 다시 수집)
+		// ═══════════════════════════════════════════════════════════════
+		m_frameCollisionNormals.clear();
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 상태 변화 콜백
+	// 상태 진입 콜백
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::OnStateEntered(const std::string& state)
 	{
-		// 하이브리드 패턴에서는 FSM 상태를 주로 애니메이션 트리거로 사용
-		// 필요시 상태별 초기화 로직 추가
+		// ????? ????? FSM ??? ?? ????? ???? ??
+		// ??? ??? ??? ?? ??
 
 		if (state == "Execution")
 		{
-			// 처형 상태 진입 시 이동 정지
-			if (m_rigidbody)
+			// 처형 상태 진입 시 속도 초기화
+			m_currentVelocity = engine::Vector3::Zero;
+			
+			// Dynamic Rigidbody 속도도 초기화
+			if (m_rigidbody && m_rigidbody->IsDynamic())
 			{
 				m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
-				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
 			}
 
-			// 대쉬 중이었다면 대쉬 강제 종료
+			// 대쉬 중이었다면 대쉬 상태 초기화
 			if (m_isDashing)
 			{
 				m_isDashing = false;
 				m_dashElapsedTime = 0.0f;
-				m_dashCollisionDecayBoost = 1.0f;
 			}
-		}
-	}
-
-	// ═══════════════════════════════════════════════════════════════
-	// 충돌 콜백 - 대쉬 충돌 감쇠
-	// ═══════════════════════════════════════════════════════════════
-	void PlayerControllerScript::OnCollisionStay(const engine::CollisionInfo& info)
-	{
-		// 대쉬 중이 아니면 무시
-		if (!m_isDashing)
-		{
-			return;
-		}
-
-		// 이미 감쇠 부스트가 적용되었으면 스킵 (중복 적용 방지)
-		if (m_dashCollisionDecayBoost > 1.0f)
-		{
-			return;
-		}
-
-		// 접촉점에서 노말 정보 추출
-		if (info.contacts.empty())
-		{
-			return;
-		}
-
-		// 첫 번째 접촉점의 노말 사용 (여러 접촉점이 있으면 평균을 낼 수도 있음)
-		engine::Vector3 collisionNormal = info.contacts[0].normal;
-		collisionNormal.y = 0.0f;  // 수평 방향만 고려
-		
-		if (collisionNormal.LengthSquared() < 0.0001f)
-		{
-			return;
-		}
-		collisionNormal.Normalize();
-
-		// 대쉬 방향과 충돌 노말의 dot product 계산
-		// 노말은 충돌면에서 바깥쪽을 향하므로, -normal과 대쉬 방향을 비교
-		// dot > threshold면 대쉬 방향으로 벽을 향해 돌진하는 상황
-		float dot = m_dashDirection.Dot(-collisionNormal);
-
-		if (dot > m_dashCollisionDotThreshold)
-		{
-			// 정면 충돌 감지 → 감쇠 부스트 적용
-			m_dashCollisionDecayBoost = m_dashCollisionDecayMultiplier;
 		}
 	}
 
@@ -450,7 +591,7 @@ namespace game
 	{
 		if (!targetMonster || !m_logicFSM) return;
 
-		// 1. ExecuteMonster 트리거 설정 → Execution 스테이트로 전이
+		// 1. ExecuteMonster ??? ?? ? Execution ????? ??
 		m_logicFSM->SetTrigger("ExecuteMonster");
 
 		// 2. 몬스터 위치로 플레이어 순간이동
@@ -459,81 +600,81 @@ namespace game
 		{
 			engine::Vector3 targetPos = monsterTransform->GetWorldPosition();
 
-			// Dynamic Rigidbody가 있으면 ForceSetPosition 사용 (물리 엔진 즉시 적용)
-			if (m_rigidbody && m_rigidbody->IsDynamic())
+			// Rigidbody가 있으면 ForceSetPosition 사용 (Dynamic/Kinematic 모두)
+			if (m_rigidbody)
 			{
-				m_rigidbody->ForceSetPosition(targetPos, true);  // 속도도 리셋
+				m_rigidbody->ForceSetPosition(targetPos, true);  // 속도 리셋
 			}
 			else if (GetTransform())
 			{
-				// Rigidbody가 없거나 Kinematic인 경우 Transform 직접 설정
+				// Rigidbody가 없는 경우 Transform 직접 설정
 				GetTransform()->SetLocalPosition(targetPos);
 			}
 		}
 	}
 
-	// ═══════════════════════════════════════════════════════════════
-	// FSM 초기화
-	// ═══════════════════════════════════════════════════════════════
+	// ???????????????????????????????????????????????????????????????
+	// FSM ???
+	// ???????????????????????????????????????????????????????????????
 	void PlayerControllerScript::InitializeFSM()
 	{
 		if (!m_logicFSM || m_fsmInitialized) return;
 
 		m_logicFSM->ClearStates();
 
-		// ─────────────────────────────────────────────
-		// 상태 정의
-		// ─────────────────────────────────────────────
-		AddFSMState("Idle", true);   // 기본 상태
+		// ?????????????????????????????????????????????
+		// ?? ??
+		// ?????????????????????????????????????????????
+		AddFSMState("Idle", true);   // ?? ??
 		AddFSMState("Walk");
 		AddFSMState("IdleShoot");
 		AddFSMState("WalkShoot");
-		AddFSMState("Dash");         // 대쉬 상태
-		AddFSMState("Execution");    // 처형 상태
+		AddFSMState("Dash");         // ?? ??
+		AddFSMState("Execution");    // ?? ??
 
 		m_logicFSM->UpdateStateMap();
 		m_logicFSM->SetDefaultState("Idle");
 		m_logicFSM->InitializeCurrentState();
 
-		// ─────────────────────────────────────────────
-		// 전이 정의
-		// ─────────────────────────────────────────────
-		// Idle <-> Walk (이동 입력)
+		// ?????????????????????????????????????????????
+		// ?? ??
+		// ?????????????????????????????????????????????
+		// Idle <-> Walk (?? ??)
 		AddFSMTransition("Idle", "Walk", "IsMoving", BoolTrue());
 		AddFSMTransition("Walk", "Idle", "IsMoving", BoolFalse());
 
-		// Idle/Walk -> Shoot (공격 트리거)
+		// Idle/Walk -> Shoot (?? ???)
 		AddFSMTransition("Idle", "IdleShoot", "Attack", Trigger());
 		AddFSMTransition("Walk", "WalkShoot", "Attack", Trigger());
 
-		// IdleShoot <-> WalkShoot (이동 입력)
+		// IdleShoot <-> WalkShoot (?? ??)
 		AddFSMTransition("IdleShoot", "WalkShoot", "IsMoving", BoolTrue());
 		AddFSMTransition("WalkShoot", "IdleShoot", "IsMoving", BoolFalse());
 
-		// Shoot -> 비Shoot (마우스 Released)
+		// Shoot -> ?Shoot (??? Released)
 		AddFSMTransition("IdleShoot", "Idle", "IsShooting", BoolFalse());
 		AddFSMTransition("WalkShoot", "Walk", "IsShooting", BoolFalse());
 
-		// ─────────────────────────────────────────────
-		// 대쉬 전이 (Walk, WalkShoot -> Dash)
-		// Idle, IdleShoot에서는 대쉬 불가 (이동 입력 필요)
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// ?? ?? (Walk, WalkShoot -> Dash)
+		// Idle, IdleShoot??? ?? ?? (?? ?? ??)
+		// ?????????????????????????????????????????????
 		AddFSMTransition("Walk", "Dash", "StartDash", Trigger());
 		AddFSMTransition("WalkShoot", "Dash", "StartDash", Trigger());
 
-		// Dash -> Walk (대쉬 종료)
+		// Dash -> Walk (?? ??)
 		AddFSMTransition("Dash", "Walk", "DashComplete", Trigger());
 
-		// ─────────────────────────────────────────────
-		// 처형 전이 (모든 상태 -> Execution)
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// ?? ?? (?? ?? -> Execution)
+		// ?????????????????????????????????????????????
 		AddFSMTransition("Idle", "Execution", "ExecuteMonster", Trigger());
 		AddFSMTransition("Walk", "Execution", "ExecuteMonster", Trigger());
 		AddFSMTransition("IdleShoot", "Execution", "ExecuteMonster", Trigger());
 		AddFSMTransition("WalkShoot", "Execution", "ExecuteMonster", Trigger());
 		AddFSMTransition("Dash", "Execution", "ExecuteMonster", Trigger());
 
-		// Execution -> Idle (처형 완료 트리거)
+		// Execution -> Idle (?? ?? ???)
 		AddFSMTransition("Execution", "Idle", "ExecutionComplete", Trigger());
 	}
 
@@ -541,26 +682,26 @@ namespace game
 	{
 		if (!m_animFSM) return;
 
-		// 기존 상태 클리어
+		// ?? ?? ???
 		m_animFSM->ClearStates();
 
-		// ─────────────────────────────────────────────
-		// 상/하체 분리 애니메이션 상태 등록
-		// AddSplitState(상태명, 하체애니, 하체루프, 상체애니, 상체루프, 상체웨이트, 크로스페이드)
-		// 상체웨이트가 0이면 상체 레이어 비활성화 (하체가 전체에 적용)
+		// ?????????????????????????????????????????????
+		// ?/?? ?? ????? ?? ??
+		// AddSplitState(???, ????, ????, ????, ????, ?????, ??????)
+		// ?????? 0?? ?? ??? ???? (??? ??? ??)
 		// 
-		// animState에 사용되는 명칭:
+		// animState? ???? ??:
 		//   - Idle, WalkForward, WalkBackward
 		//   - IdleShoot, WalkForwardShoot, WalkBackwardShoot
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
 
-		// 비공격 상태: 상체 레이어 비활성화 (하체 애니메이션이 전체에 적용)
+		// ??? ??: ?? ??? ???? (?? ?????? ??? ??)
 		m_animFSM->AddSplitState("Idle", m_animName_Idle, true, "", false, 0.0f, 0.1f);
 		m_animFSM->AddSplitState("WalkForward", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
 		m_animFSM->AddSplitState("WalkBackward", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
 
-		// 공격 상태: 상체 레이어 비활성화 (Fire할 때 직접 Fire 애니메이션 재생)
-		// 상체 웨이트 0 → Fire 시 PlayUpperBodyAnimation으로 활성화
+		// ?? ??: ?? ??? ???? (Fire? ? ?? Fire ????? ??)
+		// ?? ??? 0 ? Fire ? PlayUpperBodyAnimation?? ???
 		m_animFSM->AddSplitState("IdleShoot", m_animName_Idle, true, "", false, 0.0f, 0.1f);
 		m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
 		m_animFSM->AddSplitState("WalkBackwardShoot", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
@@ -570,35 +711,35 @@ namespace game
 	{
 		if (!m_skeletalAnimator) return;
 
-		// ─────────────────────────────────────────────
-		// SkeletalAnimator에 애니메이션 등록
-		// 규격화된 양식:
-		//   1. Idle: 대기 애니메이션
-		//   2. WalkForward: 전진 애니메이션
-		//   3. WalkBackward: 후진 애니메이션
-		//   4. Fire: 발사 애니메이션 (상체)
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// SkeletalAnimator? ????? ??
+		// ???? ??:
+		//   1. Idle: ?? ?????
+		//   2. WalkForward: ?? ?????
+		//   3. WalkBackward: ?? ?????
+		//   4. Fire: ?? ????? (??)
+		// ?????????????????????????????????????????????
 
-		// 기존 애니메이션 클리어는 하지 않음 (이미 로드된 애니메이션 유지)
+		// ?? ????? ???? ?? ?? (?? ??? ????? ??)
 		// m_skeletalAnimator->ClearAnimations();
 
-		// 애니메이션 등록 (필요한 경우 파일 경로에서 로드)
-		// 주의: 실제 구현에서는 SkeletalAnimator의 API에 맞게 수정 필요
-		// 예시: m_skeletalAnimator->LoadAnimation(m_animName_Idle, "path/to/idle.anim");
+		// ????? ?? (??? ?? ?? ???? ??)
+		// ??: ?? ????? SkeletalAnimator? API? ?? ?? ??
+		// ??: m_skeletalAnimator->LoadAnimation(m_animName_Idle, "path/to/idle.anim");
 
-		// 현재는 이미 SkeletalAnimator에 애니메이션이 로드되어 있다고 가정하고,
-		// 멤버 변수로 설정된 이름을 사용하여 참조만 함
+		// ??? ?? SkeletalAnimator? ?????? ???? ??? ????,
+		// ?? ??? ??? ??? ???? ??? ?
 
-		// 필요시 여기서 애니메이션 검증 가능
+		// ??? ??? ????? ?? ??
 		// if (!m_skeletalAnimator->HasAnimation(m_animName_Idle))
 		// {
 		//     LOG_ERROR("Animation '{}' not found in SkeletalAnimator", m_animName_Idle);
 		// }
 	}
 
-	// ═══════════════════════════════════════════════════════════════
-	// 입력 유틸리티
-	// ═══════════════════════════════════════════════════════════════
+	// ???????????????????????????????????????????????????????????????
+	// ?? ????
+	// ???????????????????????????????????????????????????????????????
 	engine::Vector3 PlayerControllerScript::GetMoveInputDirection() const
 	{
 		engine::Vector3 dir = engine::Vector3::Zero;
@@ -617,15 +758,15 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 대쉬 처리
+	// 대쉬 처리 (Dynamic Rigidbody + Impulse)
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::StartDash()
 	{
-		// 현재 이동 방향을 대쉬 방향으로 고정
+		// ?? ?? ??? ?? ???? ??
 		engine::Vector3 moveDir = GetMoveInputDirection();
 		if (moveDir.LengthSquared() < 0.0001f)
 		{
-			// 이동 입력이 없으면 대쉬 불가 (안전 장치)
+			// ?? ??? ??? ?? ?? (?? ??)
 			return;
 		}
 
@@ -635,39 +776,43 @@ namespace game
 		m_dashDirection = moveDir;
 		m_isDashing = true;
 		m_dashElapsedTime = 0.0f;
-		m_dashCollisionDecayBoost = 1.0f;  // 충돌 감쇠 배율 초기화
 
 		// ═══════════════════════════════════════════════════════════════
-		// 대쉬 카운트 시스템
+		// 대쉬 카운트 관리
 		// - 대쉬 사용 시 카운트 감소
-		// - 카운트가 3 미만이 되면 리차지 타이머 시작
+		// - 최대치 3개일 때 사용하면 충전이 시작됨
 		// ═══════════════════════════════════════════════════════════════
 		m_CurrentDashCount--;
 		if (m_CurrentDashCount < m_MaxDashCount)
 		{
-			// 리차지 타이머가 이미 작동 중이 아닌 경우에만 리셋
-			// (연속 대쉬 시 이미 카운트가 감소 중이면 타이머 유지)
+			// 대쉬를 처음 사용할 때만 충전 타이머 시작
+			// (이미 충전 중이면 타이머를 리셋하지 않음)
 			if (m_CurrentDashCount == m_MaxDashCount - 1)
 			{
-				m_dashRechargeTimer = m_dashRechargeTime;  // 처음으로 감소했을 때만 타이머 시작
+				m_dashRechargeTimer = m_dashRechargeTime;
 			}
 		}
 
 		// ═══════════════════════════════════════════════════════════════
-		// SphereCast로 대쉬 방향에 벽이 있는지 확인
-		// 벽이 있으면 초기 속도를 감소시킴
+		// Dynamic Rigidbody: Impulse로 순간 가속
+		// - PhysX가 충돌 자동 처리
+		// - 별도의 SphereCast 불필요
 		// ═══════════════════════════════════════════════════════════════
-		engine::Vector3 wallNormal;
-		m_dashWallDetectedOnStart = CheckEnvironmentBlock(m_dashDirection, wallNormal);
+		if (m_rigidbody && m_rigidbody->IsDynamic())
+		{
+			// 대쉬 Impulse 계산: 방향 * 속도 * 배율
+			float dashImpulse = m_moveSpeed * m_dashImpulseMultiplier;
+			engine::Vector3 impulseForce = m_dashDirection * dashImpulse;
+			
+			m_rigidbody->AddForce(impulseForce, engine::ForceMode::Impulse);
+		}
 	}
 
 	void PlayerControllerScript::EndDash()
 	{
 		m_isDashing = false;
 		m_dashElapsedTime = 0.0f;
-		m_dashCooldownTimer = m_dashCooldown;  // 쿨다운 시작
-		m_dashCollisionDecayBoost = 1.0f;      // 충돌 감쇠 배율 리셋
-		m_dashWallDetectedOnStart = false;     // 벽 감지 상태 리셋
+		m_dashCooldownTimer = m_dashCooldown;
 
 		// FSM 상태 전이 (Dash → Walk)
 		if (m_logicFSM)
@@ -677,181 +822,21 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// SphereCast 기반 지형 파고들기 방지
-	// QueryFilter를 사용하여 자기 자신 제외 + Environment 레이어만 감지
+	// 대쉬 처리 (Dynamic Rigidbody + Impulse 방식)
+	// - StartDash()에서 Impulse 적용됨
+	// - PhysX가 충돌/감속 자동 처리
+	// - 여기서는 시간만 체크하고 종료
 	// ═══════════════════════════════════════════════════════════════
-	bool PlayerControllerScript::CheckEnvironmentBlock(const engine::Vector3& direction, engine::Vector3& outNormal)
-	{
-		// 유효하지 않은 방향이면 리턴
-		if (direction.LengthSquared() < 0.0001f)
-		{
-			return false;
-		}
-
-		// 이동 방향 정규화 (XZ 평면)
-		engine::Vector3 checkDir = direction;
-		checkDir.y = 0.0f;
-		checkDir.Normalize();
-
-		// 플레이어 위치 (허리 높이에서 캐스트)
-		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-		playerPos.y += 1.0f;
-
-		// ═══════════════════════════════════════════════════════════════
-		// QueryFilter 설정:
-		// - 자기 자신(플레이어) 제외
-		// - Environment 레이어만 감지
-		// - 바닥/천장 무시 (벽만 감지)
-		// ═══════════════════════════════════════════════════════════════
-		engine::QueryFilter filter;
-		filter.ignoreObject = GetGameObject();                         // 자기 자신 제외
-		filter.layerMask = engine::PhysicsLayer::Mask::EnvironmentMask; // Environment만
-		filter.ignoreFloor = true;                                     // 바닥 무시
-		filter.ignoreCeiling = true;                                   // 천장 무시
-		filter.floorCeilingThreshold = 0.5f;
-
-		// SphereCast 수행
-		engine::RaycastHit hit;
-		engine::PhysicsSystem& physicsSystem = engine::SystemManager::Get().GetPhysicsSystem();
-		
-		bool hasHit = physicsSystem.SphereCast(
-			playerPos,
-			m_sphereCastRadius,
-			checkDir,
-			m_sphereCastDistance,
-			hit,
-			filter
-		);
-
-		// 디버그 (필요시 주석 해제)
-		// if (hasHit && hit.gameObject)
-		// {
-		// 	LOG_PRINT("[SphereCast] Hit: {} | Normal: ({:.2f}, {:.2f}, {:.2f}) | Distance: {:.3f}",
-		// 		hit.gameObject->GetName(), hit.normal.x, hit.normal.y, hit.normal.z, hit.distance);
-		// }
-
-		if (hasHit)
-		{
-			// 벽의 노말 저장 (XZ 평면)
-			outNormal = hit.normal;
-			outNormal.y = 0.0f;
-			if (outNormal.LengthSquared() > 0.0001f)
-			{
-				outNormal.Normalize();
-			}
-			else
-			{
-				// XZ 평면에서 유효한 노말이 없으면 무시
-				return false;
-			}
-			
-			return true;
-		}
-
-		return false;
-	}
-
-	engine::Vector3 PlayerControllerScript::CalculateSlidingDirection(
-		const engine::Vector3& moveDir, 
-		const engine::Vector3& wallNormal)
-	{
-		// 벽 슬라이딩: 이동 방향에서 벽에 수직인 성분만 제거
-		// slideDir = moveDir - (moveDir · wallNormal) × wallNormal
-		
-		engine::Vector3 normalizedMove = moveDir;
-		normalizedMove.y = 0.0f;
-		if (normalizedMove.LengthSquared() < 0.0001f)
-		{
-			return engine::Vector3::Zero;
-		}
-		normalizedMove.Normalize();
-
-		engine::Vector3 normalizedWall = wallNormal;
-		normalizedWall.y = 0.0f;
-		if (normalizedWall.LengthSquared() < 0.0001f)
-		{
-			return normalizedMove;  // 노말이 없으면 원래 방향 유지
-		}
-		normalizedWall.Normalize();
-
-		// 벽을 향하는 성분 계산
-		float dot = normalizedMove.Dot(normalizedWall);
-		
-		// 벽에서 멀어지는 방향이면 슬라이딩 불필요
-		if (dot >= 0.0f)
-		{
-			return normalizedMove;
-		}
-
-		// 벽에 수직인 성분 제거
-		engine::Vector3 slideDir = normalizedMove - normalizedWall * dot;
-		
-		if (slideDir.LengthSquared() > 0.0001f)
-		{
-			slideDir.Normalize();
-		}
-		else
-		{
-			// 정면 충돌 시 슬라이딩 불가
-			slideDir = engine::Vector3::Zero;
-		}
-
-		return slideDir;
-	}
-
-	float PlayerControllerScript::CalculateDashSpeed() const
-	{
-		// ═══════════════════════════════════════════════════════════════
-		// 지수 감쇠 공식: v(t) = v_initial × e^(-decay × t)
-		// 
-		// 조건: 1초 후에 정확히 기본 속도(m_moveSpeed)로 돌아와야 함
-		// v(1) = v_initial × e^(-decay) = m_moveSpeed
-		// 
-		// v_initial = m_moveSpeed × multiplier
-		// e^(-decay) = 1 / multiplier
-		// decay = ln(multiplier)
-		// 
-		// 충돌 감쇠: decay에 m_dashCollisionDecayBoost를 곱해서 빠르게 감속
-		// 벽 감지: 대쉬 시작 시 벽이 감지되면 초기 속도 감소
-		// ═══════════════════════════════════════════════════════════════
-
-		float multiplier = m_dashInitialSpeedMultiplier;
-		
-		// 대쉬 시작 시 벽이 감지되었으면 초기 속도 배율 감소
-		if (m_dashWallDetectedOnStart)
-		{
-			multiplier *= m_dashWallSpeedMultiplier;
-			// multiplier가 1보다 작으면 decay가 음수가 되어 속도가 증가하므로 최소 1.01로 제한
-			multiplier = std::max(multiplier, 1.01f);
-		}
-		
-		float decay = logf(multiplier);  // ln(multiplier)
-
-		// 충돌 시 감쇠 배율 적용 (벽/적에 부딪히면 빠르게 감속)
-		decay *= m_dashCollisionDecayBoost;
-
-		// 시간 정규화 (0~1 범위로)
-		float normalizedTime = m_dashElapsedTime / m_dashDuration;
-		normalizedTime = std::clamp(normalizedTime, 0.0f, 1.0f);
-
-		// 지수 감쇠 속도 계산
-		float initialSpeed = m_moveSpeed * multiplier;
-		float currentSpeed = initialSpeed * expf(-decay * normalizedTime);
-
-		// 최소 속도는 기본 이동 속도
-		return std::max(currentSpeed, m_moveSpeed);
-	}
-
 	void PlayerControllerScript::HandleDash()
 	{
-		if (!m_isDashing || !m_rigidbody || !m_rigidbody->IsDynamic())
+		if (!m_isDashing)
 		{
 			return;
 		}
 
 		float fixedDelta = engine::Time::FixedDeltaTime();
 
-		// 대쉬 경과 시간 업데이트
+		// 대쉬 시간 업데이트
 		m_dashElapsedTime += fixedDelta;
 
 		// 대쉬 종료 조건: 지속 시간 초과
@@ -862,85 +847,98 @@ namespace game
 		}
 
 		// ═══════════════════════════════════════════════════════════════
-		// 대쉬 중 SphereCast로 벽 감지 - 히트 시 속도 감쇠
+		// 대쉬 지수 감쇠 (매 프레임 속도 감소)
+		// - 초반 급가속 후 빠르게 감속
+		// - decayFactor = e^(-progress * decayRate)
 		// ═══════════════════════════════════════════════════════════════
-		engine::Vector3 wallNormal;
-		if (CheckEnvironmentBlock(m_dashDirection, wallNormal))
+		if (m_rigidbody && m_rigidbody->IsDynamic() && m_dashDecayRate > 0.0f)
 		{
-			// 벽에 충돌 - 속도를 m_dashWallSpeedMultiplier 비율로 감쇠
-			float reducedSpeed = CalculateDashSpeed() * m_dashWallSpeedMultiplier;
+			// 진행률 (0 → 1)
+			float progress = m_dashElapsedTime / m_dashDuration;
+			
+			// 지수 감쇠 계수 (progress가 커질수록 decayFactor가 작아짐)
+			// decayRate가 클수록 빠르게 감속
+			float decayFactor = expf(-progress * m_dashDecayRate);
+			
+			// 현재 수평 속도 가져오기
 			engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
-			engine::Vector3 reducedVelocity = m_dashDirection * reducedSpeed;
-			reducedVelocity.y = currentVel.y;
-			m_rigidbody->SetLinearVelocity(reducedVelocity);
-			return;
+			engine::Vector3 horizontalVel(currentVel.x, 0.0f, currentVel.z);
+			
+			// 대쉬 방향으로의 속도만 감쇠 적용
+			float speedInDashDir = horizontalVel.Dot(m_dashDirection);
+			if (speedInDashDir > 0.0f)
+			{
+				// 이전 프레임 대비 감쇠량 계산
+				float prevProgress = (m_dashElapsedTime - fixedDelta) / m_dashDuration;
+				float prevDecay = expf(-prevProgress * m_dashDecayRate);
+				float decayRatio = (prevDecay > 0.0001f) ? decayFactor / prevDecay : decayFactor;
+				
+				// 감쇠 적용 (대쉬 방향 성분만)
+				engine::Vector3 dashVelComponent = m_dashDirection * speedInDashDir;
+				engine::Vector3 otherVelComponent = horizontalVel - dashVelComponent;
+				
+				engine::Vector3 newHorizontalVel = dashVelComponent * decayRatio + otherVelComponent;
+				m_rigidbody->SetLinearVelocity(engine::Vector3(newHorizontalVel.x, currentVel.y, newHorizontalVel.z));
+			}
 		}
-
-		// 현재 대쉬 속도 계산 (지수 감쇠)
-		float dashSpeed = CalculateDashSpeed();
-
-		// 대쉬 방향으로 속도 설정
-		// SetLinearVelocity 대신 목표 속도로 즉시 설정 (대쉬는 즉각적인 이동)
-		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
-		engine::Vector3 dashVelocity = m_dashDirection * dashSpeed;
-		dashVelocity.y = currentVel.y;  // Y축(중력) 속도 유지
-
-		m_rigidbody->SetLinearVelocity(dashVelocity);
+		
+		// 회전 속도 강제 0 (대쉬 중에도 적용)
+		ForceStopRotation();
 	}
 
 	void PlayerControllerScript::HandleShooting(float deltaTime)
 	{
-		// ─────────────────────────────────────────────
-		// 쿨다운 타이머 감소 (항상 실행)
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// ??? ??? ?? (?? ??)
+		// ?????????????????????????????????????????????
 		if (m_fireTimer > 0.0f)
 		{
 			m_fireTimer -= deltaTime;
 		}
 
-		// ─────────────────────────────────────────────
-		// 발사 조건: 마우스 누름 + 쿨다운 완료
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// ?? ??: ??? ?? + ??? ??
+		// ?????????????????????????????????????????????
 		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
 
 		if (isMouseHeld && m_fireTimer <= 0.0f)
 		{
-			// 발사!
+			// ??!
 			if (m_bulletFactory && m_aimPointer)
 			{
 				engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
 				engine::Vector3 direction = m_aimPointer->GetDirectionFrom(playerPos);
 
-				// BulletParams로 발사
+				// BulletParams? ??
 				BulletParams params;
 				params.type = BulletType::Linear;
 				params.speed = m_bulletSpeed;
 				params.lifetime = m_bulletLifetime;
-				params.damage = 10;  // TODO: 멤버 변수로 관리
+				params.damage = 10;  // TODO: ?? ??? ??
 
 				m_bulletFactory->Fire(playerPos, direction, params);
 
 
 
-				// 발사 애니메이션 재생 (발사할 때마다)
+				// ?? ????? ?? (??? ???)
 				if (m_animFSM)
 				{
 					m_animFSM->PlayUpperBodyAnimation(m_animName_Fire, false);
 				}
 
-				// 쿨다운 재설정 (단순 대입으로 확실하게)
+				// ??? ??? (?? ???? ????)
 				m_fireTimer = m_fireRate;
 			}
 		}
 
-		// 참고: 마우스를 떼도 타이머를 초기화하지 않음
-		// 연타로 쿨다운을 우회하는 것을 방지
+		// ??: ???? ?? ???? ????? ??
+		// ??? ???? ???? ?? ??
 	}
 		
 
-	// ═══════════════════════════════════════════════════════════════
-	// 애니메이션 제어
-	// ═══════════════════════════════════════════════════════════════
+	// ???????????????????????????????????????????????????????????????
+	// ????? ??
+	// ???????????????????????????????????????????????????????????????
 	
 
 	std::string PlayerControllerScript::GetAnimationState() const
@@ -969,20 +967,20 @@ namespace game
 	{
 		if (!m_animFSM) return;
 
-		// ─────────────────────────────────────────────
-		// LogicFSM 상태 + 방향 정보 → AnimFSM 상태 결정
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// LogicFSM ?? + ?? ?? ? AnimFSM ?? ??
+		// ?????????????????????????????????????????????
 		std::string logicState = m_logicFSM ? m_logicFSM->GetCurrentState() : "Idle";
 		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.0001f;
 		bool isShooting = (logicState == "IdleShoot" || logicState == "WalkShoot");
 		bool isBackward = m_isBackward;
 
-		// AnimFSM 상태 결정 (InitializeAnimFSM에서 등록한 상태명과 일치해야 함)
+		// AnimFSM ?? ?? (InitializeAnimFSM?? ??? ???? ???? ?)
 		std::string animState;
 
 		if (isShooting)
 		{
-			// 공격 상태
+			// ?? ??
 			if (!isMoving)
 			{
 				animState = "IdleShoot";
@@ -998,7 +996,7 @@ namespace game
 		}
 		else
 		{
-			// 비공격 상태
+			// ??? ??
 			if (!isMoving)
 			{
 				animState = "Idle";
@@ -1013,7 +1011,7 @@ namespace game
 			}
 		}
 
-		// AnimFSM에 상태 전달 (AnimFSM이 PlayStateAnimation 호출)
+		// AnimFSM? ?? ?? (AnimFSM? PlayStateAnimation ??)
 		m_animFSM->SetAnimState(animState);
 	}
 
@@ -1021,9 +1019,10 @@ namespace game
 	
 
 
-	// ═══════════════════════════════════════════════════════════════
-	// 에디터 검증
-	// ═══════════════════════════════════════════════════════════════
+
+	// ???????????????????????????????????????????????????????????????
+	// ??? ??
+	// ???????????????????????????????????????????????????????????????
 	bool PlayerControllerScript::ValidateComponents() const
 	{
 		bool isValid = true;
@@ -1056,22 +1055,22 @@ namespace game
 		return isValid;
 	}
 
-	// ═══════════════════════════════════════════════════════════════
-	// GUI / 직렬화
-	// ═══════════════════════════════════════════════════════════════
+	// ???????????????????????????????????????????????????????????????
+	// GUI / ???
+	// ???????????????????????????????????????????????????????????????
 	void PlayerControllerScript::OnGui()
 	{
 		ImGui::Indent();
 
-		ImGui::Text("PlayerControllerScript:");
+		ImGui::Text("PlayerControllerScript (Dynamic Rigidbody):");
 
-		// ─────────────────────────────────────────────
-		// 컴포넌트 검증 (에디터 화면에서도 체크)
-		// ─────────────────────────────────────────────
+		// ?????????????????????????????????????????????
+		// ???? ?? (??? ????? ??)
+		// ?????????????????????????????????????????????
 		ImGui::Separator();
 		ImGui::Text("=== Component Validation ===");
 
-		// 에디터 모드를 위한 실시간 컴포넌트 검색 (같은 GameObject 내에서만 검색)
+		// ??? ??? ?? ??? ???? ?? (?? GameObject ???? ??)
 		engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
 		engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
 		engine::AnimFSM* animFSM = m_animFSM ? m_animFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::AnimFSM>() : nullptr);
@@ -1079,7 +1078,7 @@ namespace game
 		AimPointer* aimPointer = m_aimPointer ? m_aimPointer : (GetGameObject() ? GetGameObject()->GetComponent<AimPointer>() : nullptr);
 		BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
 
-		// 전체 유효성 검사
+		// ?? ??? ??
 		bool allValid = rigidbody && skeletalAnimator && aimPointer && bulletFactory && animFSM && logicFSM;
 
 		if (allValid)
@@ -1091,11 +1090,25 @@ namespace game
 			ImGui::TextColored(ImVec4(1, 0, 0, 1), "[ERROR] Some components are missing!");
 		}
 
-		// 개별 컴포넌트 상태 표시
-		ImGui::Indent();
-		ImGui::Text("Rigidbody:         %s", rigidbody ? "[OK]" : "[MISSING]");
-		if (!rigidbody) ImGui::SameLine(); if (!rigidbody) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		// Rigidbody 타입 검증 (Dynamic 필수)
+		if (rigidbody)
+		{
+			if (rigidbody->IsDynamic())
+			{
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "[OK] Rigidbody: Dynamic");
+			}
+			else
+			{
+				ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "[WARNING] Rigidbody is Kinematic! Change to Dynamic for physics collision.");
+			}
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(1, 0, 0, 1), "[ERROR] Rigidbody: MISSING");
+		}
 
+		// ?? ???? ?? ??
+		ImGui::Indent();
 		ImGui::Text("SkeletalAnimator:  %s", skeletalAnimator ? "[OK]" : "[MISSING]");
 		if (!skeletalAnimator) ImGui::SameLine(); if (!skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 
@@ -1112,95 +1125,140 @@ namespace game
 		if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 		ImGui::Unindent();
 
-		// 이동
+		// ═══════════════════════════════════════════════════════════════
+		// Movement (Dynamic Rigidbody)
+		// - Max Speed: 목표 최대 속도
+		// - Acceleration: 최대 속도에 도달하는 속도
+		// - Deceleration: 정지하는 속도
+		// ═══════════════════════════════════════════════════════════════
 		ImGui::Separator();
-		ImGui::Text("Movement:");
-		ImGui::DragFloat("Move Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
-		ImGui::DragFloat("Rotation Speed (rad/s)", &m_rotationSpeed, 0.5f, 1.0f, 30.0f);
-
-		// 대쉬 설정
-		ImGui::Separator();
-		ImGui::Text("Dash:");
-		ImGui::DragFloat("Dash Duration (sec)", &m_dashDuration, 0.1f, 0.1f, 3.0f);
-		ImGui::DragFloat("Dash Speed Multiplier", &m_dashInitialSpeedMultiplier, 0.1f, 1.5f, 10.0f);
-		ImGui::DragFloat("Dash Cooldown (sec)", &m_dashCooldown, 0.1f, 0.0f, 10.0f);
-
-		// 대쉬 충돌 감쇠 설정
-		ImGui::Separator();
-		ImGui::Text("Dash Collision Decay:");
-		ImGui::DragFloat("Collision Decay Multiplier", &m_dashCollisionDecayMultiplier, 0.5f, 1.0f, 20.0f);
-		ImGui::DragFloat("Collision Dot Threshold", &m_dashCollisionDotThreshold, 0.05f, 0.0f, 1.0f);
+		ImGui::Text("Movement (Dynamic Physics):");
+		
+		// 속도 설정 (함께 표시)
+		ImGui::DragFloat("Max Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
 		if (ImGui::IsItemHovered())
 		{
-			ImGui::SetTooltip("0.0 = 90 deg, 0.3 = ~72 deg, 0.5 = 60 deg, 0.7 = ~45 deg");
+			ImGui::SetTooltip("Target maximum movement speed (m/s)");
 		}
-
-		// SphereCast 설정 (지형 파고들기 방지)
-		ImGui::Separator();
-		ImGui::Text("SphereCast (Environment Block):");
-		ImGui::DragFloat("SphereCast Radius", &m_sphereCastRadius, 0.05f, 0.1f, 2.0f);
-		ImGui::DragFloat("SphereCast Distance", &m_sphereCastDistance, 0.05f, 0.1f, 2.0f);
-		ImGui::DragFloat("Dash Wall Speed %%", &m_dashWallSpeedMultiplier, 0.01f, 0.0001f, 1.0f, "%.2f");
+		ImGui::DragFloat("Acceleration", &m_movementAcceleration, 1.0f, 1.0f, 200.0f);
 		if (ImGui::IsItemHovered())
 		{
-			ImGui::SetTooltip("Wall detected at dash start: initial speed multiplier (0.1 = 10%%)");
+			ImGui::SetTooltip("How fast to reach max speed (higher = snappier)");
+		}
+		ImGui::DragFloat("Deceleration", &m_movementDeceleration, 1.0f, 1.0f, 200.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("How fast to stop (higher = snappier)");
+		}
+		ImGui::DragFloat("Max Speed Brake", &m_maxSpeedBrakeFactor, 0.5f, 1.0f, 50.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Brake force when exceeding max speed");
 		}
 		
-		// SphereCast 런타임 상태
-		if (m_environmentBlockDetected)
+		ImGui::Spacing();
+		ImGui::DragFloat("Rotation Speed (rad/s)", &m_rotationSpeed, 0.5f, 1.0f, 30.0f);
+
+		// Rigidbody 상태 표시
+		ImGui::Spacing();
+		if (m_rigidbody)
 		{
-			ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "Environment Block: DETECTED");
-			ImGui::Text("  Normal: (%.2f, %.2f)", m_lastBlockNormal.x, m_lastBlockNormal.z);
+			bool isDynamic = m_rigidbody->IsDynamic();
+			ImGui::TextColored(isDynamic ? ImVec4(0, 1, 0, 1) : ImVec4(1, 0.5f, 0, 1),
+				"Rigidbody: %s", isDynamic ? "Dynamic" : "Kinematic");
+			
+			if (isDynamic)
+			{
+				engine::Vector3 linearVel = m_rigidbody->GetLinearVelocity();
+				float horizSpeed = sqrtf(linearVel.x * linearVel.x + linearVel.z * linearVel.z);
+				ImGui::Text("Current Speed: %.2f / %.2f", horizSpeed, m_moveSpeed);
+				
+				// 진행바로 속도 표시
+				float speedRatio = m_moveSpeed > 0.0f ? horizSpeed / m_moveSpeed : 0.0f;
+				ImGui::ProgressBar(speedRatio, ImVec2(-1, 0), "");
+			}
 		}
 		else
 		{
-			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Environment Block: Clear");
+			ImGui::TextColored(ImVec4(1, 0, 0, 1), "Rigidbody: NOT FOUND");
+		}
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 충돌 반응 설정
+		// ═══════════════════════════════════════════════════════════════
+		ImGui::Separator();
+		ImGui::Text("Collision Response:");
+		ImGui::DragFloat("Push Back Force", &m_collisionPushBackForce, 0.05f, 0.0f, 5.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Impulse force when fully blocked (pushes away from wall)");
+		}
+		ImGui::DragFloat("Sliding Speed", &m_slidingSpeedMultiplier, 0.05f, 0.0f, 1.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Speed multiplier when sliding along walls (0.0~1.0)");
+		}
+		
+		// 충돌 상태 표시
+		ImGui::Spacing();
+		if (m_isColliding && !m_frameCollisionNormals.empty())
+		{
+			ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "Status: COLLIDING (%d normals)", 
+				static_cast<int>(m_frameCollisionNormals.size()));
+			for (size_t i = 0; i < m_frameCollisionNormals.size() && i < 3; ++i)
+			{
+				ImGui::Text("  Normal[%zu]: (%.2f, %.2f, %.2f)", 
+					i, m_frameCollisionNormals[i].x, m_frameCollisionNormals[i].y, m_frameCollisionNormals[i].z);
+			}
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Status: Clear");
 		}
 
-		// 대쉬 런타임 정보
+		// ═══════════════════════════════════════════════════════════════
+		// Dash (Impulse + 지수 감쇠)
+		// ═══════════════════════════════════════════════════════════════
 		ImGui::Separator();
+		ImGui::Text("Dash:");
+		ImGui::DragFloat("Dash Duration (sec)", &m_dashDuration, 0.1f, 0.1f, 3.0f);
+		ImGui::DragFloat("Dash Impulse Multiplier", &m_dashImpulseMultiplier, 0.5f, 5.0f, 50.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Dash impulse = moveSpeed * this value. Higher = faster initial speed");
+		}
+		ImGui::DragFloat("Dash Decay Rate", &m_dashDecayRate, 0.1f, 0.0f, 10.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Exponential decay rate. Higher = faster slowdown during dash");
+		}
+		ImGui::DragFloat("Dash Cooldown (sec)", &m_dashCooldown, 0.1f, 0.0f, 10.0f);
+		
+		// 대쉬 상태 표시
 		ImGui::Text("Dash State: %s", m_isDashing ? "DASHING" : "Ready");
+		ImGui::Text("Dash Count: %d / %d", m_CurrentDashCount, m_MaxDashCount);
 		if (m_dashCooldownTimer > 0.0f)
 		{
 			ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "Cooldown: %.1f sec", m_dashCooldownTimer);
 		}
-		else
-		{
-			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Cooldown: Ready");
-		}
 		if (m_isDashing)
 		{
-			float dashSpeed = CalculateDashSpeed();
-			ImGui::Text("Current Dash Speed: %.1f", dashSpeed);
 			ImGui::Text("Dash Progress: %.0f%%", (m_dashElapsedTime / m_dashDuration) * 100.0f);
-			
-			// 벽 감지 상태 표시
-			if (m_dashWallDetectedOnStart)
-			{
-				ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "Wall Detected at Start: Speed reduced to %.0f%%", 
-					m_dashWallSpeedMultiplier * 100.0f);
-			}
-			
-			// 충돌 감쇠 상태 표시
-			if (m_dashCollisionDecayBoost > 1.0f)
-			{
-				ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1), "Collision Decay Active: %.1fx", m_dashCollisionDecayBoost);
-			}
 		}
 
-		// 발사 설정
+		// ?? ??
 		ImGui::Separator();
 		ImGui::Text("Shooting:");
 		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.2f, 0.01f, 2.0f);
 		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 1.0f, 1.0f, 100.0f);
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 3.0f, 0.5f, 10.0f);
 
-		// 처형 설정
+		// ?? ??
 		ImGui::Separator();
 		ImGui::Text("Execution:");
 		ImGui::DragFloat("Execution Range", &m_executionRange, 0.5f, 1.0f, 50.0f);
 
-		// 애니메이션 설정
+		// ????? ??
 		ImGui::Separator();
 		ImGui::Text("Animation Names:");
 		ImGui::InputText("Idle", &m_animName_Idle);
@@ -1208,12 +1266,12 @@ namespace game
 		ImGui::InputText("WalkBackward", &m_animName_WalkBackward);
 		ImGui::InputText("Fire", &m_animName_Fire);
 
-		// 참조 설정
+		// ?? ??
 		ImGui::Separator();
 		ImGui::Text("References:");
 		ImGui::InputText("AimPointer Object", &m_aimPointerObjectName);
 
-		// 기타
+		// ??
 		ImGui::Separator();
 		ImGui::Checkbox("Enable Upper Body Aim", &m_enableUpperBodyAim);
 
@@ -1221,13 +1279,12 @@ namespace game
 		ImGui::Text("Runtime Info:");
 		ImGui::Text("Animation State: %s", GetAnimationState().c_str());
 		ImGui::Text("Is Moving Backward: %s", m_isBackward ? "Yes" : "No");
-		//ImGui::Text("Forward Aim Dir Angle: %.2f deg", GetForwardAimDirAngle());
-
 
 		ImGui::Unindent();
 
-		// BaseControllerScript의 OnGui 호출 (이동 물리 설정)
-		BaseControllerScript::OnGui();
+		// BaseControllerScript::OnGui()는 호출하지 않음
+		// - Movement 관련 파라미터는 위에서 직접 통합 표시
+		// - 몬스터는 BaseControllerScript::OnGui()를 그대로 사용
 
 		ImGui::Spacing();
 		ImGui::Spacing();
@@ -1250,7 +1307,7 @@ namespace game
 		j["EnableUpperBodyAim"] = m_enableUpperBodyAim;
 		j["FSMInitialized"] = m_fsmInitialized;
 
-		// 애니메이션 이름 저장
+		// ????? ?? ??
 		j["AnimName_Idle"] = m_animName_Idle;
 		j["AnimName_WalkForward"] = m_animName_WalkForward;
 		j["AnimName_WalkBackward"] = m_animName_WalkBackward;
@@ -1259,19 +1316,15 @@ namespace game
 		// 처형 설정
 		j["ExecutionRange"] = m_executionRange;
 
-		// 대쉬 설정
+		// 충돌 반응 설정
+		j["CollisionPushBackForce"] = m_collisionPushBackForce;
+		j["SlidingSpeedMultiplier"] = m_slidingSpeedMultiplier;
+
+		// 대쉬 설정 (Dynamic Impulse + 지수 감쇠)
 		j["DashDuration"] = m_dashDuration;
-		j["DashInitialSpeedMultiplier"] = m_dashInitialSpeedMultiplier;
+		j["DashImpulseMultiplier"] = m_dashImpulseMultiplier;
+		j["DashDecayRate"] = m_dashDecayRate;
 		j["DashCooldown"] = m_dashCooldown;
-
-		// 대쉬 충돌 감쇠 설정
-		j["DashCollisionDecayMultiplier"] = m_dashCollisionDecayMultiplier;
-		j["DashCollisionDotThreshold"] = m_dashCollisionDotThreshold;
-
-		// SphereCast 설정 (지형 파고들기 방지)
-		j["SphereCastRadius"] = m_sphereCastRadius;
-		j["SphereCastDistance"] = m_sphereCastDistance;
-		j["DashWallSpeedMultiplier"] = m_dashWallSpeedMultiplier;
 	}
 
 	void PlayerControllerScript::Load(const engine::json& j)
@@ -1295,7 +1348,7 @@ namespace game
 		if (j.contains("FSMInitialized"))
 			m_fsmInitialized = j["FSMInitialized"].get<bool>();
 
-		// 애니메이션 이름 로드
+		// ????? ?? ??
 		if (j.contains("AnimName_Idle"))
 			m_animName_Idle = j["AnimName_Idle"].get<std::string>();
 		if (j.contains("AnimName_WalkForward"))
@@ -1305,30 +1358,24 @@ namespace game
 		if (j.contains("AnimName_Fire"))
 			m_animName_Fire = j["AnimName_Fire"].get<std::string>();
 
-		// 처형 설정
+		// ?? ??
 		if (j.contains("ExecutionRange"))
 			m_executionRange = j["ExecutionRange"].get<float>();
 
-		// 대쉬 설정
+		// 충돌 반응 설정
+		if (j.contains("CollisionPushBackForce"))
+			m_collisionPushBackForce = j["CollisionPushBackForce"].get<float>();
+		if (j.contains("SlidingSpeedMultiplier"))
+			m_slidingSpeedMultiplier = j["SlidingSpeedMultiplier"].get<float>();
+
+		// 대쉬 설정 (Dynamic Impulse + 지수 감쇠)
 		if (j.contains("DashDuration"))
 			m_dashDuration = j["DashDuration"].get<float>();
-		if (j.contains("DashInitialSpeedMultiplier"))
-			m_dashInitialSpeedMultiplier = j["DashInitialSpeedMultiplier"].get<float>();
+		if (j.contains("DashImpulseMultiplier"))
+			m_dashImpulseMultiplier = j["DashImpulseMultiplier"].get<float>();
+		if (j.contains("DashDecayRate"))
+			m_dashDecayRate = j["DashDecayRate"].get<float>();
 		if (j.contains("DashCooldown"))
 			m_dashCooldown = j["DashCooldown"].get<float>();
-
-		// 대쉬 충돌 감쇠 설정
-		if (j.contains("DashCollisionDecayMultiplier"))
-			m_dashCollisionDecayMultiplier = j["DashCollisionDecayMultiplier"].get<float>();
-		if (j.contains("DashCollisionDotThreshold"))
-			m_dashCollisionDotThreshold = j["DashCollisionDotThreshold"].get<float>();
-
-		// SphereCast 설정 (지형 파고들기 방지)
-		if (j.contains("SphereCastRadius"))
-			m_sphereCastRadius = j["SphereCastRadius"].get<float>();
-		if (j.contains("SphereCastDistance"))
-			m_sphereCastDistance = j["SphereCastDistance"].get<float>();
-		if (j.contains("DashWallSpeedMultiplier"))
-			m_dashWallSpeedMultiplier = j["DashWallSpeedMultiplier"].get<float>();
 	}
 }

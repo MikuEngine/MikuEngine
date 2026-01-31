@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BaseControllerScript.h"
 
 #include <Framework/Object/Component/LogicFSM.h>
@@ -337,16 +337,27 @@ namespace game
 
     void BaseControllerScript::HandleMovement(float maxSpeed)
     {
-        // 이동 입력이 없으면 감속
-        if (!m_isMoving)
+        // Rigidbody 타입에 따라 자동으로 Dynamic/Kinematic 방식 선택
+        if (!m_cachedRigidbody)
         {
-            ApplyBrakingForce();
-            return;
+            m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
         }
 
-        // m_currentLogicalMoveVector는 ProcessInput에서 이미 계산된 정규화된 이동 방향
-        // ApplyMovementForce로 Rigidbody 기반 이동 (충돌 응답 보존)
-        ApplyMovementForce(m_currentLogicalMoveVector, maxSpeed);
+        if (m_cachedRigidbody && m_cachedRigidbody->IsDynamic())
+        {
+            // Dynamic Rigidbody: AddForce 기반 이동
+            if (!m_isMoving)
+            {
+                ApplyBrakingForce();
+                return;
+            }
+            ApplyMovementForce(m_currentLogicalMoveVector, maxSpeed);
+        }
+        else
+        {
+            // Kinematic Rigidbody: Transform 기반 이동
+            HandleMovementKinematic(maxSpeed);
+        }
     }
 
 
@@ -460,6 +471,121 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // Kinematic 이동 유틸리티 (Transform 기반)
+    // ═══════════════════════════════════════════════════════════════
+    
+    void BaseControllerScript::HandleMovementKinematic(float maxSpeed)
+    {
+        // m_isMoving에 따라 목표 방향 결정
+        engine::Vector3 targetDirection = m_isMoving ? m_currentLogicalMoveVector : engine::Vector3::Zero;
+        
+        // 속도 업데이트 (가속/감속)
+        UpdateKinematicVelocity(targetDirection, maxSpeed);
+        
+        // Transform 이동 적용
+        ApplyKinematicMovement();
+    }
+    
+    void BaseControllerScript::UpdateKinematicVelocity(const engine::Vector3& targetDirection, float maxSpeed)
+    {
+        float deltaTime = engine::Time::FixedDeltaTime();
+        
+        if (targetDirection.LengthSquared() > 0.0001f)
+        {
+            // 이동 입력 있음: 목표 속도로 가속
+            engine::Vector3 targetVelocity = targetDirection * maxSpeed;
+            
+            // 현재 속도에서 목표 속도로 선형 보간 (가속)
+            engine::Vector3 velocityDiff = targetVelocity - m_currentVelocity;
+            float accelStep = m_kinematicAcceleration * deltaTime;
+            
+            if (velocityDiff.Length() < accelStep)
+            {
+                // 목표 속도에 거의 도달 - 직접 설정
+                m_currentVelocity = targetVelocity;
+            }
+            else
+            {
+                // 가속
+                velocityDiff.Normalize();
+                m_currentVelocity += velocityDiff * accelStep;
+            }
+        }
+        else
+        {
+            // 이동 입력 없음: 감속
+            float currentSpeed = m_currentVelocity.Length();
+            
+            if (currentSpeed < 0.01f)
+            {
+                // 거의 정지 상태 - 완전 정지
+                m_currentVelocity = engine::Vector3::Zero;
+            }
+            else
+            {
+                // 감속
+                float decelStep = m_kinematicDeceleration * deltaTime;
+                
+                if (currentSpeed < decelStep)
+                {
+                    // 완전 정지
+                    m_currentVelocity = engine::Vector3::Zero;
+                }
+                else
+                {
+                    // 감속 적용
+                    engine::Vector3 decelDir = m_currentVelocity;
+                    decelDir.Normalize();
+                    m_currentVelocity -= decelDir * decelStep;
+                }
+            }
+        }
+        
+        // 최대 속도 제한
+        float currentSpeed = m_currentVelocity.Length();
+        if (currentSpeed > maxSpeed)
+        {
+            m_currentVelocity = m_currentVelocity * (maxSpeed / currentSpeed);
+        }
+    }
+    
+    void BaseControllerScript::ApplyKinematicMovement()
+    {
+        // 속도가 거의 0이면 이동 스킵
+        if (m_currentVelocity.LengthSquared() < 0.0001f)
+        {
+            return;
+        }
+        
+        // Transform 이동 (FixedDeltaTime 기반)
+        float deltaTime = engine::Time::FixedDeltaTime();
+        engine::Vector3 displacement = m_currentVelocity * deltaTime;
+        
+        engine::Transform* transform = GetTransform();
+        if (!transform) return;
+        
+        engine::Vector3 currentPos = transform->GetWorldPosition();
+        engine::Vector3 newPos = currentPos + displacement;
+        
+        // Kinematic Rigidbody가 있으면 ForceSetPosition 사용
+        if (!m_cachedRigidbody)
+        {
+            m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
+        }
+        
+        if (m_cachedRigidbody && !m_cachedRigidbody->IsDynamic())
+        {
+            // Kinematic: ForceSetPosition (물리 엔진에 즉시 반영)
+            m_cachedRigidbody->ForceSetPosition(newPos, false);
+        }
+        else
+        {
+            // Rigidbody 없음: Transform 직접 설정
+            transform->SetLocalPosition(newPos);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // 컴포넌트 캐싱
     // ═══════════════════════════════════════════════════════════════
     void BaseControllerScript::CacheComponents()
@@ -536,9 +662,38 @@ namespace game
     {
         ImGui::Separator();
         ImGui::Text("=== Movement Physics (Base) ===");
-        ImGui::DragFloat("Movement Accel", &m_movementAcceleration, 1.0f, 1.0f, 200.0f);
-        ImGui::DragFloat("Movement Decel", &m_movementDeceleration, 1.0f, 1.0f, 200.0f);
-        ImGui::DragFloat("Max Speed Brake", &m_maxSpeedBrakeFactor, 0.5f, 1.0f, 50.0f);
+        
+        // Rigidbody 타입 표시
+        if (!m_cachedRigidbody)
+        {
+            m_cachedRigidbody = GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr;
+        }
+        
+        if (m_cachedRigidbody)
+        {
+            if (m_cachedRigidbody->IsDynamic())
+            {
+                ImGui::TextColored(ImVec4(0.3f, 0.7f, 1.0f, 1.0f), "Rigidbody Type: Dynamic");
+                ImGui::DragFloat("Movement Accel (Dynamic)", &m_movementAcceleration, 1.0f, 1.0f, 200.0f);
+                ImGui::DragFloat("Movement Decel (Dynamic)", &m_movementDeceleration, 1.0f, 1.0f, 200.0f);
+                ImGui::DragFloat("Max Speed Brake (Dynamic)", &m_maxSpeedBrakeFactor, 0.5f, 1.0f, 50.0f);
+            }
+            else
+            {
+                ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.7f, 1.0f), "Rigidbody Type: Kinematic");
+                ImGui::DragFloat("Movement Accel (Kinematic)", &m_kinematicAcceleration, 1.0f, 1.0f, 200.0f);
+                ImGui::DragFloat("Movement Decel (Kinematic)", &m_kinematicDeceleration, 1.0f, 1.0f, 200.0f);
+                
+                // 현재 속도 표시
+                ImGui::Text("Current Velocity: (%.2f, %.2f, %.2f)", 
+                    m_currentVelocity.x, m_currentVelocity.y, m_currentVelocity.z);
+                ImGui::Text("Current Speed: %.2f", m_currentVelocity.Length());
+            }
+        }
+        else
+        {
+            ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "Rigidbody: Not Found");
+        }
     }
     
     void BaseControllerScript::Save(engine::json& j) const
@@ -550,6 +705,8 @@ namespace game
         j["MovementAcceleration"] = m_movementAcceleration;
         j["MovementDeceleration"] = m_movementDeceleration;
         j["MaxSpeedBrakeFactor"] = m_maxSpeedBrakeFactor;
+        j["KinematicAcceleration"] = m_kinematicAcceleration;
+        j["KinematicDeceleration"] = m_kinematicDeceleration;
     }
     
     void BaseControllerScript::Load(const engine::json& j)
@@ -564,5 +721,9 @@ namespace game
             m_movementDeceleration = j["MovementDeceleration"].get<float>();
         if (j.contains("MaxSpeedBrakeFactor"))
             m_maxSpeedBrakeFactor = j["MaxSpeedBrakeFactor"].get<float>();
+        if (j.contains("KinematicAcceleration"))
+            m_kinematicAcceleration = j["KinematicAcceleration"].get<float>();
+        if (j.contains("KinematicDeceleration"))
+            m_kinematicDeceleration = j["KinematicDeceleration"].get<float>();
     }
 }

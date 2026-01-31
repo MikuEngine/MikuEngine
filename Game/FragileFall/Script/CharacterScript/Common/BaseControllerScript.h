@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -56,16 +56,30 @@ namespace game
         engine::AnimFSM* m_animFSM = nullptr;
 
         // ─────────────────────────────────────────────
-        // 물리 이동 설정 (AddForce 기반)
+        // 물리 이동 설정
         // ─────────────────────────────────────────────
-        // 가속도: 높을수록 빠르게 최대 속도에 도달 (권장: 50~100)
+        // Dynamic용: 가속도 (높을수록 빠르게 최대 속도에 도달, 권장: 50~100)
         float m_movementAcceleration = 80.0f;
         
-        // 감속도: 입력이 없을 때 감속 속도 (권장: 가속도와 동일하거나 높게)
+        // Dynamic용: 감속도 (입력이 없을 때 감속 속도, 권장: 가속도와 동일하거나 높게)
         float m_movementDeceleration = 100.0f;
         
-        // 최대 속도 초과 시 브레이크 계수 (권장: 10~20)
+        // Dynamic용: 최대 속도 초과 시 브레이크 계수 (권장: 10~20)
         float m_maxSpeedBrakeFactor = 15.0f;
+
+        // ─────────────────────────────────────────────
+        // Kinematic 이동 설정
+        // ─────────────────────────────────────────────
+        // Kinematic용: 가속도 (초당 속도 증가량, 권장: 30~60)
+        float m_kinematicAcceleration = 50.0f;
+        
+        // Kinematic용: 감속도 (초당 속도 감소량, 권장: 50~100)
+        float m_kinematicDeceleration = 70.0f;
+
+        // ─────────────────────────────────────────────
+        // Kinematic 런타임 상태 (자체 속도 관리)
+        // ─────────────────────────────────────────────
+        engine::Vector3 m_currentVelocity = engine::Vector3::Zero;
 
         // ─────────────────────────────────────────────
         // FSM 타입 별칭 및 헬퍼 (가독성 향상)
@@ -236,13 +250,17 @@ namespace game
         void StopRotation();
 
         // ─────────────────────────────────────────────
-        // 이동 유틸리티 (AddForce 기반)
-        // - SetLinearVelocity 대신 AddForce 사용으로 충돌 응답 보존
+        // 이동 유틸리티 (Dynamic/Kinematic 자동 선택)
         // ─────────────────────────────────────────────
         
         // 이동 처리 (m_currentLogicalMoveVector와 m_isMoving 기반)
         // - maxSpeed: 최대 이동 속도
+        // - Rigidbody 타입에 따라 자동으로 Dynamic/Kinematic 방식 선택
         void HandleMovement(float maxSpeed);
+        
+        // ─────────────────────────────────────────────
+        // Dynamic 전용 이동 유틸리티 (AddForce 기반)
+        // ─────────────────────────────────────────────
         
         // 이동 방향으로 힘을 가하고 최대 속도 제한
         // - direction: 이동 방향 (정규화됨)
@@ -254,6 +272,22 @@ namespace game
         
         // 최대 속도 제한 (부드러운 브레이크 방식)
         void ClampToMaxSpeed(float maxSpeed);
+
+        // ─────────────────────────────────────────────
+        // Kinematic 전용 이동 유틸리티 (Transform 기반)
+        // ─────────────────────────────────────────────
+        
+        // Kinematic 이동 처리
+        // - maxSpeed: 최대 이동 속도
+        void HandleMovementKinematic(float maxSpeed);
+        
+        // Kinematic 가속/감속 처리
+        // - targetDirection: 목표 이동 방향 (정규화됨)
+        // - maxSpeed: 최대 속도
+        void UpdateKinematicVelocity(const engine::Vector3& targetDirection, float maxSpeed);
+        
+        // Kinematic Transform 이동 적용
+        void ApplyKinematicMovement();
 
         // ─────────────────────────────────────────────
         // 컴포넌트 캐싱

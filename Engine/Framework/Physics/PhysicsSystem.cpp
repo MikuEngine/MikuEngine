@@ -33,11 +33,6 @@ namespace engine
         }
 
         // 재질 해제
-        if (m_slipperyMaterial)
-        {
-            m_slipperyMaterial->release();
-            m_slipperyMaterial = nullptr;
-        }
         if (m_defaultMaterial)
         {
             m_defaultMaterial->release();
@@ -157,11 +152,6 @@ namespace engine
         // 기본 재질 (일반 충돌)
         m_defaultMaterial = m_physics->createMaterial(0.5f, 0.5f, 0.1f);
         
-        // 미끄러운 재질 (캐릭터 간 충돌, 벽 미끄러짐용)
-        // - 매우 낮은 마찰: 물체가 서로 미끄러지듯 이동
-        // - 낮은 반발: 튕기지 않음
-        m_slipperyMaterial = m_physics->createMaterial(0.05f, 0.02f, 0.0f);
-
         // 7. 레이어 매트릭스 기본 설정
         m_layerMatrix.SetupDefault();
 

@@ -15,20 +15,13 @@ namespace game
     class BulletFactory;
 
     // ═══════════════════════════════════════════════════════════════
-    // PlayerControllerScript - Dynamic Rigidbody + 회전 제약 슈팅 플레이어
+    // PlayerScript - Kinematic Rigidbody 전용 슈팅 플레이어
     // 
     // 아키텍처:
     //   - LogicFSM: 고수준 상태 (Idle, Walk, IdleShoot, WalkShoot)
     //   - 행동 로직: 함수 기반, CanMove()/CanAttack()으로 제한
     //   - AnimFSM: LogicFSM 상태에 따라 애니메이션 재생
-    //   - Dynamic Rigidbody: PhysX 물리 충돌 처리, AddForce 기반 이동
-    //   - 회전 제약: FreezeRotation으로 물리 회전 동결, 스크립트로 회전 제어
-    // 
-    // 물리 처리:
-    //   - 이동: AddForce(VelocityChange)로 즉각적인 속도 변경
-    //   - 충돌: PhysX가 자동 처리 (터널링 방지, 겹침 방지)
-    //   - 회전: Transform.SetRotation()으로 직접 제어 (물리 무시)
-    //   - 대쉬: AddForce(Impulse)로 순간 가속
+    //   - Kinematic Rigidbody: Transform 기반 이동, 자체 속도 관리
     // 
     // FSM 상태:
     //   - Idle: 정지 상태
@@ -38,9 +31,9 @@ namespace game
     //   - Dash: 대쉬 상태
     //   - Execution: 처형 상태
     // ═══════════════════════════════════════════════════════════════
-    class PlayerControllerScript : public BaseControllerScript
+    class PlayerScript : public BaseControllerScript
     {
-        REGISTER_SCRIPT(PlayerControllerScript, BaseControllerScript)
+        REGISTER_SCRIPT(PlayerScript, BaseControllerScript)
 
     protected:
         // ─────────────────────────────────────────────
@@ -62,19 +55,10 @@ namespace game
         float m_rotationSpeed = 10.0f;  // 회전 속도 (rad/sec)
 
         // ─────────────────────────────────────────────
-        // 충돌 반응 설정
-        // ─────────────────────────────────────────────
-        float m_collisionPushBackForce = 0.5f;          // 정지 판정 시 밀어내기 힘 (Impulse)
-        float m_slidingSpeedMultiplier = 0.7f;          // 슬라이딩 시 속도 배율 (0.0~1.0)
-        
-        // ─────────────────────────────────────────────
-        // 대쉬 설정 (Dynamic Rigidbody + Impulse)
-        // - PhysX가 충돌/이동 처리
-        // - Impulse로 순간 가속 후 지수 감쇠
+        // 대쉬 설정
         // ─────────────────────────────────────────────
         float m_dashDuration = 0.3f;                    // 대쉬 지속 시간 (초)
-        float m_dashImpulseMultiplier = 15.0f;          // 대쉬 Impulse 배율 (m_moveSpeed 기준)
-        float m_dashDecayRate = 4.0f;                   // 대쉬 지수 감쇠율 (높을수록 빠르게 감속)
+        float m_dashInitialSpeedMultiplier = 6.0f;      // 초기 속도 배율 (m_moveSpeed 기준)
         float m_dashCooldown = 0.2f;                    // 대쉬 쿨다운 (초)
         int m_MaxDashCount = 3;
         int m_CurrentDashCount = 3;
@@ -88,6 +72,29 @@ namespace game
         float m_dashCooldownTimer = 0.0f;               // 쿨다운 타이머
         float m_dashElapsedTime = 0.0f;                 // 대쉬 경과 시간
         engine::Vector3 m_dashDirection = engine::Vector3::Zero;  // 대쉬 방향 (시작 시 고정)
+        engine::Vector3 m_dashVelocity = engine::Vector3::Zero;   // 대쉬 속도 (자체 관리)
+
+        // ─────────────────────────────────────────────
+        // 대쉬 충돌 감쇠 시스템
+        // - 대쉬 중 벽/적과 충돌 시 감쇠 지수를 높여 빠르게 감속
+        // ─────────────────────────────────────────────
+        float m_dashCollisionDecayBoost = 1.0f;         // 충돌 시 감쇠 배율 (기본 1.0)
+        float m_dashCollisionDecayMultiplier = 5.0f;    // 충돌 감지 시 적용할 감쇠 배율
+        float m_dashCollisionDotThreshold = 0.3f;       // 정면 충돌 판정 임계값 (0.3 ≈ 72도)
+
+        // ─────────────────────────────────────────────
+        // SphereCast 기반 지형 파고들기 방지 시스템
+        // - 이동/대쉬 방향으로 SphereCast하여 Environment 레이어 감지
+        // - 감지 시 해당 방향 이동 차단 또는 대쉬 속도 감소
+        // ─────────────────────────────────────────────
+        float m_sphereCastRadius = 1.0f;                // SphereCast 반지름
+        float m_sphereCastDistance = 1.0f;              // SphereCast 감지 거리
+        float m_dashWallSpeedMultiplier = 0.1f;         // 벽 감지 시 대쉬 초기 속도 배율 (0.1 = 10%)
+        
+        // SphereCast 런타임 상태
+        bool m_environmentBlockDetected = false;        // 현재 프레임에서 Environment 감지 여부
+        bool m_dashWallDetectedOnStart = false;         // 대쉬 시작 시 벽 감지 여부
+        engine::Vector3 m_lastBlockNormal = engine::Vector3::Zero;  // 마지막으로 감지된 벽의 노말
 
         // ─────────────────────────────────────────────
         // 발사 설정 (쿨다운/타이밍은 Player가 관리)
@@ -119,14 +126,6 @@ namespace game
         std::string m_animName_WalkBackward = "WalkBackward";
         std::string m_animName_Fire = "Fire";  // 발사 애니메이션 (현재 Punch 애니메이션)
 
-        // ─────────────────────────────────────────────
-        // 충돌 상태 추적 (PhysX 콜백 기반)
-        // - 매 프레임 갱신 방식 (댕글링 방지)
-        // - FixedUpdate 시작 시 클리어, OnCollisionStay에서 갱신
-        // ─────────────────────────────────────────────
-        bool m_isColliding = false;                      // 현재 충돌 중 여부
-        std::vector<engine::Vector3> m_frameCollisionNormals;  // 현재 프레임 충돌 노말들 (여러 오브젝트 대응)
-        
         // ─────────────────────────────────────────────
         // 런타임 상태
         // ─────────────────────────────────────────────
@@ -168,13 +167,6 @@ namespace game
         void UpdateGameLogic() override;         // 비물리 로직 (타이머, 애니메이션 등)
         void UpdatePhysicsLogic() override;      // 물리 로직 (이동, 회전)
         void OnStateEntered(const std::string& state) override;
-        
-        // ─────────────────────────────────────────────
-        // 충돌 콜백 (PhysX → CollisionSystem → Script)
-        // ─────────────────────────────────────────────
-        void OnCollisionEnter(const engine::CollisionInfo& info) override;
-        void OnCollisionStay(const engine::CollisionInfo& info) override;
-        void OnCollisionExit(const engine::CollisionInfo& info) override;
 
         // ─────────────────────────────────────────────
         // 행동 제한 (하이브리드 패턴)
@@ -206,16 +198,16 @@ namespace game
         void HandleShooting(float deltaTime);  // Update에서 호출 (DeltaTime 사용)
 
         // ─────────────────────────────────────────────
-        // Dynamic Rigidbody 설정
+        // SphereCast 기반 파고들기 방지
         // ─────────────────────────────────────────────
-        void SetupDynamicRigidbody();   // Start()에서 호출, 회전 제약 설정
-        void ForceStopRotation();       // FixedUpdate()에서 호출, 각속도 0 강제
+        // 이동 방향으로 SphereCast하여 Environment 레이어 감지
+        // 반환값: 벽 감지 시 true, 아니면 false
+        // outNormal: 감지된 벽의 노말 (슬라이딩 계산용)
+        bool CheckEnvironmentBlock(const engine::Vector3& direction, engine::Vector3& outNormal);
         
-        // ─────────────────────────────────────────────
-        // 충돌 기반 이동 제한
-        // ─────────────────────────────────────────────
-        bool IsMovingIntoCollision(const engine::Vector3& moveDirection) const;
-        engine::Vector3 RemoveCollisionComponent(const engine::Vector3& velocity) const;
+        // 벽 슬라이딩이 적용된 이동 방향 계산
+        // 벽에 수직인 성분만 제거하고 평행한 성분은 유지
+        engine::Vector3 CalculateSlidingDirection(const engine::Vector3& moveDir, const engine::Vector3& wallNormal);
                 
         // ─────────────────────────────────────────────
         // 애니메이션 제어

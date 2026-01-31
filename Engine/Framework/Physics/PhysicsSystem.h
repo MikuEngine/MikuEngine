@@ -84,7 +84,6 @@ namespace engine
         
         // 재질 (프리셋)
         physx::PxMaterial* m_defaultMaterial = nullptr;
-        physx::PxMaterial* m_slipperyMaterial = nullptr;  // Ice 프리셋 (미끄러운 충돌용)
         
         // 레이어 매트릭스
         PhysicsLayerMatrix m_layerMatrix;
@@ -200,7 +199,6 @@ namespace engine
         // ═══════════════════════════════════════
         physx::PxPhysics* GetPxPhysics() const { return m_physics; }
         physx::PxMaterial* GetDefaultMaterial() const { return m_defaultMaterial; }
-        physx::PxMaterial* GetSlipperyMaterial() const { return m_slipperyMaterial; }
         
         // Scene에서 PxScene 접근 (Scene을 통해)
         physx::PxScene* GetActivePxScene() const;
