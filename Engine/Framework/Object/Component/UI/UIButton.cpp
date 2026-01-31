@@ -115,7 +115,7 @@ namespace engine
 		m_state = State::Pressed;
 		UpdateVisuals();
 	}
-
+	
 	void UIButton::OnMouseClick(const Vector2&, int mouseButton)
 	{
 		if (m_state == State::Disabled) return;

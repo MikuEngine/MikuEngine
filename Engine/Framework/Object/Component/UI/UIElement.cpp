@@ -67,7 +67,11 @@ namespace engine
 		auto vp = gd.GetViewport();
 		UIRect rootRect{ 0,0,vp.Width,vp.Height };
 
-		return PointInRect(p, rt->GetWorldRectResolved(rootRect));
+		return
+			p.x >= rt->GetWorldRect().x &&
+			p.y >= rt->GetWorldRect().y &&
+			p.x <= rt->GetWorldRect().x + rt->GetWorldRect().w &&
+			p.y <= rt->GetWorldRect().y + rt->GetWorldRect().h;
 	}
 
 	bool UIElement::HasRenderType(RenderType type) const
