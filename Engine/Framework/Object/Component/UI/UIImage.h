@@ -77,7 +77,7 @@ namespace engine
 		void SetUV(const Vector4& uv) { m_uv = uv; m_dirty = true; }
 		const Vector4& GetUV() const { return m_uv; }
 
-		void SetMaskMode(MaskMode mode) { m_maskMode = mode; m_dirty = true; }
+		void SetMaskMode(MaskMode mode);
 		MaskMode GetMaskMode() const { return m_maskMode; }
 
 		void SetClipRect(const Vector4& r) { m_clipRect = r; m_dirty = true; }

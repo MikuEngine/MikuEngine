@@ -63,7 +63,7 @@ namespace engine
 			return go;
 		}
 
-		static Vector4 CalcViewportClipRectPx(UIElement* owner, RectTransform* viewportRT)
+		static Vector4 CalcViewportClipRectRef(UIElement* owner, RectTransform* viewportRT)
 		{
 			if (!owner || !viewportRT) return Vector4(0, 0, 0, 0);
 
@@ -71,21 +71,19 @@ namespace engine
 			if (!c) return Vector4(0, 0, 0, 0);
 
 			const Vector2 ref = c->GetReferenceResolution();
-			const UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+			const UIRect rootRect{ 0, 0, ref.x, ref.y };
 
 			const UIRect vr = viewportRT->GetWorldRectResolved(rootRect);
 
-			const Vector2 scale = c->GetUIScale();
-			const Vector2 offset = c->GetUIOffset();
-
-			const float pxX = offset.x + vr.x * scale.x;
-			const float pxY = offset.y + vr.y * scale.y;
-			const float pxW = vr.w * scale.x;
-			const float pxH = vr.h * scale.y;
-
-			// (L, T, R, B)
-			return Vector4(pxX, pxY, pxX + pxW, pxY + pxH);
+			// (x0, y0, x1, y1) — ref 좌표
+			return Vector4(
+				vr.x,
+				vr.y,
+				vr.x + vr.w,
+				vr.y + vr.h
+			);
 		}
+
 
 		static void CollectRenderersInSubtree(Transform* t,
 			std::vector<UIImage*>& outImgs,
@@ -423,23 +421,8 @@ namespace engine
 		// 캐시 재구성
 		RebuildRendererCache();
 
-		const Vector4 clipPx = CalcViewportClipRectPx(this, m_viewportRT);
-
-		// clip 변화 없으면 스킵
-		if (!force)
-		{
-			const float eps = 0.01f;
-			if (std::fabs(clipPx.x - m_cachedClipPx.x) < eps &&
-				std::fabs(clipPx.y - m_cachedClipPx.y) < eps &&
-				std::fabs(clipPx.z - m_cachedClipPx.z) < eps &&
-				std::fabs(clipPx.w - m_cachedClipPx.w) < eps)
-			{
-				return;
-			}
-		}
-
-		m_cachedClipPx = clipPx;
-		ApplyClipToCachedRenderers(clipPx);
+		const Vector4 clipRef = CalcViewportClipRectRef(this, m_viewportRT);
+		ApplyClipToCachedRenderers(clipRef);
 	}
 
 	void UIScrollView::OnScroll(const Vector2& mousePos, float wheelDelta)
@@ -448,19 +431,29 @@ namespace engine
 		SetScrollY(m_scrollY - wheelDelta / wheelStep, true);
 	}
 
-	bool UIScrollView::HitTestPoint(const Vector2& p) const
+	bool UIScrollView::HitTestPoint(const Vector2& screenP) const
 	{
 		if (!m_viewportRT)
-			return UIElement::HitTestPoint(p);
+			return false;
 
 		Canvas* c = GetCanvasInParent();
-		if (!c) return UIElement::HitTestPoint(p);
+		if (!c) return false;
 
+		// screen(pixel) → ref(Canvas)
+		const Vector2 scale = c->GetUIScale();
+		const Vector2 offset = c->GetUIOffset();
+
+		Vector2 p;
+		p.x = (screenP.x - offset.x) / scale.x;
+		p.y = (screenP.y - offset.y) / scale.y;
+
+		// viewport rect도 ref 기준
 		const Vector2 ref = c->GetReferenceResolution();
 		const UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 
 		const UIRect vr = m_viewportRT->GetWorldRectResolved(rootRect);
 
+		// ref ↔ ref 비교
 		return (p.x >= vr.x && p.x <= vr.x + vr.w &&
 			p.y >= vr.y && p.y <= vr.y + vr.h);
 	}

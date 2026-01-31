@@ -57,7 +57,7 @@ namespace engine
 		m_uiCB = ResourceManager::Get().GetOrCreateConstantBuffer("UIElement", sizeof(CbUIElement));
 
 		SystemManager::Get().GetRenderSystem().Register(this);
-	}
+    }
 
 	void UIImage::DrawUI() const
 	{
@@ -66,23 +66,25 @@ namespace engine
 
 		auto* rt = GetRectTransform();
 		if (!rt) return;
-		
+
 		auto& gd = GraphicsDevice::Get();
 		auto dc = gd.GetDeviceContext();
-
 		const D3D11_VIEWPORT vp = gd.GetViewport();
 
 		Canvas* c = GetCanvasInParent();
 		if (!c) return;
 
+		// ===== ref 기준 rect 계산 =====
 		const Vector2 ref = c->GetReferenceResolution();
-
-		UIRect rootRect = { 0.0f, 0.0f, ref.x, ref.y };
+		UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 		const UIRect rect = rt->GetWorldRectResolved(rootRect);
-		
+		if (rect.w <= 0.0f || rect.h <= 0.0f)
+			return;
+
 		const Vector2 scale = c->GetUIScale();
 		const Vector2 offset = c->GetUIOffset();
 
+		// ===== ref → pixel =====
 		const float pxX = offset.x + rect.x * scale.x;
 		const float pxY = offset.y + rect.y * scale.y;
 		const float pxW = rect.w * scale.x;
@@ -96,29 +98,42 @@ namespace engine
 
 		const float sx = (pxW / vp.Width) * 2.0f;
 		const float sy = (pxH / vp.Height) * 2.0f;
-		
 
-		if (rect.w <= 0.0f || rect.h <= 0.0f) return;
+		if (!m_texture || !m_vertexBuffer || !m_indexBuffer)
+			return;
 
-		if (!m_texture || !m_vertexBuffer || !m_indexBuffer) return;
+		// ===== clipRect (ref → pixel) : 단 한 번 =====
+		Vector4 clipPx = m_clipRect;
 
+		if (m_maskMode == MaskMode::Rect)
+		{
+			clipPx = Vector4(
+				offset.x + m_clipRect.x * scale.x,
+				offset.y + m_clipRect.y * scale.y,
+				offset.x + m_clipRect.z * scale.x,
+				offset.y + m_clipRect.w * scale.y
+			);
+		}
 
+		if (clipPx.z <= clipPx.x || clipPx.w <= clipPx.y)
+		{
+			clipPx = Vector4(0, 0, vp.Width, vp.Height);
+		}
+
+		// ===== IA =====
 		dc->IASetInputLayout(m_inputLayout->GetRawInputLayout());
-
-		// IA
 		{
 			UINT stride = m_vertexBuffer->GetBufferStride();
-			UINT offset = 0;
+			UINT offsetVB = 0;
 			ID3D11Buffer* vb = m_vertexBuffer->GetRawBuffer();
-			dc->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+			dc->IASetVertexBuffers(0, 1, &vb, &stride, &offsetVB);
 			dc->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
 			dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
 
-		// State
+		// ===== State =====
 		{
-			float blendFactor[4] = { 0, 0, 0, 0 };
-
+			float blendFactor[4] = { 0,0,0,0 };
 			if (m_useAlphaBlend && m_blend)
 				dc->OMSetBlendState(m_blend->GetBlendState().Get(), blendFactor, 0xffffffff);
 			else
@@ -130,7 +145,7 @@ namespace engine
 				dc->OMSetDepthStencilState(nullptr, 0);
 		}
 
-		// Texture/Sampler
+		// ===== Texture / Sampler =====
 		{
 			ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
 			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
@@ -140,70 +155,34 @@ namespace engine
 				dc->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, samp);
 		}
 
-		// Outline Pass
+		// ===== Outline Pass =====
 		if (m_outlineEnabled && m_outlineThickness > 0.0f)
 		{
-			// 1) Quad 크기 확장
-			const float pxW = rect.w * scale.x;
-			const float pxH = rect.h * scale.y;
-
-			float t = m_outlineThickness;
-
-			const float o_pxW = pxW + t * 2.0f;
-			const float o_pxH = pxH + t * 2.0f;
-
-			const float cx = pxX + pxW * 0.5f;
-			const float cy = pxY + pxH * 0.5f;
-
-			const float o_tx = (cx / vp.Width) * 2.0f - 1.0f;
-			const float o_ty = 1.0f - (cy / vp.Height) * 2.0f;
+			const float o_pxW = pxW + m_outlineThickness * 2.0f;
+			const float o_pxH = pxH + m_outlineThickness * 2.0f;
 
 			const float o_sx = (o_pxW / vp.Width) * 2.0f;
 			const float o_sy = (o_pxH / vp.Height) * 2.0f;
 
-			// 2) Outline 전용 CB
-			CbUIElement cbUI = {};
+			CbUIElement cbUI{};
 			cbUI.clip = DirectX::XMMatrixTranspose(
 				DirectX::XMMatrixScaling(o_sx, o_sy, 1.0f) *
-				DirectX::XMMatrixTranslation(o_tx, o_ty, 0.0f)
+				DirectX::XMMatrixTranslation(tx, ty, 0.0f)
 			);
 
-			float expandU = (o_pxW - pxW) / o_pxW * 0.5f;
-			float expandV = (o_pxH - pxH) / o_pxH * 0.5f;
-
-			Vector4 cr = m_clipRect;
-			if (cr.z <= cr.x || cr.w <= cr.y)
-				cr = Vector4(0, 0, vp.Width, vp.Height);
-
-			cbUI.color = Vector4(1, 1, 1, 1);          // PS에서 discard/outline만 사용
-			cbUI.uv = Vector4(
-				-expandU,
-				-expandV,
-				1.0f + expandU * 2.0f,
-				1.0f + expandV * 2.0f
-			);;
-
-			cbUI.clipRect = cr;
+			cbUI.color = Vector4(1, 1, 1, 1);
+			cbUI.uv = m_uv;
+			cbUI.clipRect = clipPx;
 			cbUI.maskMode = static_cast<uint32_t>(m_maskMode);
 			cbUI.mask0 = m_mask0;
 			cbUI.mask1 = m_mask1;
-
 			cbUI.outlineEnabled = 1.0f;
 			cbUI.outlineThickness = m_outlineThickness;
 			cbUI.outlineColor = m_outlineColor;
 
 			dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
-			dc->VSSetConstantBuffers(
-				static_cast<UINT>(ConstantBufferSlot::UIElement),
-				1,
-				m_uiCB->GetBuffer().GetAddressOf()
-			);
-
-			dc->PSSetConstantBuffers(
-				static_cast<UINT>(ConstantBufferSlot::UIElement),
-				1,
-				m_uiCB->GetBuffer().GetAddressOf()
-			);
+			dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
+			dc->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
 
 			dc->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
 			dc->PSSetShader(m_outlinePS->GetRawShader(), nullptr, 0);
@@ -211,7 +190,7 @@ namespace engine
 			dc->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
 		}
 
-		// Texture
+		// ===== Texture Pass =====
 		{
 			CbUIElement cbUI{};
 			cbUI.clip = DirectX::XMMatrixTranspose(
@@ -221,19 +200,10 @@ namespace engine
 
 			cbUI.color = m_color;
 			cbUI.uv = m_uv;
-
-			Vector4 cr = m_clipRect;
-			if (cr.z <= cr.x || cr.w <= cr.y)
-			{
-				cr = Vector4(0, 0, vp.Width, vp.Height);
-			}
-
-			cbUI.clipRect = cr;
+			cbUI.clipRect = clipPx;
 			cbUI.maskMode = static_cast<uint32_t>(m_maskMode);
-
 			cbUI.mask0 = m_mask0;
 			cbUI.mask1 = m_mask1;
-
 			cbUI.outlineEnabled = m_outlineEnabled;
 			cbUI.outlineThickness = m_outlineThickness;
 			cbUI.outlineColor = m_outlineColor;
@@ -248,7 +218,7 @@ namespace engine
 			dc->DrawIndexed(m_indexBuffer->GetIndexCount(), 0, 0);
 		}
 
-		// SRV unbind
+		// ===== SRV unbind =====
 		{
 			ID3D11ShaderResourceView* nullSRV = nullptr;
 			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &nullSRV);
@@ -300,6 +270,14 @@ namespace engine
 	const Vector4& UIImage::GetColor() const
 	{
 		return m_color;
+	}
+
+	void UIImage::SetMaskMode(MaskMode mode)
+	{
+		if (m_maskMode == mode) return;
+
+		m_maskMode = mode;
+		m_dirty = true;
 	}
 
 	void UIImage::SetOutline(bool enable, float thickness, const Vector4& color)
@@ -364,6 +342,16 @@ namespace engine
 
 		j["Color"] = m_color; 
 		j["AlphaBlend"] = m_useAlphaBlend;
+
+		j["ClipRect"] = m_clipRect;
+		j["MaskMode"] = (int)m_maskMode;
+		j["Mask0"] = m_mask0;
+		j["Mask1"] = m_mask1;
+
+		auto& gd = GraphicsDevice::Get();
+		const D3D11_VIEWPORT vp = gd.GetViewport();
+		j["ClipBaseViewportW"] = vp.Width;
+		j["ClipBaseViewportH"] = vp.Height;
 	}
 
 	void UIImage::Load(const json& j)
@@ -377,7 +365,38 @@ namespace engine
 
 		JsonGet(j, "Color", m_color);
 		JsonGet(j, "AlphaBlend", m_useAlphaBlend);
+		
+		JsonGet(j, "ClipRect", m_clipRect);
+
+		int mm = (int)MaskMode::None;
+		JsonGet(j, "MaskMode", mm);
+		m_maskMode = (MaskMode)mm;
+
+		JsonGet(j, "Mask0", m_mask0);
+		JsonGet(j, "Mask1", m_mask1);
+		
+		float baseW = 0.0f, baseH = 0.0f;
+		JsonGet(j, "ClipBaseViewportW", baseW);
+		JsonGet(j, "ClipBaseViewportH", baseH);
+
+		auto& gd = GraphicsDevice::Get();
+		const D3D11_VIEWPORT vp = gd.GetViewport();
+
+		if (baseW > 1e-3f && baseH > 1e-3f && vp.Width > 1e-3f && vp.Height > 1e-3f)
+		{
+			const float sx = vp.Width / baseW;
+			const float sy = vp.Height / baseH;
+
+			m_clipRect.x *= sx;
+			m_clipRect.z *= sx;
+			m_clipRect.y *= sy;
+			m_clipRect.w *= sy;
+		}
 		Refresh();
+
+		LOG_PRINT("UIImage Load done: mask={} clip=({},{},{},{})",
+			(int)m_maskMode, m_clipRect.x, m_clipRect.y, m_clipRect.z, m_clipRect.w);
+
 	}
 
 	void UIImage::Refresh()

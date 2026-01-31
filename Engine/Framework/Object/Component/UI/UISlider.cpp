@@ -308,6 +308,9 @@ namespace engine
 				rt->SetPivot({ 0.5f, 0.5f });
 				rt->SetAnchoredPosition({ 0.0f, 0.0f });
 				rt->SetSize(0.0f, 0.0f);
+
+				if (m_fillMode == FillMode::PixelMask)
+					m_fill->SetMaskMode(MaskMode::Rect);
 			}
 		}
 		else
@@ -439,9 +442,10 @@ namespace engine
 			RectTransform* fillRT = m_fill->GetGameObject()->GetComponent<RectTransform>();
 			if (!rootRT || !fillRT) return;
 
-			// (화면 픽셀 좌표) 루트 Rect 계산
-			const UIRect rootRect = GetViewportRootRect();
-			const UIRect barRect = rootRT->GetWorldRectResolved(rootRect);
+			Canvas* c = GetCanvasInParent();
+			if (!c) return;
+
+			const UIRect refRoot = GetRefRootRect(c);
 
 			if (m_fillMode == FillMode::AnchorResize)
 			{
@@ -534,11 +538,13 @@ namespace engine
 					if (cutRef.w <= 1e-3f || cutRef.h <= 1e-3f)
 						return;
 
-					// 5) ref -> pixel clipRect
-					const Vector4 clipPx = RefRectToPixelClip(c, cutRef);
-
 					m_fill->SetMaskMode(MaskMode::Rect);
-					m_fill->SetClipRect(clipPx);
+					m_fill->SetClipRect(Vector4(
+						cutRef.x,
+						cutRef.y,
+						cutRef.x + cutRef.w,
+						cutRef.y + cutRef.h
+					));
 
 				}
 			}
