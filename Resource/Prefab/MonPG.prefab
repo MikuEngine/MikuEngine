@@ -5,7 +5,7 @@
             "ID": 0,
             "ParentID": -1,
             "Name": "MonPG",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
