@@ -118,6 +118,25 @@ namespace engine
 			};
 		}
 
+		static UIRect GetRefRootRect(const Canvas* c)
+		{
+			const Vector2 ref = c->GetReferenceResolution();
+			return UIRect{ 0.0f, 0.0f, ref.x, ref.y };
+		}
+
+		// ref좌표(UIRect) -> 픽셀 clipRect(x0,y0,x1,y1)
+		static Vector4 RefRectToPixelClip(const Canvas* c, const UIRect& r)
+		{
+			const Vector2 s = c->GetUIScale();
+			const Vector2 o = c->GetUIOffset();
+
+			const float x0 = o.x + r.x * s.x;
+			const float y0 = o.y + r.y * s.y;
+			const float x1 = o.x + (r.x + r.w) * s.x;
+			const float y1 = o.y + (r.y + r.h) * s.y;
+
+			return Vector4(x0, y0, x1, y1);
+		}
 
 	}
 
@@ -140,7 +159,6 @@ namespace engine
 		if (m_fillMode == FillMode::PixelMask)
 		{
 			UpdateVisuals();
-			m_dirty = false;
 			return;
 		}
 
@@ -151,27 +169,34 @@ namespace engine
 		}
 	}
 
-	bool UISlider::HitTestPoint(const Vector2& p) const
+	bool UISlider::HitTestPoint(const Vector2& screenP) const
 	{
-		const Canvas* c = GetCanvasInParent();
-
-		if (UIElement::HitTestPoint(p))
+		if (UIElement::HitTestPoint(screenP))
 			return true;
 
-		if (m_handle)
-		{
-			if (RectTransform* hrt = m_handle->GetRectTransform())
-			{
-				const UIRect rootRect = GetViewportRootRect();
-				const UIRect hr = hrt->GetWorldRectResolved(rootRect);
+		if (!m_handle) return false;
 
-				if (PointInRect(p, hr))
-					return true;
-			}
-		}
+		const Canvas* c = GetCanvasInParent();
+		if (!c) return false;
 
-		return false;
+		const Vector2 s = c->GetUIScale();
+		const Vector2 o = c->GetUIOffset();
+
+		// screen -> ref
+		Vector2 p;
+		p.x = (screenP.x - o.x) / s.x;
+		p.y = (screenP.y - o.y) / s.y;
+
+		RectTransform* hrt = m_handle->GetRectTransform();
+		if (!hrt) return false;
+
+		// handle rect는 ref root로 resolved
+		const UIRect refRoot = GetRefRootRect(c);
+		const UIRect hr = hrt->GetWorldRectResolved(refRoot);
+
+		return PointInRect(p, hr);
 	}
+
 
 	float UISlider::GetValue() const
 	{
@@ -455,52 +480,69 @@ namespace engine
 
 			if (m_fillMode == FillMode::PixelMask)
 			{
-				if (v <= 0.0f)
-				{
-					m_fill->SetMaskMode(MaskMode::None);
+				// 0) Canvas 먼저 확보 (clip 변환에 필요)
+				Canvas* c = GetCanvasInParent();
+				if (!c) return;
 
-					Vector4 c = m_fillColor;
-					c.w = 0.0f;
-					m_fill->SetColor(c);
-				}
-				else
-				{
-					m_fill->SetColor(m_fillColor);
-				}
-
+				// 1) Fill은 전체를 덮게 유지 (ref 단위)
 				fillRT->SetPivot({ 0.5f, 0.5f });
 				fillRT->SetAnchorMin({ 0.0f, 0.0f });
 				fillRT->SetAnchorMax({ 1.0f, 1.0f });
 				fillRT->SetAnchoredPosition({ 0.0f, 0.0f });
 				fillRT->SetSize(0.0f, 0.0f);
 
-				float x0 = barRect.x;
-				float y0 = barRect.y;
-				float x1 = barRect.x + barRect.w;
-				float y1 = barRect.y + barRect.h;
+				// 2) 여기서부터는 "Fill 자신"의 ref resolved rect 기준으로 자르는 게 안전합니다.
+				const UIRect refRoot = GetRefRootRect(c);
+				const UIRect fillRectRef = fillRT->GetWorldRectResolved(refRoot);
 
-				switch (m_direction)
+				// 레이아웃이 아직 확정 안 됐거나 값이 이상하면 이번 프레임은 스킵 (다음 프레임에 Update()가 다시 들어옵니다)
+				if (fillRectRef.w <= 1e-3f || fillRectRef.h <= 1e-3f)
 				{
-				case Direction::LeftToRight:
-					x1 = barRect.x + barRect.w * v;
-					break;
-
-				case Direction::RightToLeft:
-					x0 = barRect.x + barRect.w * (1.0f - v);
-					break;
-
-				case Direction::TopToBottom:
-					y1 = barRect.y + barRect.h * v;
-					break;
-
-				case Direction::BottomToTop:
-					y0 = barRect.y + barRect.h * (1.0f - v);
-					break;
+					m_fill->SetMaskMode(MaskMode::None);
 				}
 
-				m_fill->SetMaskMode(MaskMode::Rect);
-				m_fill->SetClipRect(Vector4(x0, y0, x1, y1));
+				else if (v <= 0.0f)
+				{
+					m_fill->SetMaskMode(MaskMode::None);
+					Vector4 cc = m_fillColor; cc.w = 0.0f;
+					m_fill->SetColor(cc);
+				}
+				else
+				{
+					m_fill->SetColor(m_fillColor);
+
+					// 3) v에 따라 ref영역에서 잘릴 구간을 만든다 (fillRectRef 기준)
+					float rx0 = fillRectRef.x;
+					float ry0 = fillRectRef.y;
+					float rx1 = fillRectRef.x + fillRectRef.w;
+					float ry1 = fillRectRef.y + fillRectRef.h;
+
+					switch (m_direction)
+					{
+					case Direction::LeftToRight:  rx1 = fillRectRef.x + fillRectRef.w * v; break;
+					case Direction::RightToLeft:  rx0 = fillRectRef.x + fillRectRef.w * (1.0f - v); break;
+					case Direction::TopToBottom:  ry1 = fillRectRef.y + fillRectRef.h * v; break;
+					case Direction::BottomToTop:  ry0 = fillRectRef.y + fillRectRef.h * (1.0f - v); break;
+					}
+
+					// 4) 폭/높이 역전/0 방어
+					UIRect cutRef{ rx0, ry0, (rx1 - rx0), (ry1 - ry0) };
+
+					if (cutRef.w < 0.0f) { cutRef.x += cutRef.w; cutRef.w = -cutRef.w; }
+					if (cutRef.h < 0.0f) { cutRef.y += cutRef.h; cutRef.h = -cutRef.h; }
+
+					if (cutRef.w <= 1e-3f || cutRef.h <= 1e-3f)
+						return;
+
+					// 5) ref -> pixel clipRect
+					const Vector4 clipPx = RefRectToPixelClip(c, cutRef);
+
+					m_fill->SetMaskMode(MaskMode::Rect);
+					m_fill->SetClipRect(clipPx);
+
+				}
 			}
+
 		}
 
 		// Handle 처리
@@ -516,10 +558,14 @@ namespace engine
 		RectTransform* rootRT = GetRectTransform();
 		if (!rootRT) return;
 
-		const UIRect rootRect = GetViewportRootRect();
+		Canvas* c = GetCanvasInParent();
+		if (!c) return;
 
-		const UIRect barRect2 = rootRT->GetWorldRectResolved(rootRect);
-		const UIRect handleRect2 = handleRT->GetWorldRectResolved(rootRect);
+		const UIRect refRoot = GetRefRootRect(c);
+
+		const UIRect barRect2 = rootRT->GetWorldRectResolved(refRoot);
+		const UIRect handleRect2 = handleRT->GetWorldRectResolved(refRoot);
+
 
 		float min01 = 0.0f, max01 = 1.0f;
 		ComputeHandleRange01(barRect2, handleRect2, m_direction, min01, max01);
@@ -701,7 +747,8 @@ namespace engine
 		// screen -> ref
 		const Vector2 mousePos = ScreenToRef(screenMousePos, c);
 
-		const UIRect barRect = rt->GetWorldRect(); // ref 좌표
+		const UIRect refRoot = GetRefRootRect(c);
+		const UIRect barRect = rt->GetWorldRectResolved(refRoot);
 
 		float min01 = 0.0f, max01 = 1.0f;
 
@@ -709,7 +756,7 @@ namespace engine
 		{
 			if (RectTransform* hrt = m_handle->GetRectTransform())
 			{
-				const UIRect handleRect = hrt->GetWorldRect();
+				const UIRect handleRect = hrt->GetWorldRectResolved(refRoot);
 				ComputeHandleRange01(barRect, handleRect, m_direction, min01, max01);
 			}
 		}
@@ -733,6 +780,13 @@ namespace engine
 		}
 
 		const float value01 = Pos01ToValue01(Clamp01(t), min01, max01);
+		LOG_PRINT("UISlider mouseRef=({}, {}) barRef=({}, {}, {}, {}) minMax=({}, {}) t={} value={}",
+			mousePos.x, mousePos.y,
+			barRect.x, barRect.y, barRect.w, barRect.h,
+			min01, max01,
+			t, value01);
+
+
 		SetValue(value01, true);
 	}
 
@@ -749,7 +803,9 @@ namespace engine
 		RectTransform* rt = m_handle->GetRectTransform();
 		if (!rt) return false;
 
-		const UIRect r = rt->GetWorldRect();
+		const UIRect refRoot = GetRefRootRect(c);
+		const UIRect r = rt->GetWorldRectResolved(refRoot);
+
 
 		return
 			mousePos.x >= r.x &&
