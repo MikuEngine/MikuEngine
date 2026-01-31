@@ -104,6 +104,21 @@ namespace engine
 			r.h = vp.Height;
 			return r;
 		}
+
+		static Vector2 ScreenToRef(const Vector2& screenPos, const Canvas* c)
+		{
+			if (!c) return screenPos;
+
+			const Vector2 s = c->GetUIScale();
+			const Vector2 o = c->GetUIOffset();
+
+			return {
+				(screenPos.x - o.x) / s.x,
+				(screenPos.y - o.y) / s.y
+			};
+		}
+
+
 	}
 
 	void UISlider::Initialize()
@@ -675,13 +690,18 @@ namespace engine
 		UpdateVisuals();
 	}
 
-	void UISlider::SetValueFromMouse(const Vector2& mousePos)
+	void UISlider::SetValueFromMouse(const Vector2& screenMousePos)
 	{
 		RectTransform* rt = GetRectTransform();
 		if (!rt) return;
 
-		const UIRect rootRect = GetViewportRootRect();
-		const UIRect barRect = rt->GetWorldRectResolved(rootRect);
+		Canvas* c = GetCanvasInParent();
+		if (!c) return;
+
+		// screen -> ref
+		const Vector2 mousePos = ScreenToRef(screenMousePos, c);
+
+		const UIRect barRect = rt->GetWorldRect(); // ref 좌표
 
 		float min01 = 0.0f, max01 = 1.0f;
 
@@ -689,11 +709,7 @@ namespace engine
 		{
 			if (RectTransform* hrt = m_handle->GetRectTransform())
 			{
-				Vector2 hs = hrt->GetSize();
-				if (hs.x <= 0.0f && hs.y <= 0.0f)
-					hrt->SetSize(100.0f, 100.0f);
-
-				const UIRect handleRect = hrt->GetWorldRectResolved(rootRect);
+				const UIRect handleRect = hrt->GetWorldRect();
 				ComputeHandleRange01(barRect, handleRect, m_direction, min01, max01);
 			}
 		}
@@ -703,16 +719,16 @@ namespace engine
 		switch (m_direction)
 		{
 		case Direction::LeftToRight:
-			t = (barRect.w > 1e-6f) ? (mousePos.x - barRect.x) / barRect.w : 0.0f;
+			t = (barRect.w > 0.0f) ? (mousePos.x - barRect.x) / barRect.w : 0.0f;
 			break;
 		case Direction::RightToLeft:
-			t = (barRect.w > 1e-6f) ? 1.0f - (mousePos.x - barRect.x) / barRect.w : 0.0f;
+			t = (barRect.w > 0.0f) ? 1.0f - (mousePos.x - barRect.x) / barRect.w : 0.0f;
 			break;
 		case Direction::BottomToTop:
-			t = (barRect.h > 1e-6f) ? (mousePos.y - barRect.y) / barRect.h : 0.0f;
+			t = (barRect.h > 0.0f) ? (mousePos.y - barRect.y) / barRect.h : 0.0f;
 			break;
 		case Direction::TopToBottom:
-			t = (barRect.h > 1e-6f) ? 1.0f - (mousePos.y - barRect.y) / barRect.h : 0.0f;
+			t = (barRect.h > 0.0f) ? 1.0f - (mousePos.y - barRect.y) / barRect.h : 0.0f;
 			break;
 		}
 
@@ -720,16 +736,25 @@ namespace engine
 		SetValue(value01, true);
 	}
 
-	bool UISlider::IsMouseOnHandle(const Vector2& mousePos) const
+
+	bool UISlider::IsMouseOnHandle(const Vector2& screenMousePos) const
 	{
 		if (!m_handle) return false;
 
-		RectTransform* rtHandle = m_handle->GetRectTransform();
-		if (!rtHandle) return false;
+		Canvas* c = GetCanvasInParent();
+		if (!c) return false;
 
-		const UIRect rootRect = GetViewportRootRect();
-		const UIRect hr = rtHandle->GetWorldRectResolved(rootRect);
+		const Vector2 mousePos = ScreenToRef(screenMousePos, c);
 
-		return PointInRect(mousePos, hr);
+		RectTransform* rt = m_handle->GetRectTransform();
+		if (!rt) return false;
+
+		const UIRect r = rt->GetWorldRect();
+
+		return
+			mousePos.x >= r.x &&
+			mousePos.y >= r.y &&
+			mousePos.x <= r.x + r.w &&
+			mousePos.y <= r.y + r.h;
 	}
 }
