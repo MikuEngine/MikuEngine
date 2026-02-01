@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "StateTextRenderer.h"
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
@@ -376,12 +376,28 @@ namespace game
 
     void StateTextRenderer::CleanupDestroyedObjects()
     {
-        // Ptr의 유효성 검사로 파괴된 오브젝트 자동 제거
+        // 파괴된 컨트롤러의 텍스트 UI도 함께 제거
         m_trackedObjects.erase(
             std::remove_if(m_trackedObjects.begin(), m_trackedObjects.end(),
-                [](const TrackedObject& tracked) {
-                    // Ptr가 무효화되면 자동으로 false 반환
-                    return !tracked.controller || !tracked.textObject;
+                [](TrackedObject& tracked) {
+                    // 컨트롤러가 파괴되었으면 텍스트 오브젝트들도 Destroy
+                    if (!tracked.controller)
+                    {
+                        if (tracked.textObject)
+                        {
+                            tracked.textObject->Destroy();
+                        }
+                        if (tracked.hpTextObject)
+                        {
+                            tracked.hpTextObject->Destroy();
+                        }
+                        if (tracked.dashTextObject)
+                        {
+                            tracked.dashTextObject->Destroy();
+                        }
+                        return true;
+                    }
+                    return false;
                 }),
             m_trackedObjects.end()
         );

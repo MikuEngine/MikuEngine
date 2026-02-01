@@ -7,6 +7,7 @@
 #include "Script/Boss/BossPattern/Components/BossProjectile.h"
 #include "Script/ExecutionSlowScript.h"
 #include "Script/ExecutionEffectScript.h"
+#include "Script/CameraEffectScript.h"
 
 #include <Core/System/Input.h>
 #include <Core/System/MyTime.h>
@@ -64,6 +65,12 @@ namespace game
         if (!m_slowScript)
         {
             LOG_PRINT("[ExecutionIndicatorManager] WARNING: ExecutionSlowScript not found on this object!");
+        }
+        
+        // 카메라 이펙트 스크립트 찾기 (MainCamera에서)
+        if (auto* camGO = engine::GameObject::Find("MainCamera"))
+        {
+            m_cameraEffectScript = camGO->GetComponent<CameraEffectScript>();
         }
     }
 
@@ -720,6 +727,12 @@ namespace game
             {
                 m_player->GetTransform()->SetLocalPosition(monsterPos);
             }
+            
+            // 카메라 이펙트 시작 (텔레포트 직후)
+            if (m_cameraEffectScript)
+            {
+                m_cameraEffectScript->StartZoomEffect(m_cameraEffectScript->GetDefaultDuration());
+            }
         }
 
         // ─────────────────────────────────────────────
@@ -779,6 +792,7 @@ namespace game
         ImGui::Text("Hovered Monster: %s", m_hoveredGameObject ? "Yes" : "No");
         ImGui::Text("Executing Monster: %s", m_executingGameObject ? "Yes" : "No");
         ImGui::Text("Slow Script Found: %s", m_slowScript ? "Yes" : "No");
+        ImGui::Text("Camera Effect Script Found: %s", m_cameraEffectScript ? "Yes" : "No");
         ImGui::Text("Player Found: %s", m_player ? "Yes" : "No");
         ImGui::Text("Line Instance: %s", m_lineInstance ? "Yes" : "No");
         

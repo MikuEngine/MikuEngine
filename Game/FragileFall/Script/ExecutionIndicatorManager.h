@@ -15,6 +15,7 @@ namespace game
     class MonsterScript;
     class PlayerControllerScript;
     class ExecutionSlowScript;
+    class CameraEffectScript;
 
     // ═══════════════════════════════════════════════════════════════
     // ExecutionIndicatorManager - Fragile 몬스터 처형 인디케이터 관리
@@ -96,6 +97,11 @@ namespace game
         // 슬로우 효과 스크립트 참조
         // ─────────────────────────────────────────────
         engine::Ptr<ExecutionSlowScript> m_slowScript;
+        
+        // ─────────────────────────────────────────────
+        // 카메라 이펙트 스크립트 참조
+        // ─────────────────────────────────────────────
+        engine::Ptr<CameraEffectScript> m_cameraEffectScript;
 
     public:
         void Awake() override;
