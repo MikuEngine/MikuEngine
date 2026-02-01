@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -36,6 +36,9 @@ namespace game
         bool m_useAlternateCursor = false;
         engine::Vector2 m_cursorSize{ 32.0f, 32.0f };
         engine::Vector2 m_cursorPivot{ 0.5f, 0.5f };
+
+        // 월드 좌표 계산 설정
+        float m_targetPlaneY = 2.2f;  // 레이캐스트 대상 평면의 Y 높이 (총알 발사 높이)
 
     public:
         void Start() override;

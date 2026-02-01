@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "AimPointer.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
@@ -216,21 +216,21 @@ namespace game
         engine::Vector3 rayDir = rayEnd - rayOrigin;
         rayDir.Normalize();
 
-        // Y=0 평면(XZ 바닥면)과의 교점 계산
+        // Y=m_targetPlaneY 평면과의 교점 계산
         // 레이: P = rayOrigin + t * rayDir
-        // 평면: Y = 0
-        // rayOrigin.y + t * rayDir.y = 0
-        // t = -rayOrigin.y / rayDir.y
+        // 평면: Y = m_targetPlaneY
+        // rayOrigin.y + t * rayDir.y = m_targetPlaneY
+        // t = (m_targetPlaneY - rayOrigin.y) / rayDir.y
 
         if (std::abs(rayDir.y) > 0.0001f)
         {
-            float t = -rayOrigin.y / rayDir.y;
+            float t = (m_targetPlaneY - rayOrigin.y) / rayDir.y;
 
             // t > 0 이면 카메라 앞쪽에 교점이 있음
             if (t > 0.0f)
             {
                 m_worldPosition = rayOrigin + rayDir * t;
-                m_worldPosition.y = 0.0f; // 정확히 Y=0으로 설정
+                m_worldPosition.y = m_targetPlaneY; // 정확히 목표 Y로 설정
             }
             else
             {
@@ -240,7 +240,7 @@ namespace game
         }
         else
         {
-            // 레이가 Y=0 평면과 평행한 경우 (거의 발생하지 않음)
+            // 레이가 목표 평면과 평행한 경우 (거의 발생하지 않음)
             m_worldPosition = engine::Vector3::Zero;
         }
     }
@@ -257,6 +257,14 @@ namespace game
     {      
         ImGui::Text("World Position: (%.2f, %.2f, %.2f)",
             m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
+
+        ImGui::Separator();
+        ImGui::Text("Raycast Settings");
+        ImGui::DragFloat("Target Plane Y", &m_targetPlaneY, 0.1f, -100.0f, 100.0f);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("The Y height of the plane to raycast against.\nSet this to match your bullet firing height.");
+        }
 
         ImGui::Separator();
         ImGui::Text("Canvas Settings");
@@ -301,6 +309,7 @@ namespace game
         j["UseAlternateCursor"] = m_useAlternateCursor;
         j["CursorSize"] = m_cursorSize;
         j["CursorPivot"] = m_cursorPivot;
+        j["TargetPlaneY"] = m_targetPlaneY;
     }
 
     void AimPointer::Load(const engine::json& j)
@@ -312,6 +321,7 @@ namespace game
         engine::JsonGet(j, "UseAlternateCursor", m_useAlternateCursor);
         engine::JsonGet(j, "CursorSize", m_cursorSize);
         engine::JsonGet(j, "CursorPivot", m_cursorPivot);
+        engine::JsonGet(j, "TargetPlaneY", m_targetPlaneY);
     }
 }
 

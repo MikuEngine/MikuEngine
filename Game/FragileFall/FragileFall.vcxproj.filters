@@ -52,6 +52,9 @@
     <ClCompile Include="Script\ExecutionSlowScript.cpp" />
     <ClCompile Include="Script\ExecutionEffectScript.cpp" />
     <ClCompile Include="Script\CameraEffectScript.cpp" />
+    <ClCompile Include="Script\AimPointerMeshScript.cpp" />
+    <ClCompile Include="Script\PlayerAimMeshController.cpp" />
+    <ClCompile Include="Script\OrbitScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -109,5 +112,8 @@
     <ClInclude Include="Script\ExecutionSlowScript.h" />
     <ClInclude Include="Script\ExecutionEffectScript.h" />
     <ClInclude Include="Script\CameraEffectScript.h" />
+    <ClInclude Include="Script\AimPointerMeshScript.h" />
+    <ClInclude Include="Script\PlayerAimMeshController.h" />
+    <ClInclude Include="Script\OrbitScript.h" />
   </ItemGroup>
 </Project>

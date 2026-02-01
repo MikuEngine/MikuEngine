@@ -160,6 +160,7 @@
     <ClCompile Include="Manager\LoadingScreenDrawer.cpp" />
     <ClCompile Include="Manager\TimeScaler.cpp" />
     <ClCompile Include="Script\AimPointer.cpp" />
+    <ClCompile Include="Script\AimPointerMeshScript.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\BossPatternBase.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\BossPatternManager.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossBullet.cpp" />
@@ -182,7 +183,9 @@
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedType.cpp" />
+    <ClCompile Include="Script\OrbitScript.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
+    <ClCompile Include="Script\PlayerAimMeshController.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
@@ -213,6 +216,7 @@
     <ClInclude Include="Manager\LoadingScreenDrawer.h" />
     <ClInclude Include="Manager\TimeScaler.h" />
     <ClInclude Include="Script\AimPointer.h" />
+    <ClInclude Include="Script\AimPointerMeshScript.h" />
     <ClInclude Include="Script\Boss\BossPattern\BossPatternBase.h" />
     <ClInclude Include="Script\Boss\BossPattern\BossPatternManager.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossBullet.h" />
@@ -236,7 +240,9 @@
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />
     <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedType.h" />
+    <ClInclude Include="Script\OrbitScript.h" />
     <ClInclude Include="Script\PathfindTest.h" />
+    <ClInclude Include="Script\PlayerAimMeshController.h" />
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />
     <ClInclude Include="Script\Scene\SceneController_Main.h" />
