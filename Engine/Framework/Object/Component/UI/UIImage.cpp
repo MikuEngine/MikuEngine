@@ -158,6 +158,11 @@ namespace engine
 		// ===== Outline Pass =====
 		if (m_outlineEnabled && m_outlineThickness > 0.0f)
 		{
+			const float t = m_outlineThickness;
+
+			const float expandU = (t / pxW); // px 기준 -> uv 비율
+			const float expandV = (t / pxH);
+
 			const float o_pxW = pxW + m_outlineThickness * 2.0f;
 			const float o_pxH = pxH + m_outlineThickness * 2.0f;
 
@@ -171,7 +176,13 @@ namespace engine
 			);
 
 			cbUI.color = Vector4(1, 1, 1, 1);
-			cbUI.uv = m_uv;
+			cbUI.uv = Vector4(
+				m_uv.x - expandU * m_uv.z,                 // uOffset'
+				m_uv.y - expandV * m_uv.w,                 // vOffset'
+				m_uv.z * (1.0f + expandU * 2.0f),          // uScale'
+				m_uv.w * (1.0f + expandV * 2.0f)           // vScale'
+			);
+
 			cbUI.clipRect = clipPx;
 			cbUI.maskMode = static_cast<uint32_t>(m_maskMode);
 			cbUI.mask0 = m_mask0;
