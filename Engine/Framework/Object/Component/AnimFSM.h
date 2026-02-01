@@ -61,6 +61,12 @@ namespace engine
         LogicFSM* m_logicFSM = nullptr;
         
         // ─────────────────────────────────────────────
+        // 외부 LogicFSM 참조 설정
+        // 빈 문자열이면 같은 GameObject에서 찾음
+        // ─────────────────────────────────────────────
+        std::string m_logicFSMObjectName;
+        
+        // ─────────────────────────────────────────────
         // 애니메이션 상태 맵 (통합)
         // ─────────────────────────────────────────────
         std::unordered_map<std::string, AnimState> m_states;

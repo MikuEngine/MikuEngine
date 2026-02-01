@@ -2,17 +2,21 @@
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
+#include <functional>
+#include <vector>
 
 namespace engine
 {
     class Rigidbody;
-    class SkeletalAnimator;
 }
 
 namespace game
 {
     class AimPointer;
     class BulletFactory;
+    
+    // 발사 이벤트 콜백 타입
+    using FireCallback = std::function<void()>;
 
     // ═══════════════════════════════════════════════════════════════
     // PlayerControllerScript - Dynamic Rigidbody + 회전 제약 슈팅 플레이어
@@ -47,7 +51,6 @@ namespace game
         // 컴포넌트 참조
         // ─────────────────────────────────────────────
         engine::Rigidbody* m_rigidbody = nullptr;
-        engine::SkeletalAnimator* m_skeletalAnimator = nullptr;
         AimPointer* m_aimPointer = nullptr;
         BulletFactory* m_bulletFactory = nullptr;
 
@@ -95,6 +98,17 @@ namespace game
         float m_fireRate = 0.2f;         // 발사 간격 (초)
         float m_bulletSpeed = 1.0f;     // 총알 속도
         float m_bulletLifetime = 3.0f;   // 총알 수명 (초)
+        
+        // ─────────────────────────────────────────────
+        // 총알 발사 위치 오프셋
+        // ─────────────────────────────────────────────
+        float m_bulletStartOffsetY = 2.2f;        // Y축 발사 높이
+        float m_bulletStartOffsetForward = 1.5f;  // 발사 방향으로의 오프셋 (앞으로)
+        
+        // ─────────────────────────────────────────────
+        // 발사 이벤트 콜백
+        // ─────────────────────────────────────────────
+        std::vector<FireCallback> m_fireCallbacks;
 
         // ─────────────────────────────────────────────
         // 처형 시스템 설정
@@ -105,19 +119,6 @@ namespace game
         // 참조 설정
         // ─────────────────────────────────────────────
         std::string m_aimPointerObjectName = "AimPointer";  // 씬에서 찾을 AimPointer 오브젝트 이름
-
-        // ─────────────────────────────────────────────
-        // 기타 설정
-        // ─────────────────────────────────────────────
-        bool m_enableUpperBodyAim = true;
-
-        // ─────────────────────────────────────────────
-        // 애니메이션 설정 (Initialize에서 SkeletalAnimator에 등록할 애니메이션 이름)
-        // ─────────────────────────────────────────────
-        std::string m_animName_Idle = "Idle";
-        std::string m_animName_WalkForward = "WalkForward";
-        std::string m_animName_WalkBackward = "WalkBackward";
-        std::string m_animName_Fire = "Fire";  // 발사 애니메이션 (현재 Punch 애니메이션)
 
         // ─────────────────────────────────────────────
         // 충돌 상태 추적 (PhysX 콜백 기반)
@@ -187,8 +188,6 @@ namespace game
         // 초기화
         // ─────────────────────────────────────────────
         void InitializeFSM();
-        void InitializeAnimFSM();  // AnimFSM 상태 매핑 등록
-        void InitializeAnimations();  // SkeletalAnimator에 애니메이션 등록
 
         // ─────────────────────────────────────────────
         // 입력 유틸리티
@@ -215,15 +214,9 @@ namespace game
         // ─────────────────────────────────────────────
         bool IsMovingIntoCollision(const engine::Vector3& moveDirection) const;
         engine::Vector3 RemoveCollisionComponent(const engine::Vector3& velocity) const;
-                
-        // ─────────────────────────────────────────────
-        // 애니메이션 제어
-        // ─────────────────────────────────────────────
-        void UpdateAnimation();             
-        std::string GetAnimationState() const;
         
         // ─────────────────────────────────────────────
-        // 내가 직접 짜집기한 에임 추적, 회전, Forward-Back 스위칭 유틸리티
+        // 에임 추적, 회전, Forward-Back 스위칭 유틸리티
         // ─────────────────────────────────────────────
             
         engine::Vector3 m_inputMoveDir = engine::Vector3(0.0f, 0.0f, 0.0f);
@@ -265,6 +258,13 @@ namespace game
         // ─────────────────────────────────────────────
         int GetMaxHp() const { return m_PlayerMaxHP; }
         int GetCurrentHp() const { return m_PlayerCurrentHP; }
+
+        // ─────────────────────────────────────────────
+        // 발사 시스템 접근자
+        // ─────────────────────────────────────────────
+        float GetFireRate() const { return m_fireRate; }
+        void RegisterFireCallback(const FireCallback& callback);
+        void UnregisterFireCallback(const FireCallback& callback);
 
         // 처형 시작 (ExecutionIndicatorManager에서 호출)
         void StartExecution(engine::GameObject* targetMonster);

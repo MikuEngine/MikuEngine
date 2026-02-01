@@ -11,7 +11,6 @@
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
 #include <Framework/Object/Component/Collider.h>
-#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 #include <Framework/System/SystemManager.h>
@@ -40,26 +39,11 @@ namespace game
 		// ═══════════════════════════════════════════════════════════════
 		SetupDynamicRigidbody();
 
-		// 애니메이션 초기화 (SkeletalAnimator에 애니메이션 등록)
-		InitializeAnimations();
-
 		// LogicFSM 초기화 (한 번만)
 		if (!m_fsmInitialized && m_logicFSM)
 		{
 			InitializeFSM();
 			m_fsmInitialized = true;
-		}
-
-		// AnimFSM 초기화 (상태/애니메이션 매핑 등록)
-		if (m_animFSM)
-		{
-			InitializeAnimFSM();
-
-			// Procedural Aim 활성화
-			if (m_enableUpperBodyAim)
-			{
-				m_animFSM->SetProceduralAimEnabled(true);
-			}
 		}
 	}
 
@@ -211,9 +195,7 @@ namespace game
 		if (!GetGameObject()) return;
 
 		m_rigidbody = GetGameObject()->GetComponent<engine::Rigidbody>();
-		m_skeletalAnimator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
 
-		
 		// ─────────────────────────────────────────────
 		// AimPointer: 마우스 조준 방향 계산용
 		// ─────────────────────────────────────────────
@@ -439,9 +421,6 @@ namespace game
 
 		// 발사 로직 처리 (쿨다운, 총알 생성 등)
 		if (CanAttack())  HandleShooting(deltaTime);
-
-		// 애니메이션 상태 갱신
-		UpdateAnimation();
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -669,52 +648,6 @@ namespace game
 		AddFSMTransition("Execution", "Idle", "ExecutionComplete", Trigger());
 	}
 
-	void PlayerControllerScript::InitializeAnimFSM()
-	{
-		if (!m_animFSM) return;
-
-		// 기존 상태 클리어
-		m_animFSM->ClearStates();
-
-		// ─────────────────────────────────────────────
-		// 상/하체 분리 애니메이션 상태 등록
-		// AddSplitState(상태명, 하체애니, 루프, 상체애니, 루프, 블렌드시작, 블렌드시간)
-		// 블렌드시간 0으로 하면 즉시 전환됨 (루프 없는 경우 등)
-		// 
-		// animState로 전환할 상태:
-		//   - Idle, WalkForward, WalkBackward
-		//   - IdleShoot, WalkForwardShoot, WalkBackwardShoot
-		// ─────────────────────────────────────────────
-
-		// 비발사 상태: 하체 애니만 재생 (상체 애니메이션은 별도 호출)
-		m_animFSM->AddSplitState("Idle", m_animName_Idle, true, "", false, 0.0f, 0.1f);
-		m_animFSM->AddSplitState("WalkForward", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
-		m_animFSM->AddSplitState("WalkBackward", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
-
-		// 발사 상태: 하체 애니만 재생 (Fire는 별도 Fire 애니메이션 호출)
-		// 상체 애니는 0으로 Fire를 PlayUpperBodyAnimation으로 재생함
-		m_animFSM->AddSplitState("IdleShoot", m_animName_Idle, true, "", false, 0.0f, 0.1f);
-		m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
-		m_animFSM->AddSplitState("WalkBackwardShoot", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
-	}
-
-	void PlayerControllerScript::InitializeAnimations()
-	{
-		if (!m_skeletalAnimator) return;
-
-		// ─────────────────────────────────────────────
-		// SkeletalAnimator에 애니메이션 등록
-		// 필요한 애니:
-		//   1. Idle: 대기 애니메이션
-		//   2. WalkForward: 전진 애니메이션
-		//   3. WalkBackward: 후진 애니메이션
-		//   4. Fire: 발사 애니메이션 (상체)
-		// ─────────────────────────────────────────────
-
-		// 현재 애니메이션은 에디터에서 미리 등록됨
-		// 런타임에서 필요 시 여기서 로드 가능
-		// 예시: m_skeletalAnimator->LoadAnimation(m_animName_Idle, "path/to/idle.anim");
-	}
 
 	// ═══════════════════════════════════════════════════════════════
 	// 입력 유틸리티
@@ -888,6 +821,14 @@ namespace game
 				engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
 				engine::Vector3 direction = m_aimPointer->GetDirectionFrom(playerPos);
 
+				// ─────────────────────────────────────────────
+				// 총알 발사 위치 계산
+				// - Y: 고정 높이 (m_bulletStartOffsetY)
+				// - XZ: 플레이어 위치 + 발사 방향 × 오프셋
+				// ─────────────────────────────────────────────
+				engine::Vector3 bulletStartPos = playerPos + direction * m_bulletStartOffsetForward;
+				bulletStartPos.y = m_bulletStartOffsetY;
+
 				// BulletParams 설정
 				BulletParams params;
 				params.type = BulletType::BulletPlayer;
@@ -895,12 +836,12 @@ namespace game
 				params.lifetime = m_bulletLifetime;
 				params.damage = 10;  // TODO: 데미지 변수화 필요
 
-				m_bulletFactory->Fire(playerPos, direction, params);
+				m_bulletFactory->Fire(bulletStartPos, direction, params);
 
-				// 상체 애니메이션 재생 (발사 모션)
-				if (m_animFSM)
+				// 발사 콜백 호출
+				for (const auto& callback : m_fireCallbacks)
 				{
-					m_animFSM->PlayUpperBodyAnimation(m_animName_Fire, false);
+					if (callback) callback();
 				}
 
 				// 쿨다운 타이머 리셋
@@ -908,86 +849,20 @@ namespace game
 			}
 		}
 	}
+	
+	void PlayerControllerScript::RegisterFireCallback(const FireCallback& callback)
+	{
+		m_fireCallbacks.push_back(callback);
+	}
+	
+	void PlayerControllerScript::UnregisterFireCallback(const FireCallback& callback)
+	{
+		// std::function은 직접 비교가 어려우므로, 
+		// 실제로는 ID 기반이나 weak_ptr 기반으로 관리하는 것이 좋음
+		// 현재는 단순화를 위해 clear만 지원
+		// m_fireCallbacks.clear();
+	}
 		
-
-	// ═══════════════════════════════════════════════════════════════
-	// 애니메이션 제어
-	// ═══════════════════════════════════════════════════════════════
-
-	std::string PlayerControllerScript::GetAnimationState() const
-	{
-		bool isMoving = m_currentLogicalMoveVector.LengthSquared() > 0.0001f;
-		bool isShooting = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
-		bool isBackward = m_isBackward;
-
-		if (!isMoving && !isShooting)
-			return "Idle";
-		if (!isMoving && isShooting)
-			return "IdleFire";
-		if (isMoving && !isShooting && !isBackward)
-			return "MoveForward";
-		if (isMoving && !isShooting && isBackward)
-			return "MoveBackward";
-		if (isMoving && isShooting && !isBackward)
-			return "MoveForwardFire";
-		if (isMoving && isShooting && isBackward)
-			return "MoveBackwardFire";
-
-		return "Idle";
-	}
-
-	void PlayerControllerScript::UpdateAnimation()
-	{
-		if (!m_animFSM) return;
-
-		// ─────────────────────────────────────────────
-		// LogicFSM 상태 + 이동 방향 → AnimFSM 상태 결정
-		// ─────────────────────────────────────────────
-		std::string logicState = m_logicFSM ? m_logicFSM->GetCurrentState() : "Idle";
-		bool isMoving = GetMoveInputDirection().LengthSquared() > 0.0001f;
-		bool isShooting = (logicState == "IdleShoot" || logicState == "WalkShoot");
-		bool isBackward = m_isBackward;
-
-		// AnimFSM 상태 결정 (InitializeAnimFSM에서 등록한 상태명과 일치해야 함)
-		std::string animState;
-
-		if (isShooting)
-		{
-			// 발사 중
-			if (!isMoving)
-			{
-				animState = "IdleShoot";
-			}
-			else if (isBackward)
-			{
-				animState = "WalkBackwardShoot";
-			}
-			else
-			{
-				animState = "WalkForwardShoot";
-			}
-		}
-		else
-		{
-			// 비발사 중
-			if (!isMoving)
-			{
-				animState = "Idle";
-			}
-			else if (isBackward)
-			{
-				animState = "WalkBackward";
-			}
-			else
-			{
-				animState = "WalkForward";
-			}
-		}
-
-		// AnimFSM에 상태 전달
-		m_animFSM->SetAnimState(animState);
-	}
-
 
 	
 
@@ -1004,19 +879,11 @@ namespace game
 		{
 			isValid = false;
 		}
-		if (!m_skeletalAnimator)
-		{
-			isValid = false;
-		}
 		if (!m_aimPointer)
 		{
 			isValid = false;
 		}
 		if (!m_bulletFactory)
-		{
-			isValid = false;
-		}
-		if (!m_animFSM)
 		{
 			isValid = false;
 		}
@@ -1045,14 +912,12 @@ namespace game
 
 		// 캐시된 참조 또는 직접 조회 (에디터에서 실시간 확인용)
 		engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
-		engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
-		engine::AnimFSM* animFSM = m_animFSM ? m_animFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::AnimFSM>() : nullptr);
 		engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
 		AimPointer* aimPointer = m_aimPointer ? m_aimPointer : (GetGameObject() ? GetGameObject()->GetComponent<AimPointer>() : nullptr);
 		BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
 
 		// 전체 유효성 확인
-		bool allValid = rigidbody && skeletalAnimator && aimPointer && bulletFactory && animFSM && logicFSM;
+		bool allValid = rigidbody && aimPointer && bulletFactory && logicFSM;
 
 		if (allValid)
 		{
@@ -1082,17 +947,11 @@ namespace game
 
 		// 각 컴포넌트 상태 표시
 		ImGui::Indent();
-		ImGui::Text("SkeletalAnimator:  %s", skeletalAnimator ? "[OK]" : "[MISSING]");
-		if (!skeletalAnimator) ImGui::SameLine(); if (!skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-
 		ImGui::Text("AimPointer:        %s", aimPointer ? "[OK]" : "[MISSING]");
 		if (!aimPointer) ImGui::SameLine(); if (!aimPointer) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 
 		ImGui::Text("BulletFactory:     %s", bulletFactory ? "[OK]" : "[MISSING]");
 		if (!bulletFactory) ImGui::SameLine(); if (!bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-
-		ImGui::Text("AnimFSM:           %s", animFSM ? "[OK]" : "[MISSING]");
-		if (!animFSM) ImGui::SameLine(); if (!animFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 
 		ImGui::Text("LogicFSM:          %s", logicFSM ? "[OK]" : "[MISSING]");
 		if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
@@ -1222,35 +1081,35 @@ namespace game
 		// 발사 설정
 		ImGui::Separator();
 		ImGui::Text("Shooting:");
-		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.2f, 0.01f, 2.0f);
+		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.02f, 0.01f, 2.0f);
 		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 1.0f, 1.0f, 100.0f);
-		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 3.0f, 0.5f, 10.0f);
+		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.5f, 0.5f, 10.0f);
+		
+		ImGui::Spacing();
+		ImGui::Text("Bullet Start Position:");
+		ImGui::DragFloat("Start Offset Y (height)", &m_bulletStartOffsetY, 0.1f, 0.0f, 10.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Total Y position of bullet spawn (world Y)");
+		}
+		ImGui::DragFloat("Start Offset Forward", &m_bulletStartOffsetForward, 0.1f, 0.0f, 10.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Offset along firing direction (forward from player)");
+		}
 
 		// 처형 설정
 		ImGui::Separator();
 		ImGui::Text("Execution:");
 		ImGui::DragFloat("Execution Range", &m_executionRange, 0.5f, 1.0f, 50.0f);
 
-		// 애니메이션 설정
-		ImGui::Separator();
-		ImGui::Text("Animation Names:");
-		ImGui::InputText("Idle", &m_animName_Idle);
-		ImGui::InputText("WalkForward", &m_animName_WalkForward);
-		ImGui::InputText("WalkBackward", &m_animName_WalkBackward);
-		ImGui::InputText("Fire", &m_animName_Fire);
-
 		// 참조 설정
 		ImGui::Separator();
 		ImGui::Text("References:");
 		ImGui::InputText("AimPointer Object", &m_aimPointerObjectName);
 
-		// 기타
-		ImGui::Separator();
-		ImGui::Checkbox("Enable Upper Body Aim", &m_enableUpperBodyAim);
-
 		ImGui::Separator();
 		ImGui::Text("Runtime Info:");
-		ImGui::Text("Animation State: %s", GetAnimationState().c_str());
 		ImGui::Text("Is Moving Backward: %s", m_isBackward ? "Yes" : "No");
 
 		ImGui::Unindent();
@@ -1276,15 +1135,10 @@ namespace game
 		j["FireRate"] = m_fireRate;
 		j["BulletSpeed"] = m_bulletSpeed;
 		j["BulletLifetime"] = m_bulletLifetime;
+		j["BulletStartOffsetY"] = m_bulletStartOffsetY;
+		j["BulletStartOffsetForward"] = m_bulletStartOffsetForward;
 		j["AimPointerObjectName"] = m_aimPointerObjectName;
-		j["EnableUpperBodyAim"] = m_enableUpperBodyAim;
 		j["FSMInitialized"] = m_fsmInitialized;
-
-		// 애니메이션 이름 저장
-		j["AnimName_Idle"] = m_animName_Idle;
-		j["AnimName_WalkForward"] = m_animName_WalkForward;
-		j["AnimName_WalkBackward"] = m_animName_WalkBackward;
-		j["AnimName_Fire"] = m_animName_Fire;
 
 		// 처형 설정
 		j["ExecutionRange"] = m_executionRange;
@@ -1314,22 +1168,14 @@ namespace game
 			m_bulletSpeed = j["BulletSpeed"].get<float>();
 		if (j.contains("BulletLifetime"))
 			m_bulletLifetime = j["BulletLifetime"].get<float>();
+		if (j.contains("BulletStartOffsetY"))
+			m_bulletStartOffsetY = j["BulletStartOffsetY"].get<float>();
+		if (j.contains("BulletStartOffsetForward"))
+			m_bulletStartOffsetForward = j["BulletStartOffsetForward"].get<float>();
 		if (j.contains("AimPointerObjectName"))
 			m_aimPointerObjectName = j["AimPointerObjectName"].get<std::string>();
-		if (j.contains("EnableUpperBodyAim"))
-			m_enableUpperBodyAim = j["EnableUpperBodyAim"].get<bool>();
 		if (j.contains("FSMInitialized"))
 			m_fsmInitialized = j["FSMInitialized"].get<bool>();
-
-		// 애니메이션 이름 로드
-		if (j.contains("AnimName_Idle"))
-			m_animName_Idle = j["AnimName_Idle"].get<std::string>();
-		if (j.contains("AnimName_WalkForward"))
-			m_animName_WalkForward = j["AnimName_WalkForward"].get<std::string>();
-		if (j.contains("AnimName_WalkBackward"))
-			m_animName_WalkBackward = j["AnimName_WalkBackward"].get<std::string>();
-		if (j.contains("AnimName_Fire"))
-			m_animName_Fire = j["AnimName_Fire"].get<std::string>();
 
 		// 처형 설정
 		if (j.contains("ExecutionRange"))

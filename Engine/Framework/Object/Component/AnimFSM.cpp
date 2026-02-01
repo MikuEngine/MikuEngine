@@ -3,6 +3,8 @@
 #include "Framework/Object/Component/LogicFSM.h"
 #include "Framework/Object/Component/Animator/SkeletalAnimator.h"
 #include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Scene/SceneManager.h"
+#include "Framework/Scene/Scene.h"
 
 namespace engine
 {
@@ -13,11 +15,29 @@ namespace engine
 
     void AnimFSM::Awake()
     {
-        // SkeletalAnimator 찾기
+        // SkeletalAnimator 찾기 (항상 같은 GameObject에서)
         m_animator = GetGameObject()->GetComponent<SkeletalAnimator>();
         
         // LogicFSM 찾기
-        m_logicFSM = GetGameObject()->GetComponent<LogicFSM>();
+        // m_logicFSMObjectName이 비어있으면 같은 GameObject에서 찾음
+        // 값이 있으면 해당 이름의 GameObject에서 찾음
+        if (m_logicFSMObjectName.empty())
+        {
+            m_logicFSM = GetGameObject()->GetComponent<LogicFSM>();
+        }
+        else
+        {
+            // 다른 오브젝트에서 LogicFSM 찾기
+            auto* scene = SceneManager::Get().GetScene();
+            if (scene)
+            {
+                if (auto* targetGO = scene->FindGameObject(m_logicFSMObjectName))
+                {
+                    m_logicFSM = targetGO->GetComponent<LogicFSM>();
+                }
+            }
+        }
+        
         if (m_logicFSM)
         {
             m_logicFSM->SetAnimFSM(this);
@@ -332,6 +352,19 @@ namespace engine
             ImGui::Indent();
             
             // ─────────────────────────────────────────────
+            // 외부 LogicFSM 참조 설정
+            // ─────────────────────────────────────────────
+            ImGui::Text("LogicFSM Reference:");
+            ImGui::InputText("LogicFSM Object", &m_logicFSMObjectName);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Leave empty to use LogicFSM on same GameObject.\nSet object name to reference LogicFSM on another GameObject.");
+            }
+            ImGui::Text("LogicFSM: %s", m_logicFSM ? "[OK]" : "[NOT FOUND]");
+            
+            ImGui::Separator();
+
+            // ─────────────────────────────────────────────
             // 현재 상태
             // ─────────────────────────────────────────────
             ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), "Current State: %s", 
@@ -451,6 +484,9 @@ namespace engine
     {
         Object::Save(j);
         
+        // 외부 LogicFSM 참조
+        j["LogicFSMObjectName"] = m_logicFSMObjectName;
+        
         // 레이어 설정
         j["BaseLayerIndex"] = m_baseLayerIndex;
         j["UpperBodyLayerIndex"] = m_upperBodyLayerIndex;
@@ -497,6 +533,9 @@ namespace engine
     void AnimFSM::Load(const json& j)
     {
         Object::Load(j);
+        
+        // 외부 LogicFSM 참조
+        JsonGet(j, "LogicFSMObjectName", m_logicFSMObjectName);
         
         // 레이어 설정
         JsonGet(j, "BaseLayerIndex", m_baseLayerIndex);
