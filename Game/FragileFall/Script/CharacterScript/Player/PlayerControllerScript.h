@@ -202,7 +202,6 @@ namespace game
         void HandleDash();               // 대쉬 처리 (FixedUpdate에서 호출)
         void StartDash();                // 대쉬 시작
         void EndDash();                  // 대쉬 종료
-        float CalculateDashSpeed() const; // 현재 대쉬 속도 계산 (지수 감쇠)
         void HandleShooting(float deltaTime);  // Update에서 호출 (DeltaTime 사용)
 
         // ─────────────────────────────────────────────

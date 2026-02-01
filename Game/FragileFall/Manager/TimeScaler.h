@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace game
 {
@@ -19,6 +19,9 @@ namespace game
 		// 타임스케일 초기화
 		// 각 씬에 빈 게임오브젝트 넣어서 Awake나 Start에서 호출해주면 좋을듯
 		static void ResetWorldTimeScale();
+
+		// 타임스케일 조정이 진행 중인지 확인
+		static bool IsActive();
 
 		// ui에서 사용할 함수
 		static void PlayWorld();

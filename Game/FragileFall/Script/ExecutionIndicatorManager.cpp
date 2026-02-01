@@ -1,10 +1,12 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "ExecutionIndicatorManager.h"
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
 #include "Script/Boss/BossPattern/Components/BossProjectile.h"
+#include "Script/ExecutionSlowScript.h"
+#include "Script/ExecutionEffectScript.h"
 
 #include <Core/System/Input.h>
 #include <Core/System/MyTime.h>
@@ -55,24 +57,41 @@ namespace game
         {
             LOG_PRINT("[ExecutionIndicatorManager] WARNING: Player not found!");
         }
+
+        // 슬로우 효과 스크립트 찾기 (자기 자신 오브젝트에서)
+        m_slowScript = GetGameObject()->GetComponent<ExecutionSlowScript>();
+
+        if (!m_slowScript)
+        {
+            LOG_PRINT("[ExecutionIndicatorManager] WARNING: ExecutionSlowScript not found on this object!");
+        }
     }
 
     void ExecutionIndicatorManager::Update()
     {
         if (!m_mainCamera) return;
 
-        // 대시 중이면 대시 처리
-        if (m_isDashing)
+        float deltaTime = engine::Time::DeltaTime();
+
+        // 트리거 변경 후 프레임 대기 중 (이 상태에서는 다른 처리 불가)
+        if (m_isWaitingForTrigger)
         {
-            UpdateDash(engine::Time::DeltaTime());
+            UpdateTriggerWait();
             return;
         }
 
-        // 처형 애니메이션 중이면 애니메이션만 처리
-        if (m_isExecuting)
+        // Idle 전이 대기 중
+        if (m_isWaitingForIdle)
         {
-            UpdateExecution(engine::Time::DeltaTime());
-            return;
+            UpdateIdleWait();
+            // Idle 대기 중에도 다른 처리 계속
+        }
+
+        // 몬스터 Death 타이머
+        if (m_isWaitingForDeath)
+        {
+            UpdateDeathTimer(deltaTime);
+            // Death 대기 중에도 다른 처리 계속
         }
 
         // 마우스 아래의 Fragile 몬스터 확인
@@ -93,19 +112,26 @@ namespace game
                 }
             }
 
+            // 현재 처형 중인 몬스터인지 확인
+            bool isCurrentlyExecuting = (m_executingGameObject.Get() == fragileMonster);
+            
             // 거리에 따른 표시 처리
             bool isInRange = IsMonsterInExecutionRange(fragileMonster);
             
-            // 라인은 항상 업데이트 및 표시
-            if (m_player && m_lineInstance && fragileMonster->GetTransform())
+            // 라인: 현재 처형 중인 몬스터가 아닌 경우에만 표시
+            if (m_player && m_lineInstance && fragileMonster->GetTransform() && !isCurrentlyExecuting)
             {
                 engine::Vector3 monsterPos = fragileMonster->GetTransform()->GetWorldPosition();
                 UpdateLine(monsterPos);
                 ShowLine();
             }
+            else if (isCurrentlyExecuting)
+            {
+                HideLine();
+            }
             
-            // 인디케이터는 처형 사거리 내에서만 표시
-            if (isInRange)
+            // 인디케이터는 처형 사거리 내에서만 표시 (현재 처형 중인 몬스터 제외)
+            if (isInRange && !isCurrentlyExecuting)
             {
                 if (m_indicatorInstance && fragileMonster->GetTransform())
                 {
@@ -424,122 +450,267 @@ namespace game
 
     void ExecutionIndicatorManager::StartExecution(engine::GameObject* target)
     {
-        if (!target || m_isExecuting || m_isDashing || !m_player) return;
+        if (!target || m_isWaitingForTrigger || !m_player) return;
+
+        // ─────────────────────────────────────────────
+        // 연속 처형: 기존 처형 진행 중이면 정리 후 새 처형 시작
+        // ─────────────────────────────────────────────
+        if (m_isWaitingForDeath || m_isWaitingForIdle)
+        {
+            // 이전 몬스터 즉시 Death 처리
+            if (m_executingGameObject && m_isWaitingForDeath)
+            {
+                TriggerMonsterDeath();
+            }
+            
+            // 상태 리셋
+            m_isWaitingForDeath = false;
+            m_isWaitingForIdle = false;
+            m_deathTimer = 0.0f;
+        }
 
         m_executingGameObject = target;
 
         // ─────────────────────────────────────────────
-        // 플레이어 Execution 스테이트로 전이 (순간이동은 대시에서 처리)
+        // 1. 몬스터 콜라이더를 트리거로 즉시 변경
+        //    (Execution 전이는 트리거 확인 후에 진행)
         // ─────────────────────────────────────────────
-        engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
-        if (playerFSM)
-        {
-            playerFSM->SetTrigger("ExecuteMonster");
-        }
+        SetMonsterColliderTrigger(target, true);
 
         // ─────────────────────────────────────────────
-        // 대시 순간이동 시작
+        // 2. 프레임 대기 시작 (물리 적용 확인용)
         // ─────────────────────────────────────────────
-        m_isDashing = true;
-        m_dashTimer = 0.0f;
-        
-        // 첫 번째 대시 즉시 실행
-        PerformDash();
+        m_isWaitingForTrigger = true;
+        m_triggerWaitFrames = 0;
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 대시 순간이동
+    // 콜라이더 트리거 설정
     // ═══════════════════════════════════════════════════════════════
 
-    void ExecutionIndicatorManager::UpdateDash(float deltaTime)
+    void ExecutionIndicatorManager::SetMonsterColliderTrigger(engine::GameObject* monster, bool isTrigger)
     {
-        if (!m_isDashing || !m_executingGameObject) return;
+        if (!monster) return;
 
-        m_dashTimer += deltaTime;
-
-        // 대시 간격마다 순간이동
-        if (m_dashTimer >= m_dashInterval)
+        if (auto* boxCollider = monster->GetComponent<engine::BoxCollider>())
         {
-            m_dashTimer = 0.0f;
-            PerformDash();
+            boxCollider->SetIsTrigger(isTrigger);
+        }
+        if (auto* sphereCollider = monster->GetComponent<engine::SphereCollider>())
+        {
+            sphereCollider->SetIsTrigger(isTrigger);
+        }
+        if (auto* capsuleCollider = monster->GetComponent<engine::CapsuleCollider>())
+        {
+            capsuleCollider->SetIsTrigger(isTrigger);
         }
     }
 
-    void ExecutionIndicatorManager::PerformDash()
+    bool ExecutionIndicatorManager::IsMonsterColliderTrigger(engine::GameObject* monster) const
     {
-        if (!m_executingGameObject || !m_player) return;
+        if (!monster) return false;
 
-        engine::Transform* playerTransform = m_player->GetTransform();
-        engine::Transform* monsterTransform = m_executingGameObject->GetTransform();
-        
-        if (!playerTransform || !monsterTransform) return;
+        // 하나라도 트리거로 변경되었는지 확인
+        if (auto* boxCollider = monster->GetComponent<engine::BoxCollider>())
+        {
+            if (boxCollider->IsTrigger()) return true;
+        }
+        if (auto* sphereCollider = monster->GetComponent<engine::SphereCollider>())
+        {
+            if (sphereCollider->IsTrigger()) return true;
+        }
+        if (auto* capsuleCollider = monster->GetComponent<engine::CapsuleCollider>())
+        {
+            if (capsuleCollider->IsTrigger()) return true;
+        }
 
-        engine::Vector3 playerPos = playerTransform->GetWorldPosition();
-        engine::Vector3 monsterPos = monsterTransform->GetWorldPosition();
-        
-        engine::Vector3 direction = monsterPos - playerPos;
-        float distance = direction.Length();
-        
-        // 남은 거리가 최종 도달 거리 이하면 최종 순간이동
-        if (distance <= m_finalDashThreshold)
+        return false;
+    }
+
+    bool ExecutionIndicatorManager::IsPathClearForTeleport() const
+    {
+        // TODO: 향후 구현 - 근처 충돌 가능한 콜라이더 검사
+        // 현재는 항상 true 반환 (즉시 이동 허용)
+        return true;
+    }
+
+    void ExecutionIndicatorManager::CancelExecution()
+    {
+        // 트리거 확인 실패 → 처형 취소
+        // 콜라이더 복원
+        if (m_executingGameObject)
         {
-            FinishDash();
-            return;
+            SetMonsterColliderTrigger(m_executingGameObject.Get(), false);
         }
-        
-        // 몬스터 방향으로 대시 거리만큼 순간이동
-        direction.Normalize();
-        engine::Vector3 targetPos = playerPos + direction * m_dashDistance;
-        
-        // Rigidbody를 통해 순간이동
-        engine::Rigidbody* rigidbody = m_player->GetGameObject()->GetComponent<engine::Rigidbody>();
-        if (rigidbody && rigidbody->IsDynamic())
+
+        // 상태 초기화 (플레이어/몬스터 상태 유지)
+        m_isWaitingForTrigger = false;
+        m_triggerWaitFrames = 0;
+        m_executingGameObject = nullptr;
+
+        // 인디케이터 매니저는 계속 동작 (호버/라인 표시 등)
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Idle 전이 대기
+    // ═══════════════════════════════════════════════════════════════
+
+    void ExecutionIndicatorManager::UpdateIdleWait()
+    {
+        if (!m_isWaitingForIdle) return;
+
+        m_idleWaitFrames++;
+
+        // 1프레임 대기 후 Idle 전이
+        if (m_idleWaitFrames >= 1)
         {
-            rigidbody->ForceSetPosition(targetPos, true);
-        }
-        else
-        {
-            playerTransform->SetLocalPosition(targetPos);
+            m_isWaitingForIdle = false;
+
+            if (m_player)
+            {
+                engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
+                if (playerFSM)
+                {
+                    playerFSM->SetTrigger("ExecutionComplete");
+                }
+            }
         }
     }
 
-    void ExecutionIndicatorManager::FinishDash()
+    // ═══════════════════════════════════════════════════════════════
+    // 몬스터 Death 타이머
+    // ═══════════════════════════════════════════════════════════════
+
+    void ExecutionIndicatorManager::UpdateDeathTimer(float deltaTime)
+    {
+        if (!m_isWaitingForDeath) return;
+
+        m_deathTimer += deltaTime;
+
+        if (m_deathTimer >= m_monsterDeathDelay)
+        {
+            m_isWaitingForDeath = false;
+            TriggerMonsterDeath();
+        }
+    }
+
+    void ExecutionIndicatorManager::TriggerMonsterDeath()
+    {
+        if (!m_executingGameObject) return;
+
+        if (auto comp = m_executingGameObject->GetComponent<MonsterScript>())
+        {
+            comp->TriggerDeath();
+        }
+        else if (auto comp = m_executingGameObject->GetComponent<BossPillar>())
+        {
+            comp->Execute();
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 트리거 변경 후 프레임 대기
+    // ═══════════════════════════════════════════════════════════════
+
+    void ExecutionIndicatorManager::UpdateTriggerWait()
+    {
+        if (!m_isWaitingForTrigger || !m_executingGameObject) return;
+
+        m_triggerWaitFrames++;
+
+        // 필요한 프레임 수 대기 완료
+        if (m_triggerWaitFrames >= m_triggerWaitFramesRequired)
+        {
+            // 트리거 변경 확인
+            if (!IsMonsterColliderTrigger(m_executingGameObject.Get()))
+            {
+                // 트리거 변경 실패 → 처형 취소
+                CancelExecution();
+                return;
+            }
+
+            // 향후: 경로 확인 (근처 충돌 가능 콜라이더 검사)
+            if (!IsPathClearForTeleport())
+            {
+                // 경로가 안전하지 않으면 계속 대기 (향후 구현)
+                return;
+            }
+
+            m_isWaitingForTrigger = false;
+
+            // ─────────────────────────────────────────────
+            // 트리거 확인 성공 → 처형 진행
+            // ─────────────────────────────────────────────
+
+            // 1. 슬로우 효과 시작
+            if (m_slowScript)
+            {
+                m_slowScript->StartSlowMotion();
+            }
+
+            // 2. 플레이어 Execution 스테이트로 전이
+            engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
+            if (playerFSM)
+            {
+                playerFSM->SetTrigger("ExecuteMonster");
+            }
+
+            // 3. 텔레포트 실행
+            PerformTeleport();
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 순간이동 (한 번에 몬스터 위치로)
+    // ═══════════════════════════════════════════════════════════════
+
+    void ExecutionIndicatorManager::PerformTeleport()
     {
         if (!m_executingGameObject || !m_player) return;
 
         // ─────────────────────────────────────────────
-        // 몬스터의 모든 콜라이더를 트리거로 변경 (최종 순간이동 직전)
+        // 라인 즉시 숨김
         // ─────────────────────────────────────────────
-        engine::GameObject* monsterGO = m_executingGameObject.Get();
-        if (monsterGO)
-        {
-            if (auto* boxCollider = monsterGO->GetComponent<engine::BoxCollider>())
-            {
-                boxCollider->SetIsTrigger(true);
-            }
-            if (auto* sphereCollider = monsterGO->GetComponent<engine::SphereCollider>())
-            {
-                sphereCollider->SetIsTrigger(true);
-            }
-            if (auto* capsuleCollider = monsterGO->GetComponent<engine::CapsuleCollider>())
-            {
-                capsuleCollider->SetIsTrigger(true);
-            }
+        HideLine();
+        
+        // 호버 인디케이터 숨김 (처형 중인 몬스터)
+        HideIndicator();
 
-            if (auto comp = m_executingGameObject->GetComponent<BossProjectile>())
-            {
-                comp->Execute();
-            }
+        // ─────────────────────────────────────────────
+        // 보스 투사체 특수 처리
+        // ─────────────────────────────────────────────
+        if (auto comp = m_executingGameObject->GetComponent<BossProjectile>())
+        {
+            comp->Execute();
         }
 
         // ─────────────────────────────────────────────
-        // 몬스터 위치로 최종 순간이동
+        // 처형 이펙트 인스턴시에이트 (몬스터 위치)
         // ─────────────────────────────────────────────
         engine::Transform* monsterTransform = m_executingGameObject->GetTransform();
         if (monsterTransform)
         {
             engine::Vector3 monsterPos = monsterTransform->GetWorldPosition();
             
+            // 이펙트 프리팹 생성
+            engine::GameObject* effect = engine::Prefab::Instantiate(m_effectPrefabName);
+            if (effect)
+            {
+                // 몬스터 위치 + 인디케이터 오프셋에 배치
+                if (auto* effectTransform = effect->GetTransform())
+                {
+                    effectTransform->SetLocalPosition(monsterPos + m_indicatorOffset);
+                }
+                
+                // 이펙트 설정 전달
+                if (auto* effectScript = effect->GetComponent<ExecutionEffectScript>())
+                {
+                    effectScript->SetDuration(m_effectDuration);
+                    effectScript->SetScaleMultiplier(m_effectScaleMultiplier);
+                }
+            }
+            
+            // 플레이어 순간이동
             engine::Rigidbody* rigidbody = m_player->GetGameObject()->GetComponent<engine::Rigidbody>();
             if (rigidbody && rigidbody->IsDynamic())
             {
@@ -552,98 +723,22 @@ namespace game
         }
 
         // ─────────────────────────────────────────────
-        // 대시 종료, 처형 애니메이션 시작
+        // 1프레임 후 Idle 전이 시작
         // ─────────────────────────────────────────────
-        m_isDashing = false;
-        m_dashTimer = 0.0f;
-        
-        m_isExecuting = true;
-        m_executionTimer = 0.0f;
-        
-        // 현재 인디케이터 회전 저장
-        if (m_indicatorTransform)
-        {
-            m_initialRotation = m_indicatorTransform->GetLocalRotation();
-        }
+        m_isWaitingForIdle = true;
+        m_idleWaitFrames = 0;
+
+        // ─────────────────────────────────────────────
+        // 몬스터 Death 타이머 시작
+        // ─────────────────────────────────────────────
+        m_isWaitingForDeath = true;
+        m_deathTimer = 0.0f;
     }
 
-    void ExecutionIndicatorManager::UpdateExecution(float deltaTime)
-    {
-        if (!m_isExecuting) return;
-
-        m_executionTimer += deltaTime;
-
-        // 진행률 계산 (0.0 ~ 1.0)
-        float progress = m_executionTimer / m_rotationDuration;
-
-        if (progress >= 1.0f)
-        {
-            // 애니메이션 완료
-            FinishExecution();
-            return;
-        }
-
-        // Y축 회전 애니메이션 (360도)
-        if (m_indicatorTransform)
-        {
-            float rotationAngle = progress * DirectX::XM_2PI;  // 0 ~ 2π (360도)
-            
-            // 초기 회전에 Y축 회전 추가
-            engine::Quaternion yRotation = engine::Quaternion::CreateFromAxisAngle(
-                engine::Vector3::UnitY, rotationAngle);
-            
-            m_indicatorTransform->SetLocalRotation(m_initialRotation * yRotation);
-        }
-
-        // 몬스터가 파괴되었는지 확인
-        if (!m_executingGameObject)
-        {
-            // 몬스터가 사라짐, 처형 취소
-            m_isExecuting = false;
-            HideIndicator();
-        }
-    }
-
-    void ExecutionIndicatorManager::FinishExecution()
-    {
-        m_isExecuting = false;
-
-        // 인디케이터와 라인 숨김
-        HideIndicator();
-        HideLine();
-
-        // 몬스터 Dead 상태로 전이
-        if (m_executingGameObject)
-        {
-            if (auto comp = m_executingGameObject->GetComponent<MonsterScript>())
-            {
-                comp->TriggerDeath();
-            }
-            else if (auto comp = m_executingGameObject->GetComponent<BossPillar>())
-            {
-                comp->Execute();
-            }
-        }
-
-        // 플레이어 Execution 상태 종료
-        if (m_player)
-        {
-            engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
-            if (playerFSM)
-            {
-                playerFSM->SetTrigger("ExecutionComplete");
-            }
-        }
-
-        // 상태 초기화
-        m_executingGameObject = nullptr;
-        m_hoveredGameObject = nullptr;
-    }
 
     void ExecutionIndicatorManager::OnGui()
     {
         ImGui::InputText("Indicator Prefab", &m_indicatorPrefabName);
-        ImGui::DragFloat("Rotation Duration", &m_rotationDuration, 0.1f, 0.1f, 5.0f);
         ImGui::DragFloat("Raycast Distance", &m_raycastMaxDistance, 10.0f, 100.0f, 10000.0f);
         ImGui::DragFloat3("Indicator Offset", &m_indicatorOffset.x, 0.1f);
 
@@ -656,25 +751,50 @@ namespace game
         ImGui::DragFloat("Line Height", &m_lineHeight, 0.1f, 0.0f, 10.0f);
 
         ImGui::Separator();
-        ImGui::Text("Dash Settings:");
-        ImGui::DragFloat("Dash Distance", &m_dashDistance, 0.1f, 0.5f, 10.0f);
-        ImGui::DragFloat("Dash Interval", &m_dashInterval, 0.01f, 0.05f, 1.0f);
-        ImGui::DragFloat("Final Dash Threshold", &m_finalDashThreshold, 0.1f, 0.5f, 10.0f);
+        ImGui::Text("Execution Effect Settings:");
+        ImGui::InputText("Effect Prefab", &m_effectPrefabName);
+        ImGui::DragFloat("Effect Duration", &m_effectDuration, 0.05f, 0.05f, 2.0f);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Duration of execution effect animation");
+        }
+        ImGui::DragFloat("Effect Scale Multiplier", &m_effectScaleMultiplier, 0.1f, 1.0f, 3.0f);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Final scale of effect (1.5 = 150%%)");
+        }
+        ImGui::DragFloat("Monster Death Delay", &m_monsterDeathDelay, 0.01f, 0.0f, 1.0f);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Delay after teleport before monster death");
+        }
+        ImGui::DragInt("Trigger Wait Frames", &m_triggerWaitFramesRequired, 1, 1, 10);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Frames to wait after collider trigger change before teleport");
+        }
 
         ImGui::Separator();
         ImGui::Text("Runtime Info:");
         ImGui::Text("Hovered Monster: %s", m_hoveredGameObject ? "Yes" : "No");
-        ImGui::Text("Is Dashing: %s", m_isDashing ? "Yes" : "No");
-        ImGui::Text("Is Executing: %s", m_isExecuting ? "Yes" : "No");
+        ImGui::Text("Executing Monster: %s", m_executingGameObject ? "Yes" : "No");
+        ImGui::Text("Slow Script Found: %s", m_slowScript ? "Yes" : "No");
         ImGui::Text("Player Found: %s", m_player ? "Yes" : "No");
         ImGui::Text("Line Instance: %s", m_lineInstance ? "Yes" : "No");
-        if (m_isDashing)
+        
+        ImGui::Separator();
+        ImGui::Text("Execution State:");
+        ImGui::Text("Waiting for Trigger: %s", m_isWaitingForTrigger ? "Yes" : "No");
+        ImGui::Text("Waiting for Idle: %s", m_isWaitingForIdle ? "Yes" : "No");
+        ImGui::Text("Waiting for Death: %s", m_isWaitingForDeath ? "Yes" : "No");
+        
+        if (m_isWaitingForTrigger)
         {
-            ImGui::Text("Dash Timer: %.2f / %.2f", m_dashTimer, m_dashInterval);
+            ImGui::Text("  Trigger Wait: %d / %d frames", m_triggerWaitFrames, m_triggerWaitFramesRequired);
         }
-        if (m_isExecuting)
+        if (m_isWaitingForDeath)
         {
-            ImGui::Text("Execution Progress: %.1f%%", (m_executionTimer / m_rotationDuration) * 100.0f);
+            ImGui::Text("  Death Timer: %.3f / %.3f sec", m_deathTimer, m_monsterDeathDelay);
         }
     }
 
@@ -682,7 +802,6 @@ namespace game
     {
         Object::Save(j);
         j["IndicatorPrefabName"] = m_indicatorPrefabName;
-        j["RotationDuration"] = m_rotationDuration;
         j["RaycastMaxDistance"] = m_raycastMaxDistance;
         j["IndicatorOffset"] = m_indicatorOffset;
 
@@ -693,17 +812,18 @@ namespace game
         j["LineBaseLength"] = m_lineBaseLength;
         j["LineHeight"] = m_lineHeight;
 
-        // 대시 설정
-        j["DashDistance"] = m_dashDistance;
-        j["DashInterval"] = m_dashInterval;
-        j["FinalDashThreshold"] = m_finalDashThreshold;
+        // 처형 이펙트 설정
+        j["EffectPrefabName"] = m_effectPrefabName;
+        j["EffectDuration"] = m_effectDuration;
+        j["EffectScaleMultiplier"] = m_effectScaleMultiplier;
+        j["MonsterDeathDelay"] = m_monsterDeathDelay;
+        j["TriggerWaitFramesRequired"] = m_triggerWaitFramesRequired;
     }
 
     void ExecutionIndicatorManager::Load(const engine::json& j)
     {
         Object::Load(j);
         engine::JsonGet(j, "IndicatorPrefabName", m_indicatorPrefabName);
-        engine::JsonGet(j, "RotationDuration", m_rotationDuration);
         engine::JsonGet(j, "RaycastMaxDistance", m_raycastMaxDistance);
         engine::JsonGet(j, "IndicatorOffset", m_indicatorOffset);
 
@@ -714,9 +834,11 @@ namespace game
         engine::JsonGet(j, "LineBaseLength", m_lineBaseLength);
         engine::JsonGet(j, "LineHeight", m_lineHeight);
 
-        // 대시 설정
-        engine::JsonGet(j, "DashDistance", m_dashDistance);
-        engine::JsonGet(j, "DashInterval", m_dashInterval);
-        engine::JsonGet(j, "FinalDashThreshold", m_finalDashThreshold);
+        // 처형 이펙트 설정
+        engine::JsonGet(j, "EffectPrefabName", m_effectPrefabName);
+        engine::JsonGet(j, "EffectDuration", m_effectDuration);
+        engine::JsonGet(j, "EffectScaleMultiplier", m_effectScaleMultiplier);
+        engine::JsonGet(j, "MonsterDeathDelay", m_monsterDeathDelay);
+        engine::JsonGet(j, "TriggerWaitFramesRequired", m_triggerWaitFramesRequired);
     }
 }

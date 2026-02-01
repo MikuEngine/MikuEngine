@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "TimeScaler.h"
 
 namespace game
@@ -114,6 +114,11 @@ namespace game
 		engine::Time::SetTimeScale(WORLD, 1.0f);
 		g_duration = -1.0f;
 		g_isCrossfading = false;
+	}
+
+	bool TimeScaler::IsActive()
+	{
+		return g_duration >= 0.0f && !g_worldStopped;
 	}
 
 	void TimeScaler::PlayWorld()

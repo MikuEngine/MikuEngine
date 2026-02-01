@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Ptr.h>
@@ -14,6 +14,7 @@ namespace game
 {
     class MonsterScript;
     class PlayerControllerScript;
+    class ExecutionSlowScript;
 
     // ═══════════════════════════════════════════════════════════════
     // ExecutionIndicatorManager - Fragile 몬스터 처형 인디케이터 관리
@@ -65,22 +66,36 @@ namespace game
         engine::Ptr<engine::GameObject> m_lineInstance;
         engine::Ptr<engine::Transform> m_lineTransform;
         
-        // 회전 애니메이션 상태
-        bool m_isExecuting = false;
-        float m_executionTimer = 0.0f;
-        engine::Quaternion m_initialRotation;
+        // ─────────────────────────────────────────────
+        // 처형 이펙트 설정
+        // ─────────────────────────────────────────────
+        std::string m_effectPrefabName = "ExcutionEffectSprite";  // 처형 이펙트 프리팹
+        float m_effectDuration = 0.2f;            // 이펙트 지속 시간 (초)
+        float m_effectScaleMultiplier = 1.5f;     // 이펙트 최종 스케일 배율
+        float m_monsterDeathDelay = 0.05f;        // 텔레포트 후 몬스터 Death까지 대기 시간 (초)
+
+        // 처형 런타임 상태
         engine::Ptr<engine::GameObject> m_executingGameObject;
 
-        // ─────────────────────────────────────────────
-        // 대시 순간이동 설정
-        // ─────────────────────────────────────────────
-        float m_dashDistance = 2.0f;           // 한 번에 이동하는 거리
-        float m_dashInterval = 0.15f;          // 대시 간격 (초)
-        float m_finalDashThreshold = 2.5f;     // 이 거리 이하면 최종 도달
+        // 몬스터 Death 타이머
+        bool m_isWaitingForDeath = false;
+        float m_deathTimer = 0.0f;
 
-        // 대시 런타임 상태
-        bool m_isDashing = false;
-        float m_dashTimer = 0.0f;
+        // 플레이어 Idle 전이 대기
+        bool m_isWaitingForIdle = false;
+        int m_idleWaitFrames = 0;
+
+        // ─────────────────────────────────────────────
+        // 트리거 변경 대기 상태
+        // ─────────────────────────────────────────────
+        bool m_isWaitingForTrigger = false;    // 트리거 변경 후 프레임 대기 중
+        int m_triggerWaitFrames = 0;           // 대기한 프레임 수
+        int m_triggerWaitFramesRequired = 1;   // 필요한 대기 프레임 수 (향후 확장 가능)
+
+        // ─────────────────────────────────────────────
+        // 슬로우 효과 스크립트 참조
+        // ─────────────────────────────────────────────
+        engine::Ptr<ExecutionSlowScript> m_slowScript;
 
     public:
         void Awake() override;
@@ -111,15 +126,20 @@ namespace game
         // 마우스 호버 처리
         engine::GameObject* GetFragileMonsterUnderMouse();
         
-        // 처형 애니메이션
+        // 처형 시퀀스
         void StartExecution(engine::GameObject* target);
-        void UpdateExecution(float deltaTime);
-        void FinishExecution();
+        void UpdateTriggerWait();              // 트리거 변경 후 프레임 대기
+        void PerformTeleport();                // 몬스터 위치로 순간이동
+        void UpdateIdleWait();                 // Idle 전이 대기
+        void UpdateDeathTimer(float deltaTime);// 몬스터 Death 타이머
+        void TriggerMonsterDeath();            // 몬스터 Death 처리
+        void SpawnExecutionEffect(const engine::Vector3& position);  // 처형 이펙트 생성
         
-        // 대시 순간이동
-        void UpdateDash(float deltaTime);
-        void PerformDash();
-        void FinishDash();
+        // 충돌 검사 (향후 확장용)
+        void SetMonsterColliderTrigger(engine::GameObject* monster, bool isTrigger);
+        bool IsMonsterColliderTrigger(engine::GameObject* monster) const;  // 트리거 상태 확인
+        bool IsPathClearForTeleport() const;   // 향후: 근처 충돌 가능 콜라이더 검사
+        void CancelExecution();                // 처형 취소 (트리거 확인 실패 시)
         
         // 거리 계산 헬퍼
         float GetDistanceToMonster(engine::GameObject* target) const;

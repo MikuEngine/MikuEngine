@@ -12,7 +12,7 @@
 namespace game
 {
     // ═══════════════════════════════════════════════════════════════
-    // 총알 발사
+    // 플레이어 총알 발사
     // ═══════════════════════════════════════════════════════════════
     void BulletFactory::Fire(const engine::Vector3& position,
                               const engine::Vector3& direction,
@@ -50,8 +50,12 @@ namespace game
         //collider->SetLayer(engine::PhysicsLayer::Projectile);
         //collider->SetCollisionMask(engine::PhysicsLayer::EnemyMask);
 
-        auto go = engine::Prefab::Instantiate("Bullet");
-        go->GetTransform()->SetLocalPosition(position);
+        auto go = engine::Prefab::Instantiate("BulletPlayer");
+        
+        engine::Vector3 bPos = { position.x, position.y + 2.2f, position.z };
+        
+        go->GetTransform()->SetLocalPosition(bPos);
+        
 
         // ─────────────────────────────────────────────
         // 5. Movement 생성 및 초기화
@@ -175,6 +179,8 @@ namespace game
     {
         switch (params.type)
         {
+        case BulletType::BulletPlayer:
+            return std::make_unique<BulletPlayerMovement>();
         case BulletType::Linear:
             return std::make_unique<LinearMovement>();
         case BulletType::Parabolic:

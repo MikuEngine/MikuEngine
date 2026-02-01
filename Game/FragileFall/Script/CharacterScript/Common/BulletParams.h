@@ -7,6 +7,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     enum class BulletType
     {
+        BulletPlayer,     // 플레이어 전용(기본 직선이동)
         Linear,     // 직선 이동
         Parabolic,  // 포물선 (곡사)
         // Spiral,     // 나선 궤도

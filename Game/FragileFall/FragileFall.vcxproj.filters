@@ -49,6 +49,8 @@
     <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
     <ClCompile Include="Script\CheckRotateScript.cpp" />
+    <ClCompile Include="Script\ExecutionSlowScript.cpp" />
+    <ClCompile Include="Script\ExecutionEffectScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -103,5 +105,7 @@
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
     <ClInclude Include="Script\UpgradeTypes.h" />
     <ClInclude Include="Script\CheckRotateScript.h" />
+    <ClInclude Include="Script\ExecutionSlowScript.h" />
+    <ClInclude Include="Script\ExecutionEffectScript.h" />
   </ItemGroup>
 </Project>
