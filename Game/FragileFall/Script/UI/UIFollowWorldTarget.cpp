@@ -4,6 +4,8 @@
 #include <Core/Graphics/Device/GraphicsDevice.h>
 
 #include <Framework/Object/GameObject/GameObject.h>
+#include <Framework/Object/Component/Canvas.h>
+#include <Framework/Object/Component/RectTransform.h>
 #include <Framework/Object/Component/UI/UIImage.h>
 
 #include <Framework/Object/Component/Camera.h>
@@ -49,6 +51,13 @@ namespace game
             return;
         }
 
+        engine::Canvas* c = (m_img) ? m_img->GetCanvasInParent() : nullptr;
+        if (!c)
+        {
+            SetVisible(false);
+            return;
+        }
+
         engine::Matrix view = m_camera->GetView();
         engine::Matrix proj = m_camera->GetProjection();
 
@@ -83,24 +92,34 @@ namespace game
         const float vpH = vp.Height;
 
         // NDC -> Screen(px)
-        engine::Vector2 screen;
-        screen.x = (ndcX * 0.5f + 0.5f) * vpW;
-        screen.y = (-ndcY * 0.5f + 0.5f) * vpH;
+        engine::Vector2 screenPx;
+        screenPx.x = (ndcX * 0.5f + 0.5f) * vpW;
+        screenPx.y = (-ndcY * 0.5f + 0.5f) * vpH;
+
+        // Screen(px) -> Canvas Ref
+        const engine::Vector2 scale = c->GetUIScale();
+        const engine::Vector2 offset = c->GetUIOffset();
+
+        engine::Vector2 screenRef;
+        screenRef.x = (screenPx.x - offset.x) / scale.x;
+        screenRef.y = (screenPx.y - offset.y) / scale.y;
+
+        const engine::Vector2 ref = c->GetReferenceResolution();
+        const engine::UIRect refRoot{ 0.f, 0.f, ref.x, ref.y };
 
         if (vpW != m_cachedVpW || vpH != m_cachedVpH)
         {
             m_cachedVpW = vpW;
             m_cachedVpH = vpH;
 
-            const engine::UIRect rootRect{ 0.f, 0.f, vpW, vpH };
             m_cachedParentRect = (m_parentRT)
-                ? m_parentRT->GetWorldRectResolved(rootRect)
-                : rootRect;
+                ? m_parentRT->GetWorldRectResolved(refRoot)
+                : refRoot;
         }
 
         const engine::Vector2 finalPos(
-            screen.x - m_cachedParentRect.x,
-            screen.y - m_cachedParentRect.y
+            screenRef.x - m_cachedParentRect.x,
+            screenRef.y - m_cachedParentRect.y
         );
 
         SetVisible(true);

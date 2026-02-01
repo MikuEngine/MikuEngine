@@ -29,10 +29,19 @@ namespace game
         EnsureUICursor();
 
         // 마우스 UI 좌표 -> UI 이미지 위치
-        engine::Vector2 mousePos = engine::Input::GetMousePosition();
-        if (m_cursorRect)
+        engine::Vector2 mousePx = engine::Input::GetMousePosition();
+
+        if (m_cursorRect && m_canvas)
         {
-            m_cursorRect->SetAnchoredPosition(mousePos);
+            const engine::Vector2 s = m_canvas->GetUIScale();
+            const engine::Vector2 o = m_canvas->GetUIOffset();
+
+            engine::Vector2 mouseRef{
+                (mousePx.x - o.x) / s.x,
+                (mousePx.y - o.y) / s.y
+            };
+
+            m_cursorRect->SetAnchoredPosition(mouseRef);
         }
 
         // P 키로 커서 이미지 교체
@@ -42,7 +51,7 @@ namespace game
         }
 
         // 월드 좌표 계산 (기존 로직 개선)
-        UpdateWorldPositionFromMouse(mousePos);
+        UpdateWorldPositionFromMouse(mousePx);
     }
 
     void AimPointer::SetCursorTexture(bool useAlternate)
