@@ -275,6 +275,9 @@ namespace game
         // ─────────────────────────────────────────────
         int GetMaxHp() const { return m_PlayerMaxHP; }
         int GetCurrentHp() const { return m_PlayerCurrentHP; }
+        
+        // 데미지 처리
+        void TakeDamage(int damage);
 
         // ─────────────────────────────────────────────
         // 발사 시스템 접근자

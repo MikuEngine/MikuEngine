@@ -60,12 +60,7 @@ namespace game
 		}
 
 		// Rigidbody Mass, Damping, Constraints는 씬 파일에서 로드됨
-
-		// Dynamic Rigidbody 설정 확인
-		if (!m_rigidbody->IsDynamic())
-		{
-			LOG_PRINT("[MonsterScript] WARNING: Monster Rigidbody should be Dynamic!");
-		}
+				
 
 		// 플레이어 찾기
 		FindPlayer();
@@ -259,6 +254,42 @@ namespace game
 		
 		// AddForce 기반 이동 (충돌 응답 보존)
 		ApplyMovementForce(direction, m_moveSpeed);
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 리지드바디 타입별 통합 이동 인터페이스
+	// - Dynamic: AddForce 기반 (ApplyMovementForce)
+	// - Kinematic: SetLinearVelocity 기반 (Y축 유지)
+	// - Static: 무시
+	// ═══════════════════════════════════════════════════════════════
+	void MonsterScript::MoveInDirection(const engine::Vector3& direction, float speed)
+	{
+		if (!m_rigidbody || speed <= 0.0f) return;
+		
+		engine::Vector3 normalizedDir = direction;
+		if (normalizedDir.LengthSquared() > 0.001f)
+		{
+			normalizedDir.Normalize();
+		}
+		else
+		{
+			return;  // 방향 벡터가 너무 작으면 무시
+		}
+		
+		if (m_rigidbody->IsDynamic())
+		{
+			// Dynamic: AddForce 기반 이동 (충돌 응답 보존)
+			ApplyMovementForce(normalizedDir, speed);
+		}
+		else if (m_rigidbody->IsKinematic())
+		{
+			// Kinematic: SetLinearVelocity 기반 (Y축 유지)
+			engine::Vector3 velocity = normalizedDir * speed;
+			engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+			velocity.y = currentVel.y;  // 중력 영향 유지
+			m_rigidbody->SetLinearVelocity(velocity);
+		}
+		// Static: 이동 불가 - 무시
 	}
 
 	// ═══════════════════════════════════════════════════════════════

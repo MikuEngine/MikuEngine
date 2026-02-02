@@ -9,6 +9,11 @@ namespace engine
 
 namespace game
 {
+    class CornerTrigger;
+}
+
+namespace game
+{
     // ═══════════════════════════════════════════════════════════════
     // MonsterRoundGray - Gray 등급 동글 몬스터
     // 
@@ -62,6 +67,24 @@ namespace game
         // 충돌 처리용 플래그
         // ─────────────────────────────────────────────
         bool m_collisionOccurred = false;         // 충돌 발생 플래그
+        
+        // ─────────────────────────────────────────────
+        // EngageMove용 - 감지된 방향 저장
+        // ─────────────────────────────────────────────
+        engine::Vector3 m_engageDirection = engine::Vector3(1.0f, 0.0f, 0.0f);  // 레이캐스트로 감지된 방향
+        bool m_fromEngageCollision = false;  // EngageMove에서 충돌로 IdleMove 진입 시 true
+        
+        // ─────────────────────────────────────────────
+        // 코너 트리거 - 맵 모서리 회전 방향 결정
+        // ─────────────────────────────────────────────
+        bool m_hasCornerDirection = false;          // 코너에서 확정된 방향이 있는지
+        MoveDirection m_cornerDirection = MoveDirection::PlusX;  // 코너에서 확정된 이동 방향
+        
+        // ─────────────────────────────────────────────
+        // 플레이어 데미지 쿨다운
+        // ─────────────────────────────────────────────
+        float m_damageCooldown = 1.0f;              // 데미지 쿨다운 시간 (초)
+        engine::TimePoint m_lastDamageTime;         // 마지막 데미지 준 시간
 
     public:
         void Awake() override;
@@ -69,21 +92,23 @@ namespace game
 
     protected:
         // ─────────────────────────────────────────────
-        // 충돌 콜백 (Script.h의 가상 함수 오버라이드)
+        // 충돌/트리거 콜백 (Script.h의 가상 함수 오버라이드)
         // ─────────────────────────────────────────────
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
+        void OnTriggerEnter(const engine::CollisionInfo& info) override;
         
         // ─────────────────────────────────────────────
         // 오버라이드 (Gray 전용 로직)
         // ─────────────────────────────────────────────
-        void InitializeBullet() override;
-        void Attack(float deltaTime) override;
+        void InitializeFSM() override;  // Gray 전용 FSM (공격 상태 없음)
+        void ProcessInput() override;   // Gray는 거리 기반 감지 사용 안함
         
         // ─────────────────────────────────────────────
-        // IdleMove 상태 오버라이드
+        // 상태별 행동 오버라이드
         // ─────────────────────────────────────────────
         void ExecuteIdleMoveBehaviorNonPhysics(float deltaTime) override;
         void ExecuteIdleMoveBehaviorPhysics() override;
+        void ExecuteEngageMoveBehaviorPhysics() override;  // Gray: 감지된 방향으로 직진
         
         // ─────────────────────────────────────────────
         // IdleMove 헬퍼 함수
