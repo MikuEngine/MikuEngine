@@ -420,8 +420,10 @@ namespace game
 
     void UpgradeController::RebuildTemperFromPurchased()
     {
+        // 누적, 중복 방지
         game::PlayerTemperManager::ResetAllTemper();
 
+        // 이미 강화된 노드 정보를 바탕으로 재설정
         for (const auto& [id, bought] : m_purchased)
         {
             if (!bought) continue;
