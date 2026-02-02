@@ -35,6 +35,9 @@ namespace engine
         bool m_isSceneChanged = false;
         bool m_isSceneStarted = false;
 
+        /// 비동기 로드 시 워커가 Scene::Load() 수행 → 메인에서 Load() 생략. 동기 로드 시 false 유지.
+        bool m_sceneLoadDoneByWorker = false;
+
     private:
         SceneManager();
         ~SceneManager();

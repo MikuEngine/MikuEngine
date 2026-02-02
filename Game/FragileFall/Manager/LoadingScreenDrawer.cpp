@@ -222,7 +222,7 @@ namespace game
 			{
 				g_sceneLoadAnimTime += engine::Time::DeltaTime();
 				float duration = g_sceneLoadAnimData->GetDuration();
-				if (g_sceneLoadAnimData->IsLoop() && duration > 0.0f && g_sceneLoadAnimTime >= duration)
+				if (duration > 0.0f && g_sceneLoadAnimTime >= duration)
 					g_sceneLoadAnimTime = fmodf(g_sceneLoadAnimTime, duration);
 
 				const auto& frames = g_sceneLoadAnimData->GetFrames();
@@ -240,11 +240,12 @@ namespace game
 				const float sheetH = g_sceneLoadSpriteData->GetHeight();
 				if (sheetW > 0.0f && sheetH > 0.0f)
 				{
-					const float uMin = piece.x / sheetW;
-					const float vMin = piece.y / sheetH;
-					const float uMax = (piece.x + piece.width) / sheetW;
-					const float vMax = (piece.y + piece.height) / sheetH;
-					const engine::Vector4 uv(uMin, vMin, uMax, vMax);
+					// CbUIElement.uv = offset.xy, scale.xy (SpriteRenderer/SpriteAnimator와 동일)
+					const float uOffset = piece.x / sheetW;
+					const float vOffset = piece.y / sheetH;
+					const float uScale = piece.width / sheetW;
+					const float vScale = piece.height / sheetH;
+					const engine::Vector4 uv(uOffset, vOffset, uScale, vScale);
 					DrawUIQuad(dc, centerX, animCenterY, SCENE_LOAD_ANIM_SIZE_PX, SCENE_LOAD_ANIM_SIZE_PX, vp, engine::Vector4(1, 1, 1, 1), uv);
 				}
 				else

@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PreloadManager.h"
 
 #include <fstream>
@@ -119,7 +119,7 @@ namespace engine
         m_isLoading = false;
     }
 
-    void PreloadManager::LoadSceneResourceAsync(const std::string& sceneName)
+    void PreloadManager::LoadSceneResourceAsync(const std::string& sceneName, std::function<void()> onSceneResourcesLoaded)
     {
         if (m_isLoading)
         {
@@ -127,6 +127,7 @@ namespace engine
             return;
         }
 
+        m_onSceneResourcesLoadedCallback = std::move(onSceneResourcesLoaded);
         m_isLoading = true;
         m_progress = 0.0f;
         m_loadedAssetsCount = 0;
@@ -202,6 +203,11 @@ namespace engine
         if (!m_isInitialized || !m_preloadData.contains("Scenes"))
         {
             m_progress = 1.0f;
+            if (m_onSceneResourcesLoadedCallback)
+            {
+                m_onSceneResourcesLoadedCallback();
+                m_onSceneResourcesLoadedCallback = nullptr;
+            }
             m_isLoading = false;
             return;
         }
@@ -210,6 +216,11 @@ namespace engine
         if (!scenes.contains(sceneName))
         {
             m_progress = 1.0f;
+            if (m_onSceneResourcesLoadedCallback)
+            {
+                m_onSceneResourcesLoadedCallback();
+                m_onSceneResourcesLoadedCallback = nullptr;
+            }
             m_isLoading = false;
             return;
         }
@@ -220,6 +231,11 @@ namespace engine
         if (m_totalAssetsToLoad == 0)
         {
             m_progress = 1.0f;
+            if (m_onSceneResourcesLoadedCallback)
+            {
+                m_onSceneResourcesLoadedCallback();
+                m_onSceneResourcesLoadedCallback = nullptr;
+            }
             m_isLoading = false;
             return;
         }
@@ -233,6 +249,11 @@ namespace engine
         }
 
         m_progress = 1.0f;
+        if (m_onSceneResourcesLoadedCallback)
+        {
+            m_onSceneResourcesLoadedCallback();
+            m_onSceneResourcesLoadedCallback = nullptr;
+        }
         m_isLoading = false;
     }
 
