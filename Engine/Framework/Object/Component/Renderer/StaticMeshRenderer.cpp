@@ -308,12 +308,70 @@ namespace engine
                 for (const auto& mat : m_materialData->GetMaterials())
                 {
                     ImGui::PushID(i++);
-                    ImGui::Text("[%d] Type: %d", i - 1, (int)mat.renderType);
+
+                    const char* types[]{ "Opaque", "Cutout", "Transparent"};
+
+                    ImGui::Text("[%d] Type: %s", i - 1, types[static_cast<int>(mat.renderType)]);
                     if (mat.texturePaths.count(MaterialKey::BASE_COLOR_TEXTURE))
                     {
                         std::string tex = std::filesystem::path(mat.texturePaths.at(MaterialKey::BASE_COLOR_TEXTURE)).filename().string();
-                        ImGui::BulletText("Tex: %s", tex.c_str());
+                        ImGui::BulletText("Base Color Tex: %s", tex.c_str());
                     }
+                    else
+                    {
+                        ImGui::BulletText("Base Color Tex: %s", "none");
+                    }
+
+                    if (mat.texturePaths.count(MaterialKey::EMISSIVE_TEXTURE))
+                    {
+                        std::string tex = std::filesystem::path(mat.texturePaths.at(MaterialKey::EMISSIVE_TEXTURE)).filename().string();
+                        ImGui::BulletText("Emissive Tex: %s", tex.c_str());
+                    }
+                    else
+                    {
+                        ImGui::BulletText("Emissive Tex: %s", "none");
+                    }
+
+                    if (mat.texturePaths.count(MaterialKey::NORMAL_TEXTURE))
+                    {
+                        std::string tex = std::filesystem::path(mat.texturePaths.at(MaterialKey::NORMAL_TEXTURE)).filename().string();
+                        ImGui::BulletText("Normal Tex: %s", tex.c_str());
+                    }
+                    else
+                    {
+                        ImGui::BulletText("Normal Tex: %s", "none");
+                    }
+
+                    if (mat.texturePaths.count(MaterialKey::AMBIENT_OCCLUSION_TEXTURE))
+                    {
+                        std::string tex = std::filesystem::path(mat.texturePaths.at(MaterialKey::AMBIENT_OCCLUSION_TEXTURE)).filename().string();
+                        ImGui::BulletText("AO Tex: %s", tex.c_str());
+                    }
+                    else
+                    {
+                        ImGui::BulletText("AO Tex: %s", "none");
+                    }
+
+                    if (mat.texturePaths.count(MaterialKey::ROUGHNESS_TEXTURE))
+                    {
+                        std::string tex = std::filesystem::path(mat.texturePaths.at(MaterialKey::ROUGHNESS_TEXTURE)).filename().string();
+                        ImGui::BulletText("Roughness Tex: %s", tex.c_str());
+                    }
+                    else
+                    {
+                        ImGui::BulletText("Roughness Tex: %s", "none");
+                    }
+
+                    if (mat.texturePaths.count(MaterialKey::METALNESS_TEXTURE))
+                    {
+                        std::string tex = std::filesystem::path(mat.texturePaths.at(MaterialKey::METALNESS_TEXTURE)).filename().string();
+                        ImGui::BulletText("Metalness Tex: %s", tex.c_str());
+                    }
+                    else
+                    {
+                        ImGui::BulletText("Metalness Tex: %s", "none");
+                    }
+
                     ImGui::PopID();
                 }
                 ImGui::TreePop();
