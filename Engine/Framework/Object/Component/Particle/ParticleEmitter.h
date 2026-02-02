@@ -66,6 +66,11 @@ namespace engine
 		float sizeVariation = 0.1f;
 		float lifeTime = 2.0f;
 
+		float rotationMin = 0.0f;
+		float rotationMax = 360.0f;
+		float rotationSpeedMin = -45.0f;
+		float rotationSpeedMax = 45.0f;
+
 		float emissionRate = 10.0f;
 		std::uint32_t maxParticles = 1000;
 

@@ -416,8 +416,23 @@ namespace engine
 		p.startColor = m_props.startColor;
 		p.endColor = m_props.endColor;
 
-		p.rotation = Random::Float(0.0f, 360.0f);
-		p.rotationSpeed = Random::Float(-45.0f, 45.0f);
+		if (m_props.rotationMin == m_props.rotationMax)
+		{
+			p.rotation = m_props.rotationMin;
+		}
+		else
+		{
+			p.rotation = Random::Float(m_props.rotationMin, m_props.rotationMax);
+		}
+
+		if (m_props.rotationSpeedMin == m_props.rotationSpeedMax)
+		{
+			p.rotationSpeed = m_props.rotationSpeedMin;
+		}
+		else
+		{
+			p.rotationSpeed = Random::Float(m_props.rotationSpeedMin, m_props.rotationSpeedMax);
+		}
 
 		p.startSize = m_props.sizeBegin + Random::Float(-m_props.sizeVariation, m_props.sizeVariation);
 		p.endSize = m_props.sizeEnd;
