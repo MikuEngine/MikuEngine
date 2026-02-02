@@ -42,7 +42,6 @@ namespace game
 	void PlayerTemperManager::ApplyTemper(PlayerControllerScript* player)
 	{
 		if (!player) return;
-		LOG_PRINT("[Temper] ApplyTemper g_addAtkDmg addr={}", (void*)&g_addAtkDmg);
 
 		// ═══════════════════════════════════════════════════════════════
 		// Base값 읽기 → 강화 계산 → 실제값 설정

@@ -185,7 +185,7 @@ namespace game
         if (game::UpgradeProgressManager::HasProgress())
         {
             game::UpgradeProgressManager::LoadProgress(*this);
-            //RebuildTemperFromPurchased();
+            RebuildTemperFromPurchased();
         }
     }
 
