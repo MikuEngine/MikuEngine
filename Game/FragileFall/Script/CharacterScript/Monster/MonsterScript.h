@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -248,7 +248,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 외부 데미지 처리 (총알 등에서 호출)
         // ─────────────────────────────────────────────
-        void TakeDamage(float damage);
+        virtual void TakeDamage(float damage);
         
         // ─────────────────────────────────────────────
         // 접근자 (Getters)
