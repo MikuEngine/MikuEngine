@@ -8,6 +8,7 @@
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIButton.h>
+#include <Framework/Object/Component/UI/UIImage.h>
 #include "Script/UI/UIPopUpAnimator.h"
 
 namespace game

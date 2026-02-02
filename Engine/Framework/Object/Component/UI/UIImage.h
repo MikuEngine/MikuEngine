@@ -80,6 +80,9 @@ namespace engine
 		void SetTexture(const std::string& textureFilePath);
 		const std::string& GetTexturePath() const;
 
+		void SetRampTexture(const std::string& textureFilePath);
+		void SetNoiseTexture(const std::string& textureFilePath);
+
 		void SetAlphaBlend(bool enable);
 		bool IsAlphaBlend() const;
 		
@@ -101,6 +104,34 @@ namespace engine
 		const Vector4& GetMask1() const { return m_mask1; }
 
 		void SetOutline(bool enabe, float thickness, const Vector4& color);
+
+	public:
+		// Effect
+		void ClearEffect();
+
+		// Progress / Bar 계열
+		void SetFlameProgress(
+			float feather,
+			float headWidth,
+			float emissive,
+			float flameIntensity,
+			float alphaJitter = 0.0f
+		);
+
+		void SetShineSweep(
+			float width,
+			float speed,
+			float angleRad,
+			float intensity
+		);
+
+		// Dissolve
+		void SetDissolve(
+			float threshold,
+			float softness,
+			float edgeWidth,
+			float edgeIntensity
+		);
 
 	public:
 		bool HasRenderType(RenderType type) const override;

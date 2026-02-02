@@ -525,7 +525,11 @@ namespace engine
         ImGui::NewFrame();
 
         ImGuizmo::BeginFrame();
-        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+        ImGuizmo::SetRect(
+            m_gameViewport.TopLeftX,
+            m_gameViewport.TopLeftY,
+            m_gameViewport.Width,
+            m_gameViewport.Height);
         ImGuizmo::AllowAxisFlip(false);
     }
 

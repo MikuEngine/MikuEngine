@@ -140,7 +140,7 @@ namespace game
 			return;
 		}
 
-		bullet->Setup(std::move(movement), params.lifetime);
+		bullet->Setup(std::move(movement), params, this);
 
 		LOG_PRINT("[BulletFactory] LinearFireMonster: Bullet spawned successfully at ({:.2f}, {:.2f}, {:.2f})",
 			position.x, position.y, position.z);
@@ -168,7 +168,27 @@ namespace game
 			return;
 		}
 
-		bullet->Setup(std::move(movement), params.lifetime);
+		bullet->Setup(std::move(movement), params, this);
+	}
+
+	void BulletFactory::FieldFireMonster(const engine::Vector3& position, const BulletParams& params)
+	{
+		auto go = engine::Prefab::Instantiate("ParabolicFireMonster");
+		if (!go)
+		{
+			LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'FieldFireMonster' prefab!");
+			return;
+		}
+
+		go->GetTransform()->SetLocalPosition(position);
+
+		auto* bullet = go->GetComponent<BulletMonster>();
+		if (!bullet)
+		{
+			LOG_PRINT("[BulletFactory] ERROR: 'FieldFireMonster' prefab missing BulletMonster component!");
+			return;
+		}
+		bullet->SetupField(params.radius, params);
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -186,6 +206,8 @@ namespace game
 			return std::make_unique<ParabolicMovement>(params.gravity);
 		case BulletType::Curve:
 			return std::make_unique<CurvedMovement>(params.curveSpeed);
+		case BulletType::Field:
+			return std::make_unique<ParabolicMovement>(params.gravity);
 		default:
 			return std::make_unique<LinearMovement>();
 		// 추후 구현:

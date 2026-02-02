@@ -12,10 +12,18 @@ bool InsideRect(float2 p, float4 r)
 // 알파 샘플 (UV 범위 밖은 0으로 처리)
 float AlphaAt(float2 uv)
 {
+    float alpha;
+    
     if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0)
-        return 0.0;
-
-    return g_texBlit.Sample(g_samLinear, uv).a;
+    {
+        alpha = 0.0f;
+    }
+    else
+    {
+        alpha = g_texBlit.Sample(g_samLinear, uv).a;
+    }
+    
+    return alpha;
 }
 
 float4 main(PS_INPUT_TEXCOORD input) : SV_Target

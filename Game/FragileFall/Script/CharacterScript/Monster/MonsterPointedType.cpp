@@ -417,11 +417,21 @@ namespace game
 
                 switch (m_monsterTier)
                 {
+                // ─────────────────────────────────────────────
+                // 뾰족 회색
+                // 
+                // 플레이어를 천천히 추격하며 공격 사거리에 들어오면 멈춰서서 투사체를 발사
+                // ─────────────────────────────────────────────
                 case MonsterTier::Gray:
                 {
                     m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
                     break;
                 }
+                // ─────────────────────────────────────────────
+                // 뾰족 초록
+                // 
+                // 플레이어를 추격하며 멈춰 서서 투사체를 발사하고 착탄 지점에 범위 공격
+                // ─────────────────────────────────────────────
                 case MonsterTier::Green:
                 {
                     engine::Vector3 startPos = firePosition;
@@ -449,8 +459,59 @@ namespace game
                     float finalSpeed = finalVelocity.Length();
                     finalVelocity.Normalize();
 
+                    m_bulletParams.type = BulletType::Field;
                     m_bulletParams.speed = finalSpeed;
                     m_bulletFactory->ParabolicFireMonster(startPos, finalVelocity, m_bulletParams);
+                    break;
+                }
+                // ─────────────────────────────────────────────
+                // 뾰족 파랑
+                // 
+                // 플레이어를 추격하며 멈춰 서서 투사체를 발사하고 4방향 or 플레이어 방향으로 3발 발사
+                // ─────────────────────────────────────────────
+                case MonsterTier::Blue:
+                {
+                    // 중앙
+                    m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+                    // 좌우 15도씩 벌려서 발사
+                    float angleOffset = DirectX::XMConvertToRadians(15.0f);
+                    DirectX::SimpleMath::Matrix rotationMatrix;
+                    // 왼쪽
+                    rotationMatrix = DirectX::SimpleMath::Matrix::CreateRotationY(-angleOffset);
+                    engine::Vector3 leftDir = engine::Vector3::TransformNormal(direction, rotationMatrix);
+                    leftDir.Normalize();
+                    m_bulletFactory->LinearFireMonster(firePosition, leftDir, m_bulletParams);
+                    // 오른쪽
+                    rotationMatrix = DirectX::SimpleMath::Matrix::CreateRotationY(angleOffset);
+                    engine::Vector3 rightDir = engine::Vector3::TransformNormal(direction, rotationMatrix);
+                    rightDir.Normalize();
+                    m_bulletFactory->LinearFireMonster(firePosition, rightDir, m_bulletParams);
+                    break;
+				}
+                // ─────────────────────────────────────────────
+                // 뾰족 빨강
+                // 
+                // 공격 볌위에 들어오면 플레이어 주변에게 투사체를 난사
+                // ─────────────────────────────────────────────
+                case MonsterTier::Red:
+                {
+                    int projectileCount = 8;
+                    for (int i = 0; i < projectileCount; ++i)
+                    {
+                        float angle = DirectX::XM_2PI * (static_cast<float>(i) / static_cast<float>(projectileCount));
+                        engine::Vector3 dir = engine::Vector3(cosf(angle), 0.0f, sinf(angle));
+                        m_bulletFactory->LinearFireMonster(firePosition, dir, m_bulletParams);
+                    }
+                    break;
+				}
+                // ─────────────────────────────────────────────
+                // 뾰족 보라
+                // 
+                // 플레이어에게 멀어지려고 하며 가까이 오면 도망, 긴 사거리에서 플레이어를 조준, 공격ㄹ
+                // ─────────────────────────────────────────────
+                case MonsterTier::Purple:
+                {
+                    m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
                     break;
                 }
                 default:
