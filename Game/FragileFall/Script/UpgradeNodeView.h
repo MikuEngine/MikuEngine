@@ -55,6 +55,24 @@ namespace game
 
         engine::Vector4 m_nodeColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+    public:
+        // States
+        enum class TemperOp { Add, Mul, Bool };
+        enum class TemperStat
+        {
+            AtkDmg,
+            AtkSpeed,
+            BulletLifetime,
+            BulletSizeScale,
+            BulletSpeed,
+            BulletDouble
+        };
+
+        TemperOp   m_temperOp = TemperOp::Add;
+        TemperStat m_temperStat = TemperStat::AtkDmg;
+        float      m_temperValue = 0.0f;   // Add/Mul용 (Mul이면 1.10f 같은 배율)
+        bool       m_temperBool = false;  // Bool용
+
     private:
         engine::Vector4 m_baseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
         engine::UIImage* m_image = nullptr;

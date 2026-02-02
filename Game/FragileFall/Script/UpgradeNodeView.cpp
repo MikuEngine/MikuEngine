@@ -151,8 +151,35 @@ namespace game
         }
         if (!canAdd) ImGui::EndDisabled();
 
+        // Display
         ImGui::InputText("Name", &m_name);
         ImGui::InputTextMultiline("Desc", &m_desc);
+
+        // Value Setting
+        const char* opNames[] = { "Add", "Mul", "Bool" };
+        int op = (int)m_temperOp;
+        if (ImGui::Combo("TemperOp", &op, opNames, IM_ARRAYSIZE(opNames)))
+            m_temperOp = (TemperOp)op;
+
+        const char* statNames[] = {
+            "AtkDmg", "AtkSpeed", "BulletLifetime", "BulletSizeScale", "BulletSpeed", "BulletDouble"
+        };
+        int st = (int)m_temperStat;
+        if (ImGui::Combo("TemperStat", &st, statNames, IM_ARRAYSIZE(statNames)))
+            m_temperStat = (TemperStat)st;
+
+        if (m_temperOp == TemperOp::Bool)
+        {
+            ImGui::Checkbox("TemperBool", &m_temperBool);
+        }
+        else
+        {
+            ImGui::InputFloat("TemperValue", &m_temperValue);
+
+            // 참고: Mul이면 1.10 같은 배율을 넣는게 전제입니다.
+        }
+
+        ImGui::Separator();
 
         ImGui::InputInt("Ruby", &m_costRuby);
         ImGui::InputInt("Sapphire", &m_costSapphire);
@@ -181,6 +208,11 @@ namespace game
 
         j["Name"] = m_name;
         j["Desc"] = m_desc;
+
+        j["TemperOp"] = (int)m_temperOp;
+        j["TemperStat"] = (int)m_temperStat;
+        j["TemperValue"] = m_temperValue;
+        j["TemperBool"] = m_temperBool;
 
         j["Ruby"] = m_costRuby;
         j["Sapphire"] = m_costSapphire;
@@ -214,6 +246,17 @@ namespace game
 
         engine::JsonGet(j, "Name", m_name);
         engine::JsonGet(j, "Desc", m_desc);
+
+        int op = (int)m_temperOp;
+        int st = (int)m_temperStat;
+
+        engine::JsonGet(j, "TemperOp", op);
+        engine::JsonGet(j, "TemperStat", st);
+        engine::JsonGet(j, "TemperValue", m_temperValue);
+        engine::JsonGet(j, "TemperBool", m_temperBool);
+
+        m_temperOp = (TemperOp)op;
+        m_temperStat = (TemperStat)st;
 
         engine::JsonGet(j, "Ruby", m_costRuby);
         engine::JsonGet(j, "Sapphire", m_costSapphire);
