@@ -98,6 +98,9 @@ namespace engine
         std::shared_ptr<SkeletonData> GetSkeletonData() const;
         const std::string& GetMeshPath() const override;
 
+        // AfterimageRenderer 등에서 본 데이터 참조용 (Update() 이후 유효)
+        const CbBone& GetBoneTransformData() const { return m_boneTransformData; }
+
         // 런타임 머티리얼 색상 조작
         void SetBaseColor(const Vector4& color) { m_materialBaseColor = color; }
         const Vector4& GetBaseColor() const { return m_materialBaseColor; }

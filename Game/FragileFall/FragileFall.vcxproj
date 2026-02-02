@@ -199,6 +199,7 @@
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
     <ClCompile Include="Script\TemperTestScript.cpp" />
     <ClCompile Include="Script\TimeScalerTest.cpp" />
+    <ClCompile Include="Script\TrailDashTest.cpp" />
     <ClCompile Include="Script\UI\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UI\UIHoverScale.cpp" />
     <ClCompile Include="Script\UI\UIKillPopupQueue.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />
     <ClInclude Include="Script\TemperTestScript.h" />
     <ClInclude Include="Script\TimeScalerTest.h" />
+    <ClInclude Include="Script\TrailDashTest.h" />
     <ClInclude Include="Script\UI\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UI\UIHoverScale.h" />
     <ClInclude Include="Script\UI\UIKillPopupQueue.h" />
