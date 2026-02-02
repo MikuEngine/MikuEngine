@@ -6,8 +6,6 @@
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
-#include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
-#include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Physics/PhysicsLayer.h>
 #include <Engine/Core/System/MyTime.h>
@@ -28,9 +26,6 @@ namespace game
     void MonsterRoundType::Start()
     {
         MonsterScript::Start();
-        
-        // 메쉬 타입 감지
-        DetectMeshType();
 
         // PathfindingAgent 설정 (이동 몬스터용)
         if (m_pathfindingAgent)
@@ -40,8 +35,8 @@ namespace game
             m_pathfindingAgent->SetTargetMoveThreshold(2.0f);       // 목표가 2.0f 이상 움직이면 재계산
         }
 
-        // 초기 Idle 애니메이션 재생 (SkeletalMesh 사용 시에만)
-        if (HasAnimation() && !m_animName_Idle.empty())
+        // 초기 Idle 애니메이션 재생
+        if (m_skeletalAnimator && !m_animName_Idle.empty())
         {
             m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
         }
@@ -489,8 +484,8 @@ namespace game
                 // 기본: Linear 발사 (자식에서 오버라이드하여 다른 패턴 구현)
                 m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
 
-                // 공격 애니메이션 재생 (SkeletalMesh 사용 시에만)
-                if (HasAnimation() && !m_animName_EngageAttack.empty())
+                // 공격 애니메이션 재생
+                if (m_skeletalAnimator && !m_animName_EngageAttack.empty())
                 {
                     m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
                 }
@@ -531,31 +526,6 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 메쉬 타입 감지
-    // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundType::DetectMeshType()
-    {
-        // SkeletalMeshRenderer 우선 검색
-        auto* skeletalRenderer = GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>();
-        if (skeletalRenderer)
-        {
-            m_meshType = RoundMeshType::Skeletal;
-            return;
-        }
-
-        // StaticMeshRenderer 검색
-        m_staticMeshRenderer = GetGameObject()->GetComponent<engine::StaticMeshRenderer>();
-        if (m_staticMeshRenderer)
-        {
-            m_meshType = RoundMeshType::Static;
-            return;
-        }
-
-        // 둘 다 없음
-        m_meshType = RoundMeshType::None;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
     // GUI / 직렬화
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundType::OnGui()
@@ -568,31 +538,6 @@ namespace game
         MonsterScript::OnGui();
 
         // ─────────────────────────────────────────────
-        // 메쉬 타입 정보
-        // ─────────────────────────────────────────────
-        ImGui::Separator();
-        ImGui::Text("=== Mesh Type ===");
-        
-        const char* meshTypeStr = "None";
-        ImVec4 meshTypeColor = ImVec4(1.0f, 0.3f, 0.3f, 1.0f);  // 빨강 (None)
-        
-        switch (m_meshType)
-        {
-        case RoundMeshType::Static:
-            meshTypeStr = "StaticMeshRenderer";
-            meshTypeColor = ImVec4(0.3f, 0.8f, 0.3f, 1.0f);  // 초록
-            break;
-        case RoundMeshType::Skeletal:
-            meshTypeStr = "SkeletalMeshRenderer";
-            meshTypeColor = ImVec4(0.3f, 0.6f, 1.0f, 1.0f);  // 파랑
-            break;
-        default:
-            break;
-        }
-        
-        ImGui::TextColored(meshTypeColor, "Detected: %s", meshTypeStr);
-        
-        // ─────────────────────────────────────────────
         // RoundType 고유 설정
         // ─────────────────────────────────────────────
         ImGui::Separator();
@@ -600,40 +545,17 @@ namespace game
         ImGui::DragFloat("Idle Wait Time", &m_idleWaitTime, 0.1f, 0.1f, 10.0f);
         ImGui::DragFloat("Attack Anim Duration", &m_attackAnimationDuration, 0.1f, 0.1f, 5.0f);
 
-        // ─────────────────────────────────────────────
-        // 애니메이션 이름 (SkeletalMesh + AnimFSM 있을 때만 편집 가능)
-        // ─────────────────────────────────────────────
+        // 애니메이션 이름
         ImGui::Separator();
         ImGui::Text("Animation Names:");
-        
-        if (HasAnimation())
-        {
-            // 애니메이션 사용 중 - 편집 가능
-            ImGui::InputText("Idle##Round", &m_animName_Idle);
-            ImGui::InputText("IdleMove##Round", &m_animName_IdleMove);
-            ImGui::InputText("EngageMove##Round", &m_animName_EngageMove);
-            ImGui::InputText("EngageStop##Round", &m_animName_EngageStop);
-            ImGui::InputText("EngageAttack##Round", &m_animName_EngageAttack);
-            ImGui::InputText("Repositioning##Round", &m_animName_Repositioning);
-            ImGui::InputText("Fragile##Round", &m_animName_Fragile);
-            ImGui::InputText("Dead##Round", &m_animName_Dead);
-        }
-        else
-        {
-            // 애니메이션 미사용 - 편집 불가
-            ImGui::TextColored(ImVec4(1.0f, 0.6f, 0.2f, 1.0f), "[Animation Not Used - Read Only]");
-            
-            ImGui::BeginDisabled(true);
-            ImGui::InputText("Idle##Round", &m_animName_Idle);
-            ImGui::InputText("IdleMove##Round", &m_animName_IdleMove);
-            ImGui::InputText("EngageMove##Round", &m_animName_EngageMove);
-            ImGui::InputText("EngageStop##Round", &m_animName_EngageStop);
-            ImGui::InputText("EngageAttack##Round", &m_animName_EngageAttack);
-            ImGui::InputText("Repositioning##Round", &m_animName_Repositioning);
-            ImGui::InputText("Fragile##Round", &m_animName_Fragile);
-            ImGui::InputText("Dead##Round", &m_animName_Dead);
-            ImGui::EndDisabled();
-        }
+        ImGui::InputText("Idle##Round", &m_animName_Idle);
+        ImGui::InputText("IdleMove##Round", &m_animName_IdleMove);
+        ImGui::InputText("EngageMove##Round", &m_animName_EngageMove);
+        ImGui::InputText("EngageStop##Round", &m_animName_EngageStop);
+        ImGui::InputText("EngageAttack##Round", &m_animName_EngageAttack);
+        ImGui::InputText("Repositioning##Round", &m_animName_Repositioning);
+        ImGui::InputText("Fragile##Round", &m_animName_Fragile);
+        ImGui::InputText("Dead##Round", &m_animName_Dead);
 
         // 런타임 정보
         ImGui::Separator();

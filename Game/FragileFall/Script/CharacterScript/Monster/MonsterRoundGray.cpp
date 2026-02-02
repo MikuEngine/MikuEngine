@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundGray.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -7,12 +7,12 @@
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Physics/PhysicsSystem.h>
-#include <Framework/Object/Component/Collider.h>
-#include <Framework/System/SystemManager.h>
-
+#include <Framework/Physics/CollisionTypes.h>
+#include <Framework/Physics/PhysicsLayer.h>
 #include <Engine/Core/System/MyTime.h>
+#include <Engine/Core/System/Engine.h>
 
-
+#include <random>
 
 namespace game
 {
@@ -32,15 +32,10 @@ namespace game
         MonsterRoundType::Start();
 
         // Gray 등급 색상 설정 (회색)
-        // SkeletalMeshRenderer만 SetBaseColor 지원
-        if (m_meshType == RoundMeshType::Skeletal)
+        if (auto* meshRenderer = GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>())
         {
-            if (auto* meshRenderer = GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>())
-            {
-                meshRenderer->SetBaseColor(engine::Vector4(0.5f, 0.5f, 0.5f, 1.0f));
-            }
+            meshRenderer->SetBaseColor(engine::Vector4(0.5f, 0.5f, 0.5f, 1.0f));
         }
-        // StaticMeshRenderer는 현재 SetBaseColor 미지원 (필요시 엔진 수정)
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -112,8 +107,8 @@ namespace game
                 
                 m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
 
-                // 공격 애니메이션 재생 (SkeletalMesh 사용 시에만)
-                if (HasAnimation() && !m_animName_EngageAttack.empty())
+                // 공격 애니메이션 재생
+                if (m_skeletalAnimator && !m_animName_EngageAttack.empty())
                 {
                     m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
                 }
@@ -184,10 +179,10 @@ namespace game
         engine::Vector3 velocity = direction * m_moveSpeed;
         
         // Y축은 유지 (중력 영향)
-        engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+        engine::Vector3 currentVel = m_rigidbody->GetVelocity();
         velocity.y = currentVel.y;
         
-        m_rigidbody->SetLinearVelocity(velocity);
+        m_rigidbody->SetVelocity(velocity);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -286,8 +281,8 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     bool MonsterRoundGray::DetectPlayerWithRaycast()
     {
-        engine::PhysicsSystem& physicsSystem = engine::SystemManager::Get().GetPhysicsSystem();
-               
+        auto* physicsSystem = engine::Engine::Instance()->GetPhysicsSystem();
+        if (!physicsSystem) return false;
 
         engine::Vector3 origin = GetTransform()->GetWorldPosition();
         origin.y += 1.0f;  // 약간 위에서 시작 (바닥 충돌 방지)
@@ -306,7 +301,7 @@ namespace game
         engine::RaycastHit hit;
         for (const auto& dir : directions)
         {
-            if (physicsSystem.Raycast(origin, dir, m_raycastDetectionRange, hit, layerMask))
+            if (physicsSystem->Raycast(origin, dir, m_raycastDetectionRange, hit, layerMask))
             {
                 if (hit.hasHit && hit.gameObject.Get())
                 {

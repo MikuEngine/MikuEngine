@@ -1,12 +1,7 @@
 #pragma once
 
-#include "Script/CharacterScript/Monster/MonsterScript.h"
+#include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
-
-namespace engine
-{
-    class StaticMeshRenderer;
-}
 
 namespace game
 {
@@ -16,37 +11,20 @@ namespace game
     // 특징:
     //   - MonsterScript 상속 (공통 스탯 6개 + Fragile 부활)
     //   - 5개 색상별 클래스의 기반 클래스
-    //   - 동글몬 전용 FSM (Idle, IdleMove, EngageMove, EngageStop, EngageAttack, Repositioning, Fragile, Dead)
+    //   - MonsterPointedType 기반 FSM (Idle, EngageMove, EngageStop, EngageAttack, Fragile, Dead)
     //   - PathfindingAgent 기본 사용 (색상별로 오버라이드 가능)
     //   - AttackType::Round 고정
-    //   - SkeletalMesh / StaticMesh 자동 감지 (Skeletal 우선)
     // 
     // 색상별 클래스:
     //   - MonsterRoundGray, MonsterRoundGreen, MonsterRoundBlue,
     //   - MonsterRoundRed, MonsterRoundPurple
     // ═══════════════════════════════════════════════════════════════
 
-    // ─────────────────────────────────────────────
-    // 메쉬 타입 열거형
-    // ─────────────────────────────────────────────
-    enum class RoundMeshType
-    {
-        None,       // 메쉬 렌더러 없음
-        Static,     // StaticMeshRenderer 사용
-        Skeletal    // SkeletalMeshRenderer 사용
-    };
-
     class MonsterRoundType : public MonsterScript
     {
         REGISTER_SCRIPT(MonsterRoundType, MonsterScript)
 
     protected:
-        // ─────────────────────────────────────────────
-        // 메쉬 타입 (자동 감지)
-        // ─────────────────────────────────────────────
-        RoundMeshType m_meshType = RoundMeshType::None;
-        engine::StaticMeshRenderer* m_staticMeshRenderer = nullptr;
-        
         // ─────────────────────────────────────────────
         // 총알 설정
         // ─────────────────────────────────────────────
@@ -141,13 +119,6 @@ namespace game
         // 헬퍼 함수
         // ─────────────────────────────────────────────
         bool IsPlayerInDetectionRange() const;
-        
-        // ─────────────────────────────────────────────
-        // 메쉬 타입 감지
-        // ─────────────────────────────────────────────
-        void DetectMeshType();
-        bool HasAnimation() const { return m_skeletalAnimator != nullptr && m_animFSM != nullptr; }
-        RoundMeshType GetMeshType() const { return m_meshType; }
 
     public:
         void OnGui() override;

@@ -7,6 +7,7 @@
 #include "Script/AimPointer.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
+#include "Manager/PlayerTemperManager.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
@@ -834,7 +835,7 @@ namespace game
 				params.type = BulletType::BulletPlayer;
 				params.speed = m_bulletSpeed;
 				params.lifetime = m_bulletLifetime;
-				params.damage = 10;  // TODO: 데미지 변수화 필요
+				params.damage = static_cast<int>(m_playerAtkDmg);
 
 				m_bulletFactory->Fire(bulletStartPos, direction, params);
 
@@ -1078,12 +1079,57 @@ namespace game
 			ImGui::Text("Dash Progress: %.0f%%", (m_dashElapsedTime / m_dashDuration) * 100.0f);
 		}
 
-		// 발사 설정
+		// ═══════════════════════════════════════════════════════════════
+		// 공격 변수 - Base값 (편집 가능)
+		// ═══════════════════════════════════════════════════════════════
 		ImGui::Separator();
-		ImGui::Text("Shooting:");
-		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.02f, 0.01f, 2.0f);
-		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 1.0f, 1.0f, 100.0f);
-		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.5f, 0.5f, 10.0f);
+		ImGui::Text("=== Attack Stats (Base Values) ===");
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Edit these values. Actual values are calculated by PlayerTemperManager.");
+		
+		bool baseChanged = false;
+		
+		if (ImGui::DragFloat("Base Atk Damage", &m_baseAtkDmg, 0.5f, 0.0f, 1000.0f))
+			baseChanged = true;
+		if (ImGui::DragFloat("Base Atk Speed", &m_baseAtkSpeed, 0.05f, 0.1f, 10.0f))
+			baseChanged = true;
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("1.0 = 1.4 shots/sec (0.7s interval). Higher = faster attack.");
+		}
+		if (ImGui::DragFloat("Base Bullet Lifetime", &m_baseBulletLifetime, 0.1f, 0.1f, 20.0f))
+			baseChanged = true;
+		if (ImGui::DragFloat("Base Bullet Size Scale", &m_baseBulletSizeScale, 0.05f, 0.1f, 10.0f))
+			baseChanged = true;
+		if (ImGui::DragFloat("Base Bullet Speed", &m_baseBulletSpeed, 0.5f, 0.1f, 100.0f))
+			baseChanged = true;
+		
+		// Base값 변경 시 강화 재계산
+		if (baseChanged)
+		{
+			PlayerTemperManager::ApplyTemper(this);
+		}
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 공격 변수 - 실제값 (조회만, 강화 적용 후)
+		// ═══════════════════════════════════════════════════════════════
+		ImGui::Spacing();
+		ImGui::Text("=== Attack Stats (Actual Values) ===");
+		ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.5f, 1.0f), "Read-only. Calculated: (Base + Add) x Mul");
+		
+		ImGui::BeginDisabled();
+		ImGui::DragFloat("Actual Atk Damage", &m_playerAtkDmg, 0.0f);
+		ImGui::DragFloat("Actual Atk Speed", &m_AtkSpeed, 0.0f);
+		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Calculated: 0.7 / AtkSpeed");
+		}
+		ImGui::DragFloat("Actual Bullet Lifetime", &m_bulletLifetime, 0.0f);
+		ImGui::DragFloat("Actual Bullet Size Scale", &m_bulletSizeScale, 0.0f);
+		ImGui::DragFloat("Actual Bullet Speed", &m_bulletSpeed, 0.0f);
+		bool tempDouble = m_isBulletDouble;
+		ImGui::Checkbox("Is Bullet Double", &tempDouble);
+		ImGui::EndDisabled();
 		
 		ImGui::Spacing();
 		ImGui::Text("Bullet Start Position:");
@@ -1132,9 +1178,14 @@ namespace game
 		BaseControllerScript::Save(j);
 		j["MoveSpeed"] = m_moveSpeed;
 		j["RotationSpeed"] = m_rotationSpeed;
-		j["FireRate"] = m_fireRate;
-		j["BulletSpeed"] = m_bulletSpeed;
-		j["BulletLifetime"] = m_bulletLifetime;
+		
+		// 공격 변수 - Base값만 저장 (실제값은 강화 적용 후 계산됨)
+		j["BaseAtkDmg"] = m_baseAtkDmg;
+		j["BaseAtkSpeed"] = m_baseAtkSpeed;
+		j["BaseBulletLifetime"] = m_baseBulletLifetime;
+		j["BaseBulletSizeScale"] = m_baseBulletSizeScale;
+		j["BaseBulletSpeed"] = m_baseBulletSpeed;
+		
 		j["BulletStartOffsetY"] = m_bulletStartOffsetY;
 		j["BulletStartOffsetForward"] = m_bulletStartOffsetForward;
 		j["AimPointerObjectName"] = m_aimPointerObjectName;
@@ -1162,12 +1213,32 @@ namespace game
 			m_moveSpeed = j["MoveSpeed"].get<float>();
 		if (j.contains("RotationSpeed"))
 			m_rotationSpeed = j["RotationSpeed"].get<float>();
-		if (j.contains("FireRate"))
-			m_fireRate = j["FireRate"].get<float>();
-		if (j.contains("BulletSpeed"))
-			m_bulletSpeed = j["BulletSpeed"].get<float>();
-		if (j.contains("BulletLifetime"))
-			m_bulletLifetime = j["BulletLifetime"].get<float>();
+		
+		// 공격 변수 - Base값 로드
+		if (j.contains("BaseAtkDmg"))
+			m_baseAtkDmg = j["BaseAtkDmg"].get<float>();
+		if (j.contains("BaseAtkSpeed"))
+			m_baseAtkSpeed = j["BaseAtkSpeed"].get<float>();
+		if (j.contains("BaseBulletLifetime"))
+			m_baseBulletLifetime = j["BaseBulletLifetime"].get<float>();
+		if (j.contains("BaseBulletSizeScale"))
+			m_baseBulletSizeScale = j["BaseBulletSizeScale"].get<float>();
+		if (j.contains("BaseBulletSpeed"))
+			m_baseBulletSpeed = j["BaseBulletSpeed"].get<float>();
+		
+		// 하위 호환성: 기존 씬 파일에서 실제값으로 저장된 경우 Base값으로 사용
+		if (!j.contains("BaseAtkDmg") && j.contains("FireRate"))
+		{
+			// 기존 FireRate로부터 AtkSpeed 역산 (0.7 / fireRate)
+			float oldFireRate = j["FireRate"].get<float>();
+			if (oldFireRate > 0.001f)
+				m_baseAtkSpeed = 0.7f / oldFireRate;
+		}
+		if (!j.contains("BaseBulletSpeed") && j.contains("BulletSpeed"))
+			m_baseBulletSpeed = j["BulletSpeed"].get<float>();
+		if (!j.contains("BaseBulletLifetime") && j.contains("BulletLifetime"))
+			m_baseBulletLifetime = j["BulletLifetime"].get<float>();
+		
 		if (j.contains("BulletStartOffsetY"))
 			m_bulletStartOffsetY = j["BulletStartOffsetY"].get<float>();
 		if (j.contains("BulletStartOffsetForward"))
@@ -1196,5 +1267,10 @@ namespace game
 			m_dashDecayRate = j["DashDecayRate"].get<float>();
 		if (j.contains("DashCooldown"))
 			m_dashCooldown = j["DashCooldown"].get<float>();
+		
+		// ═══════════════════════════════════════════════════════════════
+		// Base값 로드 완료 후 강화 적용하여 실제값 계산
+		// ═══════════════════════════════════════════════════════════════
+		PlayerTemperManager::ApplyTemper(this);
 	}
 }
