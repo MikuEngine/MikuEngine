@@ -121,57 +121,60 @@ namespace engine
             m_selectedObject = nullptr;
         }
 
-        m_editorCamera->Update();
-
-        if (m_showEditorUI && !ImGui::GetIO().WantCaptureMouse)
+        if (m_editorState != EditorState::Play)
         {
-            if (Input::IsMousePressed(Buttons::LEFT))
-            {
-                Vector2 pos = Input::GetMousePosition();
+            m_editorCamera->Update();
 
-                GameObject* gameObject = SystemManager::Get().GetRenderSystem().PickObject( static_cast<int>(pos.x), static_cast<int>(pos.y));
-                if (gameObject != nullptr)
+            if (m_showEditorUI && !ImGui::GetIO().WantCaptureMouse)
+            {
+                if (Input::IsMousePressed(Buttons::LEFT))
                 {
-                    SetSelectedObject(gameObject);
+                    Vector2 pos = Input::GetMousePosition();
+
+                    GameObject* gameObject = SystemManager::Get().GetRenderSystem().PickObject(static_cast<int>(pos.x), static_cast<int>(pos.y));
+                    if (gameObject != nullptr)
+                    {
+                        SetSelectedObject(gameObject);
+                    }
                 }
             }
-        }
 
-        if (!ImGui::GetIO().WantCaptureKeyboard && !Input::IsMouseHeld(Buttons::RIGHT))
-        {
-            // 1. 이동 모드
-            if (ImGui::IsKeyPressed(ImGuiKey_W))
+            if (!ImGui::GetIO().WantCaptureKeyboard && !Input::IsMouseHeld(Buttons::RIGHT))
             {
-                GizmoState::CurrentOperation = ImGuizmo::TRANSLATE;
+                // 1. 이동 모드
+                if (ImGui::IsKeyPressed(ImGuiKey_W))
+                {
+                    GizmoState::CurrentOperation = ImGuizmo::TRANSLATE;
+                }
+
+                // 2. 회전 모드
+                if (ImGui::IsKeyPressed(ImGuiKey_E))
+                {
+                    GizmoState::CurrentOperation = ImGuizmo::ROTATE;
+                }
+
+                // 3. 스케일 모드 (선택 시 즉시 LOCAL로 변경)
+                if (ImGui::IsKeyPressed(ImGuiKey_R))
+                {
+                    GizmoState::CurrentOperation = ImGuizmo::SCALE;
+                    GizmoState::CurrentMode = ImGuizmo::LOCAL;
+                }
+
+                // 4. 좌표계 토글 (현재 스케일 모드가 아닐 때만 작동)
+                if (ImGui::IsKeyPressed(ImGuiKey_Q))
+                {
+                    if (GizmoState::CurrentOperation != ImGuizmo::SCALE)
+                    {
+                        GizmoState::CurrentMode = (GizmoState::CurrentMode == ImGuizmo::LOCAL)
+                            ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
+                    }
+                }
             }
 
-            // 2. 회전 모드
-            if (ImGui::IsKeyPressed(ImGuiKey_E))
-            {
-                GizmoState::CurrentOperation = ImGuizmo::ROTATE;
-            }
-
-            // 3. 스케일 모드 (선택 시 즉시 LOCAL로 변경)
-            if (ImGui::IsKeyPressed(ImGuiKey_R))
-            {
-                GizmoState::CurrentOperation = ImGuizmo::SCALE;
+            // [강제 가드 로직] 혹시 모를 예외 상황 방지
+            if (GizmoState::CurrentOperation == ImGuizmo::SCALE) {
                 GizmoState::CurrentMode = ImGuizmo::LOCAL;
             }
-
-            // 4. 좌표계 토글 (현재 스케일 모드가 아닐 때만 작동)
-            if (ImGui::IsKeyPressed(ImGuiKey_Q))
-            {
-                if (GizmoState::CurrentOperation != ImGuizmo::SCALE)
-                {
-                    GizmoState::CurrentMode = (GizmoState::CurrentMode == ImGuizmo::LOCAL)
-                        ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
-                }
-            }
-        }
-
-        // [강제 가드 로직] 혹시 모를 예외 상황 방지
-        if (GizmoState::CurrentOperation == ImGuizmo::SCALE) {
-            GizmoState::CurrentMode = ImGuizmo::LOCAL;
         }
     }
 
