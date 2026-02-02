@@ -63,6 +63,7 @@ dkms.conf
 *.user
 imgui.ini
 *.cso
+IBLBaker.zip
 
 # CustomSetting
 /Resource/Setting/ProjectSettings.json
