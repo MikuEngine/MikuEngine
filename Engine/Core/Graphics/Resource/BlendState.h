@@ -8,7 +8,7 @@ namespace engine
         public Resource
     {
     private:
-        Microsoft::WRL::ComPtr<ID3D11BlendState> m_blendState;
+        Microsoft::WRL::ComPtr<ID3D11BlendState> m_blendStateAddtive;
 
     public:
         void Create(const D3D11_BLEND_DESC& desc);

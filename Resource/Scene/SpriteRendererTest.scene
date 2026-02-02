@@ -1,6 +1,6 @@
 {
     "Name": "SpriteRendererTest",
-    "NumGameObjects": 28,
+    "NumGameObjects": 29,
     "GameObjects": [
         {
             "ID": 0,
@@ -844,6 +844,7 @@
                                 "z": 1.0,
                                 "w": 0.0
                             },
+                            "Blend": 0,
                             "SizeBegin": 0.5099999904632568,
                             "SizeEnd": 0.10000000149011612,
                             "SizeVariation": 0.10000000149011612,
@@ -7508,6 +7509,99 @@
                     "FXAAQualityEdgeThreshold": -1.0,
                     "FXAAQualityEdgeThresholdMin": -1.0,
                     "EnableFXAA": 1
+                }
+            ]
+        },
+        {
+            "ID": 28,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 5.465845108032227,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true,
+                    "IsPlaying": true,
+                    "AutoDestroy": false,
+                    "Duration": 0.0,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/Pikachu.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 5.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "Blend": 1,
+                            "SizeBegin": 1.0,
+                            "SizeEnd": 1.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "EmissionRate": 10.0,
+                            "MaxParticles": 1000,
+                            "Shape": 1,
+                            "Radius": 1.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": []
+                        }
+                    ]
                 }
             ]
         }

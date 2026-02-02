@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
-
 #include "Script/UI/UIToastAnimator.h"
 #include <deque>
 

@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "StaticMeshData.h"
 
 #include <assimp/Importer.hpp>
@@ -16,9 +16,9 @@ namespace engine
         Assimp::Importer importer;
 
         const unsigned int importFlags = aiProcess_Triangulate |
-            aiProcess_GenNormals |
-            aiProcess_GenUVCoords |
-            aiProcess_CalcTangentSpace |
+            /*aiProcess_GenNormals |*/
+            /*aiProcess_GenUVCoords |*/
+            /*aiProcess_CalcTangentSpace |*/
             aiProcess_ConvertToLeftHanded |
             aiProcess_PreTransformVertices;
 

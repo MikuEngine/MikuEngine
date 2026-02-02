@@ -41,13 +41,13 @@ namespace engine
 		std::shared_ptr<PixelShader> m_ps;
 		std::shared_ptr<InputLayout> m_inputLayout;
 
-		std::shared_ptr<BlendState> m_blendState;
+		std::shared_ptr<BlendState> m_blendStateAddtive;
+		std::shared_ptr<BlendState> m_blendStateBlend;
 		std::shared_ptr<DepthStencilState> m_dsState;
 
 	public:
 		void Initialize();
 		void Update();
-		void Render(const Matrix& view, const Matrix& projection);
 
 		// 투명 렌더링 통합을 위한 함수
 		void CollectTransparentItems(std::vector<TransparentRenderItem>& items, const Vector3& cameraPos);

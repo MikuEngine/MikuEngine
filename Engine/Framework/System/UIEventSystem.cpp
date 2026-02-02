@@ -162,7 +162,19 @@ namespace engine
 				if (vpRT && IsDescendantOf(rt, vpRT))
 				{
 					const UIRect vp = sv->GetViewPortWorldRect();
-					if (!PointInRect(vp, mousePos))
+
+					Canvas* c = sv->GetCanvasInParent();
+					if (!c) continue;
+
+					const Vector2 scale = c->GetUIScale();
+					const Vector2 offset = c->GetUIOffset();
+
+					// mouse pixel → ref
+					Vector2 p;
+					p.x = (mousePos.x - offset.x) / scale.x;
+					p.y = (mousePos.y - offset.y) / scale.y;
+
+					if (!PointInRect(vp, p))
 						continue;
 				}
 			}

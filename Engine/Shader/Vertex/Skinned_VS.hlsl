@@ -20,7 +20,18 @@ PS_INPUT_GBUFFER main(VS_INPUT_SKINNING input)
     output.tangent = mul(input.tangent, (float3x3) world);
     output.binormal = mul(input.binormal, (float3x3) world);
     
-    output.texCoord = input.texCoord;
+    if (input.color.r >= 0.5f && input.color.g <= 0.5f && input.color.b <= 0.5f)
+    {
+        float offset = 0.591f - 0.447f;
+        
+        float2 rotUV = float2(0.755f - input.texCoord.y + offset * 2, input.texCoord.x - 0.188f);
+        
+        output.texCoord = rotUV + float2(0.447f, 0.0f);
+    }
+    else
+    {
+        output.texCoord = input.texCoord;
+    }
     
     return output;
 }

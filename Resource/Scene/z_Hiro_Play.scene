@@ -166,8 +166,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -181,9 +181,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -255,8 +253,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -270,9 +268,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -406,8 +402,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -421,9 +417,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -537,8 +531,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -552,9 +546,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -740,8 +732,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -755,9 +747,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -943,8 +933,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -958,9 +948,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1189,8 +1177,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -1204,9 +1192,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -1320,8 +1306,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -1335,9 +1321,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1641,8 +1625,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -1656,9 +1640,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1745,9 +1727,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1819,8 +1799,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -1834,9 +1814,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1990,8 +1968,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -2005,9 +1983,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2094,9 +2070,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2168,8 +2142,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -2183,9 +2157,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2339,8 +2311,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -2354,9 +2326,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2443,9 +2413,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2517,8 +2485,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -2532,9 +2500,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2829,8 +2795,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -2844,9 +2810,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3242,8 +3206,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -3257,9 +3221,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3439,8 +3401,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -3454,9 +3416,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3607,8 +3567,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -3622,9 +3582,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3732,8 +3690,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -3747,9 +3705,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3929,8 +3885,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -3944,9 +3900,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4097,8 +4051,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -4112,9 +4066,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4362,8 +4314,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -4377,9 +4329,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4505,8 +4455,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -4520,9 +4470,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIPanel",
@@ -4610,8 +4558,8 @@
                     "ClipRect": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
+                        "z": 1920.0,
+                        "w": 1080.0
                     },
                     "MaskMode": 0,
                     "Mask0": {
@@ -4625,9 +4573,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
