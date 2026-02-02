@@ -156,30 +156,81 @@ namespace game
         ImGui::InputTextMultiline("Desc", &m_desc);
 
         // Value Setting
-        const char* opNames[] = { "Add", "Mul", "Bool" };
-        int op = (int)m_temperOp;
-        if (ImGui::Combo("TemperOp", &op, opNames, IM_ARRAYSIZE(opNames)))
-            m_temperOp = (TemperOp)op;
+        ImGui::Separator();
+        ImGui::Text("Temper Effects");
 
-        const char* statNames[] = {
+        static const char* opNames[] = { "Add", "Mul", "Bool" };
+        static const char* statNames[] = {
             "AtkDmg", "AtkSpeed", "BulletLifetime", "BulletSizeScale", "BulletSpeed", "BulletDouble"
         };
-        int st = (int)m_temperStat;
-        if (ImGui::Combo("TemperStat", &st, statNames, IM_ARRAYSIZE(statNames)))
-            m_temperStat = (TemperStat)st;
 
-        if (m_temperOp == TemperOp::Bool)
+        // (선택) 효과 하나 추가
+        if (ImGui::Button("+ Add Effect"))
         {
-            ImGui::Checkbox("TemperBool", &m_temperBool);
+            TemperEffect e;
+            e.op = TemperOp::Add;
+            e.stat = TemperStat::AtkDmg;
+            e.value = 0.0f;
+            e.b = false;
+            m_effects.push_back(e);
         }
-        else
-        {
-            ImGui::InputFloat("TemperValue", &m_temperValue);
 
-            // 참고: Mul이면 1.10 같은 배율을 넣는게 전제입니다.
+        ImGui::SameLine();
+        if (ImGui::Button("Clear Effects"))
+        {
+            m_effects.clear();
+        }
+
+        // 효과 리스트 편집
+        for (int i = 0; i < (int)m_effects.size(); ++i)
+        {
+            auto& e = m_effects[i];
+
+            ImGui::PushID(i);
+            ImGui::Separator();
+
+            ImGui::Text("Effect #%d", i);
+
+            int op = (int)e.op;
+            if (ImGui::Combo("Op", &op, opNames, IM_ARRAYSIZE(opNames)))
+                e.op = (TemperOp)op;
+
+            int st = (int)e.stat;
+            if (ImGui::Combo("Stat", &st, statNames, IM_ARRAYSIZE(statNames)))
+                e.stat = (TemperStat)st;
+
+            if (e.op == TemperOp::Bool)
+            {
+                ImGui::Checkbox("Bool", &e.b);
+            }
+            else
+            {
+                ImGui::InputFloat("Value", &e.value);
+
+                // (선택) Mul 입력 편의: %로 넣고 싶으면 이런 보정 UI도 가능
+                // 예: 30% 증가를 1.30으로 자동 변환 등
+            }
+
+            // 순서 변경(선택)
+            if (ImGui::Button("Up") && i > 0)
+                std::swap(m_effects[i], m_effects[i - 1]);
+            ImGui::SameLine();
+            if (ImGui::Button("Down") && i < (int)m_effects.size() - 1)
+                std::swap(m_effects[i], m_effects[i + 1]);
+
+            ImGui::SameLine();
+            if (ImGui::Button("Remove"))
+            {
+                m_effects.erase(m_effects.begin() + i);
+                ImGui::PopID();
+                break; // erase 후 break
+            }
+
+            ImGui::PopID();
         }
 
         ImGui::Separator();
+        ImGui::Text("");
 
         ImGui::InputInt("Ruby", &m_costRuby);
         ImGui::InputInt("Sapphire", &m_costSapphire);
@@ -209,10 +260,17 @@ namespace game
         j["Name"] = m_name;
         j["Desc"] = m_desc;
 
-        j["TemperOp"] = (int)m_temperOp;
-        j["TemperStat"] = (int)m_temperStat;
-        j["TemperValue"] = m_temperValue;
-        j["TemperBool"] = m_temperBool;
+        engine::json effects = engine::json::array();
+        for (const auto& e : m_effects)
+        {
+            engine::json ej;
+            ej["Op"] = (int)e.op;
+            ej["Stat"] = (int)e.stat;
+            ej["Value"] = e.value;
+            ej["Bool"] = e.b;
+            effects.push_back(ej);
+        }
+        j["Effects"] = effects;
 
         j["Ruby"] = m_costRuby;
         j["Sapphire"] = m_costSapphire;
@@ -247,16 +305,28 @@ namespace game
         engine::JsonGet(j, "Name", m_name);
         engine::JsonGet(j, "Desc", m_desc);
 
-        int op = (int)m_temperOp;
-        int st = (int)m_temperStat;
+        m_effects.clear();
 
-        engine::JsonGet(j, "TemperOp", op);
-        engine::JsonGet(j, "TemperStat", st);
-        engine::JsonGet(j, "TemperValue", m_temperValue);
-        engine::JsonGet(j, "TemperBool", m_temperBool);
+        // Effects가 있으면 그걸 우선 로드
+        engine::JsonArrayForEach(j, "Effects",
+            [this](const engine::json& ej)
+            {
+                TemperEffect e;
 
-        m_temperOp = (TemperOp)op;
-        m_temperStat = (TemperStat)st;
+                int op = (int)e.op;
+                int st = (int)e.stat;
+
+                engine::JsonGet(ej, "Op", op);
+                engine::JsonGet(ej, "Stat", st);
+                engine::JsonGet(ej, "Value", e.value);
+                engine::JsonGet(ej, "Bool", e.b);
+
+                e.op = (TemperOp)op;
+                e.stat = (TemperStat)st;
+
+                m_effects.push_back(e);
+            });
+
 
         engine::JsonGet(j, "Ruby", m_costRuby);
         engine::JsonGet(j, "Sapphire", m_costSapphire);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <future>
 #include <atomic>
 
@@ -23,13 +24,17 @@ namespace engine
 		std::atomic<int> m_totalAssetsToLoad = 0;
 		std::atomic<int> m_loadedAssetsCount = 0;
 
+		/// 워커에서 리소스 로드 완료 후 호출. 메인에서 설정, 워커에서 호출 후 클리어.
+		std::function<void()> m_onSceneResourcesLoadedCallback;
+
 	private:
 		PreloadManager() = default;
 		~PreloadManager() = default;
 
 	public:
 		void Initialize();
-		void LoadSceneResourceAsync(const std::string& sceneName);
+		/// onSceneResourcesLoaded: 워커에서 리소스 로드 직후 같은 스레드에서 호출됨(Scene::Load 등). nullptr면 호출 안 함.
+		void LoadSceneResourceAsync(const std::string& sceneName, std::function<void()> onSceneResourcesLoaded = nullptr);
 		void LoadSceneResourceSync(const std::string& sceneName);
 		bool IsLoading() const;
 		float GetProgress() const;

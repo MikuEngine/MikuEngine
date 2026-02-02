@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ParticleSystem.h"
 
 #include "Core/Graphics/Device/GraphicsDevice.h"
@@ -167,6 +167,8 @@ namespace engine
 
 			data.position = p.position;
 			data.color = p.color;
+			data.emissiveColor = p.emissiveColor;
+			data.emissiveIntensity = p.emissiveIntensity;
 			data.rotation = p.rotation;
 			data.size = p.size;
 			data.uvOffset = p.uvOffset;

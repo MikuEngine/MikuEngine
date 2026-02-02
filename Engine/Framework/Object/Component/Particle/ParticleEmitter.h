@@ -29,6 +29,9 @@ namespace engine
 		Vector4 startColor;
 		Vector4 endColor;
 
+		Vector3 emissiveColor;
+		float emissiveIntensity;
+
 		float rotation;
 		float rotationSpeed;
 
@@ -61,6 +64,10 @@ namespace engine
 
 		Vector4 startColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 		Vector4 endColor{ 1.0f, 1.0f, 1.0f, 1.0f };
+		Vector3 startEmissive{ 1.0f, 1.0f, 1.0f };
+		Vector3 endEmissive{ 1.0f, 1.0f, 1.0f };
+		float startEmissiveIntensity = 1.0f;
+		float endEmissiveIntensity = 1.0f;
 		float sizeBegin = 1.0f;
 		float sizeEnd = 1.0f;
 		float sizeVariation = 0.1f;

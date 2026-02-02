@@ -62,6 +62,7 @@ namespace engine
 
                 if (m_loadSceneAsync)
                 {
+                    m_sceneLoadDoneByWorker = true;
                     if (!PreloadManager::Get().IsGlobalLoaded())
                     {
                         m_pendingSceneAfterGlobal = m_nextSceneName;
@@ -69,11 +70,12 @@ namespace engine
                     }
                     else
                     {
-                        PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName);
+                        PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName, [this]() { m_scene->Load(); });
                     }
                 }
                 else
                 {
+                    m_sceneLoadDoneByWorker = false;
                     PreloadManager::Get().LoadGlobalSync();
                     PreloadManager::Get().LoadSceneResourceSync(m_nextSceneName);
                 }
@@ -82,6 +84,7 @@ namespace engine
             {
                 m_scene->Clear(false);
 
+                m_sceneLoadDoneByWorker = false;
                 PreloadManager::Get().LoadSceneResourceSync(m_nextSceneName);
             }
         }
@@ -95,12 +98,17 @@ namespace engine
             {
                 if (!m_pendingSceneAfterGlobal.empty())
                 {
-                    PreloadManager::Get().LoadSceneResourceAsync(m_pendingSceneAfterGlobal);
+                    m_sceneLoadDoneByWorker = true;
+                    PreloadManager::Get().LoadSceneResourceAsync(m_pendingSceneAfterGlobal, [this]() { m_scene->Load(); });
                     m_pendingSceneAfterGlobal.clear();
                     return;
                 }
 
-                m_scene->Load();
+                if (!m_sceneLoadDoneByWorker)
+                {
+                    m_scene->Load();
+                }
+                m_sceneLoadDoneByWorker = false;
 
                 // 물리 씬 생성 (씬 로드 후)
                 SystemManager::Get().GetPhysicsSystem().CreateScenePhysics();

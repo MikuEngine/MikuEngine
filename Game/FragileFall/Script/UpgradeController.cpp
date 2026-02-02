@@ -85,62 +85,59 @@ namespace game
             }
         }
 
-        static void ApplyTemperFromView(const UpgradeNodeView& view)
+        static void ApplyOneEffect(const UpgradeNodeView::TemperEffect& e)
         {
             using game::PlayerTemperManager;
             using TemperOp = UpgradeNodeView::TemperOp;
             using TemperStat = UpgradeNodeView::TemperStat;
 
-            if (view.m_temperOp == TemperOp::Add)
+            if (e.op == TemperOp::Add)
             {
-                switch (view.m_temperStat)
+                switch (e.stat)
                 {
                 case TemperStat::AtkDmg:
-                    PlayerTemperManager::SetAddAtkDmg(PlayerTemperManager::GetAddAtkDmg() + view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetAddAtkDmg(PlayerTemperManager::GetAddAtkDmg() + e.value); break;
                 case TemperStat::AtkSpeed:
-                    PlayerTemperManager::SetAddAtkSpeed(PlayerTemperManager::GetAddAtkSpeed() + view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetAddAtkSpeed(PlayerTemperManager::GetAddAtkSpeed() + e.value); break;
                 case TemperStat::BulletLifetime:
-                    PlayerTemperManager::SetAddBulletLifetime(PlayerTemperManager::GetAddBulletLifetime() + view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetAddBulletLifetime(PlayerTemperManager::GetAddBulletLifetime() + e.value); break;
                 case TemperStat::BulletSizeScale:
-                    PlayerTemperManager::SetAddBulletSizeScale(PlayerTemperManager::GetAddBulletSizeScale() + view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetAddBulletSizeScale(PlayerTemperManager::GetAddBulletSizeScale() + e.value); break;
                 case TemperStat::BulletSpeed:
-                    PlayerTemperManager::SetAddBulletSpeed(PlayerTemperManager::GetAddBulletSpeed() + view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetAddBulletSpeed(PlayerTemperManager::GetAddBulletSpeed() + e.value); break;
                 default: break;
                 }
             }
-            else if (view.m_temperOp == TemperOp::Mul)
+            else if (e.op == TemperOp::Mul)
             {
-                switch (view.m_temperStat)
+                switch (e.stat)
                 {
                 case TemperStat::AtkDmg:
-                    PlayerTemperManager::SetMulAtkDmg(PlayerTemperManager::GetMulAtkDmg() * view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetMulAtkDmg(PlayerTemperManager::GetMulAtkDmg() * e.value); break;
                 case TemperStat::AtkSpeed:
-                    PlayerTemperManager::SetMulAtkSpeed(PlayerTemperManager::GetMulAtkSpeed() * view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetMulAtkSpeed(PlayerTemperManager::GetMulAtkSpeed() * e.value); break;
                 case TemperStat::BulletLifetime:
-                    PlayerTemperManager::SetMulBulletLifetime(PlayerTemperManager::GetMulBulletLifetime() * view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetMulBulletLifetime(PlayerTemperManager::GetMulBulletLifetime() * e.value); break;
                 case TemperStat::BulletSizeScale:
-                    PlayerTemperManager::SetMulBulletSizeScale(PlayerTemperManager::GetMulBulletSizeScale() * view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetMulBulletSizeScale(PlayerTemperManager::GetMulBulletSizeScale() * e.value); break;
                 case TemperStat::BulletSpeed:
-                    PlayerTemperManager::SetMulBulletSpeed(PlayerTemperManager::GetMulBulletSpeed() * view.m_temperValue);
-                    break;
+                    PlayerTemperManager::SetMulBulletSpeed(PlayerTemperManager::GetMulBulletSpeed() * e.value); break;
                 default: break;
                 }
             }
             else // Bool
             {
-                if (view.m_temperStat == TemperStat::BulletDouble)
-                    PlayerTemperManager::SetIsBulletDouble(view.m_temperBool);
+                if (e.stat == TemperStat::BulletDouble)
+                    PlayerTemperManager::SetIsBulletDouble(e.b);
             }
         }
+
+        static void ApplyTemperFromView(const UpgradeNodeView& view)
+        {
+            for (const auto& e : view.m_effects)
+                ApplyOneEffect(e);
+        }
+
     }
 
     void UpgradeController::Awake()
