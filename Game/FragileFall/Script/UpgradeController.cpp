@@ -11,6 +11,7 @@
 #include <Framework/Object/Component/UI/UISlider.h>
 #include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/UI/UIText.h>
+#include <Manager/UpgradeProgressManager.h>
 
 namespace game
 {
@@ -180,6 +181,12 @@ namespace game
 
         BindCostSlots();
         HideAllCostSlots();
+
+        if (game::UpgradeProgressManager::HasProgress())
+        {
+            game::UpgradeProgressManager::LoadProgress(*this);
+            //RebuildTemperFromPurchased();
+        }
     }
 
     void UpgradeController::Update()
@@ -199,6 +206,7 @@ namespace game
 
             RecomputeUnlocked();
             RefreshNodeVisuals();
+            game::UpgradeProgressManager::SaveProgress(*this);
         }
 
         ImGui::Text("Wallet: Ruby=%d Sapphire=%d Emerald=%d", m_ruby, m_sapphire, m_emerald);
@@ -248,8 +256,6 @@ namespace game
 
         RecomputeUnlocked();
         RefreshNodeVisuals();
-
-        RebuildTemperFromPurchased();
     }
 
     bool UpgradeController::CanUpgrade(int nodeId) const
@@ -292,6 +298,9 @@ namespace game
 
         RecomputeUnlocked();
         RefreshNodeVisuals();
+
+        game::UpgradeProgressManager::SaveProgress(*this);
+
         return true;
     }
 

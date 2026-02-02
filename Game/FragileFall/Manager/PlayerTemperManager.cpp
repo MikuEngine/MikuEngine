@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerTemperManager.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -42,6 +42,7 @@ namespace game
 	void PlayerTemperManager::ApplyTemper(PlayerControllerScript* player)
 	{
 		if (!player) return;
+		LOG_PRINT("[Temper] ApplyTemper g_addAtkDmg addr={}", (void*)&g_addAtkDmg);
 
 		// ═══════════════════════════════════════════════════════════════
 		// Base값 읽기 → 강화 계산 → 실제값 설정
@@ -105,7 +106,7 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	// 합연산 Setter/Getter
 	// ═══════════════════════════════════════════════════════════════
-	void PlayerTemperManager::SetAddAtkDmg(float value) { g_addAtkDmg = value; }
+	void PlayerTemperManager::SetAddAtkDmg(float value) { LOG_PRINT("[Temper] SetAddAtkDmg addr={} value={}", (void*)&g_addAtkDmg, value);  g_addAtkDmg = value; }
 	float PlayerTemperManager::GetAddAtkDmg() { return g_addAtkDmg; }
 
 	void PlayerTemperManager::SetAddAtkSpeed(float value) { g_addAtkSpeed = value; }

@@ -215,6 +215,7 @@
     <ClCompile Include="Script\CharacterScript\Monster\MonsterDullType.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
     <ClCompile Include="Script\CheckRotateScript.cpp" />
+    <ClCompile Include="Manager\UpgradeProgressManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -282,6 +283,7 @@
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
     <ClInclude Include="Script\UpgradeTypes.h" />
     <ClInclude Include="Script\CheckRotateScript.h" />
+    <ClInclude Include="Manager\UpgradeProgressManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">

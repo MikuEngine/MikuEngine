@@ -48,7 +48,6 @@ namespace game
 		}
 
 		game::PlayerTemperManager::ApplyTemper(this);
-
 	}
 
 	// ═══════════════════════════════════════════════════════════════

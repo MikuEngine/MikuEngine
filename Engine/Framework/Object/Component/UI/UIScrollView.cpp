@@ -464,25 +464,6 @@ namespace engine
 		const UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
 		const UIRect vr = m_viewportRT->GetWorldRectResolved(rootRect);
 
-
-		LOG_PRINT(
-			"[SV] screenP=({:.1f},{:.1f})  scale=({:.3f},{:.3f}) offset=({:.1f},{:.1f})",
-			screenP.x, screenP.y,
-			scale.x, scale.y,
-			offset.x, offset.y
-		);
-
-		LOG_PRINT(
-			"[SV] p(ref)=({:.1f},{:.1f})",
-			p.x, p.y
-		);
-
-		LOG_PRINT(
-			"[SV] viewport(ref)=({:.1f},{:.1f},{:.1f},{:.1f})",
-			vr.x, vr.y, vr.w, vr.h
-		);
-
-
 		return (p.x >= vr.x && p.x <= vr.x + vr.w &&
 			p.y >= vr.y && p.y <= vr.y + vr.h);
 	}
