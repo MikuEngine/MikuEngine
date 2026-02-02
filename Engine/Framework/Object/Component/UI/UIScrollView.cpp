@@ -1,6 +1,8 @@
 ﻿#include "EnginePCH.h"
 #include "UIScrollView.h"
 
+#include "Core/Graphics/Device/GraphicsDevice.h"
+
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
 
@@ -83,7 +85,6 @@ namespace engine
 				vr.y + vr.h
 			);
 		}
-
 
 		static void CollectRenderersInSubtree(Transform* t,
 			std::vector<UIImage*>& outImgs,
@@ -186,6 +187,19 @@ namespace engine
 
 		if (m_viewportRT)
 			m_viewportSize = m_viewportRT->GetSize();
+
+		if (m_viewportRT)
+		{
+			m_viewportRT->MarkUIDirty(true);
+
+			Canvas* c = GetCanvasInParent();
+			if (c)
+			{
+				const Vector2 ref = c->GetReferenceResolution();
+				const UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+				m_viewportRT->GetWorldRectResolved(rootRect);
+			}
+		}
 
 		// 레이아웃 적용
 		ApplyLayout();
@@ -433,13 +447,12 @@ namespace engine
 
 	bool UIScrollView::HitTestPoint(const Vector2& screenP) const
 	{
-		if (!m_viewportRT)
-			return false;
+		if (!m_viewportRT) return false;
 
 		Canvas* c = GetCanvasInParent();
 		if (!c) return false;
 
-		// screen(pixel) → ref(Canvas)
+		// UIElement::HitTestPoint와 동일한 변환
 		const Vector2 scale = c->GetUIScale();
 		const Vector2 offset = c->GetUIOffset();
 
@@ -447,13 +460,29 @@ namespace engine
 		p.x = (screenP.x - offset.x) / scale.x;
 		p.y = (screenP.y - offset.y) / scale.y;
 
-		// viewport rect도 ref 기준
 		const Vector2 ref = c->GetReferenceResolution();
 		const UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
-
 		const UIRect vr = m_viewportRT->GetWorldRectResolved(rootRect);
 
-		// ref ↔ ref 비교
+
+		LOG_PRINT(
+			"[SV] screenP=({:.1f},{:.1f})  scale=({:.3f},{:.3f}) offset=({:.1f},{:.1f})",
+			screenP.x, screenP.y,
+			scale.x, scale.y,
+			offset.x, offset.y
+		);
+
+		LOG_PRINT(
+			"[SV] p(ref)=({:.1f},{:.1f})",
+			p.x, p.y
+		);
+
+		LOG_PRINT(
+			"[SV] viewport(ref)=({:.1f},{:.1f},{:.1f},{:.1f})",
+			vr.x, vr.y, vr.w, vr.h
+		);
+
+
 		return (p.x >= vr.x && p.x <= vr.x + vr.w &&
 			p.y >= vr.y && p.y <= vr.y + vr.h);
 	}

@@ -358,11 +358,6 @@ namespace engine
 		j["MaskMode"] = (int)m_maskMode;
 		j["Mask0"] = m_mask0;
 		j["Mask1"] = m_mask1;
-
-		auto& gd = GraphicsDevice::Get();
-		const D3D11_VIEWPORT vp = gd.GetViewport();
-		j["ClipBaseViewportW"] = vp.Width;
-		j["ClipBaseViewportH"] = vp.Height;
 	}
 
 	void UIImage::Load(const json& j)
@@ -385,29 +380,8 @@ namespace engine
 
 		JsonGet(j, "Mask0", m_mask0);
 		JsonGet(j, "Mask1", m_mask1);
-		
-		float baseW = 0.0f, baseH = 0.0f;
-		JsonGet(j, "ClipBaseViewportW", baseW);
-		JsonGet(j, "ClipBaseViewportH", baseH);
 
-		auto& gd = GraphicsDevice::Get();
-		const D3D11_VIEWPORT vp = gd.GetViewport();
-
-		if (baseW > 1e-3f && baseH > 1e-3f && vp.Width > 1e-3f && vp.Height > 1e-3f)
-		{
-			const float sx = vp.Width / baseW;
-			const float sy = vp.Height / baseH;
-
-			m_clipRect.x *= sx;
-			m_clipRect.z *= sx;
-			m_clipRect.y *= sy;
-			m_clipRect.w *= sy;
-		}
 		Refresh();
-
-		LOG_PRINT("UIImage Load done: mask={} clip=({},{},{},{})",
-			(int)m_maskMode, m_clipRect.x, m_clipRect.y, m_clipRect.z, m_clipRect.w);
-
 	}
 
 	void UIImage::Refresh()

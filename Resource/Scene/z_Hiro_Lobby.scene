@@ -181,9 +181,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -306,9 +304,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -509,9 +505,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -712,9 +706,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -915,9 +907,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1177,9 +1167,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1328,9 +1316,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -1459,9 +1445,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1780,9 +1764,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1869,9 +1851,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1958,9 +1938,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2129,9 +2107,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2218,9 +2194,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2307,9 +2281,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2478,9 +2450,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2567,9 +2537,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2656,9 +2624,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2882,7 +2848,7 @@
             "ID": 34,
             "ParentID": 14,
             "Name": "UI_UpgradePopUp",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -2968,9 +2934,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -3070,9 +3034,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3166,9 +3128,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3291,9 +3251,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3494,9 +3452,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3697,9 +3653,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3900,9 +3854,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -4074,9 +4026,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4242,9 +4192,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4403,9 +4351,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4492,9 +4438,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4581,9 +4525,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4893,9 +4835,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5133,9 +5073,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5272,9 +5210,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5483,9 +5419,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5694,9 +5628,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5891,9 +5823,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -6011,16 +5941,16 @@
                     "Width": 0.0,
                     "Height": 0.0,
                     "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.0,
+                        "y": 0.0
                     },
                     "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.0,
+                        "y": 0.0
                     },
                     "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.0,
+                        "y": 0.0
                     }
                 },
                 {
@@ -6126,9 +6056,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -6255,9 +6183,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6272,9 +6200,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -6352,9 +6278,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6369,9 +6295,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -6461,9 +6385,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6478,9 +6402,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -6572,9 +6494,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6589,9 +6511,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -6683,9 +6603,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6700,9 +6620,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -6794,9 +6712,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6811,9 +6729,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -6903,9 +6819,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6920,9 +6836,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7014,9 +6928,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7031,9 +6945,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7125,9 +7037,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7142,9 +7054,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7221,9 +7131,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7238,9 +7148,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7330,9 +7238,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7347,9 +7255,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7441,9 +7347,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7458,9 +7364,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7552,9 +7456,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7569,9 +7473,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7664,9 +7566,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7681,9 +7583,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7775,9 +7675,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7792,9 +7692,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7886,9 +7784,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7903,9 +7801,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -7982,9 +7878,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7999,9 +7895,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -8091,9 +7985,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -8108,9 +8002,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -8202,9 +8094,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -8219,9 +8111,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -8390,9 +8280,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -8479,9 +8367,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -8604,9 +8490,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
