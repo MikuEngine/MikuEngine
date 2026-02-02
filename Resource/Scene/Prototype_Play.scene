@@ -1,6 +1,6 @@
 {
     "Name": "Prototype_Play",
-    "NumGameObjects": 76,
+    "NumGameObjects": 80,
     "GameObjects": [
         {
             "ID": 0,
@@ -12364,8 +12364,13 @@
                     "AttackType": 0,
                     "MonsterTier": 0,
                     "Hp": 20.0,
-                    "AttackRange": 15.0,
+                    "MaxHp": 100.0,
                     "MoveSpeed": 0.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 15.0,
+                    "AttackRange": 15.0,
                     "RotationSpeed": 20.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 15.0,
@@ -12688,13 +12693,17 @@
                     "AttackType": 0,
                     "MonsterTier": 0,
                     "Hp": 20.0,
-                    "AttackRange": 5.0,
+                    "MaxHp": 100.0,
                     "MoveSpeed": 8.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 55.0,
+                    "AttackRange": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 12.0,
                     "BulletLifetime": 3.0,
-                    "DetectionRange": 55.0,
                     "AttackAnimationDuration": 1.2000000476837158,
                     "AnimName_Idle": "Idle",
                     "AnimName_EngageMove": "EngageMove",
@@ -13125,9 +13134,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -13158,6 +13165,10 @@
                 },
                 {
                     "Type": "SceneController_Play",
+                    "Active": true
+                },
+                {
+                    "Type": "UIMessageQueue",
                     "Active": true
                 },
                 {
@@ -13318,9 +13329,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -13449,9 +13458,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -13652,9 +13659,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -13855,9 +13860,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -14101,9 +14104,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -14232,9 +14233,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -14553,9 +14552,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -14642,9 +14639,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -14731,9 +14726,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -14902,9 +14895,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -14991,9 +14982,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -15080,9 +15069,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -15251,9 +15238,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -15340,9 +15325,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -15429,9 +15412,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -15741,9 +15722,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -16154,9 +16133,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -16351,9 +16328,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -16519,9 +16494,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -16644,9 +16617,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -16841,9 +16812,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -17009,9 +16978,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -17232,9 +17199,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -17321,9 +17286,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -17418,13 +17381,17 @@
                     "AttackType": 0,
                     "MonsterTier": 0,
                     "Hp": 20.0,
-                    "AttackRange": 5.0,
+                    "MaxHp": 100.0,
                     "MoveSpeed": 8.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 55.0,
+                    "AttackRange": 5.0,
                     "RotationSpeed": 10.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 12.0,
                     "BulletLifetime": 3.0,
-                    "DetectionRange": 55.0,
                     "AttackAnimationDuration": 1.2000000476837158,
                     "AnimName_Idle": "Idle",
                     "AnimName_EngageMove": "EngageMove",
@@ -18029,6 +17996,322 @@
                     "AimLerpSpeed": 30.0,
                     "SpineBoneName": "mixamorig:Spine1",
                     "AnimStates": []
+                }
+            ]
+        },
+        {
+            "ID": 76,
+            "Name": "Canvas_Message",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 77,
+            "Name": "UIToastPopUp",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 660.0,
+                        "y": -300.0
+                    },
+                    "Width": 331.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                },
+                {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "UIToastAnimator",
+                    "Active": true,
+                    "EnterSlideOffsetX": 100.0,
+                    "EnterDuration": 0.3499999940395355,
+                    "MoveDuration": 0.15000000596046448,
+                    "FadeInDuration": 0.4000000059604645,
+                    "FadeOutDuration": 0.20000000298023224
+                }
+            ]
+        },
+        {
+            "ID": 78,
+            "ParentID": 77,
+            "Name": "Icon",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -120.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.7861961126327515,
+                        "y": 0.7915058135986328,
+                        "z": 0.5164651870727539,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 79,
+            "ParentID": 77,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -100.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "글자",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 20,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         }
