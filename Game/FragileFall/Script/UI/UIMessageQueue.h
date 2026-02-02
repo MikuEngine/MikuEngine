@@ -68,8 +68,5 @@ namespace game
         engine::Vector2 CalcTargetPos(const ChannelConfig& cfg, size_t visibleIndex) const;
 
         void UpdateChannel(std::deque<Item>& q, ChannelConfig& cfg);
-            
-    private:
-        //engine::Vector2 m_spawnPos = { 660.0f, -400.0f };
     };
 }

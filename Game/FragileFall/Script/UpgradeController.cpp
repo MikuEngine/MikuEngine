@@ -2,6 +2,9 @@
 #include "UpgradeController.h"
 #include "UpgradeNodeView.h"
 
+#include "../Manager/PlayerTemperManager.h"
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
+
 #include <Framework/System/SoundSystem.h>
 
 #include <Framework/Object/GameObject/GameObject.h>
@@ -82,6 +85,62 @@ namespace game
             }
         }
 
+        static void ApplyTemperFromView(const UpgradeNodeView& view)
+        {
+            using game::PlayerTemperManager;
+            using TemperOp = UpgradeNodeView::TemperOp;
+            using TemperStat = UpgradeNodeView::TemperStat;
+
+            if (view.m_temperOp == TemperOp::Add)
+            {
+                switch (view.m_temperStat)
+                {
+                case TemperStat::AtkDmg:
+                    PlayerTemperManager::SetAddAtkDmg(PlayerTemperManager::GetAddAtkDmg() + view.m_temperValue);
+                    break;
+                case TemperStat::AtkSpeed:
+                    PlayerTemperManager::SetAddAtkSpeed(PlayerTemperManager::GetAddAtkSpeed() + view.m_temperValue);
+                    break;
+                case TemperStat::BulletLifetime:
+                    PlayerTemperManager::SetAddBulletLifetime(PlayerTemperManager::GetAddBulletLifetime() + view.m_temperValue);
+                    break;
+                case TemperStat::BulletSizeScale:
+                    PlayerTemperManager::SetAddBulletSizeScale(PlayerTemperManager::GetAddBulletSizeScale() + view.m_temperValue);
+                    break;
+                case TemperStat::BulletSpeed:
+                    PlayerTemperManager::SetAddBulletSpeed(PlayerTemperManager::GetAddBulletSpeed() + view.m_temperValue);
+                    break;
+                default: break;
+                }
+            }
+            else if (view.m_temperOp == TemperOp::Mul)
+            {
+                switch (view.m_temperStat)
+                {
+                case TemperStat::AtkDmg:
+                    PlayerTemperManager::SetMulAtkDmg(PlayerTemperManager::GetMulAtkDmg() * view.m_temperValue);
+                    break;
+                case TemperStat::AtkSpeed:
+                    PlayerTemperManager::SetMulAtkSpeed(PlayerTemperManager::GetMulAtkSpeed() * view.m_temperValue);
+                    break;
+                case TemperStat::BulletLifetime:
+                    PlayerTemperManager::SetMulBulletLifetime(PlayerTemperManager::GetMulBulletLifetime() * view.m_temperValue);
+                    break;
+                case TemperStat::BulletSizeScale:
+                    PlayerTemperManager::SetMulBulletSizeScale(PlayerTemperManager::GetMulBulletSizeScale() * view.m_temperValue);
+                    break;
+                case TemperStat::BulletSpeed:
+                    PlayerTemperManager::SetMulBulletSpeed(PlayerTemperManager::GetMulBulletSpeed() * view.m_temperValue);
+                    break;
+                default: break;
+                }
+            }
+            else // Bool
+            {
+                if (view.m_temperStat == TemperStat::BulletDouble)
+                    PlayerTemperManager::SetIsBulletDouble(view.m_temperBool);
+            }
+        }
     }
 
     void UpgradeController::Awake()
@@ -192,6 +251,8 @@ namespace game
 
         RecomputeUnlocked();
         RefreshNodeVisuals();
+
+        RebuildTemperFromPurchased();
     }
 
     bool UpgradeController::CanUpgrade(int nodeId) const
@@ -229,11 +290,14 @@ namespace game
         m_emerald -= view->m_costEmerald;
 
         m_purchased[nodeId] = true;
+        
+        ApplyTemperFromView(*view);
 
         RecomputeUnlocked();
         RefreshNodeVisuals();
         return true;
     }
+
 
     void UpgradeController::SelectNode(int nodeId)
     {
@@ -345,6 +409,21 @@ namespace game
             }
 
             m_unlocked[id] = anyBought;
+        }
+    }
+
+    void UpgradeController::RebuildTemperFromPurchased()
+    {
+        game::PlayerTemperManager::ResetAllTemper();
+
+        for (const auto& [id, bought] : m_purchased)
+        {
+            if (!bought) continue;
+
+            auto it = m_views.find(id);
+            if (it == m_views.end() || !it->second) continue;
+
+            ApplyTemperFromView(*it->second);
         }
     }
 
