@@ -277,6 +277,50 @@ namespace engine
 		return m_textureFilePath;
 	}
 
+	void UIImage::SetRampTexture(const std::string& textureFilePath)
+	{
+		if (textureFilePath.empty()) return;
+
+		m_rampPath = textureFilePath;
+
+		if (textureFilePath == "None")
+		{
+			m_rampTex = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
+			return;
+		}
+
+		std::shared_ptr<engine::Texture> tex = ResourceManager::Get().GetOrCreateTexture(textureFilePath);
+		if (!tex)
+		{
+			LOG_PRINT("FATAL: Texture not found: %s", textureFilePath.c_str());
+			return;
+		}
+
+		m_rampTex = tex;
+	}
+
+	void UIImage::SetNoiseTexture(const std::string& textureFilePath)
+	{
+		if (textureFilePath.empty()) return;
+
+		m_noisePath = textureFilePath;
+
+		if (textureFilePath == "None")
+		{
+			m_noiseTex = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
+			return;
+		}
+
+		std::shared_ptr<engine::Texture> tex = ResourceManager::Get().GetOrCreateTexture(textureFilePath);
+		if (!tex)
+		{
+			LOG_PRINT("FATAL: Texture not found: %s", textureFilePath.c_str());
+			return;
+		}
+
+		m_noiseTex = tex;
+	}
+
 	void UIImage::SetAlphaBlend(bool enable)
 	{
 		m_useAlphaBlend = enable;
@@ -312,6 +356,71 @@ namespace engine
 		m_outlineColor = color;
 	}
 
+	// ================================
+	// Effect API
+	// ================================
+
+	void UIImage::ClearEffect()
+	{
+		m_effectMode = 0;
+		m_effectFlags = 0;
+		m_effect0 = Vector4(0, 0, 0, 0);
+		m_effect1 = Vector4(0, 0, 0, 0);
+		m_effect2 = Vector4(0, 0, 0, 0);
+	}
+
+	void UIImage::SetFlameProgress(float feather, float headWidth, float emissive, float flameIntensity, float alphaJitter)
+	{
+		m_effectMode = 1;
+
+		// feather, headWidth
+		m_effect0 = Vector4(feather, headWidth, 0.0f, 0.0f);
+
+		// noise tiling + scroll speed
+		m_effect1 = Vector4(
+			4.0f,   // tiling X
+			2.0f,   // tiling Y
+			0.3f,   // speed X
+			0.0f    // speed Y
+		);
+
+		// emissive, flame intensity, alpha jitter
+		m_effect2 = Vector4(
+			emissive,
+			flameIntensity,
+			alphaJitter,
+			0.0f
+		);
+	}
+
+	void UIImage::SetShineSweep(float width, float speed, float angleRad, float intensity)
+	{
+		m_effectMode = 2;
+
+		// feather(0), width, angle
+		m_effect0 = Vector4(0.0f, width, angleRad, 0.0f);
+
+		// speed in Z
+		m_effect1 = Vector4(0.0f, 0.0f, speed, 0.0f);
+
+		// emissive, intensity
+		m_effect2 = Vector4(1.0f, intensity, 0.0f, 0.0f);
+	}
+
+	void UIImage::SetDissolve(float threshold, float softness, float edgeWidth, float edgeIntensity)
+	{
+		m_effectMode = 3;
+
+		// threshold, softness, edge width
+		m_effect0 = Vector4(threshold, softness, edgeWidth, 0.0f);
+
+		// noise tiling + scroll
+		m_effect1 = Vector4(3.0f, 3.0f, 0.2f, 0.2f);
+
+		// emissive, edge intensity
+		m_effect2 = Vector4(1.0f, edgeIntensity, 0.0f, 0.0f);
+	}
+
 	bool UIImage::HasRenderType(RenderType type) const
 	{
 		return type == RenderType::Screen;
@@ -341,15 +450,84 @@ namespace engine
 			}
 		}
 
+		static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga"};
+		static std::vector<std::string> rampExtensions{ ".png", ".jpg", ".tga" };
+		static std::vector<std::string> noiseExtensions{ ".png", ".jpg", ".tga" };
+
 		ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
 		std::string selectedTex;
-
-		static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga"};
 
 		if (DrawFileSelector("Select Texture", "Resource/Texture", texExtensions, selectedTex))
 		{
 			SetTexture(selectedTex);
 		}
+
+
+
+		ImGui::Separator();
+		ImGui::TextDisabled("Effect (Optional)");
+
+		// Use Effect toggle
+		bool useEffect = (m_effectMode != 0);
+		if (ImGui::Checkbox("Use Effect", &useEffect))
+		{
+			if (!useEffect)
+			{
+				ClearEffect(); // effectMode = 0
+			}
+			else
+			{
+				m_effectMode = 1; // 기본값: FlameProgress (임시)
+			}
+		}
+
+		// Effect UI는 UseEffect일 때만
+		if (useEffect)
+		{
+			// Effect Type
+			static const char* effectNames[] =
+			{
+				"None",
+				"Flame Progress",
+				"Shine Sweep",
+				"Dissolve"
+			};
+
+			int effectIdx = (int)m_effectMode;
+			if (ImGui::Combo("Effect Type", &effectIdx, effectNames, IM_ARRAYSIZE(effectNames)))
+			{
+				m_effectMode = (uint32_t)effectIdx;
+			}
+
+			// Ramp / Noise는 Effect 있을 때만 의미 있음
+			ImGui::Spacing();
+			ImGui::Text("Effect Textures");
+
+			// Ramp
+			ImGui::Text("Ramp: %s", std::filesystem::path(m_rampPath).filename().string().c_str());
+			std::string selectedRamp;
+			if (DrawFileSelector("Select Ramp", "Resource/Texture", rampExtensions, selectedRamp))
+			{
+				SetRampTexture(selectedRamp);
+			}
+
+			// Noise
+			ImGui::Text("Noise: %s", std::filesystem::path(m_noisePath).filename().string().c_str());
+			std::string selectedNoise;
+			if (DrawFileSelector("Select Noise", "Resource/Texture", noiseExtensions, selectedNoise))
+			{
+				SetNoiseTexture(selectedNoise);
+			}
+
+			ImGui::Spacing();
+			ImGui::Text("Effect Parameters");
+
+			// Effect parameters (공용)
+			ImGui::DragFloat4("Effect0", &m_effect0.x, 0.001f);
+			ImGui::DragFloat4("Effect1", &m_effect1.x, 0.01f);
+			ImGui::DragFloat4("Effect2", &m_effect2.x, 0.01f);
+		}
+
 		ImGui::Spacing();
 
 		ImGui::ColorEdit4("Color", &m_color.x);
@@ -361,6 +539,14 @@ namespace engine
 		UIElement::Save(j);
 
 		j["TexturePath"] = m_textureFilePath;
+		j["RampPath"] = m_rampPath;
+		j["NoisePath"] = m_noisePath;
+
+		j["EffectMode"] = m_effectMode;
+		j["Effect0"] = m_effect0;
+		j["Effect1"] = m_effect1;
+		j["Effect2"] = m_effect2;
+
 		j["VSFilePath"] = m_vsFilePath;
 		j["PSFilePath"] = m_psFilePath;
 		j["OutlinePSFilePath"] = m_outlinePSFilePath;
@@ -379,6 +565,14 @@ namespace engine
 		UIElement::Load(j);
 
 		JsonGet(j, "TexturePath", m_textureFilePath);
+		JsonGet(j, "RampPath", m_rampPath);
+		JsonGet(j, "NoisePath", m_noisePath);
+
+		JsonGet(j, "EffectMode", m_effectMode);
+		JsonGet(j, "Effect0", m_effect0);
+		JsonGet(j, "Effect1", m_effect1);
+		JsonGet(j, "Effect2", m_effect2);
+
 		JsonGet(j, "VSFilePath", m_vsFilePath);
 		JsonGet(j, "PSFilePath", m_psFilePath);
 		JsonGet(j, "OutlinePSFilePath", m_outlinePSFilePath);
