@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
@@ -60,7 +60,7 @@ namespace game
 		// 5. Movement 생성 및 초기화
 		// ─────────────────────────────────────────────
 		auto movement = CreateMovement(params);
-		movement->Initialize(direction, params.speed);
+		movement->Initialize(go, direction, params.speed);
 
 		// ─────────────────────────────────────────────
 		// 6. BulletPlayer 컴포넌트 추가 및 설정
@@ -127,7 +127,7 @@ namespace game
 		// 5. Movement 생성 및 초기화
 		// ─────────────────────────────────────────────
 		auto movement = CreateMovement(params);
-		movement->Initialize(direction, params.speed);
+		movement->Initialize(go, direction, params.speed);
 
 		// ─────────────────────────────────────────────
 		// 6. BulletMonster 컴포넌트 추가 및 설정
@@ -158,7 +158,7 @@ namespace game
 		go->GetTransform()->SetLocalPosition(position);
 
 		auto movement = CreateMovement(params);
-		movement->Initialize(direction, params.speed);
+		movement->Initialize(go, direction, params.speed);
 
 		auto* bullet = go->GetComponent<BulletMonster>();
 
@@ -184,13 +184,13 @@ namespace game
 			return std::make_unique<LinearMovement>();
 		case BulletType::Parabolic:
 			return std::make_unique<ParabolicMovement>(params.gravity);
+		case BulletType::Curve:
+			return std::make_unique<CurvedMovement>(params.curveSpeed);
 		default:
 			return std::make_unique<LinearMovement>();
-			// 추후 구현:
-			// case BulletType::Spiral:
-			//     return std::make_unique<SpiralMovement>(params.spiralRadius, params.spiralFrequency);
-			// case BulletType::Homing:
-			//     return std::make_unique<HomingMovement>(params.target, params.turnSpeed);
+		// 추후 구현:
+		// case BulletType::Homing:
+		//     return std::make_unique<HomingMovement>(params.target, params.turnSpeed);
 		}
 	}
 

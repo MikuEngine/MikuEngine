@@ -32,6 +32,14 @@ namespace game
         std::string m_animName_Dead = "Dead";
         std::string m_animName_Attack = "Attack";
 
+
+		// ─────────────────────────────────────────────
+		// 둔탁 빨강
+		// ─────────────────────────────────────────────
+        float m_currentRotation = 0.0f;    // 현재 총알 발사 기준 각도
+        float m_targetRotation = 0.0f;     // 회전해서 도달해야 할 목표 각도
+        bool  m_isRotating = false;        // 현재 회전 중인지 여부
+
     public:
         void Awake() override;
         void Start() override;

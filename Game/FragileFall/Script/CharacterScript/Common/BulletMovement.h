@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Transform.h>
+#include <Framework/Object/Component/Rigidbody.h>
 #include <memory>
 
 namespace game
@@ -17,7 +18,8 @@ namespace game
         virtual ~IBulletMovement() = default;
 
         // 초기화 (발사 방향, 속도 설정)
-        virtual void Initialize(const engine::Vector3& direction, float speed) = 0;
+        // virtual void Initialize(const engine::Vector3& direction, float speed) = 0;
+        virtual void Initialize(engine::GameObject* owner, const engine::Vector3& direction, float speed) = 0;
 
         // 매 프레임 이동 업데이트
         virtual void Update(engine::Transform* transform, float deltaTime) = 0;
@@ -40,7 +42,7 @@ namespace game
     public:
         BulletPlayerMovement() = default;
 
-        void Initialize(const engine::Vector3& direction, float speed) override
+        void Initialize(engine::GameObject* owner, const engine::Vector3& direction, float speed) override
         {
             m_velocity = direction;
             m_velocity.Normalize();
@@ -77,7 +79,7 @@ namespace game
     public:
         LinearMovement() = default;
 
-        void Initialize(const engine::Vector3& direction, float speed) override
+        void Initialize(engine::GameObject* owner, const engine::Vector3& direction, float speed) override
         {
             m_velocity = direction;
             m_velocity.Normalize();
@@ -115,7 +117,7 @@ namespace game
     public:
         ParabolicMovement(float gravity) : m_gravity(gravity) {}
 
-        void Initialize(const engine::Vector3& direction, float speed) override
+        void Initialize(engine::GameObject* owner, const engine::Vector3& direction, float speed) override
         {
             m_velocity = direction * speed;
         }
@@ -141,6 +143,64 @@ namespace game
             return m_velocity;
         }
 	};
+
+    // ═══════════════════════════════════════════════════════════════
+    // CurvedMovement - 
+    // 
+    //  
+    // ═══════════════════════════════════════════════════════════════
+
+    class CurvedMovement : public IBulletMovement
+    {
+    private:
+        engine::Rigidbody* m_rigidbody = nullptr;
+        engine::Vector3 m_velocity = engine::Vector3::Zero;
+        float m_curveSpeed = 0.0f;
+
+    public:
+        CurvedMovement(float curveSpeed) : m_curveSpeed(curveSpeed) {}
+
+        void Initialize(engine::GameObject* owner, const engine::Vector3& direction, float speed) override
+        {
+            if (owner) m_rigidbody = owner->GetComponent<engine::Rigidbody>();
+
+            m_velocity = direction;
+            m_velocity.Normalize();
+            m_velocity *= speed;
+        }
+
+        void Update(engine::Transform* transform, float deltaTime) override
+        {
+            if (transform)
+            {
+                float angle = m_curveSpeed * deltaTime;
+                auto rot = DirectX::SimpleMath::Matrix::CreateRotationY(angle);
+                m_velocity = DirectX::SimpleMath::Vector3::Transform(m_velocity, rot);
+
+                if (m_rigidbody)
+                {
+                    m_rigidbody->SetLinearVelocity(m_velocity);
+                }
+                else if (transform)
+                {
+                    engine::Vector3 pos = transform->GetLocalPosition();
+                    pos += m_velocity * deltaTime;
+                    transform->SetLocalPosition(pos);
+                }
+
+                /* 진행 방향(속도 벡터)을 바라보도록 회전
+                if (m_velocity.LengthSquared() > 0.001f) {
+                    transform->SetForward(m_velocity.Normalized()); 
+                }*/
+            }
+        }
+
+        engine::Vector3 GetVelocity() const override
+        {
+            return m_velocity;
+        }
+    };
+
 
     // ═══════════════════════════════════════════════════════════════
     // 추후 구현 예정:
