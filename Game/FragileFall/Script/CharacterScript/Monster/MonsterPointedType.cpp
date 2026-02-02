@@ -6,6 +6,7 @@
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
+#include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Physics/PhysicsLayer.h>
 #include <Engine/Core/System/MyTime.h>
@@ -37,7 +38,27 @@ namespace game
         if (m_skeletalAnimator && !m_animName_Idle.empty())
         {
             m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
-        } 
+        }
+
+        // 테스트용 Tier별 색상 설정
+        switch (m_monsterTier)
+        {
+        case MonsterTier::Gray:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+            break;
+        case MonsterTier::Green:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+            break;
+        case MonsterTier::Blue:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+            break;
+        case MonsterTier::Red:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+            break;
+        case MonsterTier::Purple:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.0f, 0.5f, 1.0f));
+            break;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -149,10 +170,27 @@ namespace game
 
     void MonsterPointedType::InitializeBullet()
     {
-        m_bulletParams.type = BulletType::Linear;
-        m_bulletParams.speed = m_bulletSpeed;
-        m_bulletParams.lifetime = m_bulletLifetime;
-        m_bulletParams.damage = 10;
+        switch (m_monsterTier)
+        {
+        case MonsterTier::Gray:
+            m_bulletParams.type = BulletType::Linear;
+            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = 10;
+            break;
+        case MonsterTier::Green:
+            m_bulletParams.type = BulletType::Parabolic;
+            m_bulletParams.gravity = 9.81f;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = 15;
+			break;
+        default:
+            m_bulletParams.type = BulletType::Linear;
+            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = 10;
+			break;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -369,16 +407,56 @@ namespace game
         // 공격 애니메이션 타이머 업데이트
         m_attackAnimationTimer += deltaTime;
 
-        // EngageAttack 상태 진입 시 즉시 발사 (CanFire가 true였기 때문에 진입)
         if (m_fireTimer <= 0.0f)
         {
-            // 발사 가능 상태
             if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
             {
                 // 플레이어를 향해 발사
                 engine::Vector3 direction = CalculateDirectionToPlayer();
                 engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
-                m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+
+                switch (m_monsterTier)
+                {
+                case MonsterTier::Gray:
+                {
+                    m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+                    break;
+                }
+                case MonsterTier::Green:
+                {
+                    engine::Vector3 startPos = firePosition;
+                    engine::Vector3 targetPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+
+                    // 수평 벡터와 거리 계산
+                    engine::Vector3 diff = targetPos - startPos;
+                    engine::Vector3 horizontalDiff = { diff.x, 0.0f, diff.z };
+                    float distance = horizontalDiff.Length();
+
+                    // 날아가는 시간 설정
+                    float travelTime = 1.5f;
+
+                    // 수평 속도 계산 (V = S / t)
+                    float horizontalSpeed = distance / travelTime;
+                    engine::Vector3 horizontalDir = horizontalDiff;
+
+                    horizontalDir.Normalize();
+
+                    // 수직 초기 속도 계산 (Vy = (dy + 0.5 * g * t^2) / t)
+                    float dy = diff.y;
+                    float verticalSpeed = (dy + 0.5f * m_bulletParams.gravity * travelTime * travelTime) / travelTime;
+
+                    engine::Vector3 finalVelocity = (horizontalDir * horizontalSpeed) + (engine::Vector3::Up * verticalSpeed);
+                    float finalSpeed = finalVelocity.Length();
+                    finalVelocity.Normalize();
+
+                    m_bulletParams.speed = finalSpeed;
+                    m_bulletFactory->ParabolicFireMonster(startPos, finalVelocity, m_bulletParams);
+                    break;
+                }
+                default:
+                    m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+                    break;
+                }
 
                 // 공격 애니메이션 재생
                 if (m_skeletalAnimator && !m_animName_EngageAttack.empty())
@@ -390,7 +468,11 @@ namespace game
                 m_fireTimer = m_fireRate;
             }
         }
-
+        else
+        {
+            m_fireTimer -= deltaTime;
+        }
+          
         // 공격 애니메이션 완료 체크
         if (m_attackAnimationTimer >= m_attackAnimationDuration)
         {
@@ -429,8 +511,6 @@ namespace game
     {
         ImGui::Indent();
         
-        ImGui::Text("MonsterPointedType:");
-
         // ─────────────────────────────────────────────
         // 컴포넌트 검증 (에디터 화면에서도 체크)
         // ─────────────────────────────────────────────
@@ -477,6 +557,45 @@ namespace game
         ImGui::Text("PathfindingAgent:  %s", pathfindingAgent ? "[OK]" : "[MISSING]");
         if (!pathfindingAgent) ImGui::SameLine(); if (!pathfindingAgent) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
         ImGui::Unindent();
+
+        // 공격 타입
+        ImGui::Separator();
+        ImGui::Text("Type:");
+        if (ImGui::BeginCombo("Attack Type", GetAttackTypeStr(m_attackType)))
+        {
+            for (int i = 0; i < (int)AttackType::Max; ++i)
+            {
+                AttackType currentType = (AttackType)i;
+                bool isSelected = (m_attackType == currentType);
+
+                if (ImGui::Selectable(GetAttackTypeStr(currentType), isSelected))
+                {
+                    m_attackType = currentType;
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        if (ImGui::BeginCombo("Monster Tier", GetMonsterTierStr(m_monsterTier)))
+        {
+            for (int i = 0; i < (int)MonsterTier::Max; ++i)
+            {
+                MonsterTier currentTier = (MonsterTier)i;
+                bool isSelected = (m_monsterTier == currentTier);
+
+                if (ImGui::Selectable(GetMonsterTierStr(currentTier), isSelected))
+                {
+                    m_monsterTier = currentTier;
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
 
         // 스탯
         ImGui::Separator();

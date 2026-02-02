@@ -372,12 +372,6 @@ namespace game
         case MonsterTier::Gray:
         {
             m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-
-            if (m_skeletalAnimator && !m_animName_Attack.empty())
-            {
-                m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-            }
-
             m_fireTimer = m_fireRate;
             break;
         }
@@ -416,7 +410,6 @@ namespace game
             m_bulletParams.speed = finalSpeed;
             m_bulletFactory->ParabolicFireMonster(startPos, finalVelocity, m_bulletParams);
 
-            m_fireTimer = m_fireRate;
             break;
         }
         // ─────────────────────────────────────────────
@@ -433,12 +426,6 @@ namespace game
             m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection1, m_bulletParams);
             m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection2, m_bulletParams);
 
-            if (m_skeletalAnimator && !m_animName_Attack.empty())
-            {
-                m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-            }
-
-            m_fireTimer = m_fireRate;
             break;
         }
         // ─────────────────────────────────────────────
@@ -464,13 +451,6 @@ namespace game
             float rotationAmount = DirectX::XM_PI * 0.7f;
             m_targetRotation = m_currentRotation + rotationAmount;
             m_isRotating = true;
-
-            m_fireTimer = m_fireRate;
-
-            if (m_skeletalAnimator && !m_animName_Attack.empty())
-            {
-                m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-            }
             break;
 		}
         // ─────────────────────────────────────────────
@@ -481,17 +461,19 @@ namespace game
         case MonsterTier::Purple:
         {
             m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-            if (m_skeletalAnimator && !m_animName_Attack.empty())
-            {
-                m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-            }
-            m_fireTimer = m_fireRate;
             break;
 		}
         default:
             m_fireTimer = m_fireRate;
             break;
         }
+
+        if (m_skeletalAnimator && !m_animName_Attack.empty())
+        {
+            m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
+        }
+
+        m_fireTimer = m_fireRate;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -501,8 +483,6 @@ namespace game
     {
         ImGui::Indent();
         
-        ImGui::Text("MonsterDullType:");
-
         // ─────────────────────────────────────────────
         // 컴포넌트 검증 (에디터 화면에서도 체크)
         // ─────────────────────────────────────────────
