@@ -229,8 +229,6 @@ namespace game
             ImGui::PopID();
         }
 
-
-
         ImGui::Separator();
         ImGui::Text("");
 
@@ -262,10 +260,17 @@ namespace game
         j["Name"] = m_name;
         j["Desc"] = m_desc;
 
-        j["TemperOp"] = (int)m_temperOp;
-        j["TemperStat"] = (int)m_temperStat;
-        j["TemperValue"] = m_temperValue;
-        j["TemperBool"] = m_temperBool;
+        engine::json effects = engine::json::array();
+        for (const auto& e : m_effects)
+        {
+            engine::json ej;
+            ej["Op"] = (int)e.op;
+            ej["Stat"] = (int)e.stat;
+            ej["Value"] = e.value;
+            ej["Bool"] = e.b;
+            effects.push_back(ej);
+        }
+        j["Effects"] = effects;
 
         j["Ruby"] = m_costRuby;
         j["Sapphire"] = m_costSapphire;
@@ -300,16 +305,28 @@ namespace game
         engine::JsonGet(j, "Name", m_name);
         engine::JsonGet(j, "Desc", m_desc);
 
-        int op = (int)m_temperOp;
-        int st = (int)m_temperStat;
+        m_effects.clear();
 
-        engine::JsonGet(j, "TemperOp", op);
-        engine::JsonGet(j, "TemperStat", st);
-        engine::JsonGet(j, "TemperValue", m_temperValue);
-        engine::JsonGet(j, "TemperBool", m_temperBool);
+        // Effects가 있으면 그걸 우선 로드
+        engine::JsonArrayForEach(j, "Effects",
+            [this](const engine::json& ej)
+            {
+                TemperEffect e;
 
-        m_temperOp = (TemperOp)op;
-        m_temperStat = (TemperStat)st;
+                int op = (int)e.op;
+                int st = (int)e.stat;
+
+                engine::JsonGet(ej, "Op", op);
+                engine::JsonGet(ej, "Stat", st);
+                engine::JsonGet(ej, "Value", e.value);
+                engine::JsonGet(ej, "Bool", e.b);
+
+                e.op = (TemperOp)op;
+                e.stat = (TemperStat)st;
+
+                m_effects.push_back(e);
+            });
+
 
         engine::JsonGet(j, "Ruby", m_costRuby);
         engine::JsonGet(j, "Sapphire", m_costSapphire);
