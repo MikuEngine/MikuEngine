@@ -8,10 +8,10 @@ namespace game
 {
     class UIToastAnimator;
 
-    class UIKillPopupQueue :
-        public engine::Script<UIKillPopupQueue>
+    class UIMessageQueue :
+        public engine::Script<UIMessageQueue>
     {
-        REGISTER_SCRIPT(UIKillPopupQueue, Script)
+        REGISTER_SCRIPT(UIMessageQueue, Script)
 
     public:
         void Awake() override;
@@ -23,40 +23,38 @@ namespace game
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
 
+    public:
+        void PushMessage(const std::string& text, const std::string& iconKey = "");
+
     private:
         struct Item
         {
             engine::Ptr<engine::GameObject> go;
             engine::TimePoint born;
+
             bool exiting = false;
             bool visible = true;
         };
 
         std::deque<Item> m_items;
 
-    private:
-        void PushKill(const std::string& text, const std::string& iconKey);
+        void TryStartExitVisibleBatch();
+        void CleanupFinishedVisible();
+        void TrySpawnNextBatchIfEmpty();
+        bool HasHiddenItems() const;
 
-        void Reflow(bool instant);
-        engine::Vector2 CalcTargetPos(size_t index) const;
-        
-        void TryStartExitTop();
-        void TryUnlockAndShow();
-        void CleanupTopIfFinished();
+        void ReflowVisible(bool instant);
+        engine::Vector2 CalcTargetPos(size_t visibleIndex) const;
 
-        bool HasHiddenItems();
 
     private:
         engine::GameObject* m_canvas = nullptr;
 
         std::string m_prefabKey = "UIToastPopUp";
-
         engine::Vector2 m_spawnPos = { 660.0f, -400.0f };
 
         float m_spacing = 110.0f;
         float m_lifeTime = 3.0f;
-        int m_maxQueue = 3;
-
-        bool m_locked = false;
+        int m_maxVisible = 3;
     };
 }

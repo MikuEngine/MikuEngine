@@ -200,6 +200,7 @@
     <ClCompile Include="Script\UI\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UI\UIHoverScale.cpp" />
     <ClCompile Include="Script\UI\UIKillPopupQueue.cpp" />
+    <ClCompile Include="Script\UI\UIMessageQueue.cpp" />
     <ClCompile Include="Script\UI\UIPopUpAnimator.cpp" />
     <ClCompile Include="Script\UI\UIToastAnimator.cpp" />
     <ClCompile Include="Script\UpgradeNodeView.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="Script\UI\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UI\UIHoverScale.h" />
     <ClInclude Include="Script\UI\UIKillPopupQueue.h" />
+    <ClInclude Include="Script\UI\UIMessageQueue.h" />
     <ClInclude Include="Script\UI\UIPopUpAnimator.h" />
     <ClInclude Include="Script\UI\UIToastAnimator.h" />
     <ClInclude Include="Script\UpgradeNodeView.h" />
