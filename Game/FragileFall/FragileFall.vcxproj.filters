@@ -21,7 +21,7 @@
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp" />
     <ClCompile Include="Script\Boss\BossScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
-    <ClCompile Include="Script\CharacterScript\Monster\MonsterRoundType.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundType.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
@@ -46,7 +46,6 @@
     <ClCompile Include="Script\CharacterScript\Monster\BulletMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterDullType.cpp" />
-    <ClCompile Include="Script\CharacterScript\Monster\TempMonster.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
     <ClCompile Include="Script\CheckRotateScript.cpp" />
     <ClCompile Include="Script\ExecutionSlowScript.cpp" />
@@ -55,6 +54,11 @@
     <ClCompile Include="Script\AimPointerMeshScript.cpp" />
     <ClCompile Include="Script\PlayerAimMeshController.cpp" />
     <ClCompile Include="Script\OrbitScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundBlue.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundGray.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundGreen.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundPurple.cpp" />
+    <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundRed.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -77,7 +81,7 @@
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h" />
     <ClInclude Include="Script\Boss\BossScript.h" />
     <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
-    <ClInclude Include="Script\CharacterScript\Monster\MonsterRoundType.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundType.h" />
     <ClInclude Include="Script\ItemType.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
@@ -105,7 +109,6 @@
     <ClInclude Include="Script\CharacterScript\Monster\BulletMonster.h" />
     <ClInclude Include="Script\CharacterScript\Monster\MonsterScript.h" />
     <ClInclude Include="Script\CharacterScript\Monster\MonsterDullType.h" />
-    <ClInclude Include="Script\CharacterScript\Monster\TempMonster.h" />
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
     <ClInclude Include="Script\UpgradeTypes.h" />
     <ClInclude Include="Script\CheckRotateScript.h" />
@@ -115,5 +118,10 @@
     <ClInclude Include="Script\AimPointerMeshScript.h" />
     <ClInclude Include="Script\PlayerAimMeshController.h" />
     <ClInclude Include="Script\OrbitScript.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundBlue.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundGray.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundGreen.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundPurple.h" />
+    <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundRed.h" />
   </ItemGroup>
 </Project>

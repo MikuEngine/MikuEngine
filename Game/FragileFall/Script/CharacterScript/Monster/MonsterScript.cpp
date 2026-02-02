@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -26,6 +26,12 @@ namespace game
 	void MonsterScript::Start()
 	{
 		BaseControllerScript::Start();
+
+		// 최대 체력 저장 (부활 시 사용)
+		m_maxHp = m_Hp;
+
+		// MonsterData 동기화 (MonsterScript 값으로 설정)
+		SyncMonsterData();
 
 		// 애니메이션 초기화
 		InitializeAnimations();
@@ -333,8 +339,8 @@ namespace game
 
 	void MonsterScript::ExecuteFragileBehaviorNonPhysics()
 	{
-		// Fragile 상태에서는 아무 행동도 하지 않음
-		// Execution을 기다리는 상태
+		// Fragile 타이머 업데이트 (시간 초과 시 부활)
+		UpdateFragileTimer(engine::Time::DeltaTime());
 	}
 
 	void MonsterScript::ExecuteDeadBehaviorNonPhysics()
@@ -479,7 +485,10 @@ namespace game
 
 	void MonsterScript::OnFragile()
 	{
-		// Fragile 상태 진입 시 처리
+		// Fragile 상태 진입 시 타이머 시작
+		m_fragileTimer = 0.0f;
+		m_fragileTimerStarted = true;
+		
 		// 추후 이펙트나 사운드 추가 가능
 	}
 
@@ -489,7 +498,70 @@ namespace game
 		m_deathTimer = 0.0f;
 		m_deathTimerStarted = true;
 		
+		// Fragile 타이머 정지
+		m_fragileTimerStarted = false;
+		
 		// 추후 Death 애니메이션이나 이펙트 재생 가능
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// Fragile 부활 시스템
+	// ═══════════════════════════════════════════════════════════════
+	void MonsterScript::UpdateFragileTimer(float deltaTime)
+	{
+		if (!m_fragileTimerStarted) return;
+		
+		m_fragileTimer += deltaTime;
+		
+		// Fragile 시간 초과 시 부활
+		if (m_fragileTimer >= m_fragileTime)
+		{
+			ReviveFromFragile();
+		}
+	}
+
+	void MonsterScript::ReviveFromFragile()
+	{
+		// 체력 100% 회복
+		m_Hp = m_maxHp;
+		
+		// Fragile 상태 해제
+		m_isFragile = false;
+		m_fragileTimerStarted = false;
+		m_fragileTimer = 0.0f;
+		
+		// Idle 상태로 전이
+		if (m_logicFSM)
+		{
+			// Fragile 상태에서 Idle로 강제 전이
+			// FSM에 Revive 트리거가 없으면 직접 상태 설정
+			m_logicFSM->SetTrigger("Revive");
+		}
+		
+		// 부활 콜백
+		OnRevive();
+		
+		LOG_PRINT("[MonsterScript] Monster revived from Fragile state!");
+	}
+
+	void MonsterScript::OnRevive()
+	{
+		// 부활 시 콜백 (자식에서 오버라이드 가능)
+		// 기본 구현: 없음
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// MonsterData 동기화
+	// ═══════════════════════════════════════════════════════════════
+	void MonsterScript::SyncMonsterData()
+	{
+		// MonsterScript의 값으로 MonsterData 동기화
+		m_monsterData.Type = m_attackType;
+		m_monsterData.Tier = m_monsterTier;
+		m_monsterData.Difficulty = m_difficulty;
+		
+		// MonsterData에 없는 값들은 MonsterScript에서만 관리
+		// (체력, 이동속도, 공격력, Fragile시간, 인식범위)
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -622,30 +694,55 @@ namespace game
 		if (m_moveSpeed > 0.0f && !pathfindingAgent) ImGui::SameLine(); if (m_moveSpeed > 0.0f && !pathfindingAgent) ImGui::TextColored(ImVec4(1, 1, 0, 1), "<-- Required for moving monsters!");
 		ImGui::Unindent();
 
-		// 스탯
+		// ─────────────────────────────────────────────
+		// 공통 스탯 (6개)
+		// ─────────────────────────────────────────────
 		ImGui::Separator();
-		ImGui::Text("Stats:");
-		ImGui::DragFloat("HP", &m_Hp, 0.1f, 1.0f, 10000.0f);
-		ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.1f, 15.0f);
-
-		// 설정
-		ImGui::Separator();
-		ImGui::Text("Settings:");
+		ImGui::Text("=== Common Stats (6) ===");
+		ImGui::DragFloat("HP", &m_Hp, 1.0f, 1.0f, 10000.0f);
+		ImGui::DragFloat("Max HP", &m_maxHp, 1.0f, 1.0f, 10000.0f);
 		ImGui::DragFloat("Move Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
+		ImGui::DragFloat("Attack Damage", &m_attackDamage, 1.0f, 0.0f, 1000.0f);
+		ImGui::DragFloat("Fragile Time (sec)", &m_fragileTime, 0.1f, 1.0f, 30.0f);
+		ImGui::DragInt("Difficulty", &m_difficulty, 1, 1, 100);
+		ImGui::DragFloat("Detection Range", &m_detectionRange, 0.1f, 1.0f, 100.0f);
+
+		// ─────────────────────────────────────────────
+		// 기타 스탯
+		// ─────────────────────────────────────────────
+		ImGui::Separator();
+		ImGui::Text("=== Other Stats ===");
+		ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.1f, 50.0f);
+
+		// ─────────────────────────────────────────────
+		// 발사 설정
+		// ─────────────────────────────────────────────
+		ImGui::Separator();
+		ImGui::Text("=== Fire Settings ===");
 		ImGui::DragFloat("Rotation Speed", &m_rotationSpeed, 0.1f, 0.0f, 10.0f);
 		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.1f, 0.1f, 10.0f);
 		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 0.1f, 0.1f, 100.0f);
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
 
+		// ─────────────────────────────────────────────
 		// 런타임 정보
+		// ─────────────────────────────────────────────
 		ImGui::Separator();
-		ImGui::Text("Runtime Info:");
+		ImGui::Text("=== Runtime Info ===");
 		ImGui::Text("Current State: %s", GetCurrentState().c_str());
+		ImGui::Text("Is Fragile: %s", m_isFragile ? "Yes" : "No");
+		ImGui::Text("Is Dead: %s", m_isDead ? "Yes" : "No");
+		if (m_isFragile && m_fragileTimerStarted)
+		{
+			ImGui::Text("Fragile Timer: %.2f / %.2f", m_fragileTimer, m_fragileTime);
+			ImGui::ProgressBar(m_fragileTimer / m_fragileTime, ImVec2(-1, 0), "Fragile");
+		}
 		ImGui::Text("Player Found: %s", m_targetPlayer ? "Yes" : "No");
 		if (m_targetPlayer)
 		{
 			ImGui::Text("Distance to Player: %.2f", GetDistanceToPlayer());
-			ImGui::Text("Player In Range: %s", IsPlayerInRange() ? "Yes" : "No");
+			ImGui::Text("Player In Detection Range: %s", GetDistanceToPlayer() <= m_detectionRange ? "Yes" : "No");
+			ImGui::Text("Player In Attack Range: %s", IsPlayerInRange() ? "Yes" : "No");
 			ImGui::Text("Looking at Player: %s", IsLookingAtPlayer() ? "Yes" : "No");
 		}
 		ImGui::Text("Fire Timer: %.2f", m_fireTimer);
@@ -668,11 +765,23 @@ namespace game
 	{
 		BaseControllerScript::Save(j);
 
+		// 몬스터 분류 정보
 		j["AttackType"] = static_cast<int>(m_attackType);
 		j["MonsterTier"] = static_cast<int>(m_monsterTier);
+		
+		// 공통 스탯 (6개)
 		j["Hp"] = m_Hp;
-		j["AttackRange"] = m_AttackRange;
+		j["MaxHp"] = m_maxHp;
 		j["MoveSpeed"] = m_moveSpeed;
+		j["AttackDamage"] = m_attackDamage;
+		j["FragileTime"] = m_fragileTime;
+		j["Difficulty"] = m_difficulty;
+		j["DetectionRange"] = m_detectionRange;
+		
+		// 기타 스탯
+		j["AttackRange"] = m_AttackRange;
+		
+		// 발사 설정
 		j["RotationSpeed"] = m_rotationSpeed;
 		j["FireRate"] = m_fireRate;
 		j["BulletSpeed"] = m_bulletSpeed;
@@ -683,12 +792,23 @@ namespace game
 	{
 		BaseControllerScript::Load(j);
 
-		m_attackType = static_cast<AttackType>(j.value("AttackType", (int)AttackType::Dull));
-		m_monsterTier = static_cast<MonsterTier>(j.value("MonsterTier", (int)MonsterTier::Gray));
+		// 몬스터 분류 정보
+		m_attackType = static_cast<AttackType>(j.value("AttackType", static_cast<int>(AttackType::Dull)));
+		m_monsterTier = static_cast<MonsterTier>(j.value("MonsterTier", static_cast<int>(MonsterTier::Gray)));
 
+		// 공통 스탯 (6개)
 		m_Hp = j.value("Hp", 100.0f);
-		m_AttackRange = j.value("AttackRange", 10.0f);
+		m_maxHp = j.value("MaxHp", 100.0f);
 		m_moveSpeed = j.value("MoveSpeed", 0.0f);
+		m_attackDamage = j.value("AttackDamage", 10.0f);
+		m_fragileTime = j.value("FragileTime", 5.0f);
+		m_difficulty = j.value("Difficulty", 1);
+		m_detectionRange = j.value("DetectionRange", 15.0f);
+		
+		// 기타 스탯
+		m_AttackRange = j.value("AttackRange", 10.0f);
+		
+		// 발사 설정
 		m_rotationSpeed = j.value("RotationSpeed", 2.0f);
 		m_fireRate = j.value("FireRate", 3.0f);
 		m_bulletSpeed = j.value("BulletSpeed", 1.0f);

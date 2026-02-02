@@ -1,10 +1,8 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
-
-#include "Script/CharacterScript/Monster/TempMonster.h"
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
 #include "Script/Boss/BossPattern/Components/BossProjectile.h"
@@ -149,21 +147,6 @@ namespace game
             }
             return;
         }
-
-        // TempMonster와 충돌했는지 확인 (레거시 호환)
-        if (auto* tempMonster = info.gameObject->GetComponent<TempMonster>())
-        {
-            tempMonster->OnHit();
-
-            // dying 상태로 전환
-            m_isDying = true;
-            m_deathTimer = 0.0f;
-
-            // 속도 정지
-            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
-            {
-                rb->SetLinearVelocity(engine::Vector3::Zero);
-            }
-        }
+        
     }
 }
