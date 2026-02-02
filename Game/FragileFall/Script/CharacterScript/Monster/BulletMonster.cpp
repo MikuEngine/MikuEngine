@@ -1,19 +1,43 @@
 ﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
+#include "Script/CharacterScript/Common/BulletFactory.h"
+#include "Script/CharacterScript/Common/BulletMovement.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
+#include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
+
+#include <Framework/Scene/SceneManager.h>
+#include <Framework/Scene/Scene.h>
+
 
 namespace game
 {
     // ═══════════════════════════════════════════════════════════════
     // 초기화 (Factory에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void BulletMonster::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime)
+    void BulletMonster::Setup(std::unique_ptr<IBulletMovement> movement, const BulletParams& params, BulletFactory* factory)
     {
         m_movement = std::move(movement);
-        m_lifetime = lifetime;
+        m_lifetime = params.lifetime;
+		m_params = params;
+        m_cachedFactory = factory;
+    }
+
+    void BulletMonster::SetupField(float radius, const BulletParams& params)
+    {
+        m_isFieldType = true;
+        m_radius = radius;
+        m_lifetime = params.lifetime;
+        m_params = params;
+
+        auto* collider = GetGameObject()->GetComponent<engine::Collider>();
+        if (collider)
+        {
+            collider->SetLayer(engine::PhysicsLayer::Field);
+            collider->SetIsTrigger(true);
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -50,7 +74,7 @@ namespace game
         float dt = engine::Time::DeltaTime();
         m_elapsedTime += dt;
 
-        if (m_movement)
+        if (m_movement && !m_isFieldType)
         {
             m_movement->Update(GetTransform(), dt);
         }
@@ -59,6 +83,39 @@ namespace game
         if (m_elapsedTime >= m_lifetime)
         {
             GetGameObject()->Destroy();
+            return;
+        }
+
+		// 장판형 총알일 경우 주기적으로 데미지 적용
+        if (m_isFieldType)
+        {
+            m_tickTimer += engine::Time::DeltaTime();
+
+            if (m_tickTimer >= m_tickInterval)
+            {
+                m_tickTimer = 0.0f;
+
+                if (auto* scene = engine::SceneManager::Get().GetScene())
+                {
+                    auto* playerGO = scene->FindGameObject("Player");
+                    if (playerGO)
+                    {
+                        float distance = engine::Vector3::Distance(
+                            GetTransform()->GetWorldPosition(),
+                            playerGO->GetTransform()->GetWorldPosition()
+                        );
+
+                        if (distance <= m_params.radius)
+                        {
+                            if (auto* playerScript = playerGO->GetComponent<PlayerControllerScript>())
+                            {
+                                // playerScript->OnHit(m_params.damage); 
+                                // LOG_PRINT("Field Damage Dealt to Player!");
+                            }
+                        }
+                    }
+                }
+            }
             return;
         }
 
@@ -77,14 +134,22 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void BulletMonster::OnTriggerEnter(const engine::CollisionInfo& info)
     {
-        if (m_isDying) return;
+        if (m_isDying || m_isFieldType) return;
         if (!info.gameObject) return;
 
+        bool isPlayer = (info.gameObject->GetComponent<PlayerControllerScript>() != nullptr);
+        bool isEnvironment = (info.gameObject->GetComponent<engine::Collider>()->GetLayer() == engine::PhysicsLayer::Environment);
+
         // 플레이어와 충돌했는지 확인
-        if (auto* player = info.gameObject->GetComponent<PlayerControllerScript>())
+        if (isPlayer || isEnvironment)
         {
             // TODO: 플레이어 OnHit() 구현 시 호출
             // player->OnHit(m_damage);
+
+            if (m_params.type == BulletType::Field && m_cachedFactory)
+            {
+                m_cachedFactory->FieldFireMonster(GetTransform()->GetWorldPosition(), m_params);
+            }
 
             // dying 상태로 전환
             m_isDying = true;

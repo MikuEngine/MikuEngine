@@ -372,7 +372,6 @@ namespace game
         case MonsterTier::Gray:
         {
             m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-            m_fireTimer = m_fireRate;
             break;
         }
         // ─────────────────────────────────────────────
@@ -464,7 +463,7 @@ namespace game
             break;
 		}
         default:
-            m_fireTimer = m_fireRate;
+            m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
             break;
         }
 
