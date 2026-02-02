@@ -229,6 +229,11 @@ namespace engine
 		j["SizeVariation"] = p.sizeVariation;
 		j["LifeTime"] = p.lifeTime;
 
+		j["RotationMin"] = p.rotationMin;
+		j["RotationMax"] = p.rotationMax;
+		j["RotationSpeedMin"] = p.rotationSpeedMin;
+		j["RotationSpeedMax"] = p.rotationSpeedMax;
+
 		j["EmissionRate"] = p.emissionRate;
 		j["MaxParticles"] = p.maxParticles;
 
@@ -282,6 +287,11 @@ namespace engine
 		JsonGet(j, "SizeEnd", p.sizeEnd);
 		JsonGet(j, "SizeVariation", p.sizeVariation);
 		JsonGet(j, "LifeTime", p.lifeTime);
+
+		JsonGet(j,"RotationMin", p.rotationMin);
+		JsonGet(j,"RotationMax", p.rotationMax);
+		JsonGet(j,"RotationSpeedMin", p.rotationSpeedMin);
+		JsonGet(j,"RotationSpeedMax", p.rotationSpeedMax);
 
 		JsonGet(j, "EmissionRate", p.emissionRate);
 		JsonGet(j, "MaxParticles", p.maxParticles);

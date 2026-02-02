@@ -45,6 +45,7 @@ namespace game
 
         bool CanUpgrade(int nodeId) const;
         bool ApplyUpgrade(int nodeId);
+
         void SelectNode(int nodeId);
 
         void RefreshNodeVisuals();
@@ -52,6 +53,8 @@ namespace game
     private:
         void BuildNodeTree();
         void RecomputeUnlocked();
+        void RebuildTemperFromPurchased();
+
         void AutoRegisterNodesFromContent(const std::string& contentRootName);
         
         void BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb);

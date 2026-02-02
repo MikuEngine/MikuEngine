@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -46,6 +46,9 @@ namespace game
 			InitializeFSM();
 			m_fsmInitialized = true;
 		}
+
+		game::PlayerTemperManager::ApplyTemper(this);
+
 	}
 
 	// ═══════════════════════════════════════════════════════════════
