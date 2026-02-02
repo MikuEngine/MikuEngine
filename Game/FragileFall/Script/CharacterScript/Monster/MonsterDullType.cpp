@@ -6,6 +6,8 @@
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
+#include <Framework/Scene/SceneManager.h>
+#include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Physics/PhysicsLayer.h>
 
@@ -16,6 +18,9 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterDullType::Awake()
     {
+        // 테스트용
+        m_monsterTier = MonsterTier::Purple;
+
         MonsterScript::Awake();
         // 스탯은 씬 파일에서 로드됨 (Load 함수 참조)
     }
@@ -30,27 +35,24 @@ namespace game
             m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
         }
 
-        // 테스트용
-		m_monsterTier = MonsterTier::Red;
-
-		// 테스트용 Tier별 색상 설정
+        // 테스트용 Tier별 색상 설정
         switch (m_monsterTier)
         {
         case MonsterTier::Gray:
-			GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f));
-			break;
-		case MonsterTier::Green:
-			GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-			break;
-		case MonsterTier::Blue:
-			GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-			break;
-		case MonsterTier::Red:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+            break;
+        case MonsterTier::Green:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+            break;
+        case MonsterTier::Blue:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+            break;
+        case MonsterTier::Red:
             GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-			break;
-		case MonsterTier::Purple:
-			GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.0f, 0.5f, 1.0f));
-			break;
+            break;
+        case MonsterTier::Purple:
+            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.0f, 0.5f, 1.0f));
+            break;
         }
     }
 
@@ -60,6 +62,8 @@ namespace game
     void MonsterDullType::InitializeFSM()
     {
         if (!m_logicFSM) return;
+
+        LOG_PRINT("Initializing FSM. Current Tier: {}", (int)m_monsterTier);
 
         // ─────────────────────────────────────────────
         // 상태 정의
@@ -80,6 +84,7 @@ namespace game
         m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
         m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
+		m_logicFSM->SetParameter("HasMonsters", true);      // 둔탁 보라 전용
 
         // ─────────────────────────────────────────────
         // 전이 정의 (StateMap이 업데이트된 후에 추가)
@@ -88,12 +93,21 @@ namespace game
         AddFSMTransition("Idle", "Engage", "PlayerInRange", BoolTrue());
         AddFSMTransition("Engage", "Idle", "PlayerInRange", BoolFalse());
 
-        // Any → Fragile (HP 0, Fragile 트리거)
-        AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("Engage", "Fragile", "Fragile", Trigger());
+		// 둔탁 보라 전용 로직
+        if (m_monsterTier == MonsterTier::Purple)
+        {
+            AddFSMTransition("Idle", "Dead", "Die", Trigger());
+            AddFSMTransition("Engage", "Dead", "Die", Trigger());
+        }
+        else
+        {
+            // Any → Fragile (HP 0, Fragile 트리거)
+            AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
+            AddFSMTransition("Engage", "Fragile", "Fragile", Trigger());
 
-        // Fragile → Dead (Execution, Die 트리거)
-        AddFSMTransition("Fragile", "Dead", "Die", Trigger());
+            // Fragile → Dead (Execution, Die 트리거)
+            AddFSMTransition("Fragile", "Dead", "Die", Trigger());
+        }
 
         // ─────────────────────────────────────────────
         // 초기 상태 설정
@@ -115,9 +129,10 @@ namespace game
         // 상체웨이트 0 = 전체 애니메이션 (상/하체 분리 안 함)
         // ─────────────────────────────────────────────
         m_animFSM->AddSplitState("Idle",    m_animName_Idle, true,  "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("Engage",  m_animName_Idle, true,  "", false, 0.0f, 0.1f);  // Engage는 Idle 재생
-        m_animFSM->AddSplitState("Fragile", m_animName_Idle, true,  "", false, 0.0f, 0.1f);  // Fragile은 Idle 재생 (전용 애니메이션 설정 가능)
-        m_animFSM->AddSplitState("Dead",    m_animName_Dead, false, "", false, 0.0f, 0.1f);  // Dead는 루프 안 함
+        m_animFSM->AddSplitState("Engage",  m_animName_Idle, true,  "", false, 0.0f, 0.1f);     // Engage는 Idle 재생
+        m_animFSM->AddSplitState("Fragile", m_animName_Idle, true,  "", false, 0.0f, 0.1f);     // Fragile은 Idle 재생 (전용 애니메이션 설정 가능)
+        m_animFSM->AddSplitState("Dead",    m_animName_Dead, false, "", false, 0.0f, 0.1f);     // Dead는 루프 안 함
+ 
     }
 
     void MonsterDullType::InitializeAnimations()
@@ -132,11 +147,11 @@ namespace game
 
     void MonsterDullType::InitializeBullet()
     {
-
         switch (m_monsterTier)
         {
         case MonsterTier::Gray:
 		case MonsterTier::Blue:
+		case MonsterTier::Purple:
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
@@ -167,10 +182,34 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // BaseControllerScript 오버라이드
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterDullType::UpdateGameLogic()
+    {
+        if (m_monsterTier == MonsterTier::Purple)
+        {
+            if (!m_isDead)
+            {
+                m_hasOtherMonstersAlive = CheckMonstersPurpleType();
+                m_logicFSM->SetParameter("HasMonsters", m_hasOtherMonstersAlive);
+
+                if (!m_hasOtherMonstersAlive)
+                {
+                    m_Hp = 0;
+                    m_isDead = true;
+                    m_logicFSM->SetTrigger("Die");
+                }
+            }
+        }
+
+        MonsterScript::UpdateGameLogic();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // 상태별 행동 - 비물리 (Update에서 호출)
     // ═══════════════════════════════════════════════════════════════
     void MonsterDullType::UpdateStateBasedBehavior(const std::string& state, float deltaTime)
-    {
+    {      
         if (state == "Engage")
         {
             ExecuteEngageBehaviorNonPhysics(deltaTime);
@@ -255,6 +294,26 @@ namespace game
         StopAllMovement();
     }
 
+    bool MonsterDullType::CheckMonstersPurpleType()
+    {
+        const auto& gameObjects = engine::SceneManager::Get().GetScene()->GetGameObjects();
+
+        for (const auto& go : gameObjects)
+        {
+            if (!go || go.get() == GetGameObject())
+                continue;
+
+            auto* monster = go->GetComponent<MonsterScript>();
+
+            if (monster && !monster->m_isDead)
+            {
+                return true;
+            }
+        }
+
+        return false; 
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // 상태 진입 콜백
     // ═══════════════════════════════════════════════════════════════
@@ -274,6 +333,17 @@ namespace game
         {
             StopRotation();
         }
+    }
+
+    void MonsterDullType::TakeDamage(float damage)
+    {
+        if (m_isDead)
+            return;
+
+        if (m_monsterTier == MonsterTier::Purple && m_hasOtherMonstersAlive)
+            return;
+
+        MonsterScript::TakeDamage(damage);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -299,6 +369,8 @@ namespace game
         {
         // ─────────────────────────────────────────────
         // 둔탁 회색
+        // 
+        // 고정된 위치에서 플레이어가 인식범위 접근 시 투사체를 발사한다
         // ─────────────────────────────────────────────
         case MonsterTier::Gray:
         {
@@ -314,6 +386,8 @@ namespace game
         }
         // ─────────────────────────────────────────────
         // 둔탁 초록
+        // 
+        // 고정된 위치에서 플레이어가 인식범위 접근 시 초록색 곡사포 투사체를 날림
         // ─────────────────────────────────────────────
 		case MonsterTier::Green:
         {
@@ -350,6 +424,8 @@ namespace game
         }
         // ─────────────────────────────────────────────
         // 둔탁 파랑
+        // 
+        // 고정된 위치에서 플레이어에게 투사체 3개를 날림
         // ─────────────────────────────────────────────
         case MonsterTier::Blue:
         {
@@ -370,6 +446,8 @@ namespace game
         }
         // ─────────────────────────────────────────────
         // 둔탁 빨강
+        // 
+        // 고정된 위치에서 4방향의 회전하는 회오리 공격을 날림
         // ─────────────────────────────────────────────
         case MonsterTier::Red:
         {
@@ -396,6 +474,21 @@ namespace game
             {
                 m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
             }
+            break;
+		}
+        // ─────────────────────────────────────────────
+        // 둔탁 보라
+        // 
+        // 다른 몬스터 모두 처치하기 전까지 무적으로 다른 몬스터 처치시 자동으로 사망하며 그전 까지는 둔탁 회색패턴으로 계속해서 공격
+        // ─────────────────────────────────────────────
+        case MonsterTier::Purple:
+        {
+            m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+            if (m_skeletalAnimator && !m_animName_Attack.empty())
+            {
+                m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
+            }
+            m_fireTimer = m_fireRate;
             break;
 		}
         default:

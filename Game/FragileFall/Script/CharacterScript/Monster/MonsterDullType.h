@@ -40,6 +40,11 @@ namespace game
         float m_targetRotation = 0.0f;     // 회전해서 도달해야 할 목표 각도
         bool  m_isRotating = false;        // 현재 회전 중인지 여부
 
+        // ─────────────────────────────────────────────
+        // 둔탁 보라
+        // ─────────────────────────────────────────────
+        bool m_hasOtherMonstersAlive = false;
+
     public:
         void Awake() override;
         void Start() override;
@@ -52,7 +57,10 @@ namespace game
         void InitializeAnimFSM() override;
         void InitializeAnimations() override;
         void InitializeBullet() override;
-        
+
+        // BaseControllerScript 오버라이드
+		void UpdateGameLogic() override;
+
         // 상태별 행동 - 비물리 (Update에서 호출)
         void UpdateStateBasedBehavior(const std::string& state, float deltaTime) override;
         void ExecuteEngageBehaviorNonPhysics(float deltaTime) override;
@@ -67,8 +75,14 @@ namespace game
         void ExecuteFragileBehaviorPhysics() override;
         void ExecuteDeadBehaviorPhysics() override;
         
+        // 둔탁 보라
+        bool CheckMonstersPurpleType();
+
         // 상태 진입 콜백
         void OnStateEntered(const std::string& state) override;
+
+        // 외부 데미지 처리 (총알 등에서 호출)
+        void TakeDamage(float damage) override;
         
         // 공격 (3초마다 리니어 총알 발사)
         void Attack(float deltaTime) override;
