@@ -18,9 +18,6 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterDullType::Awake()
     {
-        // 테스트용
-        m_monsterTier = MonsterTier::Purple;
-
         MonsterScript::Awake();
         // 스탯은 씬 파일에서 로드됨 (Load 함수 참조)
     }
