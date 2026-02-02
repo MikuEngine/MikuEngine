@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ParticleEmitter.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -49,6 +49,8 @@ namespace engine
 
 			float t = p.age / p.lifeTime;
 			p.color = Vector4::Lerp(p.startColor, p.endColor, t);
+			p.emissiveColor = Vector3::Lerp(m_props.startEmissive, m_props.endEmissive, t);
+			p.emissiveIntensity = std::lerp(m_props.startEmissiveIntensity, m_props.endEmissiveIntensity, t);
 			p.size = std::lerp(p.startSize, p.endSize, t);
 
 			p.distanceToCamera = Vector3::DistanceSquared(p.position, cameraPosition);
@@ -222,6 +224,10 @@ namespace engine
 
 		j["StartColor"] = p.startColor;
 		j["EndColor"] = p.endColor;
+		j["StartEmissive"] = p.startEmissive;
+		j["EndEmissive"] = p.endEmissive;
+		j["StartEmissiveIntensity"] = p.startEmissiveIntensity;
+		j["EndEmissiveIntensity"] = p.endEmissiveIntensity;
 		j["Blend"] = static_cast<int>(p.blend);
 
 		j["SizeBegin"] = p.sizeBegin;
@@ -279,6 +285,10 @@ namespace engine
 
 		JsonGet(j, "StartColor", p.startColor);
 		JsonGet(j, "EndColor", p.endColor);
+		JsonGet(j, "StartEmissive", p.startEmissive);
+		JsonGet(j, "EndEmissive", p.endEmissive);
+		JsonGet(j, "StartEmissiveIntensity", p.startEmissiveIntensity);
+		JsonGet(j, "EndEmissiveIntensity", p.endEmissiveIntensity);
 		int blendInt = static_cast<int>(p.blend);
 		JsonGet(j, "Blend", blendInt);
 		p.blend = static_cast<EmitterBlend>(blendInt);
@@ -425,6 +435,8 @@ namespace engine
 
 		p.startColor = m_props.startColor;
 		p.endColor = m_props.endColor;
+		p.emissiveColor = m_props.startEmissive;
+		p.emissiveIntensity = m_props.startEmissiveIntensity;
 
 		if (m_props.rotationMin == m_props.rotationMax)
 		{

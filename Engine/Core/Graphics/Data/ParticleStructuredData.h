@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Vertex.h"
 
@@ -10,6 +10,9 @@ namespace engine
         float size;
 
         Vector4 color;
+
+        Vector3 emissiveColor;
+        float emissiveIntensity;
 
         Vector2 uvOffset;
         Vector2 uvScale;

@@ -294,6 +294,8 @@ struct PS_INPUT_PARTICLE
     float4 position : SV_Position;
     float2 texCoord : TEXCOORD0;
     float4 color : COLOR;
+    float3 emissiveColor : TEXCOORD1;
+    float emissiveIntensity : TEXCOORD2;
 };
 
 // structured data
@@ -302,12 +304,15 @@ struct PARTICLE_DATA
 {
     float3 position;
     float size;
-    
+
     float4 color;
-    
+
+    float3 emissiveColor;
+    float emissiveIntensity;
+
     float2 uvOffset;
     float2 uvScale;
-    
+
     float rotation;
     float3 __pad_particle_data;
 };

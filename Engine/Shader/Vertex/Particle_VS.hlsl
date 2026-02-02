@@ -51,7 +51,9 @@ PS_INPUT_PARTICLE main(uint vertexID : SV_VertexID)
     // 4. 출력 설정
     output.position = mul(float4(finalPos, 1.0f), g_viewProjection);
     output.color = p.color;
+    output.emissiveColor = p.emissiveColor;
+    output.emissiveIntensity = p.emissiveIntensity;
     output.texCoord = k_quadUVs[vertexIndex] * p.uvScale + p.uvOffset;
-    
+
     return output;
 }

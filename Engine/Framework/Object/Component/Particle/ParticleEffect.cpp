@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ParticleEffect.h"
 
 #include "Common/Utility/StaticMemoryPool.h"
@@ -324,6 +324,14 @@ namespace engine
 		{
 			props.blend = static_cast<EmitterBlend>(type);
 		}
+
+		ImGui::Spacing();
+		ImGui::SeparatorText("Emissive");
+
+		ImGui::ColorEdit3("Start Emissive", &props.startEmissive.x);
+		ImGui::ColorEdit3("End Emissive", &props.endEmissive.x);
+		ImGui::DragFloat("Start Emissive Intensity", &props.startEmissiveIntensity, 0.01f, 0.0f, 10.0f, "%.2f");
+		ImGui::DragFloat("End Emissive Intensity", &props.endEmissiveIntensity, 0.01f, 0.0f, 10.0f, "%.2f");
 
 		ImGui::Spacing();
 		ImGui::SeparatorText("Size");
