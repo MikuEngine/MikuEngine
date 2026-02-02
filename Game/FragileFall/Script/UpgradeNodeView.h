@@ -68,10 +68,20 @@ namespace game
             BulletDouble
         };
 
+        struct TemperEffect
+        {
+            TemperOp op = TemperOp::Add;
+            TemperStat stat = TemperStat::AtkDmg;
+            float value;
+            bool b;
+        };
+
         TemperOp   m_temperOp = TemperOp::Add;
         TemperStat m_temperStat = TemperStat::AtkDmg;
         float      m_temperValue = 0.0f;   // Add/Mul용 (Mul이면 1.10f 같은 배율)
         bool       m_temperBool = false;  // Bool용
+
+        std::vector<TemperEffect> m_effects;
 
     private:
         engine::Vector4 m_baseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
