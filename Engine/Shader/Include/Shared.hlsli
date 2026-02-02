@@ -34,7 +34,9 @@ SamplerState g_samPoint                 : register(s1);
 SamplerComparisonState g_samComparison  : register(s2);
 SamplerState g_samClamp                 : register(s3);
 
-
+// UI effect
+Texture2D g_texUINoise                  : register(t33);
+Texture2D g_texUIRamp                   : register(t34);
 
 cbuffer Frame : register(b0) // 프레임 당 한번만 갱신되는 버퍼
 {
@@ -179,8 +181,11 @@ cbuffer UIElement : register(b10)
     float4 g_uiColor;
     float4 g_uiUV;
     float4 g_uiClipRect;
+    
     uint g_uiMaskMode; // 0 none, 1 rect, 2 circle, 3 ring, 4 rectring
-    float3 __uiPad;
+    uint g_effectMode;
+    uint g_effectFlags;
+    float g_time;
     
     float4 g_uiMask0;
     float4 g_uiMask1;
@@ -189,6 +194,10 @@ cbuffer UIElement : register(b10)
     float g_outlineEnabled;
     float2 __uipad1;
     float4 g_outlineColor;
+    
+    float4 g_effect0;
+    float4 g_effect1;
+    float4 g_effect2;
 };
 
 cbuffer ShadowPoint : register(b11)
@@ -294,6 +303,8 @@ struct PS_INPUT_PARTICLE
     float4 position : SV_Position;
     float2 texCoord : TEXCOORD0;
     float4 color : COLOR;
+    float3 emissiveColor : TEXCOORD1;
+    float emissiveIntensity : TEXCOORD2;
 };
 
 // structured data
@@ -302,12 +313,15 @@ struct PARTICLE_DATA
 {
     float3 position;
     float size;
-    
+
     float4 color;
-    
+
+    float3 emissiveColor;
+    float emissiveIntensity;
+
     float2 uvOffset;
     float2 uvScale;
-    
+
     float rotation;
     float3 __pad_particle_data;
 };

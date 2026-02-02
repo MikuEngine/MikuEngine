@@ -8,6 +8,9 @@
 #include "UpgradeTypes.h"
 #include "ItemType.h"
 
+#include <unordered_set>
+#include <cstdint>
+
 namespace game
 {
     class UpgradeNodeView;
@@ -39,19 +42,45 @@ namespace game
         void Load(const engine::json& j) override;
 
     public:
-        // 재화
-        //int  GetCurrency() const { return m_currency; }
-        //void SetCurrency(int v) { m_currency = std::max(0, v); RecomputeUnlocked(); }
+        // 재화 관련
+        int GetRuby() const { return m_ruby; }
+        int GetSapphire() const { return m_sapphire; }
+        int GetEmerald() const { return m_emerald; }
+
+        void SetCurrency(int ruby, int sapphire, int emerald)
+        {
+            m_ruby = ruby; m_sapphire = sapphire; m_emerald = emerald;
+        }
+
+        template<typename Fn>
+        void ForEachPurchasedTrue(Fn&& fn) const
+        {
+            for (const auto& [id, bought] : m_purchased)
+                if (bought) fn(id);
+        }
+
+        void SetPurchasedFromSet(const std::unordered_set<int>& purchasedSet)
+        {
+            // BuildNodeTree가 기본 false를 채워줬다는 전제
+            for (auto& [id, b] : m_purchased)
+                b = false;
+
+            for (int id : purchasedSet)
+                m_purchased[id] = true;
+        }
 
         bool CanUpgrade(int nodeId) const;
         bool ApplyUpgrade(int nodeId);
+
         void SelectNode(int nodeId);
 
         void RefreshNodeVisuals();
+        void RecomputeUnlocked();
+        void RebuildTemperFromPurchased();
 
     private:
         void BuildNodeTree();
-        void RecomputeUnlocked();
+
         void AutoRegisterNodesFromContent(const std::string& contentRootName);
         
         void BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb);

@@ -12,6 +12,9 @@
 #include <Framework/Object/Component/RectTransform.h>
 #include "Script/UI/UIPopUpAnimator.h"
 
+#include "Manager/UpgradeProgressManager.h"
+#include "Script/UpgradeController.h"
+
 
 namespace game
 {
@@ -97,6 +100,15 @@ namespace game
         if (auto* go = engine::GameObject::Find("UI_SensitivitySlider"))
             if (auto* slider = go->GetComponent<engine::UISlider>())
                 slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
+
+        // Load
+        auto* ugdGO = engine::GameObject::Find("UpgradeController");
+        if (!ugdGO) return;
+
+        auto* uc = ugdGO->GetComponent<game::UpgradeController>();
+        if (!uc) return;
+
+        game::UpgradeProgressManager::LoadProgress(*uc);
     }
 
     void SceneController_Lobby::Update()

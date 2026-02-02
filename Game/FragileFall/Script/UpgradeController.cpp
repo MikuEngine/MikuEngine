@@ -2,12 +2,16 @@
 #include "UpgradeController.h"
 #include "UpgradeNodeView.h"
 
+#include "../Manager/PlayerTemperManager.h"
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
+
 #include <Framework/System/SoundSystem.h>
 
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/UI/UISlider.h>
 #include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/UI/UIText.h>
+#include <Manager/UpgradeProgressManager.h>
 
 namespace game
 {
@@ -82,6 +86,59 @@ namespace game
             }
         }
 
+        static void ApplyOneEffect(const UpgradeNodeView::TemperEffect& e)
+        {
+            using game::PlayerTemperManager;
+            using TemperOp = UpgradeNodeView::TemperOp;
+            using TemperStat = UpgradeNodeView::TemperStat;
+
+            if (e.op == TemperOp::Add)
+            {
+                switch (e.stat)
+                {
+                case TemperStat::AtkDmg:
+                    PlayerTemperManager::SetAddAtkDmg(PlayerTemperManager::GetAddAtkDmg() + e.value); break;
+                case TemperStat::AtkSpeed:
+                    PlayerTemperManager::SetAddAtkSpeed(PlayerTemperManager::GetAddAtkSpeed() + e.value); break;
+                case TemperStat::BulletLifetime:
+                    PlayerTemperManager::SetAddBulletLifetime(PlayerTemperManager::GetAddBulletLifetime() + e.value); break;
+                case TemperStat::BulletSizeScale:
+                    PlayerTemperManager::SetAddBulletSizeScale(PlayerTemperManager::GetAddBulletSizeScale() + e.value); break;
+                case TemperStat::BulletSpeed:
+                    PlayerTemperManager::SetAddBulletSpeed(PlayerTemperManager::GetAddBulletSpeed() + e.value); break;
+                default: break;
+                }
+            }
+            else if (e.op == TemperOp::Mul)
+            {
+                switch (e.stat)
+                {
+                case TemperStat::AtkDmg:
+                    PlayerTemperManager::SetMulAtkDmg(PlayerTemperManager::GetMulAtkDmg() * e.value); break;
+                case TemperStat::AtkSpeed:
+                    PlayerTemperManager::SetMulAtkSpeed(PlayerTemperManager::GetMulAtkSpeed() * e.value); break;
+                case TemperStat::BulletLifetime:
+                    PlayerTemperManager::SetMulBulletLifetime(PlayerTemperManager::GetMulBulletLifetime() * e.value); break;
+                case TemperStat::BulletSizeScale:
+                    PlayerTemperManager::SetMulBulletSizeScale(PlayerTemperManager::GetMulBulletSizeScale() * e.value); break;
+                case TemperStat::BulletSpeed:
+                    PlayerTemperManager::SetMulBulletSpeed(PlayerTemperManager::GetMulBulletSpeed() * e.value); break;
+                default: break;
+                }
+            }
+            else // Bool
+            {
+                if (e.stat == TemperStat::BulletDouble)
+                    PlayerTemperManager::SetIsBulletDouble(e.b);
+            }
+        }
+
+        static void ApplyTemperFromView(const UpgradeNodeView& view)
+        {
+            for (const auto& e : view.m_effects)
+                ApplyOneEffect(e);
+        }
+
     }
 
     void UpgradeController::Awake()
@@ -124,6 +181,12 @@ namespace game
 
         BindCostSlots();
         HideAllCostSlots();
+
+        if (game::UpgradeProgressManager::HasProgress())
+        {
+            game::UpgradeProgressManager::LoadProgress(*this);
+            RebuildTemperFromPurchased();
+        }
     }
 
     void UpgradeController::Update()
@@ -143,6 +206,7 @@ namespace game
 
             RecomputeUnlocked();
             RefreshNodeVisuals();
+            game::UpgradeProgressManager::SaveProgress(*this);
         }
 
         ImGui::Text("Wallet: Ruby=%d Sapphire=%d Emerald=%d", m_ruby, m_sapphire, m_emerald);
@@ -229,11 +293,17 @@ namespace game
         m_emerald -= view->m_costEmerald;
 
         m_purchased[nodeId] = true;
+        
+        ApplyTemperFromView(*view);
 
         RecomputeUnlocked();
         RefreshNodeVisuals();
+
+        game::UpgradeProgressManager::SaveProgress(*this);
+
         return true;
     }
+
 
     void UpgradeController::SelectNode(int nodeId)
     {
@@ -345,6 +415,23 @@ namespace game
             }
 
             m_unlocked[id] = anyBought;
+        }
+    }
+
+    void UpgradeController::RebuildTemperFromPurchased()
+    {
+        // 누적, 중복 방지
+        game::PlayerTemperManager::ResetAllTemper();
+
+        // 이미 강화된 노드 정보를 바탕으로 재설정
+        for (const auto& [id, bought] : m_purchased)
+        {
+            if (!bought) continue;
+
+            auto it = m_views.find(id);
+            if (it == m_views.end() || !it->second) continue;
+
+            ApplyTemperFromView(*it->second);
         }
     }
 

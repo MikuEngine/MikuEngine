@@ -155,8 +155,11 @@ namespace engine
 		Vector4 color;      // RGBA
 		Vector4 uv;         // offset.xy, scale.xy
 		Vector4 clipRect;   // (xMin, yMin, xMax, yMax) in pixels 또는 NDC 중 하나로 통일
+
 		uint32_t maskMode;  // none, rect, circle, ring, rectring, radial
-		float __pad[3];
+		uint32_t effectMode;     // 4
+		uint32_t effectFlags;    // 4
+		float    time;
 
 		Vector4 mask0;		// (cx, cy, rInner, rOuter) 또는 (cx,cy,r,0)
 		Vector4 mask1;		// (startAngleRad, fill01, clockwise, unused)
@@ -165,6 +168,11 @@ namespace engine
 		float outlineEnabled;
 		float __pad1[2];
 		Vector4 outlineColor;
+
+		// ---- Effect params (범용) ----
+		Vector4 effect0;         // 16
+		Vector4 effect1;         // 16
+		Vector4 effect2;         // 16 
 	};
 
 

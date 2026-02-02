@@ -31,11 +31,9 @@ namespace engine
 	{
 		UIElement::Initialize();
 
-		if (m_texture == nullptr)
-		{
-			m_texture = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
-			m_textureFilePath = "None";
-		}
+		if (!m_texture) m_texture = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
+		if (!m_noiseTex) m_noiseTex = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
+		if (!m_rampTex)  m_rampTex = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
 
 		m_vsFilePath = "Resource/Shader/Vertex/UIQuad_VS.hlsl";
 		m_psFilePath = "Resource/Shader/Pixel/UIQuad_PS.hlsl";
@@ -150,6 +148,12 @@ namespace engine
 			ID3D11ShaderResourceView* srv = m_texture->GetRawSRV();
 			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &srv);
 
+			ID3D11ShaderResourceView* srvN = (m_noiseTex ? m_noiseTex->GetRawSRV() : nullptr);
+			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::UINoise), 1, &srvN);
+
+			ID3D11ShaderResourceView* srvR = (m_rampTex ? m_rampTex->GetRawSRV() : nullptr);
+			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::UIRamp), 1, &srvR);
+
 			auto samp = m_sampler ? m_sampler->GetSamplerState().GetAddressOf() : nullptr;
 			if (samp)
 				dc->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, samp);
@@ -219,6 +223,14 @@ namespace engine
 			cbUI.outlineThickness = m_outlineThickness;
 			cbUI.outlineColor = m_outlineColor;
 
+			cbUI.effectMode = m_effectMode;
+			cbUI.effectFlags = m_effectFlags;
+			cbUI.time = engine::Time::UnscaledTime();
+
+			cbUI.effect0 = m_effect0;
+			cbUI.effect1 = m_effect1;
+			cbUI.effect2 = m_effect2;
+
 			dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 			dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
 			dc->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());
@@ -233,6 +245,8 @@ namespace engine
 		{
 			ID3D11ShaderResourceView* nullSRV = nullptr;
 			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::Blit), 1, &nullSRV);
+			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::UINoise), 1, &nullSRV);
+			dc->PSSetShaderResources(static_cast<UINT>(TextureSlot::UIRamp), 1, &nullSRV);
 		}
 	}
 

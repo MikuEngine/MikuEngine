@@ -151,8 +151,86 @@ namespace game
         }
         if (!canAdd) ImGui::EndDisabled();
 
+        // Display
         ImGui::InputText("Name", &m_name);
         ImGui::InputTextMultiline("Desc", &m_desc);
+
+        // Value Setting
+        ImGui::Separator();
+        ImGui::Text("Temper Effects");
+
+        static const char* opNames[] = { "Add", "Mul", "Bool" };
+        static const char* statNames[] = {
+            "AtkDmg", "AtkSpeed", "BulletLifetime", "BulletSizeScale", "BulletSpeed", "BulletDouble"
+        };
+
+        // (선택) 효과 하나 추가
+        if (ImGui::Button("+ Add Effect"))
+        {
+            TemperEffect e;
+            e.op = TemperOp::Add;
+            e.stat = TemperStat::AtkDmg;
+            e.value = 0.0f;
+            e.b = false;
+            m_effects.push_back(e);
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Clear Effects"))
+        {
+            m_effects.clear();
+        }
+
+        // 효과 리스트 편집
+        for (int i = 0; i < (int)m_effects.size(); ++i)
+        {
+            auto& e = m_effects[i];
+
+            ImGui::PushID(i);
+            ImGui::Separator();
+
+            ImGui::Text("Effect #%d", i);
+
+            int op = (int)e.op;
+            if (ImGui::Combo("Op", &op, opNames, IM_ARRAYSIZE(opNames)))
+                e.op = (TemperOp)op;
+
+            int st = (int)e.stat;
+            if (ImGui::Combo("Stat", &st, statNames, IM_ARRAYSIZE(statNames)))
+                e.stat = (TemperStat)st;
+
+            if (e.op == TemperOp::Bool)
+            {
+                ImGui::Checkbox("Bool", &e.b);
+            }
+            else
+            {
+                ImGui::InputFloat("Value", &e.value);
+
+                // (선택) Mul 입력 편의: %로 넣고 싶으면 이런 보정 UI도 가능
+                // 예: 30% 증가를 1.30으로 자동 변환 등
+            }
+
+            // 순서 변경(선택)
+            if (ImGui::Button("Up") && i > 0)
+                std::swap(m_effects[i], m_effects[i - 1]);
+            ImGui::SameLine();
+            if (ImGui::Button("Down") && i < (int)m_effects.size() - 1)
+                std::swap(m_effects[i], m_effects[i + 1]);
+
+            ImGui::SameLine();
+            if (ImGui::Button("Remove"))
+            {
+                m_effects.erase(m_effects.begin() + i);
+                ImGui::PopID();
+                break; // erase 후 break
+            }
+
+            ImGui::PopID();
+        }
+
+        ImGui::Separator();
+        ImGui::Text("");
 
         ImGui::InputInt("Ruby", &m_costRuby);
         ImGui::InputInt("Sapphire", &m_costSapphire);
@@ -181,6 +259,18 @@ namespace game
 
         j["Name"] = m_name;
         j["Desc"] = m_desc;
+
+        engine::json effects = engine::json::array();
+        for (const auto& e : m_effects)
+        {
+            engine::json ej;
+            ej["Op"] = (int)e.op;
+            ej["Stat"] = (int)e.stat;
+            ej["Value"] = e.value;
+            ej["Bool"] = e.b;
+            effects.push_back(ej);
+        }
+        j["Effects"] = effects;
 
         j["Ruby"] = m_costRuby;
         j["Sapphire"] = m_costSapphire;
@@ -214,6 +304,28 @@ namespace game
 
         engine::JsonGet(j, "Name", m_name);
         engine::JsonGet(j, "Desc", m_desc);
+
+        m_effects.clear();
+
+        // Effects가 있으면 그걸 우선 로드
+        engine::JsonArrayForEach(j, "Effects",
+            [this](const engine::json& ej)
+            {
+                TemperEffect e;
+
+                int op = (int)e.op;
+                int st = (int)e.stat;
+
+                engine::JsonGet(ej, "Op", op);
+                engine::JsonGet(ej, "Stat", st);
+                engine::JsonGet(ej, "Value", e.value);
+                engine::JsonGet(ej, "Bool", e.b);
+
+                e.op = (TemperOp)op;
+                e.stat = (TemperStat)st;
+
+                m_effects.push_back(e);
+            });
 
         engine::JsonGet(j, "Ruby", m_costRuby);
         engine::JsonGet(j, "Sapphire", m_costSapphire);
@@ -267,7 +379,7 @@ namespace game
         for (int& pid : m_parents)
             pid = MakeNodeId(m_category, pid % 100);
 
-        m_newParent = std::clamp(m_newParent, 0, 99);
+        m_newParent = MakeNodeId(m_category, m_newParent % 100);
     }
 
     void UpgradeNodeView::BuildCostList(std::vector<ItemCost>& out) const

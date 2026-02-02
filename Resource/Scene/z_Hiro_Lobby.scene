@@ -6305,6 +6305,14 @@
                     "Parent": [],
                     "Name": "공격력 증가",
                     "Desc": "공격력이 2 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 0,
+                            "Value": 2.0,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 0,
                     "Emerald": 0
@@ -6414,6 +6422,14 @@
                     ],
                     "Name": "공격력 증가",
                     "Desc": "공격력이 10 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 0,
+                            "Value": 10.0,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 2,
                     "Emerald": 0
@@ -6523,6 +6539,14 @@
                     ],
                     "Name": "공격 속도 증가",
                     "Desc": "공격 속도가 3% 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 1,
+                            "Stat": 1,
+                            "Value": 1.0299999713897705,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 3,
                     "Sapphire": 3,
                     "Emerald": 3
@@ -6633,9 +6657,17 @@
                     ],
                     "Name": "투사체 사거리 증가",
                     "Desc": "투사체의 사거리가 1m 증가합니다.",
-                    "Ruby": 50,
-                    "Sapphire": 50,
-                    "Emerald": 50
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 2,
+                            "Value": 1.0,
+                            "Bool": false
+                        }
+                    ],
+                    "Ruby": 10,
+                    "Sapphire": 5,
+                    "Emerald": 1
                 }
             ]
         },
@@ -6705,6 +6737,14 @@
                     ],
                     "Name": "투사체 크기 증가",
                     "Desc": "투사체의 크기가 3 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 3,
+                            "Value": 3.0,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 4,
                     "Emerald": 2
@@ -6814,6 +6854,14 @@
                     ],
                     "Name": "투사체 속도 증가",
                     "Desc": "투사체의 발사 속도가 5% 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 1,
+                            "Stat": 4,
+                            "Value": 1.0499999523162842,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 5,
                     "Emerald": 2
@@ -6924,6 +6972,14 @@
                     ],
                     "Name": "공격 속도 증가",
                     "Desc": "공격 속도가 10 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 1,
+                            "Value": 10.0,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 10,
                     "Emerald": 3
@@ -7033,6 +7089,14 @@
                     ],
                     "Name": "공격력 증가",
                     "Desc": "공격력이 5 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 0,
+                            "Value": 5.0,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 5,
                     "Emerald": 1
@@ -7142,6 +7206,14 @@
                     ],
                     "Name": "투사체 사거리 증가",
                     "Desc": "투사체 사거리가 5m 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 2,
+                            "Value": 5.0,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 3,
                     "Emerald": 1
@@ -7252,6 +7324,20 @@
                     ],
                     "Name": "공격력 감소",
                     "Desc": "투사체를 2배 더 발사합니다.\n대신 공격력이 20% 감소합니다",
+                    "Effects": [
+                        {
+                            "Op": 2,
+                            "Stat": 5,
+                            "Value": 0.0,
+                            "Bool": true
+                        },
+                        {
+                            "Op": 1,
+                            "Stat": 0,
+                            "Value": 0.800000011920929,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 5,
                     "Emerald": 0
@@ -7362,6 +7448,20 @@
                     ],
                     "Name": "공속",
                     "Desc": "공격 속도가 30% 증가합니다.\n대신 사거리가 10% 감소합니다.",
+                    "Effects": [
+                        {
+                            "Op": 1,
+                            "Stat": 1,
+                            "Value": 1.2999999523162842,
+                            "Bool": false
+                        },
+                        {
+                            "Op": 1,
+                            "Stat": 2,
+                            "Value": 0.8999999761581421,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 3,
                     "Emerald": 0
@@ -7563,6 +7663,14 @@
                     "Parent": [],
                     "Name": "처형 거리 증가",
                     "Desc": "처형 거리가 1m 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 0,
+                            "Value": 0.0,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 0,
                     "Emerald": 0
@@ -7672,6 +7780,14 @@
                     ],
                     "Name": "처형 대미지 상승",
                     "Desc": "처형 피해가 20% 증가합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 0,
+                            "Value": 0.0,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 1,
                     "Emerald": 0
@@ -7781,6 +7897,7 @@
                     ],
                     "Name": "처형 피해 범위 상승",
                     "Desc": "처형 피해 범위가 20% 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 2,
                     "Emerald": 0
@@ -7891,6 +8008,7 @@
                     ],
                     "Name": "처형 거리 증가",
                     "Desc": "처형 거리가 30% 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 5,
                     "Emerald": 0
@@ -8000,6 +8118,7 @@
                     ],
                     "Name": "프래자일 회복량",
                     "Desc": "프래자일 회복량이 10% 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 5,
                     "Emerald": 5
@@ -8201,6 +8320,7 @@
                     "Parent": [],
                     "Name": "체력 증가",
                     "Desc": "체력이 1 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 0,
                     "Emerald": 0
@@ -8310,6 +8430,7 @@
                     ],
                     "Name": "피격시 무적 시간 증가",
                     "Desc": "무적 시간이 3초 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 3,
                     "Emerald": 0
@@ -8419,6 +8540,7 @@
                     ],
                     "Name": "체력 증가",
                     "Desc": "체력이 2 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 5,
                     "Emerald": 0
@@ -8528,6 +8650,7 @@
                     ],
                     "Name": "체력 증가량 상승",
                     "Desc": "체력 증가량이 1 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 3,
                     "Emerald": 0
@@ -8729,6 +8852,7 @@
                     "Parent": [],
                     "Name": "대시 충전시간 감소",
                     "Desc": "대시의 충전시간이 1초 감소됩니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 0,
                     "Emerald": 0
@@ -8838,6 +8962,7 @@
                     ],
                     "Name": "대시 이동 거리 증가",
                     "Desc": "대시로 한번에 이동할 수 있는 거리가\n1m 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 2,
                     "Emerald": 0
@@ -8947,6 +9072,7 @@
                     ],
                     "Name": "이동 속도 증가",
                     "Desc": "이동 속도가 10% 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 5,
                     "Emerald": 0
@@ -9056,6 +9182,7 @@
                     ],
                     "Name": "대시 무적 시간 증가",
                     "Desc": "대시의 무적 시간이 3초 증가합니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 7,
                     "Emerald": 0
@@ -9675,7 +9802,7 @@
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/player/TestChar222.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/TestChar222.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",

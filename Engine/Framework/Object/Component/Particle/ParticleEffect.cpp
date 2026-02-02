@@ -295,6 +295,25 @@ namespace engine
 		ImGui::DragFloat3("Gravity", &props.gravity.x, 0.1f);
 
 		ImGui::Spacing();
+		ImGui::SeparatorText("Rotation");
+
+		ImGui::DragFloat("Rotation Min", &props.rotationMin, 0.1f);
+		ImGui::DragFloat("Rotation Max", &props.rotationMax, 0.1f);
+
+		if (props.rotationMin > props.rotationMax)
+		{
+			std::swap(props.rotationMin, props.rotationMax);
+		}
+
+		ImGui::DragFloat("Rotation Speed Min", &props.rotationSpeedMin, 0.1f);
+		ImGui::DragFloat("Rotation Speed Max", &props.rotationSpeedMax, 0.1f);
+
+		if (props.rotationSpeedMin > props.rotationSpeedMax)
+		{
+			std::swap(props.rotationSpeedMin, props.rotationSpeedMax);
+		}
+
+		ImGui::Spacing();
 		ImGui::SeparatorText("Color");
 
 		ImGui::ColorEdit4("Start Color", &props.startColor.x);
@@ -305,6 +324,14 @@ namespace engine
 		{
 			props.blend = static_cast<EmitterBlend>(type);
 		}
+
+		ImGui::Spacing();
+		ImGui::SeparatorText("Emissive");
+
+		ImGui::ColorEdit3("Start Emissive", &props.startEmissive.x);
+		ImGui::ColorEdit3("End Emissive", &props.endEmissive.x);
+		ImGui::DragFloat("Start Emissive Intensity", &props.startEmissiveIntensity, 0.01f, 0.0f, 100.0f, "%.2f");
+		ImGui::DragFloat("End Emissive Intensity", &props.endEmissiveIntensity, 0.01f, 0.0f, 100.0f, "%.2f");
 
 		ImGui::Spacing();
 		ImGui::SeparatorText("Size");

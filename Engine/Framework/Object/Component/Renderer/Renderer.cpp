@@ -249,6 +249,13 @@ namespace engine
 			m_socketFilePath = "Resource/Data/Socket/" + std::filesystem::path(meshPath).filename().string() + ".socketdata";
 		}
 
+		if (!std::filesystem::exists(m_socketFilePath))
+		{
+			m_socketFilePath = "";
+			ClearSockets();
+			return;
+		}
+
 		m_socketData = AssetManager::Get().GetOrCreateSocketData(m_socketFilePath, LifeScope::Scene);
 
 		if (!m_socketData) return;

@@ -28,6 +28,8 @@ namespace engine
         HDR = 31,
         StencilMap = 32,
 
+        UINoise = 33,
+        UIRamp = 34,
 
         ParticleStructured = 50
     };

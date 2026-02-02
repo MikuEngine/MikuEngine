@@ -62,6 +62,7 @@
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
     <ClCompile Include="Script\CheckRotateScript.cpp" />
     <ClCompile Include="Script\TemperTestScript.cpp" />
+    <ClCompile Include="Manager\UpgradeProgressManager.cpp" />
     <ClCompile Include="Script\CornerTrigger.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +131,7 @@
     <ClInclude Include="Script\UpgradeTypes.h" />
     <ClInclude Include="Script\CheckRotateScript.h" />
     <ClInclude Include="Script\TemperTestScript.h" />
+    <ClInclude Include="Manager\UpgradeProgressManager.h" />
     <ClInclude Include="Script\CornerTrigger.h" />
   </ItemGroup>
 </Project>

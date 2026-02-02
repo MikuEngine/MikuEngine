@@ -10,6 +10,7 @@ namespace engine
         float g_deltaTime = 0.0f;
         float g_fixedDeltaTime = 0.0166666f;
         std::vector<float> g_timeScales{ 1.0f };
+        float g_unscaledTime = 0.0f;
     }
 
     void Time::Update()
@@ -19,6 +20,8 @@ namespace engine
         g_deltaTime = std::chrono::duration<float>(g_currentTime - g_previousTime).count();
 
         g_previousTime = g_currentTime;
+
+        g_unscaledTime += g_deltaTime;
     }
 
     float Time::DeltaTime(size_t scaleSlot)
@@ -36,6 +39,11 @@ namespace engine
     float Time::UnscaledDeltaTime()
     {
         return g_deltaTime;
+    }
+
+    float Time::UnscaledTime()
+    {
+        return g_unscaledTime;
     }
 
     void Time::SetTimeScale(size_t scaleSlot, float timeScale)

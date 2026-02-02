@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ParticleEmitter.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -49,6 +49,8 @@ namespace engine
 
 			float t = p.age / p.lifeTime;
 			p.color = Vector4::Lerp(p.startColor, p.endColor, t);
+			p.emissiveColor = Vector3::Lerp(m_props.startEmissive, m_props.endEmissive, t);
+			p.emissiveIntensity = std::lerp(m_props.startEmissiveIntensity, m_props.endEmissiveIntensity, t);
 			p.size = std::lerp(p.startSize, p.endSize, t);
 
 			p.distanceToCamera = Vector3::DistanceSquared(p.position, cameraPosition);
@@ -222,12 +224,21 @@ namespace engine
 
 		j["StartColor"] = p.startColor;
 		j["EndColor"] = p.endColor;
+		j["StartEmissive"] = p.startEmissive;
+		j["EndEmissive"] = p.endEmissive;
+		j["StartEmissiveIntensity"] = p.startEmissiveIntensity;
+		j["EndEmissiveIntensity"] = p.endEmissiveIntensity;
 		j["Blend"] = static_cast<int>(p.blend);
 
 		j["SizeBegin"] = p.sizeBegin;
 		j["SizeEnd"] = p.sizeEnd;
 		j["SizeVariation"] = p.sizeVariation;
 		j["LifeTime"] = p.lifeTime;
+
+		j["RotationMin"] = p.rotationMin;
+		j["RotationMax"] = p.rotationMax;
+		j["RotationSpeedMin"] = p.rotationSpeedMin;
+		j["RotationSpeedMax"] = p.rotationSpeedMax;
 
 		j["EmissionRate"] = p.emissionRate;
 		j["MaxParticles"] = p.maxParticles;
@@ -274,6 +285,10 @@ namespace engine
 
 		JsonGet(j, "StartColor", p.startColor);
 		JsonGet(j, "EndColor", p.endColor);
+		JsonGet(j, "StartEmissive", p.startEmissive);
+		JsonGet(j, "EndEmissive", p.endEmissive);
+		JsonGet(j, "StartEmissiveIntensity", p.startEmissiveIntensity);
+		JsonGet(j, "EndEmissiveIntensity", p.endEmissiveIntensity);
 		int blendInt = static_cast<int>(p.blend);
 		JsonGet(j, "Blend", blendInt);
 		p.blend = static_cast<EmitterBlend>(blendInt);
@@ -282,6 +297,11 @@ namespace engine
 		JsonGet(j, "SizeEnd", p.sizeEnd);
 		JsonGet(j, "SizeVariation", p.sizeVariation);
 		JsonGet(j, "LifeTime", p.lifeTime);
+
+		JsonGet(j,"RotationMin", p.rotationMin);
+		JsonGet(j,"RotationMax", p.rotationMax);
+		JsonGet(j,"RotationSpeedMin", p.rotationSpeedMin);
+		JsonGet(j,"RotationSpeedMax", p.rotationSpeedMax);
 
 		JsonGet(j, "EmissionRate", p.emissionRate);
 		JsonGet(j, "MaxParticles", p.maxParticles);
@@ -415,9 +435,26 @@ namespace engine
 
 		p.startColor = m_props.startColor;
 		p.endColor = m_props.endColor;
+		p.emissiveColor = m_props.startEmissive;
+		p.emissiveIntensity = m_props.startEmissiveIntensity;
 
-		p.rotation = Random::Float(0.0f, 360.0f);
-		p.rotationSpeed = Random::Float(-45.0f, 45.0f);
+		if (m_props.rotationMin == m_props.rotationMax)
+		{
+			p.rotation = m_props.rotationMin;
+		}
+		else
+		{
+			p.rotation = Random::Float(m_props.rotationMin, m_props.rotationMax);
+		}
+
+		if (m_props.rotationSpeedMin == m_props.rotationSpeedMax)
+		{
+			p.rotationSpeed = m_props.rotationSpeedMin;
+		}
+		else
+		{
+			p.rotationSpeed = Random::Float(m_props.rotationSpeedMin, m_props.rotationSpeedMax);
+		}
 
 		p.startSize = m_props.sizeBegin + Random::Float(-m_props.sizeVariation, m_props.sizeVariation);
 		p.endSize = m_props.sizeEnd;
