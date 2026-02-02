@@ -16,6 +16,99 @@ namespace engine
     class PhysicsMaterial;
 
     // ═══════════════════════════════════════════════════════════════
+    // 레이캐스트 레이어 마스크 필터 콜백
+    // Shape의 레이어(word0)와 쿼리의 레이어 마스크(word1)를 비교
+    // ═══════════════════════════════════════════════════════════════
+    class LayerMaskQueryFilterCallback : public physx::PxQueryFilterCallback
+    {
+    public:
+        LayerMaskQueryFilterCallback() = default;
+        virtual ~LayerMaskQueryFilterCallback() = default;
+
+        // preFilter: 레이캐스트가 shape에 도달하기 전에 호출
+        // 반환값: eBLOCK(충돌), eNONE(무시), eTOUCH(터치로 처리)
+        virtual physx::PxQueryHitType::Enum preFilter(
+            const physx::PxFilterData& filterData,      // 쿼리 필터 데이터
+            const physx::PxShape* shape,                // 검사 대상 shape
+            const physx::PxRigidActor* actor,           // shape가 속한 actor
+            physx::PxHitFlags& queryFlags) override
+        {
+            if (!shape) return physx::PxQueryHitType::eNONE;
+
+            // Shape의 queryFilterData 가져오기
+            physx::PxFilterData shapeFilterData = shape->getQueryFilterData();
+            
+            // Shape의 레이어 (word0 = 레이어 인덱스)
+            uint32_t shapeLayer = shapeFilterData.word0;
+            
+            // 쿼리의 레이어 마스크 (word1 = 찾고자 하는 레이어 마스크)
+            uint32_t queryLayerMask = filterData.word1;
+            
+            // Shape의 레이어가 쿼리 마스크에 포함되는지 확인
+            // (1u << shapeLayer) & queryLayerMask
+            uint32_t shapeMask = (1u << shapeLayer);
+            
+            if ((shapeMask & queryLayerMask) != 0)
+            {
+                return physx::PxQueryHitType::eBLOCK;  // 충돌 허용
+            }
+            
+            return physx::PxQueryHitType::eNONE;  // 무시
+        }
+
+        // postFilter: 충돌 후 호출 (사용 안 함)
+        virtual physx::PxQueryHitType::Enum postFilter(
+            const physx::PxFilterData& filterData,
+            const physx::PxQueryHit& hit,
+            const physx::PxShape* shape,
+            const physx::PxRigidActor* actor) override
+        {
+            return physx::PxQueryHitType::eBLOCK;
+        }
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // 레이캐스트 레이어 마스크 필터 콜백 (RaycastAll용 - 여러 충돌 수집)
+    // eTOUCH 반환으로 모든 충돌을 수집
+    // ═══════════════════════════════════════════════════════════════
+    class LayerMaskQueryFilterCallbackAll : public physx::PxQueryFilterCallback
+    {
+    public:
+        LayerMaskQueryFilterCallbackAll() = default;
+        virtual ~LayerMaskQueryFilterCallbackAll() = default;
+
+        virtual physx::PxQueryHitType::Enum preFilter(
+            const physx::PxFilterData& filterData,
+            const physx::PxShape* shape,
+            const physx::PxRigidActor* actor,
+            physx::PxHitFlags& queryFlags) override
+        {
+            if (!shape) return physx::PxQueryHitType::eNONE;
+
+            physx::PxFilterData shapeFilterData = shape->getQueryFilterData();
+            uint32_t shapeLayer = shapeFilterData.word0;
+            uint32_t queryLayerMask = filterData.word1;
+            uint32_t shapeMask = (1u << shapeLayer);
+            
+            if ((shapeMask & queryLayerMask) != 0)
+            {
+                return physx::PxQueryHitType::eTOUCH;  // 여러 충돌 수집용
+            }
+            
+            return physx::PxQueryHitType::eNONE;
+        }
+
+        virtual physx::PxQueryHitType::Enum postFilter(
+            const physx::PxFilterData& filterData,
+            const physx::PxQueryHit& hit,
+            const physx::PxShape* shape,
+            const physx::PxRigidActor* actor) override
+        {
+            return physx::PxQueryHitType::eTOUCH;
+        }
+    };
+
+    // ═══════════════════════════════════════════════════════════════
     // 물리 시스템 설정
     // ═══════════════════════════════════════════════════════════════
 

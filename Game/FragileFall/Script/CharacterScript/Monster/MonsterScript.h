@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -165,14 +165,13 @@ namespace game
         
         float GetDistanceToPlayer() const;
         engine::Vector3 CalculateDirectionToPlayer() const;
-        bool IsPlayerInRange() const;
-        void RotateTowardsPlayer();  // FixedUpdate에서 호출
+        bool IsPlayerInRange() const;       
         bool IsLookingAtPlayer() const;
-        
-        // 호환성 유지
-        bool IsRotatedTowardsPlayer() const { return IsLookingAtPlayer(); }
-        
         bool m_isPlayerInRange = false;
+        bool IsRotatedTowardsPlayer() const { return IsLookingAtPlayer(); }
+
+        // 이건 일단 다이나믹, 키네마틱 겸용으로 구현해야함.
+        void RotateTowardsPlayer();  // FixedUpdate에서 호출  
         
         // ─────────────────────────────────────────────
         // 경로 찾기 (PathfindingAgent 활용)
@@ -208,6 +207,14 @@ namespace game
         // 이동 (PathfindingAgent 활용, 이동 몬스터용)
         // ─────────────────────────────────────────────
         virtual void MoveTowardsPlayer();  // FixedUpdate에서 호출
+        
+        // ─────────────────────────────────────────────
+        // 리지드바디 타입별 통합 이동 인터페이스
+        // - Dynamic: AddForce 기반 (ApplyMovementForce)
+        // - Kinematic: SetLinearVelocity 기반
+        // - Static: 무시
+        // ─────────────────────────────────────────────
+        void MoveInDirection(const engine::Vector3& direction, float speed);
 
         // ─────────────────────────────────────────────
         // 체력 관리

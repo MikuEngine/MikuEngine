@@ -1,6 +1,6 @@
 {
     "Name": "Prototype_Play",
-    "NumGameObjects": 82,
+    "NumGameObjects": 87,
     "GameObjects": [
         {
             "ID": 0,
@@ -11601,6 +11601,39 @@
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 0,
+                    "size": [
+                        1.0,
+                        24.010000228881836,
+                        39.54999923706055
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 63
                 }
             ]
         },
@@ -11615,7 +11648,7 @@
                     "Active": true,
                     "Position": {
                         "x": -30.5,
-                        "y": 10.0,
+                        "y": 5.020910263061523,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -11657,6 +11690,39 @@
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 0,
+                    "size": [
+                        1.4199999570846558,
+                        10.600000381469727,
+                        38.279998779296875
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 63
                 }
             ]
         },
@@ -11713,6 +11779,39 @@
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 0,
+                    "size": [
+                        58.380001068115234,
+                        13.180000305175781,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 63
                 }
             ]
         },
@@ -11858,6 +11957,39 @@
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 0,
+                    "size": [
+                        58.88999938964844,
+                        11.619999885559082,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 63
                 }
             ]
         },
@@ -18006,9 +18138,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -21.965251922607422,
-                        "y": 0.0,
-                        "z": -11.959795951843262
+                        "x": -9.480030059814453,
+                        "y": -6.560521228493599e-07,
+                        "z": -10.82974624633789
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -18038,12 +18170,12 @@
                     "AttackDamage": 10.0,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
-                    "DetectionRange": 15.0,
-                    "AttackRange": 5.0,
+                    "DetectionRange": 0.0,
+                    "AttackRange": 0.0,
                     "RotationSpeed": 2.0,
-                    "FireRate": 3.0,
-                    "BulletSpeed": 1.0,
-                    "BulletLifetime": 3.0,
+                    "FireRate": 0.009999999776482582,
+                    "BulletSpeed": 0.0,
+                    "BulletLifetime": 0.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18056,7 +18188,7 @@
                     "AnimName_Dead": "Dead",
                     "MoveDurationMin": 1.0,
                     "MoveDurationMax": 4.0,
-                    "RaycastDetectionRange": 40.0,
+                    "RaycastDetectionRange": 100.0,
                     "PlayerIgnoreCountMin": 1,
                     "PlayerIgnoreCountMax": 3
                 },
@@ -18096,7 +18228,7 @@
                     "linearDamping": 10.0,
                     "angularDamping": 1.0,
                     "useGravity": false,
-                    "constraints": 42
+                    "constraints": 18
                 },
                 {
                     "Type": "SphereCollider",
@@ -18113,7 +18245,7 @@
                     ],
                     "isTrigger": false,
                     "syncWithTransform": false,
-                    "layer": 0,
+                    "layer": 2,
                     "materialType": 0,
                     "radius": 1.090000033378601
                 },
@@ -18463,6 +18595,237 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 82,
+            "Name": "CornerTriggerObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 83,
+            "ParentID": 82,
+            "Name": "CornerTriggerRightUp",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 29.53134536743164,
+                        "y": 0.0,
+                        "z": 19.54769515991211
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 84,
+            "ParentID": 82,
+            "Name": "CornerTriggerLeftUp",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -29.205785751342773,
+                        "y": 0.9280486106872559,
+                        "z": 19.463743209838867
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 85,
+            "ParentID": 82,
+            "Name": "CornerTriggerLeftDown",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -29.475000381469727,
+                        "y": 1.1310814898024546e-06,
+                        "z": -18.526309967041016
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 86,
+            "ParentID": 82,
+            "Name": "CornerTriggerRightDown",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 29.475000381469727,
+                        "y": 0.0,
+                        "z": -18.525999069213867
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }

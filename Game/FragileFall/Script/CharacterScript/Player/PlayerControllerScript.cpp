@@ -1273,4 +1273,21 @@ namespace game
 		// ═══════════════════════════════════════════════════════════════
 		PlayerTemperManager::ApplyTemper(this);
 	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 데미지 처리
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::TakeDamage(int damage)
+	{
+		if (damage <= 0) return;
+		
+		m_PlayerCurrentHP -= damage;
+		
+		if (m_PlayerCurrentHP < 0)
+		{
+			m_PlayerCurrentHP = 0;
+		}
+		
+		// TODO: 사망 처리, UI 업데이트 등 추가 가능
+	}
 }

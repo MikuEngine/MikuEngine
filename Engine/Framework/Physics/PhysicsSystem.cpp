@@ -350,12 +350,17 @@ namespace engine
         physx::PxQueryFilterData filterData;
         filterData.data.word0 = 0;          // 쿼리 레이어 (사용 안 함)
         filterData.data.word1 = layerMask;  // 충돌할 레이어 마스크
+        filterData.flags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC | physx::PxQueryFlag::ePREFILTER;
+
+        // 레이어 마스크 필터 콜백
+        LayerMaskQueryFilterCallback filterCallback;
 
         bool hasHit = pxScene->raycast(
             pxOrigin, pxDir, maxDistance,
             hit,
             physx::PxHitFlag::eDEFAULT,
-            filterData
+            filterData,
+            &filterCallback  // 필터 콜백 전달
         );
 
         if (hasHit && hit.hasBlock)
@@ -400,14 +405,21 @@ namespace engine
         std::vector<physx::PxRaycastHit> hitBuffer(maxHits);
         physx::PxRaycastBuffer hits(hitBuffer.data(), maxHits);
 
+        // 필터 데이터 설정
         physx::PxQueryFilterData filterData;
+        filterData.data.word0 = 0;
         filterData.data.word1 = layerMask;
+        filterData.flags = physx::PxQueryFlag::eDYNAMIC | physx::PxQueryFlag::eSTATIC | physx::PxQueryFlag::ePREFILTER;
+
+        // 레이어 마스크 필터 콜백 (여러 충돌 수집용)
+        LayerMaskQueryFilterCallbackAll filterCallback;
 
         bool hasHit = pxScene->raycast(
             pxOrigin, pxDir, maxDistance,
             hits,
             physx::PxHitFlag::eDEFAULT,
-            filterData
+            filterData,
+            &filterCallback  // 필터 콜백 전달
         );
 
         if (hasHit)

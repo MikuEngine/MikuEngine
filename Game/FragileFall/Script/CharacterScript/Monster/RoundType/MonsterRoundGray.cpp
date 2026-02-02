@@ -1,18 +1,15 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundGray.h"
 
-#include "Script/CharacterScript/Common/BulletFactory.h"
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include "Script/CornerTrigger.h"
 
-#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Physics/PhysicsSystem.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/System/SystemManager.h>
-
 #include <Engine/Core/System/MyTime.h>
-
-
 
 namespace game
 {
@@ -48,18 +45,90 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGray::OnCollisionEnter(const engine::CollisionInfo& info)
     {
+        if (!info.gameObject) return;
+        
         // 총알 레이어 무시 (Projectile, EnemyProjectile)
-        if (info.gameObject)
+        auto* collider = info.collider.Get();
+        if (collider)
         {
-            auto* collider = info.collider.Get();
-            if (collider)
+            uint32_t layer = collider->GetLayer();
+            if (layer == engine::PhysicsLayer::Index::Projectile ||
+                layer == engine::PhysicsLayer::Index::EnemyProjectile)
             {
-                uint32_t layer = collider->GetLayer();
-                if (layer == engine::PhysicsLayer::Index::Projectile ||
-                    layer == engine::PhysicsLayer::Index::EnemyProjectile)
-                {
-                    return;  // 총알 충돌 무시
-                }
+                return;  // 총알 충돌 무시
+            }
+        }
+        
+        // ─────────────────────────────────────────────
+        // 플레이어 충돌 시 데미지 처리
+        // ─────────────────────────────────────────────
+        auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
+        if (player)
+        {
+            float elapsedSinceLastDamage = engine::Time::GetElapsedSeconds(m_lastDamageTime);
+            if (elapsedSinceLastDamage >= m_damageCooldown)
+            {
+                player->TakeDamage(static_cast<int>(m_attackDamage));
+                m_lastDamageTime = engine::Time::GetTimestamp();
+            }
+        }
+        
+        // ─────────────────────────────────────────────
+        // 충돌 방향 계산 (노말 벡터 사용)
+        // ─────────────────────────────────────────────
+        engine::Vector3 collisionDir = engine::Vector3::Zero;
+        for (const auto& contact : info.contacts)
+        {
+            // 노말 반전: A→B 방향이므로, 몬스터 입장에서는 반대 방향
+            engine::Vector3 normal = -contact.normal;
+            normal.y = 0.0f;  // 수평 성분만
+            if (normal.LengthSquared() > 0.0001f)
+            {
+                collisionDir = normal;
+                collisionDir.Normalize();
+                break;
+            }
+        }
+        
+        // 노말이 없으면 위치 기반으로 계산
+        if (collisionDir.LengthSquared() < 0.0001f)
+        {
+            engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+            engine::Vector3 otherPos = info.gameObject->GetTransform()->GetWorldPosition();
+            collisionDir = otherPos - myPos;
+            collisionDir.y = 0.0f;
+            if (collisionDir.LengthSquared() > 0.0001f)
+            {
+                collisionDir.Normalize();
+            }
+        }
+        
+        // ─────────────────────────────────────────────
+        // 충돌 방향이 진행방향 앞인지 판단
+        // - 내적 > 0: 앞쪽 충돌 (기존 로직)
+        // - 내적 <= 0: 뒤/옆 충돌 (충돌 방향 기준 회전)
+        // ─────────────────────────────────────────────
+        engine::Vector3 moveDir = GetDirectionVector();
+        float dotProduct = moveDir.Dot(collisionDir);
+        
+        // 충돌 기준 방향 결정 (회전의 기준이 되는 방향)
+        MoveDirection collisionBaseDir;
+        if (dotProduct > 0.3f)
+        {
+            // 앞쪽 충돌 → 현재 진행방향 기준으로 90도 회전
+            collisionBaseDir = m_currentDirection;
+        }
+        else
+        {
+            // 뒤/옆 충돌 → 충돌 방향 기준으로 90도 회전
+            // 대각선인 경우 성분이 큰 쪽 선택
+            if (std::abs(collisionDir.x) >= std::abs(collisionDir.z))
+            {
+                collisionBaseDir = (collisionDir.x > 0) ? MoveDirection::PlusX : MoveDirection::MinusX;
+            }
+            else
+            {
+                collisionBaseDir = (collisionDir.z > 0) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
             }
         }
 
@@ -67,13 +136,21 @@ namespace game
         
         if (currentState == "IdleMove")
         {
-            // IdleMove 상태에서 충돌 → 90도 방향 전환
+            // IdleMove 상태에서 충돌 → 충돌 방향 기준 90도 방향 전환
+            // 충돌 기준 방향을 현재 방향으로 설정 후 ChangeDirectionOnCollision 호출
+            m_currentDirection = collisionBaseDir;
             m_collisionOccurred = true;
         }
         else if (currentState == "EngageMove")
         {
             // EngageMove 상태에서 충돌 → IdleMove로 복귀 + 플레이어 무시
             StartPlayerIgnore();
+            
+            // 충돌 기준 방향으로 설정
+            m_currentDirection = collisionBaseDir;
+            
+            m_fromEngageCollision = true;  // IdleMove 진입 시 90도 회전 적용
+            
             if (m_logicFSM)
             {
                 m_logicFSM->SetParameter("ReturnToIdleMove", true);
@@ -82,55 +159,191 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 총알 초기화
+    // 트리거 콜백 - 코너 트리거 감지
     // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundGray::InitializeBullet()
+    void MonsterRoundGray::OnTriggerEnter(const engine::CollisionInfo& info)
     {
-        // Gray: 기본 Linear 총알
-        m_bulletParams.type = BulletType::Linear;
-        m_bulletParams.speed = m_bulletSpeed;
-        m_bulletParams.lifetime = m_bulletLifetime;
-        m_bulletParams.damage = static_cast<int>(m_attackDamage);
+        if (!info.gameObject) return;
+        
+        // 이미 코너 방향이 결정되어 있으면 무시 (중복 진입 방지)
+        if (m_hasCornerDirection) return;
+        
+        // 충돌한 오브젝트에서 CornerTrigger 스크립트가 있는지 확인
+        auto* cornerTrigger = info.gameObject->GetComponent<CornerTrigger>();
+        if (!cornerTrigger) return;
+        
+        // 현재 이동 방향을 CornerTrigger의 BlockedDirection으로 변환
+        CornerTrigger::BlockedDirection currentDir = CornerTrigger::BlockedDirection::None;
+        switch (m_currentDirection)
+        {
+        case MoveDirection::PlusX:  currentDir = CornerTrigger::BlockedDirection::PlusX;  break;
+        case MoveDirection::MinusX: currentDir = CornerTrigger::BlockedDirection::MinusX; break;
+        case MoveDirection::PlusZ:  currentDir = CornerTrigger::BlockedDirection::PlusZ;  break;
+        case MoveDirection::MinusZ: currentDir = CornerTrigger::BlockedDirection::MinusZ; break;
+        }
+        
+        // 막힌 방향 2개 가져오기
+        auto blocked1 = cornerTrigger->GetBlockedDir1();
+        auto blocked2 = cornerTrigger->GetBlockedDir2();
+        
+        // 이동 가능한 방향 계산 (4방향 - 막힌 방향 2개 = 가능한 방향 2개)
+        // 그 중 현재 방향의 90도 회전인 방향 선택
+        // 
+        // 예: TopRight 코너 (막힌: +X, +Z)
+        //     현재 +X로 이동 중 → 가능한 방향: -X, -Z → 90도 회전은 -Z
+        //     현재 +Z로 이동 중 → 가능한 방향: -X, -Z → 90도 회전은 -X
+        
+        // 현재 방향의 90도 좌/우 방향 계산
+        MoveDirection left90, right90;
+        switch (m_currentDirection)
+        {
+        case MoveDirection::PlusX:
+            left90 = MoveDirection::PlusZ;
+            right90 = MoveDirection::MinusZ;
+            break;
+        case MoveDirection::MinusX:
+            left90 = MoveDirection::MinusZ;
+            right90 = MoveDirection::PlusZ;
+            break;
+        case MoveDirection::PlusZ:
+            left90 = MoveDirection::MinusX;
+            right90 = MoveDirection::PlusX;
+            break;
+        case MoveDirection::MinusZ:
+            left90 = MoveDirection::PlusX;
+            right90 = MoveDirection::MinusX;
+            break;
+        }
+        
+        // 좌/우 중 막히지 않은 방향 선택
+        auto ToBlockedDir = [](MoveDirection dir) -> CornerTrigger::BlockedDirection {
+            switch (dir)
+            {
+            case MoveDirection::PlusX:  return CornerTrigger::BlockedDirection::PlusX;
+            case MoveDirection::MinusX: return CornerTrigger::BlockedDirection::MinusX;
+            case MoveDirection::PlusZ:  return CornerTrigger::BlockedDirection::PlusZ;
+            case MoveDirection::MinusZ: return CornerTrigger::BlockedDirection::MinusZ;
+            default: return CornerTrigger::BlockedDirection::None;
+            }
+        };
+        
+        bool left90Blocked = cornerTrigger->IsDirectionBlocked(ToBlockedDir(left90));
+        bool right90Blocked = cornerTrigger->IsDirectionBlocked(ToBlockedDir(right90));
+        
+        if (!left90Blocked && right90Blocked)
+        {
+            // 좌측만 가능
+            m_cornerDirection = left90;
+            m_hasCornerDirection = true;
+        }
+        else if (left90Blocked && !right90Blocked)
+        {
+            // 우측만 가능
+            m_cornerDirection = right90;
+            m_hasCornerDirection = true;
+        }
+        else if (!left90Blocked && !right90Blocked)
+        {
+            // 둘 다 가능 (코너가 아닌 경우?) → 코너 방향 사용 안함
+            m_hasCornerDirection = false;
+        }
+        else
+        {
+            // 둘 다 막힘 (잘못된 설정) → 무시
+            m_hasCornerDirection = false;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 공격 (Gray 전용)
+    // Gray 전용 FSM 초기화
+    // - EngageStop, EngageAttack 상태 없음 (Gray는 공격하지 않음)
+    // - 레이캐스트 기반 플레이어 감지만 사용
     // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundGray::Attack(float deltaTime)
+    void MonsterRoundGray::InitializeFSM()
     {
-        // 공격 애니메이션 타이머 업데이트
-        m_attackAnimationTimer += deltaTime;
+        if (!m_logicFSM) return;
 
-        // 발사 가능 상태
-        if (m_fireTimer <= 0.0f)
-        {
-            if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
-            {
-                // Gray: 단순 직선 발사
-                engine::Vector3 direction = CalculateDirectionToPlayer();
-                engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
-                
-                m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+        // ─────────────────────────────────────────────
+        // 상태 정의 (Gray 전용 - 공격 상태 없음)
+        // ─────────────────────────────────────────────
+        AddFSMState("Idle", true);           // 기본 상태 (대기)
+        AddFSMState("IdleMove", false);      // 맵 배회
+        AddFSMState("EngageMove", false);    // 추적 이동 (충돌까지 직진)
+        AddFSMState("Repositioning", false); // 위치 보정
+        AddFSMState("Fragile", false);
+        AddFSMState("Dead", false);
+        // EngageStop, EngageAttack 없음!
 
-                // 공격 애니메이션 재생 (SkeletalMesh 사용 시에만)
-                if (HasAnimation() && !m_animName_EngageAttack.empty())
-                {
-                    m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
-                }
+        // ─────────────────────────────────────────────
+        // StateMap 업데이트 (Transition 추가 전에 필수!)
+        // ─────────────────────────────────────────────
+        m_logicFSM->Initialize();
 
-                // 발사 쿨타임 리셋
-                m_fireTimer = m_fireRate;
-            }
-        }
+        // ─────────────────────────────────────────────
+        // 파라미터 정의 (Gray에 필요한 것만)
+        // ─────────────────────────────────────────────
+        m_logicFSM->SetParameter("IdleTimerComplete", false);     // Idle 대기 시간 완료
+        m_logicFSM->SetParameter("PlayerDetected", false);        // 4방향 레이캐스트 감지
+        m_logicFSM->SetParameter("NeedRepositioning", false);     // 위치 보정 필요
+        m_logicFSM->SetParameter("RepositioningComplete", false); // 위치 보정 완료
+        m_logicFSM->SetParameter("ReturnToIdleMove", false);      // EngageMove 충돌 후 IdleMove 복귀
+        m_logicFSM->SetParameter("Fragile", m_isFragile);
+        m_logicFSM->SetParameter("Die", m_isDead);
+        // PlayerInRange, CanFire, AttackComplete 없음!
 
-        // 공격 애니메이션 완료 체크
-        if (m_attackAnimationTimer >= m_attackAnimationDuration)
-        {
-            if (m_logicFSM)
-            {
-                m_logicFSM->SetParameter("AttackComplete", true);
-            }
-        }
+        // ─────────────────────────────────────────────
+        // 전이 정의 (Gray 전용)
+        // ─────────────────────────────────────────────
+        
+        // Idle → IdleMove (대기 시간 완료)
+        AddFSMTransition("Idle", "IdleMove", "IdleTimerComplete", BoolTrue());
+        
+        // IdleMove → EngageMove (플레이어 레이캐스트 감지)
+        AddFSMTransition("IdleMove", "EngageMove", "PlayerDetected", BoolTrue());
+        
+        // IdleMove → Repositioning (위치 보정 필요)
+        AddFSMTransition("IdleMove", "Repositioning", "NeedRepositioning", BoolTrue());
+        
+        // EngageMove → IdleMove (충돌 후 복귀)
+        AddFSMTransition("EngageMove", "IdleMove", "ReturnToIdleMove", BoolTrue());
+        
+        // EngageMove → Repositioning (위치 보정 필요)
+        AddFSMTransition("EngageMove", "Repositioning", "NeedRepositioning", BoolTrue());
+        
+        // Repositioning → IdleMove (위치 보정 완료)
+        AddFSMTransition("Repositioning", "IdleMove", "RepositioningComplete", BoolTrue());
+
+        // Any → Fragile (HP 0, Fragile 트리거)
+        AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
+        AddFSMTransition("IdleMove", "Fragile", "Fragile", Trigger());
+        AddFSMTransition("EngageMove", "Fragile", "Fragile", Trigger());
+        AddFSMTransition("Repositioning", "Fragile", "Fragile", Trigger());
+
+        // Fragile → Dead (Execution, Die 트리거)
+        AddFSMTransition("Fragile", "Dead", "Die", Trigger());
+        
+        // Fragile → Idle (부활, Revive 트리거)
+        AddFSMTransition("Fragile", "Idle", "Revive", Trigger());
+
+        // ─────────────────────────────────────────────
+        // 초기 상태 설정
+        // ─────────────────────────────────────────────
+        m_logicFSM->InitializeCurrentState();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 입력 처리 (Gray 전용 - 최소화)
+    // - 거리 기반 감지 사용 안함
+    // - 공격 관련 검사 없음
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGray::ProcessInput()
+    {
+        // Gray는 ProcessInput에서 할 일이 없음
+        // - 플레이어 감지: DetectPlayerWithRaycast()에서 처리
+        // - 공격: 없음
+        // 
+        // 참고: m_targetPlayer는 EngageMove 방향 계산에 필요할 수 있으므로
+        // 필요시 FindPlayer()를 다른 곳에서 호출
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -179,15 +392,22 @@ namespace game
     {
         if (!m_rigidbody) return;
 
-        // 현재 방향으로 이동
+        // 현재 방향으로 이동 (리지드바디 타입별 통합 인터페이스 사용)
         engine::Vector3 direction = GetDirectionVector();
-        engine::Vector3 velocity = direction * m_moveSpeed;
-        
-        // Y축은 유지 (중력 영향)
-        engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
-        velocity.y = currentVel.y;
-        
-        m_rigidbody->SetLinearVelocity(velocity);
+        MoveInDirection(direction, m_moveSpeed);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // EngageMove 상태 물리 행동 (Gray 전용)
+    // - 레이캐스트로 감지된 방향으로 충돌할 때까지 직진
+    // - 플레이어를 향해 추적하지 않음
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGray::ExecuteEngageMoveBehaviorPhysics()
+    {
+        if (!m_rigidbody) return;
+
+        // 감지된 방향으로 직진
+        MoveInDirection(m_engageDirection, m_moveSpeed);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -283,17 +503,15 @@ namespace game
 
     // ═══════════════════════════════════════════════════════════════
     // 4방향 레이캐스트로 플레이어 감지
+    // RaycastAll 사용 - 자기 자신을 제외하고 Player 레이어만 감지
+    // 감지 성공 시 m_engageDirection에 방향 저장
     // ═══════════════════════════════════════════════════════════════
     bool MonsterRoundGray::DetectPlayerWithRaycast()
     {
         engine::PhysicsSystem& physicsSystem = engine::SystemManager::Get().GetPhysicsSystem();
-               
 
         engine::Vector3 origin = GetTransform()->GetWorldPosition();
         origin.y += 1.0f;  // 약간 위에서 시작 (바닥 충돌 방지)
-
-        // 플레이어 레이어만 감지
-        uint32_t layerMask = engine::PhysicsLayer::Mask::PlayerMask;
 
         // 4방향 레이캐스트
         const engine::Vector3 directions[4] = {
@@ -303,14 +521,26 @@ namespace game
             engine::Vector3(0.0f, 0.0f, -1.0f)   // -Z
         };
 
-        engine::RaycastHit hit;
+        engine::GameObject* selfGO = GetGameObject();  // 자기 자신 제외용
+        
         for (const auto& dir : directions)
         {
-            if (physicsSystem.Raycast(origin, dir, m_raycastDetectionRange, hit, layerMask))
+            // RaycastAll로 모든 충돌 수집
+            std::vector<engine::RaycastHit> allHits;
+            physicsSystem.RaycastAll(origin, dir, m_raycastDetectionRange, allHits, engine::PhysicsLayer::Mask::All);
+            
+            // All 레이어 결과에서 Player 레이어만 필터링
+            for (auto& h : allHits)
             {
-                if (hit.hasHit && hit.gameObject.Get())
+                if (h.hasHit && h.gameObject.Get() && h.gameObject.Get() != selfGO && h.collider.Get())
                 {
-                    return true;  // 플레이어 감지!
+                    uint32_t hitLayer = h.collider.Get()->GetLayer();
+                    if (hitLayer == engine::PhysicsLayer::Index::Player)
+                    {
+                        // 감지된 방향 저장 (EngageMove에서 사용)
+                        m_engageDirection = dir;
+                        return true;  // 플레이어 감지!
+                    }
                 }
             }
         }
@@ -356,8 +586,19 @@ namespace game
         
         if (state == "IdleMove")
         {
-            // IdleMove 진입 시 초기화
-            InitializeIdleMove();
+            if (m_fromEngageCollision)
+            {
+                // EngageMove에서 충돌로 전이한 경우 → 진행 방향의 90도 좌/우로 전환
+                ChangeDirectionOnCollision();
+                ResetMoveDuration();
+                OnDirectionChanged();  // 플레이어 무시 카운트 감소
+                m_fromEngageCollision = false;
+            }
+            else
+            {
+                // 일반 IdleMove 진입 (Idle에서 전이 등) → 랜덤 방향
+                InitializeIdleMove();
+            }
         }
     }
 
