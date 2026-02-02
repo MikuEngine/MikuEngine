@@ -47,6 +47,29 @@ namespace game
         REGISTER_SCRIPT(PlayerControllerScript, BaseControllerScript)
 
     protected:
+        // ═══════════════════════════════════════════════════════════════
+        // 공격 변수 - Base값 (Save/Load 대상, OnGui 편집 가능)
+        // PlayerTemperManager가 이 값을 읽어서 강화 계산 후 실제값 설정
+        // ═══════════════════════════════════════════════════════════════
+        float m_baseAtkDmg = 10.0f;             // 기본 공격력
+        float m_baseAtkSpeed = 1.0f;            // 기본 공격속도 스케일 (1.0 = 초당 1.4발)
+        float m_baseBulletLifetime = 3.0f;      // 기본 총알 수명 (초)
+        float m_baseBulletSizeScale = 1.0f;     // 기본 총알 스케일
+        float m_baseBulletSpeed = 1.0f;         // 기본 총알 속도
+
+        // ═══════════════════════════════════════════════════════════════
+        // 공격 변수 - 실제값 (PlayerTemperManager가 설정, OnGui 조회만)
+        // 공식: 실제값 = (Base + 합연산) × 곱연산
+        // ═══════════════════════════════════════════════════════════════
+        float m_playerAtkDmg = 10.0f;           // 실제 공격력
+        float m_AtkSpeed = 1.0f;                // 실제 공격속도 스케일
+        float m_fireRate = 0.7f;                // 발사 간격 (초). m_AtkSpeed로부터 계산됨. 0.7 / m_AtkSpeed
+        float m_bulletLifetime = 3.0f;          // 실제 총알 수명 (초)
+        float m_bulletSizeScale = 1.0f;         // 실제 총알 스케일
+        float m_bulletSpeed = 1.0f;             // 실제 총알 속도
+        bool m_isBulletDouble = false;          // 더블샷 (PlayerTemperManager가 설정)
+
+
         // ─────────────────────────────────────────────
         // 컴포넌트 참조
         // ─────────────────────────────────────────────
@@ -91,13 +114,7 @@ namespace game
         float m_dashCooldownTimer = 0.0f;               // 쿨다운 타이머
         float m_dashElapsedTime = 0.0f;                 // 대쉬 경과 시간
         engine::Vector3 m_dashDirection = engine::Vector3::Zero;  // 대쉬 방향 (시작 시 고정)
-
-        // ─────────────────────────────────────────────
-        // 발사 설정 (쿨다운/타이밍은 Player가 관리)
-        // ─────────────────────────────────────────────
-        float m_fireRate = 0.2f;         // 발사 간격 (초)
-        float m_bulletSpeed = 1.0f;     // 총알 속도
-        float m_bulletLifetime = 3.0f;   // 총알 수명 (초)
+             
         
         // ─────────────────────────────────────────────
         // 총알 발사 위치 오프셋
@@ -265,6 +282,26 @@ namespace game
         float GetFireRate() const { return m_fireRate; }
         void RegisterFireCallback(const FireCallback& callback);
         void UnregisterFireCallback(const FireCallback& callback);
+
+        // ─────────────────────────────────────────────
+        // 공격 변수 - Base값 Getter (PlayerTemperManager용)
+        // ─────────────────────────────────────────────
+        float GetBaseAtkDmg() const { return m_baseAtkDmg; }
+        float GetBaseAtkSpeed() const { return m_baseAtkSpeed; }
+        float GetBaseBulletLifetime() const { return m_baseBulletLifetime; }
+        float GetBaseBulletSizeScale() const { return m_baseBulletSizeScale; }
+        float GetBaseBulletSpeed() const { return m_baseBulletSpeed; }
+
+        // ─────────────────────────────────────────────
+        // 공격 변수 - 실제값 Setter (PlayerTemperManager용)
+        // ─────────────────────────────────────────────
+        void SetPlayerAtkDmg(float value) { m_playerAtkDmg = value; }
+        void SetAtkSpeed(float value) { m_AtkSpeed = value; }
+        void SetFireRate(float value) { m_fireRate = value; }
+        void SetBulletLifetime(float value) { m_bulletLifetime = value; }
+        void SetBulletSizeScale(float value) { m_bulletSizeScale = value; }
+        void SetBulletSpeed(float value) { m_bulletSpeed = value; }
+        void SetIsBulletDouble(bool value) { m_isBulletDouble = value; }
 
         // 처형 시작 (ExecutionIndicatorManager에서 호출)
         void StartExecution(engine::GameObject* targetMonster);

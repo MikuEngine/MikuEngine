@@ -60,6 +60,7 @@
     <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundPurple.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundRed.cpp" />
     <ClCompile Include="Script\UI\UIMessageQueue.cpp" />
+    <ClCompile Include="Manager\PlayerTemperManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -125,5 +126,6 @@
     <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundPurple.h" />
     <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundRed.h" />
     <ClInclude Include="Script\UI\UIMessageQueue.h" />
+    <ClInclude Include="Manager\PlayerTemperManager.h" />
   </ItemGroup>
 </Project>

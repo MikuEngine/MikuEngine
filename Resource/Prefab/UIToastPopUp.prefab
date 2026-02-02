@@ -65,7 +65,26 @@
                         "z": 1.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
                 },
                 {
                     "Type": "UIPanel",
@@ -149,7 +168,26 @@
                         "z": 0.5164651870727539,
                         "w": 1.0
                     },
-                    "AlphaBlend": true
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
                 }
             ]
         },
@@ -207,7 +245,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "토가 17세 사인: 결정화",
+                    "Text": "글자",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 20,
                     "Color": {

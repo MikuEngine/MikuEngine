@@ -225,10 +225,31 @@ namespace game
     void UIToastAnimator::SetText(const std::string& text)
     {
         auto* go = GetGameObject();
-        auto* txt = go->GetComponent<engine::UIText>();
-        if (!txt) return;
+        if (!go) return;
 
-        txt->SetText(text);
+        auto* root = go->GetTransform();
+        if (!root) return;
+
+        std::vector<engine::Transform*> stack;
+        stack.push_back(root);
+
+        while (!stack.empty())
+        {
+            engine::Transform* cur = stack.back();
+            stack.pop_back();
+
+            if (auto* cgo = cur->GetGameObject())
+            {
+                if (auto* t = cgo->GetComponent<engine::UIText>())
+                {
+                    t->SetText(text);
+                    return;
+                }
+            }
+
+            for (auto* ch : cur->GetChildren())
+                if (ch) stack.push_back(ch);
+        }
     }
 
     // 최종 알파 = baseA * (enterAlpha * fadeAlpha)
