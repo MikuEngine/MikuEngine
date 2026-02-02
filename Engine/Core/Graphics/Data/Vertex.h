@@ -149,6 +149,7 @@ namespace engine
     struct BoneWeightVertex
     {
         Vector3 position;
+        Vector3 color;
         Vector2 texCoord;
         Vector3 normal;
         Vector3 tangent;
@@ -160,11 +161,13 @@ namespace engine
 
         BoneWeightVertex(
             const float* position,
+            const float* color,
             const float* texCoord,
             const float* normal,
             const float* tangent,
             const float* binormal) noexcept
             : position{ position },
+            color{ color },
             texCoord{ texCoord },
             normal{ normal },
             tangent{ tangent },
@@ -175,11 +178,13 @@ namespace engine
 
         BoneWeightVertex(
             const Vector3& position,
+            const Vector3& color,
             const Vector2& texCoord,
             const Vector3& normal,
             const Vector3& tangent,
             const Vector3& binormal) noexcept
             : position{ position },
+            color{ color },
             texCoord{ texCoord },
             normal{ normal },
             tangent{ tangent },
@@ -207,16 +212,17 @@ namespace engine
             }
         }
 
-        static constexpr std::array<D3D11_INPUT_ELEMENT_DESC, 7> layout
+        static constexpr std::array<D3D11_INPUT_ELEMENT_DESC, 8> layout
         {
             // SemanticName , SemanticIndex , Format , InputSlot , AlignedByteOffset , InputSlotClass , InstanceDataStepRate
             D3D11_INPUT_ELEMENT_DESC{ "POSITION",     0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            D3D11_INPUT_ELEMENT_DESC{ "TEXCOORD",     0, DXGI_FORMAT_R32G32_FLOAT,       0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            D3D11_INPUT_ELEMENT_DESC{ "NORMAL",       0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            D3D11_INPUT_ELEMENT_DESC{ "TANGENT",      0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            D3D11_INPUT_ELEMENT_DESC{ "BINORMAL",     0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            D3D11_INPUT_ELEMENT_DESC{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT,  0, 56, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            D3D11_INPUT_ELEMENT_DESC{ "BLENDWEIGHT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 72, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            D3D11_INPUT_ELEMENT_DESC{ "COLOR",        0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            D3D11_INPUT_ELEMENT_DESC{ "TEXCOORD",     0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            D3D11_INPUT_ELEMENT_DESC{ "NORMAL",       0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            D3D11_INPUT_ELEMENT_DESC{ "TANGENT",      0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            D3D11_INPUT_ELEMENT_DESC{ "BINORMAL",     0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            D3D11_INPUT_ELEMENT_DESC{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            D3D11_INPUT_ELEMENT_DESC{ "BLENDWEIGHT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
         };
 
         static constexpr VertexFormat vertexFormat = VertexFormat::BoneWeight;

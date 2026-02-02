@@ -94,6 +94,7 @@ namespace engine
 
                         m_boneWeightVertices.emplace_back(
                             &mesh->mVertices[j].x,
+                            mesh->mColors[0] == nullptr ? &v3[0] : &mesh->mColors[0][j].r,
                             &v2[0],
                             &mesh->mNormals[j].x,
                             &v3[0],
@@ -102,10 +103,13 @@ namespace engine
                 }
                 else
                 {
+                    static constexpr float v3[3]{ 0.0f, 0.0f, 0.0f };
+
                     for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
                     {
                         m_boneWeightVertices.emplace_back(
                             &mesh->mVertices[j].x,
+                            mesh->mColors[0] == nullptr ? &v3[0] : &mesh->mColors[0][j].r,
                             &mesh->mTextureCoords[0][j].x,
                             &mesh->mNormals[j].x,
                             &mesh->mTangents[j].x,

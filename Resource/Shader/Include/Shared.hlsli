@@ -226,6 +226,7 @@ struct PS_INPUT_TEXCOORD
 struct VS_INPUT_SKINNING
 {
     float3 position : POSITION;
+    float3 color : COLOR;
     float2 texCoord : TEXCOORD0;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
