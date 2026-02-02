@@ -168,9 +168,12 @@ namespace game
             FindPlayer();
         }
 
+        float dist = GetDistanceToPlayer();
+        float rangeBuffer = (GetCurrentState() == "EngageStop") ? 1.2f : 1.0f;
+
         // 플레이어와의 거리 체크
-        m_isPlayerInDetectionRange = IsPlayerInDetectionRange();
-        m_isPlayerInRange = IsPlayerInRange();
+        m_isPlayerInDetectionRange = (dist <= m_detectionRange);
+        m_isPlayerInRange = (dist <= m_AttackRange * rangeBuffer);
         
         // 발사 가능 여부 체크 (쿨타임)
         m_canFire = (m_fireTimer <= 0.0f);
