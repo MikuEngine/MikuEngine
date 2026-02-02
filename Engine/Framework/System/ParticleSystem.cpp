@@ -47,7 +47,8 @@ namespace engine
 		srvDesc.Buffer.NumElements = MAX_PARTICLES;
 		GraphicsDevice::Get().GetDevice()->CreateShaderResourceView(m_particleBuffer.Get(), &srvDesc, m_particleSRV.GetAddressOf());
 
-		m_blendState = resourceManager.GetDefaultBlendState(DefaultBlendType::Additive);
+		m_blendStateAddtive = resourceManager.GetDefaultBlendState(DefaultBlendType::Additive);
+		m_blendStateBlend = resourceManager.GetDefaultBlendState(DefaultBlendType::AlphaBlend);
 		m_dsState = resourceManager.GetDefaultDepthStencilState(DefaultDepthStencilType::DepthRead);
 	}
 
@@ -62,118 +63,6 @@ namespace engine
 
 			effect->Update();
 		}
-	}
-
-	void ParticleSystem::Render(const Matrix& view, const Matrix& projection)
-	{
-		auto context = GraphicsDevice::Get().GetDeviceContext();
-
-		context->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
-		context->PSSetShader(m_ps->GetRawShader(), nullptr, 0);
-
-		context->IASetInputLayout(nullptr);
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		ID3D11Buffer* nullBuffer = nullptr;
-		static const UINT stride = 0;
-		static const UINT offset = 0;
-
-		context->IASetVertexBuffers(0, 1, &nullBuffer, &stride, &offset);
-		context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
-
-		static constexpr float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
-		context->OMSetBlendState(m_blendState->GetRawBlendState(), blendFactor, 0xffffffff);
-		context->OMSetDepthStencilState(m_dsState->GetRawDepthStencilState(), 0);
-
-		Vector3 camPos;
-		if (auto mainCam = SystemManager::Get().GetCameraSystem().GetMainCamera())
-		{
-			camPos = mainCam->GetPosition();
-		}
-
-		m_sortedPairs.clear();
-
-		for (auto effect : m_components)
-		{
-			if (!effect->IsActive())
-			{
-				continue;
-			}
-
-			effect->SortParticles();
-
-			Vector3 effectPos = effect->GetTransform()->GetWorldPosition();
-			float effectDistSq = Vector3::DistanceSquared(effectPos, camPos);
-
-			for (auto& emitter : effect->GetEmitters())
-			{
-				auto& particles = emitter.GetParticles();
-				if (particles.empty())
-				{
-					continue;
-				}
-
-				// 가장 가까운 파티클의 거리 사용 (또는 평균)
-				float emitterDistSq = particles.empty() ? effectDistSq :
-					particles[0].distanceToCamera;  // 정렬 후 첫 번째가 가장 가까움
-
-				m_sortedPairs.push_back({ effect, &emitter, emitterDistSq });
-			}
-		}
-
-		// Emitter를 거리 기준으로 정렬 (가까운 것부터 = 먼저 그리기)
-		std::sort(m_sortedPairs.begin(), m_sortedPairs.end(),
-			[](const EffectEmitterPair& a, const EffectEmitterPair& b) {
-				return a.distanceSq < b.distanceSq;  // 가까운 것부터
-			});
-
-		for (const auto& pair : m_sortedPairs)
-		{
-			auto& emitter = *pair.emitter;
-			const auto& particles = emitter.GetParticles();
-
-			auto tex = emitter.GetTexture();
-			context->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), 1, tex->GetSRV().GetAddressOf());
-
-			size_t countToRender = particles.size();
-			if (countToRender > MAX_PARTICLES)
-			{
-				countToRender = MAX_PARTICLES;
-			}
-
-			m_structuredDataBuffer.clear();
-			m_structuredDataBuffer.reserve(countToRender);
-
-			for (size_t i = 0; i < countToRender; ++i)
-			{
-				const auto& p = particles[i];
-
-				ParticleStructuredData data;
-
-				data.position = p.position;
-				data.color = p.color;
-				data.rotation = p.rotation;
-				data.size = p.size;
-				data.uvOffset = p.uvOffset;
-				data.uvScale = p.uvScale;
-
-				m_structuredDataBuffer.push_back(data);
-			}
-
-			D3D11_MAPPED_SUBRESOURCE mapped;
-			if (SUCCEEDED(context->Map(m_particleBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped)))
-			{
-				std::memcpy(mapped.pData, m_structuredDataBuffer.data(), sizeof(ParticleStructuredData) * m_structuredDataBuffer.size());
-				context->Unmap(m_particleBuffer.Get(), 0);
-			}
-
-			context->VSSetShaderResources(static_cast<UINT>(TextureSlot::ParticleStructured), 1, m_particleSRV.GetAddressOf());
-
-			context->Draw(static_cast<UINT>(m_structuredDataBuffer.size() * 6), 0);
-		}
-
-		ID3D11ShaderResourceView* nullSRV = nullptr;
-		context->VSSetShaderResources(0, 1, &nullSRV);
 	}
 
 	void ParticleSystem::CollectTransparentItems(
@@ -233,8 +122,20 @@ namespace engine
 		context->IASetVertexBuffers(0, 1, &nullBuffer, &stride, &offset);
 		context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
 
+		auto blendType = emitter->GetProps().blend;
+
 		static constexpr float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
-		context->OMSetBlendState(m_blendState->GetRawBlendState(), blendFactor, 0xffffffff);
+
+		switch (blendType)
+		{
+		case EmitterBlend::Additive:
+			context->OMSetBlendState(m_blendStateAddtive->GetRawBlendState(), blendFactor, 0xffffffff);
+			break;
+
+		case EmitterBlend::Blend:
+			context->OMSetBlendState(m_blendStateBlend->GetRawBlendState(), blendFactor, 0xffffffff);
+			break;
+		}
 		context->OMSetDepthStencilState(m_dsState->GetRawDepthStencilState(), 0);
 
 		const auto& particles = emitter->GetParticles();

@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "ParticleEffect.h"
 
 #include "Common/Utility/StaticMemoryPool.h"
@@ -299,6 +299,12 @@ namespace engine
 
 		ImGui::ColorEdit4("Start Color", &props.startColor.x);
 		ImGui::ColorEdit4("End Color", &props.endColor.x);
+		int type = static_cast<int>(props.blend);
+		const char* blendItems[]{ "Additive", "Blend" };
+		if (ImGui::Combo("Blend Type", &type, blendItems, IM_ARRAYSIZE(blendItems)))
+		{
+			props.blend = static_cast<EmitterBlend>(type);
+		}
 
 		ImGui::Spacing();
 		ImGui::SeparatorText("Size");

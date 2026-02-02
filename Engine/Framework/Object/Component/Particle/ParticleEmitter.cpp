@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "ParticleEmitter.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -222,6 +222,8 @@ namespace engine
 
 		j["StartColor"] = p.startColor;
 		j["EndColor"] = p.endColor;
+		j["Blend"] = static_cast<int>(p.blend);
+
 		j["SizeBegin"] = p.sizeBegin;
 		j["SizeEnd"] = p.sizeEnd;
 		j["SizeVariation"] = p.sizeVariation;
@@ -272,6 +274,10 @@ namespace engine
 
 		JsonGet(j, "StartColor", p.startColor);
 		JsonGet(j, "EndColor", p.endColor);
+		int blendInt = static_cast<int>(p.blend);
+		JsonGet(j, "Blend", blendInt);
+		p.blend = static_cast<EmitterBlend>(blendInt);
+
 		JsonGet(j, "SizeBegin", p.sizeBegin);
 		JsonGet(j, "SizeEnd", p.sizeEnd);
 		JsonGet(j, "SizeVariation", p.sizeVariation);

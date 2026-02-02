@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace engine
 {
@@ -7,6 +7,12 @@ namespace engine
 		Sphere,
 		Cone,
 		Box
+	};
+
+	enum class EmitterBlend
+	{
+		Additive,
+		Blend,
 	};
 
 	struct Particle
@@ -76,6 +82,8 @@ namespace engine
 		std::uint32_t textureTileCount = 1;
 		float animationSpeed = 1.0f;
 		bool isRandomFrame = false;
+
+		EmitterBlend blend = EmitterBlend::Additive;
 	};
 
 	class Texture;
