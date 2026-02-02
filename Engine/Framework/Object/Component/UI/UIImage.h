@@ -20,7 +20,7 @@ namespace engine
 		REGISTER_COMPONENT(UIImage, UIElement)
 
 	private:
-		std::string m_textureFilePath;
+		std::string m_textureFilePath = "None";
 		std::string m_vsFilePath;
 		std::string m_psFilePath;
 		std::string m_outlinePSFilePath;
@@ -55,6 +55,18 @@ namespace engine
 		bool m_outlineEnabled = false;
 		float m_outlineThickness = 0.0f;
 		Vector4 m_outlineColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+		uint32_t m_effectMode = 0;
+		uint32_t m_effectFlags = 0;
+
+		Vector4 m_effect0 = { 0,0,0,0 };
+		Vector4 m_effect1 = { 0,0,0,0 };
+		Vector4 m_effect2 = { 0,0,0,0 };
+
+		std::shared_ptr<Texture> m_noiseTex;
+		std::shared_ptr<Texture> m_rampTex;
+		std::string m_noisePath = "None";
+		std::string m_rampPath = "None";
 
 	public:
 		UIImage() = default;

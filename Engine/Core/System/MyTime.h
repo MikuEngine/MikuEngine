@@ -10,6 +10,7 @@ namespace engine
         static float DeltaTime(size_t scaleSlot = 0);
         static float FixedDeltaTime();
         static float UnscaledDeltaTime();
+        static float UnscaledTime();
 
         static void SetTimeScale(size_t scaleSlot, float timeScale);
         static void SetFixedDeltaTime(float fixedDeltaTime);
