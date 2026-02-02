@@ -327,7 +327,6 @@ namespace game
                 m_effects.push_back(e);
             });
 
-
         engine::JsonGet(j, "Ruby", m_costRuby);
         engine::JsonGet(j, "Sapphire", m_costSapphire);
         engine::JsonGet(j, "Emerald", m_costEmerald);
@@ -380,7 +379,7 @@ namespace game
         for (int& pid : m_parents)
             pid = MakeNodeId(m_category, pid % 100);
 
-        m_newParent = std::clamp(m_newParent, 0, 99);
+        m_newParent = MakeNodeId(m_category, m_newParent % 100);
     }
 
     void UpgradeNodeView::BuildCostList(std::vector<ItemCost>& out) const
