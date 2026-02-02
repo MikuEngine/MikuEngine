@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -49,6 +49,11 @@ namespace game
         // 생존 시간 누적
         float dt = engine::Time::DeltaTime();
         m_elapsedTime += dt;
+
+        if (m_movement)
+        {
+            m_movement->Update(GetTransform(), dt);
+        }
 
         // 수명 체크
         if (m_elapsedTime >= m_lifetime)

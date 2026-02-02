@@ -31,7 +31,7 @@ namespace game
         }
 
         // 테스트용
-		m_monsterTier = MonsterTier::Green;
+		m_monsterTier = MonsterTier::Red;
 
 		// 테스트용 Tier별 색상 설정
         switch (m_monsterTier)
@@ -132,10 +132,38 @@ namespace game
 
     void MonsterDullType::InitializeBullet()
     {
-        m_bulletParams.type = BulletType::Linear;
-        m_bulletParams.speed = m_bulletSpeed;
-        m_bulletParams.lifetime = m_bulletLifetime;
-        m_bulletParams.damage = 10;
+
+        switch (m_monsterTier)
+        {
+        case MonsterTier::Gray:
+		case MonsterTier::Blue:
+            m_bulletParams.type = BulletType::Linear;
+            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = 10;
+            break;
+        case MonsterTier::Green:
+            m_bulletParams.type = BulletType::Parabolic;
+            m_bulletParams.gravity = 9.81f;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = 15;
+            break;
+        case MonsterTier::Red:
+            m_bulletParams.type = BulletType::Curve;
+            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.curveSpeed = 5.0f;
+            m_bulletParams.damage = 20;
+            m_rotationSpeed = 15.0f;
+			break;
+        default:
+            m_bulletParams.type = BulletType::Linear;
+            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = 10;
+            break;
+        
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -264,19 +292,16 @@ namespace game
             return;
         }
 
-        // 현재 보고 있는 방향으로 발사. 현재 쓰고있는 메쉬는 앞뒤가 반대라 * -1.0f
-        //engine::Vector3 direction = GetForwardDirection();
-        //direction *= -1.0f;
-
-        // 그냥 플레이어를 향해 발사.
-
         engine::Vector3 direction = CalculateDirectionToPlayer();
         engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
 
         switch (m_monsterTier)
         {
+        // ─────────────────────────────────────────────
+        // 둔탁 회색
+        // ─────────────────────────────────────────────
         case MonsterTier::Gray:
-            {
+        {
             m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
 
             if (m_skeletalAnimator && !m_animName_Attack.empty())
@@ -286,12 +311,12 @@ namespace game
 
             m_fireTimer = m_fireRate;
             break;
-            }
+        }
+        // ─────────────────────────────────────────────
+        // 둔탁 초록
+        // ─────────────────────────────────────────────
 		case MonsterTier::Green:
-            {
-            m_bulletParams.type = BulletType::Parabolic;
-            m_bulletParams.gravity = 9.81f;
-
+        {
             engine::Vector3 startPos = firePosition;
             engine::Vector3 targetPos = m_targetPlayer->GetTransform()->GetWorldPosition();
 
@@ -306,6 +331,7 @@ namespace game
             // 수평 속도 계산 (V = S / t)
             float horizontalSpeed = distance / travelTime;
             engine::Vector3 horizontalDir = horizontalDiff;
+
             horizontalDir.Normalize();
 
             // 수직 초기 속도 계산 (Vy = (dy + 0.5 * g * t^2) / t)
@@ -321,7 +347,57 @@ namespace game
 
             m_fireTimer = m_fireRate;
             break;
+        }
+        // ─────────────────────────────────────────────
+        // 둔탁 파랑
+        // ─────────────────────────────────────────────
+        case MonsterTier::Blue:
+        {
+			engine::Vector3 RotattedDirection1 = engine::Vector3::Transform(direction, engine::Matrix::CreateRotationY(0.2f));
+			engine::Vector3 RotattedDirection2 = engine::Vector3::Transform(direction, engine::Matrix::CreateRotationY(-0.2f));
+
+            m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+            m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection1, m_bulletParams);
+            m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection2, m_bulletParams);
+
+            if (m_skeletalAnimator && !m_animName_Attack.empty())
+            {
+                m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
             }
+
+            m_fireTimer = m_fireRate;
+            break;
+        }
+        // ─────────────────────────────────────────────
+        // 둔탁 빨강
+        // ─────────────────────────────────────────────
+        case MonsterTier::Red:
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                float fireAngle = m_currentRotation + (DirectX::XM_PIDIV2 * i);
+
+                engine::Vector3 fireDir;
+                fireDir.x = cosf(fireAngle);
+                fireDir.y = 0.0f;
+                fireDir.z = sinf(fireAngle);
+                fireDir.Normalize();
+
+                m_bulletFactory->LinearFireMonster(firePosition, fireDir, m_bulletParams);
+            }
+
+            float rotationAmount = DirectX::XM_PI * 0.7f;
+            m_targetRotation = m_currentRotation + rotationAmount;
+            m_isRotating = true;
+
+            m_fireTimer = m_fireRate;
+
+            if (m_skeletalAnimator && !m_animName_Attack.empty())
+            {
+                m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
+            }
+            break;
+		}
         default:
             m_fireTimer = m_fireRate;
             break;

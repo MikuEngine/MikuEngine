@@ -174,9 +174,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -397,9 +395,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -522,9 +518,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -725,9 +719,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -928,9 +920,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1131,9 +1121,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1391,9 +1379,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -1522,9 +1508,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1843,9 +1827,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -1932,9 +1914,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -2021,9 +2001,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -2192,9 +2170,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -2281,9 +2257,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -2370,9 +2344,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -2541,9 +2513,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -2630,9 +2600,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -2719,9 +2687,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -3031,9 +2997,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -3162,9 +3126,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3408,9 +3370,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -3648,9 +3608,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -3888,9 +3846,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -4128,9 +4084,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -4397,9 +4351,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -4594,9 +4546,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },
@@ -4817,9 +4767,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1920.0,
-                    "ClipBaseViewportH": 1080.0
+                    }
                 }
             ]
         },

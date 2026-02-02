@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Lobby",
-    "NumGameObjects": 100,
+    "NumGameObjects": 109,
     "GameObjects": [
         {
             "ID": 0,
@@ -181,9 +181,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -306,9 +304,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -509,9 +505,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -712,9 +706,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -915,9 +907,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1177,9 +1167,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1328,9 +1316,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -1459,9 +1445,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -1780,9 +1764,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1869,9 +1851,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -1958,9 +1938,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2129,9 +2107,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2218,9 +2194,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2307,9 +2281,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2478,9 +2450,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2567,9 +2537,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2656,9 +2624,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -2968,9 +2934,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -3070,9 +3034,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3166,9 +3128,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -3291,9 +3251,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3494,9 +3452,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3697,9 +3653,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3900,9 +3854,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -4074,9 +4026,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4242,9 +4192,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4403,9 +4351,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4492,9 +4438,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4581,9 +4525,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -4893,9 +4835,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5133,9 +5073,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5272,9 +5210,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5483,9 +5419,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5694,9 +5628,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -5891,9 +5823,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -6011,16 +5941,16 @@
                     "Width": 0.0,
                     "Height": 0.0,
                     "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.0,
+                        "y": 0.0
                     },
                     "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.0,
+                        "y": 0.0
                     },
                     "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.0,
+                        "y": 0.0
                     }
                 },
                 {
@@ -6126,9 +6056,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
@@ -6255,9 +6183,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6272,16 +6200,14 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
             "ID": 74,
             "ParentID": 73,
-            "Name": "Attack",
+            "Name": "Node",
             "Active": true,
             "Components": [
                 {
@@ -6346,15 +6272,15 @@
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6369,9 +6295,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -6380,7 +6304,7 @@
                     "NodeId": 0,
                     "Parent": [],
                     "Name": "공격력 증가",
-                    "Desc": "윤석님의 공격력이 10% 증가합니다.",
+                    "Desc": "공격력이 2 증가합니다.",
                     "Ruby": 10,
                     "Sapphire": 0,
                     "Emerald": 0
@@ -6390,7 +6314,7 @@
         {
             "ID": 75,
             "ParentID": 73,
-            "Name": "Attack",
+            "Name": "Node",
             "Active": true,
             "Components": [
                 {
@@ -6455,15 +6379,15 @@
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6478,9 +6402,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -6490,8 +6412,8 @@
                     "Parent": [
                         0
                     ],
-                    "Name": "더욱 강해져라",
-                    "Desc": "치명타 + 5%",
+                    "Name": "공격력 증가",
+                    "Desc": "공격력이 10 증가합니다.",
                     "Ruby": 10,
                     "Sapphire": 2,
                     "Emerald": 0
@@ -6501,7 +6423,7 @@
         {
             "ID": 76,
             "ParentID": 73,
-            "Name": "Attack",
+            "Name": "Node",
             "Active": true,
             "Components": [
                 {
@@ -6566,15 +6488,15 @@
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6589,9 +6511,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -6601,8 +6521,8 @@
                     "Parent": [
                         0
                     ],
-                    "Name": "강해짐",
-                    "Desc": "ㄹㅇㅋㅋ",
+                    "Name": "공격 속도 증가",
+                    "Desc": "공격 속도가 3% 증가합니다.",
                     "Ruby": 3,
                     "Sapphire": 3,
                     "Emerald": 3
@@ -6612,7 +6532,7 @@
         {
             "ID": 77,
             "ParentID": 73,
-            "Name": "Attack",
+            "Name": "Node",
             "Active": true,
             "Components": [
                 {
@@ -6677,15 +6597,15 @@
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6700,9 +6620,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -6713,8 +6631,8 @@
                         1,
                         2
                     ],
-                    "Name": "진짜 쎄짐",
-                    "Desc": "ㄱㄱㄱ",
+                    "Name": "투사체 사거리 증가",
+                    "Desc": "투사체의 사거리가 1m 증가합니다.",
                     "Ruby": 50,
                     "Sapphire": 50,
                     "Emerald": 50
@@ -6723,6 +6641,772 @@
         },
         {
             "ID": 78,
+            "ParentID": 73,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -150.0,
+                        "y": 300.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 0,
+                    "NodeId": 104,
+                    "Parent": [
+                        103
+                    ],
+                    "Name": "투사체 크기 증가",
+                    "Desc": "투사체의 크기가 3 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 4,
+                    "Emerald": 2
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 79,
+            "ParentID": 73,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 300.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 0,
+                    "NodeId": 105,
+                    "Parent": [
+                        103
+                    ],
+                    "Name": "투사체 속도 증가",
+                    "Desc": "투사체의 발사 속도가 5% 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 5,
+                    "Emerald": 2
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 80,
+            "ParentID": 73,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 450.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 0,
+                    "NodeId": 106,
+                    "Parent": [
+                        104,
+                        105
+                    ],
+                    "Name": "공격 속도 증가",
+                    "Desc": "공격 속도가 10 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 10,
+                    "Emerald": 3
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 81,
+            "ParentID": 73,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -300.0,
+                        "y": 450.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 0,
+                    "NodeId": 107,
+                    "Parent": [
+                        104
+                    ],
+                    "Name": "공격력 증가",
+                    "Desc": "공격력이 5 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 5,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 82,
+            "ParentID": 73,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 300.0,
+                        "y": 450.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 0,
+                    "NodeId": 108,
+                    "Parent": [
+                        105
+                    ],
+                    "Name": "투사체 사거리 증가",
+                    "Desc": "투사체 사거리가 5m 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 3,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 83,
+            "ParentID": 73,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -150.0,
+                        "y": 600.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 0,
+                    "NodeId": 109,
+                    "Parent": [
+                        106,
+                        107
+                    ],
+                    "Name": "공격력 감소",
+                    "Desc": "투사체를 2배 더 발사합니다.\n대신 공격력이 20% 감소합니다",
+                    "Ruby": 10,
+                    "Sapphire": 5,
+                    "Emerald": 0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 84,
+            "ParentID": 73,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 600.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 0,
+                    "NodeId": 110,
+                    "Parent": [
+                        106,
+                        108
+                    ],
+                    "Name": "공속",
+                    "Desc": "공격 속도가 30% 증가합니다.\n대신 사거리가 10% 감소합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 3,
+                    "Emerald": 0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 85,
             "ParentID": 72,
             "Name": "SkillNodes",
             "Active": true,
@@ -6794,9 +7478,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6811,16 +7495,14 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 78,
-            "Name": "Skill",
+            "ID": 86,
+            "ParentID": 85,
+            "Name": "Node",
             "Active": true,
             "Components": [
                 {
@@ -6879,8 +7561,8 @@
                     "Category": 1,
                     "NodeId": 200,
                     "Parent": [],
-                    "Name": "기술로 강해짐",
-                    "Desc": "제발 사줘",
+                    "Name": "처형 거리 증가",
+                    "Desc": "처형 거리가 1m 증가합니다.",
                     "Ruby": 10,
                     "Sapphire": 0,
                     "Emerald": 0
@@ -6896,16 +7578,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.1782921999692917,
-                        "z": 0.8880308866500854,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -6920,16 +7602,14 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 80,
-            "ParentID": 78,
-            "Name": "Skill",
+            "ID": 87,
+            "ParentID": 85,
+            "Name": "Node",
             "Active": true,
             "Components": [
                 {
@@ -6990,11 +7670,11 @@
                     "Parent": [
                         200
                     ],
-                    "Name": "뭔데?",
-                    "Desc": "왜케 비쌈",
-                    "Ruby": 100,
+                    "Name": "처형 대미지 상승",
+                    "Desc": "처형 피해가 20% 증가합니다.",
+                    "Ruby": 10,
                     "Sapphire": 1,
-                    "Emerald": 1
+                    "Emerald": 0
                 },
                 {
                     "Type": "UIImage",
@@ -7007,16 +7687,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.1764705926179886,
-                        "z": 0.886274516582489,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7031,16 +7711,14 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 81,
-            "ParentID": 78,
-            "Name": "Skill",
+            "ID": 88,
+            "ParentID": 85,
+            "Name": "Node",
             "Active": true,
             "Components": [
                 {
@@ -7101,11 +7779,11 @@
                     "Parent": [
                         200
                     ],
-                    "Name": "굿",
-                    "Desc": "네.",
-                    "Ruby": 7,
-                    "Sapphire": 7,
-                    "Emerald": 7
+                    "Name": "처형 피해 범위 상승",
+                    "Desc": "처형 피해 범위가 20% 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 2,
+                    "Emerald": 0
                 },
                 {
                     "Type": "UIImage",
@@ -7118,16 +7796,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.1764705926179886,
-                        "z": 0.886274516582489,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7142,14 +7820,231 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 82,
+            "ID": 89,
+            "ParentID": 85,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 150.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 1,
+                    "NodeId": 203,
+                    "Parent": [
+                        201,
+                        202
+                    ],
+                    "Name": "처형 거리 증가",
+                    "Desc": "처형 거리가 30% 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 5,
+                    "Emerald": 0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 90,
+            "ParentID": 85,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 300.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 1,
+                    "NodeId": 204,
+                    "Parent": [
+                        203
+                    ],
+                    "Name": "프래자일 회복량",
+                    "Desc": "프래자일 회복량이 10% 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 5,
+                    "Emerald": 5
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 91,
             "ParentID": 72,
             "Name": "SurviveNodes",
             "Active": true,
@@ -7221,9 +8116,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7238,15 +8133,13 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 82,
+            "ID": 92,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -7306,8 +8199,8 @@
                     "Category": 2,
                     "NodeId": 300,
                     "Parent": [],
-                    "Name": "오옹",
-                    "Desc": "ㄴㅇㅅ",
+                    "Name": "체력 증가",
+                    "Desc": "체력이 1 증가합니다.",
                     "Ruby": 10,
                     "Sapphire": 0,
                     "Emerald": 0
@@ -7323,16 +8216,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
+                        "x": 1.0,
                         "y": 1.0,
-                        "z": 0.24710416793823242,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7347,15 +8240,13 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 82,
+            "ID": 93,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -7383,7 +8274,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -150.0,
+                        "x": 0.0,
                         "y": 0.0
                     },
                     "Width": 100.0,
@@ -7417,11 +8308,11 @@
                     "Parent": [
                         300
                     ],
-                    "Name": "ㅁㄴㅇㄹ",
-                    "Desc": "ㅁㄴㅇㄻㄴㅇㄹ",
-                    "Ruby": 11,
-                    "Sapphire": 11,
-                    "Emerald": 1
+                    "Name": "피격시 무적 시간 증가",
+                    "Desc": "무적 시간이 3초 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 3,
+                    "Emerald": 0
                 },
                 {
                     "Type": "UIImage",
@@ -7434,16 +8325,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
+                        "x": 1.0,
                         "y": 1.0,
-                        "z": 0.24710416793823242,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7458,15 +8349,13 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 82,
+            "ID": 94,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -7494,8 +8383,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 150.0,
-                        "y": 0.0
+                        "x": -150.0,
+                        "y": 150.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -7528,11 +8417,11 @@
                     "Parent": [
                         300
                     ],
-                    "Name": "ㅇㅇㅇㅇ",
-                    "Desc": "ㅇㅇㅇㅇㅇㅇ?",
-                    "Ruby": 22,
-                    "Sapphire": 2,
-                    "Emerald": 22
+                    "Name": "체력 증가",
+                    "Desc": "체력이 2 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 5,
+                    "Emerald": 0
                 },
                 {
                     "Type": "UIImage",
@@ -7545,16 +8434,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
+                        "x": 1.0,
                         "y": 1.0,
-                        "z": 0.24710416793823242,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7569,15 +8458,13 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 82,
+            "ID": 95,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -7605,7 +8492,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
+                        "x": 150.0,
                         "y": 150.0
                     },
                     "Width": 100.0,
@@ -7637,14 +8524,13 @@
                     "Category": 2,
                     "NodeId": 303,
                     "Parent": [
-                        301,
-                        302
+                        301
                     ],
-                    "Name": "303",
-                    "Desc": "303임",
-                    "Ruby": 33,
-                    "Sapphire": 33,
-                    "Emerald": 3
+                    "Name": "체력 증가량 상승",
+                    "Desc": "체력 증가량이 1 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 3,
+                    "Emerald": 0
                 },
                 {
                     "Type": "UIImage",
@@ -7657,127 +8543,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.0,
-                        "y": 1.0,
-                        "z": 0.24710416793823242,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 210.0,
-                        "y": 290.0,
-                        "z": 1310.0,
-                        "w": 890.0
-                    },
-                    "MaskMode": 1,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
-                }
-            ]
-        },
-        {
-            "ID": 87,
-            "ParentID": 82,
-            "Name": "Node",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
                         "x": 1.0,
                         "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -150.0,
-                        "y": 300.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIClickArea",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Interactable": true
-                },
-                {
-                    "Type": "UpgradeNodeView",
-                    "Active": true,
-                    "Category": 2,
-                    "NodeId": 304,
-                    "Parent": [
-                        303
-                    ],
-                    "Name": "생존력 증가",
-                    "Desc": "진짜 생존함.",
-                    "Ruby": 6,
-                    "Sapphire": 6,
-                    "Emerald": 6
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "None",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 0.0,
-                        "y": 1.0,
-                        "z": 0.24710416793823242,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7792,125 +8567,12 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 82,
-            "Name": "Node",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 150.0,
-                        "y": 300.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIClickArea",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Interactable": true
-                },
-                {
-                    "Type": "UpgradeNodeView",
-                    "Active": true,
-                    "Category": 2,
-                    "NodeId": 305,
-                    "Parent": [
-                        303
-                    ],
-                    "Name": "되나",
-                    "Desc": "ㅇㅇㅇㄹㅇ",
-                    "Ruby": 88,
-                    "Sapphire": 8,
-                    "Emerald": 7
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "None",
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 0.0,
-                        "y": 1.0,
-                        "z": 0.24710416793823242,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 210.0,
-                        "y": 290.0,
-                        "z": 1310.0,
-                        "w": 890.0
-                    },
-                    "MaskMode": 1,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
-                }
-            ]
-        },
-        {
-            "ID": 89,
+            "ID": 96,
             "ParentID": 72,
             "Name": "MoveNodes",
             "Active": true,
@@ -7982,9 +8644,9 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -7999,15 +8661,13 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 90,
-            "ParentID": 89,
+            "ID": 97,
+            "ParentID": 96,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8067,8 +8727,8 @@
                     "Category": 3,
                     "NodeId": 400,
                     "Parent": [],
-                    "Name": "한개만",
-                    "Desc": "필요함",
+                    "Name": "대시 충전시간 감소",
+                    "Desc": "대시의 충전시간이 1초 감소됩니다.",
                     "Ruby": 10,
                     "Sapphire": 0,
                     "Emerald": 0
@@ -8084,16 +8744,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.9806950092315674,
+                        "x": 1.0,
                         "y": 1.0,
-                        "z": 0.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -8108,15 +8768,13 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 89,
+            "ID": 98,
+            "ParentID": 96,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8144,7 +8802,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -150.0,
+                        "x": 0.0,
                         "y": 0.0
                     },
                     "Width": 100.0,
@@ -8178,10 +8836,10 @@
                     "Parent": [
                         400
                     ],
-                    "Name": "이러면 됨?",
-                    "Desc": "4 0 4",
+                    "Name": "대시 이동 거리 증가",
+                    "Desc": "대시로 한번에 이동할 수 있는 거리가\n1m 증가합니다.",
                     "Ruby": 10,
-                    "Sapphire": 1,
+                    "Sapphire": 2,
                     "Emerald": 0
                 },
                 {
@@ -8195,16 +8853,16 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.9806950092315674,
+                        "x": 1.0,
                         "y": 1.0,
-                        "z": 0.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 210.0,
+                        "x": 160.0,
                         "y": 290.0,
-                        "z": 1310.0,
+                        "z": 1260.0,
                         "w": 890.0
                     },
                     "MaskMode": 1,
@@ -8219,14 +8877,230 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 92,
+            "ID": 99,
+            "ParentID": 96,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -150.0,
+                        "y": 150.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 402,
+                    "Parent": [
+                        401
+                    ],
+                    "Name": "이동 속도 증가",
+                    "Desc": "이동 속도가 10% 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 5,
+                    "Emerald": 0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 100,
+            "ParentID": 96,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 150.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 403,
+                    "Parent": [
+                        401
+                    ],
+                    "Name": "대시 무적 시간 증가",
+                    "Desc": "대시의 무적 시간이 3초 증가합니다.",
+                    "Ruby": 10,
+                    "Sapphire": 7,
+                    "Emerald": 0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 290.0,
+                        "z": 1260.0,
+                        "w": 890.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 101,
             "ParentID": 70,
             "Name": "Scrollbar",
             "Active": true,
@@ -8308,8 +9182,8 @@
             ]
         },
         {
-            "ID": 93,
-            "ParentID": 92,
+            "ID": 102,
+            "ParentID": 101,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -8390,15 +9264,13 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 92,
+            "ID": 103,
+            "ParentID": 101,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -8479,14 +9351,12 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 }
             ]
         },
         {
-            "ID": 95,
+            "ID": 104,
             "ParentID": 34,
             "Name": "Btn_Upgrade",
             "Active": true,
@@ -8604,9 +9474,7 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    },
-                    "ClipBaseViewportW": 1280.0,
-                    "ClipBaseViewportH": 720.0
+                    }
                 },
                 {
                     "Type": "UIHoverScale",
@@ -8617,8 +9485,8 @@
             ]
         },
         {
-            "ID": 96,
-            "ParentID": 95,
+            "ID": 105,
+            "ParentID": 104,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -8689,7 +9557,7 @@
             ]
         },
         {
-            "ID": 97,
+            "ID": 106,
             "Name": "UpgradeController",
             "Active": true,
             "Components": [
@@ -8724,7 +9592,7 @@
             ]
         },
         {
-            "ID": 98,
+            "ID": 107,
             "Name": "Floor",
             "Active": true,
             "Components": [
@@ -8779,7 +9647,7 @@
             ]
         },
         {
-            "ID": 99,
+            "ID": 108,
             "Name": "PlayerPreview",
             "Active": true,
             "Components": [

@@ -51,7 +51,7 @@ namespace engine
 	public:
 		bool IsScrollEnabled() const override { return true; }
 		void OnScroll(const Vector2& mousePos, float wheelDelta) override;
-		bool HitTestPoint(const Vector2& p) const override;
+		bool HitTestPoint(const Vector2& screenP) const override;
 
 	private:
 		void OnGui() override;

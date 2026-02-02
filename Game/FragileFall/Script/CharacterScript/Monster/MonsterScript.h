@@ -1,8 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
+#include "Script/MonsterGenerator/MonsterData.h"
 
 namespace engine
 {
@@ -30,7 +31,15 @@ namespace game
     //   - 플레이어 감지 및 추적
     //   - 플레이어 방향으로 회전 (Y축만)
     //   - 쿨다운 기반 자동 발사
-    //   - 체력 관리 (Dead 상태 전환)
+    //   - 체력 관리 (Fragile → 부활/Dead 전환)
+    // 
+    // 공통 스탯 변수 (6개):
+    //   - m_Hp: 체력
+    //   - m_moveSpeed: 이동속도
+    //   - m_attackDamage: 공격력
+    //   - m_fragileTime: Fragile 지속시간
+    //   - m_difficulty: 난이도 (MonsterPartyGenerator용)
+    //   - m_detectionRange: 인식범위
     // ═══════════════════════════════════════════════════════════════
     class MonsterScript : public BaseControllerScript
     {
@@ -58,18 +67,32 @@ namespace game
         // 몬스터 분류 정보
         // ─────────────────────────────────────────────
         AttackType m_attackType = AttackType::Dull;
-		MonsterTier m_monsterTier = MonsterTier::Gray;
+        MonsterTier m_monsterTier = MonsterTier::Gray;
 
         // ─────────────────────────────────────────────
-        // 몬스터 스탯 (자식 클래스에서 설정)
+        // 몬스터 데이터 구조체 (MonsterPartyGenerator 연동용)
         // ─────────────────────────────────────────────
-        float m_Hp = 10.0f;
-        float m_AttackRange = 5.0f;
+        MonsterData m_monsterData;
+
+        // ─────────────────────────────────────────────
+        // 공통 스탯 변수 (6개) - 에디터에서 수정 가능
+        // ─────────────────────────────────────────────
+        float m_Hp = 100.0f;                 // 체력
+        float m_maxHp = 100.0f;              // 최대 체력 (부활 시 회복용)
+        float m_moveSpeed = 0.0f;            // 이동속도
+        float m_attackDamage = 10.0f;        // 공격력
+        float m_fragileTime = 5.0f;          // Fragile 지속시간 (초)
+        int m_difficulty = 1;                // 난이도 (MonsterPartyGenerator용)
+        float m_detectionRange = 15.0f;      // 인식범위
+
+        // ─────────────────────────────────────────────
+        // 기타 스탯 (기존 유지)
+        // ─────────────────────────────────────────────
+        float m_AttackRange = 5.0f;          // 공격 사거리
 
         // ─────────────────────────────────────────────
         // 이동/회전/발사 설정
         // ─────────────────────────────────────────────
-        float m_moveSpeed = 0.0f;            // 이동 속도 (DullGray는 0)
         float m_rotationSpeed = 2.0f;        // 회전 속도 (rad/sec)
         float m_fireRate = 3.0f;             // 발사 간격 (초)
         float m_bulletSpeed = 1.0f;          // 총알 속도
@@ -80,6 +103,12 @@ namespace game
         // ─────────────────────────────────────────────
         float m_fireTimer = 0.0f;
         bool m_fsmInitialized = false;
+        
+        // ─────────────────────────────────────────────
+        // Fragile 부활 시스템
+        // ─────────────────────────────────────────────
+        float m_fragileTimer = 0.0f;         // Fragile 상태 경과 시간
+        bool m_fragileTimerStarted = false;  // Fragile 타이머 시작 여부
         
         // ─────────────────────────────────────────────
         // 피격 효과 (Hit Flash)
@@ -190,6 +219,18 @@ namespace game
         virtual void OnDeath();
         
         // ─────────────────────────────────────────────
+        // Fragile 부활 시스템
+        // ─────────────────────────────────────────────
+        void UpdateFragileTimer(float deltaTime);  // Fragile 타이머 업데이트
+        void ReviveFromFragile();                  // Fragile 시간 초과 시 부활
+        virtual void OnRevive();                   // 부활 시 콜백 (자식에서 오버라이드 가능)
+        
+        // ─────────────────────────────────────────────
+        // MonsterData 동기화
+        // ─────────────────────────────────────────────
+        void SyncMonsterData();                    // MonsterScript 값으로 MonsterData 동기화
+        
+        // ─────────────────────────────────────────────
         // Dead 상태 후 파괴 타이머
         // ─────────────────────────────────────────────
         float m_deathTimer = 0.0f;
@@ -209,11 +250,26 @@ namespace game
         // ─────────────────────────────────────────────
         void TakeDamage(float damage);
         
-        // 체력 접근자
+        // ─────────────────────────────────────────────
+        // 접근자 (Getters)
+        // ─────────────────────────────────────────────
         AttackType GetAttackType() const { return m_attackType; }
-		MonsterTier GetMonsterTier() const { return m_monsterTier; }
-        float GetHp() const { return m_Hp; }
+        MonsterTier GetMonsterTier() const { return m_monsterTier; }
+        const MonsterData& GetMonsterData() const { return m_monsterData; }
         
+        // 공통 스탯 접근자
+        float GetHp() const { return m_Hp; }
+        float GetMaxHp() const { return m_maxHp; }
+        float GetMoveSpeed() const { return m_moveSpeed; }
+        float GetAttackDamage() const { return m_attackDamage; }
+        float GetFragileTime() const { return m_fragileTime; }
+        int GetDifficulty() const { return m_difficulty; }
+        float GetDetectionRange() const { return m_detectionRange; }
+        float GetAttackRange() const { return m_AttackRange; }
+        
+        // ─────────────────────────────────────────────
+        // 상태 플래그
+        // ─────────────────────────────────────────────
         bool m_isFragile = false;
         bool m_isDead = false;
 
