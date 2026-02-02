@@ -1,6 +1,6 @@
 {
     "Name": "Prototype_Play",
-    "NumGameObjects": 77,
+    "NumGameObjects": 82,
     "GameObjects": [
         {
             "ID": 0,
@@ -84,9 +84,11 @@
                     "KinematicDeceleration": 70.0,
                     "MoveSpeed": 13.0,
                     "RotationSpeed": 20.0,
-                    "FireRate": 0.5,
-                    "BulletSpeed": 15.0,
-                    "BulletLifetime": 3.0,
+                    "BaseAtkDmg": 10.0,
+                    "BaseAtkSpeed": 1.399999976158142,
+                    "BaseBulletLifetime": 3.0,
+                    "BaseBulletSizeScale": 1.0,
+                    "BaseBulletSpeed": 15.0,
                     "BulletStartOffsetY": 2.5,
                     "BulletStartOffsetForward": 1.5,
                     "AimPointerObjectName": "AimPointer",
@@ -18124,7 +18126,7 @@
             ]
         },
         {
-            "ID": 76,
+            "ID": 77,
             "Name": "Canvas_Message",
             "Active": true,
             "Components": [
@@ -18179,7 +18181,7 @@
             ]
         },
         {
-            "ID": 77,
+            "ID": 78,
             "Name": "UIToastPopUp",
             "Active": true,
             "Components": [
@@ -18281,8 +18283,7 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 77,
+            "ID": 79,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -18368,8 +18369,7 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 77,
+            "ID": 80,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -18436,6 +18436,33 @@
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 81,
+            "Name": "TemperManagerTestScript",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 }
             ]
         }
