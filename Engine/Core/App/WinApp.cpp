@@ -241,6 +241,13 @@ namespace engine
         }
 #endif // _DEBUG
         
+		// 사운드 설정 적용
+		const auto& audio = m_userSettings.audio;
+		auto& sound = SoundSystem::Get();
+		sound.SetMasterVolume(audio.master);
+		sound.SetBGMVolume(audio.bgm);
+		sound.SetSFXVolume(audio.sfx);
+		sound.SetMute(audio.mute);
     }
 
     void WinApp::Shutdown()
