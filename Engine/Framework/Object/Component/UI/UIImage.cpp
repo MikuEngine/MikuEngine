@@ -360,6 +360,25 @@ namespace engine
 	// Effect API
 	// ================================
 
+	void UIImage::SetEffect(UIEffectType type)
+	{
+		m_effectMode = static_cast<uint32_t>(type);
+
+		switch (type)
+		{
+		case UIEffectType::AbyssalDecay:
+		case UIEffectType::PurpleCurse:
+		case UIEffectType::FlameBar:
+			if (!m_noiseTex) SetNoiseTexture(m_noisePath);
+			if (!m_rampTex)  SetRampTexture(m_rampPath);
+			break;
+		default:
+			break;
+		}
+
+		m_dirty = true;
+	}
+
 	void UIImage::ClearEffect()
 	{
 		m_effectMode = 0;
@@ -369,40 +388,14 @@ namespace engine
 		m_effect2 = Vector4(0, 0, 0, 0);
 	}
 
-	void UIImage::SetEffectScanLine(float density, float speed, float opacity)
+	void UIImage::SetEffectParam(int index, const Vector4& val)
 	{
-		m_effectMode = 1; // UI_FX_SCANLINE
-		m_effect0 = Vector4(density, speed, opacity, 0.0f);
-	}
-
-	void UIImage::SetEffectGlowPulse(float speed, float minIntensity, float maxIntensity)
-	{
-		m_effectMode = 2; // UI_FX_GLOW_PULSE
-		m_effect0 = Vector4(speed, minIntensity, maxIntensity, 0.0f);
-	}
-
-	void UIImage::SetEffectPixelate(float pixelSize)
-	{
-		m_effectMode = 3; // UI_FX_PIXELATE
-		// pixelSize가 커질수록 픽셀이 뭉쳐 보임 (추천: 8.0 ~ 64.0)
-		m_effect0 = Vector4(pixelSize, 0.0f, 0.0f, 0.0f);
-	}
-
-	void UIImage::SetEffectHoverTransition(bool isHover)
-	{
-		m_effectMode = 4; // UI_FX_HOVER_TRANSITION
-	}
-
-	void UIImage::SetEffectAbyssalDecay()
-	{
-		m_effectMode = 5; // UI_FX_ABYSSAL_DECAY
-		SetNoiseTexture(m_noisePath);
-	}
-
-	void UIImage::SetEffectStaticNoise(float intensity)
-	{
-		m_effectMode = 6; // UI_FX_STATIC_NOISE
-		m_effect0.x = intensity;
+		switch (index)
+		{
+		case 0: m_effect0 = val; break;
+		case 1: m_effect1 = val; break;
+		case 2: m_effect2 = val; break;
+		}
 	}
 
 	bool UIImage::HasRenderType(RenderType type) const
