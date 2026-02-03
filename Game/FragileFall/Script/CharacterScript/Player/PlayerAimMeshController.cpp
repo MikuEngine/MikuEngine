@@ -9,6 +9,9 @@
 #include <Framework/Object/Component/AnimFSM.h>
 #include <Framework/Object/Component/LogicFSM.h>
 #include <Engine/Core/System/Input.h>
+#include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
+
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
 namespace game
 {
@@ -16,6 +19,9 @@ namespace game
     {
         CacheReferences();
         
+        auto comp = GetGameObject()->GetComponent<engine::AfterimageRenderer>();
+        m_playerObject->GetComponent<PlayerControllerScript>()->SetAfterImage(comp);
+
         // AnimFSM 초기화 (상태 등록)
         if (m_animFSM && !m_animFSMInitialized)
         {
