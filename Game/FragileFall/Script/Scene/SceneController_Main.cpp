@@ -95,14 +95,6 @@ namespace game
         if (auto* go = engine::GameObject::Find("UI_SensitivitySlider"))
             if (auto* slider = go->GetComponent<engine::UISlider>())
                 slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
-
-        if (auto* go = engine::GameObject::Find("Progress"))
-        {
-            if (auto* bar = go->GetComponent<engine::UIProgressBar>())
-            {
-                bar->SetEffectCurse({ 0.7f, 0.2f, 1.0f, 1.0f }, 10.0f);
-            }
-        }
     }
 
     void SceneController_Main::Update()

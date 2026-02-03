@@ -14,21 +14,24 @@ static const uint UI_MASK_RADIAL = 5u;
 static const uint UI_FX_NONE = 0u;
 
 // [Group 1] 수치/색상 변형 (Simple Color FX)
-static const uint UI_FX_SCANLINE = 1u;
-static const uint UI_FX_GLOW_PULSE = 2u;
-static const uint UI_FX_STATIC_NOISE = 6u;
+static const uint UI_FX_SCANLINE = 10u;
+static const uint UI_FX_GLOW_PULSE = 11u;
+static const uint UI_FX_STATIC_NOISE = 12u;
 
 // [Group 2] UV 변형 (UV Distort FX) - 샘플링 전에 실행
-static const uint UI_FX_PIXELATE = 3u;
+static const uint UI_FX_PIXELATE = 20u;
 
 // [Group 3] 복합/특수 연출 (Complex/Component FX)
-static const uint UI_FX_HOVER_TRANSITION = 4u;
-static const uint UI_FX_ABYSSAL_DECAY = 5u;
-static const uint UI_FX_LIQUID_SHINE = 7u;
+static const uint UI_FX_HOVER_TRANSITION = 30u;
+static const uint UI_FX_ABYSSAL_DECAY = 31u;
+static const uint UI_FX_LIQUID_SHINE = 32u;
+static const uint UI_FX_ENERGY_FLOW = 33u;
+static const uint UI_FX_HOLOGRAM = 34u;
+static const uint UI_FX_STONE_LOCK = 35u;
 
 // [Group 4] 프로그레스바 전용 (ProgressBar Only)
-static const uint UI_FX_FLAMEBAR = 10u;
-static const uint UI_FX_PURPLECURSE = 11u;
+static const uint UI_FX_FLAMEBAR = 40u;
+static const uint UI_FX_PURPLECURSE = 41u;
 
 
 
@@ -247,6 +250,65 @@ void ApplyFx_PurpleCurse(float2 uv, inout float4 col)
     col.rgb += curseColor;
 }
 
+// 에너지 흐름
+void ApplyFx_EnergyFlow(float2 uv, inout float4 col)
+{
+    float3 baseColor = g_effect1.rgb; // C++에서 보낸 m_baseColor
+    
+    // 1. 텍스처 원본(col)과 베이스 컬러를 곱해 아이콘 문양을 살림
+    col.rgb *= baseColor;
+    
+    float speed = g_effect0.x; // 추천: 2.0
+    float intensity = g_effect0.y; // 추천: 0.5
+    
+    float2 center = uv - 0.5;
+    float angle = atan2(center.y, center.x);
+    float dist = length(center);
+
+    // 나선형으로 흐르는 노이즈
+    float n = Noise01(uv, float2(3, 3), float2(0, 0), g_time * speed + dist * 5.0);
+    
+    // 외곽으로 갈수록 밝아지는 고리
+    float ring = frac(dist * 2.0 - g_time * speed);
+    ring = smoothstep(0.4, 0.5, ring) * smoothstep(0.6, 0.5, ring);
+    
+    float3 energyCol = float3(0.2, 0.6, 1.0); // 시안색 에너지
+    col.rgb += energyCol * ring * n * intensity;
+}
+
+// 홀로그램 글리치 
+void ApplyFx_Hologram(float2 uv, inout float4 col)
+{
+    float freq = g_effect0.x; // 10.0
+    float glitch = step(0.9, sin(g_time * freq));
+    
+    // 수평 오프셋 왜곡
+    float offset = sin(uv.y * 100.0 + g_time * 20.0) * 0.01 * glitch;
+    
+    // 색상 분리 (RGB Split)
+    float4 r = g_texBlit.Sample(g_samLinear, uv + float2(offset, 0));
+    float4 b = g_texBlit.Sample(g_samLinear, uv - float2(offset, 0));
+    
+    col.r = r.r;
+    col.b = b.b;
+    col.rgb += glitch * 0.2;
+}
+
+// 석화/동결
+void ApplyFx_StoneLock(float2 uv, inout float4 col)
+{
+    // 1. 회색조 변환
+    float grey = dot(col.rgb, float3(0.299, 0.587, 0.114));
+    
+    // 2. 균열 노이즈 (Tiling을 크게 해서 미세한 금 생성)
+    float cracks = Noise01(uv, float2(15.0, 15.0), float2(0, 0), 0);
+    cracks = pow(cracks, 3.0) * 2.0;
+    
+    // 3. 석조 질감 입히기
+    float3 stone = float3(grey, grey, grey) * (0.8 + cracks * 0.2);
+    col.rgb = lerp(col.rgb, stone, 0.9); // 90% 석화
+}
+
 //////////////////////////////////////////////////////////////////////////
 // 
 //  Masking
@@ -386,6 +448,17 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             
         case UI_FX_HOVER_TRANSITION:
             ApplyFx_HoverTransition(uv, finalColor);
+            break;
+        
+        // Upgrade Controller
+        case UI_FX_ENERGY_FLOW:
+            ApplyFx_EnergyFlow(uv, finalColor);
+            break;
+        case UI_FX_HOLOGRAM:
+            ApplyFx_Hologram(uv, finalColor);
+            break;
+        case UI_FX_STONE_LOCK:
+            ApplyFx_StoneLock(uv, finalColor);
             break;
     }
 
