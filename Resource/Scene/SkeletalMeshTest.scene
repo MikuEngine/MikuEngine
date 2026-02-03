@@ -1,6 +1,6 @@
 {
     "Name": "SkeletalMeshTest",
-    "NumGameObjects": 3,
+    "NumGameObjects": 1,
     "GameObjects": [
         {
             "ID": 0,
@@ -8,197 +8,31 @@
             "Active": true,
             "Components": [
                 {
-                    "attackType": "Transform",
+                    "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -10.286880493164063,
-                        "y": 3.03857159614563,
-                        "z": -1.9595870526245562e-07
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "Rotation": {
-                        "x": 0.08966156840324402,
-                        "y": 0.7014003396034241,
-                        "z": -0.08966130018234253,
-                        "w": 0.7013980150222778
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.000002145767212,
+                        "x": 1.0,
                         "y": 1.0,
-                        "z": 1.0000016689300537
+                        "z": 1.0
                     }
                 },
                 {
-                    "attackType": "Camera",
+                    "Type": "Camera",
                     "Active": true,
                     "Near": 1.0,
                     "Far": 5000.0,
-                    "FOV": 80.69999694824219
-                }
-            ]
-        },
-        {
-            "ID": 1,
-            "Name": "GameObject",
-            "Active": true,
-            "Components": [
-                {
-                    "attackType": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "attackType": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/Floor.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1
-                }
-            ]
-        },
-        {
-            "ID": 2,
-            "Name": "GameObject",
-            "Active": true,
-            "Components": [
-                {
-                    "attackType": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "attackType": "SkeletalMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1
-                },
-                {
-                    "attackType": "SkeletalAnimator",
-                    "Active": true,
-                    "Animations": [],
-                    "Layers": [
-                        {
-                            "Name": "Base Layer",
-                            "Weight": 1.0,
-                            "BlendMode": 0,
-                            "MaskBones": []
-                        }
-                    ]
-                },
-                {
-                    "attackType": "AfterimageRenderer",
-                    "Active": true,
-                    "DrawSolidLayer": true,
-                    "SolidColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "SolidInitialAlpha": 1.0,
-                    "SolidDecaySpeed": 1.5,
-                    "SolidDecayMode": 0,
-                    "SolidDecayCurve": 1,
-                    "SolidEmissiveIntensity": 1.0,
-                    "SolidTrailGradient": 0.9200000166893005,
-                    "SolidMaxSlices": 24,
-                    "SolidSampleInterval": 0.0,
-                    "DrawAlphaLayer": false,
-                    "AlphaTint": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "AlphaEmissiveIntensity": 0.0,
-                    "AlphaInitialAlpha": 0.699999988079071,
-                    "AlphaDecaySpeed": 1.5,
-                    "AlphaDecayMode": 0,
-                    "AlphaDecayCurve": 1,
-                    "AlphaTrailGradient": 0.9200000166893005,
-                    "AlphaMaxSlices": 24,
-                    "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 5,
-                    "SourceHandleGeneration": 12
-                },
-                {
-                    "attackType": "TrailDashTest",
-                    "Active": true,
-                    "DashDuration": 0.20000000298023224,
-                    "DashSpeed": 12.0,
-                    "TeleportDistance": 5.0,
-                    "TeleportNumSlices": 12
+                    "FOV": 50.0
                 }
             ]
         }
