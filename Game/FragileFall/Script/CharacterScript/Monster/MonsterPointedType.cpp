@@ -7,9 +7,6 @@
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
-#include <Framework/Object/Component/Collider.h>
-#include <Framework/Physics/PhysicsLayer.h>
-#include <Engine/Core/System/MyTime.h>
 
 namespace game
 {
@@ -179,7 +176,7 @@ namespace game
             m_bulletParams.damage = 10;
             break;
         case MonsterTier::Green:
-            m_bulletParams.type = BulletType::Parabolic;
+            m_bulletParams.type = BulletType::Field;
             m_bulletParams.ownGravity = 9.81f;
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 15;
@@ -466,40 +463,45 @@ namespace game
                 // ─────────────────────────────────────────────
                 // 뾰족 파랑
                 // 
-                // 플레이어를 추격하며 멈춰 서서 투사체를 발사하고 4방향 or 플레이어 방향으로 3발 발사
+                // 플레이어를 추격하며 멈춰 서서 플레이어 방향으로 3발 발사
                 // ─────────────────────────────────────────────
                 case MonsterTier::Blue:
                 {
-                    // 중앙
+                    engine::Vector3 RotattedDirection1 = engine::Vector3::Transform(direction, engine::Matrix::CreateRotationY(0.4f));
+                    engine::Vector3 RotattedDirection2 = engine::Vector3::Transform(direction, engine::Matrix::CreateRotationY(-0.4f));
+
                     m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-                    // 좌우 15도씩 벌려서 발사
-                    float angleOffset = DirectX::XMConvertToRadians(15.0f);
-                    DirectX::SimpleMath::Matrix rotationMatrix;
-                    // 왼쪽
-                    rotationMatrix = DirectX::SimpleMath::Matrix::CreateRotationY(-angleOffset);
-                    engine::Vector3 leftDir = engine::Vector3::TransformNormal(direction, rotationMatrix);
-                    leftDir.Normalize();
-                    m_bulletFactory->LinearFireMonster(firePosition, leftDir, m_bulletParams);
-                    // 오른쪽
-                    rotationMatrix = DirectX::SimpleMath::Matrix::CreateRotationY(angleOffset);
-                    engine::Vector3 rightDir = engine::Vector3::TransformNormal(direction, rotationMatrix);
-                    rightDir.Normalize();
-                    m_bulletFactory->LinearFireMonster(firePosition, rightDir, m_bulletParams);
+                    m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection1, m_bulletParams);
+                    m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection2, m_bulletParams);
+
                     break;
 				}
                 // ─────────────────────────────────────────────
                 // 뾰족 빨강
                 // 
-                // 공격 볌위에 들어오면 플레이어 주변에게 투사체를 난사
+				// 공격 볌위에 들어오면 플레이어 주변에게 투사체를 난사 (8 ~ 15발)
                 // ─────────────────────────────────────────────
                 case MonsterTier::Red:
                 {
-                    int projectileCount = 8;
+                    int projectileCount = 8 + (rand() % 8);
+                    float spreadAngle = DirectX::XMConvertToRadians(60.0f);
+
                     for (int i = 0; i < projectileCount; ++i)
                     {
-                        float angle = DirectX::XM_2PI * (static_cast<float>(i) / static_cast<float>(projectileCount));
-                        engine::Vector3 dir = engine::Vector3(cosf(angle), 0.0f, sinf(angle));
-                        m_bulletFactory->LinearFireMonster(firePosition, dir, m_bulletParams);
+                        float randomOffset = ((static_cast<float>(rand()) / RAND_MAX) * spreadAngle) - (spreadAngle * 0.5f);
+                        DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY(randomOffset);
+                        engine::Vector3 fireDir = engine::Vector3::TransformNormal(direction, rot);
+                        fireDir.Normalize();
+
+                        BulletParams individualParams = m_bulletParams;
+
+                        float randomLifeMod = 0.1f + (static_cast<float>(rand()) / RAND_MAX) * 0.7f;
+                        individualParams.lifetime *= randomLifeMod;
+
+                        float randomSpeedMod = 0.6f + (static_cast<float>(rand()) / RAND_MAX) * 0.4f;
+                        individualParams.speed *= randomSpeedMod;
+
+                        m_bulletFactory->LinearFireMonster(firePosition, fireDir, individualParams);
                     }
                     break;
 				}

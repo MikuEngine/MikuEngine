@@ -1,15 +1,14 @@
 ﻿#pragma once
 
-#include "Framework/Object/Component/Script.h"
+#include "Framework/Object/Component/Component.h"
 
 namespace engine
 {
     class Renderer;
 
-    class SocketAttachment :
-        public Script<SocketAttachment>
+    class SocketAttachment : public Component
     {
-        REGISTER_SCRIPT(SocketAttachment, Script)
+        REGISTER_COMPONENT(SocketAttachment, Component)
 
     private:
         Ptr<Renderer> m_targetRenderer = nullptr;
@@ -21,10 +20,5 @@ namespace engine
 
         void SetSocket(Renderer* renderer, const std::string& socketName);
         void NotifyTargetRendererDestroyed();
-
-    public:
-        void OnGui() override;
-        void Save(json& j) const override;
-        void Load(const json& j) override;
     };
 }

@@ -396,6 +396,7 @@ namespace engine
 	void UIImage::SetEffectAbyssalDecay()
 	{
 		m_effectMode = 5; // UI_FX_ABYSSAL_DECAY
+		SetNoiseTexture(m_noisePath);
 	}
 
 	void UIImage::SetEffectStaticNoise(float intensity)
@@ -570,8 +571,6 @@ namespace engine
 		UIElement::Save(j);
 
 		j["TexturePath"] = m_textureFilePath;
-		j["RampPath"] = m_rampPath;
-		j["NoisePath"] = m_noisePath;
 
 		j["EffectMode"] = m_effectMode;
 		j["Effect0"] = m_effect0;
@@ -596,8 +595,6 @@ namespace engine
 		UIElement::Load(j);
 
 		JsonGet(j, "TexturePath", m_textureFilePath);
-		JsonGet(j, "RampPath", m_rampPath);
-		JsonGet(j, "NoisePath", m_noisePath);
 
 		JsonGet(j, "EffectMode", m_effectMode);
 		JsonGet(j, "Effect0", m_effect0);

@@ -55,6 +55,8 @@ namespace engine
         //void DrawArrow(const Vector3& start, const Vector3& direction, float length, const DirectX::XMVECTOR& color);
         //void DrawPoint(const Vector3& position, float size, const DirectX::XMVECTOR& color);
 
+        void DrawCircleFilled(const Vector3& center, float radius, const Vector3& normal, DirectX::GXMVECTOR color, int segments);
+
     private:
         friend class Singleton<DebugRenderer>;
     };

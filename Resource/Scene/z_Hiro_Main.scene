@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Main",
-    "NumGameObjects": 59,
+    "NumGameObjects": 58,
     "GameObjects": [
         {
             "ID": 0,
@@ -146,8 +146,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/Miku.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -388,8 +386,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/Earth.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -532,8 +528,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -754,8 +748,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -976,8 +968,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1198,8 +1188,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1481,8 +1469,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1631,8 +1617,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1971,8 +1955,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2079,8 +2061,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2187,8 +2167,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2377,8 +2355,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2485,8 +2461,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2593,8 +2567,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2783,8 +2755,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2891,8 +2861,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2999,8 +2967,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3330,8 +3296,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3480,8 +3444,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3745,8 +3707,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4004,8 +3964,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4263,8 +4221,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4522,8 +4478,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4810,8 +4764,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5026,8 +4978,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5268,8 +5218,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5359,65 +5307,6 @@
                     "UseRandom": false,
                     "RandomClips": [],
                     "Bus": "BGM"
-                }
-            ]
-        },
-        {
-            "ID": 58,
-            "Name": "Canvas_Message",
-            "Active": false,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
-                },
-                {
-                    "Type": "UIMessageQueue",
-                    "Active": true
                 }
             ]
         }
