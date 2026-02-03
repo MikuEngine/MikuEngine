@@ -27,6 +27,7 @@ namespace engine
             Field = 8,                      // 장판 공격
             Wall = 9,                       // 벽 (Projectile, EnemyProjectile 제외 모든 물체와 충돌)
             EnemyParabolicProjectile = 10,  // 포물선 적 투사체 (Wall, Player만 충돌)
+            ExplosionTrigger = 11,          // 폭발 트리거 (Player, Wall만 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -47,6 +48,7 @@ namespace engine
             FieldMask = (1u << Field),
             WallMask = (1u << Wall),
             EnemyParabolicProjectileMask = (1u << EnemyParabolicProjectile),
+            ExplosionTriggerMask = (1u << ExplosionTrigger),
 
             All = 0xFFFFFFFF
         };
@@ -72,7 +74,8 @@ namespace engine
                 "Field",        // 8
                 "Wall",         // 9
                 "EnemyParabolicProjectile", // 10
-                "Layer11", "Layer12", "Layer13", "Layer14", "Layer15",
+                "ExplosionTrigger", // 11
+                "Layer12", "Layer13", "Layer14", "Layer15",
                 "Layer16", "Layer17", "Layer18", "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
@@ -207,6 +210,22 @@ namespace engine
             SetCollision(EnemyParabolicProjectile, Field, false);
             SetCollision(EnemyParabolicProjectile, EnemyParabolicProjectile, false);
             // Wall, Player만 충돌 (기본값 All에서 위 항목들 제외)
+            
+            // ═══════════════════════════════════════
+            // ExplosionTrigger 충돌 규칙
+            // Player, Wall만 충돌
+            // ═══════════════════════════════════════
+            SetCollision(ExplosionTrigger, Default, false);
+            SetCollision(ExplosionTrigger, Enemy, false);
+            SetCollision(ExplosionTrigger, Projectile, false);
+            SetCollision(ExplosionTrigger, Environment, false);
+            SetCollision(ExplosionTrigger, Trigger, false);
+            SetCollision(ExplosionTrigger, EnemyProjectile, false);
+            SetCollision(ExplosionTrigger, Picking, false);
+            SetCollision(ExplosionTrigger, Field, false);
+            SetCollision(ExplosionTrigger, EnemyParabolicProjectile, false);
+            SetCollision(ExplosionTrigger, ExplosionTrigger, false);
+            // Player, Wall만 충돌 (기본값 All에서 위 항목들 제외)
   
         }
 

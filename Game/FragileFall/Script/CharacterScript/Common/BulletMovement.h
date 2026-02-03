@@ -144,7 +144,6 @@ namespace game
         engine::Vector3 m_velocity = engine::Vector3::Zero;
         float m_ownGravity = 9.81f;
         float m_launchAngle = 45.0f;  // 도(degree) 단위
-        int m_debugFrameCount = 0;    // 디버그 출력용 프레임 카운터
 
     public:
         // ownGravity: 자체 중력 가속도
@@ -161,10 +160,8 @@ namespace game
                 m_rigidbody = owner->GetComponent<engine::Rigidbody>();
             }
 
-            // ─────────────────────────────────────────────
             // launchAngle 적용하여 초기 속도 계산
             // direction은 XZ 평면의 수평 발사 방향으로 가정
-            // ─────────────────────────────────────────────
             
             // 수평 방향 (XZ 평면)
             engine::Vector3 horizontalDir = direction;
@@ -175,7 +172,6 @@ namespace game
             }
             else
             {
-                // direction이 순수 Y축인 경우 (드문 케이스)
                 horizontalDir = engine::Vector3::UnitZ;
             }
 
@@ -184,65 +180,20 @@ namespace game
             float angleRad = m_launchAngle * kDegToRad;
 
             // 초기 속도 벡터 계산
-            // v = speed * (horizontalDir * cos(angle) + up * sin(angle))
             float cosAngle = std::cos(angleRad);
             float sinAngle = std::sin(angleRad);
 
             m_velocity = horizontalDir * (speed * cosAngle);
             m_velocity.y = speed * sinAngle;
-            
-            // 디버그: 파라미터 확인
-            LOG_PRINT("[ParabolicMovement] speed={:.2f}, angle={:.1f}deg, gravity={:.2f}",
-                speed, m_launchAngle, m_ownGravity);
-            LOG_PRINT("[ParabolicMovement] horizontalDir=({:.2f}, {:.2f}, {:.2f})",
-                horizontalDir.x, horizontalDir.y, horizontalDir.z);
-            LOG_PRINT("[ParabolicMovement] cos={:.3f}, sin={:.3f}", cosAngle, sinAngle);
-            LOG_PRINT("[ParabolicMovement] velocity=({:.2f}, {:.2f}, {:.2f}), magnitude={:.2f}",
-                m_velocity.x, m_velocity.y, m_velocity.z, m_velocity.Length());
         }
 
         void Update(engine::Transform* transform, float deltaTime) override
         {
-            // ─────────────────────────────────────────────
-            // Update에서는 속도 동기화와 디버그 로그만 수행
+            // Update에서는 속도 동기화만 수행
             // AddForce는 FixedUpdate()에서 처리 (PhysX simulate와 동기화)
-            // ─────────────────────────────────────────────
             if (m_rigidbody)
             {
-                // 현재 속도 동기화 (GetVelocity 정확도용)
                 m_velocity = m_rigidbody->GetLinearVelocity();
-                
-                // 디버그: 인스턴스별 첫 15프레임 출력 (simulate() 후 상태 확인용)
-                if (m_debugFrameCount < 15)
-                {
-                    // PhysX Actor의 실제 위치 확인 (핵심 디버그!)
-                    physx::PxRigidActor* actor = m_rigidbody->GetPxActor();
-                    physx::PxVec3 physxPos(0, 0, 0);
-                    if (actor)
-                    {
-                        physx::PxRigidDynamic* dynamic = actor->is<physx::PxRigidDynamic>();
-                        if (dynamic)
-                        {
-                            physxPos = dynamic->getGlobalPose().p;
-                        }
-                    }
-                    
-                    LOG_PRINT("[ParabolicMovement::Update #{}] deltaTime={:.4f}", m_debugFrameCount, deltaTime);
-                    LOG_PRINT("  -> velocity (from GetLinearVelocity): ({:.2f}, {:.2f}, {:.2f})",
-                        m_velocity.x, m_velocity.y, m_velocity.z);
-                    LOG_PRINT("  -> PhysX Actor pos: ({:.2f}, {:.2f}, {:.2f})",
-                        physxPos.x, physxPos.y, physxPos.z);
-                    LOG_PRINT("  -> Transform pos:   ({:.2f}, {:.2f}, {:.2f})",
-                        transform ? transform->GetWorldPosition().x : 0,
-                        transform ? transform->GetWorldPosition().y : 0,
-                        transform ? transform->GetWorldPosition().z : 0);
-                    
-                    m_debugFrameCount++;
-                }
-            }
-            else
-            {
-                LOG_PRINT("[ParabolicMovement::Update] ERROR: m_rigidbody is null!");
             }
         }
 

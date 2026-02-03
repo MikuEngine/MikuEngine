@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerAimMeshController.h"
 
 #include "Script/AimPointer.h"
@@ -42,6 +42,7 @@ namespace game
                 return;
         }
 
+        UpdateShootingState();
         UpdatePositionAndRotation();
         UpdateAnimation();
     }
@@ -80,6 +81,16 @@ namespace game
         if (!m_aimPointer && m_playerObject)
         {
             m_aimPointer = m_playerObject->GetComponent<AimPointer>();
+        }
+        
+        // PlayerControllerScript 참조 및 콜백 등록
+        if (!m_playerControllerScript && m_playerObject)
+        {
+            m_playerControllerScript = m_playerObject->GetComponent<PlayerControllerScript>();
+            if (m_playerControllerScript)
+            {
+                m_playerControllerScript->RegisterFireCallback(this, [this]() { OnPlayerFired(); });
+            }
         }
     }
 
@@ -210,18 +221,19 @@ namespace game
 
         // ─────────────────────────────────────────────
         // 상/하체 분리 애니메이션 상태 등록
-        // 현재는 상체 분리 미사용 (upperWeight = 0)
+        // 비발사 상태: 상체 웨이트 0 (비활성화)
+        // 발사 상태: 상체 웨이트 1 + Fire 애니메이션
         // ─────────────────────────────────────────────
 
-        // 비발사 상태
+        // 비발사 상태 (상체 레이어 비활성화)
         m_animFSM->AddSplitState("Idle", m_animName_Idle, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("WalkForward", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("WalkBackward", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
 
-        // 발사 상태 (하체 애니만, 상체는 PlayUpperBodyAnimation으로 별도 재생)
-        m_animFSM->AddSplitState("IdleShoot", m_animName_Idle, true, "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("WalkBackwardShoot", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
+        // 발사 상태 (하체: 이동 애니, 상체: Fire 애니)
+        m_animFSM->AddSplitState("IdleShoot", m_animName_Idle, true, m_animName_Fire, false, 1.0f, 0.1f);
+        m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, m_animName_Fire, false, 1.0f, 0.1f);
+        m_animFSM->AddSplitState("WalkBackwardShoot", m_animName_WalkBackward, true, m_animName_Fire, false, 1.0f, 0.1f);
     }
 
     void PlayerAimMeshController::UpdateAnimation()
@@ -231,9 +243,8 @@ namespace game
         // ─────────────────────────────────────────────
         // LogicFSM 상태 + 이동 방향 → AnimFSM 상태 결정
         // ─────────────────────────────────────────────
-        std::string logicState = m_logicFSM->GetCurrentState();
         bool isMoving = m_logicFSM->GetBoolParameter("IsMoving");
-        bool isShooting = (logicState == "IdleShoot" || logicState == "WalkShoot");
+        bool isShooting = m_isShooting;  // PCS 콜백으로 제어
         bool isBackward = m_isBackward;
 
         // AnimFSM 상태 결정
@@ -330,6 +341,16 @@ namespace game
 
         ImGui::Separator();
 
+        // Shooting 설정
+        ImGui::Text("Shooting Settings:");
+        ImGui::DragFloat("Shooting Duration", &m_shootingDuration, 0.01f, 0.0f, 2.0f);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("How long the shooting animation state is maintained after firing");
+        }
+
+        ImGui::Separator();
+
         // 런타임 상태
         ImGui::Text("Runtime State:");
         engine::Vector3 pos = GetTransform()->GetWorldPosition();
@@ -341,11 +362,14 @@ namespace game
         engine::Vector3 moveDir = GetMoveInputDirection();
         ImGui::Text("Move Input: (%.2f, %.2f, %.2f)", moveDir.x, moveDir.y, moveDir.z);
         ImGui::Text("Is Backward: %s", m_isBackward ? "Yes" : "No");
+        ImGui::Text("Is Shooting: %s (Timer: %.2f)", m_isShooting ? "Yes" : "No", m_shootingTimer);
 
         if (m_logicFSM)
         {
             ImGui::Text("LogicFSM State: %s", m_logicFSM->GetCurrentState().c_str());
         }
+        
+        ImGui::Text("PlayerController: %s", m_playerControllerScript ? "[OK]" : "[NOT FOUND]");
     }
 
     void PlayerAimMeshController::Save(engine::json& j) const
@@ -365,6 +389,9 @@ namespace game
         // Forward/Backward 판정 설정
         j["BackwardThreshold"] = m_backwardThreshold;
         j["ForwardThreshold"] = m_forwardThreshold;
+        
+        // Shooting 설정
+        j["ShootingDuration"] = m_shootingDuration;
     }
 
     void PlayerAimMeshController::Load(const engine::json& j)
@@ -384,5 +411,31 @@ namespace game
         // Forward/Backward 판정 설정
         engine::JsonGet(j, "BackwardThreshold", m_backwardThreshold);
         engine::JsonGet(j, "ForwardThreshold", m_forwardThreshold);
+        
+        // Shooting 설정
+        engine::JsonGet(j, "ShootingDuration", m_shootingDuration);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Shooting 상태 관리
+    // ═══════════════════════════════════════════════════════════════
+    void PlayerAimMeshController::OnPlayerFired()
+    {
+        // 발사할 때마다 타이머 리셋 (연속 발사 중에는 계속 true)
+        m_isShooting = true;
+        m_shootingTimer = m_shootingDuration;
+    }
+
+    void PlayerAimMeshController::UpdateShootingState()
+    {
+        if (m_isShooting)
+        {
+            m_shootingTimer -= engine::Time::DeltaTime();
+            if (m_shootingTimer <= 0.0f)
+            {
+                m_isShooting = false;
+                m_shootingTimer = 0.0f;
+            }
+        }
     }
 }

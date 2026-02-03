@@ -54,6 +54,12 @@ namespace game
         bool m_isDying = false;
         float m_deathDelay = 0.05f;
         float m_deathTimer = 0.0f;
+        
+        // ─────────────────────────────────────────────
+        // 포물선 탄환 전용 (착탄 시 폭발 트리거 생성)
+        // ─────────────────────────────────────────────
+        engine::Vector3 m_impactPoint = engine::Vector3::Zero;  // 착탄점
+        bool m_shouldSpawnExplosion = false;                     // 폭발 트리거 생성 여부
 
 		// ─────────────────────────────────────────────
 		// 필드형 총알 전용
@@ -82,5 +88,13 @@ namespace game
         // 충돌 콜백
         // ─────────────────────────────────────────────
         void OnTriggerEnter(const engine::CollisionInfo& info) override;
+        void OnCollisionEnter(const engine::CollisionInfo& info) override;
+        
+    private:
+        // ─────────────────────────────────────────────
+        // 포물선 탄환 전용 헬퍼
+        // ─────────────────────────────────────────────
+        void SpawnExplosionTrigger(const engine::Vector3& position);
+        void DieWithExplosion(const engine::Vector3& impactPoint);
     };
 }

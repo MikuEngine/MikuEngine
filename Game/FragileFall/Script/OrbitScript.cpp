@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "OrbitScript.h"
 
 #include "AimPointerMeshScript.h"
@@ -15,10 +15,10 @@ namespace game
     {
         CacheReferences();
         
-        // PCS에 발사 콜백 등록
+        // PCS에 발사 콜백 등록 (Ptr 기반 자동 유효성 관리)
         if (m_playerController)
         {
-            m_playerController->RegisterFireCallback([this]() { OnFired(); });
+            m_playerController->RegisterFireCallback(this, [this]() { OnFired(); });
             
             // 발사 간격의 절반을 반동 지속 시간으로 설정
             m_recoilDuration = m_playerController->GetFireRate() / 2.0f;

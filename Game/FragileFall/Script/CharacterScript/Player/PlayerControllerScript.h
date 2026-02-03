@@ -1,7 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
+#include <Framework/Object/Ptr.h>
 #include <functional>
 #include <vector>
 
@@ -9,6 +10,7 @@ namespace engine
 {
     class Rigidbody;
     class AfterimageRenderer;
+    class ScriptBase;
 }
 
 namespace game
@@ -18,6 +20,13 @@ namespace game
     
     // 발사 이벤트 콜백 타입
     using FireCallback = std::function<void()>;
+    
+    // 발사 콜백 엔트리 (Ptr 기반 자동 유효성 관리)
+    struct FireCallbackEntry
+    {
+        engine::Ptr<engine::ScriptBase> owner;  // 콜백 소유자 (파괴되면 자동 invalid)
+        FireCallback callback;
+    };
 
     // ═══════════════════════════════════════════════════════════════
     // PlayerControllerScript - Dynamic Rigidbody + 회전 제약 슈팅 플레이어
@@ -126,9 +135,9 @@ namespace game
         float m_bulletStartOffsetForward = 1.5f;  // 발사 방향으로의 오프셋 (앞으로)
         
         // ─────────────────────────────────────────────
-        // 발사 이벤트 콜백
+        // 발사 이벤트 콜백 (Ptr 기반 자동 정리)
         // ─────────────────────────────────────────────
-        std::vector<FireCallback> m_fireCallbacks;
+        std::vector<FireCallbackEntry> m_fireCallbacks;
 
         // ─────────────────────────────────────────────
         // 처형 시스템 설정
@@ -286,8 +295,7 @@ namespace game
         // 발사 시스템 접근자
         // ─────────────────────────────────────────────
         float GetFireRate() const { return m_fireRate; }
-        void RegisterFireCallback(const FireCallback& callback);
-        void UnregisterFireCallback(const FireCallback& callback);
+        void RegisterFireCallback(engine::ScriptBase* owner, const FireCallback& callback);
 
         // ─────────────────────────────────────────────
         // 공격 변수 - Base값 Getter (PlayerTemperManager용)

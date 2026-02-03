@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -851,10 +851,13 @@ namespace game
 
 				m_bulletFactory->Fire(bulletStartPos, direction, params);
 
-				// 발사 콜백 호출
-				for (const auto& callback : m_fireCallbacks)
+				// 발사 콜백 호출 (Ptr 기반 자동 유효성 체크)
+				for (auto& entry : m_fireCallbacks)
 				{
-					if (callback) callback();
+					if (entry.owner && entry.callback)
+					{
+						entry.callback();
+					}
 				}
 
 				// 쿨다운 타이머 리셋
@@ -863,17 +866,12 @@ namespace game
 		}
 	}
 	
-	void PlayerControllerScript::RegisterFireCallback(const FireCallback& callback)
+	void PlayerControllerScript::RegisterFireCallback(engine::ScriptBase* owner, const FireCallback& callback)
 	{
-		m_fireCallbacks.push_back(callback);
-	}
-	
-	void PlayerControllerScript::UnregisterFireCallback(const FireCallback& callback)
-	{
-		// std::function은 직접 비교가 어려우므로, 
-		// 실제로는 ID 기반이나 weak_ptr 기반으로 관리하는 것이 좋음
-		// 현재는 단순화를 위해 clear만 지원
-		// m_fireCallbacks.clear();
+		FireCallbackEntry entry;
+		entry.owner = owner;
+		entry.callback = callback;
+		m_fireCallbacks.push_back(entry);
 	}
 		
 

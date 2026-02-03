@@ -11,6 +11,7 @@ namespace engine
 namespace game
 {
     class AimPointer;
+    class PlayerControllerScript;
 
     // ═══════════════════════════════════════════════════════════════
     // PlayerAimMeshController
@@ -36,6 +37,7 @@ namespace game
         engine::AnimFSM* m_animFSM = nullptr;
         engine::LogicFSM* m_logicFSM = nullptr;  // Player의 LogicFSM
         AimPointer* m_aimPointer = nullptr;
+        PlayerControllerScript* m_playerControllerScript = nullptr;
 
         // ─────────────────────────────────────────────
         // 위치/회전 설정
@@ -63,6 +65,13 @@ namespace game
         // ─────────────────────────────────────────────
         bool m_isBackward = false;
         bool m_animFSMInitialized = false;
+        
+        // ─────────────────────────────────────────────
+        // Shooting 상태 (PCS 콜백으로 제어)
+        // ─────────────────────────────────────────────
+        float m_shootingDuration = 0.5f;   // Shooting 상태 유지 시간
+        float m_shootingTimer = 0.0f;      // 남은 Shooting 시간
+        bool m_isShooting = false;         // 현재 Shooting 상태
 
     public:
         void Start() override;
@@ -88,5 +97,11 @@ namespace game
         // ─────────────────────────────────────────────
         engine::Vector3 GetMoveInputDirection() const;
         void UpdateForwardBackward(const engine::Vector3& aimDir);
+        
+        // ─────────────────────────────────────────────
+        // Shooting 콜백 (PCS에서 호출)
+        // ─────────────────────────────────────────────
+        void OnPlayerFired();
+        void UpdateShootingState();
     };
 }

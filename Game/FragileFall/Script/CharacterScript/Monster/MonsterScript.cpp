@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -659,10 +659,11 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void MonsterScript::SyncMonsterData()
 	{
+		return;
 		// MonsterScript의 값으로 MonsterData 동기화
-		m_monsterData.Type = m_attackType;
-		m_monsterData.Tier = m_monsterTier;
-		m_monsterData.Difficulty = m_difficulty;
+		//m_monsterData.Type = m_attackType;
+		//m_monsterData.Tier = m_monsterTier;
+		//m_monsterData.Difficulty = m_difficulty;
 		
 		// MonsterData에 없는 값들은 MonsterScript에서만 관리
 		// (체력, 이동속도, 공격력, Fragile시간, 인식범위)

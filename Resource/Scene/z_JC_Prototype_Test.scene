@@ -1,6 +1,6 @@
 {
     "Name": "z_JC_Prototype_Test",
-    "NumGameObjects": 81,
+    "NumGameObjects": 82,
     "GameObjects": [
         {
             "ID": 0,
@@ -12579,8 +12579,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12791,8 +12789,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12941,8 +12937,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13163,8 +13157,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13385,8 +13377,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13650,8 +13640,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13800,8 +13788,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14140,8 +14126,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14248,8 +14232,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14356,8 +14338,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14546,8 +14526,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14654,8 +14632,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14762,8 +14738,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14952,8 +14926,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15060,8 +15032,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15168,8 +15138,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15499,8 +15467,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15931,8 +15897,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16147,8 +16111,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16334,8 +16296,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16478,8 +16438,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16694,8 +16652,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16881,8 +16837,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -17123,8 +17077,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -17231,8 +17183,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/Miku.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -17630,6 +17580,78 @@
                                 "mixamorig:LeftHandRing4_end",
                                 "mixamorig:LeftHandPinky4_end"
                             ]
+                        },
+                        {
+                            "Name": "New Layer",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "mixamorig:Spine",
+                                "mixamorig:Spine1",
+                                "mixamorig:Spine2",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
                         }
                     ]
                 },
@@ -17644,7 +17666,8 @@
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
                     "BackwardThreshold": -0.10000000149011612,
-                    "ForwardThreshold": 0.10000000149011612
+                    "ForwardThreshold": 0.10000000149011612,
+                    "ShootingDuration": 0.5
                 },
                 {
                     "Type": "AnimFSM",
@@ -17805,8 +17828,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -17928,8 +17949,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -18437,6 +18456,91 @@
                 {
                     "Type": "BulletFactory",
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 81,
+            "Name": "ExplosionDamageTrigger",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.399999976158142,
+                        "y": 1.0,
+                        "z": 1.399999976158142
+                    }
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 61
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 0.800000011920929,
+                    "height": 5.360000133514404
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
                 }
             ]
         }
