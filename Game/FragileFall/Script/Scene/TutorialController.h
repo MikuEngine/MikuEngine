@@ -6,6 +6,11 @@ namespace game
 {
     class UIMessageQueue;
 
+    struct TutorialStep
+    {
+        std::vector<std::string> pages; // 동시에 보여줄 메시지들
+    };
+
     class TutorialController :
         public engine::Script<TutorialController>
     {
@@ -22,11 +27,11 @@ namespace game
         void Load(const engine::json& j) override;
 
     private:
-        engine::Ptr<UIMessageQueue> m_queue;
+        UIMessageQueue* m_queue = nullptr;
+        int m_stepIndex = 0;
+        int m_pageIndex = 0;
 
-        int m_index = 0;
-
-        void ShowCurrent();
+        void ShowPage();
         void Next();
         void Prev();
     };

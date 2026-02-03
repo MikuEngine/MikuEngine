@@ -29,6 +29,11 @@ namespace game
         // - deltaTime: 프레임 간격
         virtual void Update(engine::Transform* transform, float deltaTime) = 0;
 
+        // FixedUpdate (물리 시뮬레이션 주기에 맞춰 호출)
+        // - AddForce 등 물리 연산은 여기서 수행
+        // - PhysX simulate()와 동기화됨
+        virtual void FixedUpdate() {}
+
         // 현재 속도 벡터 반환 (Rigidbody 초기 속도 설정용)
         virtual engine::Vector3 GetVelocity() const = 0;
 
@@ -139,6 +144,7 @@ namespace game
         engine::Vector3 m_velocity = engine::Vector3::Zero;
         float m_ownGravity = 9.81f;
         float m_launchAngle = 45.0f;  // 도(degree) 단위
+        int m_debugFrameCount = 0;    // 디버그 출력용 프레임 카운터
 
     public:
         // ownGravity: 자체 중력 가속도
@@ -184,22 +190,73 @@ namespace game
 
             m_velocity = horizontalDir * (speed * cosAngle);
             m_velocity.y = speed * sinAngle;
+            
+            // 디버그: 파라미터 확인
+            LOG_PRINT("[ParabolicMovement] speed={:.2f}, angle={:.1f}deg, gravity={:.2f}",
+                speed, m_launchAngle, m_ownGravity);
+            LOG_PRINT("[ParabolicMovement] horizontalDir=({:.2f}, {:.2f}, {:.2f})",
+                horizontalDir.x, horizontalDir.y, horizontalDir.z);
+            LOG_PRINT("[ParabolicMovement] cos={:.3f}, sin={:.3f}", cosAngle, sinAngle);
+            LOG_PRINT("[ParabolicMovement] velocity=({:.2f}, {:.2f}, {:.2f}), magnitude={:.2f}",
+                m_velocity.x, m_velocity.y, m_velocity.z, m_velocity.Length());
         }
 
         void Update(engine::Transform* transform, float deltaTime) override
         {
             // ─────────────────────────────────────────────
-            // PhysX AddForce로 자체 중력 적용
-            // Transform 직접 조작 안 함 (PhysX가 위치 처리)
+            // Update에서는 속도 동기화와 디버그 로그만 수행
+            // AddForce는 FixedUpdate()에서 처리 (PhysX simulate와 동기화)
+            // ─────────────────────────────────────────────
+            if (m_rigidbody)
+            {
+                // 현재 속도 동기화 (GetVelocity 정확도용)
+                m_velocity = m_rigidbody->GetLinearVelocity();
+                
+                // 디버그: 인스턴스별 첫 15프레임 출력 (simulate() 후 상태 확인용)
+                if (m_debugFrameCount < 15)
+                {
+                    // PhysX Actor의 실제 위치 확인 (핵심 디버그!)
+                    physx::PxRigidActor* actor = m_rigidbody->GetPxActor();
+                    physx::PxVec3 physxPos(0, 0, 0);
+                    if (actor)
+                    {
+                        physx::PxRigidDynamic* dynamic = actor->is<physx::PxRigidDynamic>();
+                        if (dynamic)
+                        {
+                            physxPos = dynamic->getGlobalPose().p;
+                        }
+                    }
+                    
+                    LOG_PRINT("[ParabolicMovement::Update #{}] deltaTime={:.4f}", m_debugFrameCount, deltaTime);
+                    LOG_PRINT("  -> velocity (from GetLinearVelocity): ({:.2f}, {:.2f}, {:.2f})",
+                        m_velocity.x, m_velocity.y, m_velocity.z);
+                    LOG_PRINT("  -> PhysX Actor pos: ({:.2f}, {:.2f}, {:.2f})",
+                        physxPos.x, physxPos.y, physxPos.z);
+                    LOG_PRINT("  -> Transform pos:   ({:.2f}, {:.2f}, {:.2f})",
+                        transform ? transform->GetWorldPosition().x : 0,
+                        transform ? transform->GetWorldPosition().y : 0,
+                        transform ? transform->GetWorldPosition().z : 0);
+                    
+                    m_debugFrameCount++;
+                }
+            }
+            else
+            {
+                LOG_PRINT("[ParabolicMovement::Update] ERROR: m_rigidbody is null!");
+            }
+        }
+
+        void FixedUpdate() override
+        {
+            // ─────────────────────────────────────────────
+            // FixedUpdate에서 중력 적용 (PhysX simulate와 동기화)
+            // 매 FixedTimeStep마다 1회만 호출됨
             // ─────────────────────────────────────────────
             if (m_rigidbody)
             {
                 // 중력 힘 적용 (ForceMode::Acceleration = 질량 무시)
                 engine::Vector3 gravityForce(0.0f, -m_ownGravity, 0.0f);
                 m_rigidbody->AddForce(gravityForce, engine::ForceMode::Acceleration);
-
-                // 현재 속도 동기화 (GetVelocity 정확도용)
-                m_velocity = m_rigidbody->GetLinearVelocity();
             }
         }
 

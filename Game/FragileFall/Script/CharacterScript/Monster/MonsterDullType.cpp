@@ -8,8 +8,6 @@
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
-#include <Framework/Object/Component/Collider.h>
-#include <Framework/Physics/PhysicsLayer.h>
 
 namespace game
 {

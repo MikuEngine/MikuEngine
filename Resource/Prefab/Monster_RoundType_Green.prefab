@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 3.759185791015625,
-                        "y": 1.050926923751831,
-                        "z": 2.8540334701538086
+                        "x": 4.0,
+                        "y": 1.0,
+                        "z": 4.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -82,11 +82,13 @@
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 100.0,
-                    "AttackRange": 20.0,
+                    "AttackRange": 16.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 5.0,
                     "BulletSpeed": 10.0,
-                    "BulletLifetime": 5.0,
+                    "BulletLifetime": 4.0,
+                    "ParabolicSpeed": 14.0,
+                    "OwnGravity": 9.800000190734863,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",

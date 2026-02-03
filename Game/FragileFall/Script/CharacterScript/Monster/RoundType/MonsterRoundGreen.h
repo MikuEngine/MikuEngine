@@ -118,6 +118,11 @@ namespace game
         void ExecuteDiagonalMovement();     // 대각선 이동 실행
 
     public:
+        // ─────────────────────────────────────────────
+        // Parabolic 타입 여부 (Green = 항상 true)
+        // ─────────────────────────────────────────────
+        bool IsParabolicBullet() const override { return true; }
+        
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;

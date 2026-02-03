@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -76,6 +76,7 @@ namespace game
         // ─────────────────────────────────────────────
         void Start() override;
         void Update() override;
+        void FixedUpdate() override;
 
         // ─────────────────────────────────────────────
         // 충돌 콜백

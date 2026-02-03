@@ -916,19 +916,26 @@ namespace engine
         physx::PxScene* pxScene = scene->GetPxScene();
         if (!pxScene) return;
 
-        // Active Actors만 처리 (최적화)
-        physx::PxU32 nbActiveActors = 0;
-        physx::PxActor** activeActors = pxScene->getActiveActors(nbActiveActors);
-
-        for (physx::PxU32 i = 0; i < nbActiveActors; ++i)
+        // ═══════════════════════════════════════════════════════════════
+        // 모든 등록된 Dynamic Rigidbody 처리
+        // 
+        // 이전: getActiveActors()만 처리 (최적화)
+        // 문제: 새로 생성된 Actor가 active 목록에 포함되지 않아 동기화 안 됨
+        // 수정: Scene에 등록된 모든 Rigidbody를 처리
+        // ═══════════════════════════════════════════════════════════════
+        const auto& rigidbodies = scene->GetRigidbodies();
+        
+        for (Rigidbody* rb : rigidbodies)
         {
-            // 안전 체크: Actor 포인터 유효성
-            if (!activeActors[i]) continue;
+            if (!rb) continue;
             
-            physx::PxRigidDynamic* dynamic = activeActors[i]->is<physx::PxRigidDynamic>();
+            physx::PxRigidActor* actor = rb->GetPxActor();
+            if (!actor) continue;
+            
+            physx::PxRigidDynamic* dynamic = actor->is<physx::PxRigidDynamic>();
             if (!dynamic) continue;
 
-            // 안전 체크: Actor가 여전히 Scene에 있는지 확인
+            // 안전 체크: Actor가 Scene에 있는지 확인
             if (!dynamic->getScene()) continue;
 
             // Kinematic은 스킵 (엔진이 제어)
@@ -936,10 +943,6 @@ namespace engine
             {
                 continue;
             }
-
-            // Rigidbody 찾기
-            Rigidbody* rb = static_cast<Rigidbody*>(dynamic->userData);
-            if (!rb) continue;
 
             // PhysX Transform → 엔진 Transform
             physx::PxTransform pxTransform = dynamic->getGlobalPose();
