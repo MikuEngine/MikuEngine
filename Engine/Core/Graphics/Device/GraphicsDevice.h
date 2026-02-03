@@ -24,9 +24,10 @@ namespace engine
         std::unique_ptr<Texture> normal;
         std::unique_ptr<Texture> orm;
         std::unique_ptr<Texture> emissive;
+        std::unique_ptr<Texture> subsurface;
 
         static constexpr UINT startSlot = static_cast<UINT>(TextureSlot::GBufferBaseColor);
-        static constexpr UINT count = 4;
+        static constexpr UINT count = 5;
 
         void Reset();
         std::array<ID3D11RenderTargetView*, count> GetRawRTVs() const;
@@ -42,6 +43,7 @@ namespace engine
         ID3D11ShaderResourceView* normal;
         ID3D11ShaderResourceView* orm;
         ID3D11ShaderResourceView* emissive;
+        ID3D11ShaderResourceView* subsurface;
         ID3D11ShaderResourceView* bloomHalfBuffer;
         ID3D11ShaderResourceView* bloomWorkBuffer;
         ID3D11ShaderResourceView* aaBuffer;

@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "RenderSystem.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -322,6 +322,10 @@ namespace engine
         cbFrame.fxaaQualityEdgeThreshold = GetFXAAQualityEdgeThreshold();
         cbFrame.fxaaQualityEdgeThresholdMin = GetFXAAQualityEdgeThresholdMin();
         cbFrame.enableFXAA = GetEnableFXAA() ? 1.0f : 0.0f;
+
+        // SSS 전역: (1,1,1)=표면색 그대로, (1,0.4,0.2)=피부톤 틴트. 강도 스케일 1=메쉬값 그대로
+        cbFrame.subsurfaceColor = Vector3(1.0f, 1.0f, 1.0f);
+        cbFrame.subsurfaceStrength = 1.0f;
 
         context->VSSetConstantBuffers(
             static_cast<UINT>(ConstantBufferSlot::Frame),

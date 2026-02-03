@@ -64,6 +64,7 @@ dkms.conf
 imgui.ini
 *.cso
 IBLBaker.zip
+.cursor
 
 # CustomSetting
 /Resource/Setting/ProjectSettings.json

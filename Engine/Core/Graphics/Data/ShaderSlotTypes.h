@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace engine
 {
@@ -10,12 +10,14 @@ namespace engine
         Roughness = 3,
         AmbientOcclusion = 4,
         Emissive = 5,
+        Thickness = 6,
 
         GBufferBaseColor = 10,
         GBufferNormal = 11,
         GBufferORM = 12,
         GBufferEmissive = 13,
-        GBufferDepth = 14,
+        GBufferSubsurface = 14,
+        GBufferDepth = 15,
 
         ShadowMap = 20,
         IBLEnvironment = 21,

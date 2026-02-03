@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Core/Graphics/Resource/Resource.h"
 
@@ -47,8 +47,9 @@ namespace engine
         std::shared_ptr<Texture> roughness;
         std::shared_ptr<Texture> ambientOcclusion;
         std::shared_ptr<Texture> emissive;
+        std::shared_ptr<Texture> thickness;
 
-        std::array<ID3D11ShaderResourceView*, 6> AsRawArray() const
+        std::array<ID3D11ShaderResourceView*, 7> AsRawArray() const
         {
             return {
                 baseColor->GetRawSRV(),
@@ -57,6 +58,7 @@ namespace engine
                 roughness->GetRawSRV(),
                 ambientOcclusion->GetRawSRV(),
                 emissive->GetRawSRV(),
+                thickness->GetRawSRV(),
             };
         }
     };

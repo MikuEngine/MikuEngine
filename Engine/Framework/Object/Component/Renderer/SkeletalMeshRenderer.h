@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Resource/Texture.h"
@@ -73,7 +73,8 @@ namespace engine
         bool m_overrideMaterial = false;
         bool m_castShadow = false;
         CullMode m_cullMode = CullMode::Back;
-
+        float m_subsurfaceStrength = 0.0f;  // SSS strength for whole mesh (0 = off), GBuffer ORM.a. Later: texture modulates.
+        Vector3 m_subsurfaceColor = Vector3(1.0f, 1.0f, 1.0f);  // SSS tint per renderer (RGB). (0,0,0) = use global CbFrame subsurfaceColor.
 
     public:
         SkeletalMeshRenderer();

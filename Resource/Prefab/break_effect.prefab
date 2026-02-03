@@ -1,0 +1,282 @@
+{
+    "Name": "break_effect",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "break_effect",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 3.219829797744751,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true,
+                    "IsPlaying": true,
+                    "AutoDestroy": false,
+                    "Duration": 0.0,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/Gemini_Generated_Image_l6qthdl6qthdl6q22222t.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 6.300000190734863,
+                                "y": 5.0,
+                                "z": 3.5999999046325684
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 5.679999828338623,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 1,
+                            "SizeBegin": 0.9300000071525574,
+                            "SizeEnd": 1.9199999570846558,
+                            "SizeVariation": 0.4000000059604645,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 1.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 37,
+                                    "Cycles": 100,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/smash.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 1.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "SizeBegin": 8.0,
+                            "SizeEnd": 8.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.10000000149011612,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 1,
+                                    "Cycles": 69,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/dust_2.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.615686297416687
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 1.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "SizeBegin": 8.0,
+                            "SizeEnd": 16.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.4000000059604645,
+                            "RotationMin": 0.0,
+                            "RotationMax": 0.0,
+                            "RotationSpeedMin": 0.0,
+                            "RotationSpeedMax": 0.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 1,
+                                    "Cycles": 69,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

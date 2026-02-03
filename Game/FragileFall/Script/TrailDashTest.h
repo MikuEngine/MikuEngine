@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -18,6 +18,8 @@ namespace game
         float m_dashDuration = 0.2f;
         float m_dashSpeed = 12.0f;
         engine::Vector3 m_dashDirection = engine::Vector3(0.0f, 0.0f, 1.0f);
+        float m_teleportDistance = 5.0f;
+        size_t m_teleportNumSlices = 12;
 
     public:
         void Start() override;

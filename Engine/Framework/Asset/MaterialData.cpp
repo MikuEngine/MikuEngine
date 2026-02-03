@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "MaterialData.h"
 
 #include <filesystem>
@@ -165,6 +165,12 @@ namespace engine
             {
                 material.texturePaths[MaterialKey::AMBIENT_OCCLUSION_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::AMBIENT_OCCLUSION_TEXTURE);
+            }
+
+            if (aiReturn_SUCCESS == aiMaterial->Get("$raw.ThicknessTexture", 0, 0, path))
+            {
+                material.texturePaths[MaterialKey::THICKNESS_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
+                material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::THICKNESS_TEXTURE);
             }
 
             m_materials.push_back(std::move(material));
