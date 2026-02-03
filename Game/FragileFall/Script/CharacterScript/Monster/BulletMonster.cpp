@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -106,6 +106,31 @@ namespace game
             return;
         }
 
+        // Y축 높이가 바닥(0) 근처로 떨어졌는지 체크
+        if (!m_isDying && !m_isFieldType)
+        {
+            if (GetTransform()->GetWorldPosition().y <= 0.1f)
+            {
+                if (m_params.type == BulletType::Field && m_cachedFactory)
+                {
+                    engine::Vector3 spawnPos = GetTransform()->GetWorldPosition();
+                    spawnPos.y = 0.0f;
+
+                    m_cachedFactory->FieldFireMonster(spawnPos, m_params);
+                }
+
+                m_isDying = true;
+                m_deathTimer = 0.0f;
+
+                if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+                {
+                    rb->SetLinearVelocity(engine::Vector3::Zero);
+                }
+
+                return; 
+            }
+        }
+        
         // 장판형 총알일 경우 주기적으로 데미지 적용
         if (m_isFieldType)
         {
@@ -172,19 +197,11 @@ namespace game
         if (m_isDying || m_isFieldType) return;
         if (!info.gameObject) return;
 
-        bool isPlayer = (info.gameObject->GetComponent<PlayerControllerScript>() != nullptr);
-        bool isEnvironment = (info.gameObject->GetComponent<engine::Collider>()->GetLayer() == engine::PhysicsLayer::Environment);
-
         // 플레이어와 충돌했는지 확인
-        if (isPlayer || isEnvironment)
+        if (info.gameObject->GetComponent<PlayerControllerScript>())
         {
             // TODO: 플레이어 OnHit() 구현 시 호출
             // player->OnHit(m_damage);
-
-            if (m_params.type == BulletType::Field && m_cachedFactory)
-            {
-                m_cachedFactory->FieldFireMonster(GetTransform()->GetWorldPosition(), m_params);
-            }
 
             // dying 상태로 전환
             m_isDying = true;
