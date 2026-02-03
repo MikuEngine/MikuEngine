@@ -22,6 +22,12 @@ namespace game
         int m_maxCount = 5;
         int m_anchorMonsterID = 0;
 
+        // 포인트 10개 고정, 구역 3개(각 3/4/3). Spawner 자식=구역, 구역 자식=포인트. 중복 배치 불가, 구역 위치에는 미스폰.
+        std::vector<engine::Transform*> m_allPoints;   // [zone0 포인트 3, zone1 포인트 4, zone2 포인트 3]
+        std::vector<bool> m_pointUsed;                 // 포인트별 사용 여부 (SpawnParty 시작 시 초기화)
+        std::vector<size_t> m_zoneStartIndex;          // [0, 3, 7, 10] — 구역 k = [m_zoneStartIndex[k], m_zoneStartIndex[k+1])
+        size_t m_nextZoneIndex = 0;                   // 다음에 시도할 구역 (순환)
+
     public:
         void Start() override;
 
@@ -29,8 +35,8 @@ namespace game
         bool LoadMonsterDB();
         std::string GetPrefabNameFromID(int monsterID) const;
 
-        // ─── 2단계: 스폰 로직 ───
-        engine::Vector3 GetRandomSpawnPosition() const;
+        // ─── 2단계: 스폰 로직 (구역 순환 + 구역 내 랜덤 포인트) ───
+        engine::Vector3 GetNextSpawnPosition();
         engine::GameObject* SpawnOne(int monsterID, const engine::Vector3& position);
 
         // ─── 3단계: 진입점 ───

@@ -1,6 +1,6 @@
 {
     "Name": "EnemySpawnTest",
-    "NumGameObjects": 96,
+    "NumGameObjects": 98,
     "GameObjects": [
         {
             "ID": 0,
@@ -19930,6 +19930,34 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 86,
+            "ParentID": 85,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
                         "x": -26.31131362915039,
                         "y": 0.0,
                         "z": -15.03667163848877
@@ -19949,8 +19977,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 84,
+            "ID": 87,
+            "ParentID": 85,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -19977,8 +20005,8 @@
             ]
         },
         {
-            "ID": 87,
-            "ParentID": 84,
+            "ID": 88,
+            "ParentID": 85,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20005,8 +20033,36 @@
             ]
         },
         {
-            "ID": 88,
+            "ID": 89,
             "ParentID": 84,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 90,
+            "ParentID": 89,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20033,8 +20089,8 @@
             ]
         },
         {
-            "ID": 89,
-            "ParentID": 84,
+            "ID": 91,
+            "ParentID": 89,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20061,8 +20117,8 @@
             ]
         },
         {
-            "ID": 90,
-            "ParentID": 84,
+            "ID": 92,
+            "ParentID": 89,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20089,8 +20145,8 @@
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 84,
+            "ID": 93,
+            "ParentID": 89,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20117,8 +20173,36 @@
             ]
         },
         {
-            "ID": 92,
+            "ID": 94,
             "ParentID": 84,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 95,
+            "ParentID": 94,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20145,8 +20229,8 @@
             ]
         },
         {
-            "ID": 93,
-            "ParentID": 84,
+            "ID": 96,
+            "ParentID": 94,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20173,8 +20257,8 @@
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 84,
+            "ID": 97,
+            "ParentID": 94,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20197,67 +20281,6 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                }
-            ]
-        },
-        {
-            "ID": 95,
-            "Name": "Slime1",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.690000057220459,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
                 }
             ]
         }
