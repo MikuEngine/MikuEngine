@@ -11,6 +11,7 @@
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 
+#include <Framework/Object/Component/Renderer/DebugRenderer.h>
 
 namespace game
 {
@@ -38,13 +39,7 @@ namespace game
             collider->SetLayer(engine::PhysicsLayer::Field);
             collider->SetIsTrigger(true);
         }
-        if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
-        {
-            rb->SetLinearVelocity(engine::Vector3::Zero);
-            rb->SetUseGravity(false);
-			rb->SetRigidbodyType(engine::RigidbodyType::Kinematic);
-        }
-
+     
         auto* scene = engine::SceneManager::Get().GetScene();
         if (scene)
         {
@@ -101,6 +96,17 @@ namespace game
 		// 장판형 총알일 경우 주기적으로 데미지 적용
         if (m_isFieldType)
         {
+
+#ifdef _DEBUG  // 장판 범위 디버그 렌더링
+            engine::DebugRenderer::Get().AddDebugCircle(
+                GetTransform()->GetWorldPosition() + engine::Vector3(0, 0.05f, 0),
+                m_radius,
+                engine::Vector3::UnitY,
+                DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f),
+                32
+            );
+#endif
+
             m_tickTimer += engine::Time::DeltaTime();
 
             if (m_tickTimer >= m_tickInterval)

@@ -3,10 +3,6 @@
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 
-#include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
-#include <Framework/Object/Component/Rigidbody.h>
-#include <Framework/Object/Component/SphereCollider.h>
-#include <Framework/Physics/PhysicsLayer.h>
 #include <Framework/Asset/Prefab.h>
 
 namespace game
@@ -173,7 +169,7 @@ namespace game
 
 	void BulletFactory::FieldFireMonster(const engine::Vector3& position, const BulletParams& params)
 	{
-		auto go = engine::Prefab::Instantiate("ParabolicFireMonster");
+		auto go = engine::Prefab::Instantiate("BulletLinearMonster");
 		if (!go)
 		{
 			LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'FieldFireMonster' prefab!");
