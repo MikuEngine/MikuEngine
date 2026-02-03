@@ -16,8 +16,6 @@ PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input, bool isFrontFace : SV_IsFrontFace
     float ao = g_texAmbientOcclusion.Sample(g_samLinear, uv).r;
     float roughness = g_texRoughness.Sample(g_samLinear, uv).r;
     float metalness = g_texMetalness.Sample(g_samLinear, uv).r;
-    output.orm.a = 1.0f;
-    
     output.baseColor *= g_materialBaseColor;
     output.baseColor.a *= g_materialAlpha; // 장애물 반투명 적용
     output.emissive.rgb = output.emissive.rgb * g_materialEmissive * g_materialEmissiveIntensity;
@@ -41,6 +39,10 @@ PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input, bool isFrontFace : SV_IsFrontFace
     output.orm.r = ao;
     output.orm.g = roughness;
     output.orm.b = metalness;
+    float thicknessScale = g_texThickness.Sample(g_samLinear, uv).r;
+    output.orm.a = g_overrideMaterial ? 0.0f : (g_materialSubsurfaceStrength * thicknessScale);
+
+    output.subsurface = float4(g_materialSubsurfaceColor, 1.0f);
     
     // normal
     float3x3 tbn = float3x3(

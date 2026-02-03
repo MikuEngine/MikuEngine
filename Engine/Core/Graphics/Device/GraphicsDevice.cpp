@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "GraphicsDevice.h"
 
 #include <dxgi1_5.h>
@@ -34,6 +34,7 @@ namespace engine
         normal.reset();
         orm.reset();
         emissive.reset();
+        subsurface.reset();
     }
 
     std::array<ID3D11RenderTargetView*, GBufferResources::count> GBufferResources::GetRawRTVs() const
@@ -42,7 +43,8 @@ namespace engine
             baseColor->GetRawRTV(),
             normal->GetRawRTV(),
             orm->GetRawRTV(),
-            emissive->GetRawRTV()
+            emissive->GetRawRTV(),
+            subsurface->GetRawRTV()
         };
     }
 
@@ -52,7 +54,8 @@ namespace engine
             baseColor->GetRawSRV(),
             normal->GetRawSRV(),
             orm->GetRawSRV(),
-            emissive->GetRawSRV()
+            emissive->GetRawSRV(),
+            subsurface->GetRawSRV()
         };
     }
 
@@ -212,6 +215,7 @@ namespace engine
         m_deviceContext->ClearRenderTargetView(m_gBuffer.normal->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.orm->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_gBuffer.emissive->GetRawRTV(), clearColor);
+        m_deviceContext->ClearRenderTargetView(m_gBuffer.subsurface->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_hdrBuffer->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_finalBuffer->GetRawRTV(), clearColor);
         m_deviceContext->ClearRenderTargetView(m_backBufferRTV.Get(), clearColor);
@@ -658,6 +662,7 @@ namespace engine
             m_gBuffer.normal->GetRawSRV(),
             m_gBuffer.orm->GetRawSRV(),
             m_gBuffer.emissive->GetRawSRV(),
+            m_gBuffer.subsurface->GetRawSRV(),
             m_bloomHalfBuffer->GetRawSRV(),
             m_bloomWorkBuffer->GetRawSRV(),
             m_aaBuffer->GetRawSRV()
@@ -1070,8 +1075,12 @@ namespace engine
 
             desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 
-            m_gBuffer.emissive= std::make_unique<Texture>();
+            m_gBuffer.emissive = std::make_unique<Texture>();
             m_gBuffer.emissive->Create(desc);
+
+            desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            m_gBuffer.subsurface = std::make_unique<Texture>();
+            m_gBuffer.subsurface->Create(desc);
         }
 
         // bloom textures

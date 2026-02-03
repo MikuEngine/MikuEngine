@@ -1,9 +1,7 @@
 #include "GamePCH.h"
 #include "MonsterSpawner.h"
-#include <Common/Debug/Debug.h>
-#include <Common/Math/MathUtility.h>
+
 #include <Framework/Asset/Prefab.h>
-#include <Framework/Object/GameObject/GameObject.h>
 
 namespace game
 {

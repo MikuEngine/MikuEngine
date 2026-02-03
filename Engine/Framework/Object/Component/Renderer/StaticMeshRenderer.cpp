@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "StaticMeshRenderer.h"
 
 #include <filesystem>
@@ -254,6 +254,8 @@ namespace engine
         ImGui::DragFloat("Roughness", &m_materialRoughness, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
         ImGui::DragFloat("Metalness", &m_materialMetalness, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
         ImGui::DragFloat("Ambient Occlusion", &m_materialAmbientOcclusion, 0.001f, 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+        ImGui::DragFloat("Subsurface Strength (SSS)", &m_subsurfaceStrength, 0.01f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+        ImGui::ColorEdit3("Subsurface Color (SSS)", &m_subsurfaceColor.x, ImGuiColorEditFlags_Float);
 
         ImGui::Spacing();
         static const char* cullModes[] = { "None", "Back", "Front" };
@@ -372,6 +374,16 @@ namespace engine
                         ImGui::BulletText("Metalness Tex: %s", "none");
                     }
 
+                    if (mat.texturePaths.count(MaterialKey::THICKNESS_TEXTURE))
+                    {
+                        std::string tex = std::filesystem::path(mat.texturePaths.at(MaterialKey::THICKNESS_TEXTURE)).filename().string();
+                        ImGui::BulletText("Thickness Tex (SSS): %s", tex.c_str());
+                    }
+                    else
+                    {
+                        ImGui::BulletText("Thickness Tex (SSS): %s", "none (white)");
+                    }
+
                     ImGui::PopID();
                 }
                 ImGui::TreePop();
@@ -400,6 +412,8 @@ namespace engine
         j["OverrideMaterial"] = m_overrideMaterial;
         j["CastShadow"] = m_castShadow;
         j["CullMode"] = m_cullMode;
+        j["SubsurfaceStrength"] = m_subsurfaceStrength;
+        j["SubsurfaceColor"] = { m_subsurfaceColor.x, m_subsurfaceColor.y, m_subsurfaceColor.z };
     }
 
     void StaticMeshRenderer::Load(const json& j)
@@ -421,6 +435,13 @@ namespace engine
         JsonGet(j, "OverrideMaterial", m_overrideMaterial);
         JsonGet(j, "CastShadow", m_castShadow);
         JsonGet(j, "CullMode", m_cullMode);
+        JsonGet(j, "SubsurfaceStrength", m_subsurfaceStrength);
+        if (j.contains("SubsurfaceColor") && j["SubsurfaceColor"].is_array() && j["SubsurfaceColor"].size() >= 3)
+        {
+            m_subsurfaceColor.x = j["SubsurfaceColor"][0].get<float>();
+            m_subsurfaceColor.y = j["SubsurfaceColor"][1].get<float>();
+            m_subsurfaceColor.z = j["SubsurfaceColor"][2].get<float>();
+        }
 
         Refresh();
     }
@@ -526,18 +547,7 @@ namespace engine
 
         if (type != RenderType::Shadow)
         {
-            CbMaterial cbMaterial{};
-            cbMaterial.materialBaseColor = m_materialBaseColor;
-            cbMaterial.materialEmissive = m_materialEmissive;
-            cbMaterial.materialEmissiveIntensity = m_materialEmissiveIntensity;
-            cbMaterial.materialRoughness = m_materialRoughness;
-            cbMaterial.materialMetalness = m_materialMetalness;
-            cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;
-            cbMaterial.materialAlpha = m_useObstacleTransparency ? m_obstacleAlpha : 1.0f;
-            cbMaterial.overrideMaterial = m_overrideMaterial ? 1 : 0;
-
             deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
-            deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
         }
 
         switch (type)
@@ -556,6 +566,22 @@ namespace engine
                 if (materials[meshSection.materialIndex].renderType != MaterialRenderType::Opaque)
                 {
                     continue;
+                }
+
+                if (type != RenderType::Shadow)
+                {
+                    CbMaterial cbMaterial{};
+                    cbMaterial.materialBaseColor = m_materialBaseColor;
+                    cbMaterial.materialEmissive = m_materialEmissive;
+                    cbMaterial.materialEmissiveIntensity = m_materialEmissiveIntensity;
+                    cbMaterial.materialRoughness = m_materialRoughness;
+                    cbMaterial.materialMetalness = m_materialMetalness;
+                    cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;
+                    cbMaterial.materialAlpha = m_useObstacleTransparency ? m_obstacleAlpha : 1.0f;
+                    cbMaterial.overrideMaterial = m_overrideMaterial ? 1 : 0;
+                    cbMaterial.materialSubsurfaceStrength = m_subsurfaceStrength;
+                    cbMaterial.materialSubsurfaceColor = m_subsurfaceColor;
+                    deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
                 }
 
                 const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
@@ -583,6 +609,22 @@ namespace engine
                 if (materials[meshSection.materialIndex].renderType != MaterialRenderType::Cutout)
                 {
                     continue;
+                }
+
+                if (type != RenderType::Shadow)
+                {
+                    CbMaterial cbMaterial{};
+                    cbMaterial.materialBaseColor = m_materialBaseColor;
+                    cbMaterial.materialEmissive = m_materialEmissive;
+                    cbMaterial.materialEmissiveIntensity = m_materialEmissiveIntensity;
+                    cbMaterial.materialRoughness = m_materialRoughness;
+                    cbMaterial.materialMetalness = m_materialMetalness;
+                    cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;
+                    cbMaterial.materialAlpha = m_useObstacleTransparency ? m_obstacleAlpha : 1.0f;
+                    cbMaterial.overrideMaterial = m_overrideMaterial ? 1 : 0;
+                    cbMaterial.materialSubsurfaceStrength = m_subsurfaceStrength;
+                    cbMaterial.materialSubsurfaceColor = m_subsurfaceColor;
+                    deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
                 }
 
                 const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
@@ -626,6 +668,19 @@ namespace engine
                         continue;
                     }
 
+                    CbMaterial cbMaterial{};
+                    cbMaterial.materialBaseColor = m_materialBaseColor;
+                    cbMaterial.materialEmissive = m_materialEmissive;
+                    cbMaterial.materialEmissiveIntensity = m_materialEmissiveIntensity;
+                    cbMaterial.materialRoughness = m_materialRoughness;
+                    cbMaterial.materialMetalness = m_materialMetalness;
+                    cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;
+                    cbMaterial.materialAlpha = m_useObstacleTransparency ? m_obstacleAlpha : 1.0f;
+                    cbMaterial.overrideMaterial = m_overrideMaterial ? 1 : 0;
+                    cbMaterial.materialSubsurfaceStrength = m_subsurfaceStrength;
+                    cbMaterial.materialSubsurfaceColor = m_subsurfaceColor;
+                    deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
+
                     const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
                     deviceContext->PSSetShaderResources(
                         static_cast<UINT>(TextureSlot::BaseColor),
@@ -641,6 +696,19 @@ namespace engine
                     {
                         continue;
                     }
+
+                    CbMaterial cbMaterial{};
+                    cbMaterial.materialBaseColor = m_materialBaseColor;
+                    cbMaterial.materialEmissive = m_materialEmissive;
+                    cbMaterial.materialEmissiveIntensity = m_materialEmissiveIntensity;
+                    cbMaterial.materialRoughness = m_materialRoughness;
+                    cbMaterial.materialMetalness = m_materialMetalness;
+                    cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;
+                    cbMaterial.materialAlpha = m_useObstacleTransparency ? m_obstacleAlpha : 1.0f;
+                    cbMaterial.overrideMaterial = m_overrideMaterial ? 1 : 0;
+                    cbMaterial.materialSubsurfaceStrength = m_subsurfaceStrength;
+                    cbMaterial.materialSubsurfaceColor = m_subsurfaceColor;
+                    deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
 
                     const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
                     deviceContext->PSSetShaderResources(
@@ -660,6 +728,19 @@ namespace engine
                     {
                         continue;
                     }
+
+                    CbMaterial cbMaterial{};
+                    cbMaterial.materialBaseColor = m_materialBaseColor;
+                    cbMaterial.materialEmissive = m_materialEmissive;
+                    cbMaterial.materialEmissiveIntensity = m_materialEmissiveIntensity;
+                    cbMaterial.materialRoughness = m_materialRoughness;
+                    cbMaterial.materialMetalness = m_materialMetalness;
+                    cbMaterial.materialAmbientOcclusion = m_materialAmbientOcclusion;
+                    cbMaterial.materialAlpha = m_useObstacleTransparency ? m_obstacleAlpha : 1.0f;
+                    cbMaterial.overrideMaterial = m_overrideMaterial ? 1 : 0;
+                    cbMaterial.materialSubsurfaceStrength = m_subsurfaceStrength;
+                    cbMaterial.materialSubsurfaceColor = m_subsurfaceColor;
+                    deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
 
                     const auto textureSRVs = m_textures[meshSection.materialIndex].AsRawArray();
                     deviceContext->PSSetShaderResources(

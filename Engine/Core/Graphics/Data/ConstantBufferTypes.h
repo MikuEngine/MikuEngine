@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <directxtk/SimpleMath.h>
 
@@ -64,6 +64,10 @@ namespace engine
 		float enableToneMapping;
 		float enableFXAA;
 		float __pad_postprocess1;
+
+		// SSS (Subsurface Scattering) - 전역 상수. 0이면 비활성
+		Vector3 subsurfaceColor;
+		float subsurfaceStrength;
 	};
 
 	struct CbMaterial
@@ -79,6 +83,9 @@ namespace engine
 		float materialAlpha; // 장애물 반투명용 (0.0 ~ 1.0)
 
 		int overrideMaterial;
+		Vector3 materialSubsurfaceColor;   // SSS tint per renderer (RGB), written to GBuffer subsurface RT
+
+		float materialSubsurfaceStrength;  // SSS per-material strength (0 = off), written to GBuffer ORM.a
 		float __pad[3];
 	};
 
