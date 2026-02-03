@@ -38,7 +38,7 @@
     <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedType.cpp" />
     <ClCompile Include="Script\OrbitScript.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
-    <ClCompile Include="Script\PlayerAimMeshController.cpp" />
+    <ClCompile Include="Script\CharacterScript\Player\PlayerAimMeshController.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
@@ -105,7 +105,7 @@
     <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedType.h" />
     <ClInclude Include="Script\OrbitScript.h" />
     <ClInclude Include="Script\PathfindTest.h" />
-    <ClInclude Include="Script\PlayerAimMeshController.h" />
+    <ClInclude Include="Script\CharacterScript\Player\PlayerAimMeshController.h" />
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />
     <ClInclude Include="Script\Scene\SceneController_Main.h" />

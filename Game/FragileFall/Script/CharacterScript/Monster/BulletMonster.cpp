@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -47,10 +47,18 @@ namespace game
     {
         m_elapsedTime = 0.0f;
 
-        // Rigidbody에 초기 속도 설정
-        if (m_movement)
+        if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
         {
-            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+            // ─────────────────────────────────────────────
+            // Parabolic/Field 타입: 자체 중력 사용 (PhysX 글로벌 중력 OFF)
+            // ─────────────────────────────────────────────
+            if (m_params.type == BulletType::Parabolic || m_params.type == BulletType::Field)
+            {
+                rb->SetUseGravity(false);
+            }
+
+            // Rigidbody에 초기 속도 설정
+            if (m_movement)
             {
                 rb->SetLinearVelocity(m_movement->GetVelocity());
             }
@@ -74,6 +82,11 @@ namespace game
         float dt = engine::Time::DeltaTime();
         m_elapsedTime += dt;
 
+        // ─────────────────────────────────────────────
+        // Movement 업데이트
+        // - UsesPhysics() == true: AddForce 적용 (ParabolicMovement 등)
+        // - UsesPhysics() == false: Transform 직접 조작
+        // ─────────────────────────────────────────────
         if (m_movement && !m_isFieldType)
         {
             m_movement->Update(GetTransform(), dt);
@@ -86,7 +99,7 @@ namespace game
             return;
         }
 
-		// 장판형 총알일 경우 주기적으로 데미지 적용
+        // 장판형 총알일 경우 주기적으로 데미지 적용
         if (m_isFieldType)
         {
             m_tickTimer += engine::Time::DeltaTime();
@@ -119,8 +132,20 @@ namespace game
             return;
         }
 
-        // 화면 밖 체크 (간단한 범위 체크)
+        // ─────────────────────────────────────────────
+        // 소멸 체크
+        // ─────────────────────────────────────────────
         engine::Vector3 pos = GetTransform()->GetWorldPosition();
+
+        // Y좌표 기반 소멸 (바닥 아래로 떨어지면 제거)
+        constexpr float kGroundY = -1.0f;
+        if (pos.y < kGroundY)
+        {
+            GetGameObject()->Destroy();
+            return;
+        }
+
+        // 화면 밖 체크 (XZ 범위)
         float boundary = 50.0f;
         if (std::abs(pos.x) > boundary || std::abs(pos.z) > boundary)
         {

@@ -1,7 +1,7 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerAimMeshController.h"
 
-#include "AimPointer.h"
+#include "Script/AimPointer.h"
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>

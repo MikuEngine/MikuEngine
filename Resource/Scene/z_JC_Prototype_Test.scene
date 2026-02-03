@@ -1,6 +1,6 @@
 {
     "Name": "Prototype_Play",
-    "NumGameObjects": 82,
+    "NumGameObjects": 88,
     "GameObjects": [
         {
             "ID": 0,
@@ -12464,6 +12464,667 @@
         },
         {
             "ID": 16,
+            "Name": "MonDG",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -12.399999618530273,
+                        "y": 2.9802322387695313e-08,
+                        "z": 3.4000000953674316
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.014999999664723873,
+                        "y": 0.014999999664723873,
+                        "z": 0.014999999664723873
+                    }
+                },
+                {
+                    "Type": "MonsterDullType",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 20.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 0.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 15.0,
+                    "AttackRange": 15.0,
+                    "RotationSpeed": 20.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 15.0,
+                    "BulletLifetime": 3.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_Attack": "Attack",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead"
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 500.0,
+                    "linearDamping": 10.0,
+                    "angularDamping": 10.0,
+                    "useGravity": false,
+                    "constraints": 47
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Attack",
+                            "Path": "Resource/Animation/TestPunch.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Dead",
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Armature",
+                                "mixamorig:Hips",
+                                "mixamorig:Spine",
+                                "mixamorig:RightUpLeg",
+                                "mixamorig:LeftUpLeg",
+                                "mixamorig:Spine1",
+                                "mixamorig:RightLeg",
+                                "mixamorig:LeftLeg",
+                                "mixamorig:Spine2",
+                                "mixamorig:RightFoot",
+                                "mixamorig:LeftFoot",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:RightToeBase",
+                                "mixamorig:LeftToeBase",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:RightToe_End",
+                                "mixamorig:LeftToe_End",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:RightToe_End_end",
+                                "mixamorig:LeftToe_End_end",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
+                        },
+                        {
+                            "Name": "New Layer",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": []
+                        }
+                    ]
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "LogicFSMObjectName": "",
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 10.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/TestBot.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 93,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.440000057220459,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 0,
+                    "radius": 1.100000023841858,
+                    "height": 3.5
+                }
+            ]
+        },
+        {
+            "ID": 17,
+            "ParentID": 16,
+            "Name": "PickingBoundaryCol",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -6.103515625e-05,
+                        "y": 90.00000762939453,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 66.66667175292969,
+                        "y": 66.66667175292969,
+                        "z": 66.66667175292969
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 7,
+                    "materialType": 0,
+                    "radius": 2.299999952316284
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 18,
+            "Name": "MonPG",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 15.199999809265137,
+                        "y": 0.0,
+                        "z": 10.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.014999999664723873,
+                        "y": 0.014999999664723873,
+                        "z": 0.014999999664723873
+                    }
+                },
+                {
+                    "Type": "MonsterPointedType",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 20.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 8.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 55.0,
+                    "AttackRange": 5.0,
+                    "RotationSpeed": 10.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 12.0,
+                    "BulletLifetime": 3.0,
+                    "AttackAnimationDuration": 1.2000000476837158,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead"
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 5.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 30.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Dead",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageAttack",
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageMove",
+                            "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageStop",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Fragile",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "Base Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Armature",
+                                "mixamorig:Hips",
+                                "mixamorig:Spine",
+                                "mixamorig:RightUpLeg",
+                                "mixamorig:LeftUpLeg",
+                                "mixamorig:Spine1",
+                                "mixamorig:RightLeg",
+                                "mixamorig:LeftLeg",
+                                "mixamorig:Spine2",
+                                "mixamorig:RightFoot",
+                                "mixamorig:LeftFoot",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:RightToeBase",
+                                "mixamorig:LeftToeBase",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:RightToe_End",
+                                "mixamorig:LeftToe_End",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:RightToe_End_end",
+                                "mixamorig:LeftToe_End_end",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
+                        },
+                        {
+                            "Name": "New Layer",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": []
+                        }
+                    ]
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "LogicFSMObjectName": "",
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 10.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/TestBot.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.0540541410446167,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.350000023841858,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "radius": 1.1100000143051147,
+                    "height": 2.799999952316284
+                },
+                {
+                    "Type": "PathfindingAgent",
+                    "Active": true,
+                    "PathUpdateInterval": 0.10000000149011612,
+                    "WaypointReachDistance": 0.10000000149011612,
+                    "TargetMoveThreshold": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "ParentID": 18,
+            "Name": "PickingBoundaryCol",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 90.00000762939453,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 66.66667175292969,
+                        "y": 66.66667175292969,
+                        "z": 66.66667175292969
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 7,
+                    "materialType": 1,
+                    "radius": 2.299999952316284
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 20,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -12518,8 +13179,8 @@
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 16,
+            "ID": 21,
+            "ParentID": 20,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -12633,7 +13294,7 @@
             ]
         },
         {
-            "ID": 18,
+            "ID": 22,
             "Name": "Script_Controller",
             "Active": true,
             "Components": [
@@ -12675,7 +13336,7 @@
             ]
         },
         {
-            "ID": 19,
+            "ID": 23,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -12730,8 +13391,8 @@
             ]
         },
         {
-            "ID": 20,
-            "ParentID": 19,
+            "ID": 24,
+            "ParentID": 23,
             "Name": "Panel_Menu",
             "Active": false,
             "Components": [
@@ -12851,8 +13512,8 @@
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 20,
+            "ID": 25,
+            "ParentID": 24,
             "Name": "UI_OpenOption",
             "Active": true,
             "Components": [
@@ -12882,450 +13543,6 @@
                     "AnchoredPosition": {
                         "x": 0.0,
                         "y": 0.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 2,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                },
-                {
-                    "Type": "UIHoverScale",
-                    "Active": true,
-                    "HoverScale": 1.100000023841858,
-                    "Speed": 12.0
-                }
-            ]
-        },
-        {
-            "ID": 22,
-            "ParentID": 21,
-            "Name": "Label",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 3,
-                    "RaycastTarget": false,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 23,
-            "ParentID": 20,
-            "Name": "UI_BackToPlay",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -130.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 2,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                },
-                {
-                    "Type": "UIHoverScale",
-                    "Active": true,
-                    "HoverScale": 1.100000023841858,
-                    "Speed": 12.0
-                }
-            ]
-        },
-        {
-            "ID": 24,
-            "ParentID": 23,
-            "Name": "Label",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 3,
-                    "RaycastTarget": false,
-                    "Text": "계속하기",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 25,
-            "ParentID": 20,
-            "Name": "UI_BackToMain",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 130.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -13498,7 +13715,7 @@
                     "Layer": 1,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "Text": "포기",
+                    "Text": "설정",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 32,
                     "Color": {
@@ -13518,7 +13735,451 @@
         },
         {
             "ID": 27,
-            "ParentID": 20,
+            "ParentID": 24,
+            "Name": "UI_BackToPlay",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -130.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "RampPath": "None",
+                    "NoisePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                },
+                {
+                    "Type": "UIHoverScale",
+                    "Active": true,
+                    "HoverScale": 1.100000023841858,
+                    "Speed": 12.0
+                }
+            ]
+        },
+        {
+            "ID": 28,
+            "ParentID": 27,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "Text": "계속하기",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 29,
+            "ParentID": 24,
+            "Name": "UI_BackToMain",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 130.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "RampPath": "None",
+                    "NoisePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                },
+                {
+                    "Type": "UIHoverScale",
+                    "Active": true,
+                    "HoverScale": 1.100000023841858,
+                    "Speed": 12.0
+                }
+            ]
+        },
+        {
+            "ID": 30,
+            "ParentID": 29,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "Text": "포기",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 31,
+            "ParentID": 24,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -13589,8 +14250,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 19,
+            "ID": 32,
+            "ParentID": 23,
             "Name": "UI_OptionPopUp",
             "Active": false,
             "Components": [
@@ -13710,8 +14371,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 28,
+            "ID": 33,
+            "ParentID": 32,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -13860,8 +14521,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 29,
+            "ID": 34,
+            "ParentID": 33,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13932,8 +14593,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 28,
+            "ID": 35,
+            "ParentID": 32,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -14004,8 +14665,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 28,
+            "ID": 36,
+            "ParentID": 32,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -14035,412 +14696,6 @@
                     "AnchoredPosition": {
                         "x": 150.0,
                         "y": -160.0
-                    },
-                    "Width": 300.0,
-                    "Height": 50.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UISlider",
-                    "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": true,
-                    "Value": 1.0,
-                    "Direction": 0,
-                    "FillMode": 0,
-                    "TrackSprite": "",
-                    "FillSprite": "",
-                    "HandleSprite": "",
-                    "TrackColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "FillColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "HandleColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "UseFill": true
-                }
-            ]
-        },
-        {
-            "ID": 33,
-            "ParentID": 32,
-            "Name": "Background",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 34,
-            "ParentID": 32,
-            "Name": "Fill",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 2,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 960.0,
-                        "y": 555.0,
-                        "z": 1260.0,
-                        "w": 605.0
-                    },
-                    "MaskMode": 1,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 35,
-            "ParentID": 32,
-            "Name": "Handle",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 3,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 36,
-            "ParentID": 28,
-            "Name": "UI_SFXSlider",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 150.0,
-                        "y": -30.0
                     },
                     "Width": 300.0,
                     "Height": 50.0,
@@ -14687,9 +14942,9 @@
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
-                        "y": 685.0,
+                        "y": 555.0,
                         "z": 1260.0,
-                        "w": 735.0
+                        "w": 605.0
                     },
                     "MaskMode": 1,
                     "Mask0": {
@@ -14817,8 +15072,8 @@
         },
         {
             "ID": 40,
-            "ParentID": 28,
-            "Name": "UI_SensitivitySlider",
+            "ParentID": 32,
+            "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
                 {
@@ -14846,7 +15101,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 150.0,
-                        "y": 100.0
+                        "y": -30.0
                     },
                     "Width": 300.0,
                     "Height": 50.0,
@@ -15093,9 +15348,9 @@
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
-                        "y": 815.0,
+                        "y": 685.0,
                         "z": 1260.0,
-                        "w": 865.0
+                        "w": 735.0
                     },
                     "MaskMode": 1,
                     "Mask0": {
@@ -15223,7 +15478,413 @@
         },
         {
             "ID": 44,
-            "ParentID": 28,
+            "ParentID": 32,
+            "Name": "UI_SensitivitySlider",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 100.0
+                    },
+                    "Width": 300.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UISlider",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Value": 1.0,
+                    "Direction": 0,
+                    "FillMode": 0,
+                    "TrackSprite": "",
+                    "FillSprite": "",
+                    "HandleSprite": "",
+                    "TrackColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "FillColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "HandleColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "UseFill": true
+                }
+            ]
+        },
+        {
+            "ID": 45,
+            "ParentID": 44,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "RampPath": "None",
+                    "NoisePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 46,
+            "ParentID": 44,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "RampPath": "None",
+                    "NoisePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 960.0,
+                        "y": 815.0,
+                        "z": 1260.0,
+                        "w": 865.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 47,
+            "ParentID": 44,
+            "Name": "Handle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.8333333134651184,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.8333333134651184,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "RampPath": "None",
+                    "NoisePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 48,
+            "ParentID": 32,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15294,8 +15955,8 @@
             ]
         },
         {
-            "ID": 45,
-            "ParentID": 28,
+            "ID": 49,
+            "ParentID": 32,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -15366,8 +16027,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 28,
+            "ID": 50,
+            "ParentID": 32,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15438,8 +16099,8 @@
             ]
         },
         {
-            "ID": 47,
-            "ParentID": 19,
+            "ID": 51,
+            "ParentID": 23,
             "Name": "UI_RealGiveupPopUp",
             "Active": false,
             "Components": [
@@ -15553,8 +16214,8 @@
             ]
         },
         {
-            "ID": 48,
-            "ParentID": 47,
+            "ID": 52,
+            "ParentID": 51,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -15625,8 +16286,8 @@
             ]
         },
         {
-            "ID": 49,
-            "ParentID": 47,
+            "ID": 53,
+            "ParentID": 51,
             "Name": "Notice",
             "Active": true,
             "Components": [
@@ -15697,8 +16358,8 @@
             ]
         },
         {
-            "ID": 50,
-            "ParentID": 47,
+            "ID": 54,
+            "ParentID": 51,
             "Name": "Notice_2",
             "Active": true,
             "Components": [
@@ -15769,8 +16430,8 @@
             ]
         },
         {
-            "ID": 51,
-            "ParentID": 47,
+            "ID": 55,
+            "ParentID": 51,
             "Name": "Notice_3",
             "Active": true,
             "Components": [
@@ -15841,8 +16502,8 @@
             ]
         },
         {
-            "ID": 52,
-            "ParentID": 47,
+            "ID": 56,
+            "ParentID": 51,
             "Name": "OK_Button",
             "Active": true,
             "Components": [
@@ -15985,8 +16646,8 @@
             ]
         },
         {
-            "ID": 53,
-            "ParentID": 52,
+            "ID": 57,
+            "ParentID": 56,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16057,8 +16718,8 @@
             ]
         },
         {
-            "ID": 54,
-            "ParentID": 47,
+            "ID": 58,
+            "ParentID": 51,
             "Name": "Cancel_Button",
             "Active": true,
             "Components": [
@@ -16201,8 +16862,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 54,
+            "ID": 59,
+            "ParentID": 58,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16273,8 +16934,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 19,
+            "ID": 60,
+            "ParentID": 23,
             "Name": "Panel_Fail",
             "Active": false,
             "Components": [
@@ -16388,8 +17049,8 @@
             ]
         },
         {
-            "ID": 57,
-            "ParentID": 56,
+            "ID": 61,
+            "ParentID": 60,
             "Name": "ToLobby_Button",
             "Active": true,
             "Components": [
@@ -16532,8 +17193,8 @@
             ]
         },
         {
-            "ID": 58,
-            "ParentID": 57,
+            "ID": 62,
+            "ParentID": 61,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16604,8 +17265,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 56,
+            "ID": 63,
+            "ParentID": 60,
             "Name": "Restart_Button",
             "Active": true,
             "Components": [
@@ -16748,8 +17409,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 59,
+            "ID": 64,
+            "ParentID": 63,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16820,8 +17481,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 56,
+            "ID": 65,
+            "ParentID": 60,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -16935,8 +17596,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 61,
+            "ID": 66,
+            "ParentID": 65,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -17007,7 +17668,7 @@
             ]
         },
         {
-            "ID": 63,
+            "ID": 67,
             "Name": "Canvas_HUD",
             "Active": true,
             "Components": [
@@ -17062,8 +17723,8 @@
             ]
         },
         {
-            "ID": 64,
-            "ParentID": 63,
+            "ID": 68,
+            "ParentID": 67,
             "Name": "HUD",
             "Active": true,
             "Components": [
@@ -17177,8 +17838,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 64,
+            "ID": 69,
+            "ParentID": 68,
             "Name": "Profile",
             "Active": true,
             "Components": [
@@ -17285,7 +17946,7 @@
             ]
         },
         {
-            "ID": 66,
+            "ID": 70,
             "Name": "Canvas_KillPopUp",
             "Active": true,
             "Components": [
@@ -17340,7 +18001,339 @@
             ]
         },
         {
-            "ID": 67,
+            "ID": 71,
+            "Name": "MonPG",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -1.6457946300506592,
+                        "y": 0.0,
+                        "z": 12.490896224975586
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.014999999664723873,
+                        "y": 0.014999999664723873,
+                        "z": 0.014999999664723873
+                    }
+                },
+                {
+                    "Type": "MonsterPointedType",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 20.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 8.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 55.0,
+                    "AttackRange": 5.0,
+                    "RotationSpeed": 10.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 12.0,
+                    "BulletLifetime": 3.0,
+                    "AttackAnimationDuration": 1.2000000476837158,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead"
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 5.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 30.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Dead",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageAttack",
+                            "Path": "Resource/Animation/TestElbow.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageMove",
+                            "Path": "Resource/Animation/TestForward.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "EngageStop",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Fragile",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/TestIdle.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "Base Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Armature",
+                                "mixamorig:Hips",
+                                "mixamorig:Spine",
+                                "mixamorig:RightUpLeg",
+                                "mixamorig:LeftUpLeg",
+                                "mixamorig:Spine1",
+                                "mixamorig:RightLeg",
+                                "mixamorig:LeftLeg",
+                                "mixamorig:Spine2",
+                                "mixamorig:RightFoot",
+                                "mixamorig:LeftFoot",
+                                "mixamorig:Neck",
+                                "mixamorig:RightShoulder",
+                                "mixamorig:LeftShoulder",
+                                "mixamorig:RightToeBase",
+                                "mixamorig:LeftToeBase",
+                                "mixamorig:Head",
+                                "mixamorig:RightArm",
+                                "mixamorig:LeftArm",
+                                "mixamorig:RightToe_End",
+                                "mixamorig:LeftToe_End",
+                                "mixamorig:HeadTop_End",
+                                "mixamorig:RightForeArm",
+                                "mixamorig:LeftForeArm",
+                                "mixamorig:RightToe_End_end",
+                                "mixamorig:LeftToe_End_end",
+                                "mixamorig:HeadTop_End_end",
+                                "mixamorig:RightHand",
+                                "mixamorig:LeftHand",
+                                "mixamorig:RightHandThumb1",
+                                "mixamorig:RightHandIndex1",
+                                "mixamorig:RightHandMiddle1",
+                                "mixamorig:RightHandRing1",
+                                "mixamorig:RightHandPinky1",
+                                "mixamorig:LeftHandThumb1",
+                                "mixamorig:LeftHandIndex1",
+                                "mixamorig:LeftHandMiddle1",
+                                "mixamorig:LeftHandRing1",
+                                "mixamorig:LeftHandPinky1",
+                                "mixamorig:RightHandThumb2",
+                                "mixamorig:RightHandIndex2",
+                                "mixamorig:RightHandMiddle2",
+                                "mixamorig:RightHandRing2",
+                                "mixamorig:RightHandPinky2",
+                                "mixamorig:LeftHandThumb2",
+                                "mixamorig:LeftHandIndex2",
+                                "mixamorig:LeftHandMiddle2",
+                                "mixamorig:LeftHandRing2",
+                                "mixamorig:LeftHandPinky2",
+                                "mixamorig:RightHandThumb3",
+                                "mixamorig:RightHandIndex3",
+                                "mixamorig:RightHandMiddle3",
+                                "mixamorig:RightHandRing3",
+                                "mixamorig:RightHandPinky3",
+                                "mixamorig:LeftHandThumb3",
+                                "mixamorig:LeftHandIndex3",
+                                "mixamorig:LeftHandMiddle3",
+                                "mixamorig:LeftHandRing3",
+                                "mixamorig:LeftHandPinky3",
+                                "mixamorig:RightHandThumb4",
+                                "mixamorig:RightHandIndex4",
+                                "mixamorig:RightHandMiddle4",
+                                "mixamorig:RightHandRing4",
+                                "mixamorig:RightHandPinky4",
+                                "mixamorig:LeftHandThumb4",
+                                "mixamorig:LeftHandIndex4",
+                                "mixamorig:LeftHandMiddle4",
+                                "mixamorig:LeftHandRing4",
+                                "mixamorig:LeftHandPinky4",
+                                "mixamorig:RightHandThumb4_end",
+                                "mixamorig:RightHandIndex4_end",
+                                "mixamorig:RightHandMiddle4_end",
+                                "mixamorig:RightHandRing4_end",
+                                "mixamorig:RightHandPinky4_end",
+                                "mixamorig:LeftHandThumb4_end",
+                                "mixamorig:LeftHandIndex4_end",
+                                "mixamorig:LeftHandMiddle4_end",
+                                "mixamorig:LeftHandRing4_end",
+                                "mixamorig:LeftHandPinky4_end"
+                            ]
+                        },
+                        {
+                            "Name": "New Layer",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": []
+                        }
+                    ]
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "LogicFSMObjectName": "",
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 10.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/TestBot.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/TestBot.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.0540541410446167,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.350000023841858,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "radius": 1.1100000143051147,
+                    "height": 2.799999952316284
+                },
+                {
+                    "Type": "PathfindingAgent",
+                    "Active": true,
+                    "PathUpdateInterval": 0.10000000149011612,
+                    "WaypointReachDistance": 0.10000000149011612,
+                    "TargetMoveThreshold": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 72,
+            "ParentID": 71,
+            "Name": "PickingBoundaryCol",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 90.00000762939453,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 66.66667175292969,
+                        "y": 66.66667175292969,
+                        "z": 66.66667175292969
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 7,
+                    "materialType": 1,
+                    "radius": 2.299999952316284
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 73,
             "Name": "TestRotator",
             "Active": true,
             "Components": [
@@ -17406,7 +18399,7 @@
             ]
         },
         {
-            "ID": 68,
+            "ID": 74,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -17467,7 +18460,7 @@
             ]
         },
         {
-            "ID": 69,
+            "ID": 75,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -17662,7 +18655,7 @@
             ]
         },
         {
-            "ID": 70,
+            "ID": 76,
             "Name": "Monster_RoundType_Gray",
             "Active": true,
             "Components": [
@@ -17708,8 +18701,6 @@
                     "FireRate": 0.009999999776482582,
                     "BulletSpeed": 0.0,
                     "BulletLifetime": 0.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -17792,7 +18783,7 @@
             ]
         },
         {
-            "ID": 71,
+            "ID": 77,
             "Name": "Canvas_Message",
             "Active": true,
             "Components": [
@@ -17847,7 +18838,7 @@
             ]
         },
         {
-            "ID": 72,
+            "ID": 78,
             "Name": "UIToastPopUp",
             "Active": true,
             "Components": [
@@ -17970,7 +18961,7 @@
             ]
         },
         {
-            "ID": 73,
+            "ID": 79,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -18077,7 +19068,7 @@
             ]
         },
         {
-            "ID": 74,
+            "ID": 80,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -18148,7 +19139,7 @@
             ]
         },
         {
-            "ID": 75,
+            "ID": 81,
             "Name": "TemperManagerTestScript",
             "Active": true,
             "Components": [
@@ -18175,7 +19166,7 @@
             ]
         },
         {
-            "ID": 76,
+            "ID": 82,
             "Name": "CornerTriggerObject",
             "Active": true,
             "Components": [
@@ -18202,8 +19193,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 76,
+            "ID": 83,
+            "ParentID": 82,
             "Name": "CornerTriggerRightUp",
             "Active": true,
             "Components": [
@@ -18253,8 +19244,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 76,
+            "ID": 84,
+            "ParentID": 82,
             "Name": "CornerTriggerLeftUp",
             "Active": true,
             "Components": [
@@ -18304,8 +19295,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 76,
+            "ID": 85,
+            "ParentID": 82,
             "Name": "CornerTriggerLeftDown",
             "Active": true,
             "Components": [
@@ -18355,8 +19346,8 @@
             ]
         },
         {
-            "ID": 80,
-            "ParentID": 76,
+            "ID": 86,
+            "ParentID": 82,
             "Name": "CornerTriggerRightDown",
             "Active": true,
             "Components": [
@@ -18406,7 +19397,7 @@
             ]
         },
         {
-            "ID": 81,
+            "ID": 87,
             "Name": "Monster_RoundType_Green",
             "Active": true,
             "Components": [
@@ -18490,8 +19481,6 @@
                     "FireRate": 5.0,
                     "BulletSpeed": 10.0,
                     "BulletLifetime": 5.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",

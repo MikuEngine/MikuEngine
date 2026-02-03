@@ -2,6 +2,7 @@
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
+#include "Script/CharacterScript/Monster/RoundType/MonsterRoundType.h"
 
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
@@ -18,38 +19,6 @@ namespace game
 		const engine::Vector3& direction,
 		const BulletParams& params)
 	{
-		//// ─────────────────────────────────────────────
-		//// 1. GameObject 생성
-		//// ─────────────────────────────────────────────
-		//auto* bulletGO = CreateGameObject("Bullet");
-		//bulletGO->GetTransform()->SetLocalPosition(position);
-		//bulletGO->GetTransform()->SetLocalScale(engine::Vector3(1.2f, 1.2f, 1.2f));
-
-		//// ─────────────────────────────────────────────
-		//// 2. StaticMeshRenderer 추가
-		//// ─────────────────────────────────────────────
-		//auto* renderer = bulletGO->AddComponent<engine::StaticMeshRenderer>();
-		//renderer->SetMesh("Resource/Model/Sphere.fbx");
-		//renderer->SetVertexShader("Resource/Shader/Vertex/Static_VS.hlsl");
-		//renderer->SetOpaquePixelShader("Resource/Shader/Pixel/GBuffer_PS.hlsl");
-
-		//// ─────────────────────────────────────────────
-		//// 3. Rigidbody 추가 (Dynamic)
-		//// ─────────────────────────────────────────────
-		//auto* rb = bulletGO->AddComponent<engine::Rigidbody>();
-		//rb->SetRigidbodyType(engine::RigidbodyType::Dynamic);
-		//rb->SetUseGravity(false);
-		//rb->SetLinearDamping(0.0f);
-
-		//// ─────────────────────────────────────────────
-		//// 4. SphereCollider 추가 (Trigger)
-		//// ─────────────────────────────────────────────
-		//auto* collider = bulletGO->AddComponent<engine::SphereCollider>();
-		//collider->SetIsTrigger(true);
-		//collider->SetRadius(1.1f);
-		//collider->SetLayer(engine::PhysicsLayer::Projectile);
-		//collider->SetCollisionMask(engine::PhysicsLayer::EnemyMask);
-
 		auto go = engine::Prefab::Instantiate("BulletPlayer");
 
 		// 발사 위치는 호출자(PCS)에서 이미 오프셋 적용됨
@@ -75,51 +44,9 @@ namespace game
 	void BulletFactory::LinearFireMonster(const engine::Vector3& position,
 		const engine::Vector3& direction,
 		const BulletParams& params)
-	{
-		//// ─────────────────────────────────────────────
-		//// 1. GameObject 생성
-		//// ─────────────────────────────────────────────
-		//auto* bulletGO = CreateGameObject("BulletMonster");
-		//bulletGO->GetTransform()->SetLocalPosition(position);
-		//bulletGO->GetTransform()->SetLocalScale(engine::Vector3(1.2f, 1.2f, 1.2f));
-
-		//// ─────────────────────────────────────────────
-		//// 2. StaticMeshRenderer 추가
-		//// ─────────────────────────────────────────────
-		//auto* renderer = bulletGO->AddComponent<engine::StaticMeshRenderer>();
-		//renderer->SetMesh("Resource/Model/Sphere.fbx");
-		//renderer->SetVertexShader("Resource/Shader/Vertex/Static_VS.hlsl");
-		//renderer->SetOpaquePixelShader("Resource/Shader/Pixel/GBuffer_PS.hlsl");
-
-		//// ─────────────────────────────────────────────
-		//// 3. Rigidbody 추가 (Dynamic)
-		//// ─────────────────────────────────────────────
-		//auto* rb = bulletGO->AddComponent<engine::Rigidbody>();
-		//rb->SetRigidbodyType(engine::RigidbodyType::Dynamic);
-		//rb->SetUseGravity(false);
-		//rb->SetLinearDamping(0.0f);
-
-		//// ─────────────────────────────────────────────
-		//// 4. SphereCollider 추가 (Trigger, EnemyProjectile 레이어)
-		//// ─────────────────────────────────────────────
-		//auto* collider = bulletGO->AddComponent<engine::SphereCollider>();
-		//collider->SetIsTrigger(true);
-		//collider->SetRadius(1.1f);
-		//collider->SetLayer(engine::PhysicsLayer::EnemyProjectile);  // 몬스터 총알 레이어
-		//
-		//// 충돌 마스크: Default, Player, Environment와 충돌
-		//uint32_t collisionMask = engine::PhysicsLayer::DefaultMask |
-		//                          engine::PhysicsLayer::PlayerMask |
-		//                          engine::PhysicsLayer::EnvironmentMask;
-		//collider->SetCollisionMask(collisionMask);
-
+	{		
+		// 총알 발사 시, 프리팹 이름으로 찾아서 인스턴시에이트
 		auto go = engine::Prefab::Instantiate("BulletLinearMonster");
-
-		if (!go)
-		{
-			LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'BulletLinearMonster' prefab!");
-			return;
-		}
 
 		go->GetTransform()->SetLocalPosition(position);
 
@@ -134,40 +61,21 @@ namespace game
 		// ─────────────────────────────────────────────
 		auto* bullet = go->GetComponent<BulletMonster>();
 
-		if (!bullet)
-		{
-			LOG_PRINT("[BulletFactory] ERROR: 'BulletLinearMonster' prefab missing BulletMonster component!");
-			return;
-		}
-
 		bullet->Setup(std::move(movement), params, this);
 
-		LOG_PRINT("[BulletFactory] LinearFireMonster: Bullet spawned successfully at ({:.2f}, {:.2f}, {:.2f})",
-			position.x, position.y, position.z);
 	}
 
 	void BulletFactory::ParabolicFireMonster(const engine::Vector3& position, const engine::Vector3& direction, const BulletParams& params)
 	{
-		auto go = engine::Prefab::Instantiate("ParabolicFireMonster");
-		if (!go)
-		{
-			LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'ParabolicMovement' prefab!");
-			return;
-		}
-
+		auto go = engine::Prefab::Instantiate("BulletParabolicMonster");
+		
 		go->GetTransform()->SetLocalPosition(position);
 
 		auto movement = CreateMovement(params);
 		movement->Initialize(go, direction, params.speed);
 
 		auto* bullet = go->GetComponent<BulletMonster>();
-
-		if (!bullet)
-		{
-			LOG_PRINT("[BulletFactory] ERROR: 'ParabolicFireMonster' prefab missing BulletMonster component!");
-			return;
-		}
-
+		
 		bullet->Setup(std::move(movement), params, this);
 	}
 
@@ -193,23 +101,38 @@ namespace game
 
 	// ═══════════════════════════════════════════════════════════════
 	// Movement 생성 (Strategy 패턴)
+	// 
+	// 참고:
+	//   - launchAngle, ownGravity는 Parabolic 타입에서만 사용
+	//   - 다른 타입에서는 이 파라미터들을 명시적으로 무시
 	// ═══════════════════════════════════════════════════════════════
 	std::unique_ptr<IBulletMovement> BulletFactory::CreateMovement(const BulletParams& params)
 	{
 		switch (params.type)
 		{
 		case BulletType::BulletPlayer:
+			// launchAngle, ownGravity 무시 (직선 이동)
 			return std::make_unique<BulletPlayerMovement>();
+
 		case BulletType::Linear:
+			// launchAngle, ownGravity 무시 (직선 이동)
 			return std::make_unique<LinearMovement>();
+
 		case BulletType::Parabolic:
-			return std::make_unique<ParabolicMovement>(params.gravity);
+			// launchAngle, ownGravity 사용
+			return std::make_unique<ParabolicMovement>(params.ownGravity, params.launchAngle);
+
 		case BulletType::Curve:
+			// launchAngle, ownGravity 무시 (곡선 이동)
 			return std::make_unique<CurvedMovement>(params.curveSpeed);
+
 		case BulletType::Field:
-			return std::make_unique<ParabolicMovement>(params.gravity);
+			// Field 타입도 Parabolic 궤적 사용 (착탄 후 장판 생성)
+			return std::make_unique<ParabolicMovement>(params.ownGravity, params.launchAngle);
+
 		default:
 			return std::make_unique<LinearMovement>();
+
 		// 추후 구현:
 		// case BulletType::Homing:
 		//     return std::make_unique<HomingMovement>(params.target, params.turnSpeed);
@@ -221,8 +144,74 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void BulletFactory::OnGui()
 	{
-		ImGui::Text("BulletFactory");
-		ImGui::Text("Call Fire() with BulletParams to create bullets.");
+		ImGui::Text("=== BulletFactory ===");
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), 
+			"Factory for creating bullets. Settings managed by MonsterScript.");
+		
+		// ─────────────────────────────────────────────
+		// 같은 GameObject의 MonsterRoundType에서 BulletParams 정보 표시
+		// ─────────────────────────────────────────────
+		auto* roundMonster = GetGameObject()->GetComponent<MonsterRoundType>();
+		if (roundMonster)
+		{
+			const BulletParams& params = roundMonster->GetBulletParams();
+			
+			ImGui::Separator();
+			ImGui::Text("=== Current Bullet Settings ===");
+			
+			// 타입 이름 표시
+			const char* typeNames[] = { "BulletPlayer", "Linear", "Parabolic", "Curve", "Field" };
+			int typeIndex = static_cast<int>(params.type);
+			if (typeIndex >= 0 && typeIndex < 5)
+			{
+				ImGui::Text("Type: %s", typeNames[typeIndex]);
+			}
+			else
+			{
+				ImGui::Text("Type: Unknown (%d)", typeIndex);
+			}
+			
+			// 공통 속성
+			ImGui::Text("Speed: %.2f", params.speed);
+			ImGui::Text("Lifetime: %.2f sec", params.lifetime);
+			ImGui::Text("Damage: %d", params.damage);
+			
+			// 타입별 전용 속성
+			ImGui::Separator();
+			switch (params.type)
+			{
+			case BulletType::Parabolic:
+			case BulletType::Field:
+				ImGui::Text("=== Parabolic Settings ===");
+				ImGui::Text("Launch Angle: %.1f deg", params.launchAngle);
+				ImGui::Text("Own Gravity: %.2f", params.ownGravity);
+				break;
+				
+			case BulletType::Curve:
+				ImGui::Text("=== Curve Settings ===");
+				ImGui::Text("Curve Speed: %.2f", params.curveSpeed);
+				break;
+				
+			case BulletType::Linear:
+			case BulletType::BulletPlayer:
+			default:
+				ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+					"(No additional settings for this type)");
+				break;
+			}
+			
+			ImGui::Separator();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), 
+				"Edit these values in MonsterScript inspector");
+		}
+		else
+		{
+			ImGui::Separator();
+			ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+				"No MonsterRoundType found on this GameObject.");
+			ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+				"BulletParams will be provided at Fire() call.");
+		}
 	}
 
 	void BulletFactory::Save(engine::json& j) const
