@@ -4,6 +4,7 @@
 #include "Core/Graphics/Device/GraphicsDevice.h"
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Core/Graphics/Resource/DepthStencilState.h"
+#include "Core/Graphics/Resource/BlendState.h"
 
 namespace engine
 {
@@ -47,12 +48,17 @@ namespace engine
     {
         if (!m_isInitialized) return;
 
+        auto device = GraphicsDevice::Get().GetDevice().Get();
         auto context = GraphicsDevice::Get().GetDeviceContext().Get();
 
-        auto depthNone = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::None);
+        // 블렌드 상태 객체 생성
+        auto alphaBlend = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlend);
+        context->OMSetBlendState(alphaBlend->GetRawBlendState(), nullptr, 0xFFFFFFFF);
 
-        context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+        // 깊이 상태 설정
+        auto depthNone = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::DepthRead);
         context->OMSetDepthStencilState(depthNone->GetRawDepthStencilState(), 0);
+    
         context->RSSetState(nullptr);
 
         m_effect->SetView(view);
@@ -61,7 +67,6 @@ namespace engine
         m_effect->Apply(context);
 
         context->IASetInputLayout(m_inputLayout.Get());
-
         m_batch->Begin();
     }
 
@@ -69,6 +74,16 @@ namespace engine
     {
         if (!m_isInitialized) return;
         m_batch->End();
+
+        auto context = GraphicsDevice::Get().GetDeviceContext().Get();
+
+        context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+
+        auto depthDefault = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::Less);
+        context->OMSetDepthStencilState(depthDefault->GetRawDepthStencilState(), 0);
+
+        context->IASetInputLayout(nullptr);
+        context->RSSetState(nullptr);
     }
 
     void DebugRenderer::AddDebugCircle(const Vector3& center, float radius, const Vector3& normal, DirectX::GXMVECTOR color, int segments)
@@ -81,7 +96,7 @@ namespace engine
         // 필요하다면 draw data 통합 필요
         for (const auto& circle : m_circleQueue)
         {
-            DrawCircle(circle.center, circle.radius, Vector3::UnitY, circle.color);
+            DrawCircleFilled(circle.center, circle.radius, Vector3::UnitY, circle.color, circle.segments);
         }
         m_circleQueue.clear();
     }
@@ -298,6 +313,39 @@ namespace engine
             float angle = i * (DirectX::XM_2PI / edgeCount);
             Vector3 edgePoint = baseCenter + tangent * (baseRadius * cosf(angle)) + bitangent * (baseRadius * sinf(angle));
             DrawLine(tip, edgePoint, color);
+        }
+    }
+
+    void DebugRenderer::DrawCircleFilled(const Vector3& center, float radius, const Vector3& normal, DirectX::GXMVECTOR color, int segments)
+    {
+        if (normal.LengthSquared() < FLT_EPSILON) return;
+
+        Vector3 tangent;
+        if (fabsf(normal.y) < 0.99f) tangent = Vector3::UnitY.Cross(normal);
+        else tangent = Vector3::UnitX.Cross(normal);
+        tangent.Normalize();
+
+        Vector3 bitangent = normal.Cross(tangent);
+        bitangent.Normalize();
+
+        const float angleStep = DirectX::XM_2PI / segments;
+
+        DirectX::VertexPositionColor vCenter(DirectX::XMLoadFloat3(&center), color);
+
+        for (int i = 0; i < segments; ++i)
+        {
+            float angle1 = i * angleStep;
+            float angle2 = (i + 1) * angleStep;
+
+            // 원둘레 위의 두 점 계산
+            Vector3 p1 = center + tangent * (radius * cosf(angle1)) + bitangent * (radius * sinf(angle1));
+            Vector3 p2 = center + tangent * (radius * cosf(angle2)) + bitangent * (radius * sinf(angle2));
+
+            DirectX::VertexPositionColor v1(DirectX::XMLoadFloat3(&p1), color);
+            DirectX::VertexPositionColor v2(DirectX::XMLoadFloat3(&p2), color);
+
+            // 삼각형 하나 그리기 (중심 - p1 - p2)
+            m_batch->DrawTriangle(vCenter, v1, v2);
         }
     }
 }

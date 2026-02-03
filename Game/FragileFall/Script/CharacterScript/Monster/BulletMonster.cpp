@@ -102,7 +102,7 @@ namespace game
                 GetTransform()->GetWorldPosition() + engine::Vector3(0, 0.05f, 0),
                 m_radius,
                 engine::Vector3::UnitY,
-                DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f),
+                DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.2f),
                 32
             );
 #endif
