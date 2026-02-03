@@ -14,6 +14,7 @@ namespace engine
         METALNESS_TEXTURE          = 1ULL << 3,
         ROUGHNESS_TEXTURE          = 1ULL << 4,
         AMBIENT_OCCLUSION_TEXTURE  = 1ULL << 5,
+        THICKNESS_TEXTURE          = 1ULL << 6,  // SSS strength scale per pixel (e.g. ear/nose tips)
     };
 
     enum class MaterialRenderType

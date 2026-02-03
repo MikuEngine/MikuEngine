@@ -46,11 +46,11 @@ namespace game
             
             try
             {
-                out.MonsterID = std::stoi(fields[0]);
-                out.MonsterName = fields[1];
-                out.Type = static_cast<AttackType>(std::stoi(fields[2]));
-                out.Tier = static_cast<MonsterTier>(std::stoi(fields[3]));
-                out.Difficulty = std::stoi(fields[4]);
+                out.monsterID = std::stoi(fields[0]);
+                out.monsterName = fields[1];
+                out.type = static_cast<AttackType>(std::stoi(fields[2]));
+                out.tier = static_cast<MonsterTier>(std::stoi(fields[3]));
+                out.difficulty = std::stoi(fields[4]);
                 return true;
             }
             catch (...)
@@ -172,7 +172,7 @@ namespace game
             if (minMonster)
             {
                 m_anchorMonster = *minMonster;
-                LOG_PRINT("[MonsterPartyGenerator] Anchor not specified, using min difficulty monster: ID={}", m_anchorMonster.MonsterID);
+                LOG_PRINT("[MonsterPartyGenerator] Anchor not specified, using min difficulty monster: ID={}", m_anchorMonster.monsterID);
                 return true;
             }
             return false;
@@ -192,7 +192,7 @@ namespace game
         {
             m_anchorMonster = *minMonster;
             LOG_PRINT("[MonsterPartyGenerator] WARNING: Anchor monster ID {} not found, using min difficulty monster: ID={}", 
-                       monsterID, m_anchorMonster.MonsterID);
+                       monsterID, m_anchorMonster.monsterID);
             return true;
         }
         
@@ -206,7 +206,7 @@ namespace game
     void MonsterPartyGenerator::InitializeRemainingMonsters(int partySize)
     {
         m_monsterParty.clear();
-        m_monsterParty.push_back(m_anchorMonster.MonsterID);
+        m_monsterParty.push_back(m_anchorMonster.monsterID);
         
         int minDifficulty = GetMinDifficulty();
         std::vector<int> minDifficultyMonsters = GetMonstersWithDifficulty(minDifficulty);
@@ -228,7 +228,7 @@ namespace game
     int MonsterPartyGenerator::CalculateRemainingBudget(int partySize) const
     {
         int minDifficulty = GetMinDifficulty();
-        int currentTotal = m_anchorMonster.Difficulty + (minDifficulty * (partySize - 1));
+        int currentTotal = m_anchorMonster.difficulty + (minDifficulty * (partySize - 1));
         return m_targetScore - currentTotal;
     }
     
@@ -289,9 +289,9 @@ namespace game
         // DB가 난이도 오름차순 정렬되어 있으므로, 현재 Difficulty보다 큰 첫 번째 몬스터 찾기
         for (const auto& monster : m_monsterDB)
         {
-            if (monster.Difficulty > currentDifficulty)
+            if (monster.difficulty > currentDifficulty)
             {
-                return monster.Difficulty;
+                return monster.difficulty;
             }
         }
         
@@ -316,7 +316,7 @@ namespace game
             return false;
         }
         
-        int currentDifficulty = currentMonster->Difficulty;
+        int currentDifficulty = currentMonster->difficulty;
         int nextDifficulty = FindNextDifficulty(currentDifficulty);
         
         if (nextDifficulty < 0)
@@ -370,7 +370,7 @@ namespace game
     {
         for (const auto& monster : m_monsterDB)
         {
-            if (monster.MonsterID == id)
+            if (monster.monsterID == id)
             {
                 return &monster;
             }
@@ -383,7 +383,7 @@ namespace game
         // DB가 정렬되어 있으므로 이진 탐색 가능하지만, 간단하게 선형 탐색
         for (const auto& monster : m_monsterDB)
         {
-            if (monster.Difficulty == difficulty)
+            if (monster.difficulty == difficulty)
             {
                 return &monster;
             }
@@ -397,7 +397,7 @@ namespace game
         {
             return 0;
         }
-        return m_monsterDB[0].Difficulty;  // 정렬되어 있으므로 첫 번째가 최소값
+        return m_monsterDB[0].difficulty;  // 정렬되어 있으므로 첫 번째가 최소값
     }
     
     std::vector<int> MonsterPartyGenerator::GetMonstersWithDifficulty(int difficulty) const
@@ -405,9 +405,9 @@ namespace game
         std::vector<int> result;
         for (const auto& monster : m_monsterDB)
         {
-            if (monster.Difficulty == difficulty)
+            if (monster.difficulty == difficulty)
             {
-                result.push_back(monster.MonsterID);
+                result.push_back(monster.monsterID);
             }
         }
         return result;
@@ -417,9 +417,9 @@ namespace game
         std::vector<int> result;
         for (const auto& monster : m_monsterDB)
         {
-            if (monster.Type == type)
+            if (monster.type == type)
             {
-                result.push_back(monster.MonsterID);
+                result.push_back(monster.monsterID);
             }
         }
 

@@ -336,39 +336,57 @@ namespace game
     {
         if (!m_image) return;
 
-        engine::Vector4 fill = m_baseColor;
+        m_image->ClearEffect();
+        m_click->SetInteractable(s != NodeState::Disabled);
+
+        float speed, intensity, width;
+        engine::Vector4 color = m_baseColor;
+
         engine::Vector4 outline = { 0,0,0,0 };
         bool outlineOn = false;
-
-        m_click->SetInteractable(s != NodeState::Disabled);
 
         switch (s)
         {
         case NodeState::Purchased:
-            fill = m_baseColor;
-            outline = { 1.0f, 238 / 255.0f, 24 / 255.0f, 1.0f }; // 노랑
+            // [강화됨] 황금빛 광택 효과
+            m_image->SetEffect(engine::UIEffectType::LiquidShine);
+            speed = 0.7f;     // 천천히
+            width = 0.15f;
+            m_image->SetEffectParam(0, { speed, width, 0.0f, 0.0f });
+            m_image->SetEffectParam(1, color);
+            outline = { 1.0f, 0.9f, 0.1f, 1.0f }; // 황금색
             outlineOn = true;
             break;
 
         case NodeState::Selected:
-            fill = m_baseColor;
-            outline = { 0.0f, 180 / 255.0f, 230 / 255.0f, 1.0f }; // 파랑
+            // [선택됨] Active보다 더 빠르고 강렬한 에너지 연출
+            m_image->SetEffect(engine::UIEffectType::EnergyFlow);
+            speed = 1.5f;      
+            intensity = 1.8f;
+            // Param0: x=속도, y=강도
+            m_image->SetEffectParam(0, { speed, intensity, 0.0f, 0.0f });
+            m_image->SetEffectParam(1, color);
+
+            // 테두리는 순백색으로 발광 느낌 극대화
+            outline = { 0.82, 0.06f, 0.06f, 1.0f };
             outlineOn = true;
             break;
 
         case NodeState::Active:
-            fill = m_baseColor;
-            outline = { 0.4f, 0.4f, 0.4f, 1.0f }; // 회색 테두리
-            outlineOn = true;
+            m_image->SetEffect(engine::UIEffectType::EnergyFlow);
+            speed = 0.8f;
+            intensity = 0.5f;
+            m_image->SetEffectParam(0, { speed, intensity, 0.0f, 0.0f });
+            m_image->SetEffectParam(1, color);
             break;
 
         case NodeState::Disabled:
-            fill = { 0.4f, 0.4f, 0.4f, 1.0f };    // 전체 회색
+            // [잠김] 흑백 석화 효과 (색상 전달 불필요)
+            m_image->SetEffect(engine::UIEffectType::StoneLock);
             outlineOn = false;
             break;
         }
 
-        m_image->SetColor(fill);
         m_image->SetOutline(outlineOn, 5.0f, outline);
     }
 

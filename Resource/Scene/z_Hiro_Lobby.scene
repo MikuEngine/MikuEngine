@@ -227,7 +227,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -282,7 +288,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -337,7 +349,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -393,7 +411,13 @@
                     "MaterialEmissiveIntensity": 0.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -448,7 +472,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -504,7 +534,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -559,7 +595,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -614,7 +656,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -669,7 +717,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -790,7 +844,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -911,7 +971,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -966,7 +1032,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1021,7 +1093,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1076,7 +1154,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1131,7 +1215,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1186,7 +1276,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1241,7 +1337,13 @@
                     "MaterialEmissiveIntensity": 1.7799999713897705,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1342,7 +1444,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1397,7 +1505,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1452,7 +1566,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1507,7 +1627,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1562,7 +1688,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1764,8 +1896,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1914,8 +2044,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2254,8 +2382,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2362,8 +2488,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2470,8 +2594,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2660,8 +2782,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2768,8 +2888,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2876,8 +2994,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3066,8 +3182,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3174,8 +3288,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3282,8 +3394,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3555,7 +3665,7 @@
             "ID": 51,
             "ParentID": 31,
             "Name": "UI_UpgradePopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -3613,8 +3723,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3734,8 +3842,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3849,8 +3955,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3993,8 +4097,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4215,8 +4317,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4437,8 +4537,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4659,8 +4757,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4852,8 +4948,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5039,8 +5133,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5219,8 +5311,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/UI/Image/AmethystShard.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5327,8 +5417,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/UI/Image/DarkEssence.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5435,8 +5523,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/Miku.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5766,8 +5852,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6025,8 +6109,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6183,8 +6265,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/UI/Image/AmethystShard.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6413,8 +6493,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/UI/Image/DarkEssence.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6643,8 +6721,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/Miku.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6859,8 +6935,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7113,8 +7187,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7278,8 +7350,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7393,9 +7463,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7529,9 +7597,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7667,9 +7733,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7806,8 +7870,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7967,8 +8029,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8105,8 +8165,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8244,8 +8302,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8382,8 +8438,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8520,8 +8574,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8665,8 +8717,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8810,8 +8860,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8925,8 +8973,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9061,8 +9107,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9199,8 +9243,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9330,8 +9372,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9462,8 +9502,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9593,8 +9631,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9708,8 +9744,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9837,8 +9871,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9968,8 +10000,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10099,8 +10129,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10230,8 +10258,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10345,8 +10371,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10474,8 +10498,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10605,8 +10627,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10736,8 +10756,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10867,8 +10885,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11057,8 +11073,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11165,8 +11179,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11309,8 +11321,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11557,8 +11567,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11760,8 +11768,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11904,8 +11910,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12126,8 +12130,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12348,8 +12350,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12570,8 +12570,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,

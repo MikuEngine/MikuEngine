@@ -112,14 +112,16 @@ namespace engine
 
 	public:
 		// Effect
+		void SetEffect(UIEffectType type);
 		void ClearEffect();
 
-		void SetEffectScanLine(float density, float speed, float opacity);
-		void SetEffectGlowPulse(float speed, float minIntensity, float maxIntensity);
-		void SetEffectPixelate(float pixelSize);
-		void SetEffectHoverTransition(bool isHover);
-		void SetEffectAbyssalDecay();
-		void SetEffectStaticNoise(float intensity);
+		UIEffectType GetEffectType() const { return static_cast<UIEffectType>(m_effectMode); }
+
+		void SetEffectParam(int index, const Vector4& val);
+
+		void SetEffect0(const Vector4& v) { m_effect0 = v; m_dirty = true; }
+		void SetEffect1(const Vector4& v) { m_effect1 = v; m_dirty = true; }
+		void SetEffect2(const Vector4& v) { m_effect2 = v; m_dirty = true; }
 
 	public:
 		bool HasRenderType(RenderType type) const override;

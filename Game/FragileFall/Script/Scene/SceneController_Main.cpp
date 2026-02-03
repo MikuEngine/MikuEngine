@@ -10,6 +10,7 @@
 #include <Framework/Object/Component/UI/UIButton.h>
 #include <Framework/Object/Component/UI/UIImage.h>
 #include "Script/UI/UIPopUpAnimator.h"
+#include <Framework/Object/Component/UI/UIProgressBar.h>
 
 namespace game
 {

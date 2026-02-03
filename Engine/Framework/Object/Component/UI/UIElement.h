@@ -26,6 +26,31 @@ namespace engine
 		Radial,
 	};
 
+	enum class UIEffectType : uint32_t
+	{
+		None = 0,
+
+		// [Group 1] Color FX
+		Scanline = 10,
+		GlowPulse = 11,
+		StaticNoise = 12,
+
+		// [Group 2] UV FX
+		Pixelate = 20,
+
+		// [Group 3] Special FX
+		HoverTransition = 30,
+		AbyssalDecay = 31,
+		LiquidShine = 32,
+		EnergyFlow = 33,
+		Hologram = 34,
+		StoneLock = 35,
+
+		// [Group 4] Progress Bar
+		FlameBar = 40,
+		PurpleCurse = 41,
+	};
+
 	// UIElement는 UI 컴포넌트들의 공통 베이스입니다.
 	class UIElement : public Renderer
 	{

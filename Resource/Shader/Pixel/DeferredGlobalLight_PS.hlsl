@@ -19,10 +19,14 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     }
     
     float3 emissive = g_gBufferEmissive.Sample(g_samPoint, uv).rgb;
-    float3 orm = g_gBufferORM.Sample(g_samPoint, uv).rgb;
+    float4 orm = g_gBufferORM.Sample(g_samPoint, uv);
     float ao = orm.r;
     float roughness = orm.g;
     float metalness = orm.b;
+    float sssStrengthScale = orm.a;
+    float3 sssTint = g_gBufferSubsurface.Sample(g_samPoint, uv).rgb;
+    if (dot(sssTint, sssTint) < 1e-10f)
+        sssTint = g_subsurfaceColor;
     
     // world position
     float4 clipPosition;
@@ -98,7 +102,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             {
                 shadowFactor = 1.0f;
             }
-            else if (currentShadowDepth > sampleShadowDepth + 0.001f)
+            else if (currentShadowDepth > sampleShadowDepth + 0.005f)
             {
                 shadowFactor = 0.0f;
             }
@@ -121,6 +125,24 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
         float3 specularBRDF = (f * d * g) / max(EPSILON, 4.0f * nDotL * nDotV);
     
         directLighting = (diffuseBRDF + specularBRDF) * g_mainLightColor * g_mainLightIntensity * nDotL * shadowFactor;
+
+        // SSS (wrap diffuse) - per-material strength in ORM.a, softened in shadow
+        float sssStrength = g_subsurfaceStrength * sssStrengthScale;
+        if (sssStrength > 0.0f)
+        {
+            float wrap = 0.5f;
+            float wrapNdotL = saturate((dot(n, l) + wrap) / (1.0f + wrap));
+            float shadowFactorSSS = lerp(0.25f, 1.0f, shadowFactor);
+            float3 sssTerm = (sssTint * baseColor) * g_mainLightColor * g_mainLightIntensity * wrapNdotL * shadowFactorSSS * sssStrength;
+            directLighting += sssTerm;
+            // Translucency: backlit only (light through crystal/leaf)
+            if (nDotL < 0.0f)
+            {
+                float backlit = -nDotL;
+                float3 transTerm = (sssTint * baseColor) * g_mainLightColor * g_mainLightIntensity * backlit * shadowFactorSSS * sssStrength * 0.45f;
+                directLighting += transTerm;
+            }
+        }
     }
     
     float3 ambientLighting = 0.0f;

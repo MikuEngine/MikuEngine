@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "MaterialHelper.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -68,6 +68,15 @@ namespace engine
 			else
 			{
 				textures.ambientOcclusion = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
+			}
+
+			if (material.materialFlags & static_cast<std::uint64_t>(MaterialKey::THICKNESS_TEXTURE))
+			{
+				textures.thickness = ResourceManager::Get().GetOrCreateTexture(material.texturePaths.at(MaterialKey::THICKNESS_TEXTURE));
+			}
+			else
+			{
+				textures.thickness = ResourceManager::Get().GetDefaultTexture(DefaultTextureType::White);
 			}
 
 			out.push_back(std::move(textures));

@@ -36,24 +36,25 @@ float4 main(PS_INPUT input) : SV_Target
         discard;
     }
     
+    float pointShadowFactor = 1.0f;
     if (g_useLocalLightShadow)
-    { // 섀도우 맵 샘플링 (저장된 값 = 정규화된 가장 가까운 거리)
+    {
         float closestDistNorm = g_texPointShadowMap.Sample(g_samLinear, float4(normalize(-l), (float) g_localLightShadowIndex)).r;
         float closestDist = closestDistNorm * g_lightRange;
-    
-    // Bias 적용 비교
-        if (dist > closestDist + 0.1f) // Bias
-        {
-            discard;
-        }
+        if (dist > closestDist + 0.005f)
+            pointShadowFactor = 0.0f;
     }
     
     float3 baseColor = g_gBufferBaseColor.Sample(g_samPoint, uv).rgb;
     
-    float3 orm = g_gBufferORM.Sample(g_samPoint, uv).rgb;
+    float4 orm = g_gBufferORM.Sample(g_samPoint, uv);
     float ao = orm.r;
     float roughness = orm.g;
     float metalness = orm.b;
+    float sssStrengthScale = orm.a;
+    float3 sssTint = g_gBufferSubsurface.Sample(g_samPoint, uv).rgb;
+    if (dot(sssTint, sssTint) < 1e-10f)
+        sssTint = g_subsurfaceColor;
     
     // normal
     float3 n = normalize(DecodeNormal(encodedNormal.rgb));
@@ -65,16 +66,11 @@ float4 main(PS_INPUT input) : SV_Target
     
     float nDotL = saturate(dot(n, l));
     
-    if (nDotL <= 0.0f)
-    {
-        discard;
-    }
-    
     // l-v half
     float3 h = normalize(l + v);
     
     float attenuation = saturate(1.0f - (dist / g_lightRange));
-    attenuation *= attenuation; // 제곱 감쇠
+    attenuation *= attenuation;
     
     float nDotH = saturate(dot(n, h));
     
@@ -95,7 +91,22 @@ float4 main(PS_INPUT input) : SV_Target
     float3 diffuseBRDF = kd * baseColor.rgb / PI;
     float3 specularBRDF = (f * d * g) / max(EPSILON, 4.0f * nDotL * nDotV);
         
-    float3 final = (diffuseBRDF + specularBRDF) * g_lightColor * g_lightIntensity * nDotL * attenuation;
-    
+    float3 final = (diffuseBRDF + specularBRDF) * g_lightColor * g_lightIntensity * nDotL * pointShadowFactor * attenuation;
+
+    // SSS (wrap diffuse) - per-material strength in ORM.a, softened in shadow
+    float sssStrength = g_subsurfaceStrength * sssStrengthScale;
+    if (sssStrength > 0.0f)
+    {
+        float wrap = 0.5f;
+        float wrapNdotL = saturate((dot(n, l) + wrap) / (1.0f + wrap));
+        float shadowFactorSSS = lerp(0.25f, 1.0f, pointShadowFactor);
+        final += (sssTint * baseColor) * g_lightColor * g_lightIntensity * wrapNdotL * shadowFactorSSS * attenuation * sssStrength;
+        if (nDotL < 0.0f)
+        {
+            float backlit = -nDotL;
+            final += (sssTint * baseColor) * g_lightColor * g_lightIntensity * backlit * shadowFactorSSS * attenuation * sssStrength * 0.45f;
+        }
+    }
+
     return float4(final, 1.0f);
 }

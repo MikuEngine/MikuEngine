@@ -360,6 +360,25 @@ namespace engine
 	// Effect API
 	// ================================
 
+	void UIImage::SetEffect(UIEffectType type)
+	{
+		m_effectMode = static_cast<uint32_t>(type);
+
+		switch (type)
+		{
+		case UIEffectType::AbyssalDecay:
+		case UIEffectType::PurpleCurse:
+		case UIEffectType::FlameBar:
+			if (!m_noiseTex) SetNoiseTexture(m_noisePath);
+			if (!m_rampTex)  SetRampTexture(m_rampPath);
+			break;
+		default:
+			break;
+		}
+
+		m_dirty = true;
+	}
+
 	void UIImage::ClearEffect()
 	{
 		m_effectMode = 0;
@@ -369,40 +388,14 @@ namespace engine
 		m_effect2 = Vector4(0, 0, 0, 0);
 	}
 
-	void UIImage::SetEffectScanLine(float density, float speed, float opacity)
+	void UIImage::SetEffectParam(int index, const Vector4& val)
 	{
-		m_effectMode = 1; // UI_FX_SCANLINE
-		m_effect0 = Vector4(density, speed, opacity, 0.0f);
-	}
-
-	void UIImage::SetEffectGlowPulse(float speed, float minIntensity, float maxIntensity)
-	{
-		m_effectMode = 2; // UI_FX_GLOW_PULSE
-		m_effect0 = Vector4(speed, minIntensity, maxIntensity, 0.0f);
-	}
-
-	void UIImage::SetEffectPixelate(float pixelSize)
-	{
-		m_effectMode = 3; // UI_FX_PIXELATE
-		// pixelSize가 커질수록 픽셀이 뭉쳐 보임 (추천: 8.0 ~ 64.0)
-		m_effect0 = Vector4(pixelSize, 0.0f, 0.0f, 0.0f);
-	}
-
-	void UIImage::SetEffectHoverTransition(bool isHover)
-	{
-		m_effectMode = 4; // UI_FX_HOVER_TRANSITION
-	}
-
-	void UIImage::SetEffectAbyssalDecay()
-	{
-		m_effectMode = 5; // UI_FX_ABYSSAL_DECAY
-		SetNoiseTexture(m_noisePath);
-	}
-
-	void UIImage::SetEffectStaticNoise(float intensity)
-	{
-		m_effectMode = 6; // UI_FX_STATIC_NOISE
-		m_effect0.x = intensity;
+		switch (index)
+		{
+		case 0: m_effect0 = val; break;
+		case 1: m_effect1 = val; break;
+		case 2: m_effect2 = val; break;
+		}
 	}
 
 	bool UIImage::HasRenderType(RenderType type) const
@@ -444,26 +437,23 @@ namespace engine
 		}
 
 		const char* effectNames[] = {
-		"None",               // 0
-		"Scanline",           // 1
-		"Glow Pulse",         // 2
-		"Pixelate",           // 3
-		"Hover Transition",   // 4
-		"Abyssal Decay",      // 5
-		"Static Noise",       // 6
-		"Flame Bar (Progress)"// 10
+			"None", "Scanline", "Glow Pulse", "Pixelate",
+			"Hover Transition", "Abyssal Decay", "Static Noise",
+			"Flame Bar", "Purple Curse" // 추가
 		};
 
-		// 현재 m_effectMode에 맞는 인덱스 찾기 (10번 같은 경우 예외처리)
 		int effectIdx = 0;
 		if (m_effectMode >= 1 && m_effectMode <= 6) effectIdx = (int)m_effectMode;
-		else if (m_effectMode == 10) effectIdx = 7; // Flame Bar
+		else if (m_effectMode == 10) effectIdx = 7;
+		else if (m_effectMode == 11) effectIdx = 8; // Purple Curse 대응
 
 		if (ImGui::Combo("Effect Type", &effectIdx, effectNames, IM_ARRAYSIZE(effectNames)))
 		{
-			ClearEffect(); // 모드 변경 시 파라미터 초기화
-			if (effectIdx == 7) m_effectMode = 10;
-			else m_effectMode = (uint32_t)effectIdx;
+			// 수동 선택 시 enum class를 활용한 SetEffect 호출이 가장 안전합니다.
+			if (effectIdx == 0) SetEffect(UIEffectType::None);
+			else if (effectIdx <= 6) SetEffect(static_cast<UIEffectType>(effectIdx));
+			else if (effectIdx == 7) SetEffect(UIEffectType::FlameBar);
+			else if (effectIdx == 8) SetEffect(UIEffectType::PurpleCurse);
 		}
 
 		if (m_effectMode != 0)

@@ -68,10 +68,11 @@ namespace game
         // ─────────────────────────────────────────────
         // 상태 정의
         // ─────────────────────────────────────────────
-        AddFSMState("Idle", true);           // 기본 상태
-        AddFSMState("EngageMove", false);    // 추적 이동 (공격 사거리 밖)
-        AddFSMState("EngageStop", false);    // 정지 (공격 사거리 안, 쿨타임 중)
-        AddFSMState("EngageAttack", false);  // 공격 중 정지
+        AddFSMState("Idle", true);          // 기본 상태
+        AddFSMState("EngageMove", false);   // 추적 이동 (공격 사거리 밖)
+        AddFSMState("EngageStop", false);   // 정지 (공격 사거리 안, 쿨타임 중)
+        AddFSMState("EngageAttack", false); // 공격 중 정지
+        AddFSMState("Flee", false);         // 플레이어가 근접 시 도망
         AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
@@ -85,6 +86,7 @@ namespace game
         // ─────────────────────────────────────────────
         m_logicFSM->SetParameter("PlayerInDetectionRange", m_isPlayerInDetectionRange);
         m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
+        m_logicFSM->SetParameter("PlayerInFleeRange", m_isPlayerInFleeRange);
         m_logicFSM->SetParameter("CanFire", m_canFire);
         m_logicFSM->SetParameter("AttackComplete", false);
         m_logicFSM->SetParameter("Fragile", m_isFragile);
@@ -124,6 +126,18 @@ namespace game
         AddFSMTransition("EngageMove", "Fragile", "Fragile", Trigger());
         AddFSMTransition("EngageStop", "Fragile", "Fragile", Trigger());
         AddFSMTransition("EngageAttack", "Fragile", "Fragile", Trigger());
+
+        // Any -> Flee (fleeRange, m_isPlayerInFleeRange bool)
+        if (m_monsterTier == MonsterTier::Purple)
+        {
+            AddFSMTransition("Idle", "Flee", "PlayerInFleeRange", BoolTrue());
+            AddFSMTransition("EngageMove", "Flee", "PlayerInFleeRange", BoolTrue());
+            AddFSMTransition("EngageStop", "Flee", "PlayerInFleeRange", BoolTrue());
+            AddFSMTransition("EngageAttack", "Flee", "PlayerInFleeRange", BoolTrue());
+
+            AddFSMTransition("Flee", "EngageMove", "PlayerInFleeRange", BoolFalse(), "PlayerInRange", BoolFalse());
+            AddFSMTransition("Flee", "EngageStop", "PlayerInFleeRange", BoolFalse(), "PlayerInRange", BoolTrue());
+        }
 
         // Fragile → Dead (Execution, Die 트리거)
         AddFSMTransition("Fragile", "Dead", "Die", Trigger());
@@ -181,6 +195,14 @@ namespace game
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 15;
 			break;
+		case MonsterTier::Purple:
+            m_bulletParams.type = BulletType::Linear;
+            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = 10;
+            m_AttackRange = 18.0f;
+            m_detectionRange = 30.0f;
+            break;
         default:
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
@@ -202,7 +224,7 @@ namespace game
         {
             FindPlayer();
         }
-
+        
         float dist = GetDistanceToPlayer();
         float rangeBuffer = (GetCurrentState() == "EngageStop") ? 1.2f : 1.0f;
 
@@ -210,12 +232,22 @@ namespace game
         m_isPlayerInDetectionRange = (dist <= m_detectionRange);
         m_isPlayerInRange = (dist <= m_AttackRange * rangeBuffer);
         
+        // 도망 범위 조건
+        if (m_monsterTier == MonsterTier::Purple)
+        {
+            m_isPlayerInFleeRange = false;
+
+            if (GetCurrentState() == "Flee")  m_isPlayerInFleeRange = (dist <= m_safeRange);
+            else m_isPlayerInFleeRange = (dist <= m_fleeRange);
+        }
+
         // 발사 가능 여부 체크 (쿨타임)
         m_canFire = (m_fireTimer <= 0.0f);
 
         // FSM 파라미터 업데이트
         m_logicFSM->SetParameter("PlayerInDetectionRange", m_isPlayerInDetectionRange);
         m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
+        m_logicFSM->SetParameter("PlayerInFleeRange", m_isPlayerInFleeRange);
         m_logicFSM->SetParameter("CanFire", m_canFire);
     }
 
@@ -230,7 +262,11 @@ namespace game
             m_fireTimer -= deltaTime;
         }
 
-        if (state == "EngageMove")
+        if (state == "Flee")
+        {
+            ExecuteFleeBehaviorNonPhysics(deltaTime);
+        }
+        else if (state == "EngageMove")
         {
             ExecuteEngageMoveBehaviorNonPhysics(deltaTime);
         }
@@ -254,6 +290,11 @@ namespace game
         {
             ExecuteDeadBehaviorNonPhysics();
         }
+    }
+
+    void MonsterPointedType::ExecuteFleeBehaviorNonPhysics(float deltaTime)
+    {
+        // 도망 중에도 플레이어를 바라보거나, 쿨타임 계산 등
     }
 
     void MonsterPointedType::ExecuteEngageMoveBehaviorNonPhysics(float deltaTime)
@@ -293,7 +334,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterPointedType::UpdatePhysicsStateBasedBehavior(const std::string& state)
     {
-        if (state == "EngageMove")
+        if (state == "Flee")
+        {
+            ExecuteFleeBehaviorPhysics();
+        }
+        else if (state == "EngageMove")
         {
             ExecuteEngageMoveBehaviorPhysics();
         }
@@ -316,6 +361,31 @@ namespace game
         else if (state == "Dead")
         {
             ExecuteDeadBehaviorPhysics();
+        }
+    }
+
+    void MonsterPointedType::ExecuteFleeBehaviorPhysics()
+    {
+        if (!m_targetPlayer) return;
+
+        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+
+        // 플레이어 -> 나 (도망 방향) 벡터 계산
+        engine::Vector3 baseFleeDir = myPos - playerPos;
+        baseFleeDir.y = 0.0f;
+        baseFleeDir.Normalize();
+
+        float randomRad = DirectX::XMConvertToRadians(m_fleeAngleOffset);
+        DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY(randomRad);
+
+        engine::Vector3 finalFleeDir = engine::Vector3::TransformNormal(baseFleeDir, rot);
+        finalFleeDir.Normalize();
+
+        if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+        {
+            float finalSpeed = m_moveSpeed * m_fleeSpeedMultiplier;
+            rb->SetLinearVelocity(finalFleeDir * finalSpeed);
         }
     }
 
@@ -360,7 +430,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterPointedType::OnStateEntered(const std::string& state)
     {
-        if (state == "EngageAttack")
+        if (state == "Flee")
+        {
+            m_fleeAngleOffset = ((static_cast<float>(rand()) / RAND_MAX) * 90.0f) - 45.0f;
+        }
+        else if (state == "EngageAttack")
         {
             // 공격 상태 진입 시 이동 멈추고 타이머 초기화
             StopAllMovement();

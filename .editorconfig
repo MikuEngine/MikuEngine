@@ -3,5 +3,10 @@ root = true
 [*]
 charset = unset
 
+# C++ 소스: UTF-8 with BOM (MSVC/Windows 호환)
 [*.{cpp,h,hpp,c,cc,css,inl}]
 charset = utf-8-bom
+
+# HLSL 셰이더: UTF-8 (BOM 없음)
+[*.{hlsl,hlsli}]
+charset = utf-8

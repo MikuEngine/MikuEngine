@@ -66,6 +66,7 @@
     <ClCompile Include="Script\CornerTrigger.cpp" />
     <ClCompile Include="Script\TrailDashTest.cpp" />
     <ClCompile Include="Script\Scene\TutorialController.cpp" />
+    <ClCompile Include="Script\MonsterGenerator\MonsterSpawner.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\ExplosionDamageTrigger.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +139,7 @@
     <ClInclude Include="Script\CornerTrigger.h" />
     <ClInclude Include="Script\TrailDashTest.h" />
     <ClInclude Include="Script\Scene\TutorialController.h" />
+    <ClInclude Include="Script\MonsterGenerator\MonsterSpawner.h" />
     <ClInclude Include="Script\CharacterScript\Common\ExplosionDamageTrigger.h" />
   </ItemGroup>
 </Project>
