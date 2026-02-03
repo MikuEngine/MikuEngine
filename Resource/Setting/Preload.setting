@@ -22,7 +22,18 @@
         { "Type": "StaticMesh", "Path": "Resource/Model/Girl.fbx" },
         { "Type": "StaticMesh", "Path": "Resource/Model/HighPolySphere.fbx" },
         { "Type": "StaticMesh", "Path": "Resource/Model/Floor.fbx" },
-        { "Type": "StaticMesh", "Path": "Resource/Model/char.fbx" }
+        { "Type": "StaticMesh", "Path": "Resource/Model/char.fbx" },
+		{ 
+			"Type": "SoundQue",
+			"Name": "Player_Shot_Random",
+			"Paths": [
+				"Resource/Sound/SFX/Player/Player_Shot_1.wav",
+				"Resource/Sound/SFX/Player/Player_Shot_2.wav",
+				"Resource/Sound/SFX/Player/Player_Shot_3.wav",
+				"Resource/Sound/SFX/Player/Player_Shot_4.wav"
+			],
+			"Option": "SFX/Player"
+		}
     ]
   }
 }
