@@ -33,11 +33,11 @@ namespace game
 
                         try
                         {
-                            out.MonsterID = std::stoi(fields[0]);
-							out.MonsterName = fields[1];
-                            out.Type = static_cast<AttackType>(std::stoi(fields[2]));
-                            out.Tier = static_cast<MonsterTier>(std::stoi(fields[3]));
-                            out.Difficulty = std::stoi(fields[4]);
+                            out.monsterID = std::stoi(fields[0]);
+							out.monsterName = fields[1];
+                            out.type = static_cast<AttackType>(std::stoi(fields[2]));
+                            out.tier = static_cast<MonsterTier>(std::stoi(fields[3]));
+                            out.difficulty = std::stoi(fields[4]);
                         }
                         catch (...)
                         {
@@ -56,11 +56,11 @@ namespace game
                     {
                         for (auto data : monsterData)
                         {
-                            if (data.MonsterID == id)
+                            if (data.monsterID == id)
                             {
-                                difficulty += data.Difficulty;
+                                difficulty += data.difficulty;
 
-                                LOG_PRINT("생성될 몬스터 ID: {}, 몬스터 이름: {} ,공격타입: {}, 티어(색상): {}, 난이도: {}", data.MonsterID, data.MonsterName, static_cast<int>(data.Type), static_cast<int>(data.Tier), data.Difficulty);
+                                LOG_PRINT("생성될 몬스터 ID: {}, 몬스터 이름: {} ,공격타입: {}, 티어(색상): {}, 난이도: {}", data.monsterID, data.monsterName, static_cast<int>(data.type), static_cast<int>(data.tier), data.difficulty);
 
                                 break;
                             }

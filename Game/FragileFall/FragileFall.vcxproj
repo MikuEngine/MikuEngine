@@ -190,6 +190,7 @@
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\MonsterPointedType.cpp" />
+    <ClCompile Include="Script\MonsterGenerator\MonsterSpawner.cpp" />
     <ClCompile Include="Script\OrbitScript.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\PlayerAimMeshController.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />
     <ClInclude Include="Script\CharacterScript\Monster\MonsterPointedType.h" />
+    <ClInclude Include="Script\MonsterGenerator\MonsterSpawner.h" />
     <ClInclude Include="Script\OrbitScript.h" />
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\PlayerAimMeshController.h" />
