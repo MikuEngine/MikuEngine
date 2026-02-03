@@ -38,6 +38,18 @@ namespace game
             collider->SetLayer(engine::PhysicsLayer::Field);
             collider->SetIsTrigger(true);
         }
+        if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+        {
+            rb->SetLinearVelocity(engine::Vector3::Zero);
+            rb->SetUseGravity(false);
+			rb->SetRigidbodyType(engine::RigidbodyType::Kinematic);
+        }
+
+        auto* scene = engine::SceneManager::Get().GetScene();
+        if (scene)
+        {
+            m_targetPlayer = scene->FindGameObject("Player");
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -95,26 +107,18 @@ namespace game
             {
                 m_tickTimer = 0.0f;
 
-                if (auto* scene = engine::SceneManager::Get().GetScene())
+                if (m_targetPlayer)
                 {
-                    auto* playerGO = scene->FindGameObject("Player");
-                    if (playerGO)
-                    {
-                        float distance = engine::Vector3::Distance(
-                            GetTransform()->GetWorldPosition(),
-                            playerGO->GetTransform()->GetWorldPosition()
-                        );
+                    float distance = engine::Vector3::Distance(GetTransform()->GetWorldPosition(), m_targetPlayer->GetTransform()->GetWorldPosition());
 
-                        if (distance <= m_params.radius)
+                    if (distance <= m_params.radius)
+                    {
+                        if (auto* playerScript = m_targetPlayer->GetComponent<PlayerControllerScript>())
                         {
-                            if (auto* playerScript = playerGO->GetComponent<PlayerControllerScript>())
-                            {
-                                // playerScript->OnHit(m_params.damage); 
-                                // LOG_PRINT("Field Damage Dealt to Player!");
-                            }
+                            // playerScript->OnHit(m_params.damage);
                         }
                     }
-                }
+                }  
             }
             return;
         }

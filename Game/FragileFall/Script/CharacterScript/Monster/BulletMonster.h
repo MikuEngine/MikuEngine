@@ -62,6 +62,7 @@ namespace game
 		float m_radius = 0.0f;
 		float m_tickTimer = 0.0f;
 		float m_tickInterval = 0.5f; // 0.5초마다 데미지 적용
+        engine::Ptr<engine::GameObject> m_targetPlayer = nullptr;
 
     public:
         // ─────────────────────────────────────────────

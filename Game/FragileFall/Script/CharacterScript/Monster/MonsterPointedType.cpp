@@ -413,7 +413,7 @@ namespace game
             {
                 // 플레이어를 향해 발사
                 engine::Vector3 direction = CalculateDirectionToPlayer();
-                engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
+                engine::Vector3 firePosition = GetTransform()->GetWorldPosition() + m_fireOffset;
 
                 switch (m_monsterTier)
                 {
