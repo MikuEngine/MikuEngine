@@ -437,26 +437,23 @@ namespace engine
 		}
 
 		const char* effectNames[] = {
-		"None",               // 0
-		"Scanline",           // 1
-		"Glow Pulse",         // 2
-		"Pixelate",           // 3
-		"Hover Transition",   // 4
-		"Abyssal Decay",      // 5
-		"Static Noise",       // 6
-		"Flame Bar (Progress)"// 10
+			"None", "Scanline", "Glow Pulse", "Pixelate",
+			"Hover Transition", "Abyssal Decay", "Static Noise",
+			"Flame Bar", "Purple Curse" // 추가
 		};
 
-		// 현재 m_effectMode에 맞는 인덱스 찾기 (10번 같은 경우 예외처리)
 		int effectIdx = 0;
 		if (m_effectMode >= 1 && m_effectMode <= 6) effectIdx = (int)m_effectMode;
-		else if (m_effectMode == 10) effectIdx = 7; // Flame Bar
+		else if (m_effectMode == 10) effectIdx = 7;
+		else if (m_effectMode == 11) effectIdx = 8; // Purple Curse 대응
 
 		if (ImGui::Combo("Effect Type", &effectIdx, effectNames, IM_ARRAYSIZE(effectNames)))
 		{
-			ClearEffect(); // 모드 변경 시 파라미터 초기화
-			if (effectIdx == 7) m_effectMode = 10;
-			else m_effectMode = (uint32_t)effectIdx;
+			// 수동 선택 시 enum class를 활용한 SetEffect 호출이 가장 안전합니다.
+			if (effectIdx == 0) SetEffect(UIEffectType::None);
+			else if (effectIdx <= 6) SetEffect(static_cast<UIEffectType>(effectIdx));
+			else if (effectIdx == 7) SetEffect(UIEffectType::FlameBar);
+			else if (effectIdx == 8) SetEffect(UIEffectType::PurpleCurse);
 		}
 
 		if (m_effectMode != 0)

@@ -5604,7 +5604,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/UI/ProgressBar/Fill.png",
-                    "EffectMode": 5,
+                    "EffectMode": 11,
                     "Effect0": {
                         "x": 6.111999988555908,
                         "y": 0.0,
