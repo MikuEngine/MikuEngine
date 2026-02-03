@@ -508,6 +508,7 @@ namespace engine
             DebugRenderer::Get().Begin(view, projection);
             {
                 SoundSystem::Get().Render();
+                DebugRenderer::Get().RenderQueueDraws();
             }
             DebugRenderer::Get().End();
         }
