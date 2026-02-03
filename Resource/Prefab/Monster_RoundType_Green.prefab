@@ -63,7 +63,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "MonsterRoundGreen",
@@ -87,8 +93,8 @@
                     "FireRate": 5.0,
                     "BulletSpeed": 10.0,
                     "BulletLifetime": 4.0,
-                    "ParabolicSpeed": 14.0,
-                    "OwnGravity": 9.800000190734863,
+                    "ParabolicSpeed": 22.0,
+                    "OwnGravity": 30.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",

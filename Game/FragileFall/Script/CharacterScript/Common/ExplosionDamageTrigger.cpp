@@ -4,6 +4,7 @@
 
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Object/Component/SphereCollider.h>
 #include <Framework/Physics/PhysicsLayer.h>
 
 namespace game
@@ -19,17 +20,25 @@ namespace game
         m_elapsedTime = 0.0f;
         m_hasDamaged = false;
         
-        // Collider 레이어 설정
-        if (auto* collider = GetGameObject()->GetComponent<engine::Collider>())
+        // SphereCollider 캐시 및 레이어 설정
+        m_sphereCollider = GetGameObject()->GetComponent<engine::SphereCollider>();
+        if (m_sphereCollider)
         {
-            collider->SetLayer(engine::PhysicsLayer::ExplosionTrigger);
-            collider->SetIsTrigger(true);
+            m_sphereCollider->SetLayer(engine::PhysicsLayer::ExplosionTrigger);
+            m_sphereCollider->SetIsTrigger(true);
+            m_sphereCollider->SetRadius(m_startRadius);
         }
+        
+        // 초기 스케일 설정
+        GetTransform()->SetLocalScale(engine::Vector3(m_startScale, m_startScale, m_startScale));
     }
 
     void ExplosionDamageTrigger::Update()
     {
         m_elapsedTime += engine::Time::DeltaTime();
+        
+        // 확장 애니메이션
+        UpdateExpansion();
         
         // 생존 시간 초과 시 파괴
         if (m_elapsedTime >= m_lifetime)
@@ -51,5 +60,18 @@ namespace game
             
             m_hasDamaged = true;
         }
+    }
+
+    void ExplosionDamageTrigger::UpdateExpansion()
+    {
+        if (m_elapsedTime >= m_expandDuration) return;
+        
+        // 0 ~ 1 보간 비율
+        float t = m_elapsedTime / m_expandDuration;
+        
+        // 스케일 보간
+        float currentScale = m_startScale + (m_endScale - m_startScale) * t;
+        GetTransform()->SetLocalScale(engine::Vector3(currentScale, currentScale, currentScale));
+              
     }
 }
