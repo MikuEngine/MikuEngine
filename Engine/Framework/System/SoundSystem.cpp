@@ -4,16 +4,14 @@
 #include <fstream>
 #include <filesystem>
 
-#include "Framework/Asset/SoundData.h"
-// #include "Common/Utility/StringHelper.h"
-#include "Framework/Object/Component/Transform.h"
-#include "Framework/Object/GameObject/GameObject.h"
-#include "Framework/Asset/AssetManager.h"
-#include "Core/System/VirtualFileSystem.h"
-#include "Framework/Object/Component/Renderer/DebugRenderer.h"
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/CameraSystem.h"
-#include "Framework/Object/Component/Camera.h"
+#include "Framework/Object/Component/Renderer/DebugRenderer.h"
+#include "Framework/Object/Component/Transform.h"
+#include "Framework/Object/GameObject/GameObject.h"
+#include "Framework/Asset/SoundData.h"
+#include "Framework/Asset/AssetManager.h"
+#include "Core/System/VirtualFileSystem.h"
 
 #include "fmod.hpp"
 #include "fmod_errors.h"
@@ -708,7 +706,7 @@ namespace engine
         }
     }
 
-    void SoundSystem::PlayUI(const std::string name, float vol) { Play(name, "SFX", vol, 1.0f, LifeScope::Global); }
+    void SoundSystem::PlayUI(const std::string name) { Play(name, "SFX", m_sfx, 1.0f, LifeScope::Global); }
     void SoundSystem::SetMasterVolume(float v) { m_master = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetBGMVolume(float v) { m_bgm = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetSFXVolume(float v) { m_sfx = Clamp01(v); ApplyVolumes(); }
