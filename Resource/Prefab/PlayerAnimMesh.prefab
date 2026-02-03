@@ -1,0 +1,247 @@
+{
+    "Name": "PlayerAnimMesh",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "PlayerAnimMesh",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 1.1920928955078125e-07,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "PlayerAimMeshController",
+                    "Active": true,
+                    "PlayerObjectName": "Player",
+                    "AimPointerMeshObjectName": "AimPointerMesh",
+                    "FixedY": 0.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_WalkForward": "WalkForward",
+                    "AnimName_WalkBackward": "WalkBackward",
+                    "AnimName_Fire": "Fire",
+                    "BackwardThreshold": -0.10000000149011612,
+                    "ForwardThreshold": 0.10000000149011612,
+                    "ShootingDuration": 0.9300000071525574
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "LogicFSMObjectName": "Player",
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 30.0,
+                    "SpineBoneName": "mixamorig:Spine1",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "AfterimageRenderer",
+                    "Active": true,
+                    "DrawSolidLayer": true,
+                    "SolidColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "SolidInitialAlpha": 0.699999988079071,
+                    "SolidDecaySpeed": 4.599999904632568,
+                    "SolidDecayMode": 0,
+                    "SolidDecayCurve": 1,
+                    "SolidEmissiveIntensity": 5.800000190734863,
+                    "SolidTrailGradient": 0.7200000286102295,
+                    "SolidMaxSlices": 24,
+                    "SolidSampleInterval": 0.02500000037252903,
+                    "DrawAlphaLayer": false,
+                    "AlphaTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "AlphaEmissiveIntensity": 0.0,
+                    "AlphaInitialAlpha": 0.6800000071525574,
+                    "AlphaDecaySpeed": 3.700000047683716,
+                    "AlphaDecayMode": 0,
+                    "AlphaDecayCurve": 1,
+                    "AlphaTrailGradient": 0.9200000166893005,
+                    "AlphaMaxSlices": 24,
+                    "AlphaSampleInterval": 0.0,
+                    "SourceHandleIndex": 289,
+                    "SourceHandleGeneration": 5
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Fire",
+                            "Path": "Resource/Animation/main_character_animation_shooting.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/main_character_animation_idle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkBackward",
+                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkForward",
+                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Player_Rig",
+                                "Hips",
+                                "DEF-Weapon",
+                                "Ctrl-Weapon",
+                                "Spine",
+                                "UpLeg.Left",
+                                "UpLeg.Right",
+                                "Spine1",
+                                "Leg.Left",
+                                "Leg.Right",
+                                "Spine2",
+                                "Foot.Left",
+                                "Foot.Right",
+                                "Neck",
+                                "Shoulder.Left",
+                                "Shoulder.Right",
+                                "ToeBase.Left",
+                                "ToeBase.Right",
+                                "Head",
+                                "Arm.Left",
+                                "Arm.Right",
+                                "Toe_End.Left",
+                                "Toe_End.Right",
+                                "HeadTop_End",
+                                "ForeArm.Left",
+                                "ForeArm.Right",
+                                "Hand.Left",
+                                "Hand.Right",
+                                "HandThumb1.Left",
+                                "HandIndex1.Left",
+                                "HandThumb1.Right",
+                                "HandIndex1.Right",
+                                "HandThumb2.Left",
+                                "HandIndex2.Left",
+                                "Snap-Hand.L",
+                                "HandThumb2.Right",
+                                "HandIndex2.Right",
+                                "HandThumb3.Left",
+                                "HandIndex3.Left",
+                                "HandThumb3.Right",
+                                "HandIndex3.Right",
+                                "HandThumb4.Left",
+                                "HandIndex4.Left",
+                                "HandThumb4.Right",
+                                "HandIndex4.Right"
+                            ]
+                        },
+                        {
+                            "Name": "New Layer",
+                            "Weight": 0.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Spine",
+                                "Spine1",
+                                "Spine2",
+                                "Neck",
+                                "Shoulder.Left",
+                                "Shoulder.Right",
+                                "Head",
+                                "Arm.Left",
+                                "Arm.Right",
+                                "HeadTop_End",
+                                "ForeArm.Left",
+                                "ForeArm.Right",
+                                "Hand.Left",
+                                "Hand.Right",
+                                "HandThumb1.Left",
+                                "HandIndex1.Left",
+                                "HandThumb1.Right",
+                                "HandIndex1.Right",
+                                "HandThumb2.Left",
+                                "HandIndex2.Left",
+                                "Snap-Hand.L",
+                                "HandThumb2.Right",
+                                "HandIndex2.Right",
+                                "HandThumb3.Left",
+                                "HandIndex3.Left",
+                                "HandThumb3.Right",
+                                "HandIndex3.Right",
+                                "HandThumb4.Left",
+                                "HandIndex4.Left",
+                                "HandThumb4.Right",
+                                "HandIndex4.Right"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
