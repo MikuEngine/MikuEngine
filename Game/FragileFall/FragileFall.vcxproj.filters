@@ -65,6 +65,7 @@
     <ClCompile Include="Manager\UpgradeProgressManager.cpp" />
     <ClCompile Include="Script\CornerTrigger.cpp" />
     <ClCompile Include="Script\TrailDashTest.cpp" />
+    <ClCompile Include="Script\Scene\TutorialController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -135,5 +136,6 @@
     <ClInclude Include="Manager\UpgradeProgressManager.h" />
     <ClInclude Include="Script\CornerTrigger.h" />
     <ClInclude Include="Script\TrailDashTest.h" />
+    <ClInclude Include="Script\Scene\TutorialController.h" />
   </ItemGroup>
 </Project>
