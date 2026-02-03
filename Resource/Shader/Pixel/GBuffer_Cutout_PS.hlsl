@@ -13,9 +13,9 @@ PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input, bool isFrontFace : SV_IsFrontFace
     
     float3 encodedNormal = g_texNormal.Sample(g_samLinear, uv).rgb;
     output.emissive = float4(pow(abs(g_texEmissive.Sample(g_samLinear, uv).rgb), 2.2f), 1.0f);
-    output.orm.r = g_texAmbientOcclusion.Sample(g_samLinear, uv).r;
-    output.orm.g = g_texRoughness.Sample(g_samLinear, uv).r;
-    output.orm.b = g_texMetalness.Sample(g_samLinear, uv).r;
+    float ao = g_texAmbientOcclusion.Sample(g_samLinear, uv).r;
+    float roughness = g_texRoughness.Sample(g_samLinear, uv).r;
+    float metalness = g_texMetalness.Sample(g_samLinear, uv).r;
     output.orm.a = 1.0f;
     
     output.baseColor *= g_materialBaseColor;
@@ -27,10 +27,20 @@ PS_OUTPUT_GBUFFER main(PS_INPUT_GBUFFER input, bool isFrontFace : SV_IsFrontFace
         output.baseColor = g_materialBaseColor;
         output.baseColor.a *= g_materialAlpha; // 장애물 반투명 적용
         output.emissive.rgb = g_materialEmissive * g_materialEmissiveIntensity;
-        output.orm.r = g_materialAmbientOcclusion;
-        output.orm.g = g_materialRoughness;
-        output.orm.b = g_materialMetalness;
+        ao = g_materialAmbientOcclusion;
+        roughness = g_materialRoughness;
+        metalness = g_materialMetalness;
     }
+    else
+    {
+        roughness = roughness * g_materialRoughness;
+        metalness = saturate(metalness + g_materialMetalness);
+        ao = ao * g_materialAmbientOcclusion;
+    }
+    
+    output.orm.r = ao;
+    output.orm.g = roughness;
+    output.orm.b = metalness;
     
     // normal
     float3x3 tbn = float3x3(

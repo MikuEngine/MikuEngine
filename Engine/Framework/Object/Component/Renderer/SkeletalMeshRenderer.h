@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Resource/Texture.h"
@@ -66,7 +66,7 @@ namespace engine
 
         Vector4 m_materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         Vector3 m_materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
-        float m_materialRoughness = 0.0f;
+        float m_materialRoughness = 1.0f;
         float m_materialMetalness = 0.0f;
         float m_materialAmbientOcclusion = 1.0f;
         float m_materialEmissiveIntensity = 1.0f;
