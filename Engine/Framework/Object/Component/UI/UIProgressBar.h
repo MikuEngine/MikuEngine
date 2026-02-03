@@ -58,6 +58,9 @@ namespace engine
 		// 0.0 = 원, (0~1) = 링 (값이 클수록 안쪽 구멍이 커짐)
 		void SetInnerRadius01(float t) { m_innerRadius01 = Clamp01(t); m_dirty = true; }
 
+		// Effect
+		void SetEffectCurse(const Vector4& curseColor, float intensity);
+
 	private:
 		void CreateVisuals();
 		void UpdateVisuals();
