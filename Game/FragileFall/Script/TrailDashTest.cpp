@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "TrailDashTest.h"
 
 #include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
@@ -62,6 +62,9 @@ namespace game
         else
             ImGui::TextColored(ImVec4(1.f, 0.4f, 0.4f, 1.f), "AfterimageRenderer not found on this GameObject");
         ImGui::Text("Dashing: %s", m_isDashing ? "Yes" : "No");
+
+        ImGui::DragFloat("Dash Duration", &m_dashDuration, 0.001f, 0.001f, 100.0f);
+        ImGui::DragFloat("Dash Speed", &m_dashSpeed, 0.1f, 0.1f, 100.0f);
     }
 
     void TrailDashTest::Save(engine::json& j) const

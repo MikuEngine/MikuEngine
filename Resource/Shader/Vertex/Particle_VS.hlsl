@@ -25,8 +25,8 @@ PS_INPUT_PARTICLE main(uint vertexID : SV_VertexID)
 {
     PS_INPUT_PARTICLE output;
     
-    uint particleIndex = vertexID / 6; // ¸î ¹øÂ° ÆÄÆ¼Å¬ÀÎÁö
-    uint vertexIndex = vertexID % 6; // »ç°¢ÇüÀÇ ¸î ¹øÂ° Á¡ÀÎÁö
+    uint particleIndex = vertexID / 6; // ï¿½ï¿½ ï¿½ï¿½Â° ï¿½ï¿½Æ¼Å¬ï¿½ï¿½ï¿½ï¿½
+    uint vertexIndex = vertexID % 6; // ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     
     PARTICLE_DATA p = g_sbParticleData[particleIndex];
     
@@ -39,7 +39,7 @@ PS_INPUT_PARTICLE main(uint vertexID : SV_VertexID)
     float s = sin(rad);
     float2 offset = k_quadOffsets[vertexIndex];
     
-    // 2D È¸Àü Àû¿ë
+    // 2D È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     float2 rotOffset;
     rotOffset.x = offset.x * c - offset.y * s;
     rotOffset.y = offset.x * s + offset.y * c;
@@ -48,7 +48,7 @@ PS_INPUT_PARTICLE main(uint vertexID : SV_VertexID)
         + right * (rotOffset.x * halfSize)
         + up * (rotOffset.y * halfSize);
     
-    // 4. Ãâ·Â ¼³Á¤
+    // 4. ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     output.position = mul(float4(finalPos, 1.0f), g_viewProjection);
     output.color = p.color;
     output.emissiveColor = p.emissiveColor;

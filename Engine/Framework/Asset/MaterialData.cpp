@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "MaterialData.h"
 
 #include <filesystem>
@@ -123,47 +123,47 @@ namespace engine
 
             if (aiReturn_SUCCESS == aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path))
             {
-                material.texturePaths[MaterialKey::BASE_COLOR_TEXTURE] = (textureBasePath / fs::path(path.C_Str()).filename()).string();
+                material.texturePaths[MaterialKey::BASE_COLOR_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::BASE_COLOR_TEXTURE);
             }
 
             if (aiReturn_SUCCESS == aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &path))
             {
-                material.texturePaths[MaterialKey::NORMAL_TEXTURE] = (textureBasePath / fs::path(path.C_Str()).filename()).string();
+                material.texturePaths[MaterialKey::NORMAL_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::NORMAL_TEXTURE);
             }
 
             if (aiReturn_SUCCESS == aiMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &path))
             {
-                material.texturePaths[MaterialKey::EMISSIVE_TEXTURE] = (textureBasePath / fs::path(path.C_Str()).filename()).string();
+                material.texturePaths[MaterialKey::EMISSIVE_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::EMISSIVE_TEXTURE);
             }
 
             if (aiReturn_SUCCESS == aiMaterial->GetTexture(aiTextureType_METALNESS, 0, &path))
             {
-                material.texturePaths[MaterialKey::METALNESS_TEXTURE] = (textureBasePath / fs::path(path.C_Str()).filename()).string();
+                material.texturePaths[MaterialKey::METALNESS_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::METALNESS_TEXTURE);
             }
 
             if (aiReturn_SUCCESS == aiMaterial->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS, 0, &path))
             {
-                material.texturePaths[MaterialKey::ROUGHNESS_TEXTURE] = (textureBasePath / fs::path(path.C_Str()).filename()).string();
+                material.texturePaths[MaterialKey::ROUGHNESS_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::ROUGHNESS_TEXTURE);
             }
             else if (aiReturn_SUCCESS == aiMaterial->GetTexture(aiTextureType_SHININESS, 0, &path))
             {
-                material.texturePaths[MaterialKey::ROUGHNESS_TEXTURE] = (textureBasePath / fs::path(path.C_Str()).filename()).string();
+                material.texturePaths[MaterialKey::ROUGHNESS_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::ROUGHNESS_TEXTURE);
             }
 
             if (aiReturn_SUCCESS == aiMaterial->GetTexture(aiTextureType_AMBIENT_OCCLUSION, 0, &path))
             {
-                material.texturePaths[MaterialKey::AMBIENT_OCCLUSION_TEXTURE] = (textureBasePath / fs::path(path.C_Str()).filename()).string();
+                material.texturePaths[MaterialKey::AMBIENT_OCCLUSION_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::AMBIENT_OCCLUSION_TEXTURE);
             }
             else if (aiReturn_SUCCESS == aiMaterial->Get("$raw.AmbientOcclusionTexture", 0, 0, path))
             {
-                material.texturePaths[MaterialKey::AMBIENT_OCCLUSION_TEXTURE] = (textureBasePath / fs::path(path.C_Str()).filename()).string();
+                material.texturePaths[MaterialKey::AMBIENT_OCCLUSION_TEXTURE] = (textureBasePath / fs::path(ToWideChar(path.C_Str())).filename()).string();
                 material.materialFlags |= static_cast<std::uint64_t>(MaterialKey::AMBIENT_OCCLUSION_TEXTURE);
             }
 

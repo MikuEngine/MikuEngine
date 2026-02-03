@@ -248,6 +248,7 @@ namespace engine
 		j["Angle"] = p.angle;
 		j["BoxSize"] = p.boxSize;
 		j["RandomDirection"] = p.randomDirection;
+		j["UseShapeDirection"] = p.useShapeDirection;
 
 		j["TextureTilesX"] = p.textureTilesX;
 		j["TextureTilesY"] = p.textureTilesY;
@@ -314,6 +315,8 @@ namespace engine
 		JsonGet(j, "Angle", p.angle);
 		JsonGet(j, "BoxSize", p.boxSize);
 		JsonGet(j, "RandomDirection", p.randomDirection);
+		// 구 세이브에 키 없으면 true(기존 동작: Shape 방향)로 로드해 호환 유지
+		JsonGet(j, "UseShapeDirection", p.useShapeDirection, true);
 
 		JsonGet(j, "TextureTilesX", p.textureTilesX);
 		JsonGet(j, "TextureTilesY", p.textureTilesY);
@@ -405,10 +408,10 @@ namespace engine
 
 		p.velocity = m_props.velocity;
 
-		if (m_props.shape != EmitterShape::Box || m_props.randomDirection)
+		if (m_props.useShapeDirection && (m_props.shape != EmitterShape::Box || m_props.randomDirection))
 		{
 			float speed = p.velocity.Length();
-			p.velocity = direction * speed;  // 방향 적용
+			p.velocity = direction * speed;  // Shape 방향으로 velocity 크기만 적용
 		}
 
 		p.velocity.x += Random::Float(-m_props.velocityVariation.x, m_props.velocityVariation.x);
