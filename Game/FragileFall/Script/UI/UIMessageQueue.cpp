@@ -11,11 +11,13 @@ namespace game
         m_kill.spawnPos = { 660.0f, -400.0f };
         m_kill.maxVisible = 3;
         m_kill.lifeTime = 3.0f;
+        m_kill.prefabKey = "UIToastPopUp";
 
         m_tutorial.canvas = engine::GameObject::Find("Canvas_Message"); // 튜토리얼
-        m_tutorial.spawnPos = { 660.0f, -400.0f };  // 원하는 위치
+        m_tutorial.spawnPos = { 510.0f, -300.0f };  // 원하는 위치
         m_tutorial.maxVisible = 1;                 
-        m_tutorial.lifeTime = 5.0f;              
+        m_tutorial.lifeTime = 5.0f;            
+        m_tutorial.prefabKey = "UIToastPopUp_Tutorial";
     }
 
     void UIMessageQueue::Start()

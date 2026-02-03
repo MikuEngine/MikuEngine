@@ -5365,7 +5365,7 @@
         {
             "ID": 58,
             "Name": "Canvas_Message",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",

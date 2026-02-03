@@ -24,10 +24,10 @@ namespace game
     private:
         engine::Ptr<UIMessageQueue> m_queue;
 
-        std::vector<std::string> m_texts;
         int m_index = 0;
 
         void ShowCurrent();
         void Next();
+        void Prev();
     };
 }
