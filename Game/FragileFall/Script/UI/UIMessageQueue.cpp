@@ -16,7 +16,8 @@ namespace game
         m_tutorial.canvas = engine::GameObject::Find("Canvas_Message"); // 튜토리얼
         m_tutorial.spawnPos = { 510.0f, -300.0f };  // 원하는 위치
         m_tutorial.maxVisible = 3;                 
-        m_tutorial.lifeTime = 9999.0f;            
+        m_tutorial.lifeTime = 9999.0f;         
+        m_tutorial.spacing = 160.0f;
         m_tutorial.prefabKey = "UIToastPopUp_Tutorial";
     }
 
@@ -131,33 +132,40 @@ namespace game
     void UIMessageQueue::SetSingle(UIMessageChannel ch, const std::string& text, bool playEnter)
     {
         auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : m_itemsTutorial;
-        auto& cfg = (ch == UIMessageChannel::Kill) ? m_kill : m_tutorial;
 
-        if (!cfg.canvas) return;
-
-        // 1) 이미 visible 1개가 있으면 그걸 재사용해서 텍스트만 교체
+        // 1) 이미 보이는 게 있으면 (단, 나가는 중이 아닌 것만)
         for (auto& it : q)
         {
-            if (!it.go || !it.visible) continue;
+            // exiting이 true인 것은 곧 파괴될 것이므로 무시합니다.
+            if (!it.go || !it.visible || it.exiting) continue;
 
             if (auto* anim = it.go->GetComponent<game::UIToastAnimator>())
             {
                 anim->SetText(text);
-
-                // 필요하면 "다시 들어오는" 연출만 재생
-                if (playEnter)
-                {
-                    it.born = engine::Time::GetTimestamp();
-                    it.exiting = false;
-
-                    const engine::Vector2 target = CalcTargetPos(cfg, 0);
-                    anim->PlayEnter(target);
-                }
+                return;
             }
-            return;
         }
 
+        // 2) 유효하게 보이는 게 없으면 새로 생성
         PushMessage(ch, text, "");
+    }
+
+    void UIMessageQueue::ClearChannel(UIMessageChannel ch, float fadeOutOverride)
+    {
+        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : m_itemsTutorial;
+
+        for (auto& it : q)
+        {
+            if (!it.go || !it.visible) continue;
+            if (it.exiting) continue;
+
+            it.exiting = true;
+            if (auto* anim = it.go->GetComponent<game::UIToastAnimator>())
+                anim->FadeOut(fadeOutOverride);
+            else
+                it.go->Destroy();
+        }
+        q.clear();
     }
 
     void UIMessageQueue::TryStartExitVisibleBatch(std::deque<Item>& q, const ChannelConfig& cfg)
