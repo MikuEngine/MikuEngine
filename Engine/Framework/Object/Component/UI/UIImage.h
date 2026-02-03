@@ -56,6 +56,11 @@ namespace engine
 		float m_outlineThickness = 0.0f;
 		Vector4 m_outlineColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 
+		enum class EffectMode
+		{
+
+		};
+
 		uint32_t m_effectMode = 0;
 		uint32_t m_effectFlags = 0;
 
@@ -65,8 +70,8 @@ namespace engine
 
 		std::shared_ptr<Texture> m_noiseTex;
 		std::shared_ptr<Texture> m_rampTex;
-		std::string m_noisePath = "None";
-		std::string m_rampPath = "None";
+		std::string m_noisePath = "Resource/Texture/Noise.png";
+		std::string m_rampPath = "Resource/Texture/Ramp.png";
 
 	public:
 		UIImage() = default;
@@ -109,29 +114,12 @@ namespace engine
 		// Effect
 		void ClearEffect();
 
-		// Progress / Bar 계열
-		void SetFlameProgress(
-			float feather,
-			float headWidth,
-			float emissive,
-			float flameIntensity,
-			float alphaJitter = 0.0f
-		);
-
-		void SetShineSweep(
-			float width,
-			float speed,
-			float angleRad,
-			float intensity
-		);
-
-		// Dissolve
-		void SetDissolve(
-			float threshold,
-			float softness,
-			float edgeWidth,
-			float edgeIntensity
-		);
+		void SetEffectScanLine(float density, float speed, float opacity);
+		void SetEffectGlowPulse(float speed, float minIntensity, float maxIntensity);
+		void SetEffectPixelate(float pixelSize);
+		void SetEffectHoverTransition(bool isHover);
+		void SetEffectAbyssalDecay();
+		void SetEffectStaticNoise(float intensity);
 
 	public:
 		bool HasRenderType(RenderType type) const override;
