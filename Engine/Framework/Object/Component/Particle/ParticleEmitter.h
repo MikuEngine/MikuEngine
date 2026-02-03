@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace engine
 {
@@ -88,6 +88,8 @@ namespace engine
 		float angle = 25.0f;
 		Vector3 boxSize{ 1.0f, 1.0f, 1.0f };
 		bool randomDirection = false;
+		/** false: velocity (x,y,z) 그대로 사용. true: Shape 방향으로 velocity 크기만 적용 (기존 동작) */
+		bool useShapeDirection = false;
 
 		std::uint32_t textureTilesX = 1;
 		std::uint32_t textureTilesY = 1;

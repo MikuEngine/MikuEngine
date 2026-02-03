@@ -1,6 +1,6 @@
 {
     "Name": "SkeletalMeshTest",
-    "NumGameObjects": 4,
+    "NumGameObjects": 5,
     "GameObjects": [
         {
             "ID": 0,
@@ -81,7 +81,7 @@
                         "y": 1.0,
                         "z": 1.0
                     },
-                    "MaterialRoughness": 0.0,
+                    "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
@@ -161,6 +161,116 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 1.0010813474655151,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true,
+                    "IsPlaying": true,
+                    "AutoDestroy": false,
+                    "Duration": 0.0,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/DefaultParticle.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 10.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 1.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "SizeBegin": 1.0,
+                            "SizeEnd": 1.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 10.0,
+                            "MaxParticles": 1000,
+                            "Shape": 1,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": []
+                        }
+                    ]
                 }
             ]
         }
