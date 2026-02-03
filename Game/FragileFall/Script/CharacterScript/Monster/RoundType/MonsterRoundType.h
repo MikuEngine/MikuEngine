@@ -16,8 +16,6 @@ namespace game
     // 특징:
     //   - MonsterScript 상속 (공통 스탯 6개 + Fragile 부활)
     //   - 5개 색상별 클래스의 기반 클래스
-    //   - 동글몬 전용 FSM (Idle, IdleMove, EngageMove, EngageStop, EngageAttack, Repositioning, Fragile, Dead)
-    //   - PathfindingAgent 기본 사용 (색상별로 오버라이드 가능)
     //   - AttackType::Round 고정
     //   - SkeletalMesh / StaticMesh 자동 감지 (Skeletal 우선)
     // 
@@ -25,6 +23,37 @@ namespace game
     //   - MonsterRoundGray, MonsterRoundGreen, MonsterRoundBlue,
     //   - MonsterRoundRed, MonsterRoundPurple
     // ═══════════════════════════════════════════════════════════════
+    // 
+    // ┌─────────────────────────────────────────────────────────────┐
+    // │                   자식 클래스 구현 가이드                     │
+    // ├─────────────────────────────────────────────────────────────┤
+    // │                                                             │
+    // │  [필수 오버라이드] - 자식에서 반드시 구현해야 함              │
+    // │    - InitializeFSM()      : 색상별 전용 FSM 정의             │
+    // │    - ProcessInput()       : 색상별 입력/감지 로직            │
+    // │    - CanMove()            : 색상별 이동 가능 상태 조건       │
+    // │    - CanAttack()          : 색상별 공격 가능 상태 조건       │
+    // │                                                             │
+    // │  [선택적 오버라이드] - 필요한 상태만 구현                     │
+    // │    - ExecuteIdleMoveBehavior*()       : IdleMove 상태       │
+    // │    - ExecuteEngageMoveBehavior*()     : EngageMove 상태     │
+    // │    - ExecuteEngageStopBehavior*()     : EngageStop 상태     │
+    // │    - ExecuteEngageAttackBehavior*()   : EngageAttack 상태   │
+    // │    - ExecuteRepositioningBehavior*()  : Repositioning 상태  │
+    // │    - Attack()             : 공격 패턴 (발사 로직)            │
+    // │    - InitializeBullet()   : 총알 설정                        │
+    // │    - OnStateEntered()     : 상태 진입 시 추가 처리           │
+    // │                             (부모 호출 권장)                 │
+    // │                                                             │
+    // │  [공통 사용] - 오버라이드 불필요 (부모 구현 사용)             │
+    // │    - ExecuteIdleBehavior*()      : Idle 상태 (타이머)        │
+    // │    - ExecuteFragileBehavior*()   : Fragile 상태 (부활)       │
+    // │    - ExecuteDeadBehavior*()      : Dead 상태 (파괴)          │
+    // │    - UpdateStateBasedBehavior()  : 상태 분기 (자동 호출)     │
+    // │    - UpdatePhysicsStateBasedBehavior() : 물리 상태 분기      │
+    // │    - OnGui(), Save(), Load()     : 직렬화                    │
+    // │                                                             │
+    // └─────────────────────────────────────────────────────────────┘
 
     // ─────────────────────────────────────────────
     // 메쉬 타입 열거형
@@ -65,7 +94,7 @@ namespace game
         std::string m_animName_Dead = "Dead";
         
         // ─────────────────────────────────────────────
-        // Idle → IdleMove 전이 설정
+        // Idle → 다음 상태 전이 설정
         // ─────────────────────────────────────────────
         float m_idleWaitTime = 1.0f;              // Idle 대기 시간 (초)
         float m_idleTimer = 0.0f;                 // Idle 경과 시간
@@ -83,20 +112,48 @@ namespace game
         void Awake() override;
         void Start() override;
 
+        // ─────────────────────────────────────────────
+        // 접근자
+        // ─────────────────────────────────────────────
+        const BulletParams& GetBulletParams() const { return m_bulletParams; }
+
     protected:
-        // ─────────────────────────────────────────────
-        // MonsterScript 오버라이드
-        // ─────────────────────────────────────────────
-        void InitializeFSM() override;
-        void InitializeAnimFSM() override;
-        void InitializeAnimations() override;
-        void InitializeBullet() override;
+        // ═══════════════════════════════════════════════════════════════
+        // [필수 오버라이드] - 자식에서 반드시 구현해야 함
+        // ═══════════════════════════════════════════════════════════════
         
-        // 입력 처리 (FSM 파라미터 업데이트)
+        // FSM 초기화 - 자식에서 색상별 전용 FSM 정의 필수
+        // 기본 구현: 샘플 8상태 FSM (실제 사용 시 오버라이드)
+        void InitializeFSM() override;
+        
+        // 입력 처리 - 자식에서 색상별 감지/파라미터 업데이트 필수
+        // 기본 구현: 거리 기반 감지 (실제 사용 시 오버라이드)
         void ProcessInput() override;
         
+        // 행동 제한 - 자식에서 색상별 상태 조건 정의 필수
+        // 기본 구현: IdleMove/EngageMove에서 이동, EngageAttack에서 공격
+        bool CanMove() const override;
+        bool CanAttack() const override;
+
+        // ═══════════════════════════════════════════════════════════════
+        // [선택적 오버라이드] - 필요한 상태만 구현
+        // ═══════════════════════════════════════════════════════════════
+        
+        // 총알 초기화 - 공격 패턴이 있는 경우 오버라이드
+        // 기본 구현: Linear 타입 총알
+        void InitializeBullet() override;
+        
+        // 공격 - 발사 로직이 다른 경우 오버라이드
+        // 기본 구현: 플레이어 방향 Linear 발사 + 애니메이션 타이머
+        void Attack(float deltaTime) override;
+        
+        // 상태 진입 콜백 - 추가 처리 필요 시 오버라이드 (부모 호출 권장)
+        // 기본 구현: 상태별 파라미터 초기화, 이동 정지 등
+        void OnStateEntered(const std::string& state) override;
+
         // ─────────────────────────────────────────────
-        // 상태별 행동 - 비물리 (Update에서 호출)
+        // 상태별 행동 - 비물리 (자식에서 필요한 것만 오버라이드)
+        // 기본 구현: 빈 구현 또는 Attack 호출
         // ─────────────────────────────────────────────
         void UpdateStateBasedBehavior(const std::string& state, float deltaTime) override;
         virtual void ExecuteIdleMoveBehaviorNonPhysics(float deltaTime);
@@ -104,12 +161,10 @@ namespace game
         virtual void ExecuteEngageStopBehaviorNonPhysics(float deltaTime);
         virtual void ExecuteEngageAttackBehaviorNonPhysics(float deltaTime);
         virtual void ExecuteRepositioningBehaviorNonPhysics(float deltaTime);
-        void ExecuteIdleBehaviorNonPhysics() override;
-        void ExecuteFragileBehaviorNonPhysics() override;
-        void ExecuteDeadBehaviorNonPhysics() override;
         
         // ─────────────────────────────────────────────
-        // 상태별 행동 - 물리 (FixedUpdate에서 호출)
+        // 상태별 행동 - 물리 (자식에서 필요한 것만 오버라이드)
+        // 기본 구현: 빈 구현 또는 MoveTowardsPlayer/StopAllMovement
         // ─────────────────────────────────────────────
         void UpdatePhysicsStateBasedBehavior(const std::string& state) override;
         virtual void ExecuteIdleMoveBehaviorPhysics();
@@ -117,25 +172,22 @@ namespace game
         virtual void ExecuteEngageStopBehaviorPhysics();
         virtual void ExecuteEngageAttackBehaviorPhysics();
         virtual void ExecuteRepositioningBehaviorPhysics();
+
+        // ═══════════════════════════════════════════════════════════════
+        // [공통 사용] - 오버라이드 불필요
+        // ═══════════════════════════════════════════════════════════════
+        
+        // AnimFSM 초기화 (LogicFSM 상태 → 애니메이션 매핑)
+        void InitializeAnimFSM() override;
+        void InitializeAnimations() override;
+        
+        // Idle, Fragile, Dead 상태 - 부모 로직 그대로 사용
+        void ExecuteIdleBehaviorNonPhysics() override;
+        void ExecuteFragileBehaviorNonPhysics() override;
+        void ExecuteDeadBehaviorNonPhysics() override;
         void ExecuteIdleBehaviorPhysics() override;
         void ExecuteFragileBehaviorPhysics() override;
         void ExecuteDeadBehaviorPhysics() override;
-        
-        // ─────────────────────────────────────────────
-        // 상태 진입 콜백
-        // ─────────────────────────────────────────────
-        void OnStateEntered(const std::string& state) override;
-        
-        // ─────────────────────────────────────────────
-        // 공격 (자식에서 오버라이드)
-        // ─────────────────────────────────────────────
-        void Attack(float deltaTime) override;
-        
-        // ─────────────────────────────────────────────
-        // 행동 제한
-        // ─────────────────────────────────────────────
-        bool CanMove() const override;
-        bool CanAttack() const override;
         
         // ─────────────────────────────────────────────
         // 헬퍼 함수

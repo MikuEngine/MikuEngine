@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundGreen.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -22,6 +22,9 @@ namespace game
         
         // Green 등급 고정
         m_monsterTier = MonsterTier::Green;
+        
+        // m_fireRate는 Load()에서 씬 파일 값 또는 kDefaultFireRate로 설정됨
+        // Awake()에서 강제 설정하면 씬 파일 값을 덮어쓰므로 여기서 설정하지 않음
     }
 
     void MonsterRoundGreen::Start()
@@ -79,10 +82,10 @@ namespace game
         }
         
         // ─────────────────────────────────────────────
-        // 현재 상태가 EngageMove가 아니면 반사 처리 안함
+        // 현재 상태가 EngageMove 또는 EngageAttack이 아니면 반사 처리 안함
         // ─────────────────────────────────────────────
         std::string currentState = GetCurrentState();
-        if (currentState != "EngageMove")
+        if (currentState != "EngageMove" && currentState != "EngageAttack")
         {
             return;
         }
@@ -140,18 +143,19 @@ namespace game
 
     // ═══════════════════════════════════════════════════════════════
     // Green 전용 FSM 초기화
-    // - EngageStop, EngageAttack, IdleMove, Repositioning 상태 없음
-    // - Idle → EngageMove → (반사 반복) → Fragile → Dead/Idle
+    // - Idle → EngageMove → EngageAttack → EngageMove (루프)
+    // - Fragile 전이는 우선순위 높음 (트리거)
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGreen::InitializeFSM()
     {
         if (!m_logicFSM) return;
 
         // ─────────────────────────────────────────────
-        // 상태 정의 (Green 전용 - 최소화)
+        // 상태 정의 (Green 전용)
         // ─────────────────────────────────────────────
         AddFSMState("Idle", true);           // 기본 상태 (대기)
         AddFSMState("EngageMove", false);    // 대각선 등속 운동
+        AddFSMState("EngageAttack", false);  // 공격 (이동 유지)
         AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
@@ -161,22 +165,32 @@ namespace game
         m_logicFSM->Initialize();
 
         // ─────────────────────────────────────────────
-        // 파라미터 정의 (Green에 필요한 것만)
+        // 파라미터 정의
         // ─────────────────────────────────────────────
         m_logicFSM->SetParameter("IdleTimerComplete", false);     // Idle 대기 시간 완료
+        m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
+        m_logicFSM->SetParameter("CanFire", m_canFire);
+        m_logicFSM->SetParameter("AttackComplete", false);
         m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
 
         // ─────────────────────────────────────────────
-        // 전이 정의 (Green 전용)
+        // 전이 정의
         // ─────────────────────────────────────────────
         
         // Idle → EngageMove (대기 시간 완료)
         AddFSMTransition("Idle", "EngageMove", "IdleTimerComplete", BoolTrue());
+        
+        // EngageMove → EngageAttack (사거리 진입 + 발사 가능)
+        AddFSMTransition("EngageMove", "EngageAttack", "PlayerInRange", BoolTrue(), "CanFire", BoolTrue());
+        
+        // EngageAttack → EngageMove (공격 완료, 다음 프레임)
+        AddFSMTransition("EngageAttack", "EngageMove", "AttackComplete", BoolTrue());
 
-        // Any → Fragile (HP 0, Fragile 트리거)
+        // Fragile 전이 (트리거 - 우선순위 높음)
         AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
         AddFSMTransition("EngageMove", "Fragile", "Fragile", Trigger());
+        AddFSMTransition("EngageAttack", "Fragile", "Fragile", Trigger());
 
         // Fragile → Dead (Execution, Die 트리거)
         AddFSMTransition("Fragile", "Dead", "Die", Trigger());
@@ -191,36 +205,159 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 총알 초기화 (Green은 발사 공격 안함 - 빈 구현)
+    // 총알 초기화
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGreen::InitializeBullet()
     {
-        // Green은 총알 발사 없음
-        // 필요시 나중에 구현
+        // Green: 포물선 총알
+        m_bulletParams.type = BulletType::Parabolic;
+        m_bulletParams.lifetime = m_bulletLifetime;
+        m_bulletParams.damage = static_cast<int>(m_attackDamage);
+
+        // ─────────────────────────────────────────────
+        // 포물선 전용 파라미터
+        // - speed, launchAngle, ownGravity는 Attack() 시점에 자동 계산
+        // - 여기서는 기본값만 설정
+        // ─────────────────────────────────────────────
+        m_bulletParams.speed = m_speedScale;          // 기본값 (Attack에서 덮어씀)
+        m_bulletParams.launchAngle = 45.0f;           // 기본값 (Attack에서 자동 계산)
+        m_bulletParams.ownGravity = 9.8f;             // 기본값 (Attack에서 자동 계산)
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 입력 처리 (Green 전용 - 최소화)
-    // - 레이캐스트 감지 없음
-    // - 공격 관련 검사 없음
+    // 입력 처리 (Green 전용)
+    // - 플레이어 찾기
+    // - 사거리/쿨타임 체크
+    // - FSM 파라미터 업데이트
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGreen::ProcessInput()
     {
-        // Green은 ProcessInput에서 할 일이 없음
-        // - 플레이어 감지: 없음 (시작 시 랜덤 방향, 이후 반사만)
-        // - 공격: 없음 (충돌 데미지만)
+        if (!m_logicFSM) return;
+
+        // 플레이어를 찾지 못했으면 재탐색
+        if (!m_targetPlayer)
+        {
+            FindPlayer();
+        }
+
+        // 플레이어 공격 사거리 체크
+        m_isPlayerInRange = IsPlayerInRange();
+        
+        // 발사 가능 여부 체크 (쿨타임)
+        m_canFire = (m_fireTimer <= 0.0f);
+
+        // FSM 파라미터 업데이트
+        m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
+        m_logicFSM->SetParameter("CanFire", m_canFire);
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // EngageMove 상태 물리 행동 (Green 전용)
-    // - 대각선 방향으로 등속 운동
+    // EngageMove 상태 물리 행동
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGreen::ExecuteEngageMoveBehaviorPhysics()
     {
-        if (!m_rigidbody) return;
+        ExecuteDiagonalMovement();
+    }
 
-        // 대각선 방향으로 등속 이동
-        MoveInDirection(m_moveDirectionVector, m_moveSpeed);
+    // ═══════════════════════════════════════════════════════════════
+    // EngageAttack 상태 비물리 행동
+    // - Attack() 호출
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGreen::ExecuteEngageAttackBehaviorNonPhysics(float deltaTime)
+    {
+        Attack(deltaTime);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // EngageAttack 상태 물리 행동
+    // - EngageMove와 동일한 이동 로직 (반사 포함)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGreen::ExecuteEngageAttackBehaviorPhysics()
+    {
+        ExecuteDiagonalMovement();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 공격 (Green 전용)
+    // - 플레이어 방향으로 발사
+    // - 발사 후 다음 프레임에 EngageMove로 복귀
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGreen::Attack(float deltaTime)
+    {
+        //임시선언
+        float bulletStartOffsetForward = 0.3f;
+        float bulletStartOffsetY = 1.5f;
+
+        // 발사 가능 상태 (쿨타임 완료)
+        if (m_fireTimer <= 0.0f)
+        {
+            if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
+            {
+                // 플레이어 방향으로 발사
+                engine::Vector3 direction = CalculateDirectionToPlayer();
+                engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
+                
+                // ─────────────────────────────────────────────
+                // Parabolic 타입: 파라미터 자동 계산
+                // - 착탄점: 플레이어 XZ, Y=0
+                // - 속도: m_speedScale
+                // - 최대 높이: m_parabolicHeightScale
+                // - 자동 계산: launchAngle, gravity
+                // ─────────────────────────────────────────────
+                if (m_bulletParams.type == BulletType::Parabolic)
+                {
+                    // 착탄점 설정 (플레이어 XZ, Y=0)
+                    engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+                    engine::Vector3 bulletStartPos = firePosition + direction * bulletStartOffsetForward;
+                    bulletStartPos.y = bulletStartOffsetY;
+                    engine::Vector3 targetPos(playerPos.x, 0.0f, playerPos.z);
+                    
+                    // 파라미터 자동 계산
+                    float angleRad = 0.0f;
+                    float gravity = 9.8f;
+                    CalculateParabolicParams(targetPos, angleRad, gravity);
+                    
+                    // BulletParams에 계산된 값 설정
+                    m_bulletParams.speed = m_speedScale;
+                    m_bulletParams.launchAngle = angleRad * 180.0f / 3.14159265f;  // 도(degree)로 변환
+                    m_bulletParams.ownGravity = gravity;                    
+                    
+                }
+                
+                m_bulletFactory->ParabolicFireMonster(firePosition, direction, m_bulletParams);
+
+                // 공격 애니메이션 재생 (SkeletalMesh 사용 시에만)
+                if (HasAnimation() && !m_animName_EngageAttack.empty())
+                {
+                    m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
+                }
+
+                // 발사 쿨타임 리셋
+                m_fireTimer = m_fireRate;
+            }
+        }
+
+        // 공격 완료 → 다음 프레임에 EngageMove로 복귀
+        if (m_logicFSM)
+        {
+            m_logicFSM->SetParameter("AttackComplete", true);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 행동 제한 (Green 전용)
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundGreen::CanMove() const
+    {
+        std::string state = GetCurrentState();
+        // EngageMove, EngageAttack 모두 이동 가능
+        return state == "EngageMove" || state == "EngageAttack";
+    }
+
+    bool MonsterRoundGreen::CanAttack() const
+    {
+        std::string state = GetCurrentState();
+        return state == "EngageAttack" && !m_isFragile && !m_isDead;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -233,10 +370,42 @@ namespace game
         
         if (state == "EngageMove")
         {
-            // EngageMove 진입 시 항상 랜덤 대각선 방향 설정
-            // (Idle → EngageMove 전이 시, 부활 후 포함)
+            // EngageMove 진입 시 AttackComplete 초기화
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("AttackComplete", false);
+            }
+            
+            // Idle에서 처음 전이한 경우에만 랜덤 방향 설정
+            // (EngageAttack에서 복귀 시에는 방향 유지)
+            // 부모의 OnStateEntered에서 Idle 타이머가 리셋되므로,
+            // Idle에서 온 건지 확인하기 위해 별도 플래그 필요 없음
+            // → Idle 진입 시 방향을 랜덤으로 설정하는 방식으로 변경
+        }
+        else if (state == "Idle")
+        {
+            // Idle 진입 시 (시작/부활) 랜덤 방향 설정
             SetRandomDiagonalDirection();
         }
+        else if (state == "EngageAttack")
+        {
+            // EngageAttack 진입 시 AttackComplete 초기화
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("AttackComplete", false);
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 대각선 이동 실행 (EngageMove, EngageAttack 공용)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGreen::ExecuteDiagonalMovement()
+    {
+        if (!m_rigidbody) return;
+
+        // 대각선 방향으로 등속 이동
+        MoveInDirection(m_moveDirectionVector, m_moveSpeed);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -334,15 +503,38 @@ namespace game
     void MonsterRoundGreen::OnGui()
     {
         ImGui::Text("=== MonsterRoundGreen ===");
-        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Tier: Green");
+        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Tier: Green (Parabolic)");
         
         // 부모 클래스 OnGui 호출
         MonsterRoundType::OnGui();
         
         // Green 전용 설정
         ImGui::Separator();
-        ImGui::Text("=== Green Movement Settings ===");
+        ImGui::Text("=== Green Settings ===");
         ImGui::DragFloat("Damage Cooldown", &m_damageCooldown, 0.1f, 0.1f, 5.0f);
+
+        // ─────────────────────────────────────────────
+        // 포물선 설정 (Green은 항상 Parabolic)
+        // - 편집 가능: speedScale, parabolicHeightScale
+        // - 읽기 전용: launchAngle, gravity (자동 계산됨)
+        // ─────────────────────────────────────────────
+        ImGui::Separator();
+        ImGui::Text("=== Parabolic Bullet Settings ===");
+        
+        // 편집 가능한 설정
+        ImGui::DragFloat("Speed Scale", &m_speedScale, 0.1f, 0.1f, 50.0f, "%.1f");
+        ImGui::DragFloat("Max Height (Y)", &m_parabolicHeightScale, 0.1f, 0.5f, 50.0f, "%.1f m");
+        
+        ImGui::Spacing();
+        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Auto-calculated (read-only):");
+        
+        // 읽기 전용: 마지막으로 계산된 값 표시
+        ImGui::Text("  Launch Angle: %.1f deg", m_bulletParams.launchAngle);
+        ImGui::Text("  Gravity: %.2f", m_bulletParams.ownGravity);
+        ImGui::Text("  Speed: %.1f", m_bulletParams.speed);
+        
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+            "(Angle & Gravity calculated at fire time based on player distance)");
         
         // 런타임 정보
         ImGui::Separator();
@@ -351,6 +543,9 @@ namespace game
         ImGui::Text("Current Direction: %s", diagDirNames[static_cast<int>(m_currentDiagonalDirection)]);
         ImGui::Text("Direction Vector: (%.2f, %.2f, %.2f)", 
             m_moveDirectionVector.x, m_moveDirectionVector.y, m_moveDirectionVector.z);
+        ImGui::Text("Player In Attack Range: %s", m_isPlayerInRange ? "Yes" : "No");
+        ImGui::Text("Can Fire: %s", m_canFire ? "Yes" : "No");
+        ImGui::Text("Fire Timer: %.2f / %.2f", m_fireTimer, m_fireRate);
     }
 
     void MonsterRoundGreen::Save(engine::json& j) const
@@ -365,7 +560,24 @@ namespace game
     {
         MonsterRoundType::Load(j);
         
+        // ─────────────────────────────────────────────
+        // Green 전용 기본값 적용 (씬 파일에 값이 없을 때만)
+        // 우선순위: 씬 파일 값 > kDefault 상수
+        // ─────────────────────────────────────────────
+        if (!j.contains("FireRate"))
+        {
+            m_fireRate = kDefaultFireRate;  // 5.0f
+        }
+        // else: MonsterScript::Load()에서 씬 파일 값이 이미 로드됨
+        
         // Green 전용 데이터 로드
-        m_damageCooldown = j.value("DamageCooldown", 1.0f);
+        if (!j.contains("DamageCooldown"))
+        {
+            m_damageCooldown = kDefaultDamageCooldown;  // 1.0f
+        }
+        else
+        {
+            m_damageCooldown = j.value("DamageCooldown", kDefaultDamageCooldown);
+        }
     }
 }

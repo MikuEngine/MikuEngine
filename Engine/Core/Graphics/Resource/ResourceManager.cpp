@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ResourceManager.h"
 
 #include "Core/Graphics/Resource/IndexBuffer.h"
@@ -574,6 +574,20 @@ namespace engine
             desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
             m_defaultBlendStates[static_cast<size_t>(DefaultBlendType::AlphaBlend)] = std::make_shared<BlendState>();
             m_defaultBlendStates[static_cast<size_t>(DefaultBlendType::AlphaBlend)]->Create(desc);
+        }
+        // AlphaBlendPremultiplied (셰이더에서 rgb*=a 출력 시 One, InvSrcAlpha)
+        {
+            D3D11_BLEND_DESC desc{};
+            desc.RenderTarget[0].BlendEnable = TRUE;
+            desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+            desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+            desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+            desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+            desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+            desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+            desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+            m_defaultBlendStates[static_cast<size_t>(DefaultBlendType::AlphaBlendPremultiplied)] = std::make_shared<BlendState>();
+            m_defaultBlendStates[static_cast<size_t>(DefaultBlendType::AlphaBlendPremultiplied)]->Create(desc);
         }
         // Additive (더하기 - 이펙트)
         {

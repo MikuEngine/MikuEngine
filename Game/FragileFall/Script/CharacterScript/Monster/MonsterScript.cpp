@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -189,6 +189,100 @@ namespace game
 	{
 		// 기본 구현은 비어있음
 		// 자손 클래스에서 오버라이드하여 구현
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 포물선 파라미터 자동 계산
+	// 
+	// 주어진 값:
+	//   - m_speedScale: 속도 (에디터 설정)
+	//   - m_parabolicHeightScale: 최대 높이 Y좌표 (에디터 설정, 절대값)
+	//   - targetPos: 착탄점 (플레이어 XZ, Y=0)
+	//   - 발사 위치: 현재 몬스터 위치
+	// 
+	// 계산 결과:
+	//   - outAngleRad: 발사각 (라디안)
+	//   - outGravity: 자체 중력
+	// ═══════════════════════════════════════════════════════════════
+	bool MonsterScript::CalculateParabolicParams(
+		const engine::Vector3& targetPos,
+		float& outAngleRad,
+		float& outGravity
+	) const
+	{
+		engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+		
+		// 수평 거리 계산 (XZ 평면)
+		float dx_x = targetPos.x - myPos.x;
+		float dx_z = targetPos.z - myPos.z;
+		float R = std::sqrt(dx_x * dx_x + dx_z * dx_z);  // 수평 거리
+		
+		// 최소 거리 체크 (division by zero 방지)
+		constexpr float kMinDistance = 0.5f;
+		if (R < kMinDistance)
+		{
+			// 너무 가까우면 기본값 사용
+			outAngleRad = 45.0f * 3.14159265f / 180.0f;
+			outGravity = 9.8f;
+			return false;
+		}
+		
+		float h1 = myPos.y;                    // 발사 위치 Y
+		float H = m_parabolicHeightScale;     // 최대 높이 Y좌표 (절대값)
+		float v = m_speedScale;               // 속도
+		
+		// 조건 체크: 최대 높이가 발사 위치보다 높아야 함
+		if (H <= h1)
+		{
+			// 최대 높이가 발사 위치보다 낮으면 기본값 사용
+			outAngleRad = 45.0f * 3.14159265f / 180.0f;
+			outGravity = 9.8f;
+			return false;
+		}
+		
+		// ─────────────────────────────────────────────
+		// 포물선 계수 계산
+		// 
+		// 포물선 방정식: y(x) = a*x² + b*x + c
+		// 조건:
+		//   1. y(0) = h1 (발사점)
+		//   2. y(R) = 0 (착탄점, Y=0)
+		//   3. 최고점 y = H
+		// 
+		// 결과:
+		//   b = 2 * [(H - h1) + sqrt(H * (H - h1))] / R
+		//   a = -(b * R + h1) / R²
+		// ─────────────────────────────────────────────
+		float H_rel = H - h1;  // 발사 위치 기준 상대 높이
+		
+		// b 계산 (양수 해 선택 - 포물선이 위로 향하는 경우)
+		float sqrtTerm = std::sqrt(H * H_rel);
+		float b = 2.0f * (H_rel + sqrtTerm) / R;
+		
+		// a 계산 (음수여야 함 - 위로 볼록한 포물선)
+		float a = -(b * R + h1) / (R * R);
+		
+		// ─────────────────────────────────────────────
+		// 발사각 계산: tan(θ) = y'(0) = b
+		// ─────────────────────────────────────────────
+		outAngleRad = std::atan(b);
+		
+		// ─────────────────────────────────────────────
+		// 중력 계산: a = -g / (2 * v² * cos²(θ))
+		// => g = -2 * a * v² * cos²(θ)
+		// ─────────────────────────────────────────────
+		float cosTheta = std::cos(outAngleRad);
+		outGravity = -2.0f * a * v * v * cosTheta * cosTheta;
+		
+		// 중력이 음수가 되면 안 됨 (물리적으로 불가능)
+		if (outGravity <= 0.0f)
+		{
+			outAngleRad = 45.0f * 3.14159265f / 180.0f;
+			outGravity = 9.8f;
+			return false;
+		}
+		
+		return true;
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -817,6 +911,10 @@ namespace game
 		j["FireRate"] = m_fireRate;
 		j["BulletSpeed"] = m_bulletSpeed;
 		j["BulletLifetime"] = m_bulletLifetime;
+
+		// 포물선 총알 설정 (Parabolic 타입에서만 사용)
+		j["SpeedScale"] = m_speedScale;
+		j["ParabolicHeightScale"] = m_parabolicHeightScale;
 	}
 
 	void MonsterScript::Load(const engine::json& j)
@@ -844,5 +942,9 @@ namespace game
 		m_fireRate = j.value("FireRate", 3.0f);
 		m_bulletSpeed = j.value("BulletSpeed", 1.0f);
 		m_bulletLifetime = j.value("BulletLifetime", 3.0f);
+
+		// 포물선 총알 설정 (Parabolic 타입에서만 사용)
+		m_speedScale = j.value("SpeedScale", 10.0f);
+		m_parabolicHeightScale = j.value("ParabolicHeightScale", 5.0f);
 	}
 }
