@@ -156,6 +156,10 @@ namespace engine
 			countToRender = MAX_PARTICLES;
 		}
 
+		// World 스케일 중 가장 큰 값으로 파티클 크기 일괄 적용
+		Vector3 worldScale = effect->GetTransform()->GetWorldScale();
+		float uniformScale = std::max({ worldScale.x, worldScale.y, worldScale.z });
+
 		m_structuredDataBuffer.clear();
 		m_structuredDataBuffer.reserve(countToRender);
 
@@ -170,7 +174,7 @@ namespace engine
 			data.emissiveColor = p.emissiveColor;
 			data.emissiveIntensity = p.emissiveIntensity;
 			data.rotation = p.rotation;
-			data.size = p.size;
+			data.size = p.size * uniformScale;
 			data.uvOffset = p.uvOffset;
 			data.uvScale = p.uvScale;
 

@@ -68,17 +68,22 @@ namespace engine
 		// C-1: 기록 플래그
 		bool m_isRecording = false;
 
-		// 솔리드 레이어 전용 (알파 없음, emissive/언릿)
+		// 솔리드 레이어 전용 (emissive/언릿, 알파·감쇠·밝기 옵션)
 		bool m_drawSolidLayer = false;
 		Vector4 m_solidColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		float m_solidInitialAlpha = 1.0f;
+		float m_solidDecaySpeed = 1.5f;
+		AlphaDecayMode m_solidDecayMode = AlphaDecayMode::Simultaneous;
+		float m_solidEmissiveIntensity = 1.0f;   // 1 이상이면 더 밝게
 		size_t m_solidMaxSlices = AFTERIMAGE_DEFAULT_MAX_SLICES;
 		float m_solidSampleInterval = 0.0f;
 		float m_solidLastSampleTime = 0.0f;
 		std::vector<AfterimageSlice> m_slicesSolid;
 
-		// 알파 레이어 전용 (감쇠 + 틴트, 라이팅)
+		// 알파 레이어 전용 (감쇠 + 틴트, 라이팅 + 옵션 emissive)
 		bool m_drawAlphaLayer = true;
 		Vector4 m_alphaTint = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		float m_alphaEmissiveIntensity = 0.0f;   // 0 = 라이팅만, 1 이상 = emissive 추가로 밝게
 		float m_alphaInitialAlpha = 0.7f;
 		float m_alphaDecaySpeed = 1.5f;
 		AlphaDecayMode m_alphaDecayMode = AlphaDecayMode::Simultaneous;
@@ -109,6 +114,14 @@ namespace engine
 		size_t GetSolidMaxSlices() const { return m_solidMaxSlices; }
 		void SetSolidSampleInterval(float seconds);
 		float GetSolidSampleInterval() const { return m_solidSampleInterval; }
+		void SetSolidInitialAlpha(float alpha);
+		float GetSolidInitialAlpha() const { return m_solidInitialAlpha; }
+		void SetSolidDecaySpeed(float speed);
+		float GetSolidDecaySpeed() const { return m_solidDecaySpeed; }
+		void SetSolidDecayMode(AlphaDecayMode mode) { m_solidDecayMode = mode; }
+		AlphaDecayMode GetSolidDecayMode() const { return m_solidDecayMode; }
+		void SetSolidEmissiveIntensity(float intensity);
+		float GetSolidEmissiveIntensity() const { return m_solidEmissiveIntensity; }
 		// 알파 레이어 전용
 		void SetAlphaInitialAlpha(float alpha);
 		float GetAlphaInitialAlpha() const { return m_alphaInitialAlpha; }
@@ -137,6 +150,8 @@ namespace engine
 		bool GetDrawAlphaLayer() const { return m_drawAlphaLayer; }
 		void SetAlphaTint(const Vector4& color);
 		const Vector4& GetAlphaTint() const { return m_alphaTint; }
+		void SetAlphaEmissiveIntensity(float intensity);
+		float GetAlphaEmissiveIntensity() const { return m_alphaEmissiveIntensity; }
 
 		AfterimageRenderer() = default;
 		~AfterimageRenderer() override = default;

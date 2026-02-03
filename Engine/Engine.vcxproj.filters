@@ -141,9 +141,6 @@
     <ClCompile Include="Framework\Object\Component\Renderer\StaticMeshRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Object\Component\Renderer\AfterimageRenderer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Graphics\Resource\MaterialHelper.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -378,6 +375,9 @@
     <ClCompile Include="Framework\System\LoadingScreenRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\Object\Component\Renderer\AfterimageRenderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\App\WinApp.h">
@@ -534,9 +534,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Object\Component\Renderer\StaticMeshRenderer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\Object\Component\Renderer\AfterimageRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Resource\MaterialHelper.h">
@@ -803,6 +800,9 @@
     <ClInclude Include="Framework\System\LoadingScreenRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Framework\Object\Component\Renderer\AfterimageRenderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Vertex\FullscreenQuad_VS.hlsl" />
@@ -854,6 +854,7 @@
     <FxCompile Include="Shader\Vertex\Particle_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\Particle_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\UIQuadOutline_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\EmissiveTransparent_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

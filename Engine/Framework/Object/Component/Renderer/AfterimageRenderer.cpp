@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "AfterimageRenderer.h"
 
 #include "Framework/Object/Component/Renderer/SkeletalMeshRenderer.h"
@@ -118,16 +118,35 @@ namespace engine
 
 	void AfterimageRenderer::Update()
 	{
-		// 알파 레이어만 감쇠 (솔리드는 감쇠 없음)
+		const float dt = Time::DeltaTime();
+
+		// 솔리드 레이어 감쇠
+		if (m_solidDecaySpeed > 0.0f && !m_slicesSolid.empty())
+		{
+			if (m_solidDecayMode == AlphaDecayMode::Simultaneous)
+			{
+				for (auto& slice : m_slicesSolid)
+					slice.alpha -= m_solidDecaySpeed * dt;
+				m_slicesSolid.erase(
+					std::remove_if(m_slicesSolid.begin(), m_slicesSolid.end(),
+						[](const AfterimageSlice& s) { return s.alpha <= 0.0f; }),
+					m_slicesSolid.end());
+			}
+			else
+			{
+				m_slicesSolid.front().alpha -= m_solidDecaySpeed * dt;
+				if (m_slicesSolid.front().alpha <= 0.0f)
+					m_slicesSolid.erase(m_slicesSolid.begin());
+			}
+		}
+
+		// 알파 레이어 감쇠
 		if (m_alphaDecaySpeed > 0.0f && !m_slicesAlpha.empty())
 		{
-			const float dt = Time::DeltaTime();
 			if (m_alphaDecayMode == AlphaDecayMode::Simultaneous)
 			{
 				for (auto& slice : m_slicesAlpha)
-				{
 					slice.alpha -= m_alphaDecaySpeed * dt;
-				}
 				m_slicesAlpha.erase(
 					std::remove_if(m_slicesAlpha.begin(), m_slicesAlpha.end(),
 						[](const AfterimageSlice& s) { return s.alpha <= 0.0f; }),
@@ -137,9 +156,7 @@ namespace engine
 			{
 				m_slicesAlpha.front().alpha -= m_alphaDecaySpeed * dt;
 				if (m_slicesAlpha.front().alpha <= 0.0f)
-				{
 					m_slicesAlpha.erase(m_slicesAlpha.begin());
-				}
 			}
 		}
 
@@ -242,20 +259,20 @@ namespace engine
 			}
 		};
 
-		// 솔리드 레이어: emissive PS, 빛 영향 없음, 알파=1
+		// 솔리드 레이어: emissive PS, 빛 영향 없음, slice.alpha + emissive intensity
 		if (m_drawSolidLayer && !m_slicesSolid.empty())
 		{
 			for (const auto& slice : m_slicesSolid)
-				drawOneSlice(slice, m_solidColor, 1.0f, 1.0f, m_emissivePS.get());
+				drawOneSlice(slice, m_solidColor, slice.alpha, m_solidEmissiveIntensity, m_emissivePS.get());
 		}
-		// 알파 레이어: 라이팅 PS, 감쇠+틴트
+		// 알파 레이어: 라이팅 PS, 감쇠+틴트 + 옵션 emissive
 		if (m_drawAlphaLayer && !m_slicesAlpha.empty())
 		{
 			deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
 			for (const auto& slice : m_slicesAlpha)
 			{
 				const float alpha = slice.alpha * m_alphaTint.w;
-				drawOneSlice(slice, m_alphaTint, alpha, 0.0f, m_transparentPS.get());
+				drawOneSlice(slice, m_alphaTint, alpha, m_alphaEmissiveIntensity, m_transparentPS.get());
 			}
 		}
 
@@ -292,7 +309,7 @@ namespace engine
 				m_solidLastSampleTime = now;
 				AfterimageSlice slice;
 				slice.world = world;
-				slice.alpha = 1.0f;
+				slice.alpha = m_solidInitialAlpha;
 				m_slicesSolid.push_back(slice);
 				while (m_slicesSolid.size() > m_solidMaxSlices)
 					m_slicesSolid.erase(m_slicesSolid.begin());
@@ -326,7 +343,7 @@ namespace engine
 				m_solidLastSampleTime = now;
 				AfterimageSlice slice;
 				slice.world = world;
-				slice.alpha = 1.0f;
+				slice.alpha = m_solidInitialAlpha;
 				m_slicesSolid.push_back(slice);
 				while (m_slicesSolid.size() > m_solidMaxSlices)
 					m_slicesSolid.erase(m_slicesSolid.begin());
@@ -374,7 +391,7 @@ namespace engine
 			sliceWorld._43 = pos.z;
 			AfterimageSlice sliceSolid;
 			sliceSolid.world = sliceWorld;
-			sliceSolid.alpha = 1.0f;
+			sliceSolid.alpha = m_solidInitialAlpha;
 			AfterimageSlice sliceAlpha;
 			sliceAlpha.world = sliceWorld;
 			sliceAlpha.alpha = m_alphaInitialAlpha;
@@ -403,6 +420,21 @@ namespace engine
 	void AfterimageRenderer::SetSolidSampleInterval(float seconds)
 	{
 		m_solidSampleInterval = std::max(0.0f, seconds);
+	}
+
+	void AfterimageRenderer::SetSolidInitialAlpha(float alpha)
+	{
+		m_solidInitialAlpha = std::clamp(alpha, 0.0f, 1.0f);
+	}
+
+	void AfterimageRenderer::SetSolidDecaySpeed(float speed)
+	{
+		m_solidDecaySpeed = std::max(0.0f, speed);
+	}
+
+	void AfterimageRenderer::SetSolidEmissiveIntensity(float intensity)
+	{
+		m_solidEmissiveIntensity = std::max(0.0f, intensity);
 	}
 
 	void AfterimageRenderer::SetAlphaInitialAlpha(float alpha)
@@ -437,6 +469,11 @@ namespace engine
 	{
 		m_alphaTint = color;
 		m_alphaTint.w = std::clamp(m_alphaTint.w, 0.0f, 1.0f);
+	}
+
+	void AfterimageRenderer::SetAlphaEmissiveIntensity(float intensity)
+	{
+		m_alphaEmissiveIntensity = std::max(0.0f, intensity);
 	}
 
 	void AfterimageRenderer::OnGui()
@@ -474,6 +511,20 @@ namespace engine
 			float sc[4] = { m_solidColor.x, m_solidColor.y, m_solidColor.z, 1.0f };
 			if (ImGui::ColorEdit3("Solid Color", sc, ImGuiColorEditFlags_NoInputs))
 				SetSolidColor(Vector4(sc[0], sc[1], sc[2], 1.0f));
+			float solidInitialAlpha = m_solidInitialAlpha;
+			if (ImGui::SliderFloat("Solid Initial Alpha", &solidInitialAlpha, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+				SetSolidInitialAlpha(solidInitialAlpha);
+			float solidDecay = m_solidDecaySpeed;
+			if (ImGui::DragFloat("Solid Decay Speed", &solidDecay, 0.1f, 0.0f, 10.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+				SetSolidDecaySpeed(solidDecay);
+			int solidDecayMode = static_cast<int>(m_solidDecayMode);
+			const char* solidDecayNames[] = { "Simultaneous", "Sequential" };
+			if (ImGui::Combo("Solid Decay Mode", &solidDecayMode, solidDecayNames, 2))
+				SetSolidDecayMode(static_cast<AlphaDecayMode>(solidDecayMode));
+			float solidEmissive = m_solidEmissiveIntensity;
+			if (ImGui::DragFloat("Solid Emissive Intensity", &solidEmissive, 0.1f, 0.0f, 100.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+				SetSolidEmissiveIntensity(solidEmissive);
+			ImGui::TextUnformatted("(1 = normal, >1 = brighter)");
 			int solidMax = static_cast<int>(m_solidMaxSlices);
 			if (ImGui::SliderInt("Solid Max Slices", &solidMax, static_cast<int>(AFTERIMAGE_MIN_SLICES), static_cast<int>(AFTERIMAGE_MAX_SLICES_CAP), "%d", ImGuiSliderFlags_AlwaysClamp))
 				SetSolidMaxSlices(static_cast<size_t>(solidMax));
@@ -508,6 +559,10 @@ namespace engine
 			float alphaInterval = m_alphaSampleInterval;
 			if (ImGui::DragFloat("Alpha Sample Interval (s)", &alphaInterval, 0.005f, 0.0f, 0.2f, "%.3f", ImGuiSliderFlags_AlwaysClamp))
 				SetAlphaSampleInterval(alphaInterval);
+			float alphaEmissive = m_alphaEmissiveIntensity;
+			if (ImGui::DragFloat("Alpha Emissive Intensity", &alphaEmissive, 0.1f, 0.0f, 10.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+				SetAlphaEmissiveIntensity(alphaEmissive);
+			ImGui::TextUnformatted("(0 = lighting only, >0 = add emissive)");
 			ImGui::Text("Alpha Slices: %zu / %zu", m_slicesAlpha.size(), m_alphaMaxSlices);
 		}
 
@@ -520,10 +575,15 @@ namespace engine
 
 		j["DrawSolidLayer"] = m_drawSolidLayer;
 		j["SolidColor"] = { m_solidColor.x, m_solidColor.y, m_solidColor.z };
+		j["SolidInitialAlpha"] = m_solidInitialAlpha;
+		j["SolidDecaySpeed"] = m_solidDecaySpeed;
+		j["SolidDecayMode"] = static_cast<int>(m_solidDecayMode);
+		j["SolidEmissiveIntensity"] = m_solidEmissiveIntensity;
 		j["SolidMaxSlices"] = m_solidMaxSlices;
 		j["SolidSampleInterval"] = m_solidSampleInterval;
 		j["DrawAlphaLayer"] = m_drawAlphaLayer;
 		j["AlphaTint"] = { m_alphaTint.x, m_alphaTint.y, m_alphaTint.z, m_alphaTint.w };
+		j["AlphaEmissiveIntensity"] = m_alphaEmissiveIntensity;
 		j["AlphaInitialAlpha"] = m_alphaInitialAlpha;
 		j["AlphaDecaySpeed"] = m_alphaDecaySpeed;
 		j["AlphaDecayMode"] = static_cast<int>(m_alphaDecayMode);
@@ -551,6 +611,15 @@ namespace engine
 			m_solidColor.z = j["SolidColor"][2].get<float>();
 			m_solidColor.w = 1.0f;
 		}
+		JsonGet(j, "SolidInitialAlpha", m_solidInitialAlpha, 1.0f);
+		JsonGet(j, "SolidDecaySpeed", m_solidDecaySpeed, 1.5f);
+		if (j.contains("SolidDecayMode"))
+		{
+			int dm = static_cast<int>(m_solidDecayMode);
+			JsonGet(j, "SolidDecayMode", dm, 0);
+			m_solidDecayMode = (dm == 1) ? AlphaDecayMode::Sequential : AlphaDecayMode::Simultaneous;
+		}
+		JsonGet(j, "SolidEmissiveIntensity", m_solidEmissiveIntensity, 1.0f);
 		JsonGet(j, "SolidMaxSlices", m_solidMaxSlices, static_cast<size_t>(AFTERIMAGE_DEFAULT_MAX_SLICES));
 		JsonGet(j, "SolidSampleInterval", m_solidSampleInterval, 0.0f);
 		if (j.contains("DrawAlphaLayer"))
@@ -562,6 +631,7 @@ namespace engine
 			m_alphaTint.z = j["AlphaTint"][2].get<float>();
 			m_alphaTint.w = j["AlphaTint"][3].get<float>();
 		}
+		JsonGet(j, "AlphaEmissiveIntensity", m_alphaEmissiveIntensity, 0.0f);
 		JsonGet(j, "AlphaInitialAlpha", m_alphaInitialAlpha, 0.7f);
 		JsonGet(j, "AlphaDecaySpeed", m_alphaDecaySpeed, 1.5f);
 		int decayMode = static_cast<int>(m_alphaDecayMode);
@@ -570,8 +640,12 @@ namespace engine
 		JsonGet(j, "AlphaMaxSlices", m_alphaMaxSlices, static_cast<size_t>(AFTERIMAGE_DEFAULT_MAX_SLICES));
 		JsonGet(j, "AlphaSampleInterval", m_alphaSampleInterval, 0.0f);
 
+		m_solidInitialAlpha = std::clamp(m_solidInitialAlpha, 0.0f, 1.0f);
+		m_solidDecaySpeed = std::max(0.0f, m_solidDecaySpeed);
+		m_solidEmissiveIntensity = std::max(0.0f, m_solidEmissiveIntensity);
 		m_solidMaxSlices = std::clamp(m_solidMaxSlices, AFTERIMAGE_MIN_SLICES, AFTERIMAGE_MAX_SLICES_CAP);
 		m_solidSampleInterval = std::max(0.0f, m_solidSampleInterval);
+		m_alphaEmissiveIntensity = std::max(0.0f, m_alphaEmissiveIntensity);
 		m_alphaInitialAlpha = std::clamp(m_alphaInitialAlpha, 0.0f, 1.0f);
 		m_alphaDecaySpeed = std::max(0.0f, m_alphaDecaySpeed);
 		m_alphaMaxSlices = std::clamp(m_alphaMaxSlices, AFTERIMAGE_MIN_SLICES, AFTERIMAGE_MAX_SLICES_CAP);

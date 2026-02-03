@@ -174,13 +174,13 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.0010813474655151,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": -0.0,
+                        "x": 0.0,
                         "y": 0.0,
-                        "z": -0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
                     "Scale": {
@@ -190,87 +190,82 @@
                     }
                 },
                 {
-                    "Type": "ParticleEffect",
+                    "Type": "SkeletalMeshRenderer",
                     "Active": true,
-                    "IsPlaying": true,
-                    "AutoDestroy": false,
-                    "Duration": 0.0,
-                    "Emitters": [
+                    "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [],
+                    "Layers": [
                         {
-                            "TexturePath": "Resource/Texture/DefaultParticle.png",
-                            "PositionOffset": {
-                                "x": 0.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "Velocity": {
-                                "x": 0.0,
-                                "y": 0.0,
-                                "z": 10.0
-                            },
-                            "VelocityVariation": {
-                                "x": 0.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "Gravity": {
-                                "x": 0.0,
-                                "y": -9.800000190734863,
-                                "z": 0.0
-                            },
-                            "StartColor": {
-                                "x": 1.0,
-                                "y": 1.0,
-                                "z": 1.0,
-                                "w": 1.0
-                            },
-                            "EndColor": {
-                                "x": 1.0,
-                                "y": 1.0,
-                                "z": 1.0,
-                                "w": 1.0
-                            },
-                            "StartEmissive": {
-                                "x": 1.0,
-                                "y": 1.0,
-                                "z": 1.0
-                            },
-                            "EndEmissive": {
-                                "x": 1.0,
-                                "y": 1.0,
-                                "z": 1.0
-                            },
-                            "StartEmissiveIntensity": 1.0,
-                            "EndEmissiveIntensity": 1.0,
-                            "Blend": 0,
-                            "SizeBegin": 1.0,
-                            "SizeEnd": 1.0,
-                            "SizeVariation": 0.10000000149011612,
-                            "LifeTime": 2.0,
-                            "RotationMin": 0.0,
-                            "RotationMax": 360.0,
-                            "RotationSpeedMin": -45.0,
-                            "RotationSpeedMax": 45.0,
-                            "EmissionRate": 10.0,
-                            "MaxParticles": 1000,
-                            "Shape": 1,
-                            "Radius": 0.0,
-                            "Angle": 25.0,
-                            "BoxSize": {
-                                "x": 1.0,
-                                "y": 1.0,
-                                "z": 1.0
-                            },
-                            "RandomDirection": false,
-                            "UseShapeDirection": false,
-                            "TextureTilesX": 1,
-                            "TextureTilesY": 1,
-                            "TextureTileCount": 1,
-                            "AnimationSpeed": 1.0,
-                            "IsRandomFrame": false,
-                            "Bursts": []
+                            "Name": "Base Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": []
                         }
                     ]
+                },
+                {
+                    "Type": "AfterimageRenderer",
+                    "Active": true,
+                    "DrawSolidLayer": true,
+                    "SolidColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "SolidInitialAlpha": 1.0,
+                    "SolidDecaySpeed": 1.5,
+                    "SolidDecayMode": 0,
+                    "SolidEmissiveIntensity": 10.0,
+                    "SolidMaxSlices": 24,
+                    "SolidSampleInterval": 0.03999999910593033,
+                    "DrawAlphaLayer": false,
+                    "AlphaTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "AlphaEmissiveIntensity": 0.0,
+                    "AlphaInitialAlpha": 0.699999988079071,
+                    "AlphaDecaySpeed": 1.5,
+                    "AlphaDecayMode": 0,
+                    "AlphaMaxSlices": 24,
+                    "AlphaSampleInterval": 0.0,
+                    "SourceHandleIndex": 11,
+                    "SourceHandleGeneration": 5
+                },
+                {
+                    "Type": "TrailDashTest",
+                    "Active": true,
+                    "DashDuration": 0.20000000298023224,
+                    "DashSpeed": 12.0
                 }
             ]
         }
