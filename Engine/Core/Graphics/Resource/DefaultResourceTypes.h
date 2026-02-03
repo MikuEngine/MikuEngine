@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace engine
 {
@@ -42,6 +42,7 @@ namespace engine
     {
         Disabled,
         AlphaBlend,
+        AlphaBlendPremultiplied,  // src = (rgb*a, a) 출력 시 One, InvSrcAlpha
         Additive,
         Count
     };

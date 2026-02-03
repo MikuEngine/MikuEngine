@@ -138,6 +138,18 @@ namespace game
 
         button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
         if (cb) cb(); });
+
+        /*if (auto* button = go->GetComponent<engine::UIButton>())
+        {
+            auto* img = go->GetComponent<engine::UIImage>();
+
+            img->ClearEffect();
+
+            button->AddOnHover([img](bool isHover) {
+                if (isHover) img->SetEffectAbyssalDecay();
+                else img->ClearEffect();
+                });
+        }*/
     }
 
     void SceneController_Main::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)

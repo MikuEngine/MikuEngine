@@ -221,6 +221,7 @@
     <ClCompile Include="Framework\Object\Component\Component.cpp" />
     <ClCompile Include="Framework\Object\Component\ComponentFactory.cpp" />
     <ClCompile Include="Framework\Object\Component\Light\Light.cpp" />
+    <ClCompile Include="Framework\Object\Component\Renderer\AfterimageRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\DebugRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\Renderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Script.cpp" />
@@ -228,7 +229,6 @@
     <ClCompile Include="Framework\Object\Component\Animator\SpriteAnimator.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Renderer\StaticMeshRenderer.cpp" />
-    <ClCompile Include="Framework\Object\Component\Renderer\AfterimageRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Socket\SocketAttachment.cpp" />
     <ClCompile Include="Framework\Object\Component\Socket\SocketDebugRenderer.cpp" />
     <ClCompile Include="Framework\Object\Component\Transform.cpp" />
@@ -364,6 +364,7 @@
     <ClInclude Include="Framework\Object\Component\Component.h" />
     <ClInclude Include="Framework\Object\Component\ComponentFactory.h" />
     <ClInclude Include="Framework\Object\Component\Light\Light.h" />
+    <ClInclude Include="Framework\Object\Component\Renderer\AfterimageRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\DebugRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\Renderer.h" />
     <ClInclude Include="Framework\Object\Component\Script.h" />
@@ -371,7 +372,6 @@
     <ClInclude Include="Framework\Object\Component\Animator\SpriteAnimator.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\SpriteRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Renderer\StaticMeshRenderer.h" />
-    <ClInclude Include="Framework\Object\Component\Renderer\AfterimageRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Socket\SocketAttachment.h" />
     <ClInclude Include="Framework\Object\Component\Socket\SocketDebugRenderer.h" />
     <ClInclude Include="Framework\Object\Component\Transform.h" />
@@ -455,6 +455,10 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\Pixel\DeferredSpotLight_Toon_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Pixel\EmissiveTransparent_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>

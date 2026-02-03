@@ -196,6 +196,7 @@
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
+    <ClCompile Include="Script\Scene\TutorialController.cpp" />
     <ClCompile Include="Script\StateTextRenderer.cpp" />
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
     <ClCompile Include="Script\TemperTestScript.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />
     <ClInclude Include="Script\Scene\SceneController_Main.h" />
+    <ClInclude Include="Script\Scene\TutorialController.h" />
     <ClInclude Include="Script\StateTextRenderer.h" />
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />
     <ClInclude Include="Script\TemperTestScript.h" />

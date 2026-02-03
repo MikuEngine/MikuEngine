@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Data/ConstantBufferTypes.h"
@@ -32,6 +32,14 @@ namespace engine
 		Sequential
 	};
 
+	// 감쇠 곡선: 선형(alpha -= speed*dt) / 지수(alpha *= exp(-speed*dt), 눈에 더 잘 보임)
+	static constexpr float DECAY_REMOVE_THRESHOLD = 0.01f;  // 지수 감쇠 시 이하면 제거 (0에 안 닿음)
+	enum class DecayCurve
+	{
+		Linear,
+		Exponential
+	};
+
 	// A-2: 최대 슬라이스 수 기본값 (링 버퍼 상한)
 	static constexpr size_t AFTERIMAGE_DEFAULT_MAX_SLICES = 24;
 	static constexpr size_t AFTERIMAGE_MIN_SLICES = 1;
@@ -56,7 +64,8 @@ namespace engine
 		std::shared_ptr<ConstantBuffer> m_materialConstantBuffer;
 		std::shared_ptr<ConstantBuffer> m_boneConstantBuffer;
 		std::shared_ptr<VertexShader> m_vs;
-		std::shared_ptr<PixelShader> m_transparentPS;
+		std::shared_ptr<PixelShader> m_transparentPS;   // 알파 레이어 (라이팅)
+		std::shared_ptr<PixelShader> m_emissivePS;       // 솔리드 레이어 (언릿/이미시브)
 		std::vector<Textures> m_textures;
 		std::shared_ptr<InputLayout> m_inputLayout;
 		std::shared_ptr<SamplerState> m_samplerState;
@@ -66,16 +75,34 @@ namespace engine
 
 		// C-1: 기록 플래그
 		bool m_isRecording = false;
-		// E-1: 기록 시 초기 알파
-		float m_initialAlpha = 0.7f;
-		// E-2: 알파 감쇠 (매 프레임 alpha -= m_alphaDecaySpeed * dt, 0 이하면 제거)
+
+		// 솔리드 레이어 전용 (emissive/언릿, 알파·감쇠·밝기 옵션)
+		bool m_drawSolidLayer = false;
+		Vector4 m_solidColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		float m_solidInitialAlpha = 1.0f;
+		float m_solidDecaySpeed = 1.5f;
+		AlphaDecayMode m_solidDecayMode = AlphaDecayMode::Simultaneous;
+		DecayCurve m_solidDecayCurve = DecayCurve::Exponential;
+		float m_solidEmissiveIntensity = 1.0f;   // 1 이상이면 더 밝게
+		float m_solidTrailGradient = 0.92f;      // 새 슬라이스 추가 시 기존 슬라이스 alpha *= 이 값 (1=동일, <1=앞쪽이 더 흐림)
+		size_t m_solidMaxSlices = AFTERIMAGE_DEFAULT_MAX_SLICES;
+		float m_solidSampleInterval = 0.0f;
+		float m_solidLastSampleTime = 0.0f;
+		std::vector<AfterimageSlice> m_slicesSolid;
+
+		// 알파 레이어 전용 (감쇠 + 틴트, 라이팅 + 옵션 emissive)
+		bool m_drawAlphaLayer = true;
+		Vector4 m_alphaTint = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		float m_alphaEmissiveIntensity = 0.0f;   // 0 = 라이팅만, 1 이상 = emissive 추가로 밝게
+		float m_alphaInitialAlpha = 0.7f;
 		float m_alphaDecaySpeed = 1.5f;
 		AlphaDecayMode m_alphaDecayMode = AlphaDecayMode::Simultaneous;
-		// 최대 슬라이스 수 (링 버퍼 상한, 에디터/직렬화로 조정 가능)
-		size_t m_maxSlices = AFTERIMAGE_DEFAULT_MAX_SLICES;
-
-		// A-2: 링 버퍼 (가장 오래된 것부터 제거)
-		std::vector<AfterimageSlice> m_slices;
+		DecayCurve m_alphaDecayCurve = DecayCurve::Exponential;
+		float m_alphaTrailGradient = 0.92f;      // 새 슬라이스 추가 시 기존 슬라이스 alpha *= 이 값
+		size_t m_alphaMaxSlices = AFTERIMAGE_DEFAULT_MAX_SLICES;
+		float m_alphaSampleInterval = 0.0f;
+		float m_alphaLastSampleTime = 0.0f;
+		std::vector<AfterimageSlice> m_slicesAlpha;
 
 	private:
 		void Refresh();
@@ -94,17 +121,57 @@ namespace engine
 		/// 순간이동 구간(from → to)에 보간 슬라이스를 numSlices개 채움. 기록 상태와 무관하게 호출 가능.
 		void RecordTeleportPath(const Matrix& fromWorld, const Matrix& toWorld, size_t numSlices);
 
-		// E-1: 초기 알파 설정
-		void SetInitialAlpha(float alpha);
-		float GetInitialAlpha() const { return m_initialAlpha; }
-		// E-2: 알파 감쇠 속도 (0이면 감쇠 없음)
+		// 솔리드 레이어 전용
+		void SetSolidMaxSlices(size_t count);
+		size_t GetSolidMaxSlices() const { return m_solidMaxSlices; }
+		void SetSolidSampleInterval(float seconds);
+		float GetSolidSampleInterval() const { return m_solidSampleInterval; }
+		void SetSolidInitialAlpha(float alpha);
+		float GetSolidInitialAlpha() const { return m_solidInitialAlpha; }
+		void SetSolidDecaySpeed(float speed);
+		float GetSolidDecaySpeed() const { return m_solidDecaySpeed; }
+		void SetSolidDecayMode(AlphaDecayMode mode) { m_solidDecayMode = mode; }
+		AlphaDecayMode GetSolidDecayMode() const { return m_solidDecayMode; }
+		void SetSolidDecayCurve(DecayCurve curve) { m_solidDecayCurve = curve; }
+		DecayCurve GetSolidDecayCurve() const { return m_solidDecayCurve; }
+		void SetSolidEmissiveIntensity(float intensity);
+		float GetSolidEmissiveIntensity() const { return m_solidEmissiveIntensity; }
+		void SetSolidTrailGradient(float gradient);
+		float GetSolidTrailGradient() const { return m_solidTrailGradient; }
+		// 알파 레이어 전용
+		void SetAlphaInitialAlpha(float alpha);
+		float GetAlphaInitialAlpha() const { return m_alphaInitialAlpha; }
 		void SetAlphaDecaySpeed(float speed);
 		float GetAlphaDecaySpeed() const { return m_alphaDecaySpeed; }
 		void SetAlphaDecayMode(AlphaDecayMode mode) { m_alphaDecayMode = mode; }
 		AlphaDecayMode GetAlphaDecayMode() const { return m_alphaDecayMode; }
-		// 최대 슬라이스 수 (1 ~ AFTERIMAGE_MAX_SLICES_CAP)
-		void SetMaxSlices(size_t count);
-		size_t GetMaxSlices() const { return m_maxSlices; }
+		void SetAlphaDecayCurve(DecayCurve curve) { m_alphaDecayCurve = curve; }
+		DecayCurve GetAlphaDecayCurve() const { return m_alphaDecayCurve; }
+		void SetAlphaMaxSlices(size_t count);
+		size_t GetAlphaMaxSlices() const { return m_alphaMaxSlices; }
+		void SetAlphaSampleInterval(float seconds);
+		float GetAlphaSampleInterval() const { return m_alphaSampleInterval; }
+		// 하위 호환: 알파 레이어에 대응
+		void SetInitialAlpha(float alpha) { SetAlphaInitialAlpha(alpha); }
+		float GetInitialAlpha() const { return m_alphaInitialAlpha; }
+		void SetMaxSlices(size_t count) { SetAlphaMaxSlices(count); }
+		size_t GetMaxSlices() const { return m_alphaMaxSlices; }
+		void SetSampleInterval(float seconds) { SetAlphaSampleInterval(seconds); }
+		float GetSampleInterval() const { return m_alphaSampleInterval; }
+		/// 솔리드 레이어 (알파 없음, 단색 실루엣)
+		void SetDrawSolidLayer(bool draw) { m_drawSolidLayer = draw; }
+		bool GetDrawSolidLayer() const { return m_drawSolidLayer; }
+		void SetSolidColor(const Vector4& color);
+		const Vector4& GetSolidColor() const { return m_solidColor; }
+		/// 알파 레이어 (감쇠 + 틴트)
+		void SetDrawAlphaLayer(bool draw) { m_drawAlphaLayer = draw; }
+		bool GetDrawAlphaLayer() const { return m_drawAlphaLayer; }
+		void SetAlphaTint(const Vector4& color);
+		const Vector4& GetAlphaTint() const { return m_alphaTint; }
+		void SetAlphaEmissiveIntensity(float intensity);
+		float GetAlphaEmissiveIntensity() const { return m_alphaEmissiveIntensity; }
+		void SetAlphaTrailGradient(float gradient);
+		float GetAlphaTrailGradient() const { return m_alphaTrailGradient; }
 
 		AfterimageRenderer() = default;
 		~AfterimageRenderer() override = default;

@@ -413,7 +413,7 @@ namespace game
             {
                 // 플레이어를 향해 발사
                 engine::Vector3 direction = CalculateDirectionToPlayer();
-                engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
+                engine::Vector3 firePosition = GetTransform()->GetWorldPosition() + m_fireOffset;
 
                 switch (m_monsterTier)
                 {
@@ -459,7 +459,6 @@ namespace game
                     float finalSpeed = finalVelocity.Length();
                     finalVelocity.Normalize();
 
-                    m_bulletParams.type = BulletType::Field;
                     m_bulletParams.speed = finalSpeed;
                     m_bulletFactory->ParabolicFireMonster(startPos, finalVelocity, m_bulletParams);
                     break;
@@ -507,7 +506,7 @@ namespace game
                 // ─────────────────────────────────────────────
                 // 뾰족 보라
                 // 
-                // 플레이어에게 멀어지려고 하며 가까이 오면 도망, 긴 사거리에서 플레이어를 조준, 공격ㄹ
+                // 플레이어에게 멀어지려고 하며 가까이 오면 도망, 긴 사거리에서 플레이어를 조준, 공격
                 // ─────────────────────────────────────────────
                 case MonsterTier::Purple:
                 {

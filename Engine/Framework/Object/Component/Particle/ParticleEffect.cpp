@@ -293,6 +293,13 @@ namespace engine
 		ImGui::DragFloat3("Velocity", &props.velocity.x, 0.1f);
 		ImGui::DragFloat3("Velocity Variation", &props.velocityVariation.x, 0.1f);
 		ImGui::DragFloat3("Gravity", &props.gravity.x, 0.1f);
+		ImGui::Checkbox("Use Shape Direction", &props.useShapeDirection);
+		ImGui::SameLine();
+		ImGui::TextDisabled("(?)");
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("ON: Shape(Cone/Sphere) 방향으로 velocity 크기만 적용.\nOFF: Velocity (x,y,z) 그대로 사용.");
+		}
 
 		ImGui::Spacing();
 		ImGui::SeparatorText("Rotation");

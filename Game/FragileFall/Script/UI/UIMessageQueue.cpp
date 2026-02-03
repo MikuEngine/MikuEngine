@@ -11,11 +11,13 @@ namespace game
         m_kill.spawnPos = { 660.0f, -400.0f };
         m_kill.maxVisible = 3;
         m_kill.lifeTime = 3.0f;
+        m_kill.prefabKey = "UIToastPopUp";
 
         m_tutorial.canvas = engine::GameObject::Find("Canvas_Message"); // 튜토리얼
-        m_tutorial.spawnPos = { 660.0f, -400.0f };  // 원하는 위치
-        m_tutorial.maxVisible = 3;                 
-        m_tutorial.lifeTime = 999.0f;              // 계속 켜 있고, 수동으로 사라지게
+        m_tutorial.spawnPos = { 510.0f, -300.0f };  // 원하는 위치
+        m_tutorial.maxVisible = 1;                 
+        m_tutorial.lifeTime = 5.0f;            
+        m_tutorial.prefabKey = "UIToastPopUp_Tutorial";
     }
 
     void UIMessageQueue::Start()
@@ -27,11 +29,6 @@ namespace game
     {
         // 메시지 흐름
         // if문으로 제어
-        if (engine::Input::IsKeyPressed(engine::Keys::J))
-        {
-            PushMessage(UIMessageChannel::Tutorial, "asdf", "");
-        }
-
         if (engine::Input::IsKeyPressed(engine::Keys::K))
         {
             PushMessage(UIMessageChannel::Kill, "asdf", "");

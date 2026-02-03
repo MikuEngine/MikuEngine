@@ -8,17 +8,18 @@ namespace game
 {
     class UIToastAnimator;
 
+    enum class UIMessageChannel
+    {
+        Kill,
+        Tutorial,
+        System,
+    };
+
     class UIMessageQueue :
         public engine::Script<UIMessageQueue>
     {
         REGISTER_SCRIPT(UIMessageQueue, Script)
     private:
-        enum class UIMessageChannel
-        {
-            Kill,
-            Tutorial,
-            System,
-        };
 
         struct ChannelConfig
         {

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -97,6 +97,7 @@ namespace game
         float m_fireRate = 3.0f;             // 발사 간격 (초)
         float m_bulletSpeed = 1.0f;          // 총알 속도
         float m_bulletLifetime = 3.0f;       // 총알 수명 (초)
+        engine::Vector3 m_fireOffset{ 0.0f, 1.5f, 0.0f };  // 발사 위치 오프셋
 
         // ─────────────────────────────────────────────
         // 포물선 총알 설정 (Parabolic 타입에서만 사용)

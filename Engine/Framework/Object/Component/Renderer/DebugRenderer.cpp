@@ -71,6 +71,21 @@ namespace engine
         m_batch->End();
     }
 
+    void DebugRenderer::AddDebugCircle(const Vector3& center, float radius, const Vector3& normal, DirectX::GXMVECTOR color, int segments)
+    {
+        m_circleQueue.emplace_back( center, radius, normal, segments, color );
+    }
+
+    void DebugRenderer::RenderQueueDraws()
+    {
+        // 필요하다면 draw data 통합 필요
+        for (const auto& circle : m_circleQueue)
+        {
+            DrawCircle(circle.center, circle.radius, Vector3::UnitY, circle.color);
+        }
+        m_circleQueue.clear();
+    }
+
     void DebugRenderer::DrawLine(const Vector3& start, const Vector3& end, const DirectX::XMVECTOR& color)
     {
         DirectX::VertexPositionColor v1(DirectX::XMLoadFloat3(&start), color);

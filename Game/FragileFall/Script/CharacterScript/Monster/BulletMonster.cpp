@@ -11,6 +11,7 @@
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 
+#include <Framework/Object/Component/Renderer/DebugRenderer.h>
 
 namespace game
 {
@@ -37,6 +38,12 @@ namespace game
         {
             collider->SetLayer(engine::PhysicsLayer::Field);
             collider->SetIsTrigger(true);
+        }
+     
+        auto* scene = engine::SceneManager::Get().GetScene();
+        if (scene)
+        {
+            m_targetPlayer = scene->FindGameObject("Player");
         }
     }
 
@@ -102,32 +109,35 @@ namespace game
         // 장판형 총알일 경우 주기적으로 데미지 적용
         if (m_isFieldType)
         {
+
+#ifdef _DEBUG  // 장판 범위 디버그 렌더링
+            engine::DebugRenderer::Get().AddDebugCircle(
+                GetTransform()->GetWorldPosition() + engine::Vector3(0, 0.05f, 0),
+                m_radius,
+                engine::Vector3::UnitY,
+                DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f),
+                32
+            );
+#endif
+
             m_tickTimer += engine::Time::DeltaTime();
 
             if (m_tickTimer >= m_tickInterval)
             {
                 m_tickTimer = 0.0f;
 
-                if (auto* scene = engine::SceneManager::Get().GetScene())
+                if (m_targetPlayer)
                 {
-                    auto* playerGO = scene->FindGameObject("Player");
-                    if (playerGO)
-                    {
-                        float distance = engine::Vector3::Distance(
-                            GetTransform()->GetWorldPosition(),
-                            playerGO->GetTransform()->GetWorldPosition()
-                        );
+                    float distance = engine::Vector3::Distance(GetTransform()->GetWorldPosition(), m_targetPlayer->GetTransform()->GetWorldPosition());
 
-                        if (distance <= m_params.radius)
+                    if (distance <= m_params.radius)
+                    {
+                        if (auto* playerScript = m_targetPlayer->GetComponent<PlayerControllerScript>())
                         {
-                            if (auto* playerScript = playerGO->GetComponent<PlayerControllerScript>())
-                            {
-                                // playerScript->OnHit(m_params.damage); 
-                                // LOG_PRINT("Field Damage Dealt to Player!");
-                            }
+                            // playerScript->OnHit(m_params.damage);
                         }
                     }
-                }
+                }  
             }
             return;
         }

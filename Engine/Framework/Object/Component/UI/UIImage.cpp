@@ -369,56 +369,39 @@ namespace engine
 		m_effect2 = Vector4(0, 0, 0, 0);
 	}
 
-	void UIImage::SetFlameProgress(float feather, float headWidth, float emissive, float flameIntensity, float alphaJitter)
+	void UIImage::SetEffectScanLine(float density, float speed, float opacity)
 	{
-		m_effectMode = 1;
-
-		// feather, headWidth
-		m_effect0 = Vector4(feather, headWidth, 0.0f, 0.0f);
-
-		// noise tiling + scroll speed
-		m_effect1 = Vector4(
-			4.0f,   // tiling X
-			2.0f,   // tiling Y
-			0.3f,   // speed X
-			0.0f    // speed Y
-		);
-
-		// emissive, flame intensity, alpha jitter
-		m_effect2 = Vector4(
-			emissive,
-			flameIntensity,
-			alphaJitter,
-			0.0f
-		);
+		m_effectMode = 1; // UI_FX_SCANLINE
+		m_effect0 = Vector4(density, speed, opacity, 0.0f);
 	}
 
-	void UIImage::SetShineSweep(float width, float speed, float angleRad, float intensity)
+	void UIImage::SetEffectGlowPulse(float speed, float minIntensity, float maxIntensity)
 	{
-		m_effectMode = 2;
-
-		// feather(0), width, angle
-		m_effect0 = Vector4(0.0f, width, angleRad, 0.0f);
-
-		// speed in Z
-		m_effect1 = Vector4(0.0f, 0.0f, speed, 0.0f);
-
-		// emissive, intensity
-		m_effect2 = Vector4(1.0f, intensity, 0.0f, 0.0f);
+		m_effectMode = 2; // UI_FX_GLOW_PULSE
+		m_effect0 = Vector4(speed, minIntensity, maxIntensity, 0.0f);
 	}
 
-	void UIImage::SetDissolve(float threshold, float softness, float edgeWidth, float edgeIntensity)
+	void UIImage::SetEffectPixelate(float pixelSize)
 	{
-		m_effectMode = 3;
+		m_effectMode = 3; // UI_FX_PIXELATE
+		// pixelSize가 커질수록 픽셀이 뭉쳐 보임 (추천: 8.0 ~ 64.0)
+		m_effect0 = Vector4(pixelSize, 0.0f, 0.0f, 0.0f);
+	}
 
-		// threshold, softness, edge width
-		m_effect0 = Vector4(threshold, softness, edgeWidth, 0.0f);
+	void UIImage::SetEffectHoverTransition(bool isHover)
+	{
+		m_effectMode = 4; // UI_FX_HOVER_TRANSITION
+	}
 
-		// noise tiling + scroll
-		m_effect1 = Vector4(3.0f, 3.0f, 0.2f, 0.2f);
+	void UIImage::SetEffectAbyssalDecay()
+	{
+		m_effectMode = 5; // UI_FX_ABYSSAL_DECAY
+	}
 
-		// emissive, edge intensity
-		m_effect2 = Vector4(1.0f, edgeIntensity, 0.0f, 0.0f);
+	void UIImage::SetEffectStaticNoise(float intensity)
+	{
+		m_effectMode = 6; // UI_FX_STATIC_NOISE
+		m_effect0.x = intensity;
 	}
 
 	bool UIImage::HasRenderType(RenderType type) const
@@ -440,34 +423,12 @@ namespace engine
 	{
 		UIElement::OnGui();
 
-		if (GameObject* go = GetGameObject())
-		{
-			if (auto* btn = go->GetComponent<UIButton>())
-			{
-				ImGui::Separator();
-				ImGui::TextDisabled("This Image is controlled by UIButton (SpriteSwap/ Tint).");
-				return;
-			}
-		}
+		// Use Effect toggle
+		ImGui::TextDisabled("Effect (Optional)");
 
-		static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga"};
 		static std::vector<std::string> rampExtensions{ ".png", ".jpg", ".tga" };
 		static std::vector<std::string> noiseExtensions{ ".png", ".jpg", ".tga" };
 
-		ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
-		std::string selectedTex;
-
-		if (DrawFileSelector("Select Texture", "Resource/Texture", texExtensions, selectedTex))
-		{
-			SetTexture(selectedTex);
-		}
-
-
-
-		ImGui::Separator();
-		ImGui::TextDisabled("Effect (Optional)");
-
-		// Use Effect toggle
 		bool useEffect = (m_effectMode != 0);
 		if (ImGui::Checkbox("Use Effect", &useEffect))
 		{
@@ -481,51 +442,121 @@ namespace engine
 			}
 		}
 
-		// Effect UI는 UseEffect일 때만
-		if (useEffect)
+		const char* effectNames[] = {
+		"None",               // 0
+		"Scanline",           // 1
+		"Glow Pulse",         // 2
+		"Pixelate",           // 3
+		"Hover Transition",   // 4
+		"Abyssal Decay",      // 5
+		"Static Noise",       // 6
+		"Flame Bar (Progress)"// 10
+		};
+
+		// 현재 m_effectMode에 맞는 인덱스 찾기 (10번 같은 경우 예외처리)
+		int effectIdx = 0;
+		if (m_effectMode >= 1 && m_effectMode <= 6) effectIdx = (int)m_effectMode;
+		else if (m_effectMode == 10) effectIdx = 7; // Flame Bar
+
+		if (ImGui::Combo("Effect Type", &effectIdx, effectNames, IM_ARRAYSIZE(effectNames)))
 		{
-			// Effect Type
-			static const char* effectNames[] =
-			{
-				"None",
-				"Flame Progress",
-				"Shine Sweep",
-				"Dissolve"
-			};
+			ClearEffect(); // 모드 변경 시 파라미터 초기화
+			if (effectIdx == 7) m_effectMode = 10;
+			else m_effectMode = (uint32_t)effectIdx;
+		}
 
-			int effectIdx = (int)m_effectMode;
-			if (ImGui::Combo("Effect Type", &effectIdx, effectNames, IM_ARRAYSIZE(effectNames)))
-			{
-				m_effectMode = (uint32_t)effectIdx;
-			}
-
-			// Ramp / Noise는 Effect 있을 때만 의미 있음
+		if (m_effectMode != 0)
+		{
 			ImGui::Spacing();
-			ImGui::Text("Effect Textures");
+			ImGui::TextColored(ImVec4(0.7f, 0.7f, 1.0f, 1.0f), "Effect Settings");
 
-			// Ramp
-			ImGui::Text("Ramp: %s", std::filesystem::path(m_rampPath).filename().string().c_str());
-			std::string selectedRamp;
-			if (DrawFileSelector("Select Ramp", "Resource/Texture", rampExtensions, selectedRamp))
+			// [2] 효과별 맞춤형 파라미터 노출
+			switch (m_effectMode)
 			{
-				SetRampTexture(selectedRamp);
+			case 1: // Scanline
+				ImGui::DragFloat("Density", &m_effect0.x, 1.0f, 1.0f, 500.0f);
+				ImGui::DragFloat("Speed", &m_effect0.y, 0.1f, -50.0f, 50.0f);
+				ImGui::DragFloat("Opacity", &m_effect0.z, 0.01f, 0.0f, 1.0f);
+				break;
+
+			case 2: // Glow Pulse
+				ImGui::DragFloat("Pulse Speed", &m_effect0.x, 0.1f, 0.0f, 20.0f);
+				ImGui::DragFloat("Min Intensity", &m_effect0.y, 0.01f, 0.0f, 2.0f);
+				ImGui::DragFloat("Max Intensity", &m_effect0.z, 0.01f, 0.0f, 5.0f);
+				break;
+
+			case 3: // Pixelate
+				ImGui::DragFloat("Pixel Size", &m_effect0.x, 1.0f, 1.0f, 512.0f);
+				break;
+
+			case 4: // Hover Transition
+				ImGui::Text("Animation Start: %.2f", m_effect1.x);
+				if (ImGui::Button("Test Trigger")) m_effect1.x = engine::Time::UnscaledTime();
+				break;
+
+			case 5: // Abyssal Decay
+				ImGui::Text("Uses Noise Texture");
+				break;
+
+			case 6: // Static Noise
+				ImGui::DragFloat("Noise Intensity", &m_effect0.x, 0.01f, 0.0f, 1.0f);
+				break;
+
+			case 10: // Flame Bar
+				ImGui::DragFloat("Feather", &m_effect0.x, 0.001f, 0.0f, 0.1f);
+				ImGui::DragFloat("Head Width", &m_effect0.y, 0.001f, 0.0f, 0.2f);
+				ImGui::DragFloat("Flame Intensity", &m_effect2.y, 0.1f, 0.0f, 10.0f);
+				break;
 			}
 
-			// Noise
-			ImGui::Text("Noise: %s", std::filesystem::path(m_noisePath).filename().string().c_str());
-			std::string selectedNoise;
-			if (DrawFileSelector("Select Noise", "Resource/Texture", noiseExtensions, selectedNoise))
+			// [3] 텍스처 설정 (필요한 경우에만 노출)
+			if (m_effectMode == 5 || m_effectMode == 10)
 			{
-				SetNoiseTexture(selectedNoise);
+				ImGui::Separator();
+				ImGui::Text("Resource Settings");
+
+				// Noise 텍스처 선택 UI...
+				ImGui::Text("Noise: %s", std::filesystem::path(m_noisePath).filename().string().c_str());
+				ImGui::SameLine();
+				if (ImGui::Button("None##NoiseTex"))
+				{
+					SetNoiseTexture("None");
+				}
+				
+				std::string selectedNoise;
+				if (DrawFileSelector("Select Noise", "Resource/Texture", noiseExtensions, selectedNoise))
+					SetNoiseTexture(selectedNoise);
+
+				if (m_effectMode == 10) // FlameBar 전용 Ramp
+				{
+					ImGui::Text("Ramp: %s", std::filesystem::path(m_rampPath).filename().string().c_str());
+					std::string selectedRamp;
+					if (DrawFileSelector("Select Ramp", "Resource/Texture", rampExtensions, selectedRamp))
+						SetRampTexture(selectedRamp);
+				}
 			}
+		}
 
-			ImGui::Spacing();
-			ImGui::Text("Effect Parameters");
+		ImGui::Spacing();
 
-			// Effect parameters (공용)
-			ImGui::DragFloat4("Effect0", &m_effect0.x, 0.001f);
-			ImGui::DragFloat4("Effect1", &m_effect1.x, 0.01f);
-			ImGui::DragFloat4("Effect2", &m_effect2.x, 0.01f);
+		if (GameObject* go = GetGameObject())
+		{
+			if (auto* btn = go->GetComponent<UIButton>())
+			{
+				ImGui::Separator();
+				ImGui::TextDisabled("This Image is controlled by UIButton (SpriteSwap/ Tint).");
+				return;
+			}
+		}
+
+		static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga"};
+
+		ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
+		std::string selectedTex;
+
+		if (DrawFileSelector("Select Texture", "Resource/Texture", texExtensions, selectedTex))
+		{
+			SetTexture(selectedTex);
 		}
 
 		ImGui::Spacing();
@@ -595,5 +626,7 @@ namespace engine
 	void UIImage::Refresh()
 	{
 		SetTexture(m_textureFilePath);
+		SetNoiseTexture(m_noisePath);
+		SetRampTexture(m_rampPath);
 	}
 }
