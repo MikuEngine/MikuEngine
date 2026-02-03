@@ -47,9 +47,10 @@ namespace game
         
         // 총알 레이어 무시 (Projectile, EnemyProjectile)
         auto* collider = info.collider.Get();
+        uint32_t layer = 0;
         if (collider)
         {
-            uint32_t layer = collider->GetLayer();
+            layer = collider->GetLayer();
             if (layer == engine::PhysicsLayer::Index::Projectile ||
                 layer == engine::PhysicsLayer::Index::EnemyProjectile)
             {
@@ -58,48 +59,69 @@ namespace game
         }
         
         // ─────────────────────────────────────────────
-        // 플레이어 충돌 시 데미지 처리
+        // 플레이어 충돌 시 데미지 처리 (Fragile/Dead가 아닌 모든 상태)
         // ─────────────────────────────────────────────
-        auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
-        if (player)
+        if (!m_isFragile && !m_isDead)
         {
-            float elapsedSinceLastDamage = engine::Time::GetElapsedSeconds(m_lastDamageTime);
-            if (elapsedSinceLastDamage >= m_damageCooldown)
+            auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
+            if (player)
             {
-                player->TakeDamage(static_cast<int>(m_attackDamage));
-                m_lastDamageTime = engine::Time::GetTimestamp();
+                float elapsedSinceLastDamage = engine::Time::GetElapsedSeconds(m_lastDamageTime);
+                if (elapsedSinceLastDamage >= m_damageCooldown)
+                {
+                    player->TakeDamage(static_cast<int>(m_attackDamage));
+                    m_lastDamageTime = engine::Time::GetTimestamp();
+                }
             }
         }
         
         // ─────────────────────────────────────────────
-        // 현재 상태가 IdleMove가 아니면 충돌 방향 전환 안함
+        // 상태별 충돌 처리
         // ─────────────────────────────────────────────
         std::string currentState = GetCurrentState();
-        if (currentState != "IdleMove")
-        {
-            return;
-        }
         
-        // 충돌 발생 플래그 설정 (다음 Update/FixedUpdate에서 처리)
-        m_collisionOccurred = true;
+        if (currentState == "IdleMove")
+        {
+            // Environment 레이어 무시
+            if (layer == engine::PhysicsLayer::Index::Environment)
+            {
+                return;
+            }
+            // 그 외 충돌 → 방향 전환
+            m_collisionOccurred = true;
+        }
+        else if (currentState == "EngageMove")
+        {
+            // Environment 레이어 무시
+            if (layer == engine::PhysicsLayer::Index::Environment)
+            {
+                return;
+            }
+            
+            // Player 또는 Wall과 충돌 → Idle로 전이
+            if (layer == engine::PhysicsLayer::Index::Player ||
+                layer == engine::PhysicsLayer::Index::Wall)
+            {
+                m_engageCollisionOccurred = true;
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
     // Blue 전용 FSM 초기화
-    // - 현재: Idle → IdleMove → Fragile → Dead (Engage 관련 나중에 추가)
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::InitializeFSM()
     {
         if (!m_logicFSM) return;
 
         // ─────────────────────────────────────────────
-        // 상태 정의 (Blue - 현재 버전, Engage 없음)
+        // 상태 정의
         // ─────────────────────────────────────────────
-        AddFSMState("Idle", true);           // 기본 상태 (대기)
+        AddFSMState("Idle", true);           // 기본 상태 (대기 + 플레이어 무시)
         AddFSMState("IdleMove", false);      // 곡선 배회
+        AddFSMState("EngageMove", false);    // 플레이어에게 돌진
         AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
-        // TODO: EngageMove, EngageAttack 나중에 추가
 
         // ─────────────────────────────────────────────
         // StateMap 업데이트 (Transition 추가 전에 필수!)
@@ -107,23 +129,31 @@ namespace game
         m_logicFSM->Initialize();
 
         // ─────────────────────────────────────────────
-        // 파라미터 정의 (Blue - 현재 버전)
+        // 파라미터 정의
         // ─────────────────────────────────────────────
         m_logicFSM->SetParameter("IdleTimerComplete", false);     // Idle 대기 시간 완료
+        m_logicFSM->SetParameter("PlayerDetected", false);        // 플레이어 감지 (무시 시간 이후)
+        m_logicFSM->SetParameter("EngageComplete", false);        // 돌진 완료 (충돌 or 목표 도달)
         m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
-        // TODO: PlayerDetected 등 나중에 추가
 
         // ─────────────────────────────────────────────
-        // 전이 정의 (Blue - 현재 버전)
+        // 전이 정의
         // ─────────────────────────────────────────────
         
         // Idle → IdleMove (대기 시간 완료)
         AddFSMTransition("Idle", "IdleMove", "IdleTimerComplete", BoolTrue());
+        
+        // IdleMove → EngageMove (플레이어 감지)
+        AddFSMTransition("IdleMove", "EngageMove", "PlayerDetected", BoolTrue());
+        
+        // EngageMove → Idle (돌진 완료)
+        AddFSMTransition("EngageMove", "Idle", "EngageComplete", BoolTrue());
 
         // Any → Fragile (HP 0, Fragile 트리거)
         AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
         AddFSMTransition("IdleMove", "Fragile", "Fragile", Trigger());
+        AddFSMTransition("EngageMove", "Fragile", "Fragile", Trigger());
 
         // Fragile → Dead (Execution, Die 트리거)
         AddFSMTransition("Fragile", "Dead", "Die", Trigger());
@@ -138,23 +168,44 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 입력 처리 (Blue - 현재 감지 로직 없음)
-    // TODO: 플레이어 감지 로직 나중에 추가
+    // 입력 처리 - 플레이어 감지 + 무시 타이머
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::ProcessInput()
     {
-        // 현재는 플레이어 감지 없음
-        // 나중에 EngageMove 추가 시 구현
+        if (!m_logicFSM) return;
+        
+        // 플레이어를 찾지 못했으면 재탐색
+        if (!m_targetPlayer)
+        {
+            FindPlayer();
+        }
+        
+        // IdleMove 상태에서만 플레이어 감지
+        std::string currentState = GetCurrentState();
+        if (currentState == "IdleMove")
+        {
+            // 감지 가능 여부 확인 (무시 시간 종료)
+            if (CanDetectPlayer())
+            {
+                // 플레이어가 감지 범위 안에 있는지 확인
+                bool playerInRange = IsPlayerInDetectionRange();
+                
+                if (playerInRange)
+                {
+                    m_logicFSM->SetParameter("PlayerDetected", true);
+                }
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
     // IdleMove 상태 비물리 행동
-    // - 타이머 관리
-    // - 충돌 처리
-    // - Roaming 파라미터 갱신
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::ExecuteIdleMoveBehaviorNonPhysics(float deltaTime)
     {
+        // 무시 타이머 업데이트 (Idle에서 시작된 타이머 계속)
+        UpdatePlayerIgnoreTimer(deltaTime);
+        
         // 충돌 발생 처리
         if (m_collisionOccurred)
         {
@@ -175,8 +226,6 @@ namespace game
 
     // ═══════════════════════════════════════════════════════════════
     // IdleMove 상태 물리 행동
-    // - 방향 회전 (곡선 이동)
-    // - 이동
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::ExecuteIdleMoveBehaviorPhysics()
     {
@@ -186,11 +235,9 @@ namespace game
         
         // ─────────────────────────────────────────────
         // 1. 방향 회전 (매 FixedUpdate마다 각도 누적)
-        // - m_turnScale: 초당 회전 각도 (도/초)
-        // - m_turnDirection: +1(좌/반시계), -1(우/시계)
         // ─────────────────────────────────────────────
         float angleChangeDeg = m_turnScale * fixedDeltaTime * static_cast<float>(m_turnDirection);
-        float angleChangeRad = angleChangeDeg * 3.14159265f / 180.0f;  // 도 → 라디안
+        float angleChangeRad = angleChangeDeg * 3.14159265f / 180.0f;
         m_currentAngle += angleChangeRad;
         
         // 각도 정규화 (0 ~ 2π)
@@ -203,6 +250,40 @@ namespace game
         // ─────────────────────────────────────────────
         engine::Vector3 direction = GetDirectionVector();
         MoveInDirection(direction, m_moveSpeed);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // EngageMove 상태 비물리 행동
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundBlue::ExecuteEngageMoveBehaviorNonPhysics(float deltaTime)
+    {
+        if (!m_logicFSM) return;
+        
+        // 충돌 발생 시 (Player/Wall) → Idle로 전이
+        if (m_engageCollisionOccurred)
+        {
+            m_logicFSM->SetParameter("EngageComplete", true);
+            m_engageCollisionOccurred = false;
+            return;
+        }
+        
+        // 목표 도달 시 → Idle로 전이
+        if (HasReachedEngageTarget())
+        {
+            m_logicFSM->SetParameter("EngageComplete", true);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // EngageMove 상태 물리 행동
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundBlue::ExecuteEngageMoveBehaviorPhysics()
+    {
+        if (!m_rigidbody) return;
+        if (!m_hasEngageTarget) return;
+        
+        // 고정 방향으로 돌진
+        MoveInDirection(m_engageDirection, m_engageMoveSpeed);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -226,9 +307,6 @@ namespace game
 
     // ═══════════════════════════════════════════════════════════════
     // Roaming 파라미터 재설정
-    // - m_roamingDuration: 범위 내 랜덤
-    // - m_turnDirection: 좌/우 50% 확률
-    // - m_turnScale: 범위 내 랜덤
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::ResetRoamingParameters()
     {
@@ -241,7 +319,7 @@ namespace game
         
         // 2. 좌/우 방향 선택 (50% 확률)
         std::uniform_int_distribution<int> dirDist(0, 1);
-        m_turnDirection = (dirDist(gen) == 0) ? 1 : -1;  // +1: 좌(반시계), -1: 우(시계)
+        m_turnDirection = (dirDist(gen) == 0) ? 1 : -1;
         
         // 3. m_turnScale 설정 (범위 내 랜덤)
         std::uniform_real_distribution<float> turnDist(m_turnScaleMin, m_maxTurnScale);
@@ -252,8 +330,7 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 충돌 시 방향 전환
-    // - 좌/우 50% 선택 후 90~180도 랜덤 각도로 전환
+    // 충돌 시 방향 전환 (90~180도 랜덤)
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::ChangeDirectionOnCollision()
     {
@@ -272,11 +349,11 @@ namespace game
         // 3. 방향 적용
         if (turnLeft)
         {
-            m_currentAngle += angleChangeRad;  // 반시계 방향
+            m_currentAngle += angleChangeRad;
         }
         else
         {
-            m_currentAngle -= angleChangeRad;  // 시계 방향
+            m_currentAngle -= angleChangeRad;
         }
         
         // 각도 정규화 (0 ~ 2π)
@@ -287,15 +364,105 @@ namespace game
 
     // ═══════════════════════════════════════════════════════════════
     // 현재 각도 → 방향 벡터 변환
-    // - 0도 = +X, 90도 = +Z (반시계 방향)
     // ═══════════════════════════════════════════════════════════════
     engine::Vector3 MonsterRoundBlue::GetDirectionVector() const
     {
         return engine::Vector3(
-            std::cos(m_currentAngle),   // X
-            0.0f,                        // Y (수평 이동)
-            std::sin(m_currentAngle)    // Z
+            std::cos(m_currentAngle),
+            0.0f,
+            std::sin(m_currentAngle)
         );
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // EngageMove 초기화 - 고정 목표 위치 계산
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundBlue::InitializeEngageMove()
+    {
+        m_hasEngageTarget = false;
+        m_engageCollisionOccurred = false;
+        
+        if (!m_targetPlayer || !m_targetPlayer->GetGameObject())
+        {
+            return;
+        }
+        
+        // 현재 위치
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        
+        // 플레이어 위치 (진입 시점 고정)
+        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+        
+        // 방향 벡터 계산
+        engine::Vector3 direction = playerPos - myPos;
+        direction.y = 0.0f;  // 수평 이동만
+        
+        float distance = direction.Length();
+        if (distance < 0.001f)
+        {
+            return;  // 너무 가까움
+        }
+        
+        // 정규화
+        direction.Normalize();
+        m_engageDirection = direction;
+        
+        // 목표 위치: 플레이어 방향으로 거리 * 배율만큼
+        float targetDistance = distance * m_engageTargetMultiplier;
+        m_engageTargetPosition = myPos + direction * targetDistance;
+        
+        m_hasEngageTarget = true;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 목표 도달 여부 확인
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundBlue::HasReachedEngageTarget() const
+    {
+        if (!m_hasEngageTarget) return true;  // 목표 없으면 도달로 처리
+        
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 diff = m_engageTargetPosition - myPos;
+        diff.y = 0.0f;  // 수평 거리만
+        
+        float distSq = diff.LengthSquared();
+        float thresholdSq = m_engageArrivalThreshold * m_engageArrivalThreshold;
+        
+        return distSq <= thresholdSq;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 플레이어 무시 시작 (Idle 진입 시)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundBlue::StartPlayerIgnore()
+    {
+        m_isIgnoringPlayer = true;
+        m_playerIgnoreTimer = 0.0f;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 무시 타이머 업데이트
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundBlue::UpdatePlayerIgnoreTimer(float deltaTime)
+    {
+        if (m_isIgnoringPlayer)
+        {
+            m_playerIgnoreTimer += deltaTime;
+            
+            if (m_playerIgnoreTimer >= m_playerIgnoreDuration)
+            {
+                m_isIgnoringPlayer = false;
+                m_playerIgnoreTimer = 0.0f;
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 플레이어 감지 가능 여부
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundBlue::CanDetectPlayer() const
+    {
+        return !m_isIgnoringPlayer;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -306,14 +473,37 @@ namespace game
         // 부모 클래스 호출
         MonsterRoundType::OnStateEntered(state);
         
-        if (state == "IdleMove")
+        if (state == "Idle")
+        {
+            // Idle 진입 시 플레이어 무시 시작
+            StartPlayerIgnore();
+            
+            // FSM 파라미터 초기화
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("PlayerDetected", false);
+                m_logicFSM->SetParameter("EngageComplete", false);
+            }
+        }
+        else if (state == "IdleMove")
         {
             InitializeIdleMove();
+            
+            // FSM 파라미터 초기화
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("PlayerDetected", false);
+            }
         }
-        else if (state == "Idle")
+        else if (state == "EngageMove")
         {
-            // Idle 진입 시 (시작/부활) - 특별한 처리 없음
-            // 다음 IdleMove 진입 시 InitializeIdleMove()에서 랜덤 방향 설정
+            InitializeEngageMove();
+            
+            // FSM 파라미터 초기화
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("EngageComplete", false);
+            }
         }
     }
 
@@ -323,12 +513,12 @@ namespace game
     void MonsterRoundBlue::OnGui()
     {
         ImGui::Text("=== MonsterRoundBlue ===");
-        ImGui::TextColored(ImVec4(0.0f, 0.5f, 1.0f, 1.0f), "Tier: Blue (Curved Movement)");
+        ImGui::TextColored(ImVec4(0.0f, 0.5f, 1.0f, 1.0f), "Tier: Blue (Curved + Dash)");
         
         // 부모 클래스 OnGui 호출
         MonsterRoundType::OnGui();
         
-        // Blue 전용 설정
+        // Blue 전용 설정 - Roaming
         ImGui::Separator();
         ImGui::Text("=== Blue Roaming Settings ===");
         ImGui::DragFloat("Roaming Duration Min", &m_roamingDurationMin, 0.1f, 0.1f, 10.0f);
@@ -339,13 +529,19 @@ namespace game
         ImGui::DragFloat("Turn Scale Min (deg/s)", &m_turnScaleMin, 1.0f, 1.0f, 90.0f);
         ImGui::DragFloat("Turn Scale Max (deg/s)", &m_maxTurnScale, 1.0f, 1.0f, 180.0f);
         
+        // Blue 전용 설정 - EngageMove
+        ImGui::Separator();
+        ImGui::Text("=== Blue EngageMove Settings ===");
+        ImGui::DragFloat("Engage Move Speed", &m_engageMoveSpeed, 0.5f, 1.0f, 30.0f);
+        ImGui::DragFloat("Player Ignore Duration", &m_playerIgnoreDuration, 0.1f, 0.1f, 10.0f);
+        
         ImGui::Separator();
         ImGui::Text("=== Blue Damage Settings ===");
         ImGui::DragFloat("Damage Cooldown", &m_damageCooldown, 0.1f, 0.1f, 5.0f);
         
-        // 런타임 정보
+        // 런타임 정보 - IdleMove
         ImGui::Separator();
-        ImGui::Text("=== Blue Runtime ===");
+        ImGui::Text("=== Blue Runtime (IdleMove) ===");
         float angleDeg = m_currentAngle * 180.0f / 3.14159265f;
         ImGui::Text("Current Angle: %.1f deg", angleDeg);
         ImGui::Text("Turn Direction: %s", (m_turnDirection > 0) ? "Left (CCW)" : "Right (CW)");
@@ -354,6 +550,27 @@ namespace game
         
         engine::Vector3 dir = GetDirectionVector();
         ImGui::Text("Direction Vector: (%.2f, %.2f, %.2f)", dir.x, dir.y, dir.z);
+        
+        // 런타임 정보 - 플레이어 무시
+        ImGui::Separator();
+        ImGui::Text("=== Blue Runtime (Player Ignore) ===");
+        ImGui::Text("Ignoring Player: %s", m_isIgnoringPlayer ? "Yes" : "No");
+        if (m_isIgnoringPlayer)
+        {
+            ImGui::Text("Ignore Timer: %.2f / %.2f", m_playerIgnoreTimer, m_playerIgnoreDuration);
+        }
+        
+        // 런타임 정보 - EngageMove
+        ImGui::Separator();
+        ImGui::Text("=== Blue Runtime (EngageMove) ===");
+        ImGui::Text("Has Target: %s", m_hasEngageTarget ? "Yes" : "No");
+        if (m_hasEngageTarget)
+        {
+            ImGui::Text("Target: (%.2f, %.2f, %.2f)", 
+                m_engageTargetPosition.x, m_engageTargetPosition.y, m_engageTargetPosition.z);
+            ImGui::Text("Direction: (%.2f, %.2f, %.2f)", 
+                m_engageDirection.x, m_engageDirection.y, m_engageDirection.z);
+        }
     }
 
     void MonsterRoundBlue::Save(engine::json& j) const
@@ -366,6 +583,8 @@ namespace game
         j["TurnScaleMin"] = m_turnScaleMin;
         j["MaxTurnScale"] = m_maxTurnScale;
         j["DamageCooldown"] = m_damageCooldown;
+        j["EngageMoveSpeed"] = m_engageMoveSpeed;
+        j["PlayerIgnoreDuration"] = m_playerIgnoreDuration;
     }
 
     void MonsterRoundBlue::Load(const engine::json& j)
@@ -378,5 +597,7 @@ namespace game
         m_turnScaleMin = j.value("TurnScaleMin", 10.0f);
         m_maxTurnScale = j.value("MaxTurnScale", 45.0f);
         m_damageCooldown = j.value("DamageCooldown", 1.0f);
+        m_engageMoveSpeed = j.value("EngageMoveSpeed", 10.0f);
+        m_playerIgnoreDuration = j.value("PlayerIgnoreDuration", 1.0f);
     }
 }

@@ -17786,7 +17786,7 @@
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
                     "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 101,
+                    "SourceHandleIndex": 93,
                     "SourceHandleGeneration": 6
                 }
             ]
@@ -18546,9 +18546,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -12.880000114440918,
-                        "y": -6.560521228493599e-07,
-                        "z": 6.570000171661377
+                        "x": -21.98268699645996,
+                        "y": -7.028929758234881e-07,
+                        "z": 11.548081398010254
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -18643,7 +18643,7 @@
                     "MonsterTier": 0,
                     "Hp": 100.0,
                     "MaxHp": 100.0,
-                    "MoveSpeed": 7.0,
+                    "MoveSpeed": 5.0,
                     "AttackDamage": 10.0,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
@@ -18667,9 +18667,11 @@
                     "AnimName_Dead": "Dead",
                     "RoamingDurationMin": 1.0,
                     "RoamingDurationMax": 3.0,
-                    "TurnScaleMin": 10.0,
+                    "TurnScaleMin": 30.0,
                     "MaxTurnScale": 90.0,
-                    "DamageCooldown": 1.0
+                    "DamageCooldown": 1.0,
+                    "EngageMoveSpeed": 17.0,
+                    "PlayerIgnoreDuration": 3.0
                 }
             ]
         }
