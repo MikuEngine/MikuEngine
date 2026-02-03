@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -24,7 +24,9 @@ namespace engine
             Trigger = 5,
             EnemyProjectile = 6,
             Picking = 7,
-			Field = 8,   // 장판 공격
+            Field = 8,                      // 장판 공격
+            Wall = 9,                       // 벽 (Projectile, EnemyProjectile 제외 모든 물체와 충돌)
+            EnemyParabolicProjectile = 10,  // 포물선 적 투사체 (Wall, Player만 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -43,6 +45,8 @@ namespace engine
             EnemyProjectileMask = (1u << EnemyProjectile),
             PickingMask = (1u << Picking),
             FieldMask = (1u << Field),
+            WallMask = (1u << Wall),
+            EnemyParabolicProjectileMask = (1u << EnemyParabolicProjectile),
 
             All = 0xFFFFFFFF
         };
@@ -64,10 +68,11 @@ namespace engine
                 "Environment",  // 4
                 "Trigger",      // 5
                 "EnemyProjectile", // 6
-                "Picking", // 7
-                "Field",
-                "Layer9",
-                "Layer10", "Layer11", "Layer12", "Layer13", "Layer14", "Layer15",
+                "Picking",      // 7
+                "Field",        // 8
+                "Wall",         // 9
+                "EnemyParabolicProjectile", // 10
+                "Layer11", "Layer12", "Layer13", "Layer14", "Layer15",
                 "Layer16", "Layer17", "Layer18", "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
@@ -169,7 +174,9 @@ namespace engine
             // Field ↔ Environment: 충돌함 (바닥이나 벽 감지를 위해 유지)
 
 
-			// ═══════════════════════════════════════
+            // ═══════════════════════════════════════
+            // Picking 충돌 규칙
+            // ═══════════════════════════════════════
             SetCollision(Picking, Default, false);
             SetCollision(Picking, Player, false);
             SetCollision(Picking, Enemy, false);
@@ -177,6 +184,29 @@ namespace engine
             SetCollision(Picking, Environment, false);
             SetCollision(Picking, Trigger, false);            
             SetCollision(Picking, EnemyProjectile, false);
+            
+            // ═══════════════════════════════════════
+            // Wall 충돌 규칙
+            // Projectile, EnemyProjectile 제외 모든 물체와 충돌
+            // ═══════════════════════════════════════
+            SetCollision(Wall, Projectile, false);
+            SetCollision(Wall, EnemyProjectile, false);
+            // 나머지는 기본값 All에 의해 충돌함
+            
+            // ═══════════════════════════════════════
+            // EnemyParabolicProjectile 충돌 규칙
+            // Wall, Player만 충돌
+            // ═══════════════════════════════════════
+            SetCollision(EnemyParabolicProjectile, Default, false);
+            SetCollision(EnemyParabolicProjectile, Enemy, false);
+            SetCollision(EnemyParabolicProjectile, Projectile, false);
+            SetCollision(EnemyParabolicProjectile, Environment, false);
+            SetCollision(EnemyParabolicProjectile, Trigger, false);
+            SetCollision(EnemyParabolicProjectile, EnemyProjectile, false);
+            SetCollision(EnemyParabolicProjectile, Picking, false);
+            SetCollision(EnemyParabolicProjectile, Field, false);
+            SetCollision(EnemyParabolicProjectile, EnemyParabolicProjectile, false);
+            // Wall, Player만 충돌 (기본값 All에서 위 항목들 제외)
   
         }
 

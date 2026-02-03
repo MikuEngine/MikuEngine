@@ -227,7 +227,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -282,7 +288,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -337,7 +349,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -393,7 +411,13 @@
                     "MaterialEmissiveIntensity": 0.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -448,7 +472,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -504,7 +534,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -559,7 +595,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -614,7 +656,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -669,7 +717,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -790,7 +844,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -911,7 +971,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -966,7 +1032,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1021,7 +1093,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1076,7 +1154,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1131,7 +1215,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1186,7 +1276,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1241,7 +1337,13 @@
                     "MaterialEmissiveIntensity": 1.7799999713897705,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1342,7 +1444,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1397,7 +1505,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1452,7 +1566,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1507,7 +1627,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -1562,7 +1688,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },

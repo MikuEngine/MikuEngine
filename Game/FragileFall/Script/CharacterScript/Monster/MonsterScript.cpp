@@ -192,96 +192,75 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 포물선 파라미터 자동 계산
+	// 포물선 발사각 자동 계산
 	// 
-	// 주어진 값:
-	//   - m_speedScale: 속도 (에디터 설정)
-	//   - m_parabolicHeightScale: 최대 높이 Y좌표 (에디터 설정, 절대값)
-	//   - targetPos: 착탄점 (플레이어 XZ, Y=0)
-	//   - 발사 위치: 현재 몬스터 위치
+	// 물리 기반 포물선 운동:
+	//   - 에디터 설정: m_parabolicSpeed (속력 v), m_ownGravity (중력 g)
+	//   - 자동 계산: 발사각 θ (플레이어 거리 기반)
+	//   - m_useHighArc로 높은/낮은 발사각 선택
 	// 
-	// 계산 결과:
-	//   - outAngleRad: 발사각 (라디안)
-	//   - outGravity: 자체 중력
+	// 공식:
+	//   - 최대 사거리 (45도): R_max = v² / g
+	//   - 낮은 발사각: θ_low = 0.5 × arcsin(g × R / v²)
+	//   - 높은 발사각: θ_high = 90° - θ_low
+	// 
+	// 조건:
+	//   - v² >= g × R (해가 존재하려면)
 	// ═══════════════════════════════════════════════════════════════
-	bool MonsterScript::CalculateParabolicParams(
+	bool MonsterScript::CalculateParabolicLaunchAngle(
+		const engine::Vector3& startPos,
 		const engine::Vector3& targetPos,
-		float& outAngleRad,
-		float& outGravity
+		float& outAngleRad
 	) const
 	{
-		engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+		constexpr float kPi = 3.14159265f;
+		constexpr float kMinDistance = 0.5f;
 		
 		// 수평 거리 계산 (XZ 평면)
-		float dx_x = targetPos.x - myPos.x;
-		float dx_z = targetPos.z - myPos.z;
-		float R = std::sqrt(dx_x * dx_x + dx_z * dx_z);  // 수평 거리
+		float dx = targetPos.x - startPos.x;
+		float dz = targetPos.z - startPos.z;
+		float R = std::sqrt(dx * dx + dz * dz);
 		
-		// 최소 거리 체크 (division by zero 방지)
-		constexpr float kMinDistance = 0.5f;
+		// 최소 거리 체크
 		if (R < kMinDistance)
 		{
-			// 너무 가까우면 기본값 사용
-			outAngleRad = 45.0f * 3.14159265f / 180.0f;
-			outGravity = 9.8f;
-			return false;
+			// 너무 가까우면: High Arc는 수직, Low Arc는 낮은 각도
+			outAngleRad = m_useHighArc ? (85.0f * kPi / 180.0f) : (15.0f * kPi / 180.0f);
+			return true;
 		}
 		
-		float h1 = myPos.y;                    // 발사 위치 Y
-		float H = m_parabolicHeightScale;     // 최대 높이 Y좌표 (절대값)
-		float v = m_speedScale;               // 속도
+		float v = m_parabolicSpeed;
+		float g = m_ownGravity;
+		float v2 = v * v;
 		
-		// 조건 체크: 최대 높이가 발사 위치보다 높아야 함
-		if (H <= h1)
+		// 발사 가능 조건: v² >= g × R
+		float maxRange = v2 / g;
+		if (R > maxRange)
 		{
-			// 최대 높이가 발사 위치보다 낮으면 기본값 사용
-			outAngleRad = 45.0f * 3.14159265f / 180.0f;
-			outGravity = 9.8f;
+			// 사거리 초과: 45도(최대 사거리 각도)로 발사
+			// 목표까지 도달하지 못하지만, 최대한 멀리 발사
+			outAngleRad = 45.0f * kPi / 180.0f;
 			return false;
 		}
 		
 		// ─────────────────────────────────────────────
-		// 포물선 계수 계산
-		// 
-		// 포물선 방정식: y(x) = a*x² + b*x + c
-		// 조건:
-		//   1. y(0) = h1 (발사점)
-		//   2. y(R) = 0 (착탄점, Y=0)
-		//   3. 최고점 y = H
-		// 
-		// 결과:
-		//   b = 2 * [(H - h1) + sqrt(H * (H - h1))] / R
-		//   a = -(b * R + h1) / R²
+		// 발사각 계산
+		// sin(2θ) = g × R / v²
+		// θ_low = 0.5 × arcsin(g × R / v²)
+		// θ_high = 90° - θ_low
+		// m_useHighArc에 따라 선택
 		// ─────────────────────────────────────────────
-		float H_rel = H - h1;  // 발사 위치 기준 상대 높이
+		float sinValue = (g * R) / v2;
 		
-		// b 계산 (양수 해 선택 - 포물선이 위로 향하는 경우)
-		float sqrtTerm = std::sqrt(H * H_rel);
-		float b = 2.0f * (H_rel + sqrtTerm) / R;
+		// 수치 안정성 (arcsin 범위: -1 ~ 1)
+		sinValue = std::max(-1.0f, std::min(1.0f, sinValue));
 		
-		// a 계산 (음수여야 함 - 위로 볼록한 포물선)
-		float a = -(b * R + h1) / (R * R);
+		float theta2 = std::asin(sinValue);  // 2θ_low
+		float thetaLow = theta2 * 0.5f;
+		float thetaHigh = (kPi * 0.5f) - thetaLow;  // 90° - θ_low
 		
-		// ─────────────────────────────────────────────
-		// 발사각 계산: tan(θ) = y'(0) = b
-		// ─────────────────────────────────────────────
-		outAngleRad = std::atan(b);
-		
-		// ─────────────────────────────────────────────
-		// 중력 계산: a = -g / (2 * v² * cos²(θ))
-		// => g = -2 * a * v² * cos²(θ)
-		// ─────────────────────────────────────────────
-		float cosTheta = std::cos(outAngleRad);
-		outGravity = -2.0f * a * v * v * cosTheta * cosTheta;
-		
-		// 중력이 음수가 되면 안 됨 (물리적으로 불가능)
-		if (outGravity <= 0.0f)
-		{
-			outAngleRad = 45.0f * 3.14159265f / 180.0f;
-			outGravity = 9.8f;
-			return false;
-		}
-		
+		// m_useHighArc에 따라 발사각 선택
+		outAngleRad = m_useHighArc ? thetaHigh : thetaLow;
 		return true;
 	}
 
@@ -681,9 +660,9 @@ namespace game
 	void MonsterScript::SyncMonsterData()
 	{
 		// MonsterScript의 값으로 MonsterData 동기화
-		m_monsterData.Type = m_attackType;
-		m_monsterData.Tier = m_monsterTier;
-		m_monsterData.Difficulty = m_difficulty;
+		m_monsterData.type = m_attackType;
+		m_monsterData.tier = m_monsterTier;
+		m_monsterData.difficulty = m_difficulty;
 		
 		// MonsterData에 없는 값들은 MonsterScript에서만 관리
 		// (체력, 이동속도, 공격력, Fragile시간, 인식범위)
@@ -846,7 +825,21 @@ namespace game
 		ImGui::Text("=== Fire Settings ===");
 		ImGui::DragFloat("Rotation Speed", &m_rotationSpeed, 0.1f, 0.0f, 10.0f);
 		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.1f, 0.1f, 10.0f);
-		ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 0.1f, 0.1f, 100.0f);
+		
+		// Parabolic 타입은 별도의 Parabolic Speed 사용
+		if (IsParabolicBullet())
+		{
+			ImGui::BeginDisabled(true);
+			ImGui::DragFloat("Bullet Speed", &m_parabolicSpeed, 0.1f, 0.1f, 100.0f);
+			ImGui::EndDisabled();
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(See Parabolic Settings)");
+		}
+		else
+		{
+			ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 0.1f, 0.1f, 100.0f);
+		}
+		
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
 
 		// ─────────────────────────────────────────────
@@ -913,8 +906,8 @@ namespace game
 		j["BulletLifetime"] = m_bulletLifetime;
 
 		// 포물선 총알 설정 (Parabolic 타입에서만 사용)
-		j["SpeedScale"] = m_speedScale;
-		j["ParabolicHeightScale"] = m_parabolicHeightScale;
+		j["ParabolicSpeed"] = m_parabolicSpeed;
+		j["OwnGravity"] = m_ownGravity;
 	}
 
 	void MonsterScript::Load(const engine::json& j)
@@ -944,7 +937,7 @@ namespace game
 		m_bulletLifetime = j.value("BulletLifetime", 3.0f);
 
 		// 포물선 총알 설정 (Parabolic 타입에서만 사용)
-		m_speedScale = j.value("SpeedScale", 10.0f);
-		m_parabolicHeightScale = j.value("ParabolicHeightScale", 5.0f);
+		m_parabolicSpeed = j.value("ParabolicSpeed", 15.0f);
+		m_ownGravity = j.value("OwnGravity", 9.8f);
 	}
 }

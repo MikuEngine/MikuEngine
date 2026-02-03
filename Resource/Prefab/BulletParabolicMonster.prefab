@@ -84,7 +84,7 @@
                     ],
                     "isTrigger": true,
                     "syncWithTransform": false,
-                    "layer": 3,
+                    "layer": 10,
                     "materialType": 0,
                     "radius": 0.9399999976158142
                 }

@@ -1,8 +1,9 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Monster/RoundType/MonsterRoundType.h"
+#include "Script/CharacterScript/Monster/RoundType/MonsterRoundGreen.h"
 
 #include <Framework/Asset/Prefab.h>
 
@@ -152,12 +153,19 @@ namespace game
 		{
 			const BulletParams& params = roundMonster->GetBulletParams();
 			
+			// Green 몬스터인지 확인 (에디터 모드에서도 올바른 타입 표시)
+			auto* greenMonster = GetGameObject()->GetComponent<MonsterRoundGreen>();
+			bool isGreenMonster = (greenMonster != nullptr);
+			
+			// 실제 사용될 타입 결정 (Green = 항상 Parabolic)
+			BulletType displayType = isGreenMonster ? BulletType::Parabolic : params.type;
+			
 			ImGui::Separator();
 			ImGui::Text("=== Current Bullet Settings ===");
 			
 			// 타입 이름 표시
 			const char* typeNames[] = { "BulletPlayer", "Linear", "Parabolic", "Curve", "Field" };
-			int typeIndex = static_cast<int>(params.type);
+			int typeIndex = static_cast<int>(displayType);
 			if (typeIndex >= 0 && typeIndex < 5)
 			{
 				ImGui::Text("Type: %s", typeNames[typeIndex]);
@@ -168,19 +176,23 @@ namespace game
 			}
 			
 			// 공통 속성
-			ImGui::Text("Speed: %.2f", params.speed);
+			ImGui::Text("Speed: %.2f m/s", params.speed);
 			ImGui::Text("Lifetime: %.2f sec", params.lifetime);
 			ImGui::Text("Damage: %d", params.damage);
 			
 			// 타입별 전용 속성
 			ImGui::Separator();
-			switch (params.type)
+			switch (displayType)
 			{
 			case BulletType::Parabolic:
 			case BulletType::Field:
 				ImGui::Text("=== Parabolic Settings ===");
-				ImGui::Text("Launch Angle: %.1f deg", params.launchAngle);
-				ImGui::Text("Own Gravity: %.2f", params.ownGravity);
+				ImGui::Text("Launch Angle: %.1f deg (auto)", params.launchAngle);
+				ImGui::Text("Own Gravity: %.2f m/s^2", params.ownGravity);
+				{
+					float maxRange = (params.speed * params.speed) / params.ownGravity;
+					ImGui::Text("Max Range: %.1f m", maxRange);
+				}
 				break;
 				
 			case BulletType::Curve:

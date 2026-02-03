@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -101,12 +101,15 @@ namespace game
 
         // ─────────────────────────────────────────────
         // 포물선 총알 설정 (Parabolic 타입에서만 사용)
-        // - 에디터 설정: speedScale, parabolicHeightScale
-        // - 자동 계산: launchAngle, gravity (발사 시점에 계산)
+        // - 에디터 설정: bulletSpeed, ownGravity
+        // - 자동 계산: launchAngle (발사 시점에 거리 기반 계산)
+        // - m_useHighArc: 높은/낮은 발사각 선택
+        // - 제한: v² / g >= AttackRange (최대 사거리가 어택레인지 이상)
         // - 다른 타입에서는 이 값들을 무시함
         // ─────────────────────────────────────────────
-        float m_speedScale = 10.0f;           // 포물선 이동 속력 (0.1~50)
-        float m_parabolicHeightScale = 5.0f;  // 포물선 최대 높이 Y좌표 (미터, 절대값)
+        float m_parabolicSpeed = 15.0f;       // 포물선 총알 속력 (m/s)
+        float m_ownGravity = 9.8f;            // 자체 중력 가속도 (m/s²)
+        bool m_useHighArc = false;            // true: 높은 발사각 (곡선 화려), false: 낮은 발사각 (빠른 도달)
 
         // ─────────────────────────────────────────────
         // 런타임 상태
@@ -196,14 +199,17 @@ namespace game
         virtual void Attack(float deltaTime);
 
         // ─────────────────────────────────────────────
-        // 포물선 파라미터 자동 계산 (Parabolic 타입용)
-        // - 입력: 착탄점, speedScale, parabolicHeightScale
-        // - 출력: launchAngle (라디안), gravity
+        // 포물선 발사각 자동 계산 (Parabolic 타입용)
+        // - 입력: 발사 위치, 착탄점
+        // - 사용: m_parabolicSpeed, m_ownGravity, m_useHighArc
+        // - 출력: launchAngle (라디안)
+        // - m_useHighArc=true: 높은 발사각 (곡선 화려)
+        // - m_useHighArc=false: 낮은 발사각 (빠른 도달)
         // ─────────────────────────────────────────────
-        bool CalculateParabolicParams(
+        bool CalculateParabolicLaunchAngle(
+            const engine::Vector3& startPos,   // 발사 위치 (오프셋 적용된 실제 위치)
             const engine::Vector3& targetPos,  // 착탄점 (플레이어 XZ, Y=0)
-            float& outAngleRad,                // 출력: 발사각 (라디안)
-            float& outGravity                  // 출력: 중력
+            float& outAngleRad                 // 출력: 발사각 (라디안)
         ) const;
         
         // ─────────────────────────────────────────────
@@ -277,6 +283,12 @@ namespace game
         // 외부 데미지 처리 (총알 등에서 호출)
         // ─────────────────────────────────────────────
         virtual void TakeDamage(float damage);
+        
+        // ─────────────────────────────────────────────
+        // 총알 타입 확인 (UI 분기용)
+        // - 자식 클래스에서 오버라이드하여 Parabolic 여부 반환
+        // ─────────────────────────────────────────────
+        virtual bool IsParabolicBullet() const { return false; }
         
         // ─────────────────────────────────────────────
         // 접근자 (Getters)

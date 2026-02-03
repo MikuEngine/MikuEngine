@@ -59,37 +59,37 @@ namespace game
 
     struct MonsterData
     {
-        int MonsterID;
-        std::string MonsterName;
-        AttackType Type;
-        MonsterTier Tier;
-        int Difficulty;
+        int monsterID;
+        std::string monsterName;
+        AttackType type;
+        MonsterTier tier;
+        int difficulty;
         
         // 기본 생성자
         MonsterData()
-            : MonsterID(0)
-            , Type(AttackType::Dull)
-            , Tier(MonsterTier::Gray)
-            , Difficulty(0)
+            : monsterID(0)
+            , type(AttackType::Dull)
+            , tier(MonsterTier::Gray)
+            , difficulty(0)
         {}
         
         // 파라미터 생성자
         MonsterData(int id, AttackType type, MonsterTier tier, int difficulty)
-            : MonsterID(id)
-            , Type(type)
-            , Tier(tier)
-            , Difficulty(difficulty)
+            : monsterID(id)
+            , type(type)
+            , tier(tier)
+            , difficulty(difficulty)
         {}
         
         // 비교 연산자 (난이도 기준 정렬용)
         bool operator<(const MonsterData& other) const
         {
-            return Difficulty < other.Difficulty;
+            return difficulty < other.difficulty;
         }
         
         bool operator==(const MonsterData& other) const
         {
-            return MonsterID == other.MonsterID;
+            return monsterID == other.monsterID;
         }
     };
 }

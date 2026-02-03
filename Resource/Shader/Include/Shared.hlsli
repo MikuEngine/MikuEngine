@@ -8,13 +8,15 @@ Texture2D g_texMetalness                : register(t2);
 Texture2D g_texRoughness                : register(t3);
 Texture2D g_texAmbientOcclusion         : register(t4);
 Texture2D g_texEmissive                 : register(t5);
+Texture2D g_texThickness                : register(t6);  // SSS strength scale per pixel (e.g. ear/nose), white = 1.0
 
 // g-buffer textures
 Texture2D g_gBufferBaseColor            : register(t10);
 Texture2D g_gBufferNormal               : register(t11);
 Texture2D g_gBufferORM                  : register(t12); // AO(r), roughness(g), metalness(b)
 Texture2D g_gBufferEmissive             : register(t13);
-Texture2D g_gBufferDepth                : register(t14);
+Texture2D g_gBufferSubsurface           : register(t14);
+Texture2D g_gBufferDepth                : register(t15);
 
 // global
 Texture2D g_texShadowMap                : register(t20);
@@ -91,6 +93,10 @@ cbuffer Frame : register(b0) // 프레임 당 한번만 갱신되는 버퍼
     float g_enableToneMapping;
     float g_enableFXAA;
     float __pad_postprocess1;
+
+    // SSS (Subsurface Scattering) - 전역 상수. 0이면 비활성
+    float3 g_subsurfaceColor;
+    float g_subsurfaceStrength;
 };
 
 cbuffer Material : register(b1)
@@ -106,6 +112,9 @@ cbuffer Material : register(b1)
     float g_materialAlpha; // 장애물 반투명용 (0.0 ~ 1.0)
     
     int g_overrideMaterial;
+    float3 g_materialSubsurfaceColor;
+    
+    float g_materialSubsurfaceStrength;
     float3 __pad_material;
 };
 
@@ -269,6 +278,7 @@ struct PS_OUTPUT_GBUFFER
     float4 normal : SV_Target1;
     float4 orm : SV_Target2;
     float4 emissive : SV_Target3;
+    float4 subsurface : SV_Target4;
 };
 
 struct PS_INPUT

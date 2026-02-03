@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "TrailDashTest.h"
 
 #include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
@@ -53,18 +53,41 @@ namespace game
             if (m_afterimage)
                 m_afterimage->BeginRecording();
         }
+
+        // T = 순간이동 (이전 위치→현재 방향 앞쪽으로 이동, 구간에 잔상만 남김)
+        if (engine::Input::IsKeyPressed(engine::Keys::T) && m_afterimage)
+        {
+            engine::Matrix fromWorld = GetTransform()->GetWorld();
+            engine::Vector3 forward = GetTransform()->GetForward();
+            forward.Normalize();
+            engine::Vector3 toPos = fromWorld.Translation() + forward * m_teleportDistance;
+            engine::Matrix toWorld = fromWorld;
+            toWorld._41 = toPos.x;
+            toWorld._42 = toPos.y;
+            toWorld._43 = toPos.z;
+
+            m_afterimage->ClearSlices();
+            m_afterimage->RecordTeleportPath(fromWorld, toWorld, m_teleportNumSlices);
+            GetTransform()->SetWorldMatrix(toWorld);
+        }
     }
 
     void TrailDashTest::OnGui()
     {
         if (m_afterimage)
-            ImGui::Text("Afterimage: OK (Space = dash)");
+            ImGui::Text("Afterimage: OK (Space = dash, T = teleport)");
         else
             ImGui::TextColored(ImVec4(1.f, 0.4f, 0.4f, 1.f), "AfterimageRenderer not found on this GameObject");
         ImGui::Text("Dashing: %s", m_isDashing ? "Yes" : "No");
 
         ImGui::DragFloat("Dash Duration", &m_dashDuration, 0.001f, 0.001f, 100.0f);
         ImGui::DragFloat("Dash Speed", &m_dashSpeed, 0.1f, 0.1f, 100.0f);
+        ImGui::Separator();
+        ImGui::TextUnformatted("Teleport (T key)");
+        ImGui::DragFloat("Teleport Distance", &m_teleportDistance, 0.5f, 0.5f, 50.0f);
+        int numSlices = static_cast<int>(m_teleportNumSlices);
+        if (ImGui::SliderInt("Teleport Trail Slices", &numSlices, 1, 32))
+            m_teleportNumSlices = static_cast<size_t>(numSlices);
     }
 
     void TrailDashTest::Save(engine::json& j) const
@@ -72,6 +95,8 @@ namespace game
         Object::Save(j);
         j["DashDuration"] = m_dashDuration;
         j["DashSpeed"] = m_dashSpeed;
+        j["TeleportDistance"] = m_teleportDistance;
+        j["TeleportNumSlices"] = static_cast<int>(m_teleportNumSlices);
     }
 
     void TrailDashTest::Load(const engine::json& j)
@@ -79,5 +104,9 @@ namespace game
         Object::Load(j);
         engine::JsonGet(j, "DashDuration", m_dashDuration, 0.2f);
         engine::JsonGet(j, "DashSpeed", m_dashSpeed, 12.0f);
+        engine::JsonGet(j, "TeleportDistance", m_teleportDistance, 5.0f);
+        int n = 12;
+        engine::JsonGet(j, "TeleportNumSlices", n, 12);
+        m_teleportNumSlices = static_cast<size_t>(std::max(1, n));
     }
 }
