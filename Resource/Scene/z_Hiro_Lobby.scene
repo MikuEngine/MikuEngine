@@ -7463,7 +7463,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/Earth.png",
+                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7597,7 +7597,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/Earth.png",
+                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7733,7 +7733,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/Earth.png",
+                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,

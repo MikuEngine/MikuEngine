@@ -353,7 +353,7 @@ namespace game
             speed = 0.7f;     // 천천히
             width = 0.15f;
             m_image->SetEffectParam(0, { speed, width, 0.0f, 0.0f });
-            m_image->SetEffectParam(1, m_baseColor);
+            m_image->SetEffectParam(1, color);
             outline = { 1.0f, 0.9f, 0.1f, 1.0f }; // 황금색
             outlineOn = true;
             break;
@@ -368,7 +368,7 @@ namespace game
             m_image->SetEffectParam(1, color);
 
             // 테두리는 순백색으로 발광 느낌 극대화
-            outline = { 1.0f, 1.0f, 1.0f, 1.0f };
+            outline = { 0.82, 0.06f, 0.06f, 1.0f };
             outlineOn = true;
             break;
 
