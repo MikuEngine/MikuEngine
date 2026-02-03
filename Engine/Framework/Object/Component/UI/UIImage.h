@@ -113,6 +113,14 @@ namespace engine
 	public:
 		// Effect
 		void ClearEffect();
+		uint32_t GetEffectMode() { return m_effectMode; }
+
+		void SetEffect0(const Vector4& v) { m_effect0 = v; m_dirty = true; }
+		void SetEffect1(const Vector4& v) { m_effect1 = v; m_dirty = true; }
+		void SetEffect2(const Vector4& v) { m_effect2 = v; m_dirty = true; }
+
+		// 특정 컴포넌트(x, y, z, w)만 수정하고 싶을 때 편리한 래퍼
+		void SetEffectParam0X(float x) { m_effect0.x = x; m_dirty = true; }
 
 		void SetEffectScanLine(float density, float speed, float opacity);
 		void SetEffectGlowPulse(float speed, float minIntensity, float maxIntensity);

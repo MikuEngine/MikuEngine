@@ -28,8 +28,9 @@ static const uint UI_FX_STATIC_NOISE     = 6u;
 
 //static const uint UI_FX_WAVE_DISTORT     = 5u;
 
-// OnlyProgress
+// OnlyProgressBar
 static const uint UI_FX_FLAMEBAR = 10u;
+static const uint UI_FX_PURPLECURSE = 11u;
 
 bool InsideRect(float2 p, float4 r)
 {
@@ -223,6 +224,29 @@ void ApplyFx_StaticNoise(float2 uv, inout float4 col)
     uv.y += jump;
 }
 
+// OnlyProgressBar
+void ApplyFx_PurpleCurse(float2 uv, inout float4 col)
+{
+    float fillProgress = saturate(g_uiMask1.y);
+    float intensity = g_effect0.x; // 현재 1.0 ~ 10.0 사이의 값
+
+    // 노이즈 속도에도 intensity를 섞어보세요. 강할수록 빨리 꿈틀거립니다.
+    float n = Noise01(uv, float2(4.0, 4.0), float2(0.1, 0.5), g_time * (0.5 + intensity * 0.1));
+
+    // 핵심: intensity를 '지수'로 사용하거나 '대비'로 사용
+    // n이 0.5 근처일 때 intensity가 높을수록 0 또는 1로 확 쏠리게 만듭니다.
+    float contrastN = saturate((n - 0.5) * intensity + 0.5);
+
+    float corruption = smoothstep(1.2 - fillProgress, 1.5 - fillProgress, contrastN);
+    
+    // 광원 밝기 조절
+    float3 basePurple = float3(0.5, 0.0, 1.0);
+    float3 curseColor = basePurple * contrastN * fillProgress * (intensity * 0.5);
+    
+    col.rgb = lerp(col.rgb, float3(0, 0, 0), corruption);
+    col.rgb += curseColor;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -333,7 +357,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             break;
         
         case UI_FX_ABYSSAL_DECAY:
-            ApplyFx_AbyssalDecay(uv, finalColor);
+            ApplyFx_PurpleCurse(uv, finalColor);
             break;
         case UI_FX_STATIC_NOISE:
             ApplyFx_StaticNoise(uv, finalColor);
@@ -342,6 +366,10 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
         case UI_FX_FLAMEBAR:
             ApplyFx_FlameBar(uv, finalColor);
             break;
+        case UI_FX_PURPLECURSE:
+            ApplyFx_PurpleCurse(uv, finalColor);
+            break;
+        
         default:
             break;
     }
