@@ -131,12 +131,8 @@ namespace engine
 		m_fillColor = curseColor;
 		m_fill->SetColor(m_fillColor);
 
-		// 2. Abyssal Decay 적용: 잠식되는 느낌
-		m_fill->SetEffectAbyssalDecay();
-
+		m_fill->SetEffect(UIEffectType::PurpleCurse);
 		m_fill->SetEffect0(Vector4(intensity, 0, 0, 0));
-
-		m_dirty = true;
 	}
 
 	void UIProgressBar::CreateVisuals()
@@ -221,25 +217,11 @@ namespace engine
 		m_background->SetColor(m_bgColor);
 		m_fill->SetColor(m_fillColor);
 
-		if (m_fill->GetEffectMode() == 5)
+		if (m_fill && m_fill->GetEffectType() == UIEffectType::PurpleCurse)
 		{
-			// 예: 게이지가 0일 땐 강도 1.0, 꽉 찼을 땐 강도 10.0 (지수 함수 등으로 조절 가능)
-			float baseIntensity = 1.0f;
-			float additionalIntensity = m_value * 9.0f; // 0~9까지 추가
-
-			float finalIntensity = baseIntensity + additionalIntensity;
-
-			// m_fill의 effect0.x (intensity)를 실시간 업데이트
-			m_fill->SetEffect0(Vector4(finalIntensity, 0, 0, 0));
+			float dynamicIntensity = 1.0f + (m_value * 9.0f);
+			m_fill->SetEffect0(Vector4(dynamicIntensity, 0, 0, 0));
 		}
-		
-		// Direction에 따라 기본 크기 설정 - TODO : 이거 지워도 됨
-		m_barWidth = GetRectTransform()->GetSize().x;
-		m_barHeight = GetRectTransform()->GetSize().y;
-		if (m_direction == Direction::LeftToRight || m_direction == Direction::RightToLeft)
-			GetRectTransform()->SetSize(m_barWidth, m_barHeight);
-		else
-			GetRectTransform()->SetSize(m_barWidth, m_barHeight);
 
 		// Fill 처리
 		RectTransform* rootRT = GetRectTransform();

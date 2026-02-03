@@ -11544,7 +11544,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -11600,7 +11606,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -11689,7 +11701,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -11778,7 +11796,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -11867,7 +11891,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -11956,7 +11986,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -12045,7 +12081,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -12134,7 +12176,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -12223,7 +12271,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -17344,7 +17398,13 @@
                     "MaterialEmissiveIntensity": 5.309999942779541,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "OrbitScript",
@@ -17410,7 +17470,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "AimPointerMeshScript",
@@ -17471,7 +17537,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "SkeletalAnimator",
@@ -17645,8 +17717,8 @@
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
                     "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 309,
-                    "SourceHandleGeneration": 1
+                    "SourceHandleIndex": 310,
+                    "SourceHandleGeneration": 2
                 }
             ]
         },
@@ -17697,8 +17769,8 @@
                     "FireRate": 0.009999999776482582,
                     "BulletSpeed": 0.0,
                     "BulletLifetime": 0.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
+                    "ParabolicSpeed": 15.0,
+                    "OwnGravity": 9.800000190734863,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -17741,7 +17813,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "Rigidbody",
@@ -18455,7 +18533,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "MonsterRoundGreen",
@@ -18479,8 +18563,8 @@
                     "FireRate": 5.0,
                     "BulletSpeed": 10.0,
                     "BulletLifetime": 5.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
+                    "ParabolicSpeed": 15.0,
+                    "OwnGravity": 9.800000190734863,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",

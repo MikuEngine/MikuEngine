@@ -112,22 +112,16 @@ namespace engine
 
 	public:
 		// Effect
+		void SetEffect(UIEffectType type);
 		void ClearEffect();
-		uint32_t GetEffectMode() { return m_effectMode; }
+
+		UIEffectType GetEffectType() const { return static_cast<UIEffectType>(m_effectMode); }
+
+		void SetEffectParam(int index, const Vector4& val);
 
 		void SetEffect0(const Vector4& v) { m_effect0 = v; m_dirty = true; }
 		void SetEffect1(const Vector4& v) { m_effect1 = v; m_dirty = true; }
 		void SetEffect2(const Vector4& v) { m_effect2 = v; m_dirty = true; }
-
-		// 특정 컴포넌트(x, y, z, w)만 수정하고 싶을 때 편리한 래퍼
-		void SetEffectParam0X(float x) { m_effect0.x = x; m_dirty = true; }
-
-		void SetEffectScanLine(float density, float speed, float opacity);
-		void SetEffectGlowPulse(float speed, float minIntensity, float maxIntensity);
-		void SetEffectPixelate(float pixelSize);
-		void SetEffectHoverTransition(bool isHover);
-		void SetEffectAbyssalDecay();
-		void SetEffectStaticNoise(float intensity);
 
 	public:
 		bool HasRenderType(RenderType type) const override;
