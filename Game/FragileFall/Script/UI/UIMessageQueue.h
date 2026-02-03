@@ -8,17 +8,18 @@ namespace game
 {
     class UIToastAnimator;
 
+    enum class UIMessageChannel
+    {
+        Kill,
+        Tutorial,
+        System,
+    };
+
     class UIMessageQueue :
         public engine::Script<UIMessageQueue>
     {
         REGISTER_SCRIPT(UIMessageQueue, Script)
     private:
-        enum class UIMessageChannel
-        {
-            Kill,
-            Tutorial,
-            System,
-        };
 
         struct ChannelConfig
         {
@@ -42,6 +43,8 @@ namespace game
 
     public:
         void PushMessage(UIMessageChannel ch, const std::string& text, const std::string& iconKey = "");
+        void Advance(UIMessageChannel ch, float fadeOutOverride = -1.0f);
+        void SetSingle(UIMessageChannel ch, const std::string& text, bool playEnter = true);
 
     private:
         struct Item

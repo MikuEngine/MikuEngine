@@ -8,6 +8,7 @@
 namespace engine
 {
     class Rigidbody;
+    class AfterimageRenderer;
 }
 
 namespace game
@@ -47,6 +48,8 @@ namespace game
         REGISTER_SCRIPT(PlayerControllerScript, BaseControllerScript)
 
     protected:
+        engine::AfterimageRenderer* m_afterimage = nullptr;
+
         // ═══════════════════════════════════════════════════════════════
         // 공격 변수 - Base값 (Save/Load 대상, OnGui 편집 가능)
         // PlayerTemperManager가 이 값을 읽어서 강화 계산 후 실제값 설정
@@ -305,6 +308,7 @@ namespace game
         void SetBulletSizeScale(float value) { m_bulletSizeScale = value; }
         void SetBulletSpeed(float value) { m_bulletSpeed = value; }
         void SetIsBulletDouble(bool value) { m_isBulletDouble = value; }
+        void SetAfterImage(engine::AfterimageRenderer* comp) { m_afterimage = comp; }
 
         // 처형 시작 (ExecutionIndicatorManager에서 호출)
         void StartExecution(engine::GameObject* targetMonster);

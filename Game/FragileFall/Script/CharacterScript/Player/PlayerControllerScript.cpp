@@ -17,6 +17,7 @@
 #include <Framework/System/SystemManager.h>
 #include <Engine/Core/System/Input.h>
 #include <Engine/Core/System/MyTime.h>
+#include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
 
 
 namespace game
@@ -421,6 +422,11 @@ namespace game
 		{
 			return;
 		}
+		if (IsInState("Dash"))
+		{
+			m_afterimage->RecordSample();
+		}
+		
 
 		// 발사 로직 처리 (쿨다운, 총알 생성 등)
 		if (CanAttack())  HandleShooting(deltaTime);
@@ -553,7 +559,7 @@ namespace game
 
 			// 대쉬 중이었다면 대쉬 상태 초기화
 			if (m_isDashing)
-			{
+			{				
 				m_isDashing = false;
 				m_dashElapsedTime = 0.0f;
 			}
@@ -685,6 +691,8 @@ namespace game
 			return;
 		}
 
+		m_afterimage->BeginRecording();
+
 		moveDir.y = 0.0f;
 		moveDir.Normalize();
 
@@ -725,6 +733,8 @@ namespace game
 
 	void PlayerControllerScript::EndDash()
 	{
+		m_afterimage->EndRecording();
+
 		m_isDashing = false;
 		m_dashElapsedTime = 0.0f;
 		m_dashCooldownTimer = m_dashCooldown;

@@ -19,6 +19,8 @@ namespace game
     //   - 충돌 시 정반사 방향으로 90도 꺾임
     //   - 충돌면 노말은 X축 또는 Z축으로 스냅
     //   - Idle → EngageMove 전이 시 대각선 4방향 중 랜덤 선택
+    //   - EngageMove/EngageAttack 중 플레이어 사거리 내 + 쿨타임 완료 시 공격
+    //   - EngageAttack에서도 이동/반사 로직 동일하게 유지
     // ═══════════════════════════════════════════════════════════════
 
     class MonsterRoundGreen : public MonsterRoundType
@@ -26,6 +28,13 @@ namespace game
         REGISTER_SCRIPT(MonsterRoundGreen, MonsterRoundType)
 
     public:
+        // ─────────────────────────────────────────────
+        // Green 전용 기본값 (변수 선언과 동시에 초기화 대체)
+        // 씬 파일에 값이 없을 때 Load()에서 사용
+        // ─────────────────────────────────────────────
+        static constexpr float kDefaultFireRate = 5.0f;
+        static constexpr float kDefaultDamageCooldown = 1.0f;
+        
         // ─────────────────────────────────────────────
         // 대각선 이동 방향 열거형 (월드 좌표 기준)
         // ─────────────────────────────────────────────
@@ -63,14 +72,27 @@ namespace game
         // ─────────────────────────────────────────────
         // 오버라이드 (Green 전용 로직)
         // ─────────────────────────────────────────────
-        void InitializeFSM() override;      // Green 전용 FSM (Idle, EngageMove, Fragile, Dead)
-        void InitializeBullet() override;   // 총알 초기화 (사용 안함, 빈 구현)
-        void ProcessInput() override;       // Green은 레이캐스트 감지 안함
+        void InitializeFSM() override;      // Green 전용 FSM (Idle, EngageMove, EngageAttack, Fragile, Dead)
+        void InitializeBullet() override;   // 총알 초기화
+        void ProcessInput() override;       // 플레이어 감지, 사거리/쿨타임 체크
         
         // ─────────────────────────────────────────────
         // 상태별 행동 오버라이드
         // ─────────────────────────────────────────────
-        void ExecuteEngageMoveBehaviorPhysics() override;  // 대각선 등속 이동
+        void ExecuteEngageMoveBehaviorPhysics() override;       // 대각선 등속 이동
+        void ExecuteEngageAttackBehaviorNonPhysics(float deltaTime) override;  // Attack 호출
+        void ExecuteEngageAttackBehaviorPhysics() override;     // 이동 유지 (EngageMove와 동일)
+        
+        // ─────────────────────────────────────────────
+        // 공격
+        // ─────────────────────────────────────────────
+        void Attack(float deltaTime) override;  // 플레이어 방향 발사
+        
+        // ─────────────────────────────────────────────
+        // 행동 제한 오버라이드
+        // ─────────────────────────────────────────────
+        bool CanMove() const override;      // EngageMove, EngageAttack 모두 true
+        bool CanAttack() const override;    // EngageAttack일 때 true
         
         // ─────────────────────────────────────────────
         // 상태 진입 콜백 오버라이드
@@ -89,6 +111,11 @@ namespace game
         // ─────────────────────────────────────────────
         engine::Vector3 SnapNormalToAxis(const engine::Vector3& normal) const;    // 노말을 X/Z축으로 스냅
         engine::Vector3 ReflectDirection(const engine::Vector3& direction, const engine::Vector3& normal) const;  // 정반사
+        
+        // ─────────────────────────────────────────────
+        // 이동 로직 (EngageMove, EngageAttack 공용)
+        // ─────────────────────────────────────────────
+        void ExecuteDiagonalMovement();     // 대각선 이동 실행
 
     public:
         void OnGui() override;

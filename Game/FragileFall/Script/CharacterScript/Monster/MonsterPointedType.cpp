@@ -179,8 +179,8 @@ namespace game
             m_bulletParams.damage = 10;
             break;
         case MonsterTier::Green:
-            m_bulletParams.type = BulletType::Field;
-            m_bulletParams.gravity = 9.81f;
+            m_bulletParams.type = BulletType::Parabolic;
+            m_bulletParams.ownGravity = 9.81f;
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 15;
 			break;
@@ -453,7 +453,7 @@ namespace game
 
                     // 수직 초기 속도 계산 (Vy = (dy + 0.5 * g * t^2) / t)
                     float dy = diff.y;
-                    float verticalSpeed = (dy + 0.5f * m_bulletParams.gravity * travelTime * travelTime) / travelTime;
+                    float verticalSpeed = (dy + 0.5f * m_bulletParams.ownGravity * travelTime * travelTime) / travelTime;
 
                     engine::Vector3 finalVelocity = (horizontalDir * horizontalSpeed) + (engine::Vector3::Up * verticalSpeed);
                     float finalSpeed = finalVelocity.Length();

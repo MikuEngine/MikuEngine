@@ -100,6 +100,15 @@ namespace game
         engine::Vector3 m_fireOffset{ 0.0f, 1.5f, 0.0f };  // 발사 위치 오프셋
 
         // ─────────────────────────────────────────────
+        // 포물선 총알 설정 (Parabolic 타입에서만 사용)
+        // - 에디터 설정: speedScale, parabolicHeightScale
+        // - 자동 계산: launchAngle, gravity (발사 시점에 계산)
+        // - 다른 타입에서는 이 값들을 무시함
+        // ─────────────────────────────────────────────
+        float m_speedScale = 10.0f;           // 포물선 이동 속력 (0.1~50)
+        float m_parabolicHeightScale = 5.0f;  // 포물선 최대 높이 Y좌표 (미터, 절대값)
+
+        // ─────────────────────────────────────────────
         // 런타임 상태
         // ─────────────────────────────────────────────
         float m_fireTimer = 0.0f;
@@ -185,6 +194,17 @@ namespace game
         // 공격 (자손 클래스에서 오버라이드)
         // ─────────────────────────────────────────────
         virtual void Attack(float deltaTime);
+
+        // ─────────────────────────────────────────────
+        // 포물선 파라미터 자동 계산 (Parabolic 타입용)
+        // - 입력: 착탄점, speedScale, parabolicHeightScale
+        // - 출력: launchAngle (라디안), gravity
+        // ─────────────────────────────────────────────
+        bool CalculateParabolicParams(
+            const engine::Vector3& targetPos,  // 착탄점 (플레이어 XZ, Y=0)
+            float& outAngleRad,                // 출력: 발사각 (라디안)
+            float& outGravity                  // 출력: 중력
+        ) const;
         
         // ─────────────────────────────────────────────
         // 상태별 행동 - 비물리 (Update에서 호출, DeltaTime 기반)
