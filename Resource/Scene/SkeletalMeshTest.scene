@@ -240,9 +240,11 @@
                         1.0
                     ],
                     "SolidInitialAlpha": 1.0,
-                    "SolidDecaySpeed": 1.5,
+                    "SolidDecaySpeed": 10.0,
                     "SolidDecayMode": 0,
+                    "SolidDecayCurve": 1,
                     "SolidEmissiveIntensity": 10.0,
+                    "SolidTrailGradient": 0.699999988079071,
                     "SolidMaxSlices": 24,
                     "SolidSampleInterval": 0.03999999910593033,
                     "DrawAlphaLayer": false,
@@ -256,10 +258,12 @@
                     "AlphaInitialAlpha": 0.699999988079071,
                     "AlphaDecaySpeed": 1.5,
                     "AlphaDecayMode": 0,
+                    "AlphaDecayCurve": 1,
+                    "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
                     "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 11,
-                    "SourceHandleGeneration": 5
+                    "SourceHandleIndex": 15,
+                    "SourceHandleGeneration": 3
                 },
                 {
                     "Type": "TrailDashTest",
