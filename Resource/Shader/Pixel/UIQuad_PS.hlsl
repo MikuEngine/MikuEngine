@@ -8,29 +8,32 @@ static const uint UI_MASK_RING = 3u;
 static const uint UI_MASK_RECTRING = 4u;
 static const uint UI_MASK_RADIAL = 5u;
 
-// EffectMode
+
+
+// --- Effect Mode ì •ì˜ (C++ UIEffectTypeê³¼ ë°˜ë“œì‹œ ì¼ì¹˜ì‹œí‚¬ ê²ƒ) ---
 static const uint UI_FX_NONE = 0u;
 
-static const uint UI_FX_SCANLINE         = 1u;
-static const uint UI_FX_GLOW_PULSE       = 2u; 
+// [Group 1] ìˆ˜ì¹˜/ìƒ‰ìƒ ë³€í˜• (Simple Color FX)
+static const uint UI_FX_SCANLINE = 10u;
+static const uint UI_FX_GLOW_PULSE = 11u;
+static const uint UI_FX_STATIC_NOISE = 12u;
+
+// [Group 2] UV ë³€í˜• (UV Distort FX) - ìƒ˜í”Œë§ ì „ì— ì‹¤í–‰
+static const uint UI_FX_PIXELATE = 20u;
+
+// [Group 3] ë³µí•©/íŠ¹ìˆ˜ ì—°ì¶œ (Complex/Component FX)
+static const uint UI_FX_HOVER_TRANSITION = 30u;
+static const uint UI_FX_ABYSSAL_DECAY = 31u;
+static const uint UI_FX_LIQUID_SHINE = 32u;
+static const uint UI_FX_ENERGY_FLOW = 33u;
+static const uint UI_FX_HOLOGRAM = 34u;
+static const uint UI_FX_STONE_LOCK = 35u;
+
+// [Group 4] í”„ë¡œê·¸ë ˆìŠ¤ë°” ì „ìš© (ProgressBar Only)
+static const uint UI_FX_FLAMEBAR = 40u;
+static const uint UI_FX_PURPLECURSE = 41u;
 
 
-static const uint UI_FX_PIXELATE         = 3u; //
-
-
-
-static const uint UI_FX_HOVER_TRANSITION = 4u;
-
-static const uint UI_FX_ABYSSAL_DECAY    = 5u;
-static const uint UI_FX_STATIC_NOISE     = 6u;
-
-
-
-//static const uint UI_FX_WAVE_DISTORT     = 5u;
-
-// OnlyProgressBar
-static const uint UI_FX_FLAMEBAR = 10u;
-static const uint UI_FX_PURPLECURSE = 11u;
 
 bool InsideRect(float2 p, float4 r)
 {
@@ -68,7 +71,7 @@ float2 Rotate2D(float2 v, float a)
 
 //////////////////////////////////////////////////////////////////////////
 
-// ex 1) ³¡ÀÌ ºÒÅ¸´Â ¹Ù
+// ex 1) ëì´ ë¶ˆíƒ€ëŠ” ë°”
 void ApplyFx_FlameBar(float2 uv, inout float4 col)
 {
     float fill = saturate(g_uiMask1.y);
@@ -80,7 +83,7 @@ void ApplyFx_FlameBar(float2 uv, inout float4 col)
     float flameInt = g_effect2.y; // 0~2
     float alphaJit = g_effect2.z; // 0~0.3
 
-    // Fill mask(ºÎµå·´°Ô)
+    // Fill mask(ë¶€ë“œëŸ½ê²Œ)
     float mFill = FillMask01(uv.x, fill, feather);
     col.a *= mFill;
 
@@ -97,7 +100,7 @@ void ApplyFx_FlameBar(float2 uv, inout float4 col)
     col.a *= saturate(1.0 - alphaJit + alphaJit * n);
 }
 
-// ex 5) ½ºÄµ¶óÀÎ (¿òÁ÷ÀÌ´Â °¡·ÎÁÙ È¿°ú)
+// ex 5) ìŠ¤ìº”ë¼ì¸ (ì›€ì§ì´ëŠ” ê°€ë¡œì¤„ íš¨ê³¼)
 void ApplyFx_Scanline(float2 uv, inout float4 col)
 {
     float density = g_effect0.x;
@@ -110,7 +113,7 @@ void ApplyFx_Scanline(float2 uv, inout float4 col)
     col.rgb += scan * opacity * col.rgb;
 }
 
-// ex 6) ±Û·Î¿ì ÆŞ½º
+// ex 6) ê¸€ë¡œìš° í„ìŠ¤
 void ApplyFx_GlowPulse(inout float4 col)
 {
     float speed = g_effect0.x;
@@ -124,62 +127,62 @@ void ApplyFx_GlowPulse(inout float4 col)
     col.rgb += intensity * 0.5f;
 }
 
-// ex 7) ÇÈ¼¿È­
+// ex 7) í”½ì…€í™”
 void ApplyFx_Pixelate(inout float2 uv)
 {
     float pixelSize = g_effect0.x;
     if (pixelSize > 1.0)
     {
-        // UV¸¦ Æ¯Á¤ ±×¸®µå ´ÜÀ§·Î ²÷¾î¼­ °è´Ü Çö»óÀ» ¸¸µì´Ï´Ù.
+        // UVë¥¼ íŠ¹ì • ê·¸ë¦¬ë“œ ë‹¨ìœ„ë¡œ ëŠì–´ì„œ ê³„ë‹¨ í˜„ìƒì„ ë§Œë“­ë‹ˆë‹¤.
         uv.x = floor(uv.x * pixelSize) / pixelSize;
         uv.y = floor(uv.y * pixelSize) / pixelSize;
     }
 }
 
-// ex 8) È£¹ö ¾Ö´Ï¸ŞÀÌ¼Ç (ÇÈ¼¿È­ -> ½ºÄµ¶óÀÎ -> ±Û·Î¿ì ÀüÈ¯)
+// ex 8) í˜¸ë²„ ì• ë‹ˆë©”ì´ì…˜ (í”½ì…€í™” -> ìŠ¤ìº”ë¼ì¸ -> ê¸€ë¡œìš° ì „í™˜)
 void ApplyFx_HoverTransition(float2 uv, inout float4 col)
 {
-    // g_effect1.x¸¦ '½ÃÀÛ ½Ã°£(startTime)'À¸·Î È°¿ëÇÕ´Ï´Ù.
+    // g_effect1.xë¥¼ 'ì‹œì‘ ì‹œê°„(startTime)'ìœ¼ë¡œ í™œìš©í•©ë‹ˆë‹¤.
     float startTime = g_effect1.x;
-    float localTime = g_time - startTime; // ¾Ö´Ï¸ŞÀÌ¼Ç ÁøÇà ½Ã°£
+    float localTime = g_time - startTime; // ì• ë‹ˆë©”ì´ì…˜ ì§„í–‰ ì‹œê°„
     
-    // 1. ÃÊ¹İ 0.3ÃÊ: °­ÇÑ ÇÈ¼¿È­ (¼±¸íÇØÁö´Â ¿¬Ãâ)
+    // 1. ì´ˆë°˜ 0.3ì´ˆ: ê°•í•œ í”½ì…€í™” (ì„ ëª…í•´ì§€ëŠ” ì—°ì¶œ)
     if (localTime < 0.3)
     {
         float t = localTime / 0.3;
-        // 16px -> 512px(¿øº»¼öÁØ)·Î ¼±¸íÇØÁü
+        // 16px -> 512px(ì›ë³¸ìˆ˜ì¤€)ë¡œ ì„ ëª…í•´ì§
         float pSize = lerp(16.0, 512.0, t);
         uv.x = floor(uv.x * pSize) / pSize;
         uv.y = floor(uv.y * pSize) / pSize;
     }
 
-    // 2. 0.1ÃÊ ~ 0.5ÃÊ: ½ºÄµ¶óÀÎÀÌ ½ºÃÄ Áö³ª°¨
+    // 2. 0.1ì´ˆ ~ 0.5ì´ˆ: ìŠ¤ìº”ë¼ì¸ì´ ìŠ¤ì³ ì§€ë‚˜ê°
     if (localTime > 0.1 && localTime < 0.5)
     {
         float scan = sin(uv.y * 100.0 + localTime * 50.0);
         col.rgb += smoothstep(0.8, 1.0, scan) * 0.3;
     }
 
-    // 3. 0.2ÃÊ ÀÌÈÄ ~ °è¼Ó: ÀºÀºÇÑ ±Û·Î¿ì ÆŞ½º
+    // 3. 0.2ì´ˆ ì´í›„ ~ ê³„ì†: ì€ì€í•œ ê¸€ë¡œìš° í„ìŠ¤
     if (localTime > 0.2)
     {
         float pulse = (sin(g_time * 3.0) * 0.5 + 0.5);
-        // Èò»ö ¹öÆ°À» °í·ÁÇÑ Additive Glow
+        // í°ìƒ‰ ë²„íŠ¼ì„ ê³ ë ¤í•œ Additive Glow
         col.rgb += pulse * float3(0.2, 0.2, 0.2);
     }
 }
 
 void ApplyFx_LiquidShine(float2 uv, inout float4 col)
 {
-    // ´ë°¢¼± ¹æÇâ °è»ê
+    // ëŒ€ê°ì„  ë°©í–¥ ê³„ì‚°
     float angle = uv.x + uv.y;
-    // ½Ã°£¿¡ µû¶ó Èå¸£´Â ¶ì (0~1 ¹İº¹)
+    // ì‹œê°„ì— ë”°ë¼ íë¥´ëŠ” ë  (0~1 ë°˜ë³µ)
     float shine = frac(angle * 0.5 - g_time * 0.8);
     
-    // ¶ì¸¦ ¾ã°í ¼±¸íÇÏ°Ô ¸¸µê
+    // ë ë¥¼ ì–‡ê³  ì„ ëª…í•˜ê²Œ ë§Œë“¦
     shine = smoothstep(0.4, 0.5, shine) - smoothstep(0.5, 0.6, shine);
     
-    // Èò»ö ±¤¿ø Ãß°¡ (Additive)
+    // í°ìƒ‰ ê´‘ì› ì¶”ê°€ (Additive)
     col.rgb += shine * 0.6;
 }
 
@@ -188,38 +191,38 @@ void ApplyFx_AbyssalDecay(float2 uv, inout float4 col)
     float startTime = g_effect1.x;
     float localTime = g_time - startTime;
 
-    // ½ÃÀÛ ÀüÀÌ¶ó¸é È¿°ú ¹ÌÀû¿ë
+    // ì‹œì‘ ì „ì´ë¼ë©´ íš¨ê³¼ ë¯¸ì ìš©
     if (localTime < 0.0)
         return;
 
-    // 0¿¡¼­ 1ÃÊ±îÁö Èå¸£°Ô ¼³Á¤ (¾Ö´Ï¸ŞÀÌ¼Ç ¼Óµµ Á¶Àı)
+    // 0ì—ì„œ 1ì´ˆê¹Œì§€ íë¥´ê²Œ ì„¤ì • (ì• ë‹ˆë©”ì´ì…˜ ì†ë„ ì¡°ì ˆ)
     float intensity = saturate(localTime / 1.0f);
     
     float2 center = uv - 0.5;
     float dist = dot(center, center) * 2.0;
 
-    // ³ëÀÌÁî ¿ÀÇÁ¼Â¿¡µµ localTimeÀ» ½á¼­ ¿òÁ÷ÀÌ°Ô ¸¸µê
+    // ë…¸ì´ì¦ˆ ì˜¤í”„ì…‹ì—ë„ localTimeì„ ì¨ì„œ ì›€ì§ì´ê²Œ ë§Œë“¦
     float n = Noise01(uv, float2(4.0, 4.0), float2(0.1, 0.1), localTime * 0.2);
 
-    // [ÇÙ½É ¼öÁ¤] intensity¸¦ °öÇÏ°Å³ª dist¿¡¼­ »©ÁÖ´Â ¹æ½ÄÀ¸·Î 'È®Àå' ¿¬Ãâ
-    // intensity°¡ 0ÀÏ ¶§´Â mask°¡ °ÅÀÇ 0ÀÌ µÇµµ·Ï ¼³Á¤
+    // [í•µì‹¬ ìˆ˜ì •] intensityë¥¼ ê³±í•˜ê±°ë‚˜ distì—ì„œ ë¹¼ì£¼ëŠ” ë°©ì‹ìœ¼ë¡œ 'í™•ì¥' ì—°ì¶œ
+    // intensityê°€ 0ì¼ ë•ŒëŠ” maskê°€ ê±°ì˜ 0ì´ ë˜ë„ë¡ ì„¤ì •
     float mask = smoothstep(0.4, 0.9, (dist + n * 0.3) * intensity);
 
-    // ¿Ü°ûÀ» °Ë°Ô ÅÂ¿ò
+    // ì™¸ê³½ì„ ê²€ê²Œ íƒœì›€
     col.rgb = lerp(col.rgb, float3(0, 0, 0), mask);
     col.rgb *= (1.0 - mask * 0.5);
 }
 
 void ApplyFx_StaticNoise(float2 uv, inout float4 col)
 {
-    // ¾ÆÁÖ ºü¸¥ ¹«ÀÛÀ§ ÀÔÀÚ ³ëÀÌÁî
+    // ì•„ì£¼ ë¹ ë¥¸ ë¬´ì‘ìœ„ ì…ì ë…¸ì´ì¦ˆ
     float noise = frac(sin(dot(uv + g_time, float2(12.9898, 78.233))) * 43758.5453);
     
-    // ¿øº» ÀÌ¹ÌÁö¿¡ ³ëÀÌÁî¸¦ ¾ã°Ô µ¤À½
+    // ì›ë³¸ ì´ë¯¸ì§€ì— ë…¸ì´ì¦ˆë¥¼ ì–‡ê²Œ ë®ìŒ
     float noiseIntensity = 0.15;
     col.rgb = lerp(col.rgb, float3(noise, noise, noise), noiseIntensity);
     
-    // °¡²û È­¸éÀÌ À§¾Æ·¡·Î Æ¢´Â È¿°ú (Jitter)
+    // ê°€ë” í™”ë©´ì´ ìœ„ì•„ë˜ë¡œ íŠ€ëŠ” íš¨ê³¼ (Jitter)
     float jump = step(0.98, frac(sin(g_time) * 123.45)) * 0.01;
     uv.y += jump;
 }
@@ -228,18 +231,18 @@ void ApplyFx_StaticNoise(float2 uv, inout float4 col)
 void ApplyFx_PurpleCurse(float2 uv, inout float4 col)
 {
     float fillProgress = saturate(g_uiMask1.y);
-    float intensity = g_effect0.x; // ÇöÀç 1.0 ~ 10.0 »çÀÌÀÇ °ª
+    float intensity = g_effect0.x; // í˜„ì¬ 1.0 ~ 10.0 ì‚¬ì´ì˜ ê°’
 
-    // ³ëÀÌÁî ¼Óµµ¿¡µµ intensity¸¦ ¼¯¾îº¸¼¼¿ä. °­ÇÒ¼ö·Ï »¡¸® ²ŞÆ²°Å¸³´Ï´Ù.
+    // ë…¸ì´ì¦ˆ ì†ë„ì—ë„ intensityë¥¼ ì„ì–´ë³´ì„¸ìš”. ê°•í• ìˆ˜ë¡ ë¹¨ë¦¬ ê¿ˆí‹€ê±°ë¦½ë‹ˆë‹¤.
     float n = Noise01(uv, float2(4.0, 4.0), float2(0.1, 0.5), g_time * (0.5 + intensity * 0.1));
 
-    // ÇÙ½É: intensity¸¦ 'Áö¼ö'·Î »ç¿ëÇÏ°Å³ª '´ëºñ'·Î »ç¿ë
-    // nÀÌ 0.5 ±ÙÃ³ÀÏ ¶§ intensity°¡ ³ôÀ»¼ö·Ï 0 ¶Ç´Â 1·Î È® ½ò¸®°Ô ¸¸µì´Ï´Ù.
+    // í•µì‹¬: intensityë¥¼ 'ì§€ìˆ˜'ë¡œ ì‚¬ìš©í•˜ê±°ë‚˜ 'ëŒ€ë¹„'ë¡œ ì‚¬ìš©
+    // nì´ 0.5 ê·¼ì²˜ì¼ ë•Œ intensityê°€ ë†’ì„ìˆ˜ë¡ 0 ë˜ëŠ” 1ë¡œ í™• ì ë¦¬ê²Œ ë§Œë“­ë‹ˆë‹¤.
     float contrastN = saturate((n - 0.5) * intensity + 0.5);
 
     float corruption = smoothstep(1.2 - fillProgress, 1.5 - fillProgress, contrastN);
     
-    // ±¤¿ø ¹à±â Á¶Àı
+    // ê´‘ì› ë°ê¸° ì¡°ì ˆ
     float3 basePurple = float3(0.5, 0.0, 1.0);
     float3 curseColor = basePurple * contrastN * fillProgress * (intensity * 0.5);
     
@@ -247,15 +250,76 @@ void ApplyFx_PurpleCurse(float2 uv, inout float4 col)
     col.rgb += curseColor;
 }
 
+// ì—ë„ˆì§€ íë¦„
+void ApplyFx_EnergyFlow(float2 uv, inout float4 col)
+{
+    float3 baseColor = g_effect1.rgb; // C++ì—ì„œ ë³´ë‚¸ m_baseColor
+    
+    // 1. í…ìŠ¤ì²˜ ì›ë³¸(col)ê³¼ ë² ì´ìŠ¤ ì»¬ëŸ¬ë¥¼ ê³±í•´ ì•„ì´ì½˜ ë¬¸ì–‘ì„ ì‚´ë¦¼
+    col.rgb *= baseColor;
+    
+    float speed = g_effect0.x; // ì¶”ì²œ: 2.0
+    float intensity = g_effect0.y; // ì¶”ì²œ: 0.5
+    
+    float2 center = uv - 0.5;
+    float angle = atan2(center.y, center.x);
+    float dist = length(center);
+
+    // ë‚˜ì„ í˜•ìœ¼ë¡œ íë¥´ëŠ” ë…¸ì´ì¦ˆ
+    float n = Noise01(uv, float2(3, 3), float2(0, 0), g_time * speed + dist * 5.0);
+    
+    // ì™¸ê³½ìœ¼ë¡œ ê°ˆìˆ˜ë¡ ë°ì•„ì§€ëŠ” ê³ ë¦¬
+    float ring = frac(dist * 2.0 - g_time * speed);
+    ring = smoothstep(0.4, 0.5, ring) * smoothstep(0.6, 0.5, ring);
+    
+    float3 energyCol = float3(0.2, 0.6, 1.0); // ì‹œì•ˆìƒ‰ ì—ë„ˆì§€
+    col.rgb += energyCol * ring * n * intensity;
+}
+
+// í™€ë¡œê·¸ë¨ ê¸€ë¦¬ì¹˜ 
+void ApplyFx_Hologram(float2 uv, inout float4 col)
+{
+    float freq = g_effect0.x; // 10.0
+    float glitch = step(0.9, sin(g_time * freq));
+    
+    // ìˆ˜í‰ ì˜¤í”„ì…‹ ì™œê³¡
+    float offset = sin(uv.y * 100.0 + g_time * 20.0) * 0.01 * glitch;
+    
+    // ìƒ‰ìƒ ë¶„ë¦¬ (RGB Split)
+    float4 r = g_texBlit.Sample(g_samLinear, uv + float2(offset, 0));
+    float4 b = g_texBlit.Sample(g_samLinear, uv - float2(offset, 0));
+    
+    col.r = r.r;
+    col.b = b.b;
+    col.rgb += glitch * 0.2;
+}
+
+// ì„í™”/ë™ê²°
+void ApplyFx_StoneLock(float2 uv, inout float4 col)
+{
+    // 1. íšŒìƒ‰ì¡° ë³€í™˜
+    float grey = dot(col.rgb, float3(0.299, 0.587, 0.114));
+    
+    // 2. ê· ì—´ ë…¸ì´ì¦ˆ (Tilingì„ í¬ê²Œ í•´ì„œ ë¯¸ì„¸í•œ ê¸ˆ ìƒì„±)
+    float cracks = Noise01(uv, float2(15.0, 15.0), float2(0, 0), 0);
+    cracks = pow(cracks, 3.0) * 2.0;
+    
+    // 3. ì„ì¡° ì§ˆê° ì…íˆê¸°
+    float3 stone = float3(grey, grey, grey) * (0.8 + cracks * 0.2);
+    col.rgb = lerp(col.rgb, stone, 0.9); // 90% ì„í™”
+}
+
+//////////////////////////////////////////////////////////////////////////
+// 
+//  Masking
+//
 //////////////////////////////////////////////////////////////////////////
 
-
-
-float4 main(PS_INPUT_TEXCOORD input) : SV_Target
+void ProcessMasking(float2 p)
 {
-    float2 p = input.position.xy;
+    if (g_uiMaskMode == UI_MASK_NONE)
+        return;
     
-    // Mask
     if (g_uiMaskMode == UI_MASK_RECT)
     {
         if (!InsideRect(p, g_uiClipRect))
@@ -266,7 +330,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
         float2 c = g_uiMask0.xy;
         float r = g_uiMask0.z;
         
-        if (distance(p,c) > r)
+        if (distance(p, c) > r)
             discard;
     }
     else if (g_uiMaskMode == UI_MASK_RING)
@@ -311,7 +375,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
         if (ang < 0)
             ang += 6.2831853; // 0~2pi
 
-        // startµµ 0~2pi·Î Á¤±ÔÈ­(¾ÈÀü)
+        // startë„ 0~2pië¡œ ì •ê·œí™”(ì•ˆì „)
         if (start < 0)
             start += 6.2831853;
         start = fmod(start, 6.2831853);
@@ -328,52 +392,77 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
         if (rel > span)
             discard;
     }
+}
+
+float4 main(PS_INPUT_TEXCOORD input) : SV_Target
+{
+    float2 p = input.position.xy;
+    ProcessMasking(p);
 
     // Texture Sample
     float2 uv = input.texCoord;
-    
-    // UV Base Effect
+    float4 finalColor = g_uiColor;
+
+    // 2. UV ê¸°ë°˜ ì´í™íŠ¸ (í…ìŠ¤ì²˜ ìƒ˜í”Œë§ ì „)
+    [branch] // ì„±ëŠ¥ ìµœì í™”: ifë¬¸ ë¶„ê¸° ì˜ˆì¸¡
     if (g_effectMode == UI_FX_PIXELATE)
     {
         ApplyFx_Pixelate(uv);
     }
-    if (g_effectMode == UI_FX_HOVER_TRANSITION)
-    {
-        float4 dummyCol = float4(0, 0, 0, 0);
-        ApplyFx_HoverTransition(uv, dummyCol);
-    }
-    
-    float4 tex = g_texBlit.Sample(g_samLinear, uv);
-    float4 finalColor = tex * g_uiColor;
+    // HoverTransitionë„ UVë¥¼ ê±´ë“œë¦°ë‹¤ë©´ ì—¬ê¸°ì— í¬í•¨
 
-    // 3) Color/Alpha FX
+    // 3. ë©”ì¸ í…ìŠ¤ì²˜ ìƒ˜í”Œë§
+    float4 tex = g_texBlit.Sample(g_samLinear, uv);
+    finalColor *= tex;
+
+    // 4. ìƒ‰ìƒ/ì•ŒíŒŒ ê¸°ë°˜ ì´í™íŠ¸ (í…ìŠ¤ì²˜ ìƒ˜í”Œë§ í›„)
     switch (g_effectMode)
     {
         case UI_FX_SCANLINE:
             ApplyFx_Scanline(uv, finalColor);
             break;
+            
         case UI_FX_GLOW_PULSE:
             ApplyFx_GlowPulse(finalColor);
             break;
-        
-        case UI_FX_ABYSSAL_DECAY:
-            ApplyFx_PurpleCurse(uv, finalColor);
-            break;
+
         case UI_FX_STATIC_NOISE:
             ApplyFx_StaticNoise(uv, finalColor);
             break;
-        
-        case UI_FX_FLAMEBAR:
-            ApplyFx_FlameBar(uv, finalColor);
+
+        case UI_FX_LIQUID_SHINE:
+            ApplyFx_LiquidShine(uv, finalColor);
             break;
+
+        case UI_FX_ABYSSAL_DECAY:
+            ApplyFx_AbyssalDecay(uv, finalColor);
+            break;
+        
         case UI_FX_PURPLECURSE:
             ApplyFx_PurpleCurse(uv, finalColor);
             break;
+
+        case UI_FX_FLAMEBAR:
+            ApplyFx_FlameBar(uv, finalColor);
+            break;
+            
+        case UI_FX_HOVER_TRANSITION:
+            ApplyFx_HoverTransition(uv, finalColor);
+            break;
         
-        default:
+        // Upgrade Controller
+        case UI_FX_ENERGY_FLOW:
+            ApplyFx_EnergyFlow(uv, finalColor);
+            break;
+        case UI_FX_HOLOGRAM:
+            ApplyFx_Hologram(uv, finalColor);
+            break;
+        case UI_FX_STONE_LOCK:
+            ApplyFx_StoneLock(uv, finalColor);
             break;
     }
 
+    // 5. ìµœì¢… ë³´ì •
     finalColor.rgb = LinearToSRGB(finalColor.rgb);
     return finalColor;
 }
