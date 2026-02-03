@@ -41,6 +41,9 @@ namespace game
                                   const engine::Vector3& direction,
 			                      const BulletParams& params);
 
+        void FieldFireMonster(const engine::Vector3& position,
+			                  const BulletParams& params);
+
     private:
         // ─────────────────────────────────────────────
         // 내부 헬퍼: Movement 생성

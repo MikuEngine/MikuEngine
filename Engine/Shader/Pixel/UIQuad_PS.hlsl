@@ -216,7 +216,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
         case UI_FX_DISSOLVE:    ApplyFx_Dissolve(uv, finalColor);   break;
         default:  break;
     }
-   
+  
     finalColor.rgb = LinearToSRGB(finalColor.rgb);
 
     return finalColor;

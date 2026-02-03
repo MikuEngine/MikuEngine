@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdint>
 #include <string>
@@ -24,6 +24,7 @@ namespace engine
             Trigger = 5,
             EnemyProjectile = 6,
             Picking = 7,
+			Field = 8,   // 장판 공격
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -41,7 +42,8 @@ namespace engine
             TriggerMask = (1u << Trigger),
             EnemyProjectileMask = (1u << EnemyProjectile),
             PickingMask = (1u << Picking),
-            
+            FieldMask = (1u << Field),
+
             All = 0xFFFFFFFF
         };
 
@@ -63,7 +65,8 @@ namespace engine
                 "Trigger",      // 5
                 "EnemyProjectile", // 6
                 "Picking", // 7
-                "Layer8", "Layer9",
+                "Field",
+                "Layer9",
                 "Layer10", "Layer11", "Layer12", "Layer13", "Layer14", "Layer15",
                 "Layer16", "Layer17", "Layer18", "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
@@ -145,6 +148,28 @@ namespace engine
             // EnemyProjectile ↔ Default: 충돌함 (기본값)
             // EnemyProjectile ↔ Environment: 충돌함 (기본값)
 
+
+            // ═══════════════════════════════════════
+			// Feild (장판) 충돌 규칙
+            // ═══════════════════════════════════════
+
+            // Field ↔ Enemy: 충돌 안 함 (적 장판이 적에게 피해를 주지 않음)
+            SetCollision(Field, Enemy, false);
+
+            // Field ↔ EnemyProjectile: 충돌 안 함 (장판이 날아오는 총알을 막으면 안 됨)
+            SetCollision(Field, EnemyProjectile, false);
+
+            // Field ↔ Projectile: 충돌 안 함 (장판이 플레이어 총알을 막으면 안 됨)
+            SetCollision(Field, Projectile, false);
+
+            // Field ↔ Field: 충돌 안 함 (장판끼리 밀어내지 않음)
+            SetCollision(Field, Field, false);
+
+            // Field ↔ Player: 충돌함 (기본값 All에 의해 유지, Trigger로 작동 유도)
+            // Field ↔ Environment: 충돌함 (바닥이나 벽 감지를 위해 유지)
+
+
+			// ═══════════════════════════════════════
             SetCollision(Picking, Default, false);
             SetCollision(Picking, Player, false);
             SetCollision(Picking, Enemy, false);
@@ -153,7 +178,6 @@ namespace engine
             SetCollision(Picking, Trigger, false);            
             SetCollision(Picking, EnemyProjectile, false);
   
-
         }
 
         // 두 레이어 간 충돌 여부 설정
