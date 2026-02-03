@@ -56,7 +56,7 @@ namespace game
         if (auto* playerScript = info.gameObject->GetComponent<PlayerControllerScript>())
         {
             // TODO: 플레이어 OnHit() 구현 시 활성화
-            // playerScript->OnHit(m_damage);
+            playerScript->TakeDamage(m_damage);
             
             m_hasDamaged = true;
         }

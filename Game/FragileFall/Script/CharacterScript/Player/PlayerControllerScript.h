@@ -90,8 +90,8 @@ namespace game
         BulletFactory* m_bulletFactory = nullptr;
 
         //HP
-        int m_PlayerMaxHP = 10;
-        int m_PlayerCurrentHP = 10;
+        int m_PlayerMaxHP = 100;
+        int m_PlayerCurrentHP = 100;
 
         // ─────────────────────────────────────────────
         // 이동 설정

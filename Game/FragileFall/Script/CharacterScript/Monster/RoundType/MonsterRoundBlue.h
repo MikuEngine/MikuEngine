@@ -20,6 +20,8 @@ namespace game
     //   - m_roamingDuration 동안 좌/우 방향으로 m_turnScale만큼 회전하며 이동
     //   - 충돌 시 90~180도 랜덤 방향 전환
     //   - EngageMove: 플레이어 감지 시 고정 목표로 돌진
+    //   - EngageCollision: 충돌로 돌진 종료, 회전하며 감속
+    //   - EngageArrival: 목표 도달로 돌진 종료, 직진하며 감속
     //   - Fragile 부활 시 Idle로 전이
     // ═══════════════════════════════════════════════════════════════
 
@@ -56,6 +58,12 @@ namespace game
         // ─────────────────────────────────────────────────
         bool m_collisionOccurred = false;         // IdleMove 충돌 발생 플래그
         bool m_engageCollisionOccurred = false;   // EngageMove 충돌 발생 플래그 (Player/Wall)
+        bool m_engageArrivalOccurred = false;     // EngageMove 목표 도달 플래그
+        
+        // ─────────────────────────────────────────────────
+        // 충돌 방향 저장 (EngageCollision용)
+        // ─────────────────────────────────────────────────
+        engine::Vector3 m_lastCollisionNormal = engine::Vector3::Zero;  // 마지막 충돌 노말
         
         // ─────────────────────────────────────────────────
         // 플레이어 데미지 쿨다운
@@ -76,6 +84,18 @@ namespace game
         engine::Vector3 m_engageTargetPosition = engine::Vector3::Zero;  // 돌진 목표 위치
         engine::Vector3 m_engageDirection = engine::Vector3::Zero;       // 돌진 방향 (정규화)
         bool m_hasEngageTarget = false;           // 유효한 목표가 있는지
+        
+        // ─────────────────────────────────────────────────
+        // EngageCollision / EngageArrival 설정
+        // ─────────────────────────────────────────────────
+        float m_engageTransitionDuration = 1.0f;  // 전이 상태 지속 시간 (1초, 하드코딩)
+        float m_engageTransitionTimer = 0.0f;     // 전이 상태 타이머
+        
+        // EngageCollision 전용
+        float m_collisionInitialAngleOffset = 45.0f;   // 충돌 반대방향에서 초기 꺾임 각도 (도, 하드코딩)
+        float m_collisionRotationAmount = 30.0f;       // 1초간 추가 회전 각도 (도, 하드코딩)
+        int m_collisionTurnDirection = 1;              // 회전 방향 (+1: 좌, -1: 우)
+        float m_collisionStartAngle = 0.0f;            // 상태 진입 시 초기 각도
         
         // ─────────────────────────────────────────────────
         // 플레이어 무시 시스템 (Idle 진입 후)
@@ -109,6 +129,18 @@ namespace game
         void ExecuteEngageMoveBehaviorPhysics() override;
         
         // ─────────────────────────────────────────────────
+        // EngageCollision / EngageArrival 상태 행동
+        // (MonsterRoundType에 없으므로 UpdateStateBasedBehavior에서 직접 호출)
+        // ─────────────────────────────────────────────────
+        void UpdateStateBasedBehavior(const std::string& state, float deltaTime) override;
+        void UpdatePhysicsStateBasedBehavior(const std::string& state) override;
+        
+        void ExecuteEngageCollisionBehaviorNonPhysics(float deltaTime);
+        void ExecuteEngageCollisionBehaviorPhysics();
+        void ExecuteEngageArrivalBehaviorNonPhysics(float deltaTime);
+        void ExecuteEngageArrivalBehaviorPhysics();
+        
+        // ─────────────────────────────────────────────────
         // IdleMove 헬퍼 함수
         // ─────────────────────────────────────────────────
         void InitializeIdleMove();                              // IdleMove 초기화 (완전 랜덤 방향)
@@ -121,6 +153,13 @@ namespace game
         // ─────────────────────────────────────────────────
         void InitializeEngageMove();                            // EngageMove 초기화 (목표 위치 계산)
         bool HasReachedEngageTarget() const;                    // 목표 도달 여부 확인
+        
+        // ─────────────────────────────────────────────────
+        // EngageCollision / EngageArrival 헬퍼 함수
+        // ─────────────────────────────────────────────────
+        void InitializeEngageCollision();                       // EngageCollision 초기화
+        void InitializeEngageArrival();                         // EngageArrival 초기화
+        float CalculateTransitionSpeed() const;                 // 감속 중 현재 속도 계산
         
         // ─────────────────────────────────────────────────
         // 플레이어 무시 시스템
