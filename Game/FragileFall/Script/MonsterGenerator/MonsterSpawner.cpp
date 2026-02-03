@@ -112,7 +112,19 @@ namespace game
             m_zoneStartIndex.push_back(m_allPoints.size());
         }
         m_pointUsed.assign(m_allPoints.size(), false);
-        m_nextZoneIndex = (m_zoneStartIndex.size() >= 3) ? 1 : 0;
+
+        size_t startZone = 0;
+        const size_t numZones = m_zoneStartIndex.size() > 1 ? m_zoneStartIndex.size() - 1 : 0;
+        for (size_t z = 0; z < numZones; z++)
+        {
+            size_t pointCount = m_zoneStartIndex[z + 1] - m_zoneStartIndex[z];
+            if (pointCount == 4)
+            {
+                startZone = z;
+                break;
+            }
+        }
+        m_nextZoneIndex = startZone;
 
         size_t maxSpawn = m_allPoints.size() < 10 ? m_allPoints.size() : 10;
         size_t count = partyIDs.size() < maxSpawn ? partyIDs.size() : maxSpawn;
