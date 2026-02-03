@@ -15,8 +15,8 @@ namespace game
 
         m_tutorial.canvas = engine::GameObject::Find("Canvas_Message"); // 튜토리얼
         m_tutorial.spawnPos = { 510.0f, -300.0f };  // 원하는 위치
-        m_tutorial.maxVisible = 1;                 
-        m_tutorial.lifeTime = 5.0f;            
+        m_tutorial.maxVisible = 3;                 
+        m_tutorial.lifeTime = 9999.0f;            
         m_tutorial.prefabKey = "UIToastPopUp_Tutorial";
     }
 
@@ -104,6 +104,60 @@ namespace game
 
         const engine::Vector2 target = CalcTargetPos(cfg, (size_t)visibleCount);
         anim->PlayEnter(target);
+    }
+
+    void UIMessageQueue::Advance(UIMessageChannel ch, float fadeOutOverride)
+    {
+        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : m_itemsTutorial;
+        auto& cfg = (ch == UIMessageChannel::Kill) ? m_kill : m_tutorial;
+
+        // visible 중 "첫 번째(=현재)" 하나만 페이드아웃
+        for (auto& it : q)
+        {
+            if (!it.go || !it.visible) continue;
+            if (it.exiting) return; // 이미 나가는 중이면 중복 방지
+
+            it.exiting = true;
+
+            if (auto* anim = it.go->GetComponent<game::UIToastAnimator>())
+                anim->FadeOut(fadeOutOverride);  // UIToastAnimator에 override 지원하셨으니 그대로
+            else
+                it.go->Destroy();
+
+            return;
+        }
+    }
+
+    void UIMessageQueue::SetSingle(UIMessageChannel ch, const std::string& text, bool playEnter)
+    {
+        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : m_itemsTutorial;
+        auto& cfg = (ch == UIMessageChannel::Kill) ? m_kill : m_tutorial;
+
+        if (!cfg.canvas) return;
+
+        // 1) 이미 visible 1개가 있으면 그걸 재사용해서 텍스트만 교체
+        for (auto& it : q)
+        {
+            if (!it.go || !it.visible) continue;
+
+            if (auto* anim = it.go->GetComponent<game::UIToastAnimator>())
+            {
+                anim->SetText(text);
+
+                // 필요하면 "다시 들어오는" 연출만 재생
+                if (playEnter)
+                {
+                    it.born = engine::Time::GetTimestamp();
+                    it.exiting = false;
+
+                    const engine::Vector2 target = CalcTargetPos(cfg, 0);
+                    anim->PlayEnter(target);
+                }
+            }
+            return;
+        }
+
+        PushMessage(ch, text, "");
     }
 
     void UIMessageQueue::TryStartExitVisibleBatch(std::deque<Item>& q, const ChannelConfig& cfg)

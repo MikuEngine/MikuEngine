@@ -43,6 +43,8 @@ namespace game
 
     public:
         void PushMessage(UIMessageChannel ch, const std::string& text, const std::string& iconKey = "");
+        void Advance(UIMessageChannel ch, float fadeOutOverride = -1.0f);
+        void SetSingle(UIMessageChannel ch, const std::string& text, bool playEnter = true);
 
     private:
         struct Item

@@ -263,7 +263,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -80.0,
+                        "x": -125.0,
                         "y": 0.0
                     },
                     "Width": 100.0,
@@ -285,7 +285,7 @@
                     "Type": "UIText",
                     "Active": true,
                     "Layer": 0,
-                    "OrderInLayer": 0,
+                    "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "글자",
                     "FontPath": "Resource/Font/malgun.ttf",

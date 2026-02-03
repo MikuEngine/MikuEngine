@@ -65,21 +65,30 @@ namespace game
         if (!m_queue) return;
         if (m_index < 0 || m_index >= (int)g_texts.size()) return;
 
-        m_queue->PushMessage(
+        m_queue->SetSingle(
             UIMessageChannel::Tutorial,
-            g_texts[m_index]
+            g_texts[m_index], true
         );
     }
 
     void TutorialController::Next()
     {
+        if (m_index >= (int)g_texts.size() - 1)
+        {
+            if (m_queue)
+                m_queue->Advance(UIMessageChannel::Tutorial, 0.2f); // 0.2f는 원하는 속도
+            return;
+        }
+
         m_index++;
         ShowCurrent();
     }
 
     void TutorialController::Prev()
     {
-        m_index--;
+        if (m_index > 0) 
+            m_index--;
+
         ShowCurrent();
     }
 
