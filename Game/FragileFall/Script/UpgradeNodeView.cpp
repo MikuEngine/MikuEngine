@@ -359,16 +359,20 @@ namespace game
             break;
 
         case NodeState::Selected:
-            // [선택됨] Active보다 더 빠르고 강렬한 에너지 연출
-            m_image->SetEffect(engine::UIEffectType::EnergyFlow);
-            speed = 1.5f;      
-            intensity = 1.8f;
-            // Param0: x=속도, y=강도
-            m_image->SetEffectParam(0, { speed, intensity, 0.0f, 0.0f });
-            m_image->SetEffectParam(1, color);
+            // [선택됨]
+            m_image->SetEffect(engine::UIEffectType::SelectOrbit);
+            speed = 2.0f;
+            intensity = 0.1f;
+            // z:궤도위치, w:궤도강도
+            m_image->SetEffectParam(0, { speed, intensity, 0.46f, 3.0f });
 
-            // 테두리는 순백색으로 발광 느낌 극대화
-            outline = { 0.82, 0.06f, 0.06f, 1.0f };
+            // Param 1: 노드 아이콘 베이스 색상 (예: 약간 어두운 붉은색)
+            m_image->SetEffectParam(1, { 0.8f, 0.2f, 0.2f, 1.0f });
+
+            // Param 2: 외곽을 도는 입자 색상
+            m_image->SetEffectParam(2, { 1.0f, 1.0f, 1.0f, 1.0f });
+
+            outline = { 1.0f, 1.0f, 1.0f, 1.0f };
             outlineOn = true;
             break;
 

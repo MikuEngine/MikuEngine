@@ -28,6 +28,7 @@ static const uint UI_FX_LIQUID_SHINE = 32u;
 static const uint UI_FX_ENERGY_FLOW = 33u;
 static const uint UI_FX_HOLOGRAM = 34u;
 static const uint UI_FX_STONE_LOCK = 35u;
+static const uint UI_FX_SELECT_ORBIT = 36u;
 
 // [Group 4] 프로그레스바 전용 (ProgressBar Only)
 static const uint UI_FX_FLAMEBAR = 40u;
@@ -309,6 +310,41 @@ void ApplyFx_StoneLock(float2 uv, inout float4 col)
     col.rgb = lerp(col.rgb, stone, 0.9); // 90% 석화
 }
 
+// 궤도 효과
+void ApplyFx_SelectOrbit(float2 uv, inout float4 col)
+{
+    float3 baseColor = g_effect1.rgb; // 노드 기본 색상
+    float3 orbitColor = g_effect2.rgb; // 궤도 입자 전용 색상 (추가)
+    
+    float speed = g_effect0.x;
+    float centerInt = g_effect0.y;
+    float orbitSize = g_effect0.z;
+    float orbitInt = g_effect0.w;
+
+    // 1. 노드 본체 색상 적용
+    col.rgb *= baseColor;
+    
+    float2 center = uv - 0.5;
+    float dist = length(center);
+    float angle = atan2(center.y, center.x);
+
+    // 2. 외곽 회전 궤도 (Orbit)
+    float orbit = sin(angle + g_time * speed);
+    orbit = pow(saturate(orbit), 15.0);
+    
+    float ringMask = smoothstep(orbitSize - 0.05, orbitSize, dist)
+                   * smoothstep(orbitSize + 0.05, orbitSize, dist);
+    
+    // 3. 중앙부 박동 (Center)
+    float pulse = sin(g_time * speed * 0.5) * 0.5 + 0.5;
+    float centerGlow = smoothstep(0.3, 0.0, dist) * pulse * centerInt;
+
+    // 4. 최종 합성
+    // 중앙 광채는 노드 색상(baseColor)을 따르고, 궤도는 전용 색상(orbitColor)을 따름
+    col.rgb += (centerGlow * baseColor);
+    col.rgb += (orbit * ringMask * orbitInt * orbitColor);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // 
 //  Masking
@@ -459,6 +495,9 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             break;
         case UI_FX_STONE_LOCK:
             ApplyFx_StoneLock(uv, finalColor);
+            break;
+        case UI_FX_SELECT_ORBIT:
+            ApplyFx_SelectOrbit(uv, finalColor);
             break;
     }
 
