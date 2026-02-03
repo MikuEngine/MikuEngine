@@ -479,16 +479,29 @@ namespace game
                 // ─────────────────────────────────────────────
                 // 뾰족 빨강
                 // 
-                // 공격 볌위에 들어오면 플레이어 주변에게 투사체를 난사
+				// 공격 볌위에 들어오면 플레이어 주변에게 투사체를 난사 (8 ~ 15발)
                 // ─────────────────────────────────────────────
                 case MonsterTier::Red:
                 {
-                    int projectileCount = 8;
+                    int projectileCount = 8 + (rand() % 8);
+                    float spreadAngle = DirectX::XMConvertToRadians(60.0f);
+
                     for (int i = 0; i < projectileCount; ++i)
                     {
-                        float angle = DirectX::XM_2PI * (static_cast<float>(i) / static_cast<float>(projectileCount));
-                        engine::Vector3 dir = engine::Vector3(cosf(angle), 0.0f, sinf(angle));
-                        m_bulletFactory->LinearFireMonster(firePosition, dir, m_bulletParams);
+                        float randomOffset = ((static_cast<float>(rand()) / RAND_MAX) * spreadAngle) - (spreadAngle * 0.5f);
+                        DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY(randomOffset);
+                        engine::Vector3 fireDir = engine::Vector3::TransformNormal(direction, rot);
+                        fireDir.Normalize();
+
+                        BulletParams individualParams = m_bulletParams;
+
+                        float randomLifeMod = 0.1f + (static_cast<float>(rand()) / RAND_MAX) * 0.7f;
+                        individualParams.lifetime *= randomLifeMod;
+
+                        float randomSpeedMod = 0.6f + (static_cast<float>(rand()) / RAND_MAX) * 0.4f;
+                        individualParams.speed *= randomSpeedMod;
+
+                        m_bulletFactory->LinearFireMonster(firePosition, fireDir, individualParams);
                     }
                     break;
 				}
