@@ -45,6 +45,7 @@ namespace engine
 		EnergyFlow = 33,
 		Hologram = 34,
 		StoneLock = 35,
+		SelectOrbit = 36,
 
 		// [Group 4] Progress Bar
 		FlameBar = 40,
