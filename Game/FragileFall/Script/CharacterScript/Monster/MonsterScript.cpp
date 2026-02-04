@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -729,7 +729,7 @@ namespace game
 		}
 
 		// 피격 효과 시작
-		StartHitFlash();
+		//StartHitFlash();
 
 		// 체력 체크는 CheckHealth()에서 자동으로 처리됨
 	}

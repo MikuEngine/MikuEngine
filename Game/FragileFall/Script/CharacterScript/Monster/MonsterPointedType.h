@@ -149,9 +149,6 @@ namespace game
         engine::Vector3 ReflectDirection(const engine::Vector3& direction, const engine::Vector3& normal) const;
         bool TryFindPathAfterRedemption();      // Redemption 후 패스찾기 (60회)
 
-        // 맵 경계 체크 (도망 위치 선정용)
-        bool IsPositionInMapBounds(const engine::Vector3& pos) const;
-
     public:
         void OnGui() override;
         void Save(engine::json& j) const override;

@@ -839,11 +839,13 @@ namespace game
 			if (m_bulletFactory && m_aimPointer)
 			{
 				engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-
 				engine::Vector3 targetPos = m_aimPointer->GetWorldPosition();
 
 				engine::Vector3 bulletStartPos;
 				engine::Vector3 direction;
+
+				// 에임 포인터로부터 플레이어 기준의 기본 방향 일단 확보
+				engine::Vector3 dirFromPlayer = m_aimPointer->GetDirectionFrom(playerPos);
 
 				// ─────────────────────────────────────────────
 				// 총알 발사 위치 계산 (소켓 또는 오프셋)
@@ -873,19 +875,18 @@ namespace game
 				{
 					bulletStartPos = bulletSocketRenderer->GetSocketWorldMatrix(m_bulletFireSocketName).Translation();
 				}
-				else if (useSocket)
-				{
-					bulletStartPos = playerPos + direction * 0.5f;
-				}
 				else
 				{
-					// 소켓이 없을 경우 플레이어 위치 기준 오프셋 적용
-					bulletStartPos = playerPos + direction * m_bulletStartOffsetForward;
+					// 소켓을 못 찾았을 경우 Fallback 로직
+					bulletStartPos = playerPos + dirFromPlayer * m_bulletStartOffsetForward;
 					bulletStartPos.y = playerPos.y + m_bulletStartOffsetY;
 				}
 
+				// ─────────────────────────────────────────────
+				// 최종 방향 계산 (수평 유지 및 조준점 일치)
+				// ─────────────────────────────────────────────
+				// 목표 지점의 높이를 발사 지점과 맞춰서 수평 탄도를 만듭니다.
 				targetPos.y = bulletStartPos.y;
-
 				direction = targetPos - bulletStartPos;
 
 				if (direction.LengthSquared() > 0.0001f)

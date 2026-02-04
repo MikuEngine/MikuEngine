@@ -38,8 +38,6 @@ namespace game
     {
         if (!m_logicFSM) return;
 
-        LOG_PRINT("Initializing FSM. Current Tier: {}", (int)m_monsterTier);
-
         // ─────────────────────────────────────────────
         // 상태 정의
         // ─────────────────────────────────────────────

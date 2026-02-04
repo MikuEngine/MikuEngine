@@ -125,14 +125,14 @@ namespace game
             // 거리에 따른 표시 처리
             bool isInRange = IsMonsterInExecutionRange(fragileMonster);
             
-            // 라인: 현재 처형 중인 몬스터가 아닌 경우에만 표시
-            if (m_player && m_lineInstance && fragileMonster->GetTransform() && !isCurrentlyExecuting)
+            // 라인: 사거리 내이고 현재 처형 중이 아닌 경우에만 표시
+            if (m_player && m_lineInstance && fragileMonster->GetTransform() && !isCurrentlyExecuting && isInRange)
             {
                 engine::Vector3 monsterPos = fragileMonster->GetTransform()->GetWorldPosition();
                 UpdateLine(monsterPos);
                 ShowLine();
             }
-            else if (isCurrentlyExecuting)
+            else
             {
                 HideLine();
             }

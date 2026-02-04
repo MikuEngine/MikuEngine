@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundBlue.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -34,6 +34,10 @@ namespace game
                 meshRenderer->SetBaseColor(engine::Vector4(0.0f, 0.5f, 1.0f, 1.0f));
             }
         }
+        
+        // 게임 시작 시 플레이어 무시 상태로 초기화
+        // (InitializeCurrentState는 OnStateEntered를 호출하지 않으므로 수동 설정 필요)
+        StartPlayerIgnore();
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -43,16 +47,21 @@ namespace game
     {
         if (!info.gameObject) return;
         
-        // 총알 레이어 무시 (Projectile, EnemyProjectile)
+        // ─────────────────────────────────────────────
+        // 방향 전환이 필요한 레이어에만 반응 (Wall, Environment, Enemy)
+        // 총알은 트리거 타입이므로 OnTriggerEnter로 처리됨
+        // ─────────────────────────────────────────────
         auto* collider = info.collider.Get();
         uint32_t layer = 0;
         if (collider)
         {
             layer = collider->GetLayer();
-            if (layer == engine::PhysicsLayer::Index::Projectile ||
-                layer == engine::PhysicsLayer::Index::EnemyProjectile)
+            if (layer != engine::PhysicsLayer::Index::Wall &&
+                layer != engine::PhysicsLayer::Index::Environment &&
+                layer != engine::PhysicsLayer::Index::Enemy &&
+                layer != engine::PhysicsLayer::Index::Player)
             {
-                return;
+                return;  // 방향 전환 불필요한 레이어는 무시
             }
         }
         
@@ -104,29 +113,35 @@ namespace game
         
         // ─────────────────────────────────────────────
         // 상태별 충돌 처리
+        // Wall과 Environment는 동일하게 처리
         // ─────────────────────────────────────────────
         std::string currentState = GetCurrentState();
+        bool isObstacle = (layer == engine::PhysicsLayer::Index::Wall ||
+                          layer == engine::PhysicsLayer::Index::Environment);
         
         if (currentState == "IdleMove")
         {
-            if (layer == engine::PhysicsLayer::Index::Environment)
+            if (isObstacle || layer == engine::PhysicsLayer::Index::Enemy)
             {
-                return;
+                m_collisionOccurred = true;
+                m_lastCollisionNormal = collisionNormal;  // 회전 제한용 노말 저장
             }
-            m_collisionOccurred = true;
         }
         else if (currentState == "EngageMove")
         {
-            if (layer == engine::PhysicsLayer::Index::Environment)
-            {
-                return;
-            }
-            
-            if (layer == engine::PhysicsLayer::Index::Player ||
-                layer == engine::PhysicsLayer::Index::Wall)
+            if (layer == engine::PhysicsLayer::Index::Player || isObstacle)
             {
                 m_engageCollisionOccurred = true;
-                m_lastCollisionNormal = collisionNormal;  // 충돌 노말 저장
+                m_lastCollisionNormal = collisionNormal;
+            }
+        }
+        else if (currentState == "EngageCollision" || currentState == "EngageArrival")
+        {
+            // 전이 상태에서 장애물 충돌 시 즉시 정지 (벽 관통 방지)
+            if (isObstacle)
+            {
+                m_transitionCollisionOccurred = true;
+                m_lastCollisionNormal = collisionNormal;
             }
         }
     }
@@ -298,6 +313,14 @@ namespace game
     {
         if (!m_rigidbody) return;
 
+        // 충돌 감지 시 힘 적용 중단 (벽 관통 방지)
+        // 방향 전환은 NonPhysics에서 처리됨
+        if (m_collisionOccurred)
+        {
+            StopAllMovement();
+            return;
+        }
+
         float fixedDeltaTime = engine::Time::FixedDeltaTime();
         
         float angleChangeDeg = m_turnScale * fixedDeltaTime * static_cast<float>(m_turnDirection);
@@ -342,6 +365,14 @@ namespace game
         if (!m_rigidbody) return;
         if (!m_hasEngageTarget) return;
         
+        // 충돌 감지 시 힘 적용 중단 (벽 관통 방지)
+        // 상태 전이는 NonPhysics에서 처리됨
+        if (m_engageCollisionOccurred)
+        {
+            StopAllMovement();
+            return;
+        }
+        
         MoveInDirection(m_engageDirection, m_engageMoveSpeed);
     }
 
@@ -371,6 +402,13 @@ namespace game
     void MonsterRoundBlue::ExecuteEngageCollisionBehaviorPhysics()
     {
         if (!m_rigidbody) return;
+        
+        // 전이 중 Wall 충돌 시 즉시 정지 (벽 관통 방지)
+        if (m_transitionCollisionOccurred)
+        {
+            StopAllMovement();
+            return;
+        }
         
         float t = m_engageTransitionTimer / m_engageTransitionDuration;
         t = std::min(t, 1.0f);
@@ -421,6 +459,13 @@ namespace game
     {
         if (!m_rigidbody) return;
         
+        // 전이 중 Wall 충돌 시 즉시 정지 (벽 관통 방지)
+        if (m_transitionCollisionOccurred)
+        {
+            StopAllMovement();
+            return;
+        }
+        
         float currentSpeed = CalculateTransitionSpeed();
         
         MoveInDirection(m_engageDirection, currentSpeed);
@@ -464,29 +509,45 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 충돌 시 방향 전환 (90~180도 랜덤)
+    // 충돌 시 방향 전환 (노말 기반 회전 제한)
+    // - m_lastCollisionNormal은 "몬스터 → 벽" 방향 (벽 안쪽)
+    // - 안전한 방향 = -m_lastCollisionNormal (벽 바깥쪽)
+    // - 안전한 방향 기준 ±90도 범위 내에서만 회전 허용
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::ChangeDirectionOnCollision()
     {
         static std::random_device rd;
         static std::mt19937 gen(rd());
         
-        std::uniform_int_distribution<int> dirDist(0, 1);
-        bool turnLeft = (dirDist(gen) == 0);
-        
-        std::uniform_real_distribution<float> angleDist(90.0f, 180.0f);
-        float angleChangeDeg = angleDist(gen);
-        float angleChangeRad = angleChangeDeg * 3.14159265f / 180.0f;
-        
-        if (turnLeft)
+        // 충돌 노말이 유효하지 않으면 기존 방식 사용
+        if (m_lastCollisionNormal.LengthSquared() < 0.0001f)
         {
-            m_currentAngle += angleChangeRad;
+            // 폴백: 랜덤 90~180도 회전
+            std::uniform_int_distribution<int> dirDist(0, 1);
+            bool turnLeft = (dirDist(gen) == 0);
+            
+            std::uniform_real_distribution<float> angleDist(90.0f, 180.0f);
+            float angleChangeDeg = angleDist(gen);
+            float angleChangeRad = angleChangeDeg * 3.14159265f / 180.0f;
+            
+            m_currentAngle += turnLeft ? angleChangeRad : -angleChangeRad;
         }
         else
         {
-            m_currentAngle -= angleChangeRad;
+            // 안전한 방향 = 벽 바깥쪽 = -m_lastCollisionNormal
+            engine::Vector3 safeDirection = -m_lastCollisionNormal;
+            float safeAngle = std::atan2(safeDirection.z, safeDirection.x);
+            
+            // 안전한 방향 기준 ±90도 범위 내에서 랜덤 선택
+            // (벽 안쪽을 향하지 않는 방향만 허용)
+            std::uniform_real_distribution<float> offsetDist(-90.0f, 90.0f);
+            float offsetDeg = offsetDist(gen);
+            float offsetRad = offsetDeg * 3.14159265f / 180.0f;
+            
+            m_currentAngle = safeAngle + offsetRad;
         }
         
+        // 각도 정규화
         const float TWO_PI = 2.0f * 3.14159265f;
         while (m_currentAngle < 0.0f) m_currentAngle += TWO_PI;
         while (m_currentAngle >= TWO_PI) m_currentAngle -= TWO_PI;
@@ -703,6 +764,7 @@ namespace game
         else if (state == "EngageCollision")
         {
             InitializeEngageCollision();
+            m_transitionCollisionOccurred = false;  // 충돌 플래그 리셋
             
             if (m_logicFSM)
             {
@@ -712,6 +774,7 @@ namespace game
         else if (state == "EngageArrival")
         {
             InitializeEngageArrival();
+            m_transitionCollisionOccurred = false;  // 충돌 플래그 리셋
             
             if (m_logicFSM)
             {

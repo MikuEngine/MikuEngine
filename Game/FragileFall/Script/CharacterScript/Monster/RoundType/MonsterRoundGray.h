@@ -85,6 +85,19 @@ namespace game
         // ─────────────────────────────────────────────
         float m_damageCooldown = 1.0f;              // 데미지 쿨다운 시간 (초)
         engine::TimePoint m_lastDamageTime;         // 마지막 데미지 준 시간
+        
+        // ─────────────────────────────────────────────
+        // 맵 경계 체크 및 복원 시스템
+        // ─────────────────────────────────────────────
+        float m_boundaryMinX = -50.0f;                             // 맵 경계 최소 X (직렬화)
+        float m_boundaryMaxX = 50.0f;                              // 맵 경계 최대 X (직렬화)
+        float m_boundaryMinZ = -50.0f;                             // 맵 경계 최소 Z (직렬화)
+        float m_boundaryMaxZ = 50.0f;                              // 맵 경계 최대 Z (직렬화)
+        float m_obstacleCheckDistance = 2.0f;                      // 방향 전환 후 장애물 체크 거리 (직렬화)
+        float m_repositioningSpeed = 5.0f;                         // 복원 이동 속도 (직렬화)
+        float m_repositioningDuration = 2.0f;                      // 복원 최대 지속 시간 (직렬화)
+        float m_repositioningTimer = 0.0f;                         // 복원 타이머
+        engine::Vector3 m_repositioningDirection = engine::Vector3::Zero;  // 복원 방향
 
     public:
         void Awake() override;
@@ -125,6 +138,20 @@ namespace game
         // ─────────────────────────────────────────────
         void StartPlayerIgnore();                               // 무시 시작
         void OnDirectionChanged();                              // 방향 변경 시 호출 (무시 횟수 감소)
+        
+        // ─────────────────────────────────────────────
+        // 맵 경계 및 장애물 체크 시스템
+        // ─────────────────────────────────────────────
+        bool HasObstacleAhead(float distance) const;            // 현재 방향으로 장애물 확인
+        bool TryFindSafeDirection();                            // 안전한 방향 찾기
+        bool IsOutOfBounds() const;                             // 맵 밖으로 나갔는지 확인
+        void StartRepositioning();                              // 복원 시작 (중심으로)
+        
+        // ─────────────────────────────────────────────
+        // Repositioning 상태 행동
+        // ─────────────────────────────────────────────
+        void ExecuteRepositioningBehaviorNonPhysics(float deltaTime) override;
+        void ExecuteRepositioningBehaviorPhysics() override;
         
         // ─────────────────────────────────────────────
         // 상태 진입 콜백 오버라이드

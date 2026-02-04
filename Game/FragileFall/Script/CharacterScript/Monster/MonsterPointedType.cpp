@@ -1033,12 +1033,6 @@ namespace game
         return reflected;
     }
 
-    bool MonsterPointedType::IsPositionInMapBounds(const engine::Vector3& pos) const
-    {
-        return (pos.x >= m_mapBoundXMin && pos.x <= m_mapBoundXMax &&
-                pos.z >= m_mapBoundZMin && pos.z <= m_mapBoundZMax);
-    }
-
     // ═══════════════════════════════════════════════════════════════
     // GUI / 직렬화
     // ═══════════════════════════════════════════════════════════════

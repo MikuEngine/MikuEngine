@@ -1,19 +1,19 @@
 {
-    "Name": "Monster_RoundType_Green",
+    "Name": "Monster_Dull_Gray",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "Monster_RoundType_Green",
+            "Name": "Monster_Dull_Gray",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 21.75356101989746,
-                        "y": 1.5,
-                        "z": 9.446041107177734
+                        "x": -6.523746490478516,
+                        "y": -0.022288143634796143,
+                        "z": 15.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -31,84 +31,15 @@
                     "Type": "Rigidbody",
                     "Active": true,
                     "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
+                    "mass": 5.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 30.0,
                     "useGravity": false,
-                    "constraints": 42
+                    "constraints": 47
                 },
                 {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/crystal_sphere_green.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 0.0540541410446167,
-                        "y": 1.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 0.07722008228302002,
-                        "y": 1.0,
-                        "z": 0.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "MonsterRoundGreen",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 0,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 12.0,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 100.0,
-                    "AttackRange": 16.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 5.0,
-                    "BulletSpeed": 10.0,
-                    "BulletLifetime": 4.0,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "ParabolicSpeed": 17.0,
-                    "OwnGravity": 17.0,
-                    "IdleWaitTime": 1.0,
-                    "AttackAnimationDuration": 1.0,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_IdleMove": "IdleMove",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Repositioning": "Repositioning",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead",
-                    "DamageCooldown": 1.0
+                    "Type": "BulletFactory",
+                    "Active": true
                 },
                 {
                     "Type": "LogicFSM",
@@ -117,15 +48,11 @@
                     "States": []
                 },
                 {
-                    "Type": "BulletFactory",
-                    "Active": true
-                },
-                {
                     "Type": "CapsuleCollider",
                     "Active": true,
                     "center": [
                         0.0,
-                        0.0,
+                        1.350000023841858,
                         0.0
                     ],
                     "rotation": [
@@ -136,9 +63,71 @@
                     "isTrigger": false,
                     "syncWithTransform": false,
                     "layer": 2,
-                    "materialType": 0,
-                    "radius": 1.5,
-                    "height": 8.199999809265137
+                    "materialType": 1,
+                    "radius": 1.1100000143051147,
+                    "height": 2.799999952316284
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/white/crystal_white.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "MonsterDullType",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 40.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 0.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 15.0,
+                    "AttackRange": 20.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 2.0,
+                    "BulletSpeed": 15.0,
+                    "BulletLifetime": 3.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "ParabolicSpeed": 15.0,
+                    "OwnGravity": 9.800000190734863
                 }
             ]
         },
@@ -152,8 +141,8 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -6.103515625e-05,
-                        "y": -1.5,
+                        "x": 0.0,
+                        "y": 2.200000047683716,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -163,9 +152,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 66.66667175292969,
+                        "y": 66.66667175292969,
+                        "z": 66.66667175292969
                     }
                 },
                 {
