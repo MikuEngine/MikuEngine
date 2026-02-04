@@ -54,12 +54,16 @@ namespace game
         bool m_isUpgradeOpen = false;
 
         bool m_isPlayerMove = false;
+        bool m_walkStarted = false;
 
         float m_moveElapsed = 0.0f;
         float m_moveDuration = 1.5f;
 
         engine::Vector3 m_moveStartPos = { 0,0,0 };
         engine::Vector3 m_moveTargetPos = { 0,0,18 };
+
+        float m_moveStartYaw = 0.0f;
+        float m_moveTargetYaw = 0.0f;
 
         engine::Quaternion m_moveStartRot = engine::Quaternion::Identity;
         engine::Quaternion m_moveTargetRot = engine::Quaternion::Identity;
