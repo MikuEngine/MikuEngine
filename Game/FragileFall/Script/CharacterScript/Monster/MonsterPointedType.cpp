@@ -1,12 +1,12 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterPointedType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
 
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 #include <Framework/Object/Component/Rigidbody.h>
-#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
-#include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
+
+// 뾰족 타입은 StaticMesh를 사용하므로 SkeletalAnimator/SkeletalMeshRenderer include 불필요
 
 namespace game
 {
@@ -16,6 +16,10 @@ namespace game
     void MonsterPointedType::Awake()
     {
         MonsterScript::Awake();
+        
+        // Pointed 타입 고정
+        m_attackType = AttackType::Pointed;
+        
         // 스탯은 씬 파일에서 로드됨 (Load 함수 참조)
     }
 
@@ -31,31 +35,7 @@ namespace game
             m_pathfindingAgent->SetTargetMoveThreshold(2.0f);       // 목표가 2.0f 이상 움직이면 재계산
         }
 
-        // 초기 Idle 애니메이션 재생
-        if (m_skeletalAnimator && !m_animName_Idle.empty())
-        {
-            m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
-        }
-
-        // 테스트용 Tier별 색상 설정
-        switch (m_monsterTier)
-        {
-        case MonsterTier::Gray:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f));
-            break;
-        case MonsterTier::Green:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-            break;
-        case MonsterTier::Blue:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            break;
-        case MonsterTier::Red:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-            break;
-        case MonsterTier::Purple:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.0f, 0.5f, 1.0f));
-            break;
-        }
+        // 뾰족 타입은 StaticMesh를 사용하므로 애니메이션 관련 초기화 불필요
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -150,33 +130,12 @@ namespace game
 
     void MonsterPointedType::InitializeAnimFSM()
     {
-        if (!m_animFSM) return;
-
-        // 기존 상태 클리어
-        m_animFSM->ClearStates();
-
-        // ─────────────────────────────────────────────
-        // LogicFSM 상태 → 애니메이션 매핑
-        // 몬스터는 UpperBody/LowerBody 구분 없이 전체 애니메이션 재생
-        // AddSplitState(상태명, 하체애니, 하체루프, 상체애니, 상체루프, 상체웨이트, 크로스페이드)
-        // 상체웨이트 0 = 전체 애니메이션 (상/하체 분리 안 함)
-        // ─────────────────────────────────────────────
-        m_animFSM->AddSplitState("Idle",         m_animName_Idle, true,  "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("EngageMove",   m_animName_EngageMove, true, "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("EngageStop",   m_animName_EngageStop, true, "", false, 0.0f, 0.1f);         // Idle 재생
-        m_animFSM->AddSplitState("EngageAttack", m_animName_EngageAttack, true, "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("Fragile",      m_animName_Fragile, true, "", false, 0.0f, 0.1f);         // Idle 재생
-        m_animFSM->AddSplitState("Dead",         m_animName_Dead, true, "", false, 0.0f, 0.1f);         // Idle 재생
+        // 뾰족 타입은 StaticMesh를 사용하므로 AnimFSM 초기화 불필요
     }
 
     void MonsterPointedType::InitializeAnimations()
     {
-        if (!m_skeletalAnimator) return;
-
-        // SkeletalAnimator에 애니메이션 등록
-        // 실제 .fbx 파일 경로는 에디터에서 설정하거나
-        // 씬 파일에서 로드됨
-        // 여기서는 이름만 연결
+        // 뾰족 타입은 StaticMesh를 사용하므로 애니메이션 초기화 불필요
     }
 
     void MonsterPointedType::InitializeBullet()
@@ -594,11 +553,7 @@ namespace game
                     break;
                 }
 
-                // 공격 애니메이션 재생
-                if (m_skeletalAnimator && !m_animName_EngageAttack.empty())
-                {
-                    m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
-                }
+                // 뾰족 타입은 StaticMesh를 사용하므로 공격 애니메이션 재생 불필요
 
                 // 발사 쿨타임 리셋
                 m_fireTimer = m_fireRate;
@@ -649,20 +604,19 @@ namespace game
         
         // ─────────────────────────────────────────────
         // 컴포넌트 검증 (에디터 화면에서도 체크)
+        // 뾰족 타입은 StaticMesh 사용 - SkeletalAnimator/AnimFSM 불필요
         // ─────────────────────────────────────────────
         ImGui::Separator();
         ImGui::Text("=== Component Validation ===");
         
         // 에디터 모드를 위한 실시간 컴포넌트 검색 (같은 GameObject 내에서만 검색)
         engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
-        engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
-        engine::AnimFSM* animFSM = m_animFSM ? m_animFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::AnimFSM>() : nullptr);
         engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
         BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
         engine::PathfindingAgent* pathfindingAgent = m_pathfindingAgent ? m_pathfindingAgent : (GetGameObject() ? GetGameObject()->GetComponent<engine::PathfindingAgent>() : nullptr);
         
-        // 전체 유효성 검사 (PathfindingAgent는 이동 몬스터 필수)
-        bool allValid = rigidbody && skeletalAnimator && bulletFactory && animFSM && logicFSM && pathfindingAgent;
+        // 전체 유효성 검사 (뾰족: Rigidbody, LogicFSM, BulletFactory, PathfindingAgent 필수)
+        bool allValid = rigidbody && bulletFactory && logicFSM && pathfindingAgent;
         
         if (allValid)
         {
@@ -678,14 +632,8 @@ namespace game
         ImGui::Text("Rigidbody:         %s", rigidbody ? "[OK]" : "[MISSING]");
         if (!rigidbody) ImGui::SameLine(); if (!rigidbody) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
         
-        ImGui::Text("SkeletalAnimator:  %s", skeletalAnimator ? "[OK]" : "[MISSING]");
-        if (!skeletalAnimator) ImGui::SameLine(); if (!skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-        
         ImGui::Text("BulletFactory:     %s", bulletFactory ? "[OK]" : "[MISSING]");
         if (!bulletFactory) ImGui::SameLine(); if (!bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-        
-        ImGui::Text("AnimFSM:           %s", animFSM ? "[OK]" : "[MISSING]");
-        if (!animFSM) ImGui::SameLine(); if (!animFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
         
         ImGui::Text("LogicFSM:          %s", logicFSM ? "[OK]" : "[MISSING]");
         if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
@@ -694,26 +642,15 @@ namespace game
         if (!pathfindingAgent) ImGui::SameLine(); if (!pathfindingAgent) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
         ImGui::Unindent();
 
-        // 공격 타입
+        // 공격 타입 (읽기 전용 - Pointed 고정)
         ImGui::Separator();
         ImGui::Text("Type:");
+        ImGui::BeginDisabled(true);
         if (ImGui::BeginCombo("Attack Type", GetAttackTypeStr(m_attackType)))
         {
-            for (int i = 0; i < (int)AttackType::Max; ++i)
-            {
-                AttackType currentType = (AttackType)i;
-                bool isSelected = (m_attackType == currentType);
-
-                if (ImGui::Selectable(GetAttackTypeStr(currentType), isSelected))
-                {
-                    m_attackType = currentType;
-                }
-
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();
-            }
             ImGui::EndCombo();
         }
+        ImGui::EndDisabled();
 
         if (ImGui::BeginCombo("Monster Tier", GetMonsterTierStr(m_monsterTier)))
         {
@@ -748,17 +685,9 @@ namespace game
         ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.1f, 0.1f, 10.0f);
         ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 0.1f, 0.1f, 100.0f);
         ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
-        ImGui::DragFloat("Attack Anim Duration", &m_attackAnimationDuration, 0.1f, 0.1f, 5.0f);
+        ImGui::DragFloat("Attack Duration", &m_attackAnimationDuration, 0.1f, 0.1f, 5.0f);
 
-        // PointedGreen 고유 설정
-        ImGui::Separator();
-        ImGui::Text("Animation Names:");
-        ImGui::InputText("Idle", &m_animName_Idle);
-        ImGui::InputText("EngageMove", &m_animName_EngageMove);
-        ImGui::InputText("EngageStop", &m_animName_EngageStop);
-        ImGui::InputText("EngageAttack", &m_animName_EngageAttack);       
-        ImGui::InputText("Fragile", &m_animName_Fragile);
-        ImGui::InputText("Dead", &m_animName_Dead);
+        // 뾰족 타입은 StaticMesh를 사용하므로 Animation Names 설정 불필요
 
         // 런타임 정보
         ImGui::Separator();
@@ -812,12 +741,7 @@ namespace game
         
         j["DetectionRange"] = m_detectionRange;
         j["AttackAnimationDuration"] = m_attackAnimationDuration;
-        j["AnimName_Idle"] = m_animName_Idle;
-        j["AnimName_EngageMove"] = m_animName_EngageMove;
-        j["AnimName_EngageStop"] = m_animName_EngageStop;
-        j["AnimName_EngageAttack"] = m_animName_EngageAttack;        
-        j["AnimName_Fragile"] = m_animName_Fragile;
-        j["AnimName_Dead"] = m_animName_Dead;
+        // 뾰족 타입은 StaticMesh 사용 - 애니메이션 관련 직렬화 불필요
     }
 
     void MonsterPointedType::Load(const engine::json& j)
@@ -826,11 +750,6 @@ namespace game
         
         m_detectionRange = j.value("DetectionRange", 15.0f);
         m_attackAnimationDuration = j.value("AttackAnimationDuration", 1.0f);
-        m_animName_Idle = j.value("AnimName_Idle", "Idle");
-        m_animName_EngageMove = j.value("AnimName_EngageMove", "EngageMove");
-        m_animName_EngageStop = j.value("AnimName_EngageStop", "EngageStop");
-        m_animName_EngageAttack = j.value("AnimName_EngageAttack", "EngageAttack");        
-        m_animName_Fragile = j.value("AnimName_Fragile", "Fragile");
-        m_animName_Dead = j.value("AnimName_Dead", "Dead");
+        // 뾰족 타입은 StaticMesh 사용 - 애니메이션 관련 직렬화 불필요
     }
 }

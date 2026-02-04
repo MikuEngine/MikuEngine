@@ -52,7 +52,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 초기화 (Factory에서 호출)
         // ─────────────────────────────────────────────
-        void Setup(std::unique_ptr<IBulletMovement> movement, float lifetime);
+        void Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg);
 
         // ─────────────────────────────────────────────
         // 생명주기

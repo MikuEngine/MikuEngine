@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -671,9 +671,15 @@ namespace game
 
 	// ═══════════════════════════════════════════════════════════════
 	// 피격 효과 (Hit Flash)
+	// 
+	// NOTE: 현재 SkeletalMeshRenderer 기반으로 구현됨
+	//       StaticMesh 사용 시 StaticMeshRenderer로 교체하여 사용 가능
+	//       - StaticMeshRenderer를 캐싱하고 SetBaseColor() 호출
+	//       - 또는 Material Instance를 사용하여 색상 변경
 	// ═══════════════════════════════════════════════════════════════
 	void MonsterScript::StartHitFlash()
 	{
+		// SkeletalMeshRenderer가 없으면 무시 (StaticMesh 타입)
 		if (!m_skeletalMeshRenderer) return;
 
 		m_isHitFlashing = true;
@@ -697,6 +703,7 @@ namespace game
 
 	void MonsterScript::EndHitFlash()
 	{
+		// SkeletalMeshRenderer가 없으면 무시 (StaticMesh 타입)
 		if (!m_skeletalMeshRenderer) return;
 
 		m_isHitFlashing = false;
