@@ -299,9 +299,8 @@ namespace engine
 
         if (selectedPath.empty()) return;
 
-        fs::path sourcePath(selectedPath);
-        fs::path destDir = SoundSystem::Get().GetSoundPath();
-        fs::path destPath = destDir / sourcePath.filename();
+        fs::path sourcePath = fs::absolute(selectedPath);
+        fs::path destDir = fs::absolute(SoundSystem::Get().GetSoundPath());
 
         try
         {
@@ -311,25 +310,39 @@ namespace engine
             }
 
             std::error_code ec;
-            bool isSameFile = false;
+            fs::path relativePath = fs::relative(sourcePath, destDir, ec);
 
-            if (fs::exists(destPath) && fs::equivalent(sourcePath, destPath, ec))
+            bool isInsideSoundFolder = !ec && !relativePath.empty() && (relativePath.string().find("..") == std::string::npos);
+
+            if (isInsideSoundFolder)
             {
-                isSameFile = true;
+                m_clipName = relativePath.string();
+                std::replace(m_clipName.begin(), m_clipName.end(), '\\', '/');
             }
-            if(!isSameFile)
+            else
             {
-                fs::copy_file(sourcePath, destPath, fs::copy_options::overwrite_existing);
+                fs::path finalDestPath = destDir / sourcePath.filename();
+
+                bool isSameFile = false;
+                if (fs::exists(finalDestPath) && fs::equivalent(sourcePath, finalDestPath, ec))
+                {
+                    isSameFile = true;
+                }
+
+                if (!isSameFile)
+                {
+                    fs::copy_file(sourcePath, finalDestPath, fs::copy_options::overwrite_existing);
+                }
+
+                m_clipName = sourcePath.filename().string();
             }
 
-            m_clipName = sourcePath.filename().string();
             SetClip(m_clipName);
-
             SoundSystem::Get().RefreshSoundList();
         }
         catch (fs::filesystem_error& e)
         {
-            LOG_ERROR("AudioSource :: File Copy Failed! {}", e.what());
+            LOG_ERROR("AudioSource :: File Load/Copy Failed! {}", e.what());
         }
     }
 
