@@ -123,6 +123,8 @@ namespace engine
             bool loop = true,
             int layerIndex = 0,
             float speed = 1.0f);
+        /** 현재 재생 중인 애니메이션의 재생 속도를 동적으로 변경 */
+        void SetLayerSpeed(int layerIndex, float speed);
         void Update() override;
         void DrawTimeline(const std::string& animName);
         void UpdateTimeinePose();

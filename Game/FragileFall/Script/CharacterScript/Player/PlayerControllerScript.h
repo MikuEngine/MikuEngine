@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -66,6 +66,7 @@ namespace game
         float m_baseAtkDmg = 10.0f;             // 기본 공격력
         float m_baseAtkSpeed = 1.0f;            // 기본 공격속도 스케일 (1.0 = 초당 1.4발)
         float m_baseBulletLifetime = 3.0f;      // 기본 총알 수명 (초)
+        float m_baseBulletRange = 50.0f;        // 기본 총알 사거리 (BulletPlayer 전용)
         float m_baseBulletSizeScale = 1.0f;     // 기본 총알 스케일
         float m_baseBulletSpeed = 1.0f;         // 기본 총알 속도
 
@@ -76,7 +77,8 @@ namespace game
         float m_playerAtkDmg = 10.0f;           // 실제 공격력
         float m_AtkSpeed = 1.0f;                // 실제 공격속도 스케일
         float m_fireRate = 0.7f;                // 발사 간격 (초). m_AtkSpeed로부터 계산됨. 0.7 / m_AtkSpeed
-        float m_bulletLifetime = 3.0f;          // 실제 총알 수명 (초)
+        float m_bulletLifetime = 3.0f;          // 실제 총알 수명 (초) - BulletPlayer는 사용 안 함
+        float m_bulletRange = 50.0f;            // 실제 총알 사거리 (BulletPlayer 전용)
         float m_bulletSizeScale = 1.0f;         // 실제 총알 스케일
         float m_bulletSpeed = 1.0f;             // 실제 총알 속도
         bool m_isBulletDouble = false;          // 더블샷 (PlayerTemperManager가 설정)
@@ -168,6 +170,8 @@ namespace game
         // ─────────────────────────────────────────────
         float m_fireTimer = 0.0f;
         bool m_fsmInitialized = false;
+        bool m_canFireNow = true;       // 애니 발사 프레임 통과 시 AimMeshController가 true로 설정
+        bool m_hasFiredThisSession = false;  // 이번 클릭/홀드에서 1발 이상 쐈는지 (첫 발은 즉시 허용용)
         
         // 마지막 이동 방향 (캐릭터가 서있는 방향)
         // 초기값: -Z 방향 (아래쪽)
@@ -302,6 +306,13 @@ namespace game
         // ─────────────────────────────────────────────
         float GetFireRate() const { return m_fireRate; }
         void RegisterFireCallback(engine::ScriptBase* owner, const FireCallback& callback);
+        
+        // ─────────────────────────────────────────────
+        // 애니메이션 발사 프레임 동기화용
+        // ─────────────────────────────────────────────
+        /** 애니메이션 발사 프레임에 도달했는지 확인 (PlayerAimMeshController에서 호출) */
+        bool CanFireNow() const { return m_canFireNow; }
+        void SetCanFireNow(bool canFire) { m_canFireNow = canFire; }
 
         // ─────────────────────────────────────────────
         // 공격 변수 - Base값 Getter (PlayerTemperManager용)
@@ -309,6 +320,7 @@ namespace game
         float GetBaseAtkDmg() const { return m_baseAtkDmg; }
         float GetBaseAtkSpeed() const { return m_baseAtkSpeed; }
         float GetBaseBulletLifetime() const { return m_baseBulletLifetime; }
+        float GetBaseBulletRange() const { return m_baseBulletRange; }
         float GetBaseBulletSizeScale() const { return m_baseBulletSizeScale; }
         float GetBaseBulletSpeed() const { return m_baseBulletSpeed; }
 
@@ -319,6 +331,7 @@ namespace game
         void SetAtkSpeed(float value) { m_AtkSpeed = value; }
         void SetFireRate(float value) { m_fireRate = value; }
         void SetBulletLifetime(float value) { m_bulletLifetime = value; }
+        void SetBulletRange(float value) { m_bulletRange = value; }
         void SetBulletSizeScale(float value) { m_bulletSizeScale = value; }
         void SetBulletSpeed(float value) { m_bulletSpeed = value; }
         void SetIsBulletDouble(bool value) { m_isBulletDouble = value; }

@@ -68,6 +68,67 @@ namespace game
         UpdateShootingState();
         UpdatePositionAndRotation();
         UpdateAnimation();
+        
+        // ─────────────────────────────────────────────
+        // Fire 애니메이션 재생 속도 동기화 및 발사 프레임 확인
+        // ─────────────────────────────────────────────
+        if (m_animFSM && m_playerControllerScript && m_logicFSM)
+        {
+            std::string currentState = m_logicFSM->GetCurrentState();
+            bool isShooting = (currentState == "IdleShoot" || currentState == "WalkShoot");
+            
+            if (isShooting)
+            {
+                // 발사 간격(fireRate)을 직접 사용하여 애니메이션 속도 계산
+                float fireRate = m_playerControllerScript->GetFireRate();
+                const float baseFireRate = 0.7f;  // 기본 발사 간격 (초)
+                float animSpeed = (fireRate > 0.001f) ? (baseFireRate / fireRate) : 1.0f;
+                
+                // AnimFSM의 SkeletalAnimator 가져오기
+                auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
+                if (animator)
+                {
+                    int targetLayer = -1;
+                    if (currentState == "IdleShoot")
+                    {
+                        targetLayer = m_animFSM->GetBaseLayerIndex();
+                    }
+                    else if (currentState == "WalkShoot")
+                    {
+                        targetLayer = m_animFSM->GetUpperBodyLayerIndex();
+                    }
+                    
+                    if (targetLayer >= 0)
+                    {
+                        std::string currentAnim = animator->GetCurrentAnimationName(targetLayer);
+                        if (currentAnim == m_animName_Fire)
+                        {
+                            // 애니메이션 속도 업데이트 (발사 속도에 맞춤)
+                            animator->SetLayerSpeed(targetLayer, animSpeed);
+                            // 발사 프레임 통과 시 한 번만 SetCanFireNow(true) (총알↔모션 동기화)
+                            float normalizedTime = animator->GetNormalizedTime(targetLayer);
+                            if (normalizedTime >= m_fireAnimShootFrameTime && m_prevFireNormalizedTime < m_fireAnimShootFrameTime)
+                                m_playerControllerScript->SetCanFireNow(true);
+                            m_prevFireNormalizedTime = normalizedTime;
+                        }
+                        else
+                        {
+                            m_prevFireNormalizedTime = -1.0f;
+                        }
+                    }
+                    else
+                    {
+                        m_prevFireNormalizedTime = -1.0f;
+                    }
+                }
+            }
+            else
+            {
+                m_prevFireNormalizedTime = -1.0f;
+                m_playerControllerScript->SetCanFireNow(false);
+            }
+        }
+        
         // 메시 쪽 AnimFSM은 플레이어(로직) 오브젝트가 아니라 이 오브젝트에 붙어 있으므로 여기서 UpdateFSM 호출 (상체 weight 보간, procedural)
         if (m_animFSM)
             m_animFSM->UpdateFSM();
@@ -442,6 +503,11 @@ namespace game
         ImGui::InputText("WalkForward", &m_animName_WalkForward);
         ImGui::InputText("WalkBackward", &m_animName_WalkBackward);
         ImGui::InputText("Fire", &m_animName_Fire);
+        ImGui::DragFloat("Fire Anim Shoot Frame Time", &m_fireAnimShootFrameTime, 0.01f, 0.0f, 1.0f);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Fire 애니메이션에서 실제 총알 발사 모션이 나오는 시간 (정규화된 시간, 0.0~1.0). 예: 0.2 = 애니메이션의 20% 지점");
+        }
         ImGui::DragFloat("Upper Body Aim Offset (deg)", &m_upperBodyAimOffsetDeg, 1.0f, -90.0f, 90.0f);
         if (ImGui::IsItemHovered())
             ImGui::SetTooltip("Walk+발사 시 상체 조준 Yaw 보정. Fire 애니가 비스듬히 서서 쏘면 조정 (왼쪽 보면 +)");
@@ -523,6 +589,7 @@ namespace game
         j["AnimName_WalkForward"] = m_animName_WalkForward;
         j["AnimName_WalkBackward"] = m_animName_WalkBackward;
         j["AnimName_Fire"] = m_animName_Fire;
+        j["FireAnimShootFrameTime"] = m_fireAnimShootFrameTime;
         j["UpperBodyAimOffsetDeg"] = m_upperBodyAimOffsetDeg;
         j["UpperBodyYawScale"] = m_upperBodyYawScale;
         j["GunBoneName"] = m_gunBoneName;
@@ -551,6 +618,7 @@ namespace game
         engine::JsonGet(j, "AnimName_WalkForward", m_animName_WalkForward);
         engine::JsonGet(j, "AnimName_WalkBackward", m_animName_WalkBackward);
         engine::JsonGet(j, "AnimName_Fire", m_animName_Fire);
+        engine::JsonGet(j, "FireAnimShootFrameTime", m_fireAnimShootFrameTime);
         engine::JsonGet(j, "UpperBodyAimOffsetDeg", m_upperBodyAimOffsetDeg);
         engine::JsonGet(j, "UpperBodyYawScale", m_upperBodyYawScale);
         engine::JsonGet(j, "GunBoneName", m_gunBoneName);
@@ -572,6 +640,7 @@ namespace game
         // 발사할 때마다 타이머 리셋 (연속 발사 중에는 계속 true)
         m_isShooting = true;
         m_shootingTimer = m_shootingDuration;
+        // Fire 애니는 AnimFSM 전환으로만 재생 (Play() 호출 안 함 → Idle→Fire 블렌딩 유지)
     }
 
     void PlayerAimMeshController::UpdateShootingState()

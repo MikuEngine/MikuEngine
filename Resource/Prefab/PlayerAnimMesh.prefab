@@ -39,6 +39,7 @@
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
+                    "FireAnimShootFrameTime": 0.36000001430511475,
                     "UpperBodyAimOffsetDeg": 90.0,
                     "UpperBodyYawScale": 2.0,
                     "GunBoneName": "DEF-Weapon",
@@ -205,9 +206,7 @@
                     "AlphaDecayCurve": 1,
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
-                    "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 371,
-                    "SourceHandleGeneration": 3
+                    "AlphaSampleInterval": 0.0
                 }
             ]
         }

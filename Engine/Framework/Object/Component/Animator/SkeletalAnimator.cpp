@@ -398,6 +398,29 @@ namespace engine
         layer.transitionTime = 0.0f;
     }
 
+    void SkeletalAnimator::SetLayerSpeed(int layerIndex, float speed)
+    {
+        if (layerIndex < 0 || layerIndex >= m_layers.size())
+        {
+            LOG_ERROR("등록되지 않은 레이어: {}", layerIndex);
+            return;
+        }
+
+        auto& layer = m_layers[layerIndex];
+        
+        // 현재 재생 중인 애니메이션의 속도 변경
+        if (layer.current.active)
+        {
+            layer.current.speed = speed;
+        }
+        
+        // 전환 중인 애니메이션의 속도도 변경
+        if (layer.next.active)
+        {
+            layer.next.speed = speed;
+        }
+    }
+
     void SkeletalAnimator::Update()
     {
         if (m_skeleton.empty())

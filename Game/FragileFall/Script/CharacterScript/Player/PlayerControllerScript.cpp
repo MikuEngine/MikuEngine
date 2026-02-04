@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -333,6 +333,8 @@ namespace game
 
 		// Held 시 파라미터 (연속 발사)
 		m_logicFSM->SetParameter("IsShooting", isMouseHeld);
+		if (!isMouseHeld)
+			m_hasFiredThisSession = false;  // 손 떼면 다음 클릭에서 첫 발 즉시 허용
 
 		// ─────────────────────────────────────────────
 		// 3. 대쉬 입력 (Shift/Space)
@@ -824,11 +826,13 @@ namespace game
 		}
 
 		// ─────────────────────────────────────────────
-		// 발사 조건: 마우스 홀드 + 쿨다운 완료
+		// 발사 조건: 마우스 홀드 + 쿨다운 + (애니 발사 프레임 도달 OR 이번 세션 첫 발)
+		// → 첫 발은 즉시, 연사는 애니 발사 모션과 동기화
 		// ─────────────────────────────────────────────
 		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
+		bool canFireThisFrame = m_canFireNow || !m_hasFiredThisSession;
 
-		if (isMouseHeld && m_fireTimer <= 0.0f)
+		if (isMouseHeld && m_fireTimer <= 0.0f && canFireThisFrame)
 		{
 			// 발사!
 			if (m_bulletFactory && m_aimPointer)
@@ -881,7 +885,8 @@ namespace game
 				BulletParams params;
 				params.type = BulletType::BulletPlayer;
 				params.speed = m_bulletSpeed;
-				params.lifetime = m_bulletLifetime;
+				params.lifetime = m_bulletLifetime;  // 하위 호환성용 (BulletPlayer는 사용 안 함)
+				params.range = m_bulletRange;        // BulletPlayer는 range 사용
 				params.damage = m_playerAtkDmg;
 
 				m_bulletFactory->Fire(bulletStartPos, direction, params);
@@ -895,8 +900,10 @@ namespace game
 					}
 				}
 
-				// 쿨다운 타이머 리셋
+				// 쿨다운 타이머 리셋, 이번 세션에서 발사했음 표시, 애니 동기화 플래그 소비
 				m_fireTimer = m_fireRate;
+				m_hasFiredThisSession = true;
+				m_canFireNow = false;
 			}
 		}
 	}
@@ -1116,6 +1123,16 @@ namespace game
 			ImGui::SetTooltip("잔상 녹화 구간. 대쉬 시간의 이 비율까지만 녹화 (감속 구간 제외, 0.7=70%%)");
 		}
 		ImGui::DragFloat("Dash Cooldown (sec)", &m_dashCooldown, 0.1f, 0.0f, 10.0f);
+		ImGui::DragInt("Max Dash Count", &m_MaxDashCount, 1, 1, 10);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Maximum number of dashes available");
+		}
+		ImGui::DragFloat("Dash Recharge Time (sec)", &m_dashRechargeTime, 0.1f, 0.1f, 10.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Time to recharge one dash");
+		}
 		
 		// 대쉬 상태 표시
 		ImGui::Text("Dash State: %s", m_isDashing ? "DASHING" : "Ready");
@@ -1148,6 +1165,12 @@ namespace game
 		}
 		if (ImGui::DragFloat("Base Bullet Lifetime", &m_baseBulletLifetime, 0.1f, 0.1f, 20.0f))
 			baseChanged = true;
+		if (ImGui::DragFloat("Base Bullet Range", &m_baseBulletRange, 1.0f, 1.0f, 200.0f))
+			baseChanged = true;
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("BulletPlayer 사거리 (거리 단위). BulletPlayer는 lifetime 대신 range 사용");
+		}
 		if (ImGui::DragFloat("Base Bullet Size Scale", &m_baseBulletSizeScale, 0.05f, 0.1f, 10.0f))
 			baseChanged = true;
 		if (ImGui::DragFloat("Base Bullet Speed", &m_baseBulletSpeed, 0.5f, 0.1f, 100.0f))
@@ -1175,6 +1198,11 @@ namespace game
 			ImGui::SetTooltip("Calculated: 0.7 / AtkSpeed");
 		}
 		ImGui::DragFloat("Actual Bullet Lifetime", &m_bulletLifetime, 0.0f);
+		ImGui::DragFloat("Actual Bullet Range", &m_bulletRange, 0.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("BulletPlayer 사거리 (BulletPlayer는 lifetime 대신 range 사용)");
+		}
 		ImGui::DragFloat("Actual Bullet Size Scale", &m_bulletSizeScale, 0.0f);
 		ImGui::DragFloat("Actual Bullet Speed", &m_bulletSpeed, 0.0f);
 		bool tempDouble = m_isBulletDouble;
@@ -1236,6 +1264,7 @@ namespace game
 		j["BaseAtkDmg"] = m_baseAtkDmg;
 		j["BaseAtkSpeed"] = m_baseAtkSpeed;
 		j["BaseBulletLifetime"] = m_baseBulletLifetime;
+		j["BaseBulletRange"] = m_baseBulletRange;
 		j["BaseBulletSizeScale"] = m_baseBulletSizeScale;
 		j["BaseBulletSpeed"] = m_baseBulletSpeed;
 		
@@ -1259,6 +1288,8 @@ namespace game
 		j["DashDecayRate"] = m_dashDecayRate;
 		j["DashAfterimageCutoffRatio"] = m_dashAfterimageCutoffRatio;
 		j["DashCooldown"] = m_dashCooldown;
+		j["MaxDashCount"] = m_MaxDashCount;
+		j["DashRechargeTime"] = m_dashRechargeTime;
 	}
 
 	void PlayerControllerScript::Load(const engine::json& j)
@@ -1277,6 +1308,8 @@ namespace game
 			m_baseAtkSpeed = j["BaseAtkSpeed"].get<float>();
 		if (j.contains("BaseBulletLifetime"))
 			m_baseBulletLifetime = j["BaseBulletLifetime"].get<float>();
+		if (j.contains("BaseBulletRange"))
+			m_baseBulletRange = j["BaseBulletRange"].get<float>();
 		if (j.contains("BaseBulletSizeScale"))
 			m_baseBulletSizeScale = j["BaseBulletSizeScale"].get<float>();
 		if (j.contains("BaseBulletSpeed"))
@@ -1329,6 +1362,10 @@ namespace game
 			m_dashAfterimageCutoffRatio = j["DashAfterimageCutoffRatio"].get<float>();
 		if (j.contains("DashCooldown"))
 			m_dashCooldown = j["DashCooldown"].get<float>();
+		if (j.contains("MaxDashCount"))
+			m_MaxDashCount = j["MaxDashCount"].get<int>();
+		if (j.contains("DashRechargeTime"))
+			m_dashRechargeTime = j["DashRechargeTime"].get<float>();
 		
 		// ═══════════════════════════════════════════════════════════════
 		// Base값 로드 완료 후 강화 적용하여 실제값 계산
