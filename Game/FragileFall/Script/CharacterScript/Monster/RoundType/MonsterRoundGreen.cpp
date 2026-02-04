@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundGreen.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -212,7 +212,7 @@ namespace game
         // Green: 포물선 총알
         m_bulletParams.type = BulletType::Parabolic;
         m_bulletParams.lifetime = m_bulletLifetime;
-        m_bulletParams.damage = static_cast<int>(m_attackDamage);
+        m_bulletParams.damage = m_attackDamage;
 
         // ─────────────────────────────────────────────
         // 포물선 전용 파라미터

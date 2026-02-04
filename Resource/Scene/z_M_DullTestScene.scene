@@ -1,6 +1,6 @@
 {
     "Name": "z_M_DullTestScene",
-    "NumGameObjects": 90,
+    "NumGameObjects": 91,
     "GameObjects": [
         {
             "ID": 0,
@@ -422,10 +422,14 @@
                     "PlayerObjectName": "Player",
                     "AimPointerMeshObjectName": "AimPointerMesh",
                     "FixedY": 0.0,
+                    "LowerBodyAimThresholdDeg": 30.0,
+                    "LowerBodyTurnSpeed": 8.0,
                     "AnimName_Idle": "Idle",
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
+                    "UpperBodyAimOffsetDeg": 0.0,
+                    "UpperBodyYawScale": 1.0,
                     "BackwardThreshold": -0.10000000149011612,
                     "ForwardThreshold": 0.10000000149011612,
                     "ShootingDuration": 0.9300000071525574
@@ -475,7 +479,7 @@
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
                     "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 19,
+                    "SourceHandleIndex": 26,
                     "SourceHandleGeneration": 3
                 },
                 {
@@ -18998,11 +19002,11 @@
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 15.0,
-                    "AttackRange": 15.0,
+                    "AttackRange": 200.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 15.0,
-                    "BulletLifetime": 3.0,
+                    "BulletLifetime": 5.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863
                 }
@@ -19245,6 +19249,100 @@
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 90,
+            "Name": "BulletCurvedMonster",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
+                    }
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 0.0,
+                    "angularDamping": 0.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": true,
+                    "layer": 6,
+                    "materialType": 0,
+                    "radius": 0.5
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.7953662872314453,
+                        "y": 0.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "BulletMonster",
+                    "Active": true
                 }
             ]
         }

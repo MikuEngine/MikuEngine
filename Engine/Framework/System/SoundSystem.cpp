@@ -22,8 +22,8 @@ namespace engine
     // Sound Class Implementation
     // ==============================================================
 
-    Sound::Sound(FMOD::System *system, int index, std::string name, FMOD::ChannelGroup *channelGroup)
-        : m_pSystem(system), m_id(index), m_name(name), m_pChannelGroup(channelGroup) {}
+    Sound::Sound(FMOD::System* system, std::string key, std::string filePath, FMOD::ChannelGroup* channelGroup)
+        : m_pSystem(system), m_key(key), m_filePath(filePath), m_pChannelGroup(channelGroup) {}
 
     Sound::~Sound()
     {
@@ -221,6 +221,9 @@ namespace engine
 
         if (auto* g = GetOrCreateChannelGroup("SFX"))
             g->setVolume(Clamp01(m_sfx));
+
+        if (auto* g = GetOrCreateChannelGroup("UI"))
+			g->setVolume(Clamp01(m_sfx));
     }
 
     float SoundSystem::Clamp01(float v)
@@ -490,7 +493,7 @@ namespace engine
         return parentGroup;
     }
 
-    Sound* SoundSystem::CreateSound(const std::string &filename, const std::string &option)
+    Sound* SoundSystem::CreateSound(const std::string& key, const std::string& filePath, const std::string &option)
     {
         bool isBGM = (option.find("BGM") != std::string::npos);
         bool is3D = true;
@@ -503,16 +506,16 @@ namespace engine
 
         FMOD::ChannelGroup* targetGroup = GetOrCreateChannelGroup(groupName);
 
+        // 경로 정규화
+        std::string soundPath = filePath;
+        if (soundPath.find("Resource/") != 0 && soundPath.find("resource/") != 0)
+        {
+            soundPath = m_soundPath + filePath;
+        }
+        
         // VFS를 통해 파일 로드 시도
         auto& vfs = VirtualFileSystem::Get();
         std::vector<uint8_t> fileData;
-        
-        // 경로 정규화
-        std::string soundPath = filename;
-        if (soundPath.find("Resource/") != 0 && soundPath.find("resource/") != 0)
-        {
-            soundPath = m_soundPath + filename;
-        }
         
         // VFS에서 로드 시도
         bool loaded = vfs.LoadFile(soundPath, fileData);
@@ -522,7 +525,7 @@ namespace engine
         if (!loaded)
         {
             fs::path rootPath(m_soundPath);
-            fs::path inputPath(filename);
+            fs::path inputPath(filePath);
             fs::path targetPath;
 
             std::string inputStr = inputPath.generic_string();
@@ -584,12 +587,12 @@ namespace engine
 
         if (!loaded || fileData.empty())
         {
-            LOG_ERROR("[SoundSystem] File Not Found: {} (Original Input: {})", soundPath, filename);
+            LOG_ERROR("[SoundSystem] File Not Found: {} (Original Input: {})", soundPath, filePath);
             return nullptr;
         }
 
         // 사운드 객체 생성
-        Sound *sound = new Sound(m_pSystem, m_index++, filename, targetGroup);
+        Sound *sound = new Sound(m_pSystem, key, filePath, targetGroup);
 
         FMOD_MODE mode = FMOD_DEFAULT;
         if (is3D) mode = FMOD_3D | FMOD_3D_LINEARROLLOFF;
@@ -619,7 +622,7 @@ namespace engine
         return sound;
     }
 
-    void SoundSystem::CreateRandomSound(const std::string& groupName, const std::vector<std::string>& filePaths, const std::string& option, LifeScope scope)
+    void SoundSystem::CreateRandomSound(const std::string& key, const std::vector<std::string>& filePaths, const std::string& option, LifeScope scope)
     {
         FMOD::ChannelGroup* targetGroup = nullptr;
 
@@ -640,7 +643,7 @@ namespace engine
 
         for (const auto& path : filePaths)
         {
-            auto soundData = AssetManager::Get().GetOrCreateSoundData(path, option, scope);
+            auto soundData = AssetManager::Get().GetOrCreateSoundData(path, path, option, scope);
 
             if (soundData && soundData->GetSound())
             {
@@ -657,7 +660,7 @@ namespace engine
 
         if (!soundList.empty())
         {
-            m_SoundQues[groupName] = soundList;
+            m_SoundQues[key] = soundList;
         }
     }
 
@@ -682,7 +685,7 @@ namespace engine
         }
         else
         {
-            auto soundData = AssetManager::Get().GetOrCreateSoundData(key, option, scope);
+            auto soundData = AssetManager::Get().GetOrCreateSoundData(key, key, option, scope);
 
             if (soundData)
             {
@@ -710,7 +713,7 @@ namespace engine
         }
     }
 
-    void SoundSystem::PlayUI(const std::string name) { Play(name, "SFX", m_sfx, 1.0f, LifeScope::Global); }
+    void SoundSystem::PlayUI(const std::string name) { Play(name, "SFX", 1.0f, 1.0f, LifeScope::Global); }
     void SoundSystem::SetMasterVolume(float v) { m_master = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetBGMVolume(float v) { m_bgm = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetSFXVolume(float v) { m_sfx = Clamp01(v); ApplyVolumes(); }

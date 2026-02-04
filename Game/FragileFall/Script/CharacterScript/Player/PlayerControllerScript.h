@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -90,8 +90,8 @@ namespace game
         BulletFactory* m_bulletFactory = nullptr;
 
         //HP
-        int m_PlayerMaxHP = 100;
-        int m_PlayerCurrentHP = 100;
+        float m_PlayerMaxHP = 100.0f;
+        float m_PlayerCurrentHP = 100.0f;
 
         // ─────────────────────────────────────────────
         // 이동 설정
@@ -291,11 +291,11 @@ namespace game
         // ─────────────────────────────────────────────
         // HP 시스템 접근자
         // ─────────────────────────────────────────────
-        int GetMaxHp() const { return m_PlayerMaxHP; }
-        int GetCurrentHp() const { return m_PlayerCurrentHP; }
+        float GetMaxHp() const { return m_PlayerMaxHP; }
+        float GetCurrentHp() const { return m_PlayerCurrentHP; }
         
         // 데미지 처리
-        void TakeDamage(int damage);
+        void TakeDamage(float damage);
 
         // ─────────────────────────────────────────────
         // 발사 시스템 접근자

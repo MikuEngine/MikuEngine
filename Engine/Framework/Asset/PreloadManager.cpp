@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PreloadManager.h"
 
 #include <fstream>
@@ -266,7 +266,7 @@ namespace engine
 
         if (type == "SoundQue")
         {
-            std::string name = assetData.value("Name", "");
+            std::string key = assetData.value("Name", "");
 
             if (assetData.contains("Paths") && assetData["Paths"].is_array())
             {
@@ -278,9 +278,9 @@ namespace engine
 
                 std::string option = assetData.value("Option", "SFX");
 
-                if (!name.empty() && !paths.empty())
+                if (!key.empty() && !paths.empty())
                 {
-                    SoundSystem::Get().CreateRandomSound(name, paths, option, scope);
+                    SoundSystem::Get().CreateRandomSound(key, paths, option, scope);
                 }
             }
             return; 
@@ -314,8 +314,11 @@ namespace engine
         }
         else if (type == "Sound")
         {
+            std::string name = assetData.value("Name", "");
             std::string option = assetData.value("Option", "SFX");
-            AssetManager::Get().GetOrCreateSoundData(path, option, scope);
+
+            std::string key = name.empty() ? path : name;
+            AssetManager::Get().GetOrCreateSoundData(key, path, option, scope);
         }
     }
 }

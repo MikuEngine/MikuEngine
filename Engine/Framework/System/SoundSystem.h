@@ -27,11 +27,11 @@ namespace engine
         FMOD::Sound* m_pSound = nullptr;
         FMOD::Channel* m_pChannel = nullptr;
         FMOD::ChannelGroup* m_pChannelGroup = nullptr;
-        std::string m_name;
-        int m_id;
+        std::string m_key;
+        std::string m_filePath;
 
     public:
-        Sound(FMOD::System* system, int index, std::string name, FMOD::ChannelGroup* channelGroup);
+        Sound(FMOD::System* system, std::string key, std::string filePath, FMOD::ChannelGroup* channelGroup);
         ~Sound();
 
         void Release();
@@ -106,8 +106,8 @@ namespace engine
         void StopSceneSounds();
         void OnGameStart();
 
-        Sound* CreateSound(const std::string& filename, const std::string& option);
-        void CreateRandomSound(const std::string& groupName, const std::vector<std::string>& filePaths, const std::string& option, LifeScope scope);
+        Sound* CreateSound(const std::string& key, const std::string& filePath, const std::string& option);
+        void CreateRandomSound(const std::string& key, const std::vector<std::string>& filePaths, const std::string& option, LifeScope scope);
         const std::string& GetSoundPath() const { return m_soundPath; }
 
         void RefreshSoundList();

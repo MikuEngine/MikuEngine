@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -95,7 +95,7 @@ namespace game
         bool IsPlayerInDetectionRange() const;
 
         // 뾰족 보라
-		void UpdateFleeBehavior(float deltaTime);
+		//void UpdateFleeBehavior(float deltaTime);
 
     public:
         void OnGui() override;

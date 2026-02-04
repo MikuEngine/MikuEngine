@@ -246,8 +246,7 @@ namespace game
 				DieWithExplosion(impactPoint);
 			}
 			return;
-		}
-		
+		}		
 
 		// 일반 타입: 플레이어와 충돌
 		if (info.gameObject->GetComponent<PlayerControllerScript>())

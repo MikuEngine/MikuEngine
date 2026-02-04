@@ -226,57 +226,67 @@ namespace game
     };
 
     // ═══════════════════════════════════════════════════════════════
-    // CurvedMovement - 곡선 이동
+    // CurvedMovement - 나선형 이동
     // 
-    // Y축 회전을 통해 곡선 궤적으로 이동
+    // 시작점을 중심으로 우측(시계방향)으로 회전하며 바깥으로 퍼지는 나선 궤도
+    // - angularSpeed: 회전 속도 (rad/s)
+    // - radiusGrowthRate: 반지름 증가율 (m/s)
     // 
-    // 참고: launchAngle, ownGravity는 사용하지 않음 (곡선 이동)
+    // Kinematic Trigger 전용 (PhysX 물리 사용 안 함)
     // ═══════════════════════════════════════════════════════════════
 
     class CurvedMovement : public IBulletMovement
     {
     private:
-        engine::Rigidbody* m_rigidbody = nullptr;
-        engine::Vector3 m_velocity = engine::Vector3::Zero;
-        float m_curveSpeed = 0.0f;
+        engine::Vector3 m_centerPos = engine::Vector3::Zero;  // 원 중심 (시작 위치)
+        float m_initialAngle = 0.0f;      // 초기 발사 각도 (라디안)
+        float m_elapsedTime = 0.0f;       // 경과 시간
+        float m_angularSpeed = 2.0f;      // 회전 속도 (rad/s)
+        float m_radiusGrowthRate = 1.0f;  // 반지름 증가율 (m/s)
 
     public:
-        // launchAngle, ownGravity: 이 타입에서는 무시됨
-        CurvedMovement(float curveSpeed) : m_curveSpeed(curveSpeed) {}
+        CurvedMovement(float angularSpeed, float radiusGrowthRate)
+            : m_angularSpeed(angularSpeed)
+            , m_radiusGrowthRate(radiusGrowthRate) 
+        {}
 
         void Initialize(engine::GameObject* owner, const engine::Vector3& direction, float speed) override
         {
-            if (owner) m_rigidbody = owner->GetComponent<engine::Rigidbody>();
-
-            m_velocity = direction;
-            m_velocity.Normalize();
-            m_velocity *= speed;
+            if (owner)
+            {
+                m_centerPos = owner->GetTransform()->GetWorldPosition();
+            }
+            
+            // 초기 발사 방향에서 각도 계산 (XZ 평면)
+            // atan2(z, x)로 방향 벡터의 각도 추출
+            m_initialAngle = std::atan2(direction.z, direction.x);
         }
 
         void Update(engine::Transform* transform, float deltaTime) override
         {
-            if (transform)
-            {
-                float angle = m_curveSpeed * deltaTime;
-                auto rot = DirectX::SimpleMath::Matrix::CreateRotationY(angle);
-                m_velocity = DirectX::SimpleMath::Vector3::Transform(m_velocity, rot);
-
-                if (m_rigidbody)
-                {
-                    m_rigidbody->SetLinearVelocity(m_velocity);
-                }
-                else if (transform)
-                {
-                    engine::Vector3 pos = transform->GetLocalPosition();
-                    pos += m_velocity * deltaTime;
-                    transform->SetLocalPosition(pos);
-                }
-            }
+            if (!transform) return;
+            
+            m_elapsedTime += deltaTime;
+            
+            // 현재 각도 (우측 회전 = 시계방향 = 음의 각속도)
+            float currentAngle = m_initialAngle - m_angularSpeed * m_elapsedTime;
+            
+            // 현재 반지름 (시간에 따라 증가)
+            float currentRadius = m_radiusGrowthRate * m_elapsedTime;
+            
+            // 새 위치 계산 (중심 + 반지름 * 방향)
+            engine::Vector3 newPos;
+            newPos.x = m_centerPos.x + currentRadius * std::cos(currentAngle);
+            newPos.y = m_centerPos.y;
+            newPos.z = m_centerPos.z + currentRadius * std::sin(currentAngle);
+            
+            transform->SetLocalPosition(newPos);
         }
 
         engine::Vector3 GetVelocity() const override
         {
-            return m_velocity;
+            // Kinematic이므로 초기 속도 불필요
+            return engine::Vector3::Zero;
         }
 
         bool UsesPhysics() const override { return false; }

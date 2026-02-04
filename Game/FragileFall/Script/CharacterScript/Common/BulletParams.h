@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace game
 {
@@ -38,7 +38,7 @@ namespace game
         // ─────────────────────────────────────────────
         float speed = 10.0f;        // 총알 속도
         float lifetime = 3.0f;      // 총알 수명 (초)
-        int damage = 0;
+        float damage = 0.0f;
 
         // ─────────────────────────────────────────────
         // 포물선용 (Parabolic 타입에서만 사용)
@@ -48,9 +48,11 @@ namespace game
         float ownGravity = 9.8f;    // 자체 중력 가속도 (PhysX 글로벌 중력과 별개)
 
         // ─────────────────────────────────────────────
-        // 곡선용
+        // 곡선/나선용 (Curve 타입에서 사용)
         // ─────────────────────────────────────────────
-        float curveSpeed = 0.0f;
+        float curveSpeed = 0.0f;        // [미사용] 기존 곡선 속도
+        float angularSpeed = 2.0f;      // 회전 속도 (rad/s)
+        float radiusGrowthRate = 1.0f;  // 반지름 증가율 (m/s)
 
         // ─────────────────────────────────────────────
         // 범위형

@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundGray.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -68,7 +68,7 @@ namespace game
             float elapsedSinceLastDamage = engine::Time::GetElapsedSeconds(m_lastDamageTime);
             if (elapsedSinceLastDamage >= m_damageCooldown)
             {
-                player->TakeDamage(static_cast<int>(m_attackDamage));
+                player->TakeDamage(m_attackDamage);
                 m_lastDamageTime = engine::Time::GetTimestamp();
             }
         }

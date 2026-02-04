@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
@@ -77,6 +77,43 @@ namespace game
 		bullet->Setup(std::move(movement), params, this);
 	}
 
+	// ═══════════════════════════════════════════════════════════════
+	// 나선형 총알 발사 (4발, +X/-X/+Z/-Z 방향)
+	// ═══════════════════════════════════════════════════════════════
+	void BulletFactory::CurvedFireMonster(const engine::Vector3& position, const BulletParams& params)
+	{
+		// 4방향 발사 (+X, -X, +Z, -Z)
+		const engine::Vector3 directions[4] = {
+			engine::Vector3( 1.0f, 0.0f,  0.0f),  // +X
+			engine::Vector3(-1.0f, 0.0f,  0.0f),  // -X
+			engine::Vector3( 0.0f, 0.0f,  1.0f),  // +Z
+			engine::Vector3( 0.0f, 0.0f, -1.0f),  // -Z
+		};
+
+		for (int i = 0; i < 4; ++i)
+		{
+			auto go = engine::Prefab::Instantiate("BulletCurvedMonster");
+			if (!go)
+			{
+				LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'BulletCurvedMonster' prefab!");
+				continue;
+			}
+
+			go->GetTransform()->SetLocalPosition(position);
+
+			// Movement 생성 및 초기화
+			auto movement = CreateMovement(params);
+			movement->Initialize(go, directions[i], params.speed);
+
+			// BulletMonster 컴포넌트 설정
+			auto* bullet = go->GetComponent<BulletMonster>();
+			if (bullet)
+			{
+				bullet->Setup(std::move(movement), params, this);
+			}
+		}
+	}
+
 	// ExplosinTriggerScript로 기능 이전
 	//void BulletFactory::FieldFireMonster(const engine::Vector3& position, const BulletParams& params)
 	//{
@@ -113,8 +150,8 @@ namespace game
 			return std::make_unique<ParabolicMovement>(params.ownGravity, params.launchAngle);
 
 		case BulletType::Curve:
-			// launchAngle, ownGravity 무시 (곡선 이동)
-			return std::make_unique<CurvedMovement>(params.curveSpeed);
+			// 나선형 이동 (angularSpeed, radiusGrowthRate 사용)
+			return std::make_unique<CurvedMovement>(params.angularSpeed, params.radiusGrowthRate);
 
 		//case BulletType::Field:
 		//	// Field 타입도 Parabolic 궤적 사용 (착탄 후 장판 생성)
@@ -189,8 +226,9 @@ namespace game
 				break;
 				
 			case BulletType::Curve:
-				ImGui::Text("=== Curve Settings ===");
-				ImGui::Text("Curve Speed: %.2f", params.curveSpeed);
+				ImGui::Text("=== Curve (Spiral) Settings ===");
+				ImGui::Text("Angular Speed: %.2f rad/s", params.angularSpeed);
+				ImGui::Text("Radius Growth: %.2f m/s", params.radiusGrowthRate);
 				break;
 				
 			case BulletType::Linear:

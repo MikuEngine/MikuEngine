@@ -32,7 +32,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 데미지
         // ─────────────────────────────────────────────
-        int m_damage = 10;
+        float m_damage = 10;
         bool m_hasDamaged = false;
         
         // ─────────────────────────────────────────────
@@ -41,7 +41,7 @@ namespace game
         float m_expandDuration = 0.3f;
         float m_startScale = 1.4f;
         float m_endScale = 5.0f;
-        float m_startRadius = 2.66;
+        float m_startRadius = 2.66f;
         float m_endRadius = 2.66f;
         
         // 콜라이더 캐시
@@ -49,7 +49,7 @@ namespace game
 
     public:
         // 초기화 (BulletMonster에서 호출)
-        void Setup(int damage, float lifetime = 1.5f);
+        void Setup(float damage, float lifetime = 1.5f);
 
         // 생명주기
         void Start() override;
