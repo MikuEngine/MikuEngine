@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Common/ExplosionDamageTrigger.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -9,7 +9,7 @@
 
 namespace game
 {
-    void ExplosionDamageTrigger::Setup(int damage, float lifetime)
+    void ExplosionDamageTrigger::Setup(float damage, float lifetime)
     {
         m_damage = damage;
         m_lifetime = lifetime;

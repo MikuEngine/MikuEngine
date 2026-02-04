@@ -118,11 +118,11 @@
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 15.0,
-                    "AttackRange": 15.0,
+                    "AttackRange": 200.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 15.0,
-                    "BulletLifetime": 3.0,
+                    "BulletLifetime": 5.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863
                 }

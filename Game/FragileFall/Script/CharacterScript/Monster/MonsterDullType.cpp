@@ -127,9 +127,10 @@ namespace game
             break;
         case MonsterTier::Red:
             m_bulletParams.type = BulletType::Curve;
-            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.speed = m_bulletSpeed;           // 나선형에서는 미사용
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.curveSpeed = 5.0f;
+            m_bulletParams.angularSpeed = 2.0f;             // 회전 속도 (rad/s)
+            m_bulletParams.radiusGrowthRate = 3.0f;         // 반지름 증가율 (m/s)
             m_bulletParams.damage = 20;
             m_rotationSpeed = 15.0f;
 			break;
@@ -396,26 +397,16 @@ namespace game
         // ─────────────────────────────────────────────
         // 둔탁 빨강
         // 
-        // 고정된 위치에서 4방향의 회전하는 회오리 공격을 날림
+        // 고정된 위치에서 4방향 나선형 탄환 발사
+        // - 팩토리가 +X, -X, +Z, -Z 방향으로 4발 생성
+        // - 각 탄환은 CurvedMovement로 나선 궤도 이동
         // ─────────────────────────────────────────────
         case MonsterTier::Red:
         {
-            for (int i = 0; i < 4; ++i)
-            {
-                float fireAngle = m_currentRotation + (DirectX::XM_PIDIV2 * i);
-
-                engine::Vector3 fireDir;
-                fireDir.x = cosf(fireAngle);
-                fireDir.y = 0.0f;
-                fireDir.z = sinf(fireAngle);
-                fireDir.Normalize();
-
-                m_bulletFactory->LinearFireMonster(firePosition, fireDir, m_bulletParams);
-            }
-
-            float rotationAmount = DirectX::XM_PI * 0.7f;
-            m_targetRotation = m_currentRotation + rotationAmount;
-            m_isRotating = true;
+            engine::Vector3 curvedFirePos = firePosition;
+            curvedFirePos.y = 2.2f;  // Y 오프셋
+            
+            m_bulletFactory->CurvedFireMonster(curvedFirePos, m_bulletParams);
             break;
 		}
         // ─────────────────────────────────────────────

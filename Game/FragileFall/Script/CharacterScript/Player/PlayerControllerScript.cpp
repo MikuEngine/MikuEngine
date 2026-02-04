@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -847,7 +847,7 @@ namespace game
 				params.type = BulletType::BulletPlayer;
 				params.speed = m_bulletSpeed;
 				params.lifetime = m_bulletLifetime;
-				params.damage = static_cast<int>(m_playerAtkDmg);
+				params.damage = m_playerAtkDmg;
 
 				m_bulletFactory->Fire(bulletStartPos, direction, params);
 
@@ -1287,7 +1287,7 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	// 데미지 처리
 	// ═══════════════════════════════════════════════════════════════
-	void PlayerControllerScript::TakeDamage(int damage)
+	void PlayerControllerScript::TakeDamage(float damage)
 	{
 		if (damage <= 0) return;
 		

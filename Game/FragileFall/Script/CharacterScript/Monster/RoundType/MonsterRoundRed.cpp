@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundRed.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -39,7 +39,7 @@ namespace game
         m_bulletParams.type = BulletType::Linear;
         m_bulletParams.speed = m_bulletSpeed;
         m_bulletParams.lifetime = m_bulletLifetime;
-        m_bulletParams.damage = static_cast<int>(m_attackDamage);
+        m_bulletParams.damage = m_attackDamage;
     }
 
     // ═══════════════════════════════════════════════════════════════
