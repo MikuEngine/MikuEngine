@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -12.587697982788086,
+                        "x": 0.0,
                         "y": 1.6826348304748535,
-                        "z": 3.52913498878479
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -31,7 +31,7 @@
                     "Type": "ParticleEffect",
                     "Active": true,
                     "IsPlaying": true,
-                    "AutoDestroy": false,
+                    "AutoDestroy": true,
                     "Duration": 0.0,
                     "Emitters": [
                         {
@@ -81,6 +81,8 @@
                             "StartEmissiveIntensity": 6.079999923706055,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 8.0,
                             "SizeEnd": 8.0,
                             "SizeVariation": 1.0,
@@ -100,6 +102,7 @@
                                 "z": 1.0
                             },
                             "RandomDirection": false,
+                            "UseShapeDirection": true,
                             "TextureTilesX": 1,
                             "TextureTilesY": 1,
                             "TextureTileCount": 1,
@@ -161,6 +164,8 @@
                             "StartEmissiveIntensity": 4.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 1.0,
                             "SizeEnd": 1.0,
                             "SizeVariation": 0.10000000149011612,
@@ -180,6 +185,7 @@
                                 "z": 1.0
                             },
                             "RandomDirection": false,
+                            "UseShapeDirection": true,
                             "TextureTilesX": 1,
                             "TextureTilesY": 1,
                             "TextureTileCount": 1,
@@ -241,6 +247,8 @@
                             "StartEmissiveIntensity": 4.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 1.5,
                             "SizeEnd": 1.5,
                             "SizeVariation": 0.10000000149011612,
@@ -260,6 +268,7 @@
                                 "z": 1.0
                             },
                             "RandomDirection": false,
+                            "UseShapeDirection": true,
                             "TextureTilesX": 1,
                             "TextureTilesY": 1,
                             "TextureTileCount": 1,
@@ -321,6 +330,8 @@
                             "StartEmissiveIntensity": 4.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 1.399999976158142,
                             "SizeEnd": 1.399999976158142,
                             "SizeVariation": 0.10000000149011612,
@@ -340,6 +351,7 @@
                                 "z": 1.0
                             },
                             "RandomDirection": false,
+                            "UseShapeDirection": true,
                             "TextureTilesX": 1,
                             "TextureTilesY": 1,
                             "TextureTileCount": 1,
@@ -401,6 +413,8 @@
                             "StartEmissiveIntensity": 4.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 0.18000000715255737,
                             "SizeEnd": 0.18000000715255737,
                             "SizeVariation": 0.10000000149011612,
@@ -420,6 +434,7 @@
                                 "z": 1.0
                             },
                             "RandomDirection": false,
+                            "UseShapeDirection": true,
                             "TextureTilesX": 1,
                             "TextureTilesY": 1,
                             "TextureTileCount": 1,
@@ -481,6 +496,8 @@
                             "StartEmissiveIntensity": 4.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 0.4000000059604645,
                             "SizeEnd": 0.4000000059604645,
                             "SizeVariation": 0.10000000149011612,
@@ -500,6 +517,7 @@
                                 "z": 1.0
                             },
                             "RandomDirection": false,
+                            "UseShapeDirection": true,
                             "TextureTilesX": 1,
                             "TextureTilesY": 1,
                             "TextureTileCount": 1,
@@ -561,6 +579,8 @@
                             "StartEmissiveIntensity": 4.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 0.6299999952316284,
                             "SizeEnd": 0.6299999952316284,
                             "SizeVariation": 0.10000000149011612,
@@ -580,6 +600,7 @@
                                 "z": 1.0
                             },
                             "RandomDirection": false,
+                            "UseShapeDirection": true,
                             "TextureTilesX": 1,
                             "TextureTilesY": 1,
                             "TextureTileCount": 1,
@@ -641,6 +662,8 @@
                             "StartEmissiveIntensity": 4.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 2.0,
                             "SizeEnd": 8.0,
                             "SizeVariation": 0.10000000149011612,
@@ -660,6 +683,7 @@
                                 "z": 1.0
                             },
                             "RandomDirection": false,
+                            "UseShapeDirection": true,
                             "TextureTilesX": 1,
                             "TextureTilesY": 1,
                             "TextureTileCount": 1,
