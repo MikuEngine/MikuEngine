@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -19,6 +19,18 @@ namespace game
         REGISTER_SCRIPT(AimPointer, Script)
 
     private:
+        enum class AimCursorState
+        {
+            Default,
+            Clicked,
+
+            AimIdle,
+            AimFiring,
+            AimExecute,
+
+            Count
+        };
+
         engine::Vector3 m_worldPosition;  // 마우스 월드 좌표
 
         // UI 커서 컴포넌트 (씬의 Canvas 오브젝트에서 관리)
@@ -31,8 +43,13 @@ namespace game
         std::string m_canvasObjectName = "AimPointerCanvas";  // 씬에서 찾을 Canvas 오브젝트 이름
 
         // 커서 설정
-        std::string m_cursorTexturePrimary = "Resource/Texture/Earth.png";
-        std::string m_cursorTextureAlternate = "Resource/Texture/Moon.png";
+        AimCursorState m_cursor = AimCursorState::Default;
+        std::unordered_map<AimCursorState, std::string> m_cursorTextures;
+        std::array<std::string, (int)AimCursorState::Count> m_cursorTexByState;
+
+        std::string m_cursorTexturePrimary = "Resource/Texture/UI/Image/Cursor_Default.png";
+        std::string m_cursorTextureAlternate = "Resource/Texture/UI/Image/Cursor_Click.png";
+
         bool m_useAlternateCursor = false;
         engine::Vector2 m_cursorSize{ 32.0f, 32.0f };
         engine::Vector2 m_cursorPivot{ 0.5f, 0.5f };
@@ -55,6 +72,7 @@ namespace game
         //   SetCursorTexture(false); // 기본 커서
         //   SetCursorTexture(true);  // 대체 커서
         void SetCursorTexture(bool useAlternate);
+        void SetCursorTexture(AimCursorState state);
 
     public:
         void OnGui() override;

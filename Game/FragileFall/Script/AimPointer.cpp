@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "AimPointer.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
@@ -11,14 +11,27 @@
 #include <Framework/Object/Component/Renderer/SpriteRenderer.h>
 #include <Framework/Object/Component/Camera.h>
 
+#include <Core/Graphics/Resource/ResourceManager.h>
+
 namespace game
 {
     void AimPointer::Start()
     {       
         LOG_PRINT("[AimPointer] Started");
 
+        //m_cursorTexByState[(int)AimCursorState::Default] = "Resource/Texture/UI/Image/Cursor_Default.png";
+        //m_cursorTexByState[(int)AimCursorState::Clicked] = "Resource/Texture/UI/Image/Cursor_Click.png";
+        //m_cursorTexByState[(int)AimCursorState::AimIdle] = "Resource/Texture/Aim_Idle.png";
+        //m_cursorTexByState[(int)AimCursorState::AimFiring] = "Resource/Texture/Aim_Firing.png";
+        //m_cursorTexByState[(int)AimCursorState::AimExecute] = "Resource/Texture/Aim_Execute.png";
+
+        //if (m_cursorTexByState.empty()) return;
+
         EnsureUICursor();
+
         SetCursorTexture(m_useAlternateCursor);
+        //SetCursorTexture(AimCursorState::Default);
+
         UpdateWorldPositionFromMouse(engine::Input::GetMousePosition());
     }
 
@@ -67,6 +80,20 @@ namespace game
         if (!path.empty() && path != "None")
         {
             m_cursorImage->SetTexture(path);
+        }
+    }
+
+    void AimPointer::SetCursorTexture(AimCursorState state)
+    {
+        if (m_cursor == state)
+            return;
+
+        m_cursor = state;
+
+        auto it = m_cursorTextures.find(state);
+        if (it != m_cursorTextures.end())
+        {
+            m_cursorImage->SetTexture(it->second);
         }
     }
 
