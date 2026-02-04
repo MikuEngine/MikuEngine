@@ -231,6 +231,22 @@ namespace game
         if (m_blocker)
             m_blocker->SetActive(open);
 
+        if (!open)
+        {
+            auto* ugdGO = engine::GameObject::Find("UpgradeController");
+            if (ugdGO)
+            {
+                if (auto* uc = ugdGO->GetComponent<game::UpgradeController>())
+                {
+                    // 또는 안전하게 함수를 호출 (추천)
+                    uc->ResetSelection();
+                }
+            }
+        }
+
+
+
+
         if (!m_upgradePopUp) return;
 
         if (auto* anim = m_upgradePopUp->GetComponent<game::UIPopUpAnimator>())
