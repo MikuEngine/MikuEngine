@@ -18403,7 +18403,8 @@
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
                     "BackwardThreshold": -0.10000000149011612,
-                    "ForwardThreshold": 0.10000000149011612
+                    "ForwardThreshold": 0.10000000149011612,
+                    "ShootingDuration": 0.5
                 },
                 {
                     "Type": "AnimFSM",
@@ -18529,8 +18530,95 @@
                                 "HandThumb4.Right",
                                 "HandIndex4.Right"
                             ]
+                        },
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Player_Rig",
+                                "Hips",
+                                "DEF-Weapon",
+                                "Ctrl-Weapon",
+                                "Spine",
+                                "UpLeg.Left",
+                                "UpLeg.Right",
+                                "Spine1",
+                                "Leg.Left",
+                                "Leg.Right",
+                                "Spine2",
+                                "Foot.Left",
+                                "Foot.Right",
+                                "Neck",
+                                "Shoulder.Left",
+                                "Shoulder.Right",
+                                "ToeBase.Left",
+                                "ToeBase.Right",
+                                "Head",
+                                "Arm.Left",
+                                "Arm.Right",
+                                "Toe_End.Left",
+                                "Toe_End.Right",
+                                "HeadTop_End",
+                                "ForeArm.Left",
+                                "ForeArm.Right",
+                                "Hand.Left",
+                                "Hand.Right",
+                                "HandThumb1.Left",
+                                "HandIndex1.Left",
+                                "HandThumb1.Right",
+                                "HandIndex1.Right",
+                                "HandThumb2.Left",
+                                "HandIndex2.Left",
+                                "Snap-Hand.L",
+                                "HandThumb2.Right",
+                                "HandIndex2.Right",
+                                "HandThumb3.Left",
+                                "HandIndex3.Left",
+                                "HandThumb3.Right",
+                                "HandIndex3.Right",
+                                "HandThumb4.Left",
+                                "HandIndex4.Left",
+                                "HandThumb4.Right",
+                                "HandIndex4.Right"
+                            ]
                         }
                     ]
+                },
+                {
+                    "Type": "AfterimageRenderer",
+                    "Active": true,
+                    "DrawSolidLayer": true,
+                    "SolidColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "SolidInitialAlpha": 0.7799999713897705,
+                    "SolidDecaySpeed": 10.0,
+                    "SolidDecayMode": 0,
+                    "SolidDecayCurve": 1,
+                    "SolidEmissiveIntensity": 16.899999618530273,
+                    "SolidTrailGradient": 0.6000000238418579,
+                    "SolidMaxSlices": 24,
+                    "SolidSampleInterval": 0.03999999910593033,
+                    "DrawAlphaLayer": false,
+                    "AlphaTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "AlphaEmissiveIntensity": 0.0,
+                    "AlphaInitialAlpha": 0.699999988079071,
+                    "AlphaDecaySpeed": 1.5,
+                    "AlphaDecayMode": 0,
+                    "AlphaDecayCurve": 1,
+                    "AlphaTrailGradient": 0.9200000166893005,
+                    "AlphaMaxSlices": 24,
+                    "AlphaSampleInterval": 0.0,
+                    "SourceHandleIndex": 387,
+                    "SourceHandleGeneration": 5
                 }
             ]
         },
