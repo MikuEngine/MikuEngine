@@ -35,8 +35,8 @@
 		"Option": "SFX/Monster"
 	},
 	{ "Type": "Sound", "Path": "Resource/Sound/Suki_Yuki_Maji_Magic.mp3", "Option": "BGM" },
-	{ "Type": "Sound", "Path": "Resource/Sound/SFX/UI/UI_Open.wav", "Option": "SFX/UI" },
-	{ "Type": "Sound", "Path": "Resource/Sound/SFX/UI/UI_Close.wav", "Option": "SFX/UI" },
+	{ "Type": "Sound", "Name": "UI_Open", "Path": "Resource/Sound/SFX/UI/UI_Open.wav", "Option": "SFX/UI" },
+	{ "Type": "Sound", "Name": "UI_Close", "Path": "Resource/Sound/SFX/UI/UI_Close.wav", "Option": "SFX/UI" },
 	{ "Type": "Sound", "Path": "Resource/Sound/SFX/Monster/Monster_Fragile.wav", "Option": "SFX/Monster" },
 	{ "Type": "Sound", "Path": "Resource/Sound/SFX/Monster/Monster_Fragile_Cracking.wav", "Option": "SFX/Monster" },
 	{ "Type": "Sound", "Path": "Resource/Sound/SFX/Monster/Monster_Fragile_End.wav", "Option": "SFX/Monster" }

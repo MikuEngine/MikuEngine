@@ -117,7 +117,7 @@ namespace engine
         Stop();
         m_clipName = name;
 
-        m_soundData = AssetManager::Get().GetOrCreateSoundData(name, m_bus);
+        m_soundData = AssetManager::Get().GetOrCreateSoundData(name, name, m_bus);
     }
 
     void AudioSource::Play(EventCallBack callback, float fadeInDuration)
@@ -144,7 +144,7 @@ namespace engine
             clipToPlay = m_randomClipNames[randomIndex];
         }
 
-        auto soundData = AssetManager::Get().GetOrCreateSoundData(clipToPlay, m_bus);
+        auto soundData = AssetManager::Get().GetOrCreateSoundData(clipToPlay, clipToPlay, m_bus);
         if (!soundData) return;
         m_soundData = soundData;
         Sound* soundResource = soundData->GetSound();

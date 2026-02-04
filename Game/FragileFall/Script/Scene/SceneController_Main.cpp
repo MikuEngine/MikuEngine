@@ -101,14 +101,14 @@ namespace game
     {
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
+            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+
             if (m_isOptionOpen || m_isCreditOpen)
             {
-                engine::SoundSystem::Get().PlayUI("UI_Click_Random");
                 Back();
             }
             else
             {
-                engine::SoundSystem::Get().PlayUI("UI_Click_Random");
                 m_isQuitOpen ? CheckQuit(false) : CheckQuit(true);
             }
         }
@@ -244,6 +244,9 @@ namespace game
             if (auto* anim = m_optionPopUp->GetComponent<game::UIPopUpAnimator>())
             {
                 open ? anim->Open() : anim->Close();
+
+				std::string soundName = open ? "UI_Open" : "UI_Close";
+                engine::SoundSystem::Get().PlayUI(soundName);
             }
         }
 
@@ -258,6 +261,9 @@ namespace game
             if (auto* anim = m_creditPopUp->GetComponent<game::UIPopUpAnimator>())
             {
                 open ? anim->Open() : anim->Close();
+
+                std::string soundName = open ? "UI_Open" : "UI_Close";
+                engine::SoundSystem::Get().PlayUI(soundName);
             }
         }
 

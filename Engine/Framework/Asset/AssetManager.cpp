@@ -212,11 +212,11 @@ namespace engine
         return spriteData;
     }
 
-    std::shared_ptr<SoundData> AssetManager::GetOrCreateSoundData(const std::string& filePath, const std::string& option, LifeScope scope)
+    std::shared_ptr<SoundData> AssetManager::GetOrCreateSoundData(const std::string& key, const std::string& filePath, const std::string& option, LifeScope scope)
     {
-        const std::string key = filePath + "|" + option;
+        const std::string tempkey = filePath + "|" + option;
 
-        LOG_PRINT("[SoundData] filePath='{}' option='{}' key='{}'", filePath, option, key);
+        LOG_PRINT("[SoundData] filePath='{}' option='{}' key='{}'", filePath, option, tempkey);
 
         if (auto find = m_soundDatas.find(key); find != m_soundDatas.end())
         {
@@ -224,7 +224,7 @@ namespace engine
                 return find->second.lock();
         }
 
-        Sound *sound = SoundSystem::Get().CreateSound(filePath, option);
+        Sound *sound = SoundSystem::Get().CreateSound(key, filePath, option);
         if (!sound) return nullptr;
 
         auto soundData = std::make_shared<SoundData>(sound);

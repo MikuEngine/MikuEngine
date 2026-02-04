@@ -170,6 +170,9 @@ namespace game
             if (auto* anim = m_menuPopUp->GetComponent<game::UIPopUpAnimator>())
             {
                 open ? anim->Open() : anim->Close();
+
+                std::string soundName = open ? "UI_Open" : "UI_Close";
+                engine::SoundSystem::Get().PlayUI(soundName);
             }
             else
             {
@@ -280,6 +283,9 @@ namespace game
             if (auto* anim = m_optionPopUp->GetComponent<game::UIPopUpAnimator>())
             {
                 open ? anim->Open() : anim->Close();
+
+                std::string soundName = open ? "UI_Open" : "UI_Close";
+                engine::SoundSystem::Get().PlayUI(soundName);
             }
             else
             {
