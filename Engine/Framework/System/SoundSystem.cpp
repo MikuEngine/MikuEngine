@@ -115,32 +115,13 @@ namespace engine
     // ==============================================================
     // SoundSystem Class Implementation
     // ==============================================================
-
-    void SoundSystem::ApplyVolumes()
-    {
-        if (!m_pSystem) return;
-
-        const float master = m_mute ? 0.0f : Clamp01(m_master);
-
-        if (auto* g = GetOrCreateChannelGroup("Master"))
-            g->setVolume(master);
-
-        if (auto* g = GetOrCreateChannelGroup("BGM"))
-            g->setVolume(Clamp01(m_bgm));
-
-        if (auto* g = GetOrCreateChannelGroup("SFX"))
-            g->setVolume(Clamp01(m_sfx));
-    }
-
-    float SoundSystem::Clamp01(float v)
-    {
-        if (v < 0.f) return 0.f;
-        if (v > 1.f) return 1.f;
-        return v;
-    }
-
     bool SoundSystem::Initialize()
     {
+		// 디버그 출력 비활성화
+        FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_NONE, FMOD_DEBUG_MODE_TTY, nullptr, nullptr);
+        // System Init 호출 시 플래그 확인, 보통 로그 안 나오게 하기
+        m_pSystem->init(512, FMOD_INIT_NORMAL, nullptr);
+
         m_components.clear();
         m_callbackList.clear();
 
@@ -224,6 +205,29 @@ namespace engine
                 masterGroup->stop();
             }
         }
+    }
+
+    void SoundSystem::ApplyVolumes()
+    {
+        if (!m_pSystem) return;
+
+        const float master = m_mute ? 0.0f : Clamp01(m_master);
+
+        if (auto* g = GetOrCreateChannelGroup("Master"))
+            g->setVolume(master);
+
+        if (auto* g = GetOrCreateChannelGroup("BGM"))
+            g->setVolume(Clamp01(m_bgm));
+
+        if (auto* g = GetOrCreateChannelGroup("SFX"))
+            g->setVolume(Clamp01(m_sfx));
+    }
+
+    float SoundSystem::Clamp01(float v)
+    {
+        if (v < 0.f) return 0.f;
+        if (v > 1.f) return 1.f;
+        return v;
     }
 
     void SoundSystem::StopSceneSounds()
