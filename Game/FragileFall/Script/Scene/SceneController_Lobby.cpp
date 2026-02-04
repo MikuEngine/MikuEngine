@@ -84,9 +84,6 @@ namespace game
         m_isOptionOpen = false;
         m_isUpgradeOpen = false;
 
-        SetOptionOpen(false);
-        SetUpgradeOpen(false);
-
         auto& app = engine::AppContext::GetApp();
         const auto& s = app.GetUserSettings();
 
@@ -215,7 +212,7 @@ namespace game
         {
             open ? anim->Open() : anim->Close();
 
-            std::string soundName = open ? "UI_Open" : "UI_Close";
+            std::string soundName = m_isOptionOpen ? "UI_Open" : "UI_Close";
             engine::SoundSystem::Get().PlayUI(soundName);
         }
         else
@@ -244,16 +241,13 @@ namespace game
             }
         }
 
-
-
-
         if (!m_upgradePopUp) return;
 
         if (auto* anim = m_upgradePopUp->GetComponent<game::UIPopUpAnimator>())
         {
             open ? anim->Open() : anim->Close();
 
-            std::string soundName = open ? "UI_Open" : "UI_Close";
+            std::string soundName = m_isUpgradeOpen ? "UI_Open" : "UI_Close";
             engine::SoundSystem::Get().PlayUI(soundName);
         }
         else
