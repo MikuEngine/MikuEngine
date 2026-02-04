@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -12,6 +12,7 @@
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Object/Component/Camera.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 #include <Framework/System/SystemManager.h>
@@ -838,14 +839,18 @@ namespace game
 			if (m_bulletFactory && m_aimPointer)
 			{
 				engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-				engine::Vector3 direction = m_aimPointer->GetDirectionFrom(playerPos);
+
+				engine::Vector3 targetPos = m_aimPointer->GetWorldPosition();
+
+				engine::Vector3 bulletStartPos;
+				engine::Vector3 direction;
 
 				// ─────────────────────────────────────────────
-				// 총알 발사 위치: BulletFireSocket 사용 시 소켓 위치 (PlayerAnimMesh 오브젝트의 SkeletalMeshRenderer)
+				// 총알 발사 위치 계산 (소켓 또는 오프셋)
 				// ─────────────────────────────────────────────
-				engine::Vector3 bulletStartPos;
 				bool useSocket = !m_playerAnimMeshObjectName.empty() && !m_bulletFireSocketName.empty();
 				engine::SkeletalMeshRenderer* bulletSocketRenderer = nullptr;
+
 				if (useSocket)
 				{
 					auto* scene = engine::SceneManager::Get().GetScene();
@@ -863,44 +868,54 @@ namespace game
 						}
 					}
 				}
+
 				if (bulletSocketRenderer)
+				{
 					bulletStartPos = bulletSocketRenderer->GetSocketWorldMatrix(m_bulletFireSocketName).Translation();
+				}
 				else if (useSocket)
 				{
 					bulletStartPos = playerPos + direction * 0.5f;
-					static bool s_bulletSocketWarned = false;
-					if (!s_bulletSocketWarned)
-					{
-						LOG_PRINT("[PlayerController] BulletFire: mesh '{}' or socket '{}' not found, using fallback.", m_playerAnimMeshObjectName, m_bulletFireSocketName);
-						s_bulletSocketWarned = true;
-					}
 				}
 				else
 				{
+					// 소켓이 없을 경우 플레이어 위치 기준 오프셋 적용
 					bulletStartPos = playerPos + direction * m_bulletStartOffsetForward;
-					bulletStartPos.y = m_bulletStartOffsetY;
+					bulletStartPos.y = playerPos.y + m_bulletStartOffsetY;
 				}
 
-				// BulletParams 설정
+				targetPos.y = bulletStartPos.y;
+
+				direction = targetPos - bulletStartPos;
+
+				if (direction.LengthSquared() > 0.0001f)
+				{
+					direction.Normalize();
+				}
+				else
+				{
+					direction = GetTransform()->GetForward();
+				}
+
+				// ─────────────────────────────────────────────
+				// BulletParams 설정 및 발사
+				// ─────────────────────────────────────────────
 				BulletParams params;
 				params.type = BulletType::BulletPlayer;
 				params.speed = m_bulletSpeed;
-				params.lifetime = m_bulletLifetime;  // 하위 호환성용 (BulletPlayer는 사용 안 함)
-				params.range = m_bulletRange;        // BulletPlayer는 range 사용
+				params.range = m_bulletRange;
 				params.damage = m_playerAtkDmg;
 
 				m_bulletFactory->Fire(bulletStartPos, direction, params);
 
-				// 발사 콜백 호출 (Ptr 기반 자동 유효성 체크)
+				// ─────────────────────────────────────────────
+				// 발사 후 상태 관리
+				// ─────────────────────────────────────────────
 				for (auto& entry : m_fireCallbacks)
 				{
-					if (entry.owner && entry.callback)
-					{
-						entry.callback();
-					}
+					if (entry.owner && entry.callback) entry.callback();
 				}
 
-				// 쿨다운 타이머 리셋, 이번 세션에서 발사했음 표시, 애니 동기화 플래그 소비
 				m_fireTimer = m_fireRate;
 				m_hasFiredThisSession = true;
 				m_canFireNow = false;
@@ -915,11 +930,6 @@ namespace game
 		entry.callback = callback;
 		m_fireCallbacks.push_back(entry);
 	}
-		
-
-	
-
-
 
 	// ═══════════════════════════════════════════════════════════════
 	// 에디터 검증
