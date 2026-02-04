@@ -38,7 +38,7 @@ namespace game
         engine::Vector2 m_cursorPivot{ 0.5f, 0.5f };
 
         // 월드 좌표 계산 설정
-        float m_targetPlaneY = 2.2f;  // 레이캐스트 대상 평면의 Y 높이 (총알 발사 높이)
+        float m_targetPlaneY = 1.5f;  // 레이캐스트 대상 평면의 Y 높이 (총알 발사 높이)
 
     public:
         void Start() override;
@@ -46,7 +46,7 @@ namespace game
 
         // 플레이어에서 에임포인터 방향을 얻는 함수
         engine::Vector3 GetDirectionFrom(const engine::Vector3& fromPosition) const;
-        
+
         // 현재 에임포인터 월드 위치
         const engine::Vector3& GetWorldPosition() const { return m_worldPosition; }
 

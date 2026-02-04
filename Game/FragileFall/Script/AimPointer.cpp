@@ -217,30 +217,22 @@ namespace game
         rayDir.Normalize();
 
         // Y=m_targetPlaneY 평면과의 교점 계산
-        // 레이: P = rayOrigin + t * rayDir
-        // 평면: Y = m_targetPlaneY
-        // rayOrigin.y + t * rayDir.y = m_targetPlaneY
-        // t = (m_targetPlaneY - rayOrigin.y) / rayDir.y
-
         if (std::abs(rayDir.y) > 0.0001f)
         {
             float t = (m_targetPlaneY - rayOrigin.y) / rayDir.y;
 
-            // t > 0 이면 카메라 앞쪽에 교점이 있음
             if (t > 0.0f)
             {
                 m_worldPosition = rayOrigin + rayDir * t;
-                m_worldPosition.y = m_targetPlaneY; // 정확히 목표 Y로 설정
+                m_worldPosition.y = m_targetPlaneY;
             }
             else
             {
-                // 카메라 뒤쪽이면 기본값
                 m_worldPosition = engine::Vector3::Zero;
             }
         }
         else
         {
-            // 레이가 목표 평면과 평행한 경우 (거의 발생하지 않음)
             m_worldPosition = engine::Vector3::Zero;
         }
     }

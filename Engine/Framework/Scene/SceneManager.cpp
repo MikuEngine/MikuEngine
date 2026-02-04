@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SceneManager.h"
 
 #include "Framework/Scene/Scene.h"

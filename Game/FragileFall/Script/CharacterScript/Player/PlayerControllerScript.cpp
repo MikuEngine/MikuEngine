@@ -881,7 +881,7 @@ namespace game
 					bulletStartPos.y = m_bulletStartOffsetY;
 				}
 
-				// 발사 방향: 실제 발사 위치(소켓) → 에임. 플레이어 기준이면 소켓 오프셋 때문에 방향이 어긋남
+				// 발사 방향: 실제 발사 위치(소켓/왼손) → 에임. (원래는 머리 위라 Y만 보정했는데, 이제는 소켓 위치로 XZ 보정 필요)
 				engine::Vector3 direction = m_aimPointer->GetDirectionFrom(bulletStartPos);
 
 				// BulletParams 설정

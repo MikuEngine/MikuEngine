@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "WinApp.h"
 
+#include <thread>
 #include <DirectXColors.h>
 
 #ifdef _DEBUG
@@ -507,6 +508,11 @@ namespace engine
         switch (uMsg)
         {
         case WM_DESTROY:
+            while (SceneManager::Get().GetSceneState() == SceneState::Loading)
+            {
+                SceneManager::Get().ProcessResourceLoading();
+                std::this_thread::yield();
+            }
             PostQuitMessage(0);
             break;
 
