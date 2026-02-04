@@ -73,6 +73,13 @@ namespace game
 		constexpr float SCENE_LOAD_TEXT_HEIGHT_PX = 40.0f;
 
 		std::shared_ptr<engine::Texture> g_whiteTexture;
+
+		int g_loadStep = 0;
+		float g_loadingDotsTime = 0.0f;
+
+		constexpr float LOADING_TEXT_GRACE_SEC = 0.0f;
+		constexpr float LOADING_STEP_SEC = 0.30f;
+		float g_loadingElapsed = 0.0f;
 	}
 
 	static bool NextUtf8Codepoint(const char*& p, const char* end, uint32_t& outCp)
@@ -344,10 +351,12 @@ namespace game
 		const D3D11_VIEWPORT vp = gd.GetViewport();
 		const float scale = vp.Height / 1080.0f;
 
+		const float textOffsetY = 150.0f;
+
 		const float centerX = vp.Width * 0.5f;
 		const float animCenterY = vp.Height * SCENE_LOAD_ANIM_Y_RATIO;
 		const float barCenterY = vp.Height * SCENE_LOAD_BAR_Y_RATIO;
-		const float textCenterY = vp.Height * SCENE_LOAD_TEXT_Y_RATIO;
+		const float textCenterY = vp.Height * SCENE_LOAD_TEXT_Y_RATIO - textOffsetY;
 
 		// 스케일링된 크기 수치
 		const float sAnimSize = SCENE_LOAD_ANIM_SIZE_PX * scale;
@@ -439,7 +448,30 @@ namespace game
 		// 3) 로고 아래 텍스트
 		if (g_loadingFont)
 		{
-			std::string loadingStr = "로딩중...";
+			g_loadingDotsTime += engine::Time::UnscaledDeltaTime();
+
+			std::string loadingStr;
+
+			if (g_loadingElapsed < LOADING_TEXT_GRACE_SEC)
+			{
+				loadingStr = "로딩중...";
+			}
+			else
+			{
+				// (B) 이후엔 단계 애니메이션
+				g_loadingDotsTime += engine::Time::UnscaledDeltaTime();
+				g_loadStep = (int)floorf(g_loadingDotsTime / LOADING_STEP_SEC) % 6; // 0~5
+
+				switch (g_loadStep)
+				{
+				case 0: loadingStr = "로"; break;
+				case 1: loadingStr = "로딩"; break;
+				case 2: loadingStr = "로딩중"; break;
+				case 3: loadingStr = "로딩중."; break;
+				case 4: loadingStr = "로딩중.."; break;
+				default: loadingStr = "로딩중..."; break;
+				}
+			}
 
 			// 중앙 정렬을 위한 가로 폭 사전 계산
 			float totalWidth = 0.0f;
@@ -450,7 +482,10 @@ namespace game
 				totalWidth += g_loadingFont->EnsureGlyph(dc, cp).advance;
 			}
 
-			DrawTextQuad(dc, g_loadingFont, loadingStr, centerX, textCenterY, 40, vp, engine::Vector4(1, 1, 1, 1), scale);
+			const float textStartX = centerX - (totalWidth * 0.5f);
+			const float textStartY = textCenterY - (40.0f * scale * 0.5f);
+
+			DrawTextQuad(dc, g_loadingFont, loadingStr, textStartX, textStartY, 40, vp, engine::Vector4(1, 1, 1, 1), scale);
 		}
 
 		ID3D11ShaderResourceView* nullSRV = nullptr;
@@ -474,6 +509,14 @@ namespace game
 	void LoadingScreenDrawer::OnFirstLoadFinished()
 	{
 		g_isFirstLoad = false;
+	}
+
+	void LoadingScreenDrawer::OnSceneTransitionBegin()
+	{
+		g_loadingElapsed = 0.0f;
+		g_loadingDotsTime = 0.0f;
+		g_loadStep = 0;
+		g_sceneLoadAnimTime = 0.0f;
 	}
 
 	void LoadingScreenDrawer::OnShutdown()
