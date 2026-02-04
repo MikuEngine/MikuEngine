@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace engine
 {
@@ -97,6 +97,9 @@ namespace engine
 		float animationSpeed = 1.0f;
 		bool isRandomFrame = false;
 
+		bool useDistanceEmission = false; // 거리 기반 스폰 사용 여부
+		float emitSpacing = 0.02f;        // 파티클 사이의 간격 (단위: m)
+
 		EmitterBlend blend = EmitterBlend::Additive;
 	};
 
@@ -112,6 +115,10 @@ namespace engine
 
 		float m_emissionTimer = 0.0f;
 		float m_emitterAge = 0.0f;
+
+		engine::Vector3 m_prevPos;         // 이전 프레임 위치 저장
+		float m_distAccumulator = 0.0f;    // 남은 거리 저장용 (m_emitCarry 역할)
+		bool m_isFirstFrame = true;        // 발사 직후 위치 점프 방지
 
 	public:
 		void Initialize(const EmitterProps& props);

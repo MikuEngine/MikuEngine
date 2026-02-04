@@ -283,9 +283,24 @@ namespace engine
 		ImGui::SeparatorText("Emission");
 
 		ImGui::DragFloat3("Position Offset", &props.positionOffset.x, 0.1f);
-		ImGui::DragFloat("Emission Rate", &props.emissionRate, 0.1f, 0.0f, 1000.0f);
 		ImGui::DragInt("Max Particles", reinterpret_cast<int*>(&props.maxParticles), 1, 1, 10000);
 		ImGui::DragFloat("Life Time", &props.lifeTime, 0.1f, 0.01f, 100.0f);
+		ImGui::Checkbox(std::format("Use Distance Emission##{}", index).c_str(), &props.useDistanceEmission);
+		ImGui::SameLine();
+		ImGui::TextDisabled("(?)");
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("ON: 거리 간격 설정. 너무 작으면 위험하므로 최소치를 0.001f 정도로 제한합니다. \nOFF: Emission Rate 그대로 사용.");
+		}
+
+		if (props.useDistanceEmission)
+		{
+			ImGui::DragFloat(std::format("Emit Spacing##{}", index).c_str(), &props.emitSpacing, 0.001f, 0.001f, 2.0f, "%.3f m");
+		}
+		else
+		{
+			ImGui::DragFloat(std::format("Emission Rate##{}", index).c_str(), &props.emissionRate, 0.1f, 0.0f, 10000.0f);
+		}
 
 		ImGui::Spacing();
 		ImGui::SeparatorText("Velocity");

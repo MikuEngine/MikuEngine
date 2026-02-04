@@ -18,12 +18,12 @@
                     "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
+                        "z": -0.7071067690849304,
+                        "w": 0.7071067094802856
                     },
                     "Scale": {
-                        "x": 0.699999988079071,
-                        "y": 0.699999988079071,
+                        "x": 0.7000012993812561,
+                        "y": 0.7000012993812561,
                         "z": 0.699999988079071
                     }
                 },
@@ -64,7 +64,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/Sphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -86,7 +86,250 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true,
+                    "IsPlaying": true,
+                    "AutoDestroy": false,
+                    "Duration": 0.0,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/DefaultParticle.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 2.5,
+                                "y": 2.5,
+                                "z": 2.5
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.4671814441680908,
+                                "y": 0.8457090258598328,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 20.0,
+                            "EndEmissiveIntensity": 0.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 0.15000000596046448,
+                            "SizeEnd": 0.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.4000000059604645,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -180.0,
+                            "RotationSpeedMax": 180.0,
+                            "EmissionRate": 100.0,
+                            "MaxParticles": 1000,
+                            "Shape": 1,
+                            "Radius": 0.6000000238418579,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": []
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/T_Smoke.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 1.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.20000000298023224,
+                                "y": 0.20000000298023224,
+                                "z": 0.20000000298023224
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.800000011920929,
+                                "y": 0.8980392217636108,
+                                "z": 1.0,
+                                "w": 0.3137255012989044
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 0.800000011920929,
+                                "y": 0.8980392217636108,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 8.0,
+                            "EndEmissiveIntensity": 0.0,
+                            "Blend": 1,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 4.0,
+                            "SizeEnd": 6.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.6000000238418579,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -20.0,
+                            "RotationSpeedMax": 20.0,
+                            "EmissionRate": 8.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.5,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": false,
+                            "TextureTilesX": 8,
+                            "TextureTilesY": 8,
+                            "TextureTileCount": 64,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": true,
+                            "Bursts": []
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/DefaultParticle.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.3281853199005127,
+                                "y": 0.6031365394592285,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.5137255191802979,
+                                "y": 0.7137255072593689,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 15.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": true,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 0.4000000059604645,
+                            "SizeEnd": 0.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.20000000298023224,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 2000.0,
+                            "MaxParticles": 2000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": []
+                        }
+                    ]
                 }
             ]
         }
