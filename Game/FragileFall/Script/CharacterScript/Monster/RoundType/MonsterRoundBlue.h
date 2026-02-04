@@ -59,6 +59,7 @@ namespace game
         bool m_collisionOccurred = false;         // IdleMove 충돌 발생 플래그
         bool m_engageCollisionOccurred = false;   // EngageMove 충돌 발생 플래그 (Player/Wall)
         bool m_engageArrivalOccurred = false;     // EngageMove 목표 도달 플래그
+        bool m_transitionCollisionOccurred = false;  // EngageCollision/EngageArrival 중 Wall 충돌 플래그
         
         // ─────────────────────────────────────────────────
         // 충돌 방향 저장 (EngageCollision용)
@@ -88,7 +89,7 @@ namespace game
         // ─────────────────────────────────────────────────
         // EngageCollision / EngageArrival 설정
         // ─────────────────────────────────────────────────
-        float m_engageTransitionDuration = 1.0f;  // 전이 상태 지속 시간 (1초, 하드코딩)
+        float m_engageTransitionDuration = 0.8f;  // 전이 상태 지속 시간 (0.5초, 하드코딩)
         float m_engageTransitionTimer = 0.0f;     // 전이 상태 타이머
         
         // EngageCollision 전용

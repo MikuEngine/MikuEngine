@@ -47,15 +47,20 @@ namespace game
     {
         if (!info.gameObject) return;
         
-        // 총알 레이어 무시 (Projectile, EnemyProjectile)
+        // ─────────────────────────────────────────────
+        // 방향 전환이 필요한 레이어에만 반응 (Wall, Environment, Enemy)
+        // 총알은 트리거 타입이므로 OnTriggerEnter로 처리됨
+        // ─────────────────────────────────────────────
         auto* collider = info.collider.Get();
         if (collider)
         {
             uint32_t layer = collider->GetLayer();
-            if (layer == engine::PhysicsLayer::Index::Projectile ||
-                layer == engine::PhysicsLayer::Index::EnemyProjectile)
+            if (layer != engine::PhysicsLayer::Index::Wall &&
+                layer != engine::PhysicsLayer::Index::Environment &&
+                layer != engine::PhysicsLayer::Index::Enemy &&
+                layer != engine::PhysicsLayer::Index::Player)
             {
-                return;  // 총알 충돌 무시
+                return;  // 방향 전환 불필요한 레이어는 무시
             }
         }
         
@@ -374,6 +379,13 @@ namespace game
             OnDirectionChanged();  // 플레이어 무시 카운트 감소
         }
         
+        // 맵 경계 체크 (주기적)
+        if (IsOutOfBounds())
+        {
+            StartRepositioning();
+            return;  // Repositioning으로 전이
+        }
+        
         // 4방향 레이캐스트로 플레이어 감지
         // 플레이어 무시 중이 아닌 경우에만 감지
         if (!m_isIgnoringPlayer)
@@ -437,10 +449,21 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 충돌 시 90도 방향 전환 (좌/우 랜덤)
+    // 충돌 시 90도 방향 전환
+    // - 코너트리거에서 결정된 방향이 있으면 그 방향 사용
+    // - 없으면 좌/우 랜덤 선택
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGray::ChangeDirectionOnCollision()
     {
+        // 코너트리거에서 안전한 방향이 결정되어 있으면 사용
+        if (m_hasCornerDirection)
+        {
+            m_currentDirection = m_cornerDirection;
+            m_hasCornerDirection = false;  // 사용 후 리셋
+            return;
+        }
+        
+        // 코너 방향 없음 → 랜덤 좌/우 90도 회전
         static std::random_device rd;
         static std::mt19937 gen(rd());
         std::uniform_int_distribution<int> dist(0, 1);
@@ -468,6 +491,17 @@ namespace game
         case MoveDirection::MinusZ:
             m_currentDirection = turnLeft ? MoveDirection::PlusX : MoveDirection::MinusX;
             break;
+        }
+        
+        // 방향 전환 후 장애물 체크 (즉각 대응)
+        if (HasObstacleAhead(m_obstacleCheckDistance))
+        {
+            // 새 방향에도 장애물 → 다른 안전한 방향 찾기
+            if (!TryFindSafeDirection())
+            {
+                // 모든 방향이 막힘 → Repositioning 필요
+                StartRepositioning();
+            }
         }
     }
 
@@ -506,7 +540,8 @@ namespace game
 
     // ═══════════════════════════════════════════════════════════════
     // 4방향 레이캐스트로 플레이어 감지
-    // RaycastAll 사용 - 자기 자신을 제외하고 Player 레이어만 감지
+    // RaycastAll 사용 - 자기 자신을 제외
+    // 장애물(Wall, Environment, Enemy)이 플레이어보다 가까우면 감지 실패
     // 감지 성공 시 m_engageDirection에 방향 저장
     // ═══════════════════════════════════════════════════════════════
     bool MonsterRoundGray::DetectPlayerWithRaycast()
@@ -532,19 +567,41 @@ namespace game
             std::vector<engine::RaycastHit> allHits;
             physicsSystem.RaycastAll(origin, dir, m_raycastDetectionRange, allHits, engine::PhysicsLayer::Mask::All);
             
-            // All 레이어 결과에서 Player 레이어만 필터링
+            // 자기 자신 제외 및 유효한 히트만 필터링
+            std::vector<engine::RaycastHit> validHits;
             for (auto& h : allHits)
             {
                 if (h.hasHit && h.gameObject.Get() && h.gameObject.Get() != selfGO && h.collider.Get())
                 {
-                    uint32_t hitLayer = h.collider.Get()->GetLayer();
-                    if (hitLayer == engine::PhysicsLayer::Index::Player)
-                    {
-                        // 감지된 방향 저장 (EngageMove에서 사용)
-                        m_engageDirection = dir;
-                        return true;  // 플레이어 감지!
-                    }
+                    validHits.push_back(h);
                 }
+            }
+            
+            // 거리순 정렬 (가까운 것부터)
+            std::sort(validHits.begin(), validHits.end(),
+                [](const engine::RaycastHit& a, const engine::RaycastHit& b) {
+                    return a.distance < b.distance;
+                });
+            
+            // 가장 가까운 것부터 확인
+            for (auto& h : validHits)
+            {
+                uint32_t hitLayer = h.collider.Get()->GetLayer();
+                
+                if (hitLayer == engine::PhysicsLayer::Index::Player)
+                {
+                    // 플레이어가 가장 가까움 → 감지 성공!
+                    m_engageDirection = dir;
+                    return true;
+                }
+                else if (hitLayer == engine::PhysicsLayer::Index::Wall ||
+                         hitLayer == engine::PhysicsLayer::Index::Environment ||
+                         hitLayer == engine::PhysicsLayer::Index::Enemy)
+                {
+                    // 장애물이 가려서 이 방향 실패 → 다음 방향 확인
+                    break;
+                }
+                // 그 외 레이어(Trigger 등)는 무시하고 계속 확인
             }
         }
 
@@ -603,6 +660,15 @@ namespace game
                 InitializeIdleMove();
             }
         }
+        else if (state == "Repositioning")
+        {
+            // Repositioning은 StartRepositioning()에서 이미 초기화됨
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("RepositioningComplete", false);
+                m_logicFSM->SetParameter("NeedRepositioning", false);
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -628,6 +694,14 @@ namespace game
         ImGui::DragInt("Ignore Count Min", &m_playerIgnoreCountMin, 1, 1, 10);
         ImGui::DragInt("Ignore Count Max", &m_playerIgnoreCountMax, 1, 1, 10);
         
+        ImGui::Separator();
+        ImGui::Text("=== Boundary & Repositioning ===");
+        ImGui::DragFloat3("Boundary Center", &m_boundaryCenter.x, 0.5f);
+        ImGui::DragFloat("Boundary Radius", &m_boundaryRadius, 1.0f, 10.0f, 200.0f);
+        ImGui::DragFloat("Obstacle Check Dist", &m_obstacleCheckDistance, 0.1f, 0.5f, 10.0f);
+        ImGui::DragFloat("Repositioning Speed", &m_repositioningSpeed, 0.5f, 1.0f, 20.0f);
+        ImGui::DragFloat("Repositioning Duration", &m_repositioningDuration, 0.1f, 0.5f, 10.0f);
+        
         // 런타임 정보
         ImGui::Separator();
         ImGui::Text("=== Gray Runtime ===");
@@ -651,6 +725,15 @@ namespace game
         j["RaycastDetectionRange"] = m_raycastDetectionRange;
         j["PlayerIgnoreCountMin"] = m_playerIgnoreCountMin;
         j["PlayerIgnoreCountMax"] = m_playerIgnoreCountMax;
+        
+        // 맵 경계 및 복원 시스템
+        j["BoundaryCenterX"] = m_boundaryCenter.x;
+        j["BoundaryCenterY"] = m_boundaryCenter.y;
+        j["BoundaryCenterZ"] = m_boundaryCenter.z;
+        j["BoundaryRadius"] = m_boundaryRadius;
+        j["ObstacleCheckDistance"] = m_obstacleCheckDistance;
+        j["RepositioningSpeed"] = m_repositioningSpeed;
+        j["RepositioningDuration"] = m_repositioningDuration;
     }
 
     void MonsterRoundGray::Load(const engine::json& j)
@@ -663,5 +746,152 @@ namespace game
         m_raycastDetectionRange = j.value("RaycastDetectionRange", 20.0f);
         m_playerIgnoreCountMin = j.value("PlayerIgnoreCountMin", 1);
         m_playerIgnoreCountMax = j.value("PlayerIgnoreCountMax", 4);
+        
+        // 맵 경계 및 복원 시스템
+        m_boundaryCenter.x = j.value("BoundaryCenterX", 0.0f);
+        m_boundaryCenter.y = j.value("BoundaryCenterY", 0.0f);
+        m_boundaryCenter.z = j.value("BoundaryCenterZ", 0.0f);
+        m_boundaryRadius = j.value("BoundaryRadius", 50.0f);
+        m_obstacleCheckDistance = j.value("ObstacleCheckDistance", 2.0f);
+        m_repositioningSpeed = j.value("RepositioningSpeed", 5.0f);
+        m_repositioningDuration = j.value("RepositioningDuration", 2.0f);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 현재 방향으로 장애물 확인 (레이캐스트)
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundGray::HasObstacleAhead(float distance) const
+    {
+        engine::PhysicsSystem& physicsSystem = engine::SystemManager::Get().GetPhysicsSystem();
+        
+        engine::Vector3 origin = GetTransform()->GetWorldPosition();
+        origin.y += 1.0f;  // 약간 위에서 시작
+        
+        engine::Vector3 direction = GetDirectionVector();
+        
+        std::vector<engine::RaycastHit> allHits;
+        physicsSystem.RaycastAll(origin, direction, distance, allHits, engine::PhysicsLayer::Mask::All);
+        
+        engine::GameObject* selfGO = GetGameObject();
+        
+        for (auto& h : allHits)
+        {
+            if (h.hasHit && h.gameObject.Get() && h.gameObject.Get() != selfGO && h.collider.Get())
+            {
+                uint32_t hitLayer = h.collider.Get()->GetLayer();
+                if (hitLayer == engine::PhysicsLayer::Index::Wall ||
+                    hitLayer == engine::PhysicsLayer::Index::Environment ||
+                    hitLayer == engine::PhysicsLayer::Index::Enemy)
+                {
+                    return true;  // 장애물 발견!
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 안전한 방향 찾기 (4방향 체크)
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundGray::TryFindSafeDirection()
+    {
+        const MoveDirection allDirections[4] = {
+            MoveDirection::PlusX,
+            MoveDirection::MinusX,
+            MoveDirection::PlusZ,
+            MoveDirection::MinusZ
+        };
+        
+        // 현재 방향 제외하고 체크
+        for (auto dir : allDirections)
+        {
+            if (dir == m_currentDirection) continue;  // 현재 방향 제외
+            
+            // 임시로 방향 설정하고 체크
+            MoveDirection prevDir = m_currentDirection;
+            m_currentDirection = dir;
+            
+            if (!HasObstacleAhead(m_obstacleCheckDistance))
+            {
+                // 안전한 방향 발견!
+                return true;
+            }
+            
+            // 복원
+            m_currentDirection = prevDir;
+        }
+        
+        return false;  // 모든 방향이 막힘
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 맵 밖으로 나갔는지 확인
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundGray::IsOutOfBounds() const
+    {
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 diff = myPos - m_boundaryCenter;
+        diff.y = 0.0f;  // 수평 거리만
+        
+        float distSq = diff.LengthSquared();
+        float radiusSq = m_boundaryRadius * m_boundaryRadius;
+        
+        return distSq > radiusSq;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Repositioning 시작 (맵 중심으로)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGray::StartRepositioning()
+    {
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        m_repositioningDirection = m_boundaryCenter - myPos;
+        m_repositioningDirection.y = 0.0f;
+        
+        if (m_repositioningDirection.LengthSquared() > 0.0001f)
+        {
+            m_repositioningDirection.Normalize();
+        }
+        else
+        {
+            // 이미 중심에 있음 → 랜덤 방향
+            m_repositioningDirection = engine::Vector3(1.0f, 0.0f, 0.0f);
+        }
+        
+        m_repositioningTimer = 0.0f;
+        
+        if (m_logicFSM)
+        {
+            m_logicFSM->SetParameter("NeedRepositioning", true);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Repositioning 상태 비물리 행동
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGray::ExecuteRepositioningBehaviorNonPhysics(float deltaTime)
+    {
+        m_repositioningTimer += deltaTime;
+        
+        // 경계 안으로 들어왔거나 시간 초과
+        if (!IsOutOfBounds() || m_repositioningTimer >= m_repositioningDuration)
+        {
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("RepositioningComplete", true);
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Repositioning 상태 물리 행동
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGray::ExecuteRepositioningBehaviorPhysics()
+    {
+        if (!m_rigidbody) return;
+        
+        // 중심 방향으로 이동
+        MoveInDirection(m_repositioningDirection, m_repositioningSpeed);
     }
 }
