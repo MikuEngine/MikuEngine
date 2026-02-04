@@ -28,6 +28,7 @@ namespace engine
             Wall = 9,                       // 벽 (Projectile, EnemyProjectile 제외 모든 물체와 충돌)
             EnemyParabolicProjectile = 10,  // 포물선 적 투사체 (Wall, Player만 충돌)
             ExplosionTrigger = 11,          // 폭발 트리거 (Player, Wall만 충돌)
+            JumpingEnemy = 12,              // 점프 중인 적 (Environment 충돌 무시, Wall/Player는 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -49,6 +50,7 @@ namespace engine
             WallMask = (1u << Wall),
             EnemyParabolicProjectileMask = (1u << EnemyParabolicProjectile),
             ExplosionTriggerMask = (1u << ExplosionTrigger),
+            JumpingEnemyMask = (1u << JumpingEnemy),
 
             All = 0xFFFFFFFF
         };
@@ -75,7 +77,8 @@ namespace engine
                 "Wall",         // 9
                 "EnemyParabolicProjectile", // 10
                 "ExplosionTrigger", // 11
-                "Layer12", "Layer13", "Layer14", "Layer15",
+                "JumpingEnemy", // 12
+                "Layer13", "Layer14", "Layer15",
                 "Layer16", "Layer17", "Layer18", "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
@@ -226,6 +229,15 @@ namespace engine
             SetCollision(ExplosionTrigger, EnemyParabolicProjectile, false);
             SetCollision(ExplosionTrigger, ExplosionTrigger, false);
             // Player, Wall만 충돌 (기본값 All에서 위 항목들 제외)
+            
+            // ═══════════════════════════════════════
+            // JumpingEnemy 충돌 규칙
+            // Environment 충돌 무시, Wall/Player는 충돌
+            // ═══════════════════════════════════════
+            SetCollision(JumpingEnemy, Environment, false);  // 점프 중 Environment 무시
+            SetCollision(JumpingEnemy, Trigger, false);      // 트리거 무시
+            SetCollision(JumpingEnemy, Projectile, false);   // 플레이어 총알 무시
+            // Wall, Player, Enemy 등은 기본값 All에 의해 충돌함
   
         }
 

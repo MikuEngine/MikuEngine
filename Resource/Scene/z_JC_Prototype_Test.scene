@@ -87,10 +87,13 @@
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 0.699999988079071,
                     "BaseBulletLifetime": 3.0,
+                    "BaseBulletRange": 50.0,
                     "BaseBulletSizeScale": 1.0,
                     "BaseBulletSpeed": 15.0,
                     "BulletStartOffsetY": 2.5,
                     "BulletStartOffsetForward": 1.5,
+                    "PlayerAnimMeshObjectName": "PlayerAnimMesh",
+                    "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
                     "ExecutionRange": 20.0,
@@ -99,7 +102,10 @@
                     "DashDuration": 0.30000001192092896,
                     "DashImpulseMultiplier": 6.0,
                     "DashDecayRate": 2.0,
-                    "DashCooldown": 0.20000000298023224
+                    "DashAfterimageCutoffRatio": 0.699999988079071,
+                    "DashCooldown": 0.20000000298023224,
+                    "MaxDashCount": 3,
+                    "DashRechargeTime": 1.0
                 },
                 {
                     "Type": "AimPointer",
@@ -116,7 +122,8 @@
                         "x": 0.5,
                         "y": 0.5
                     },
-                    "TargetPlaneY": 2.5
+                    "TargetPlaneY": 2.5,
+                    "AimYOffsetWhenMoving": 0.0
                 },
                 {
                     "Type": "LogicFSM",
@@ -17733,10 +17740,17 @@
                     "PlayerObjectName": "Player",
                     "AimPointerMeshObjectName": "AimPointerMesh",
                     "FixedY": 0.0,
+                    "LowerBodyAimThresholdDeg": 0.0,
+                    "LowerBodyTurnSpeed": 8.0,
                     "AnimName_Idle": "Idle",
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
+                    "FireAnimShootFrameTime": 0.20000000298023224,
+                    "UpperBodyAimOffsetDeg": 0.0,
+                    "UpperBodyYawScale": 1.0,
+                    "GunBoneName": "",
+                    "HandBoneName": "",
                     "BackwardThreshold": -0.10000000149011612,
                     "ForwardThreshold": 0.10000000149011612,
                     "ShootingDuration": 0.5
@@ -17785,9 +17799,7 @@
                     "AlphaDecayCurve": 1,
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
-                    "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 93,
-                    "SourceHandleGeneration": 6
+                    "AlphaSampleInterval": 0.0
                 }
             ]
         },
@@ -18492,6 +18504,9 @@
                     "FireRate": 5.0,
                     "BulletSpeed": 10.0,
                     "BulletLifetime": 4.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 22.0,
                     "OwnGravity": 30.0,
                     "IdleWaitTime": 1.0,
@@ -18653,6 +18668,9 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 1.0,
                     "BulletLifetime": 3.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863,
                     "IdleWaitTime": 1.0,
