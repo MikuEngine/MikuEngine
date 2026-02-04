@@ -73,10 +73,16 @@
                     "layer": 0,
                     "materialType": 0,
                     "size": [
-                        1.0,
-                        1.0,
-                        1.0
+                        5.0,
+                        10.0,
+                        5.0
                     ]
+                },
+                {
+                    "Type": "CornerTrigger",
+                    "Active": true,
+                    "blockedDir1": 1,
+                    "blockedDir2": 3
                 }
             ]
         },
@@ -124,10 +130,16 @@
                     "layer": 0,
                     "materialType": 0,
                     "size": [
-                        1.0,
-                        1.0,
-                        1.0
+                        5.0,
+                        10.0,
+                        5.0
                     ]
+                },
+                {
+                    "Type": "CornerTrigger",
+                    "Active": true,
+                    "blockedDir1": 2,
+                    "blockedDir2": 3
                 }
             ]
         },
@@ -175,10 +187,16 @@
                     "layer": 0,
                     "materialType": 0,
                     "size": [
-                        1.0,
-                        1.0,
-                        1.0
+                        5.0,
+                        10.0,
+                        5.0
                     ]
+                },
+                {
+                    "Type": "CornerTrigger",
+                    "Active": true,
+                    "blockedDir1": 2,
+                    "blockedDir2": 4
                 }
             ]
         },
@@ -226,10 +244,16 @@
                     "layer": 0,
                     "materialType": 0,
                     "size": [
-                        1.0,
-                        1.0,
-                        1.0
+                        5.0,
+                        10.0,
+                        5.0
                     ]
+                },
+                {
+                    "Type": "CornerTrigger",
+                    "Active": true,
+                    "blockedDir1": 1,
+                    "blockedDir2": 4
                 }
             ]
         }

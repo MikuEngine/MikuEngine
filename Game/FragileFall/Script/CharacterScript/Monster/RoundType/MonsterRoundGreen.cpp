@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundGreen.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -54,15 +54,20 @@ namespace game
     {
         if (!info.gameObject) return;
         
-        // 총알 레이어 무시 (Projectile, EnemyProjectile)
+        // ─────────────────────────────────────────────
+        // 방향 전환이 필요한 레이어에만 반응 (Wall, Environment, Enemy)
+        // 총알은 트리거 타입이므로 OnTriggerEnter로 처리됨
+        // ─────────────────────────────────────────────
         auto* collider = info.collider.Get();
         if (collider)
         {
             uint32_t layer = collider->GetLayer();
-            if (layer == engine::PhysicsLayer::Index::Projectile ||
-                layer == engine::PhysicsLayer::Index::EnemyProjectile)
+            if (layer != engine::PhysicsLayer::Index::Wall &&
+                layer != engine::PhysicsLayer::Index::Environment &&
+                layer != engine::PhysicsLayer::Index::Enemy &&
+                layer != engine::PhysicsLayer::Index::Player)
             {
-                return;  // 총알 충돌 무시
+                return;  // 방향 전환 불필요한 레이어는 무시
             }
         }
         

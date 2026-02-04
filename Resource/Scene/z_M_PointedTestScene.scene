@@ -93,7 +93,7 @@
                     "BulletStartOffsetForward": 1.5,
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
-                    "ExecutionRange": 20.0,
+                    "ExecutionRange": 10.0,
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.30000001192092896,
@@ -248,8 +248,8 @@
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
                     "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 419,
-                    "SourceHandleGeneration": 8
+                    "SourceHandleIndex": 12,
+                    "SourceHandleGeneration": 3
                 },
                 {
                     "Type": "SkeletalMeshRenderer",

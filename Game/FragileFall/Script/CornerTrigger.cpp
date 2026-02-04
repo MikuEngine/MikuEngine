@@ -40,12 +40,18 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void CornerTrigger::Save(engine::json& j) const
     {
+        // 부모 클래스 Save 호출 (Type, Active 등 저장)
+        Object::Save(j);
+        
         j["blockedDir1"] = static_cast<int>(m_blockedDir1);
         j["blockedDir2"] = static_cast<int>(m_blockedDir2);
     }
 
     void CornerTrigger::Load(const engine::json& j)
     {
+        // 부모 클래스 Load 호출
+        Object::Load(j);
+        
         if (j.contains("blockedDir1"))
             m_blockedDir1 = static_cast<BlockedDirection>(j["blockedDir1"].get<int>());
         if (j.contains("blockedDir2"))
