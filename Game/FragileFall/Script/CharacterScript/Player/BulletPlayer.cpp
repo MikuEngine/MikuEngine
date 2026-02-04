@@ -13,11 +13,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 초기화 (Factory에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void BulletPlayer::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float damage)
+    void BulletPlayer::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg)
     {
         m_movement = std::move(movement);
         m_lifetime = lifetime;
-        m_damage = damage;
+        m_damage = dmg;
     }
 
     // ═══════════════════════════════════════════════════════════════

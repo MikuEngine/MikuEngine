@@ -53,7 +53,7 @@ namespace game
         // 초기화 (Factory에서 호출)
         // - damage: 플레이어 강화 반영된 데미지 (미전달 시 기본값 사용)
         // ─────────────────────────────────────────────
-        void Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float damage = 10.0f);
+        void Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg);
 
         // ─────────────────────────────────────────────
         // 생명주기

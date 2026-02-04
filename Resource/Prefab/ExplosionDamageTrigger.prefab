@@ -38,26 +38,6 @@
                     "constraints": 61
                 },
                 {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 11,
-                    "materialType": 0,
-                    "radius": 0.800000011920929,
-                    "height": 5.360000133514404
-                },
-                {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
@@ -94,6 +74,25 @@
                 {
                     "Type": "ExplosionDamageTrigger",
                     "Active": true
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 11,
+                    "materialType": 0,
+                    "radius": 2.640000104904175
                 }
             ]
         }

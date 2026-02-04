@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -75,7 +75,7 @@ namespace game
         // 초기화 (Factory에서 호출)
         // ─────────────────────────────────────────────
         void Setup(std::unique_ptr<IBulletMovement> movement, const BulletParams& params, BulletFactory* factory);
-		void SetupField(float radius, const BulletParams& params);
+		//void SetupField(float radius, const BulletParams& params);
 
         // ─────────────────────────────────────────────
         // 생명주기
@@ -95,6 +95,6 @@ namespace game
         // 포물선 탄환 전용 헬퍼
         // ─────────────────────────────────────────────
         void SpawnExplosionTrigger(const engine::Vector3& position);
-        void DieWithExplosion(const engine::Vector3& impactPoint);
+        void DieWithExplosion(const engine::Vector3& impactPoint);  // [미사용]
     };
 }

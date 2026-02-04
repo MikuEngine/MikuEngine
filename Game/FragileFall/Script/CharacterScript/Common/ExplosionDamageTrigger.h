@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -41,7 +41,7 @@ namespace game
         float m_expandDuration = 0.3f;
         float m_startScale = 1.4f;
         float m_endScale = 5.0f;
-        float m_startRadius = 0.8f;
+        float m_startRadius = 2.66;
         float m_endRadius = 2.66f;
         
         // 콜라이더 캐시

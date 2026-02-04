@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -22,16 +22,7 @@ namespace game
         // ─────────────────────────────────────────────
         BulletParams m_bulletParams;
 
-        // ─────────────────────────────────────────────
-        // 애니메이션 이름 (Initialize에서 설정)
-        // m_animName_Attack은 부모 클래스 MonsterScript에 정의됨
-        // ─────────────────────────────────────────────
-        std::string m_animName_Idle = "Idle";
-        std::string m_animName_Engage = "Engage";
-        std::string m_animName_Fragile = "Fragile";
-        std::string m_animName_Dead = "Dead";
-        std::string m_animName_Attack = "Attack";
-
+        // 둔탁 타입은 StaticMesh를 사용하므로 애니메이션 이름 변수 불필요
 
 		// ─────────────────────────────────────────────
 		// 둔탁 빨강
@@ -88,6 +79,11 @@ namespace game
         void Attack(float deltaTime) override;
 
     public:
+        // ─────────────────────────────────────────────
+        // Parabolic 타입 여부 (Green = true)
+        // ─────────────────────────────────────────────
+        bool IsParabolicBullet() const override { return m_monsterTier == MonsterTier::Green; }
+        
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;

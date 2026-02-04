@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
@@ -32,7 +32,7 @@ namespace game
 		// 6. BulletPlayer 컴포넌트 추가 및 설정
 		// ─────────────────────────────────────────────
 		auto* bullet = go->GetComponent<BulletPlayer>();
-		bullet->Setup(std::move(movement), params.lifetime, static_cast<float>(params.damage));
+		bullet->Setup(std::move(movement), params.lifetime, params.damage);
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -62,6 +62,7 @@ namespace game
 
 	}
 
+	// 포물선 탄환
 	void BulletFactory::ParabolicFireMonster(const engine::Vector3& position, const engine::Vector3& direction, const BulletParams& params)
 	{
 		auto go = engine::Prefab::Instantiate("BulletParabolicMonster");
@@ -76,25 +77,17 @@ namespace game
 		bullet->Setup(std::move(movement), params, this);
 	}
 
-	void BulletFactory::FieldFireMonster(const engine::Vector3& position, const BulletParams& params)
-	{
-		auto go = engine::Prefab::Instantiate("BulletLinearMonster");
-		if (!go)
-		{
-			LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'FieldFireMonster' prefab!");
-			return;
-		}
+	// ExplosinTriggerScript로 기능 이전
+	//void BulletFactory::FieldFireMonster(const engine::Vector3& position, const BulletParams& params)
+	//{
+	//	auto go = engine::Prefab::Instantiate("BulletLinearMonster");
+	//	
+	//	go->GetTransform()->SetLocalPosition(position);
 
-		go->GetTransform()->SetLocalPosition(position);
-
-		auto* bullet = go->GetComponent<BulletMonster>();
-		if (!bullet)
-		{
-			LOG_PRINT("[BulletFactory] ERROR: 'FieldFireMonster' prefab missing BulletMonster component!");
-			return;
-		}
-		bullet->SetupField(params.radius, params);
-	}
+	//	auto* bullet = go->GetComponent<BulletMonster>();
+	//
+	//	bullet->SetupField(params.radius, params);
+	//}
 
 	// ═══════════════════════════════════════════════════════════════
 	// Movement 생성 (Strategy 패턴)
@@ -123,9 +116,9 @@ namespace game
 			// launchAngle, ownGravity 무시 (곡선 이동)
 			return std::make_unique<CurvedMovement>(params.curveSpeed);
 
-		case BulletType::Field:
-			// Field 타입도 Parabolic 궤적 사용 (착탄 후 장판 생성)
-			return std::make_unique<ParabolicMovement>(params.ownGravity, params.launchAngle);
+		//case BulletType::Field:
+		//	// Field 타입도 Parabolic 궤적 사용 (착탄 후 장판 생성)
+		//	return std::make_unique<ParabolicMovement>(params.ownGravity, params.launchAngle);
 
 		default:
 			return std::make_unique<LinearMovement>();
