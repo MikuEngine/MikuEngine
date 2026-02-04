@@ -109,7 +109,8 @@ namespace game
 
     void SceneController_Lobby::Start()
     {
-        TimeScaler::PlayWorld();
+        if (!TimeScaler::IsActive())
+            TimeScaler::PlayWorld();
 
         m_optionPopUp = engine::GameObject::Find("UI_OptionPopUp");
         if (m_optionPopUp) m_optionPopUp->SetActive(false);
@@ -178,10 +179,11 @@ namespace game
             auto* tr = m_playerPreview->GetTransform();
 
             const engine::Vector3 pos = LerpVec3(m_moveStartPos, m_moveTargetPos, s);
-            const engine::Vector3 rot = LerpEulerDeg(m_moveStartRot, m_moveTargetRot, s);
+            engine::Quaternion rot;
+            engine::Quaternion::Slerp(m_moveStartRot, m_moveTargetRot,s,rot);
 
-            tr->SetLocalPosition(pos);
             tr->SetLocalRotation(rot);
+            tr->SetLocalPosition(pos);
 
             if (t >= 1.0f)
             {
@@ -293,6 +295,10 @@ namespace game
     {
         m_isOptionOpen = open;
 
+        const bool shouldStop = (m_isOptionOpen || m_isUpgradeOpen);
+        if (shouldStop) TimeScaler::StopWorld();
+        else            TimeScaler::PlayWorld();
+
         if (m_blocker)
             m_blocker->SetActive(open);
 
@@ -314,6 +320,10 @@ namespace game
     void SceneController_Lobby::SetUpgradeOpen(bool open)
     {
         m_isUpgradeOpen = open;
+
+        const bool shouldStop = (m_isOptionOpen || m_isUpgradeOpen);
+        if (shouldStop) TimeScaler::StopWorld();
+        else            TimeScaler::PlayWorld();
 
         if (m_blocker)
             m_blocker->SetActive(open);
