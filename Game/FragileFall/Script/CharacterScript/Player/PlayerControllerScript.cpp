@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -18,6 +18,7 @@
 #include <Engine/Core/System/Input.h>
 #include <Engine/Core/System/MyTime.h>
 #include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
+#include <Engine/Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 
 
 namespace game
@@ -332,6 +333,8 @@ namespace game
 
 		// Held 시 파라미터 (연속 발사)
 		m_logicFSM->SetParameter("IsShooting", isMouseHeld);
+		if (!isMouseHeld)
+			m_hasFiredThisSession = false;  // 손 떼면 다음 클릭에서 첫 발 즉시 허용
 
 		// ─────────────────────────────────────────────
 		// 3. 대쉬 입력 (Shift/Space)
@@ -422,7 +425,8 @@ namespace game
 		{
 			return;
 		}
-		if (IsInState("Dash"))
+		// 잔상: 대쉬 이동 구간에서만 녹화. 감속 구간(이동 종료 직전)에는 녹화하지 않아 종료 지점에 잔상이 몰리지 않게 함
+		if (IsInState("Dash") && m_afterimage && m_dashElapsedTime < m_dashDuration * m_dashAfterimageCutoffRatio)
 		{
 			m_afterimage->RecordSample();
 		}
@@ -822,11 +826,13 @@ namespace game
 		}
 
 		// ─────────────────────────────────────────────
-		// 발사 조건: 마우스 홀드 + 쿨다운 완료
+		// 발사 조건: 마우스 홀드 + 쿨다운 + (애니 발사 프레임 도달 OR 이번 세션 첫 발)
+		// → 첫 발은 즉시, 연사는 애니 발사 모션과 동기화
 		// ─────────────────────────────────────────────
 		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
+		bool canFireThisFrame = m_canFireNow || !m_hasFiredThisSession;
 
-		if (isMouseHeld && m_fireTimer <= 0.0f)
+		if (isMouseHeld && m_fireTimer <= 0.0f && canFireThisFrame)
 		{
 			// 발사!
 			if (m_bulletFactory && m_aimPointer)
@@ -835,18 +841,52 @@ namespace game
 				engine::Vector3 direction = m_aimPointer->GetDirectionFrom(playerPos);
 
 				// ─────────────────────────────────────────────
-				// 총알 발사 위치 계산
-				// - Y: 고정 높이 (m_bulletStartOffsetY)
-				// - XZ: 플레이어 위치 + 발사 방향 × 오프셋
+				// 총알 발사 위치: BulletFireSocket 사용 시 소켓 위치 (PlayerAnimMesh 오브젝트의 SkeletalMeshRenderer)
 				// ─────────────────────────────────────────────
-				engine::Vector3 bulletStartPos = playerPos + direction * m_bulletStartOffsetForward;
-				bulletStartPos.y = m_bulletStartOffsetY;
+				engine::Vector3 bulletStartPos;
+				bool useSocket = !m_playerAnimMeshObjectName.empty() && !m_bulletFireSocketName.empty();
+				engine::SkeletalMeshRenderer* bulletSocketRenderer = nullptr;
+				if (useSocket)
+				{
+					auto* scene = engine::SceneManager::Get().GetScene();
+					engine::GameObject* meshGO = scene ? scene->FindGameObject(m_playerAnimMeshObjectName) : nullptr;
+					auto* r = meshGO ? meshGO->GetComponent<engine::SkeletalMeshRenderer>() : nullptr;
+					if (r)
+					{
+						for (const auto& inst : r->GetSocketInstances())
+						{
+							if (inst.info.name == m_bulletFireSocketName)
+							{
+								bulletSocketRenderer = r;
+								break;
+							}
+						}
+					}
+				}
+				if (bulletSocketRenderer)
+					bulletStartPos = bulletSocketRenderer->GetSocketWorldMatrix(m_bulletFireSocketName).Translation();
+				else if (useSocket)
+				{
+					bulletStartPos = playerPos + direction * 0.5f;
+					static bool s_bulletSocketWarned = false;
+					if (!s_bulletSocketWarned)
+					{
+						LOG_PRINT("[PlayerController] BulletFire: mesh '{}' or socket '{}' not found, using fallback.", m_playerAnimMeshObjectName, m_bulletFireSocketName);
+						s_bulletSocketWarned = true;
+					}
+				}
+				else
+				{
+					bulletStartPos = playerPos + direction * m_bulletStartOffsetForward;
+					bulletStartPos.y = m_bulletStartOffsetY;
+				}
 
 				// BulletParams 설정
 				BulletParams params;
 				params.type = BulletType::BulletPlayer;
 				params.speed = m_bulletSpeed;
-				params.lifetime = m_bulletLifetime;
+				params.lifetime = m_bulletLifetime;  // 하위 호환성용 (BulletPlayer는 사용 안 함)
+				params.range = m_bulletRange;        // BulletPlayer는 range 사용
 				params.damage = m_playerAtkDmg;
 
 				m_bulletFactory->Fire(bulletStartPos, direction, params);
@@ -860,8 +900,10 @@ namespace game
 					}
 				}
 
-				// 쿨다운 타이머 리셋
+				// 쿨다운 타이머 리셋, 이번 세션에서 발사했음 표시, 애니 동기화 플래그 소비
 				m_fireTimer = m_fireRate;
+				m_hasFiredThisSession = true;
+				m_canFireNow = false;
 			}
 		}
 	}
@@ -1075,7 +1117,22 @@ namespace game
 		{
 			ImGui::SetTooltip("Exponential decay rate. Higher = faster slowdown during dash");
 		}
+		ImGui::DragFloat("Dash Afterimage Cutoff", &m_dashAfterimageCutoffRatio, 0.05f, 0.2f, 1.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("잔상 녹화 구간. 대쉬 시간의 이 비율까지만 녹화 (감속 구간 제외, 0.7=70%%)");
+		}
 		ImGui::DragFloat("Dash Cooldown (sec)", &m_dashCooldown, 0.1f, 0.0f, 10.0f);
+		ImGui::DragInt("Max Dash Count", &m_MaxDashCount, 1, 1, 10);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Maximum number of dashes available");
+		}
+		ImGui::DragFloat("Dash Recharge Time (sec)", &m_dashRechargeTime, 0.1f, 0.1f, 10.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Time to recharge one dash");
+		}
 		
 		// 대쉬 상태 표시
 		ImGui::Text("Dash State: %s", m_isDashing ? "DASHING" : "Ready");
@@ -1108,6 +1165,12 @@ namespace game
 		}
 		if (ImGui::DragFloat("Base Bullet Lifetime", &m_baseBulletLifetime, 0.1f, 0.1f, 20.0f))
 			baseChanged = true;
+		if (ImGui::DragFloat("Base Bullet Range", &m_baseBulletRange, 1.0f, 1.0f, 200.0f))
+			baseChanged = true;
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("BulletPlayer 사거리 (거리 단위). BulletPlayer는 lifetime 대신 range 사용");
+		}
 		if (ImGui::DragFloat("Base Bullet Size Scale", &m_baseBulletSizeScale, 0.05f, 0.1f, 10.0f))
 			baseChanged = true;
 		if (ImGui::DragFloat("Base Bullet Speed", &m_baseBulletSpeed, 0.5f, 0.1f, 100.0f))
@@ -1135,6 +1198,11 @@ namespace game
 			ImGui::SetTooltip("Calculated: 0.7 / AtkSpeed");
 		}
 		ImGui::DragFloat("Actual Bullet Lifetime", &m_bulletLifetime, 0.0f);
+		ImGui::DragFloat("Actual Bullet Range", &m_bulletRange, 0.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("BulletPlayer 사거리 (BulletPlayer는 lifetime 대신 range 사용)");
+		}
 		ImGui::DragFloat("Actual Bullet Size Scale", &m_bulletSizeScale, 0.0f);
 		ImGui::DragFloat("Actual Bullet Speed", &m_bulletSpeed, 0.0f);
 		bool tempDouble = m_isBulletDouble;
@@ -1143,16 +1211,19 @@ namespace game
 		
 		ImGui::Spacing();
 		ImGui::Text("Bullet Start Position:");
+		ImGui::InputText("Player Anim Mesh Object", &m_playerAnimMeshObjectName);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("BulletFireSocket이 있는 메쉬 오브젝트 이름 (씬에서 FindGameObject). 기본 PlayerAnimMesh");
+		ImGui::InputText("Bullet Fire Socket Name", &m_bulletFireSocketName);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("해당 메쉬의 SkeletalMeshRenderer 소켓 이름. 비우면 아래 오프셋 사용");
+		ImGui::TextDisabled("(소켓 미사용 시 아래 오프셋 적용)");
 		ImGui::DragFloat("Start Offset Y (height)", &m_bulletStartOffsetY, 0.1f, 0.0f, 10.0f);
 		if (ImGui::IsItemHovered())
-		{
 			ImGui::SetTooltip("Total Y position of bullet spawn (world Y)");
-		}
 		ImGui::DragFloat("Start Offset Forward", &m_bulletStartOffsetForward, 0.1f, 0.0f, 10.0f);
 		if (ImGui::IsItemHovered())
-		{
 			ImGui::SetTooltip("Offset along firing direction (forward from player)");
-		}
 
 		// 처형 설정
 		ImGui::Separator();
@@ -1193,11 +1264,14 @@ namespace game
 		j["BaseAtkDmg"] = m_baseAtkDmg;
 		j["BaseAtkSpeed"] = m_baseAtkSpeed;
 		j["BaseBulletLifetime"] = m_baseBulletLifetime;
+		j["BaseBulletRange"] = m_baseBulletRange;
 		j["BaseBulletSizeScale"] = m_baseBulletSizeScale;
 		j["BaseBulletSpeed"] = m_baseBulletSpeed;
 		
 		j["BulletStartOffsetY"] = m_bulletStartOffsetY;
 		j["BulletStartOffsetForward"] = m_bulletStartOffsetForward;
+		j["PlayerAnimMeshObjectName"] = m_playerAnimMeshObjectName;
+		j["BulletFireSocketName"] = m_bulletFireSocketName;
 		j["AimPointerObjectName"] = m_aimPointerObjectName;
 		j["FSMInitialized"] = m_fsmInitialized;
 
@@ -1212,7 +1286,10 @@ namespace game
 		j["DashDuration"] = m_dashDuration;
 		j["DashImpulseMultiplier"] = m_dashImpulseMultiplier;
 		j["DashDecayRate"] = m_dashDecayRate;
+		j["DashAfterimageCutoffRatio"] = m_dashAfterimageCutoffRatio;
 		j["DashCooldown"] = m_dashCooldown;
+		j["MaxDashCount"] = m_MaxDashCount;
+		j["DashRechargeTime"] = m_dashRechargeTime;
 	}
 
 	void PlayerControllerScript::Load(const engine::json& j)
@@ -1231,6 +1308,8 @@ namespace game
 			m_baseAtkSpeed = j["BaseAtkSpeed"].get<float>();
 		if (j.contains("BaseBulletLifetime"))
 			m_baseBulletLifetime = j["BaseBulletLifetime"].get<float>();
+		if (j.contains("BaseBulletRange"))
+			m_baseBulletRange = j["BaseBulletRange"].get<float>();
 		if (j.contains("BaseBulletSizeScale"))
 			m_baseBulletSizeScale = j["BaseBulletSizeScale"].get<float>();
 		if (j.contains("BaseBulletSpeed"))
@@ -1253,6 +1332,10 @@ namespace game
 			m_bulletStartOffsetY = j["BulletStartOffsetY"].get<float>();
 		if (j.contains("BulletStartOffsetForward"))
 			m_bulletStartOffsetForward = j["BulletStartOffsetForward"].get<float>();
+		if (j.contains("PlayerAnimMeshObjectName"))
+			m_playerAnimMeshObjectName = j["PlayerAnimMeshObjectName"].get<std::string>();
+		if (j.contains("BulletFireSocketName"))
+			m_bulletFireSocketName = j["BulletFireSocketName"].get<std::string>();
 		if (j.contains("AimPointerObjectName"))
 			m_aimPointerObjectName = j["AimPointerObjectName"].get<std::string>();
 		if (j.contains("FSMInitialized"))
@@ -1275,8 +1358,14 @@ namespace game
 			m_dashImpulseMultiplier = j["DashImpulseMultiplier"].get<float>();
 		if (j.contains("DashDecayRate"))
 			m_dashDecayRate = j["DashDecayRate"].get<float>();
+		if (j.contains("DashAfterimageCutoffRatio"))
+			m_dashAfterimageCutoffRatio = j["DashAfterimageCutoffRatio"].get<float>();
 		if (j.contains("DashCooldown"))
 			m_dashCooldown = j["DashCooldown"].get<float>();
+		if (j.contains("MaxDashCount"))
+			m_MaxDashCount = j["MaxDashCount"].get<int>();
+		if (j.contains("DashRechargeTime"))
+			m_dashRechargeTime = j["DashRechargeTime"].get<float>();
 		
 		// ═══════════════════════════════════════════════════════════════
 		// Base값 로드 완료 후 강화 적용하여 실제값 계산

@@ -1,6 +1,6 @@
 {
     "Name": "Boss_Dev",
-    "NumGameObjects": 9,
+    "NumGameObjects": 11,
     "GameObjects": [
         {
             "ID": 0,
@@ -178,153 +178,15 @@
                         1.9299999475479126,
                         1.0
                     ]
+                },
+                {
+                    "Type": "BossScript",
+                    "Active": true
                 }
             ]
         },
         {
             "ID": 3,
-            "Name": "Player",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.5,
-                        "z": -4.099999904632568
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 0.05405378341674805,
-                        "y": 0.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": true,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 0.0,
-                    "angularDamping": 0.0,
-                    "useGravity": false,
-                    "constraints": 0
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 0,
-                    "materialType": 1,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "BulletFactory",
-                    "Active": true
-                },
-                {
-                    "Type": "AimPointer",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
-                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
-                    "UseAlternateCursor": false,
-                    "CursorSize": {
-                        "x": 32.0,
-                        "y": 32.0
-                    },
-                    "CursorPivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "TargetPlaneY": 2.200000047683716
-                },
-                {
-                    "Type": "PlayerControllerScript",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 13.0,
-                    "RotationSpeed": 10.0,
-                    "BaseAtkDmg": 10.0,
-                    "BaseAtkSpeed": 1.0,
-                    "BaseBulletLifetime": 3.0,
-                    "BaseBulletSizeScale": 1.0,
-                    "BaseBulletSpeed": 1.0,
-                    "BulletStartOffsetY": 2.200000047683716,
-                    "BulletStartOffsetForward": 1.5,
-                    "AimPointerObjectName": "AimPointer",
-                    "FSMInitialized": false,
-                    "ExecutionRange": 10.0,
-                    "CollisionPushBackForce": 0.5,
-                    "SlidingSpeedMultiplier": 0.699999988079071,
-                    "DashDuration": 0.30000001192092896,
-                    "DashImpulseMultiplier": 15.0,
-                    "DashDecayRate": 4.0,
-                    "DashCooldown": 0.20000000298023224
-                }
-            ]
-        },
-        {
-            "ID": 4,
             "Name": "Light1",
             "Active": true,
             "Components": [
@@ -370,7 +232,7 @@
             ]
         },
         {
-            "ID": 5,
+            "ID": 4,
             "Name": "Light2",
             "Active": true,
             "Components": [
@@ -416,34 +278,7 @@
             ]
         },
         {
-            "ID": 6,
-            "Name": "ExecutionManager",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 7,
+            "ID": 5,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -498,8 +333,8 @@
             ]
         },
         {
-            "ID": 8,
-            "ParentID": 7,
+            "ID": 6,
+            "ParentID": 5,
             "Name": "UI_BossHP",
             "Active": true,
             "Components": [
@@ -566,6 +401,455 @@
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "AimPointerMesh",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": false,
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "AimPointerMeshScript",
+                    "Active": true,
+                    "AimPointerObjectName": "Player",
+                    "FixedY": 2.200000047683716
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "Player",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.019999999552965164,
+                        "y": 0.019999999552965164,
+                        "z": 0.019999999552965164
+                    }
+                },
+                {
+                    "Type": "PlayerControllerScript",
+                    "Active": true,
+                    "MovementAcceleration": 50.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "MoveSpeed": 5.5,
+                    "RotationSpeed": 20.0,
+                    "BaseAtkDmg": 10.0,
+                    "BaseAtkSpeed": 1.399999976158142,
+                    "BaseBulletLifetime": 3.0,
+                    "BaseBulletRange": 50.0,
+                    "BaseBulletSizeScale": 1.0,
+                    "BaseBulletSpeed": 15.0,
+                    "BulletStartOffsetY": 2.5,
+                    "BulletStartOffsetForward": 1.5,
+                    "PlayerAnimMeshObjectName": "PlayerAnimMesh",
+                    "BulletFireSocketName": "BulletFireSocket",
+                    "AimPointerObjectName": "AimPointer",
+                    "FSMInitialized": false,
+                    "ExecutionRange": 20.0,
+                    "CollisionPushBackForce": 0.5,
+                    "SlidingSpeedMultiplier": 0.699999988079071,
+                    "DashDuration": 0.30000001192092896,
+                    "DashImpulseMultiplier": 6.0,
+                    "DashDecayRate": 2.0,
+                    "DashAfterimageCutoffRatio": 0.4000000059604645,
+                    "DashCooldown": 0.20000000298023224,
+                    "MaxDashCount": 3,
+                    "DashRechargeTime": 1.0
+                },
+                {
+                    "Type": "AimPointer",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
+                    },
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "TargetPlaneY": 2.5
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 5.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.8600000143051147,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 1,
+                    "materialType": 0,
+                    "radius": 0.5899999737739563,
+                    "height": 4.75
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "Name": "PlayerAnimMesh",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "PlayerAimMeshController",
+                    "Active": true,
+                    "PlayerObjectName": "Player",
+                    "AimPointerMeshObjectName": "AimPointerMesh",
+                    "FixedY": 0.0,
+                    "LowerBodyAimThresholdDeg": 30.0,
+                    "LowerBodyTurnSpeed": 8.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_WalkForward": "WalkForward",
+                    "AnimName_WalkBackward": "WalkBackward",
+                    "AnimName_Fire": "Fire",
+                    "UpperBodyAimOffsetDeg": 90.0,
+                    "UpperBodyYawScale": 2.0,
+                    "GunBoneName": "DEF-Weapon",
+                    "HandBoneName": "Snap-Hand.L",
+                    "BackwardThreshold": -0.10000000149011612,
+                    "ForwardThreshold": 0.10000000149011612,
+                    "ShootingDuration": 0.5
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "LogicFSMObjectName": "Player",
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": true,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 30.0,
+                    "SpineBoneName": "Spine",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/main_character_final.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Fire",
+                            "Path": "Resource/Animation/main_character_animation_shooting.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/main_character_animation_idle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkBackward",
+                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkForward",
+                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Player_Rig",
+                                "Hips",
+                                "DEF-Weapon",
+                                "Ctrl-Weapon",
+                                "Spine",
+                                "UpLeg.Left",
+                                "UpLeg.Right",
+                                "Spine1",
+                                "Leg.Left",
+                                "Leg.Right",
+                                "Spine2",
+                                "Foot.Left",
+                                "Foot.Right",
+                                "Neck",
+                                "Shoulder.Left",
+                                "Shoulder.Right",
+                                "ToeBase.Left",
+                                "ToeBase.Right",
+                                "Head",
+                                "Arm.Left",
+                                "Arm.Right",
+                                "Toe_End.Left",
+                                "Toe_End.Right",
+                                "HeadTop_End",
+                                "ForeArm.Left",
+                                "ForeArm.Right",
+                                "Hand.Left",
+                                "Hand.Right",
+                                "HandThumb1.Left",
+                                "HandIndex1.Left",
+                                "HandThumb1.Right",
+                                "HandIndex1.Right",
+                                "HandThumb2.Left",
+                                "HandIndex2.Left",
+                                "Snap-Hand.L",
+                                "HandThumb2.Right",
+                                "HandIndex2.Right",
+                                "HandThumb3.Left",
+                                "HandIndex3.Left",
+                                "HandThumb3.Right",
+                                "HandIndex3.Right",
+                                "HandThumb4.Left",
+                                "HandIndex4.Left",
+                                "HandThumb4.Right",
+                                "HandIndex4.Right"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Type": "AfterimageRenderer",
+                    "Active": true,
+                    "DrawSolidLayer": true,
+                    "SolidColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "SolidInitialAlpha": 0.6399999856948853,
+                    "SolidDecaySpeed": 10.0,
+                    "SolidDecayMode": 0,
+                    "SolidDecayCurve": 1,
+                    "SolidEmissiveIntensity": 16.899999618530273,
+                    "SolidTrailGradient": 0.4099999964237213,
+                    "SolidMaxSlices": 24,
+                    "SolidSampleInterval": 0.05000000074505806,
+                    "DrawAlphaLayer": false,
+                    "AlphaTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "AlphaEmissiveIntensity": 0.0,
+                    "AlphaInitialAlpha": 0.699999988079071,
+                    "AlphaDecaySpeed": 1.5,
+                    "AlphaDecayMode": 0,
+                    "AlphaDecayCurve": 1,
+                    "AlphaTrailGradient": 0.9200000166893005,
+                    "AlphaMaxSlices": 24,
+                    "AlphaSampleInterval": 0.0
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "Name": "ExcutionIndicatorManager",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ExecutionIndicatorManager",
+                    "Active": true,
+                    "IndicatorPrefabName": "ExcutionIndicator",
+                    "RaycastMaxDistance": 1000.0,
+                    "IndicatorOffset": {
+                        "x": 0.0,
+                        "y": 1.5,
+                        "z": -0.5
+                    },
+                    "LinePrefabName": "IndicatorLine",
+                    "LinePlayerOffset": 1.0,
+                    "LineMonsterOffset": 1.5,
+                    "LineBaseLength": 0.5,
+                    "LineHeight": 0.6000000238418579,
+                    "EffectPrefabName": "ExcutionEffectSprite",
+                    "EffectDuration": 0.800000011920929,
+                    "EffectScaleMultiplier": 1.5,
+                    "MonsterDeathDelay": 0.05000000074505806,
+                    "TriggerWaitFramesRequired": 1
+                },
+                {
+                    "Type": "ExecutionSlowScript",
+                    "Active": true,
+                    "SlowDuration": 1.5,
+                    "TargetTimeScale": 0.20000000298023224,
+                    "UseCrossfade": true,
+                    "FadeInRatio": 0.20000000298023224,
+                    "SustainRatio": 0.6000000238418579,
+                    "FadeOutRatio": 0.20000000298023224
                 }
             ]
         }

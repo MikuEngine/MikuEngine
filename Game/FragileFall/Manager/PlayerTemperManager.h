@@ -54,6 +54,9 @@ namespace game
 		static void SetAddBulletLifetime(float value);
 		static float GetAddBulletLifetime();
 
+		static void SetAddBulletRange(float value);
+		static float GetAddBulletRange();
+
 		static void SetAddBulletSizeScale(float value);
 		static float GetAddBulletSizeScale();
 
@@ -71,6 +74,9 @@ namespace game
 
 		static void SetMulBulletLifetime(float value);
 		static float GetMulBulletLifetime();
+
+		static void SetMulBulletRange(float value);
+		static float GetMulBulletRange();
 
 		static void SetMulBulletSizeScale(float value);
 		static float GetMulBulletSizeScale();

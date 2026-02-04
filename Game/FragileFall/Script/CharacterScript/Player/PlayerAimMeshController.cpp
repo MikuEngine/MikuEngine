@@ -29,6 +29,7 @@ namespace game
         if (m_animFSM && !m_animFSMInitialized)
         {
             InitializeAnimFSM();
+            m_animFSM->SetScriptControlled(true);  // LogicFSM 콜백으로 Idle 재생되지 않게 (한 번 클릭 시 뚜둑 방지)
             m_animFSMInitialized = true;
         }
 
@@ -43,8 +44,14 @@ namespace game
             }
             std::vector<std::string> spineBones = { m_animFSM->GetSpineBoneName() };
             animator->SetLayerMask(upperLayer, spineBones, true, true);
+
+            // 총 본이 손 본을 따르도록 (리그에서 총이 루트 직계일 때 코드로 보정)
+            if (!m_gunBoneName.empty() && !m_handBoneName.empty())
+            {
+                animator->SetBoneFollowBone(m_gunBoneName, m_handBoneName);
+            }
         }
-        
+
         UpdatePositionAndRotation();
     }
 
@@ -61,6 +68,67 @@ namespace game
         UpdateShootingState();
         UpdatePositionAndRotation();
         UpdateAnimation();
+        
+        // ─────────────────────────────────────────────
+        // Fire 애니메이션 재생 속도 동기화 및 발사 프레임 확인
+        // ─────────────────────────────────────────────
+        if (m_animFSM && m_playerControllerScript && m_logicFSM)
+        {
+            std::string currentState = m_logicFSM->GetCurrentState();
+            bool isShooting = (currentState == "IdleShoot" || currentState == "WalkShoot");
+            
+            if (isShooting)
+            {
+                // 발사 간격(fireRate)을 직접 사용하여 애니메이션 속도 계산
+                float fireRate = m_playerControllerScript->GetFireRate();
+                const float baseFireRate = 0.7f;  // 기본 발사 간격 (초)
+                float animSpeed = (fireRate > 0.001f) ? (baseFireRate / fireRate) : 1.0f;
+                
+                // AnimFSM의 SkeletalAnimator 가져오기
+                auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
+                if (animator)
+                {
+                    int targetLayer = -1;
+                    if (currentState == "IdleShoot")
+                    {
+                        targetLayer = m_animFSM->GetBaseLayerIndex();
+                    }
+                    else if (currentState == "WalkShoot")
+                    {
+                        targetLayer = m_animFSM->GetUpperBodyLayerIndex();
+                    }
+                    
+                    if (targetLayer >= 0)
+                    {
+                        std::string currentAnim = animator->GetCurrentAnimationName(targetLayer);
+                        if (currentAnim == m_animName_Fire)
+                        {
+                            // 애니메이션 속도 업데이트 (발사 속도에 맞춤)
+                            animator->SetLayerSpeed(targetLayer, animSpeed);
+                            // 발사 프레임 통과 시 한 번만 SetCanFireNow(true) (총알↔모션 동기화)
+                            float normalizedTime = animator->GetNormalizedTime(targetLayer);
+                            if (normalizedTime >= m_fireAnimShootFrameTime && m_prevFireNormalizedTime < m_fireAnimShootFrameTime)
+                                m_playerControllerScript->SetCanFireNow(true);
+                            m_prevFireNormalizedTime = normalizedTime;
+                        }
+                        else
+                        {
+                            m_prevFireNormalizedTime = -1.0f;
+                        }
+                    }
+                    else
+                    {
+                        m_prevFireNormalizedTime = -1.0f;
+                    }
+                }
+            }
+            else
+            {
+                m_prevFireNormalizedTime = -1.0f;
+                m_playerControllerScript->SetCanFireNow(false);
+            }
+        }
+        
         // 메시 쪽 AnimFSM은 플레이어(로직) 오브젝트가 아니라 이 오브젝트에 붙어 있으므로 여기서 UpdateFSM 호출 (상체 weight 보간, procedural)
         if (m_animFSM)
             m_animFSM->UpdateFSM();
@@ -165,7 +233,9 @@ namespace game
         bool shouldRotateTowardAim = false;
         if (m_logicFSM && m_logicFSM->GetBoolParameter("IsMoving"))
         {
-            // 이동 중: 임계각 초과일 때만 하체 회전
+            // 이동 중: 걸으며 쏠 때는 임계값 0(항상 에임 추적), 그냥 걸을 때만 설정된 임계값 사용 (옆/뒤 달리기용)
+            bool isShooting = m_logicFSM->GetBoolParameter("IsShooting");
+            float effectiveThreshold = isShooting ? 0.0f : m_lowerBodyAimThresholdDeg;
             engine::Vector3 currentForward = GetTransform()->GetForward();
             currentForward.y = 0.0f;
             if (currentForward.LengthSquared() >= 0.0001f)
@@ -175,7 +245,7 @@ namespace game
                 engine::Vector3 cross = currentForward.Cross(direction);
                 float angleDeg = engine::ToDegree(std::atan2(cross.y, dot));
                 if (angleDeg < 0.0f) angleDeg = -angleDeg;
-                shouldRotateTowardAim = (angleDeg > m_lowerBodyAimThresholdDeg);
+                shouldRotateTowardAim = (angleDeg > effectiveThreshold);
             }
             else
                 shouldRotateTowardAim = true;
@@ -275,8 +345,8 @@ namespace game
         m_animFSM->AddSplitState("WalkForward", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("WalkBackward", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
 
-        // Idle+발사: 전신 Fire 단일 재생 (Default)
-        m_animFSM->AddDefaultState("IdleShoot", m_animName_Fire, false, 0.1f, 0, 1.0f);
+        // Idle+발사: 전신 Fire 단일 재생 (Default). 꾹 누르는 동안 루프
+        m_animFSM->AddDefaultState("IdleShoot", m_animName_Fire, true, 0.1f, 0, 1.0f);
 
         // Walk+발사: 하체 이동 애니 + 상체 Fire (Split). 상체 Fire는 꾹 누르는 동안 계속 재생(루프)
         m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, m_animName_Fire, true, 1.0f, 0.1f);
@@ -291,8 +361,9 @@ namespace game
         // LogicFSM 상태 + 이동 방향 → AnimFSM 상태 결정
         // ─────────────────────────────────────────────
         bool isMoving = m_logicFSM->GetBoolParameter("IsMoving");
-        // 발사 애니는 '마우스 홀드' 기준(LogicFSM IsShooting) 사용. 타이머(m_isShooting) 쓰면 연사 쿨 중 한 프레임 false 되어 Walk으로 튐
-        bool isShooting = m_logicFSM->GetBoolParameter("IsShooting");
+        // 발사 애니: 마우스 홀드/클릭 순간이거나, 방금 발사 후 m_shootingDuration 동안 Shoot 유지 (한 번 클릭 시 뚜둑 없이 바로 Fire 재생)
+        bool mouseHeldOrPressed = m_logicFSM->GetBoolParameter("IsShooting") || engine::Input::IsMousePressed(engine::Input::Buttons::LEFT);
+        bool isShooting = mouseHeldOrPressed || m_isShooting;
         bool isBackward = m_isBackward;
 
         // AnimFSM 상태 결정
@@ -432,12 +503,28 @@ namespace game
         ImGui::InputText("WalkForward", &m_animName_WalkForward);
         ImGui::InputText("WalkBackward", &m_animName_WalkBackward);
         ImGui::InputText("Fire", &m_animName_Fire);
+        ImGui::DragFloat("Fire Anim Shoot Frame Time", &m_fireAnimShootFrameTime, 0.01f, 0.0f, 1.0f);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Fire 애니메이션에서 실제 총알 발사 모션이 나오는 시간 (정규화된 시간, 0.0~1.0). 예: 0.2 = 애니메이션의 20% 지점");
+        }
         ImGui::DragFloat("Upper Body Aim Offset (deg)", &m_upperBodyAimOffsetDeg, 1.0f, -90.0f, 90.0f);
         if (ImGui::IsItemHovered())
             ImGui::SetTooltip("Walk+발사 시 상체 조준 Yaw 보정. Fire 애니가 비스듬히 서서 쏘면 조정 (왼쪽 보면 +)");
         ImGui::DragFloat("Upper Body Yaw Scale", &m_upperBodyYawScale, 0.05f, 0.5f, 2.0f);
         if (ImGui::IsItemHovered())
             ImGui::SetTooltip("옆 조준 시 손 방향 어긋남 보정. 1=기본, 손이 덜 돌면 >1, 과하게 돌면 <1");
+
+        ImGui::Separator();
+
+        // 총 본 → 손 본 연동 (리그에서 총이 루트 직계일 때)
+        ImGui::Text("Gun Bone Follow Hand:");
+        ImGui::InputText("Gun Bone Name", &m_gunBoneName);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("스켈레톤의 총 메쉬 본 이름. 비우면 미사용");
+        ImGui::InputText("Hand Bone Name", &m_handBoneName);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("총이 따라갈 손 본 이름. 둘 다 설정 시에만 연동");
 
         ImGui::Separator();
 
@@ -502,8 +589,11 @@ namespace game
         j["AnimName_WalkForward"] = m_animName_WalkForward;
         j["AnimName_WalkBackward"] = m_animName_WalkBackward;
         j["AnimName_Fire"] = m_animName_Fire;
+        j["FireAnimShootFrameTime"] = m_fireAnimShootFrameTime;
         j["UpperBodyAimOffsetDeg"] = m_upperBodyAimOffsetDeg;
         j["UpperBodyYawScale"] = m_upperBodyYawScale;
+        j["GunBoneName"] = m_gunBoneName;
+        j["HandBoneName"] = m_handBoneName;
 
         // Forward/Backward 판정 설정
         j["BackwardThreshold"] = m_backwardThreshold;
@@ -528,8 +618,11 @@ namespace game
         engine::JsonGet(j, "AnimName_WalkForward", m_animName_WalkForward);
         engine::JsonGet(j, "AnimName_WalkBackward", m_animName_WalkBackward);
         engine::JsonGet(j, "AnimName_Fire", m_animName_Fire);
+        engine::JsonGet(j, "FireAnimShootFrameTime", m_fireAnimShootFrameTime);
         engine::JsonGet(j, "UpperBodyAimOffsetDeg", m_upperBodyAimOffsetDeg);
         engine::JsonGet(j, "UpperBodyYawScale", m_upperBodyYawScale);
+        engine::JsonGet(j, "GunBoneName", m_gunBoneName);
+        engine::JsonGet(j, "HandBoneName", m_handBoneName);
 
         // Forward/Backward 판정 설정
         engine::JsonGet(j, "BackwardThreshold", m_backwardThreshold);
@@ -547,6 +640,7 @@ namespace game
         // 발사할 때마다 타이머 리셋 (연속 발사 중에는 계속 true)
         m_isShooting = true;
         m_shootingTimer = m_shootingDuration;
+        // Fire 애니는 AnimFSM 전환으로만 재생 (Play() 호출 안 함 → Idle→Fire 블렌딩 유지)
     }
 
     void PlayerAimMeshController::UpdateShootingState()

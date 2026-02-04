@@ -77,6 +77,18 @@ namespace engine
                     m_currentUpperBodyWeight += (diff > 0.0f ? step : -step);
             }
             m_animator->SetLayerWeight(m_upperBodyLayerIndex, m_currentUpperBodyWeight);
+
+            // 상체가 켜져 있어야 하는데 레이어가 재생 중이 아니면 다시 재생 (꾹 눌러도 Fire 계속 재생되도록)
+            if (m_upperBodyWeightTarget > 0.001f && !m_currentState.empty())
+            {
+                auto it = m_states.find(m_currentState);
+                if (it != m_states.end() && it->second.useSplitAnimation && !it->second.upperAnimation.empty())
+                {
+                    const std::string& expected = it->second.upperAnimation;
+                    if (m_animator->GetCurrentAnimationName(m_upperBodyLayerIndex) != expected || !m_animator->IsPlaying(m_upperBodyLayerIndex))
+                        m_animator->Play(expected, it->second.upperLoop, m_upperBodyLayerIndex, 1.0f);
+                }
+            }
         }
         // Procedural 조준 업데이트
         UpdateProceduralAim();
@@ -92,22 +104,16 @@ namespace engine
 
     void AnimFSM::OnLogicStateChanged(const std::string& oldState, const std::string& newState)
     {
-        // 상태 변경 시 애니메이션 재생 (자동 연동 모드)
-        // 해당 상태가 등록되어 있을 때만 재생 (스크립트에서 직접 제어하는 경우를 위해)
+        if (m_scriptControlled) return;
         if (m_states.find(newState) != m_states.end())
-        {
             PlayStateAnimation(newState);
-        }
     }
 
     void AnimFSM::OnLogicStateEntered(const std::string& state)
     {
-        // 상태 진입 시 애니메이션 재생
-        // 해당 상태가 등록되어 있을 때만 재생
+        if (m_scriptControlled) return;
         if (m_states.find(state) != m_states.end())
-        {
             PlayStateAnimation(state);
-        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -356,8 +362,7 @@ namespace engine
         if (state.upperBodyWeight > 0.0f && !state.upperAnimation.empty())
         {
             m_upperBodyWeightTarget = state.upperBodyWeight;
-            if (m_animator->GetCurrentAnimationName(m_upperBodyLayerIndex) != state.upperAnimation)
-                m_animator->Play(state.upperAnimation, state.upperLoop, m_upperBodyLayerIndex, 1.0f);
+            m_animator->Play(state.upperAnimation, state.upperLoop, m_upperBodyLayerIndex, 1.0f);
         }
         else
         {

@@ -32,7 +32,7 @@ namespace game
 		// 6. BulletPlayer 컴포넌트 추가 및 설정
 		// ─────────────────────────────────────────────
 		auto* bullet = go->GetComponent<BulletPlayer>();
-		bullet->Setup(std::move(movement), params.lifetime, params.damage);
+		bullet->Setup(std::move(movement), params.lifetime, params.damage, params.range);
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -79,9 +79,18 @@ namespace game
 
 	// ═══════════════════════════════════════════════════════════════
 	// 나선형 총알 발사 (4발, +X/-X/+Z/-Z 방향)
+	// angularSpeed, radiusGrowthRate: 실시간 반영을 위해 직접 전달
 	// ═══════════════════════════════════════════════════════════════
-	void BulletFactory::CurvedFireMonster(const engine::Vector3& position, const BulletParams& params)
+	void BulletFactory::CurvedFireMonster(const engine::Vector3& position,
+	                                      float angularSpeed,
+	                                      float radiusGrowthRate,
+	                                      const BulletParams& params)
 	{
+		// 실시간 반영을 위해 params 복사 후 값 설정
+		BulletParams curvedParams = params;
+		curvedParams.angularSpeed = angularSpeed;
+		curvedParams.radiusGrowthRate = radiusGrowthRate;
+
 		// 4방향 발사 (+X, -X, +Z, -Z)
 		const engine::Vector3 directions[4] = {
 			engine::Vector3( 1.0f, 0.0f,  0.0f),  // +X
@@ -101,9 +110,49 @@ namespace game
 
 			go->GetTransform()->SetLocalPosition(position);
 
+			// Movement 생성 및 초기화 (curvedParams 사용)
+			auto movement = CreateMovement(curvedParams);
+			movement->Initialize(go, directions[i], curvedParams.speed);
+
+			// BulletMonster 컴포넌트 설정
+			auto* bullet = go->GetComponent<BulletMonster>();
+			if (bullet)
+			{
+				bullet->Setup(std::move(movement), curvedParams, this);
+			}
+		}
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 3방향 총알 발사 (중앙 + 좌우 퍼짐)
+	// ═══════════════════════════════════════════════════════════════
+	void BulletFactory::ThreewayFireMonster(const engine::Vector3& position,
+	                                        const engine::Vector3& direction,
+	                                        float spreadAngle,
+	                                        const BulletParams& params)
+	{
+		// 3방향: 좌(-spreadAngle), 중앙(0), 우(+spreadAngle)
+		const float angles[3] = { -spreadAngle, 0.0f, spreadAngle };
+
+		for (int i = 0; i < 3; ++i)
+		{
+			auto go = engine::Prefab::Instantiate("BulletLinearMonster");
+			if (!go)
+			{
+				LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'BulletLinearMonster' prefab!");
+				continue;
+			}
+
+			go->GetTransform()->SetLocalPosition(position);
+
+			// 방향 회전 (Y축 기준)
+			DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY(angles[i]);
+			engine::Vector3 fireDir = engine::Vector3::TransformNormal(direction, rot);
+			fireDir.Normalize();
+
 			// Movement 생성 및 초기화
 			auto movement = CreateMovement(params);
-			movement->Initialize(go, directions[i], params.speed);
+			movement->Initialize(go, fireDir, params.speed);
 
 			// BulletMonster 컴포넌트 설정
 			auto* bullet = go->GetComponent<BulletMonster>();

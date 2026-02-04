@@ -97,6 +97,15 @@ namespace game
         float m_fireRate = 3.0f;             // 발사 간격 (초)
         float m_bulletSpeed = 1.0f;          // 총알 속도
         float m_bulletLifetime = 3.0f;       // 총알 수명 (초)
+        float m_spreadAngle = 0.2f;          // 3방향 발사 퍼짐 각도 (라디안, Blue용)
+
+        // ─────────────────────────────────────────────
+        // 나선형 탄환 전용 (Curve/Red 타입에서만 사용)
+        // - 다른 BulletType(Linear, Parabolic 등)에서는 무시됨
+        // ─────────────────────────────────────────────
+        float m_curvedAngularSpeed = 2.0f;   // 회전 속도 (rad/s)
+        float m_curvedRadiusGrowth = 3.0f;   // 반지름 증가율 (m/s)
+
         engine::Vector3 m_fireOffset{ 0.0f, 1.5f, 0.0f };  // 발사 위치 오프셋
 
         // ─────────────────────────────────────────────

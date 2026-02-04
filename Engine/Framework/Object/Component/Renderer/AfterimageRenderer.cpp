@@ -237,7 +237,7 @@ namespace engine
 		deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
 
 		deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Bone), 1, m_boneConstantBuffer->GetBuffer().GetAddressOf());
-		deviceContext->UpdateSubresource(m_boneConstantBuffer->GetRawBuffer(), 0, nullptr, &m_boneTransformData, 0, 0);
+		// 본 데이터는 슬라이스별로 UpdateSubresource 함 (슬라이스에 boneSnapshot 있으면 녹화 순간 포즈, 없으면 소스 현재)
 
 		static constexpr float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
 		auto depthState = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::DepthRead);
@@ -290,7 +290,11 @@ namespace engine
 			auto blendPremul = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlendPremultiplied);
 			deviceContext->OMSetBlendState(blendPremul->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
 			for (const auto& slice : m_slicesSolid)
+			{
+				const CbBone* boneData = slice.boneSnapshot.has_value() ? &*slice.boneSnapshot : &m_boneTransformData;
+				deviceContext->UpdateSubresource(m_boneConstantBuffer->GetRawBuffer(), 0, nullptr, boneData, 0, 0);
 				drawOneSlice(slice, m_solidColor, slice.alpha, m_solidEmissiveIntensity, m_emissivePS.get());
+			}
 		}
 		// 알파 레이어: 라이팅 PS, 일반 AlphaBlend
 		if (m_drawAlphaLayer && !m_slicesAlpha.empty())
@@ -300,6 +304,8 @@ namespace engine
 			deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
 			for (const auto& slice : m_slicesAlpha)
 			{
+				const CbBone* boneData = slice.boneSnapshot.has_value() ? &*slice.boneSnapshot : &m_boneTransformData;
+				deviceContext->UpdateSubresource(m_boneConstantBuffer->GetRawBuffer(), 0, nullptr, boneData, 0, 0);
 				const float alpha = slice.alpha * m_alphaTint.w;
 				drawOneSlice(slice, m_alphaTint, alpha, m_alphaEmissiveIntensity, m_transparentPS.get());
 			}
@@ -341,6 +347,8 @@ namespace engine
 				AfterimageSlice slice;
 				slice.world = world;
 				slice.alpha = m_solidInitialAlpha;
+				if (m_source && m_meshData && !m_meshData->IsRigid())
+					slice.boneSnapshot = m_source->GetBoneTransformData();
 				m_slicesSolid.push_back(slice);
 				while (m_slicesSolid.size() > m_solidMaxSlices)
 					m_slicesSolid.erase(m_slicesSolid.begin());
@@ -356,6 +364,8 @@ namespace engine
 				AfterimageSlice slice;
 				slice.world = world;
 				slice.alpha = m_alphaInitialAlpha;
+				if (m_source && m_meshData && !m_meshData->IsRigid())
+					slice.boneSnapshot = m_source->GetBoneTransformData();
 				m_slicesAlpha.push_back(slice);
 				while (m_slicesAlpha.size() > m_alphaMaxSlices)
 					m_slicesAlpha.erase(m_slicesAlpha.begin());
@@ -379,6 +389,8 @@ namespace engine
 				AfterimageSlice slice;
 				slice.world = world;
 				slice.alpha = m_solidInitialAlpha;
+				if (m_source && m_meshData && !m_meshData->IsRigid())
+					slice.boneSnapshot = m_source->GetBoneTransformData();
 				m_slicesSolid.push_back(slice);
 				while (m_slicesSolid.size() > m_solidMaxSlices)
 					m_slicesSolid.erase(m_slicesSolid.begin());
@@ -394,6 +406,8 @@ namespace engine
 				AfterimageSlice slice;
 				slice.world = world;
 				slice.alpha = m_alphaInitialAlpha;
+				if (m_source && m_meshData && !m_meshData->IsRigid())
+					slice.boneSnapshot = m_source->GetBoneTransformData();
 				m_slicesAlpha.push_back(slice);
 				while (m_slicesAlpha.size() > m_alphaMaxSlices)
 					m_slicesAlpha.erase(m_slicesAlpha.begin());
@@ -432,6 +446,11 @@ namespace engine
 			AfterimageSlice sliceAlpha;
 			sliceAlpha.world = sliceWorld;
 			sliceAlpha.alpha = m_alphaInitialAlpha;
+			if (m_source && m_meshData && !m_meshData->IsRigid())
+			{
+				sliceSolid.boneSnapshot = m_source->GetBoneTransformData();
+				sliceAlpha.boneSnapshot = m_source->GetBoneTransformData();
+			}
 			if (m_drawSolidLayer)
 			{
 				for (auto& s : m_slicesSolid)
@@ -661,12 +680,8 @@ namespace engine
 		j["AlphaMaxSlices"] = m_alphaMaxSlices;
 		j["AlphaSampleInterval"] = m_alphaSampleInterval;
 
-		if (m_source)
-		{
-			Handle h = m_source.GetHandle();
-			j["SourceHandleIndex"] = h.index;
-			j["SourceHandleGeneration"] = h.generation;
-		}
+		// 소스는 런타임 핸들(인스턴스/씬 내부 유효)이므로 저장하지 않음.
+		// 로드 후 Initialize()에서 같은 GameObject의 SkeletalMeshRenderer로 자동 재결정됨.
 	}
 
 	void AfterimageRenderer::Load(const json& j)
@@ -739,17 +754,6 @@ namespace engine
 		m_alphaSampleInterval = std::max(0.0f, m_alphaSampleInterval);
 		m_alphaTint.w = std::clamp(m_alphaTint.w, 0.0f, 1.0f);
 
-		if (j.contains("SourceHandleIndex") && j.contains("SourceHandleGeneration"))
-		{
-			Handle h;
-			h.index = j["SourceHandleIndex"].get<std::uint32_t>();
-			h.generation = j["SourceHandleGeneration"].get<std::uint32_t>();
-			m_source = Ptr<SkeletalMeshRenderer>(h);
-			if (m_source)
-			{
-				m_meshFilePath = m_source->GetMeshPath();
-				Refresh();
-			}
-		}
+		// SourceHandleIndex/Generation은 저장하지 않음(런타임 전용). 소스는 Initialize()에서 같은 GameObject의 SkeletalMeshRenderer로 재결정됨.
 	}
 }

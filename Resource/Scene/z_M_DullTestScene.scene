@@ -479,7 +479,7 @@
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
                     "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 26,
+                    "SourceHandleIndex": 3,
                     "SourceHandleGeneration": 3
                 },
                 {
@@ -18458,6 +18458,9 @@
                     "FireRate": 2.0,
                     "BulletSpeed": 12.0,
                     "BulletLifetime": 3.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863
                 }
@@ -18641,6 +18644,9 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 1.0,
                     "BulletLifetime": 3.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863
                 }
@@ -18824,6 +18830,9 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 15.0,
                     "BulletLifetime": 3.0,
+                    "SpreadAngle": 0.4099999964237213,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863
                 }
@@ -19007,6 +19016,9 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 15.0,
                     "BulletLifetime": 5.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 17.600000381469727,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863
                 }
@@ -19190,6 +19202,9 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 15.0,
                     "BulletLifetime": 3.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863
                 }

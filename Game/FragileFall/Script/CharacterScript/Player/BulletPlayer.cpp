@@ -13,10 +13,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 초기화 (Factory에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void BulletPlayer::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg)
+    void BulletPlayer::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg, float range)
     {
         m_movement = std::move(movement);
-        m_lifetime = lifetime;
+        m_lifetime = lifetime;  // 하위 호환성용 (사용 안 함)
+        m_range = range;
         m_damage = dmg;
     }
 
@@ -27,12 +28,21 @@ namespace game
     {
         m_elapsedTime = 0.0f;
 
-        // Rigidbody에 초기 속도 설정
+        // 발사 위치와 방향 저장 (사거리 계산용)
+        m_startPosition = GetTransform()->GetWorldPosition();
         if (m_movement)
         {
+            engine::Vector3 velocity = m_movement->GetVelocity();
+            if (velocity.LengthSquared() > 0.0001f)
+            {
+                m_direction = velocity;
+                m_direction.Normalize();
+            }
+            
+            // Rigidbody에 초기 속도 설정
             if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
             {
-                rb->SetLinearVelocity(m_movement->GetVelocity());
+                rb->SetLinearVelocity(velocity);
             }
         }
     }
@@ -50,21 +60,23 @@ namespace game
             return;
         }
 
-        // 생존 시간 누적
-        float dt = engine::Time::DeltaTime();
-        m_elapsedTime += dt;
-
-        // 수명 체크
-        if (m_elapsedTime >= m_lifetime)
+        // 사거리 기반 생명주기 관리
+        engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 displacement = currentPos - m_startPosition;
+        
+        // 발사 방향으로의 이동 거리 계산 (투영)
+        float distanceTraveled = displacement.Dot(m_direction);
+        
+        // 목적지보다 멀리 이동했으면 삭제
+        if (distanceTraveled >= m_range)
         {
             GetGameObject()->Destroy();
             return;
         }
 
-        // 화면 밖 체크 (간단한 범위 체크)
-        engine::Vector3 pos = GetTransform()->GetWorldPosition();
-        float boundary = 50.0f;
-        if (std::abs(pos.x) > boundary || std::abs(pos.z) > boundary)
+        // 화면 밖 체크 (간단한 범위 체크, 안전장치)
+        float boundary = 100.0f;  // 사거리보다 큰 값으로 설정
+        if (std::abs(currentPos.x) > boundary || std::abs(currentPos.z) > boundary)
         {
             GetGameObject()->Destroy();
             return;

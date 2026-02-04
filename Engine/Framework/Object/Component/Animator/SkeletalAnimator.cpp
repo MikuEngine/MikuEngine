@@ -180,6 +180,17 @@ namespace engine
         }
     }
 
+    void SkeletalAnimator::SetBoneFollowBone(const std::string& targetBoneName, const std::string& sourceBoneName)
+    {
+        if (targetBoneName.empty() || sourceBoneName.empty()) return;
+        m_boneFollowMap[targetBoneName] = sourceBoneName;
+    }
+
+    void SkeletalAnimator::ClearBoneFollowBone(const std::string& targetBoneName)
+    {
+        m_boneFollowMap.erase(targetBoneName);
+    }
+
     bool SkeletalAnimator::IsFinished(int layerIndex) const
     {
         if (layerIndex < 0 || layerIndex >= m_layers.size())
@@ -387,6 +398,29 @@ namespace engine
         layer.transitionTime = 0.0f;
     }
 
+    void SkeletalAnimator::SetLayerSpeed(int layerIndex, float speed)
+    {
+        if (layerIndex < 0 || layerIndex >= m_layers.size())
+        {
+            LOG_ERROR("등록되지 않은 레이어: {}", layerIndex);
+            return;
+        }
+
+        auto& layer = m_layers[layerIndex];
+        
+        // 현재 재생 중인 애니메이션의 속도 변경
+        if (layer.current.active)
+        {
+            layer.current.speed = speed;
+        }
+        
+        // 전환 중인 애니메이션의 속도도 변경
+        if (layer.next.active)
+        {
+            layer.next.speed = speed;
+        }
+    }
+
     void SkeletalAnimator::Update()
     {
         if (m_skeleton.empty())
@@ -437,7 +471,7 @@ namespace engine
                 {
                     if (layer.next.loop)
                     {
-                        layer.next.time += std::fmod(layer.next.time, nextDuration);
+                        layer.next.time = std::fmod(layer.next.time, nextDuration);
                     }
                     else
                     {
@@ -570,6 +604,24 @@ namespace engine
 
             bone.model = boneOffsets[bone.index] * bone.combined;
             m_finalBoneMatrices[bone.index] = bone.model.Transpose();
+        }
+
+        // Bone Follow: after all bones computed, override target bones to match source bones (e.g. gun bone follows hand)
+        for (const auto& [targetName, sourceName] : m_boneFollowMap)
+        {
+            Bone* pTarget = nullptr;
+            const Bone* pSource = nullptr;
+            for (auto& b : m_skeleton)
+            {
+                if (b.name == targetName) pTarget = &b;
+                if (b.name == sourceName) pSource = &b;
+            }
+            if (pTarget && pSource)
+            {
+                pTarget->combined = pSource->combined;
+                pTarget->model = boneOffsets[pTarget->index] * pTarget->combined;
+                m_finalBoneMatrices[pTarget->index] = pTarget->model.Transpose();
+            }
         }
 
         auto renderer = GetGameObject()->GetComponent<SkeletalMeshRenderer>();

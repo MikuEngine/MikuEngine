@@ -912,6 +912,9 @@ namespace game
 		j["FireRate"] = m_fireRate;
 		j["BulletSpeed"] = m_bulletSpeed;
 		j["BulletLifetime"] = m_bulletLifetime;
+		j["SpreadAngle"] = m_spreadAngle;
+		j["CurvedAngularSpeed"] = m_curvedAngularSpeed;
+		j["CurvedRadiusGrowth"] = m_curvedRadiusGrowth;
 
 		// 포물선 총알 설정 (Parabolic 타입에서만 사용)
 		j["ParabolicSpeed"] = m_parabolicSpeed;
@@ -943,6 +946,9 @@ namespace game
 		m_fireRate = j.value("FireRate", 3.0f);
 		m_bulletSpeed = j.value("BulletSpeed", 1.0f);
 		m_bulletLifetime = j.value("BulletLifetime", 3.0f);
+		m_spreadAngle = j.value("SpreadAngle", 0.2f);
+		m_curvedAngularSpeed = j.value("CurvedAngularSpeed", 2.0f);
+		m_curvedRadiusGrowth = j.value("CurvedRadiusGrowth", 3.0f);
 
 		// 포물선 총알 설정 (Parabolic 타입에서만 사용)
 		m_parabolicSpeed = j.value("ParabolicSpeed", 15.0f);
