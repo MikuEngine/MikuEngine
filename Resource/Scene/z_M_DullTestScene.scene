@@ -318,10 +318,13 @@
                     "BaseAtkDmg": 55.0,
                     "BaseAtkSpeed": 1.399999976158142,
                     "BaseBulletLifetime": 3.0,
+                    "BaseBulletRange": 50.0,
                     "BaseBulletSizeScale": 1.0,
                     "BaseBulletSpeed": 15.0,
                     "BulletStartOffsetY": 2.5,
                     "BulletStartOffsetForward": 1.5,
+                    "PlayerAnimMeshObjectName": "PlayerAnimMesh",
+                    "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
                     "ExecutionRange": 20.0,
@@ -330,7 +333,10 @@
                     "DashDuration": 0.30000001192092896,
                     "DashImpulseMultiplier": 6.0,
                     "DashDecayRate": 2.0,
-                    "DashCooldown": 0.20000000298023224
+                    "DashAfterimageCutoffRatio": 0.699999988079071,
+                    "DashCooldown": 0.20000000298023224,
+                    "MaxDashCount": 3,
+                    "DashRechargeTime": 1.0
                 },
                 {
                     "Type": "AimPointer",
@@ -428,8 +434,11 @@
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
+                    "FireAnimShootFrameTime": 0.20000000298023224,
                     "UpperBodyAimOffsetDeg": 0.0,
                     "UpperBodyYawScale": 1.0,
+                    "GunBoneName": "",
+                    "HandBoneName": "",
                     "BackwardThreshold": -0.10000000149011612,
                     "ForwardThreshold": 0.10000000149011612,
                     "ShootingDuration": 0.9300000071525574
@@ -478,15 +487,13 @@
                     "AlphaDecayCurve": 1,
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
-                    "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 272,
-                    "SourceHandleGeneration": 8
+                    "AlphaSampleInterval": 0.0
                 },
                 {
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
-                    "SocketFilePath": "",
+                    "SocketFilePath": "Resource/Data/Socket/main_character_final.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
