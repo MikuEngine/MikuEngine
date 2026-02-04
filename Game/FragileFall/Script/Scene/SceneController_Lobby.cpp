@@ -171,24 +171,51 @@ namespace game
         if (m_playerPreview && m_isPlayerMove)
         {
             m_moveElapsed += engine::Time::UnscaledDeltaTime();
-            float t = (m_moveDuration > 0.0f) ? (m_moveElapsed / m_moveDuration) : 1.0f;
-            t = Clamp(t, 0.f, 1.f);
 
-            float s = SmoothStep01(t);
+            float t = Clamp(m_moveElapsed / m_moveDuration, 0.f, 1.f);
+
+            constexpr float kRotEnd = 0.5f;   // 회전 완료
+            constexpr float kMoveStart = 0.35f; // 이동 시작
+
+            float tRot = Clamp(t / kRotEnd, 0.f, 1.f);
+            float tMove = Clamp((t - kMoveStart) / (1.f - kMoveStart), 0.f, 1.f);
+
+            float sRot = SmoothStep01(tRot);
+            float sMove = SmoothStep01(tMove);
 
             auto* tr = m_playerPreview->GetTransform();
 
-            const engine::Vector3 pos = LerpVec3(m_moveStartPos, m_moveTargetPos, s);
-            engine::Quaternion rot;
-            engine::Quaternion::Slerp(m_moveStartRot, m_moveTargetRot,s,rot);
+            // 1) 회전은 먼저 끝까지
+            engine::Quaternion currentRot;
+            engine::Quaternion::Slerp(m_moveStartRot, m_moveTargetRot, sRot, currentRot);
+            tr->SetLocalRotation(currentRot);
 
-            tr->SetLocalRotation(rot);
-            tr->SetLocalPosition(pos);
+            if (!m_walkStarted && tMove > 0.f)
+            {
+                m_walkStarted = true;
 
+                if (auto* anim = m_playerPreview->GetComponent<engine::SkeletalAnimator>())
+                    anim->PlayCrossFade("Walk", 0.3f, true, 0, 1);
+            }
+
+            if (!m_walkStarted && t > 0.3f)
+            {
+                m_walkStarted = true;
+                if (auto* anim = m_playerPreview->GetComponent<engine::SkeletalAnimator>())
+                {
+                    // CrossFade 시간을 0.3~0.5초 정도로 주어 부드럽게 연결
+                    anim->PlayCrossFade("Walk", 0.4f, true);
+                }
+            }
+
+            // 4. 위치 이동 적용
+            engine::Vector3 currentPos = LerpVec3(m_moveStartPos, m_moveTargetPos, sMove);
+            tr->SetLocalPosition(currentPos);
+
+            // 5. 완료 처리
             if (t >= 1.0f)
             {
                 m_isPlayerMove = false;
-
                 game::LoadingScreenDrawer::OnSceneTransitionBegin();
                 engine::SceneManager::Get().ChangeScene("Prototype_Play");
             }
@@ -254,20 +281,30 @@ namespace game
     {
         if (!m_playerPreview) return;
         
+        // 진입하면 입력 차단(화면은 어두워지지 않게)
+        if (m_blocker)
+        {
+            m_blocker->SetActive(true);
+            auto* img = m_blocker->GetComponent<engine::UIImage>();
+            img->SetColor({ 0,0,0,0 });
+        }
+
         auto* tr = m_playerPreview->GetTransform();
         if (!tr) return;
 
         m_moveStartPos = tr->GetLocalPosition();
         m_moveStartRot = tr->GetLocalRotation();
 
+        float targetYaw = -15.f;
+
         m_moveTargetPos = { 0, 0, 20 };
-        m_moveTargetRot = engine::Quaternion::CreateFromYawPitchRoll({ 0.0f, -15.f, 0.0f });
+
+        m_moveTargetRot = engine::Quaternion::CreateFromYawPitchRoll(engine::ToRadian(targetYaw), 0.f, 0.f);
 
         m_moveElapsed = 0.0f;
+        m_moveDuration = 1.5f;
         m_isPlayerMove = true;
-
-        auto* playerAnim = m_playerPreview->GetComponent<engine::SkeletalAnimator>();
-        if (playerAnim) playerAnim->PlayCrossFade("Walk", 0.3f, true, 0, 1);
+        m_walkStarted = false;
     }
 
     void SceneController_Lobby::OpenUpgrade()
