@@ -168,38 +168,41 @@ namespace game
 		const D3D11_VIEWPORT& vp,
 		const engine::Vector4& color = engine::Vector4(1, 1, 1, 1),
 		const engine::Vector4& uv = engine::Vector4(0, 0, 1, 1),
-		uint32_t maskMode = 0)
+		uint32_t maskMode = 0,
+		float rotationRad = 0.0f)
 	{
+		// 1. NDC 변환
 		const float tx = (centerPxX / vp.Width) * 2.0f - 1.0f;
 		const float ty = 1.0f - (centerPxY / vp.Height) * 2.0f;
 		const float sx = (sizePxW / vp.Width) * 2.0f;
 		const float sy = (sizePxH / vp.Height) * 2.0f;
 
+		// 2. 데이터 구성
 		engine::CbUIElement cbUI = {};
 		cbUI.clip = DirectX::XMMatrixTranspose(
 			DirectX::XMMatrixScaling(sx, sy, 1.0f) *
+			DirectX::XMMatrixRotationZ(rotationRad) *
 			DirectX::XMMatrixTranslation(tx, ty, 0.0f)
 		);
 		cbUI.color = color;
 		cbUI.uv = uv;
 		cbUI.clipRect = engine::Vector4(0, 0, vp.Width, vp.Height);
-		cbUI.maskMode = 0;
-		cbUI.outlineEnabled = 0.0f;
-
 		cbUI.maskMode = maskMode;
 
-		if (maskMode == 2) // UI_MASK_CIRCLE
+		if (maskMode == 2)
 		{
-			// g_uiMask0.xy = 중심 좌표, z = 반지름
-			// 반지름은 가로 크기의 절반을 사용합니다.
 			cbUI.mask0 = engine::Vector4(centerPxX, centerPxY, sizePxW * 0.5f, 0.0f);
 		}
 
-		cbUI.outlineEnabled = 0.0f;
-
+		// 3. GPU 업데이트 및 명시적 바인딩 (이 부분이 핵심입니다)
 		dc->UpdateSubresource(g_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
-		dc->VSSetConstantBuffers(static_cast<UINT>(engine::ConstantBufferSlot::UIElement), 1, g_uiCB->GetBuffer().GetAddressOf());
-		dc->PSSetConstantBuffers(static_cast<UINT>(engine::ConstantBufferSlot::UIElement), 1, g_uiCB->GetBuffer().GetAddressOf());
+
+		// 슬롯 번호는 engine::ConstantBufferSlot::UIElement (Shared.hlsli의 b4 예상)
+		ID3D11Buffer* cbPtr = g_uiCB->GetBuffer().Get();
+		dc->VSSetConstantBuffers(static_cast<UINT>(engine::ConstantBufferSlot::UIElement), 1, &cbPtr);
+		dc->PSSetConstantBuffers(static_cast<UINT>(engine::ConstantBufferSlot::UIElement), 1, &cbPtr);
+
+		// 4. 그리기
 		dc->DrawIndexed(g_quadIB->GetIndexCount(), 0, 0);
 	}
 
@@ -304,23 +307,27 @@ namespace game
 		const float sOrbitRadius = ORBIT_RADIUS_PX * scale;
 		const float sOrbitW = ORBIT_TEXT_WIDTH_PX * scale;
 		const float sOrbitH = ORBIT_TEXT_HEIGHT_PX * scale;
+		const float sOrbitSize = ORBIT_RADIUS_PX * 2.0f * scale;
 
 		// 1) 가운데 동그란 로고
 		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_logoTexture->GetSRV().GetAddressOf());
 		DrawUIQuad(dc, centerX, centerY, sLogoSize, sLogoSize, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 2);
 
-		// 2) 로고 외부를 도는 텍스트 이미지
-		g_orbitAngle += engine::Time::DeltaTime() * ORBIT_SPEED_RAD_PER_SEC;
-		const float orbitX = centerX + sOrbitRadius * cosf(g_orbitAngle);
-		const float orbitY = centerY - sOrbitRadius * sinf(g_orbitAngle);
+		//// 2) 로고 외부를 도는 텍스트 이미지
+		//if (g_orbitTextTexture)
+		//{
+		//	// 시간에 따라 각도 업데이트 (제자리 회전)
+		//	g_orbitAngle += engine::Time::DeltaTime() * ORBIT_SPEED_RAD_PER_SEC;
 
-		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_orbitTextTexture->GetSRV().GetAddressOf());
-		DrawUIQuad(dc, orbitX, orbitY, sOrbitW, sOrbitH, vp);
+		//	dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_orbitTextTexture->GetSRV().GetAddressOf());
 
-		// 2) 로고 외부를 도는 텍스트 이미지
+		//	DrawUIQuad(dc, centerX, centerY, sOrbitSize, sOrbitSize, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 0, g_orbitAngle);
+		//}
+
+		// 2) 로고 아래 텍스트
 		//if (g_loadingFont)
 		//{
-		//	std::string loadingStr = "NOW LOADING...";
+		//	std::string loadingStr = "Miku Engine";
 
 		//	// 중앙 정렬을 위한 가로 폭 사전 계산
 		//	float totalWidth = 0.0f;
