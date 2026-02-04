@@ -680,12 +680,8 @@ namespace engine
 		j["AlphaMaxSlices"] = m_alphaMaxSlices;
 		j["AlphaSampleInterval"] = m_alphaSampleInterval;
 
-		if (m_source)
-		{
-			Handle h = m_source.GetHandle();
-			j["SourceHandleIndex"] = h.index;
-			j["SourceHandleGeneration"] = h.generation;
-		}
+		// 소스는 런타임 핸들(인스턴스/씬 내부 유효)이므로 저장하지 않음.
+		// 로드 후 Initialize()에서 같은 GameObject의 SkeletalMeshRenderer로 자동 재결정됨.
 	}
 
 	void AfterimageRenderer::Load(const json& j)
@@ -758,17 +754,6 @@ namespace engine
 		m_alphaSampleInterval = std::max(0.0f, m_alphaSampleInterval);
 		m_alphaTint.w = std::clamp(m_alphaTint.w, 0.0f, 1.0f);
 
-		if (j.contains("SourceHandleIndex") && j.contains("SourceHandleGeneration"))
-		{
-			Handle h;
-			h.index = j["SourceHandleIndex"].get<std::uint32_t>();
-			h.generation = j["SourceHandleGeneration"].get<std::uint32_t>();
-			m_source = Ptr<SkeletalMeshRenderer>(h);
-			if (m_source)
-			{
-				m_meshFilePath = m_source->GetMeshPath();
-				Refresh();
-			}
-		}
+		// SourceHandleIndex/Generation은 저장하지 않음(런타임 전용). 소스는 Initialize()에서 같은 GameObject의 SkeletalMeshRenderer로 재결정됨.
 	}
 }

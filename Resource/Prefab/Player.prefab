@@ -35,7 +35,7 @@
                     "MaxSpeedBrakeFactor": 15.0,
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 13.0,
+                    "MoveSpeed": 5.5,
                     "RotationSpeed": 20.0,
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
@@ -44,6 +44,8 @@
                     "BaseBulletSpeed": 15.0,
                     "BulletStartOffsetY": 2.5,
                     "BulletStartOffsetForward": 1.5,
+                    "PlayerAnimMeshObjectName": "PlayerAnimMesh",
+                    "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
                     "ExecutionRange": 20.0,
@@ -52,6 +54,7 @@
                     "DashDuration": 0.30000001192092896,
                     "DashImpulseMultiplier": 6.0,
                     "DashDecayRate": 2.0,
+                    "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224
                 },
                 {

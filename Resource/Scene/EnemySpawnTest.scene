@@ -18485,9 +18485,7 @@
                     "AlphaDecayCurve": 1,
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
-                    "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 348,
-                    "SourceHandleGeneration": 11
+                    "AlphaSampleInterval": 0.0
                 }
             ]
         },
