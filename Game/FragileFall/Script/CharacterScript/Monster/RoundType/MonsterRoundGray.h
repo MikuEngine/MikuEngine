@@ -89,8 +89,10 @@ namespace game
         // ─────────────────────────────────────────────
         // 맵 경계 체크 및 복원 시스템
         // ─────────────────────────────────────────────
-        engine::Vector3 m_boundaryCenter = engine::Vector3::Zero;  // 맵 중심 (직렬화)
-        float m_boundaryRadius = 50.0f;                            // 맵 반경 (직렬화)
+        float m_boundaryMinX = -50.0f;                             // 맵 경계 최소 X (직렬화)
+        float m_boundaryMaxX = 50.0f;                              // 맵 경계 최대 X (직렬화)
+        float m_boundaryMinZ = -50.0f;                             // 맵 경계 최소 Z (직렬화)
+        float m_boundaryMaxZ = 50.0f;                              // 맵 경계 최대 Z (직렬화)
         float m_obstacleCheckDistance = 2.0f;                      // 방향 전환 후 장애물 체크 거리 (직렬화)
         float m_repositioningSpeed = 5.0f;                         // 복원 이동 속도 (직렬화)
         float m_repositioningDuration = 2.0f;                      // 복원 최대 지속 시간 (직렬화)

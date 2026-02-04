@@ -696,8 +696,10 @@ namespace game
         
         ImGui::Separator();
         ImGui::Text("=== Boundary & Repositioning ===");
-        ImGui::DragFloat3("Boundary Center", &m_boundaryCenter.x, 0.5f);
-        ImGui::DragFloat("Boundary Radius", &m_boundaryRadius, 1.0f, 10.0f, 200.0f);
+        ImGui::DragFloat("Boundary Min X", &m_boundaryMinX, 1.0f, -500.0f, 500.0f);
+        ImGui::DragFloat("Boundary Max X", &m_boundaryMaxX, 1.0f, -500.0f, 500.0f);
+        ImGui::DragFloat("Boundary Min Z", &m_boundaryMinZ, 1.0f, -500.0f, 500.0f);
+        ImGui::DragFloat("Boundary Max Z", &m_boundaryMaxZ, 1.0f, -500.0f, 500.0f);
         ImGui::DragFloat("Obstacle Check Dist", &m_obstacleCheckDistance, 0.1f, 0.5f, 10.0f);
         ImGui::DragFloat("Repositioning Speed", &m_repositioningSpeed, 0.5f, 1.0f, 20.0f);
         ImGui::DragFloat("Repositioning Duration", &m_repositioningDuration, 0.1f, 0.5f, 10.0f);
@@ -727,10 +729,10 @@ namespace game
         j["PlayerIgnoreCountMax"] = m_playerIgnoreCountMax;
         
         // 맵 경계 및 복원 시스템
-        j["BoundaryCenterX"] = m_boundaryCenter.x;
-        j["BoundaryCenterY"] = m_boundaryCenter.y;
-        j["BoundaryCenterZ"] = m_boundaryCenter.z;
-        j["BoundaryRadius"] = m_boundaryRadius;
+        j["BoundaryMinX"] = m_boundaryMinX;
+        j["BoundaryMaxX"] = m_boundaryMaxX;
+        j["BoundaryMinZ"] = m_boundaryMinZ;
+        j["BoundaryMaxZ"] = m_boundaryMaxZ;
         j["ObstacleCheckDistance"] = m_obstacleCheckDistance;
         j["RepositioningSpeed"] = m_repositioningSpeed;
         j["RepositioningDuration"] = m_repositioningDuration;
@@ -748,10 +750,10 @@ namespace game
         m_playerIgnoreCountMax = j.value("PlayerIgnoreCountMax", 4);
         
         // 맵 경계 및 복원 시스템
-        m_boundaryCenter.x = j.value("BoundaryCenterX", 0.0f);
-        m_boundaryCenter.y = j.value("BoundaryCenterY", 0.0f);
-        m_boundaryCenter.z = j.value("BoundaryCenterZ", 0.0f);
-        m_boundaryRadius = j.value("BoundaryRadius", 50.0f);
+        m_boundaryMinX = j.value("BoundaryMinX", -50.0f);
+        m_boundaryMaxX = j.value("BoundaryMaxX", 50.0f);
+        m_boundaryMinZ = j.value("BoundaryMinZ", -50.0f);
+        m_boundaryMaxZ = j.value("BoundaryMaxZ", 50.0f);
         m_obstacleCheckDistance = j.value("ObstacleCheckDistance", 2.0f);
         m_repositioningSpeed = j.value("RepositioningSpeed", 5.0f);
         m_repositioningDuration = j.value("RepositioningDuration", 2.0f);
@@ -826,27 +828,36 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 맵 밖으로 나갔는지 확인
+    // 맵 밖으로 나갔는지 확인 (사각형 경계)
     // ═══════════════════════════════════════════════════════════════
     bool MonsterRoundGray::IsOutOfBounds() const
     {
         engine::Vector3 myPos = GetTransform()->GetWorldPosition();
-        engine::Vector3 diff = myPos - m_boundaryCenter;
-        diff.y = 0.0f;  // 수평 거리만
         
-        float distSq = diff.LengthSquared();
-        float radiusSq = m_boundaryRadius * m_boundaryRadius;
-        
-        return distSq > radiusSq;
+        return myPos.x < m_boundaryMinX || myPos.x > m_boundaryMaxX ||
+               myPos.z < m_boundaryMinZ || myPos.z > m_boundaryMaxZ;
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // Repositioning 시작 (맵 중심으로)
+    // Repositioning 시작 (가장 가까운 경계 안쪽으로)
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGray::StartRepositioning()
     {
         engine::Vector3 myPos = GetTransform()->GetWorldPosition();
-        m_repositioningDirection = m_boundaryCenter - myPos;
+        engine::Vector3 targetPos = myPos;
+        
+        // 경계를 벗어난 축을 경계 안쪽으로 보정
+        if (myPos.x < m_boundaryMinX)
+            targetPos.x = m_boundaryMinX + 2.0f;  // 경계 + 여유
+        else if (myPos.x > m_boundaryMaxX)
+            targetPos.x = m_boundaryMaxX - 2.0f;
+        
+        if (myPos.z < m_boundaryMinZ)
+            targetPos.z = m_boundaryMinZ + 2.0f;
+        else if (myPos.z > m_boundaryMaxZ)
+            targetPos.z = m_boundaryMaxZ - 2.0f;
+        
+        m_repositioningDirection = targetPos - myPos;
         m_repositioningDirection.y = 0.0f;
         
         if (m_repositioningDirection.LengthSquared() > 0.0001f)
@@ -855,8 +866,15 @@ namespace game
         }
         else
         {
-            // 이미 중심에 있음 → 랜덤 방향
-            m_repositioningDirection = engine::Vector3(1.0f, 0.0f, 0.0f);
+            // 이미 경계 안 → 맵 중심으로
+            float centerX = (m_boundaryMinX + m_boundaryMaxX) * 0.5f;
+            float centerZ = (m_boundaryMinZ + m_boundaryMaxZ) * 0.5f;
+            m_repositioningDirection = engine::Vector3(centerX - myPos.x, 0.0f, centerZ - myPos.z);
+            
+            if (m_repositioningDirection.LengthSquared() > 0.0001f)
+                m_repositioningDirection.Normalize();
+            else
+                m_repositioningDirection = engine::Vector3(1.0f, 0.0f, 0.0f);
         }
         
         m_repositioningTimer = 0.0f;
