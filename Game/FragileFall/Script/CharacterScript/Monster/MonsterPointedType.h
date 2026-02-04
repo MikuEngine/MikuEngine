@@ -1,7 +1,12 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
+
+namespace engine
+{
+    struct CollisionInfo;
+}
 
 namespace game
 {
@@ -37,13 +42,45 @@ namespace game
         bool m_canFire = false;                   // 발사 가능한지 (쿨타임 체크)
 
         // ─────────────────────────────────────────────
-        // 뾰족 보라
+        // 뾰족 보라 - Flee 스테이트
         // ─────────────────────────────────────────────
 		float m_fleeRange = 10.0f;				// 도망 시작 거리 (플레이어와의 거리)
 		float m_safeRange = 14.0f;				// 도망 멈추는 거리 (플레이어와의 거리)
 		float m_fleeSpeedMultiplier = 1.7f;	    // 도망 시 이동 속도 배율
-        float m_fleeAngleOffset = 0.0f;         // 상태 진입 시 결정될 랜덤 각도
 		bool m_isPlayerInFleeRange = false;     // 플레이어가 도망 시작 거리 안에 있는지
+
+        // 패스파인딩 기반 도망 (인스펙터에서 설정 가능)
+        float m_fleeDistanceMin = 20.0f;        // 도망 위치 최소 거리
+        float m_fleeDistanceMax = 70.0f;        // 도망 위치 최대 거리
+        
+        // 런타임 상태 (직렬화 불필요)
+        engine::Vector3 m_fleeTargetPos = engine::Vector3::Zero;  // 현재 도망 목표 위치
+        bool m_hasFleeTarget = false;           // 유효한 도망 목표가 있는지
+
+        // ─────────────────────────────────────────────
+        // Flee 실패 → Redemption → Laststand 시스템
+        // ─────────────────────────────────────────────
+        int m_fleeAttemptCount = 0;             // 패스찾기 실패 누적 (프레임당 10회씩)
+        static constexpr int kMaxFleeAttempts = 120;  // 120회 실패 시 Redemption 전이
+        bool m_isNoWayOut = false;              // 탈출구 없음 플래그
+
+        // Redemption 상태 변수
+        engine::Vector3 m_redemptionMoveDir = engine::Vector3::Zero;  // 이동 방향
+        int m_redemptionReflectCount = 0;       // 반사 횟수 (2회 후 패스찾기)
+        static constexpr int kRedemptionMaxReflects = 2;
+        static constexpr int kRedemptionPathAttempts = 60;  // 2회 반사 후 패스찾기 시도 횟수
+        float m_redemptionSpeedMultiplier = 1.5f;  // Redemption 이동 속도 배율
+
+        // Laststand 상태 변수
+        float m_laststandTimer = 0.0f;          // 패스찾기 재시도 타이머
+        float m_laststandRetryInterval = 5.0f;  // 5초마다 재시도
+        static constexpr int kLaststandPathAttempts = 20;  // 한번에 20회 시도
+
+        // 맵 경계 (도망 위치 선정용, 인스펙터에서 설정 가능)
+        float m_mapBoundXMin = -29.5f;
+        float m_mapBoundXMax = 29.5f;
+        float m_mapBoundZMin = -18.5f;
+        float m_mapBoundZMax = 19.5f;
 
     public:
         void Awake() override;
@@ -80,6 +117,15 @@ namespace game
         void ExecuteIdleBehaviorPhysics() override;
         void ExecuteFragileBehaviorPhysics() override;
         void ExecuteDeadBehaviorPhysics() override;
+
+        // Redemption/Laststand 상태 행동
+        void ExecuteRedemptionBehaviorNonPhysics(float deltaTime);
+        void ExecuteRedemptionBehaviorPhysics();
+        void ExecuteLaststandBehaviorNonPhysics(float deltaTime);
+        void ExecuteLaststandBehaviorPhysics();
+
+        // 충돌 콜백 (Redemption 반사용)
+        void OnCollisionEnter(const engine::CollisionInfo& info) override;
         
         // 상태 진입 콜백
         void OnStateEntered(const std::string& state) override;
@@ -94,8 +140,17 @@ namespace game
         // 헬퍼 함수
         bool IsPlayerInDetectionRange() const;
 
-        // 뾰족 보라
-		//void UpdateFleeBehavior(float deltaTime);
+        // 뾰족 보라 - 패스파인딩 기반 도망
+        bool TrySelectFleeTarget();             // 도망 위치 선정 시도 (최대 10회)
+        void MoveToFleeTarget();                // 도망 위치로 패스파인딩 이동
+
+        // Redemption 반사 헬퍼
+        engine::Vector3 SnapNormalToAxis(const engine::Vector3& normal) const;
+        engine::Vector3 ReflectDirection(const engine::Vector3& direction, const engine::Vector3& normal) const;
+        bool TryFindPathAfterRedemption();      // Redemption 후 패스찾기 (60회)
+
+        // 맵 경계 체크 (도망 위치 선정용)
+        bool IsPositionInMapBounds(const engine::Vector3& pos) const;
 
     public:
         void OnGui() override;

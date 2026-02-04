@@ -6,6 +6,8 @@
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 #include <Framework/Object/Component/Rigidbody.h>
 
+
+
 // 뾰족 타입은 StaticMesh를 사용하므로 SkeletalAnimator/SkeletalMeshRenderer include 불필요
 
 namespace game
@@ -53,6 +55,8 @@ namespace game
         AddFSMState("EngageStop", false);   // 정지 (공격 사거리 안, 쿨타임 중)
         AddFSMState("EngageAttack", false); // 공격 중 정지
         AddFSMState("Flee", false);         // 플레이어가 근접 시 도망
+        AddFSMState("Redemption", false);   // 도망 실패 시 반사 이동
+        AddFSMState("Laststand", false);    // 최후의 저항 (정지 + 공격)
         AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
@@ -71,6 +75,11 @@ namespace game
         m_logicFSM->SetParameter("AttackComplete", false);
         m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
+        
+        // Redemption/Laststand 전이용 파라미터
+        m_logicFSM->SetParameter("NoWayOut", false);           // Flee → Redemption
+        m_logicFSM->SetParameter("RedemptionFailed", false);   // Redemption → Laststand
+        m_logicFSM->SetParameter("PathFound", false);          // Laststand → Flee/EngageMove
 
         // ─────────────────────────────────────────────
         // 전이 정의 (StateMap이 업데이트된 후에 추가)
@@ -117,6 +126,21 @@ namespace game
 
             AddFSMTransition("Flee", "EngageMove", "PlayerInFleeRange", BoolFalse(), "PlayerInRange", BoolFalse());
             AddFSMTransition("Flee", "EngageStop", "PlayerInFleeRange", BoolFalse(), "PlayerInRange", BoolTrue());
+
+            // Flee → Redemption (패스찾기 120회 실패)
+            AddFSMTransition("Flee", "Redemption", "NoWayOut", BoolTrue());
+            
+            // Redemption → Laststand (2회 반사 후 패스찾기 실패)
+            AddFSMTransition("Redemption", "Laststand", "RedemptionFailed", BoolTrue());
+            
+            // Laststand → Flee/EngageMove (5초마다 패스찾기 성공 시)
+            AddFSMTransition("Laststand", "Flee", "PathFound", BoolTrue(), "PlayerInFleeRange", BoolTrue());
+            AddFSMTransition("Laststand", "EngageMove", "PathFound", BoolTrue(), "PlayerInFleeRange", BoolFalse());
+            
+            // Redemption/Laststand → Fragile
+            AddFSMTransition("Flee", "Fragile", "Fragile", Trigger());
+            AddFSMTransition("Redemption", "Fragile", "Fragile", Trigger());
+            AddFSMTransition("Laststand", "Fragile", "Fragile", Trigger());
         }
 
         // Fragile → Dead (Execution, Die 트리거)
@@ -148,9 +172,22 @@ namespace game
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 10;
             break;
+        case MonsterTier::Blue:
+            m_bulletParams.type = BulletType::Linear;
+            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = 10;
+            break;
         case MonsterTier::Green:
-            m_bulletParams.type = BulletType::Field;
-            m_bulletParams.ownGravity = 9.81f;
+            // ─────────────────────────────────────────────
+            // 포물선 전용 파라미터 (둔탁녹색과 동일한 방식)
+            // - launchAngle은 Attack() 시점에 거리 기반 자동 계산
+            // - speed, ownGravity는 에디터에서 설정한 값 사용
+            // ─────────────────────────────────────────────
+            m_bulletParams.type = BulletType::Parabolic;
+            m_bulletParams.speed = m_parabolicSpeed;      // 에디터 설정값
+            m_bulletParams.launchAngle = 45.0f;           // 기본값 (Attack에서 자동 계산)
+            m_bulletParams.ownGravity = m_ownGravity;     // 에디터 설정값
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 15;
 			break;
@@ -241,6 +278,14 @@ namespace game
         {
             ExecuteIdleBehaviorNonPhysics();
         }
+        else if (state == "Redemption")
+        {
+            ExecuteRedemptionBehaviorNonPhysics(deltaTime);
+        }
+        else if (state == "Laststand")
+        {
+            ExecuteLaststandBehaviorNonPhysics(deltaTime);
+        }
         else if (state == "Fragile")
         {
             ExecuteFragileBehaviorNonPhysics();
@@ -288,6 +333,76 @@ namespace game
         MonsterScript::ExecuteDeadBehaviorNonPhysics();
     }
 
+    void MonsterPointedType::ExecuteRedemptionBehaviorNonPhysics(float deltaTime)
+    {
+        // Redemption: 충돌 반사로 이동 중
+        // 반사 횟수는 OnCollisionEnter에서 관리
+        // 비물리에서는 특별히 할 일 없음
+    }
+
+    void MonsterPointedType::ExecuteLaststandBehaviorNonPhysics(float deltaTime)
+    {
+        // 5초마다 패스찾기 재시도
+        m_laststandTimer += deltaTime;
+        
+        if (m_laststandTimer >= m_laststandRetryInterval)
+        {
+            m_laststandTimer = 0.0f;
+            
+            // 20회 패스찾기 시도
+            if (!m_targetPlayer || !m_pathfindingAgent) return;
+
+            engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+            engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+
+            engine::Vector3 awayFromPlayer = myPos - playerPos;
+            awayFromPlayer.y = 0.0f;
+            awayFromPlayer.Normalize();
+
+            float baseAngle = std::atan2(awayFromPlayer.z, awayFromPlayer.x);
+
+            for (int attempt = 0; attempt < kLaststandPathAttempts; ++attempt)
+            {
+                float randomOffsetDeg = (static_cast<float>(rand()) / RAND_MAX) * 180.0f - 90.0f;
+                float randomOffsetRad = DirectX::XMConvertToRadians(randomOffsetDeg);
+                float finalAngle = baseAngle + randomOffsetRad;
+
+                float randomDistance = m_fleeDistanceMin + 
+                    (static_cast<float>(rand()) / RAND_MAX) * (m_fleeDistanceMax - m_fleeDistanceMin);
+
+                // 도망 목표 위치 계산 + 맵 경계로 클램핑
+                engine::Vector3 targetPos;
+                targetPos.x = std::clamp(myPos.x + randomDistance * std::cos(finalAngle), m_mapBoundXMin, m_mapBoundXMax);
+                targetPos.y = myPos.y;
+                targetPos.z = std::clamp(myPos.z + randomDistance * std::sin(finalAngle), m_mapBoundZMin, m_mapBoundZMax);
+
+                m_pathfindingAgent->RequestPathImmediate(targetPos);
+                
+                if (m_pathfindingAgent->HasPath())
+                {
+                    m_fleeTargetPos = targetPos;
+                    m_hasFleeTarget = true;
+                    m_fleeAttemptCount = 0;
+                    m_isNoWayOut = false;
+                    
+                    // 패스 찾음 → 거리에 따라 Flee 또는 EngageMove로 전이
+                    if (m_logicFSM)
+                    {
+                        m_logicFSM->SetParameter("PathFound", true);
+                        m_logicFSM->SetParameter("RedemptionFailed", false);
+                    }
+                    return;
+                }
+            }
+        }
+        
+        // 사거리 내 플레이어 있으면 공격
+        if (m_isPlayerInRange && m_canFire)
+        {
+            Attack(deltaTime);
+        }
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // 상태별 행동 - 물리 (FixedUpdate에서 호출)
     // ═══════════════════════════════════════════════════════════════
@@ -313,6 +428,14 @@ namespace game
         {
             ExecuteIdleBehaviorPhysics();
         }
+        else if (state == "Redemption")
+        {
+            ExecuteRedemptionBehaviorPhysics();
+        }
+        else if (state == "Laststand")
+        {
+            ExecuteLaststandBehaviorPhysics();
+        }
         else if (state == "Fragile")
         {
             ExecuteFragileBehaviorPhysics();
@@ -325,27 +448,8 @@ namespace game
 
     void MonsterPointedType::ExecuteFleeBehaviorPhysics()
     {
-        if (!m_targetPlayer) return;
-
-        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
-
-        // 플레이어 -> 나 (도망 방향) 벡터 계산
-        engine::Vector3 baseFleeDir = myPos - playerPos;
-        baseFleeDir.y = 0.0f;
-        baseFleeDir.Normalize();
-
-        float randomRad = DirectX::XMConvertToRadians(m_fleeAngleOffset);
-        DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY(randomRad);
-
-        engine::Vector3 finalFleeDir = engine::Vector3::TransformNormal(baseFleeDir, rot);
-        finalFleeDir.Normalize();
-
-        if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
-        {
-            float finalSpeed = m_moveSpeed * m_fleeSpeedMultiplier;
-            rb->SetLinearVelocity(finalFleeDir * finalSpeed);
-        }
+        // 패스파인딩 기반 도망 이동
+        MoveToFleeTarget();
     }
 
     void MonsterPointedType::ExecuteEngageMoveBehaviorPhysics()
@@ -384,6 +488,25 @@ namespace game
         StopAllMovement();
     }
 
+    void MonsterPointedType::ExecuteRedemptionBehaviorPhysics()
+    {
+        // Redemption: 플레이어 반대 방향으로 1.5배속 이동
+        if (m_rigidbody)
+        {
+            float speed = m_moveSpeed * m_redemptionSpeedMultiplier;
+            m_rigidbody->SetLinearVelocity(m_redemptionMoveDir * speed);
+        }
+    }
+
+    void MonsterPointedType::ExecuteLaststandBehaviorPhysics()
+    {
+        // Laststand: 정지
+        StopAllMovement();
+        
+        // 플레이어 바라보기
+        RotateTowardsPlayer();
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // 상태 진입 콜백
     // ═══════════════════════════════════════════════════════════════
@@ -391,7 +514,17 @@ namespace game
     {
         if (state == "Flee")
         {
-            m_fleeAngleOffset = ((static_cast<float>(rand()) / RAND_MAX) * 90.0f) - 45.0f;
+            // Flee 상태 진입 시: 초기화 및 도망 위치 선정
+            m_hasFleeTarget = false;
+            m_fleeAttemptCount = 0;  // 실패 카운트 리셋
+            m_isNoWayOut = false;
+            
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("NoWayOut", false);
+            }
+            
+            TrySelectFleeTarget();
         }
         else if (state == "EngageAttack")
         {
@@ -411,6 +544,38 @@ namespace game
             // EngageStop 상태 진입 시 이동 멈춤
             StopAllMovement();
             m_logicFSM->SetParameter("AttackComplete", false);
+        }
+        else if (state == "Redemption")
+        {
+            // Redemption 상태 진입: 플레이어 반대 방향으로 초기 이동 방향 설정
+            if (m_targetPlayer)
+            {
+                engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+                engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+                
+                m_redemptionMoveDir = myPos - playerPos;
+                m_redemptionMoveDir.y = 0.0f;
+                m_redemptionMoveDir.Normalize();
+            }
+            m_redemptionReflectCount = 0;
+            
+            // FSM 파라미터 초기화
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("RedemptionFailed", false);
+            }
+        }
+        else if (state == "Laststand")
+        {
+            // Laststand 상태 진입: 정지 및 타이머 초기화
+            StopAllMovement();
+            m_laststandTimer = 0.0f;
+            
+            // FSM 파라미터 초기화
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("PathFound", false);
+            }
         }
         else if (state == "Fragile")
         {
@@ -458,55 +623,46 @@ namespace game
                     break;
                 }
                 // ─────────────────────────────────────────────
-                // 뾰족 초록
+                // 뾰족 초록 (둔탁녹색과 동일한 포물선 발사 방식)
                 // 
                 // 플레이어를 추격하며 멈춰 서서 투사체를 발사하고 착탄 지점에 범위 공격
+                // - 에디터 설정: m_parabolicSpeed (속력), m_ownGravity (중력)
+                // - 자동 계산: launchAngle (플레이어 거리 기반)
                 // ─────────────────────────────────────────────
                 case MonsterTier::Green:
                 {
-                    engine::Vector3 startPos = firePosition;
-                    engine::Vector3 targetPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-
-                    // 수평 벡터와 거리 계산
-                    engine::Vector3 diff = targetPos - startPos;
-                    engine::Vector3 horizontalDiff = { diff.x, 0.0f, diff.z };
-                    float distance = horizontalDiff.Length();
-
-                    // 날아가는 시간 설정
-                    float travelTime = 1.5f;
-
-                    // 수평 속도 계산 (V = S / t)
-                    float horizontalSpeed = distance / travelTime;
-                    engine::Vector3 horizontalDir = horizontalDiff;
-
-                    horizontalDir.Normalize();
-
-                    // 수직 초기 속도 계산 (Vy = (dy + 0.5 * g * t^2) / t)
-                    float dy = diff.y;
-                    float verticalSpeed = (dy + 0.5f * m_bulletParams.ownGravity * travelTime * travelTime) / travelTime;
-
-                    engine::Vector3 finalVelocity = (horizontalDir * horizontalSpeed) + (engine::Vector3::Up * verticalSpeed);
-                    float finalSpeed = finalVelocity.Length();
-                    finalVelocity.Normalize();
-
-                    m_bulletParams.speed = finalSpeed;
-                    m_bulletFactory->ParabolicFireMonster(startPos, finalVelocity, m_bulletParams);
+                    // 발사 오프셋 설정
+                    float bulletStartOffsetY = 1.5f;
+                    
+                    engine::Vector3 bulletStartPos = firePosition;
+                    bulletStartPos.y = bulletStartOffsetY;
+                    
+                    // 착탄점 설정 (플레이어 XZ, Y=0)
+                    engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+                    engine::Vector3 targetPos(playerPos.x, 0.0f, playerPos.z);
+                    
+                    // 발사각 자동 계산
+                    float angleRad = 0.0f;
+                    CalculateParabolicLaunchAngle(bulletStartPos, targetPos, angleRad);
+                    
+                    // BulletParams에 값 설정
+                    m_bulletParams.speed = m_parabolicSpeed;
+                    m_bulletParams.launchAngle = angleRad * 180.0f / 3.14159265f;  // 도(degree)로 변환
+                    m_bulletParams.ownGravity = m_ownGravity;
+                    
+                    // 실제 발사
+                    m_bulletFactory->ParabolicFireMonster(bulletStartPos, direction, m_bulletParams);
                     break;
                 }
                 // ─────────────────────────────────────────────
                 // 뾰족 파랑
                 // 
-                // 플레이어를 추격하며 멈춰 서서 플레이어 방향으로 3발 발사
+                // 플레이어를 추격하며 멈춰 서서 3방향 투사체 발사
+                // - m_spreadAngle: 좌우 퍼짐 각도 (인스펙터에서 설정 가능)
                 // ─────────────────────────────────────────────
                 case MonsterTier::Blue:
                 {
-                    engine::Vector3 RotattedDirection1 = engine::Vector3::Transform(direction, engine::Matrix::CreateRotationY(0.4f));
-                    engine::Vector3 RotattedDirection2 = engine::Vector3::Transform(direction, engine::Matrix::CreateRotationY(-0.4f));
-
-                    m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-                    m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection1, m_bulletParams);
-                    m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection2, m_bulletParams);
-
+                    m_bulletFactory->ThreewayFireMonster(firePosition, direction, m_spreadAngle, m_bulletParams);
                     break;
 				}
                 // ─────────────────────────────────────────────
@@ -517,7 +673,7 @@ namespace game
                 case MonsterTier::Red:
                 {
                     int projectileCount = 8 + (rand() % 8);
-                    float spreadAngle = DirectX::XMConvertToRadians(60.0f);
+                    constexpr float spreadAngle = DirectX::XMConvertToRadians(60.0f);
 
                     for (int i = 0; i < projectileCount; ++i)
                     {
@@ -593,6 +749,294 @@ namespace game
     bool MonsterPointedType::IsPlayerInDetectionRange() const
     {
         return IsTargetInRange(m_targetPlayer ? m_targetPlayer->GetGameObject() : nullptr, m_detectionRange);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 뾰족 보라 - 패스파인딩 기반 도망
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterPointedType::TrySelectFleeTarget()
+    {
+        if (!m_targetPlayer || !m_pathfindingAgent) return false;
+
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+
+        // 플레이어 → 몬스터 방향 (도망 기본 방향 = 180도)
+        engine::Vector3 awayFromPlayer = myPos - playerPos;
+        awayFromPlayer.y = 0.0f;
+        awayFromPlayer.Normalize();
+
+        // 기본 방향의 각도 계산 (XZ 평면)
+        float baseAngle = std::atan2(awayFromPlayer.z, awayFromPlayer.x);
+
+        // 최대 10회 시도
+        constexpr int kMaxAttempts = 10;
+        for (int attempt = 0; attempt < kMaxAttempts; ++attempt)
+        {
+            // 랜덤 각도: 기본 방향(180도) 기준 ±90도 범위
+            // 즉, -90도 ~ +90도 오프셋 (플레이어 반대쪽 반구)
+            float randomOffsetDeg = (static_cast<float>(rand()) / RAND_MAX) * 180.0f - 90.0f;
+            float randomOffsetRad = DirectX::XMConvertToRadians(randomOffsetDeg);
+            float finalAngle = baseAngle + randomOffsetRad;
+
+            // 랜덤 거리: min ~ max 범위
+            float randomDistance = m_fleeDistanceMin + 
+                (static_cast<float>(rand()) / RAND_MAX) * (m_fleeDistanceMax - m_fleeDistanceMin);
+
+            // 도망 목표 위치 계산 + 맵 경계로 클램핑
+            engine::Vector3 targetPos;
+            targetPos.x = std::clamp(myPos.x + randomDistance * std::cos(finalAngle), m_mapBoundXMin, m_mapBoundXMax);
+            targetPos.y = myPos.y;
+            targetPos.z = std::clamp(myPos.z + randomDistance * std::sin(finalAngle), m_mapBoundZMin, m_mapBoundZMax);
+
+            // 즉시 패스파인딩 시도 (지연 없이 바로 계산)
+            m_pathfindingAgent->RequestPathImmediate(targetPos);
+            
+            // 패스가 유효한지 확인
+            if (m_pathfindingAgent->HasPath())
+            {
+                m_fleeTargetPos = targetPos;
+                m_hasFleeTarget = true;
+                m_fleeAttemptCount = 0;  // 성공 시 카운트 리셋
+                return true;
+            }
+        }
+
+        // 10회 실패: 실패 카운트 누적
+        m_fleeAttemptCount += kMaxAttempts;
+        m_hasFleeTarget = false;
+        
+        // 120회 누적 실패 시 NoWayOut → Redemption 전이
+        if (m_fleeAttemptCount >= kMaxFleeAttempts)
+        {
+            m_isNoWayOut = true;
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("NoWayOut", true);
+            }
+        }
+        
+        return false;
+    }
+
+    void MonsterPointedType::MoveToFleeTarget()
+    {
+        if (!m_pathfindingAgent || !m_hasFleeTarget) return;
+
+        // 패스가 있으면 패스파인딩 이동
+        if (m_pathfindingAgent->HasPath())
+        {
+            engine::Vector3 waypoint;
+            if (m_pathfindingAgent->GetCurrentWaypoint(waypoint))
+            {
+                // 웨이포인트로 이동
+                engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+                engine::Vector3 dir = waypoint - myPos;
+                dir.y = 0.0f;
+                
+                float distToWaypoint = dir.Length();
+                if (distToWaypoint > 0.1f)
+                {
+                    dir.Normalize();
+                    
+                    if (m_rigidbody)
+                    {
+                        float speed = m_moveSpeed * m_fleeSpeedMultiplier;
+                        m_rigidbody->SetLinearVelocity(dir * speed);
+                    }
+                }
+                
+                // 웨이포인트 도달 체크
+                if (distToWaypoint < 1.0f)
+                {
+                    m_pathfindingAgent->AdvanceToNextWaypoint();
+                }
+            }
+        }
+        else
+        {
+            // 패스가 없으면 새 도망 위치 선정 시도
+            if (!TrySelectFleeTarget())
+            {
+                // 실패 시: 정지 (대체 행동)
+                StopAllMovement();
+            }
+        }
+
+        // 도망 목표 도달 체크
+        if (m_hasFleeTarget)
+        {
+            engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+            float distToTarget = engine::Vector3::Distance(myPos, m_fleeTargetPos);
+            
+            if (distToTarget < 2.0f)  // 도망 목표 근처 도달
+            {
+                // 플레이어가 아직 임계거리 안에 있으면 새 도망 위치 선정
+                if (m_isPlayerInFleeRange)
+                {
+                    TrySelectFleeTarget();
+                }
+                // 임계거리 밖이면 FSM이 알아서 EngageMove로 전이
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Redemption 후 패스찾기 (60회 시도)
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterPointedType::TryFindPathAfterRedemption()
+    {
+        if (!m_targetPlayer || !m_pathfindingAgent) return false;
+
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+
+        engine::Vector3 awayFromPlayer = myPos - playerPos;
+        awayFromPlayer.y = 0.0f;
+        awayFromPlayer.Normalize();
+
+        float baseAngle = std::atan2(awayFromPlayer.z, awayFromPlayer.x);
+
+        // 60회 시도 (6프레임 분량)
+        for (int attempt = 0; attempt < kRedemptionPathAttempts; ++attempt)
+        {
+            float randomOffsetDeg = (static_cast<float>(rand()) / RAND_MAX) * 180.0f - 90.0f;
+            float randomOffsetRad = DirectX::XMConvertToRadians(randomOffsetDeg);
+            float finalAngle = baseAngle + randomOffsetRad;
+
+            float randomDistance = m_fleeDistanceMin + 
+                (static_cast<float>(rand()) / RAND_MAX) * (m_fleeDistanceMax - m_fleeDistanceMin);
+
+            // 도망 목표 위치 계산 + 맵 경계로 클램핑
+            engine::Vector3 targetPos;
+            targetPos.x = std::clamp(myPos.x + randomDistance * std::cos(finalAngle), m_mapBoundXMin, m_mapBoundXMax);
+            targetPos.y = myPos.y;
+            targetPos.z = std::clamp(myPos.z + randomDistance * std::sin(finalAngle), m_mapBoundZMin, m_mapBoundZMax);
+
+            m_pathfindingAgent->RequestPathImmediate(targetPos);
+            
+            if (m_pathfindingAgent->HasPath())
+            {
+                m_fleeTargetPos = targetPos;
+                m_hasFleeTarget = true;
+                m_fleeAttemptCount = 0;  // 카운트 리셋
+                m_isNoWayOut = false;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 충돌 콜백 (Redemption 반사용)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterPointedType::OnCollisionEnter(const engine::CollisionInfo& info)
+    {
+        // Redemption 상태에서만 반사 처리
+        std::string currentState = GetCurrentState();
+        if (currentState != "Redemption") return;
+
+        if (!info.gameObject) return;
+
+        // ─────────────────────────────────────────────
+        // 충돌 노말 추출
+        // ─────────────────────────────────────────────
+        engine::Vector3 collisionNormal = engine::Vector3::Zero;
+        for (const auto& contact : info.contacts)
+        {
+            engine::Vector3 normal = -contact.normal;
+            normal.y = 0.0f;
+            if (normal.LengthSquared() > 0.0001f)
+            {
+                collisionNormal = normal;
+                collisionNormal.Normalize();
+                break;
+            }
+        }
+        
+        // 노말이 없으면 위치 기반으로 계산
+        if (collisionNormal.LengthSquared() < 0.0001f)
+        {
+            engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+            engine::Vector3 otherPos = info.gameObject->GetTransform()->GetWorldPosition();
+            collisionNormal = otherPos - myPos;
+            collisionNormal.y = 0.0f;
+            if (collisionNormal.LengthSquared() > 0.0001f)
+            {
+                collisionNormal.Normalize();
+            }
+            else
+            {
+                return;  // 유효한 노말 없음
+            }
+        }
+        
+        // ─────────────────────────────────────────────
+        // 노말을 X축 또는 Z축으로 스냅
+        // ─────────────────────────────────────────────
+        engine::Vector3 snappedNormal = SnapNormalToAxis(collisionNormal);
+        
+        // ─────────────────────────────────────────────
+        // 정반사 계산: R = V - 2(V·N)N
+        // ─────────────────────────────────────────────
+        m_redemptionMoveDir = ReflectDirection(m_redemptionMoveDir, snappedNormal);
+        m_redemptionMoveDir.Normalize();
+        
+        // 반사 횟수 증가
+        m_redemptionReflectCount++;
+        
+        // 2회 반사 후 패스찾기 시도
+        if (m_redemptionReflectCount >= kRedemptionMaxReflects)
+        {
+            if (TryFindPathAfterRedemption())
+            {
+                // 패스 찾음 → Flee로 복귀
+                if (m_logicFSM)
+                {
+                    m_logicFSM->SetParameter("NoWayOut", false);
+                }
+            }
+            else
+            {
+                // 패스 못 찾음 → Laststand로 전이
+                if (m_logicFSM)
+                {
+                    m_logicFSM->SetParameter("RedemptionFailed", true);
+                }
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 반사 헬퍼 함수 (MonsterRoundGreen 방식)
+    // ═══════════════════════════════════════════════════════════════
+    engine::Vector3 MonsterPointedType::SnapNormalToAxis(const engine::Vector3& normal) const
+    {
+        float absX = std::abs(normal.x);
+        float absZ = std::abs(normal.z);
+        
+        if (absX >= absZ)
+        {
+            return engine::Vector3((normal.x >= 0.0f) ? 1.0f : -1.0f, 0.0f, 0.0f);
+        }
+        else
+        {
+            return engine::Vector3(0.0f, 0.0f, (normal.z >= 0.0f) ? 1.0f : -1.0f);
+        }
+    }
+
+    engine::Vector3 MonsterPointedType::ReflectDirection(const engine::Vector3& direction, const engine::Vector3& normal) const
+    {
+        float dotProduct = direction.Dot(normal);
+        engine::Vector3 reflected = direction - 2.0f * dotProduct * normal;
+        return reflected;
+    }
+
+    bool MonsterPointedType::IsPositionInMapBounds(const engine::Vector3& pos) const
+    {
+        return (pos.x >= m_mapBoundXMin && pos.x <= m_mapBoundXMax &&
+                pos.z >= m_mapBoundZMin && pos.z <= m_mapBoundZMax);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -689,6 +1133,98 @@ namespace game
 
         // 뾰족 타입은 StaticMesh를 사용하므로 Animation Names 설정 불필요
 
+        // ─────────────────────────────────────────────
+        // 포물선 설정 (Green일 때만 표시 - 둔탁녹색과 동일)
+        // ─────────────────────────────────────────────
+        if (m_monsterTier == MonsterTier::Green)
+        {
+            ImGui::Separator();
+            ImGui::Text("=== Parabolic Bullet Settings ===");
+            
+            ImGui::DragFloat("Parabolic Speed", &m_parabolicSpeed, 0.5f, 1.0f, 50.0f, "%.1f m/s");
+            ImGui::DragFloat("Own Gravity", &m_ownGravity, 0.1f, 1.0f, 30.0f, "%.1f m/s^2");
+            
+            float maxRange = (m_parabolicSpeed * m_parabolicSpeed) / m_ownGravity;
+            ImGui::Text("Max Range (at 45 deg): %.1f m", maxRange);
+            
+            if (maxRange < m_AttackRange)
+            {
+                ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), 
+                    "WARNING: Max Range < Attack Range!");
+            }
+            else
+            {
+                ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), 
+                    "OK: Max Range >= Attack Range");
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // 3방향 발사 설정 (Blue일 때만 표시)
+        // ─────────────────────────────────────────────
+        if (m_monsterTier == MonsterTier::Blue)
+        {
+            ImGui::Separator();
+            ImGui::Text("=== Threeway Bullet Settings ===");
+            
+            ImGui::DragFloat("Spread Angle", &m_spreadAngle, 0.01f, 0.0f, 1.5f, "%.2f rad");
+            
+            float spreadDeg = m_spreadAngle * 180.0f / 3.14159265f;
+            ImGui::Text("  = %.1f degrees", spreadDeg);
+            
+            ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+                "(Left: -%.2f rad, Center: 0, Right: +%.2f rad)", m_spreadAngle, m_spreadAngle);
+        }
+
+        // ─────────────────────────────────────────────
+        // Flee 설정 (Purple일 때만 표시)
+        // ─────────────────────────────────────────────
+        if (m_monsterTier == MonsterTier::Purple)
+        {
+            ImGui::Separator();
+            ImGui::Text("=== Flee Settings (Purple) ===");
+            
+            ImGui::DragFloat("Flee Range", &m_fleeRange, 0.5f, 1.0f, 50.0f, "%.1f m");
+            ImGui::DragFloat("Safe Range", &m_safeRange, 0.5f, 1.0f, 50.0f, "%.1f m");
+            ImGui::DragFloat("Flee Speed Mult", &m_fleeSpeedMultiplier, 0.1f, 0.5f, 3.0f, "%.1fx");
+            
+            ImGui::Spacing();
+            ImGui::Text("Pathfinding Flee:");
+            ImGui::DragFloat("Flee Dist Min", &m_fleeDistanceMin, 1.0f, 5.0f, 100.0f, "%.0f m");
+            ImGui::DragFloat("Flee Dist Max", &m_fleeDistanceMax, 1.0f, 10.0f, 150.0f, "%.0f m");
+            
+            ImGui::Spacing();
+            ImGui::Text("Map Bounds (Flee Target):");
+            ImGui::DragFloat("X Min", &m_mapBoundXMin, 0.5f, -100.0f, 0.0f, "%.1f");
+            ImGui::DragFloat("X Max", &m_mapBoundXMax, 0.5f, 0.0f, 100.0f, "%.1f");
+            ImGui::DragFloat("Z Min", &m_mapBoundZMin, 0.5f, -100.0f, 0.0f, "%.1f");
+            ImGui::DragFloat("Z Max", &m_mapBoundZMax, 0.5f, 0.0f, 100.0f, "%.1f");
+            
+            ImGui::Spacing();
+            ImGui::Text("Redemption/Laststand:");
+            ImGui::DragFloat("Redemption Speed Mult", &m_redemptionSpeedMultiplier, 0.1f, 0.5f, 3.0f, "%.1fx");
+            ImGui::DragFloat("Laststand Retry Interval", &m_laststandRetryInterval, 0.5f, 1.0f, 10.0f, "%.1f sec");
+            
+            // 런타임 상태 표시
+            ImGui::Spacing();
+            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime (read-only):");
+            ImGui::Text("  Has Flee Target: %s", m_hasFleeTarget ? "Yes" : "No");
+            if (m_hasFleeTarget)
+            {
+                ImGui::Text("  Target Pos: (%.1f, %.1f, %.1f)", 
+                    m_fleeTargetPos.x, m_fleeTargetPos.y, m_fleeTargetPos.z);
+                
+                engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+                float dist = engine::Vector3::Distance(myPos, m_fleeTargetPos);
+                ImGui::Text("  Distance to Target: %.1f m", dist);
+            }
+            
+            ImGui::Text("  Flee Attempt Count: %d / %d", m_fleeAttemptCount, kMaxFleeAttempts);
+            ImGui::Text("  Is No Way Out: %s", m_isNoWayOut ? "Yes" : "No");
+            ImGui::Text("  Redemption Reflects: %d / %d", m_redemptionReflectCount, kRedemptionMaxReflects);
+            ImGui::Text("  Laststand Timer: %.1f / %.1f", m_laststandTimer, m_laststandRetryInterval);
+        }
+
         // 런타임 정보
         ImGui::Separator();
         ImGui::Text("Runtime Info:");
@@ -741,7 +1277,23 @@ namespace game
         
         j["DetectionRange"] = m_detectionRange;
         j["AttackAnimationDuration"] = m_attackAnimationDuration;
-        // 뾰족 타입은 StaticMesh 사용 - 애니메이션 관련 직렬화 불필요
+        
+        // Flee 설정 (Purple용)
+        j["FleeRange"] = m_fleeRange;
+        j["SafeRange"] = m_safeRange;
+        j["FleeSpeedMultiplier"] = m_fleeSpeedMultiplier;
+        j["FleeDistanceMin"] = m_fleeDistanceMin;
+        j["FleeDistanceMax"] = m_fleeDistanceMax;
+        
+        // Redemption/Laststand 설정 (Purple용)
+        j["RedemptionSpeedMultiplier"] = m_redemptionSpeedMultiplier;
+        j["LaststandRetryInterval"] = m_laststandRetryInterval;
+        
+        // 맵 경계 (Purple용)
+        j["MapBoundXMin"] = m_mapBoundXMin;
+        j["MapBoundXMax"] = m_mapBoundXMax;
+        j["MapBoundZMin"] = m_mapBoundZMin;
+        j["MapBoundZMax"] = m_mapBoundZMax;
     }
 
     void MonsterPointedType::Load(const engine::json& j)
@@ -750,6 +1302,22 @@ namespace game
         
         m_detectionRange = j.value("DetectionRange", 15.0f);
         m_attackAnimationDuration = j.value("AttackAnimationDuration", 1.0f);
-        // 뾰족 타입은 StaticMesh 사용 - 애니메이션 관련 직렬화 불필요
+        
+        // Flee 설정 (Purple용)
+        m_fleeRange = j.value("FleeRange", 10.0f);
+        m_safeRange = j.value("SafeRange", 14.0f);
+        m_fleeSpeedMultiplier = j.value("FleeSpeedMultiplier", 1.7f);
+        m_fleeDistanceMin = j.value("FleeDistanceMin", 20.0f);
+        m_fleeDistanceMax = j.value("FleeDistanceMax", 70.0f);
+        
+        // Redemption/Laststand 설정 (Purple용)
+        m_redemptionSpeedMultiplier = j.value("RedemptionSpeedMultiplier", 1.5f);
+        m_laststandRetryInterval = j.value("LaststandRetryInterval", 5.0f);
+        
+        // 맵 경계 (Purple용)
+        m_mapBoundXMin = j.value("MapBoundXMin", -29.5f);
+        m_mapBoundXMax = j.value("MapBoundXMax", 29.5f);
+        m_mapBoundZMin = j.value("MapBoundZMin", -18.5f);
+        m_mapBoundZMax = j.value("MapBoundZMax", 19.5f);
     }
 }
