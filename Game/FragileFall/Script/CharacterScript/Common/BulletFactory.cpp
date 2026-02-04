@@ -32,7 +32,7 @@ namespace game
 		// 6. BulletPlayer 컴포넌트 추가 및 설정
 		// ─────────────────────────────────────────────
 		auto* bullet = go->GetComponent<BulletPlayer>();
-		bullet->Setup(std::move(movement), params.lifetime);
+		bullet->Setup(std::move(movement), params.lifetime, static_cast<float>(params.damage));
 	}
 
 	// ═══════════════════════════════════════════════════════════════

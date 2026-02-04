@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
@@ -13,10 +13,11 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 초기화 (Factory에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void BulletPlayer::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime)
+    void BulletPlayer::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float damage)
     {
         m_movement = std::move(movement);
         m_lifetime = lifetime;
+        m_damage = damage;
     }
 
     // ═══════════════════════════════════════════════════════════════
