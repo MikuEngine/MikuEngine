@@ -65,6 +65,8 @@ namespace engine
         // 빈 문자열이면 같은 GameObject에서 찾음
         // ─────────────────────────────────────────────
         std::string m_logicFSMObjectName;
+        /// true면 LogicFSM 상태 변경 시 자동 재생 안 함 (스크립트가 SetAnimState로만 제어)
+        bool m_scriptControlled = false;
         
         // ─────────────────────────────────────────────
         // 애니메이션 상태 맵 (통합)
@@ -110,6 +112,7 @@ namespace engine
         // LogicFSM 연동
         // ─────────────────────────────────────────────
         void SetLogicFSM(LogicFSM* logicFSM);
+        void SetScriptControlled(bool scriptControlled) { m_scriptControlled = scriptControlled; }
         void OnLogicStateChanged(const std::string& oldState, const std::string& newState);
         void OnLogicStateEntered(const std::string& state);
 

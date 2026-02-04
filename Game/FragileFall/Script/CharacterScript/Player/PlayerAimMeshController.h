@@ -45,8 +45,8 @@ namespace game
         std::string m_playerObjectName = "Player";
         std::string m_aimPointerMeshObjectName = "AimPointerMesh";
         float m_fixedY = 0.0f;
-        /** 이동 중일 때만 적용. 에임이 하체 방향과 이 각도(도) 이상 벌어졌을 때만 하체 회전. Idle/가만히 있을 때는 미적용(전신 부드럽게 에임 추적) */
-        float m_lowerBodyAimThresholdDeg = 30.0f;
+        /** 이동 중일 때만 적용. 에임이 하체 방향과 이 각도(도) 이상 벌어졌을 때만 하체 회전. 0이면 항상 에임 정확히 추적. Idle/가만히 있을 때는 미적용 */
+        float m_lowerBodyAimThresholdDeg = 0.0f;
         /** 하체 회전 보간 속도 (1초에 이 비율만큼 목표 방향으로 회전, Slerp 계수). 클수록 빨리 맞춤 */
         float m_lowerBodyTurnSpeed = 8.0f;
 
@@ -61,6 +61,10 @@ namespace game
         std::string m_animName_WalkForward = "WalkForward";
         std::string m_animName_WalkBackward = "WalkBackward";
         std::string m_animName_Fire = "Fire";
+        /** 총 메쉬 본 이름 (루트 직계). 비어있지 않으면 손 본을 따라가도록 SetBoneFollowBone 등록 */
+        std::string m_gunBoneName;
+        /** 손 본 이름 (총 본이 이 본의 pose를 따름). m_gunBoneName과 둘 다 설정 시에만 연동 활성화 */
+        std::string m_handBoneName;
 
         // ─────────────────────────────────────────────
         // Forward/Backward 판정 설정

@@ -29,6 +29,7 @@ namespace game
         if (m_animFSM && !m_animFSMInitialized)
         {
             InitializeAnimFSM();
+            m_animFSM->SetScriptControlled(true);  // LogicFSM 콜백으로 Idle 재생되지 않게 (한 번 클릭 시 뚜둑 방지)
             m_animFSMInitialized = true;
         }
 
@@ -43,8 +44,14 @@ namespace game
             }
             std::vector<std::string> spineBones = { m_animFSM->GetSpineBoneName() };
             animator->SetLayerMask(upperLayer, spineBones, true, true);
+
+            // 총 본이 손 본을 따르도록 (리그에서 총이 루트 직계일 때 코드로 보정)
+            if (!m_gunBoneName.empty() && !m_handBoneName.empty())
+            {
+                animator->SetBoneFollowBone(m_gunBoneName, m_handBoneName);
+            }
         }
-        
+
         UpdatePositionAndRotation();
     }
 
@@ -165,7 +172,9 @@ namespace game
         bool shouldRotateTowardAim = false;
         if (m_logicFSM && m_logicFSM->GetBoolParameter("IsMoving"))
         {
-            // 이동 중: 임계각 초과일 때만 하체 회전
+            // 이동 중: 걸으며 쏠 때는 임계값 0(항상 에임 추적), 그냥 걸을 때만 설정된 임계값 사용 (옆/뒤 달리기용)
+            bool isShooting = m_logicFSM->GetBoolParameter("IsShooting");
+            float effectiveThreshold = isShooting ? 0.0f : m_lowerBodyAimThresholdDeg;
             engine::Vector3 currentForward = GetTransform()->GetForward();
             currentForward.y = 0.0f;
             if (currentForward.LengthSquared() >= 0.0001f)
@@ -175,7 +184,7 @@ namespace game
                 engine::Vector3 cross = currentForward.Cross(direction);
                 float angleDeg = engine::ToDegree(std::atan2(cross.y, dot));
                 if (angleDeg < 0.0f) angleDeg = -angleDeg;
-                shouldRotateTowardAim = (angleDeg > m_lowerBodyAimThresholdDeg);
+                shouldRotateTowardAim = (angleDeg > effectiveThreshold);
             }
             else
                 shouldRotateTowardAim = true;
@@ -275,8 +284,8 @@ namespace game
         m_animFSM->AddSplitState("WalkForward", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("WalkBackward", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
 
-        // Idle+발사: 전신 Fire 단일 재생 (Default)
-        m_animFSM->AddDefaultState("IdleShoot", m_animName_Fire, false, 0.1f, 0, 1.0f);
+        // Idle+발사: 전신 Fire 단일 재생 (Default). 꾹 누르는 동안 루프
+        m_animFSM->AddDefaultState("IdleShoot", m_animName_Fire, true, 0.1f, 0, 1.0f);
 
         // Walk+발사: 하체 이동 애니 + 상체 Fire (Split). 상체 Fire는 꾹 누르는 동안 계속 재생(루프)
         m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, m_animName_Fire, true, 1.0f, 0.1f);
@@ -291,8 +300,9 @@ namespace game
         // LogicFSM 상태 + 이동 방향 → AnimFSM 상태 결정
         // ─────────────────────────────────────────────
         bool isMoving = m_logicFSM->GetBoolParameter("IsMoving");
-        // 발사 애니는 '마우스 홀드' 기준(LogicFSM IsShooting) 사용. 타이머(m_isShooting) 쓰면 연사 쿨 중 한 프레임 false 되어 Walk으로 튐
-        bool isShooting = m_logicFSM->GetBoolParameter("IsShooting");
+        // 발사 애니: 마우스 홀드/클릭 순간이거나, 방금 발사 후 m_shootingDuration 동안 Shoot 유지 (한 번 클릭 시 뚜둑 없이 바로 Fire 재생)
+        bool mouseHeldOrPressed = m_logicFSM->GetBoolParameter("IsShooting") || engine::Input::IsMousePressed(engine::Input::Buttons::LEFT);
+        bool isShooting = mouseHeldOrPressed || m_isShooting;
         bool isBackward = m_isBackward;
 
         // AnimFSM 상태 결정
@@ -441,6 +451,17 @@ namespace game
 
         ImGui::Separator();
 
+        // 총 본 → 손 본 연동 (리그에서 총이 루트 직계일 때)
+        ImGui::Text("Gun Bone Follow Hand:");
+        ImGui::InputText("Gun Bone Name", &m_gunBoneName);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("스켈레톤의 총 메쉬 본 이름. 비우면 미사용");
+        ImGui::InputText("Hand Bone Name", &m_handBoneName);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("총이 따라갈 손 본 이름. 둘 다 설정 시에만 연동");
+
+        ImGui::Separator();
+
         // Forward/Backward 판정 설정
         ImGui::Text("Forward/Backward Detection:");
         ImGui::DragFloat("Backward Threshold", &m_backwardThreshold, 0.01f, -1.0f, 0.0f);
@@ -504,6 +525,8 @@ namespace game
         j["AnimName_Fire"] = m_animName_Fire;
         j["UpperBodyAimOffsetDeg"] = m_upperBodyAimOffsetDeg;
         j["UpperBodyYawScale"] = m_upperBodyYawScale;
+        j["GunBoneName"] = m_gunBoneName;
+        j["HandBoneName"] = m_handBoneName;
 
         // Forward/Backward 판정 설정
         j["BackwardThreshold"] = m_backwardThreshold;
@@ -530,6 +553,8 @@ namespace game
         engine::JsonGet(j, "AnimName_Fire", m_animName_Fire);
         engine::JsonGet(j, "UpperBodyAimOffsetDeg", m_upperBodyAimOffsetDeg);
         engine::JsonGet(j, "UpperBodyYawScale", m_upperBodyYawScale);
+        engine::JsonGet(j, "GunBoneName", m_gunBoneName);
+        engine::JsonGet(j, "HandBoneName", m_handBoneName);
 
         // Forward/Backward 판정 설정
         engine::JsonGet(j, "BackwardThreshold", m_backwardThreshold);

@@ -1,6 +1,6 @@
 {
     "Name": "EnemySpawnTest",
-    "NumGameObjects": 98,
+    "NumGameObjects": 97,
     "GameObjects": [
         {
             "ID": 0,
@@ -82,7 +82,7 @@
                     "MaxSpeedBrakeFactor": 15.0,
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 1.100000023841858,
+                    "MoveSpeed": 5.5,
                     "RotationSpeed": 20.0,
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
@@ -91,6 +91,8 @@
                     "BaseBulletSpeed": 15.0,
                     "BulletStartOffsetY": 2.5,
                     "BulletStartOffsetForward": 1.5,
+                    "PlayerAnimMeshObjectName": "PlayerAnimMesh",
+                    "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
                     "ExecutionRange": 20.0,
@@ -99,6 +101,7 @@
                     "DashDuration": 0.30000001192092896,
                     "DashImpulseMultiplier": 6.0,
                     "DashDecayRate": 2.0,
+                    "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224
                 },
                 {
@@ -12185,7 +12188,7 @@
         {
             "ID": 13,
             "Name": "StateTextCanvas",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -12258,7 +12261,7 @@
         {
             "ID": 14,
             "Name": "StateText",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -12387,14 +12390,14 @@
         {
             "ID": 16,
             "Name": "MonDG",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
                         "x": -12.399999618530273,
-                        "y": 2.9802322387695313e-08,
+                        "y": -0.19973838329315186,
                         "z": 3.4000000953674316
                     },
                     "Rotation": {
@@ -12432,11 +12435,7 @@
                     "BulletSpeed": 15.0,
                     "BulletLifetime": 3.0,
                     "ParabolicSpeed": 15.0,
-                    "OwnGravity": 9.800000190734863,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_Attack": "Attack",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead"
+                    "OwnGravity": 9.800000190734863
                 },
                 {
                     "Type": "Rigidbody",
@@ -12724,7 +12723,7 @@
         {
             "ID": 18,
             "Name": "MonPG",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -12770,13 +12769,7 @@
                     "BulletLifetime": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863,
-                    "AttackAnimationDuration": 1.2000000476837158,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead"
+                    "AttackAnimationDuration": 1.2000000476837158
                 },
                 {
                     "Type": "Rigidbody",
@@ -17891,7 +17884,7 @@
         {
             "ID": 71,
             "Name": "MonPG",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -17937,13 +17930,7 @@
                     "BulletLifetime": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863,
-                    "AttackAnimationDuration": 1.2000000476837158,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead"
+                    "AttackAnimationDuration": 1.2000000476837158
                 },
                 {
                     "Type": "Rigidbody",
@@ -18230,78 +18217,6 @@
         },
         {
             "ID": 73,
-            "Name": "TestRotator",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 2.5,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 0.12999999523162842,
-                        "y": 0.20000000298023224,
-                        "z": 1.2999999523162842
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.7480000257492065,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.309999942779541,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "OrbitScript",
-                    "Active": true,
-                    "PlayerObjectName": "Player",
-                    "AimPointerMeshObjectName": "AimPointerMesh",
-                    "FixedY": 2.5,
-                    "OrbitRadius": 1.399999976158142,
-                    "RecoilOffsetZ": -0.3700000047683716,
-                    "RecoilOffsetY": 0.4000000059604645,
-                    "RecoilRotationX": 30.0
-                }
-            ]
-        },
-        {
-            "ID": 74,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -18368,7 +18283,7 @@
             ]
         },
         {
-            "ID": 75,
+            "ID": 74,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -18406,6 +18321,8 @@
                     "AnimName_Fire": "Fire",
                     "UpperBodyAimOffsetDeg": 90.0,
                     "UpperBodyYawScale": 2.0,
+                    "GunBoneName": "DEF-Weapon",
+                    "HandBoneName": "Snap-Hand.L",
                     "BackwardThreshold": -0.10000000149011612,
                     "ForwardThreshold": 0.10000000149011612,
                     "ShootingDuration": 0.5
@@ -18427,7 +18344,7 @@
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
-                    "SocketFilePath": "",
+                    "SocketFilePath": "Resource/Data/Socket/main_character_final.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -18546,14 +18463,14 @@
                         1.0,
                         1.0
                     ],
-                    "SolidInitialAlpha": 0.7799999713897705,
+                    "SolidInitialAlpha": 0.6399999856948853,
                     "SolidDecaySpeed": 10.0,
                     "SolidDecayMode": 0,
                     "SolidDecayCurve": 1,
                     "SolidEmissiveIntensity": 16.899999618530273,
-                    "SolidTrailGradient": 0.6000000238418579,
+                    "SolidTrailGradient": 0.4099999964237213,
                     "SolidMaxSlices": 24,
-                    "SolidSampleInterval": 0.03999999910593033,
+                    "SolidSampleInterval": 0.05000000074505806,
                     "DrawAlphaLayer": false,
                     "AlphaTint": [
                         1.0,
@@ -18569,13 +18486,13 @@
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
                     "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 347,
-                    "SourceHandleGeneration": 1
+                    "SourceHandleIndex": 348,
+                    "SourceHandleGeneration": 11
                 }
             ]
         },
         {
-            "ID": 76,
+            "ID": 75,
             "Name": "Monster_RoundType_Gray",
             "Active": true,
             "Components": [
@@ -18711,7 +18628,7 @@
             ]
         },
         {
-            "ID": 77,
+            "ID": 76,
             "Name": "Canvas_Message",
             "Active": true,
             "Components": [
@@ -18766,7 +18683,7 @@
             ]
         },
         {
-            "ID": 78,
+            "ID": 77,
             "Name": "UIToastPopUp",
             "Active": true,
             "Components": [
@@ -18887,7 +18804,7 @@
             ]
         },
         {
-            "ID": 79,
+            "ID": 78,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -18992,7 +18909,7 @@
             ]
         },
         {
-            "ID": 80,
+            "ID": 79,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -19063,7 +18980,7 @@
             ]
         },
         {
-            "ID": 81,
+            "ID": 80,
             "Name": "TemperManagerTestScript",
             "Active": true,
             "Components": [
@@ -19090,7 +19007,7 @@
             ]
         },
         {
-            "ID": 82,
+            "ID": 81,
             "Name": "Effect_Break_V1.01_big_white",
             "Active": true,
             "Components": [
@@ -19774,7 +19691,7 @@
             ]
         },
         {
-            "ID": 83,
+            "ID": 82,
             "Name": "Effect_bullet_Destroy",
             "Active": true,
             "Components": [
@@ -19891,7 +19808,7 @@
             ]
         },
         {
-            "ID": 84,
+            "ID": 83,
             "Name": "MonsterSpawner",
             "Active": true,
             "Components": [
@@ -19927,8 +19844,8 @@
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 84,
+            "ID": 84,
+            "ParentID": 83,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -19955,8 +19872,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 85,
+            "ID": 85,
+            "ParentID": 84,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -19983,8 +19900,8 @@
             ]
         },
         {
-            "ID": 87,
-            "ParentID": 85,
+            "ID": 86,
+            "ParentID": 84,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20011,8 +19928,8 @@
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 85,
+            "ID": 87,
+            "ParentID": 84,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20039,8 +19956,8 @@
             ]
         },
         {
-            "ID": 89,
-            "ParentID": 84,
+            "ID": 88,
+            "ParentID": 83,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20067,8 +19984,8 @@
             ]
         },
         {
-            "ID": 90,
-            "ParentID": 89,
+            "ID": 89,
+            "ParentID": 88,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20095,8 +20012,8 @@
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 89,
+            "ID": 90,
+            "ParentID": 88,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20123,8 +20040,8 @@
             ]
         },
         {
-            "ID": 92,
-            "ParentID": 89,
+            "ID": 91,
+            "ParentID": 88,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20151,8 +20068,8 @@
             ]
         },
         {
-            "ID": 93,
-            "ParentID": 89,
+            "ID": 92,
+            "ParentID": 88,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20179,8 +20096,8 @@
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 84,
+            "ID": 93,
+            "ParentID": 83,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20207,8 +20124,8 @@
             ]
         },
         {
-            "ID": 95,
-            "ParentID": 94,
+            "ID": 94,
+            "ParentID": 93,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20235,8 +20152,8 @@
             ]
         },
         {
-            "ID": 96,
-            "ParentID": 94,
+            "ID": 95,
+            "ParentID": 93,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -20263,8 +20180,8 @@
             ]
         },
         {
-            "ID": 97,
-            "ParentID": 94,
+            "ID": 96,
+            "ParentID": 93,
             "Name": "GameObject",
             "Active": true,
             "Components": [

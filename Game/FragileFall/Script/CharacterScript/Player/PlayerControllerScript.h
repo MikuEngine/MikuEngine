@@ -118,6 +118,8 @@ namespace game
         int m_CurrentDashCount = 3;
         float m_dashRechargeTime = 1.0f;
         float m_dashRechargeTimer = 1.0f;
+        /** 잔상 녹화 구간: 대쉬 시간의 이 비율까지만 RecordSample (0.7 = 전 구간의 70%만, 감속 구간 제외) */
+        float m_dashAfterimageCutoffRatio = 0.7f;
 
         // ─────────────────────────────────────────────
         // 대쉬 런타임 상태
@@ -129,10 +131,14 @@ namespace game
              
         
         // ─────────────────────────────────────────────
-        // 총알 발사 위치 오프셋
+        // 총알 발사 위치 (소켓 사용 시 오프셋 무시)
         // ─────────────────────────────────────────────
-        float m_bulletStartOffsetY = 2.2f;        // Y축 발사 높이
-        float m_bulletStartOffsetForward = 1.5f;  // 발사 방향으로의 오프셋 (앞으로)
+        /** BulletFireSocket이 있는 메쉬 오브젝트 이름. 씬에서 FindGameObject로 검색 */
+        std::string m_playerAnimMeshObjectName = "PlayerAnimMesh";
+        /** 발사 소켓 이름. 해당 메쉬의 SkeletalMeshRenderer에서 검색. 비우면 오프셋 방식 */
+        std::string m_bulletFireSocketName = "BulletFireSocket";
+        float m_bulletStartOffsetY = 2.2f;        // 소켓 미사용 시 Y축 발사 높이
+        float m_bulletStartOffsetForward = 1.5f;  // 소켓 미사용 시 발사 방향 오프셋
         
         // ─────────────────────────────────────────────
         // 발사 이벤트 콜백 (Ptr 기반 자동 정리)

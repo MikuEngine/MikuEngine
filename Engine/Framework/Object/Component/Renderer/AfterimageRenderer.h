@@ -3,6 +3,7 @@
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Data/ConstantBufferTypes.h"
 #include "Core/Graphics/Resource/Texture.h"
+#include <optional>
 
 namespace engine
 {
@@ -18,11 +19,12 @@ namespace engine
 	class SamplerState;
 	class RasterizerState;
 
-	// A-1: 잔상 한 슬라이스 (위치·회전 + 알파)
+	// A-1: 잔상 한 슬라이스 (위치·회전 + 알파). 스킨 메쉬일 때 녹화 순간의 본 포즈를 저장해 본체 애니와 무관하게 고정
 	struct AfterimageSlice
 	{
 		Matrix world;
 		float alpha = 1.0f;
+		std::optional<CbBone> boneSnapshot;  // 녹화 순간의 본 행렬 (스킨 메쉬일 때만 사용, 없으면 소스 현재 포즈)
 	};
 
 	// 알파 감쇠 방식: 동시(모든 슬라이스 동시 감쇠) / 순차(가장 오래된 슬라이스부터 하나씩 감쇠)
