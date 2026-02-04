@@ -838,7 +838,7 @@ namespace game
 			if (m_bulletFactory && m_aimPointer)
 			{
 				engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
-				engine::Vector3 direction = m_aimPointer->GetDirectionFrom(playerPos);
+				engine::Vector3 dirFromPlayer = m_aimPointer->GetDirectionFrom(playerPos);
 
 				// ─────────────────────────────────────────────
 				// 총알 발사 위치: BulletFireSocket 사용 시 소켓 위치 (PlayerAnimMesh 오브젝트의 SkeletalMeshRenderer)
@@ -867,7 +867,7 @@ namespace game
 					bulletStartPos = bulletSocketRenderer->GetSocketWorldMatrix(m_bulletFireSocketName).Translation();
 				else if (useSocket)
 				{
-					bulletStartPos = playerPos + direction * 0.5f;
+					bulletStartPos = playerPos + dirFromPlayer * 0.5f;
 					static bool s_bulletSocketWarned = false;
 					if (!s_bulletSocketWarned)
 					{
@@ -877,9 +877,12 @@ namespace game
 				}
 				else
 				{
-					bulletStartPos = playerPos + direction * m_bulletStartOffsetForward;
+					bulletStartPos = playerPos + dirFromPlayer * m_bulletStartOffsetForward;
 					bulletStartPos.y = m_bulletStartOffsetY;
 				}
+
+				// 발사 방향: 실제 발사 위치(소켓) → 에임. 플레이어 기준이면 소켓 오프셋 때문에 방향이 어긋남
+				engine::Vector3 direction = m_aimPointer->GetDirectionFrom(bulletStartPos);
 
 				// BulletParams 설정
 				BulletParams params;
