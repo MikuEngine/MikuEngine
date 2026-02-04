@@ -14,6 +14,7 @@
 
 #include "Manager/UpgradeProgressManager.h"
 #include "Script/UpgradeController.h"
+#include <Manager/LoadingScreenDrawer.h>
 
 
 namespace game
@@ -176,6 +177,7 @@ namespace game
 
     void SceneController_Lobby::EnterPlay()
     {
+        game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("Prototype_Play");
     }
 
@@ -191,6 +193,7 @@ namespace game
 
     void SceneController_Lobby::BackToMain()
     {
+        game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
     }
 

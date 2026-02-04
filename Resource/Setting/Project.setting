@@ -1,6 +1,6 @@
 {
     "SceneList": [
-        "StaticMeshTest"
+        "z_Hiro_Main"
     ],
     "SkyboxTexturePath": "Resource/Texture/PlainsSunsetEnvHDR.dds",
     "IBLIrradiancePath": "Resource/Texture/PlainsSunsetDiffuseHDR.dds",

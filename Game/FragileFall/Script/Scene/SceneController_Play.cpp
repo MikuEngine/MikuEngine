@@ -11,6 +11,7 @@
 #include "Script/UI/UIPopUpAnimator.h"
 
 #include "Manager/TimeScaler.h"
+#include <Manager/LoadingScreenDrawer.h>
 
 namespace game
 {
@@ -209,16 +210,19 @@ namespace game
 
     void SceneController_Play::BackToMain()
     {
+        game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
     }
 
     void SceneController_Play::BackToLobby()
     {
+        game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("z_Hiro_Lobby");
     }
 
     void SceneController_Play::BackToRestart()
     {
+        game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("Prototype_Play");
     }
 

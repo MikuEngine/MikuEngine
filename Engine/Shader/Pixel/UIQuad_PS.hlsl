@@ -437,15 +437,14 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
 
     // Texture Sample
     float2 uv = input.texCoord;
+    
     float4 finalColor = g_uiColor;
 
     // 2. UV 기반 이펙트 (텍스처 샘플링 전)
-    [branch] // 성능 최적화: if문 분기 예측
     if (g_effectMode == UI_FX_PIXELATE)
     {
         ApplyFx_Pixelate(uv);
     }
-    // HoverTransition도 UV를 건드린다면 여기에 포함
 
     // 3. 메인 텍스처 샘플링
     float4 tex = g_texBlit.Sample(g_samLinear, uv);
