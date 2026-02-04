@@ -15,7 +15,9 @@
 #include "Manager/UpgradeProgressManager.h"
 #include "Script/UpgradeController.h"
 #include <Manager/LoadingScreenDrawer.h>
+#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 
+#include "Manager/TimeScaler.h"
 
 namespace game
 {
@@ -44,6 +46,44 @@ namespace game
             sens = Clamp(sens, kSensMin, kSensMax);
             return (sens - kSensMin) / (kSensMax - kSensMin);
         }
+
+        static float Lerp(float a, float b, float t)
+        {
+            return a + (b - a) * t;
+        }
+
+        static engine::Vector3 LerpVec3(const engine::Vector3& a, const engine::Vector3& b, float t)
+        {
+            return { Lerp(a.x, b.x, t), Lerp(a.y, b.y, t), Lerp(a.z, b.z, t) };
+        }
+
+        static float DeltaAngleDeg(float a, float b)
+        {
+            float d = fmodf(b - a, 360.0f);
+            if (d > 180.0f) d -= 360.0f;
+            if (d < -180.0f) d += 360.0f;
+            return d;
+        }
+
+        static float LerpAngleDeg(float a, float b, float t)
+        {
+            return a + DeltaAngleDeg(a, b) * t;
+        }
+
+        static engine::Vector3 LerpEulerDeg(const engine::Quaternion& a, const engine::Quaternion& b, float t)
+        {
+            return {
+                LerpAngleDeg(a.x, b.x, t),
+                LerpAngleDeg(a.y, b.y, t),
+                LerpAngleDeg(a.z, b.z, t)
+            };
+        }
+
+        static float SmoothStep01(float t)
+        {
+            t = Clamp(t, 0.f, 1.f);
+            return t * t * (3.f - 2.f * t);
+        }
     }
 
     void SceneController_Lobby::Awake()
@@ -69,6 +109,8 @@ namespace game
 
     void SceneController_Lobby::Start()
     {
+        TimeScaler::PlayWorld();
+
         m_optionPopUp = engine::GameObject::Find("UI_OptionPopUp");
         if (m_optionPopUp) m_optionPopUp->SetActive(false);
 
@@ -99,7 +141,16 @@ namespace game
             if (auto* slider = go->GetComponent<engine::UISlider>())
                 slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
 
-        // Load
+        // 플레이어 애니메이션 재생 ================================================
+        m_playerPreview = engine::GameObject::Find("PlayerPreview");
+        if (!m_playerPreview) return;
+
+        m_isPlayerMove = false;
+
+        auto* playerAnim = m_playerPreview->GetComponent<engine::SkeletalAnimator>();
+        if (playerAnim) playerAnim->Play("Idle", true);
+
+        // Load =======================================================
         auto* ugdGO = engine::GameObject::Find("UpgradeController");
         if (!ugdGO) return;
 
@@ -114,6 +165,31 @@ namespace game
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
             HandleEscape();
+        }
+
+        if (m_playerPreview && m_isPlayerMove)
+        {
+            m_moveElapsed += engine::Time::UnscaledDeltaTime();
+            float t = (m_moveDuration > 0.0f) ? (m_moveElapsed / m_moveDuration) : 1.0f;
+            t = Clamp(t, 0.f, 1.f);
+
+            float s = SmoothStep01(t);
+
+            auto* tr = m_playerPreview->GetTransform();
+
+            const engine::Vector3 pos = LerpVec3(m_moveStartPos, m_moveTargetPos, s);
+            const engine::Vector3 rot = LerpEulerDeg(m_moveStartRot, m_moveTargetRot, s);
+
+            tr->SetLocalPosition(pos);
+            tr->SetLocalRotation(rot);
+
+            if (t >= 1.0f)
+            {
+                m_isPlayerMove = false;
+
+                game::LoadingScreenDrawer::OnSceneTransitionBegin();
+                engine::SceneManager::Get().ChangeScene("Prototype_Play");
+            }
         }
     }
 
@@ -174,8 +250,22 @@ namespace game
 
     void SceneController_Lobby::EnterPlay()
     {
-        game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("Prototype_Play");
+        if (!m_playerPreview) return;
+        
+        auto* tr = m_playerPreview->GetTransform();
+        if (!tr) return;
+
+        m_moveStartPos = tr->GetLocalPosition();
+        m_moveStartRot = tr->GetLocalRotation();
+
+        m_moveTargetPos = { 0, 0, 20 };
+        m_moveTargetRot = engine::Quaternion::CreateFromYawPitchRoll({ 0.0f, -15.f, 0.0f });
+
+        m_moveElapsed = 0.0f;
+        m_isPlayerMove = true;
+
+        auto* playerAnim = m_playerPreview->GetComponent<engine::SkeletalAnimator>();
+        if (playerAnim) playerAnim->PlayCrossFade("Walk", 0.3f, true, 0, 1);
     }
 
     void SceneController_Lobby::OpenUpgrade()
