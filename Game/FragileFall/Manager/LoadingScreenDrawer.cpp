@@ -50,7 +50,7 @@ namespace game
 		float g_orbitAngle = 0.0f;
 
 		constexpr float LOGO_SIZE_PX = 200.0f;
-		constexpr float ORBIT_RADIUS_PX = 180.0f;
+		constexpr float ORBIT_RADIUS_PX = 350.0f;
 		constexpr float ORBIT_TEXT_WIDTH_PX = 80.0f;
 		constexpr float ORBIT_TEXT_HEIGHT_PX = 32.0f;
 		constexpr float ORBIT_SPEED_RAD_PER_SEC = 1.2f;
@@ -320,24 +320,19 @@ namespace game
 		dc->PSSetShader(g_uiPS->GetRawShader(), nullptr, 0);
 		dc->PSSetSamplers(static_cast<UINT>(engine::SamplerSlot::Linear), 1, g_linearSampler->GetSamplerState().GetAddressOf());
 
-		// 스케일링된 수치 계산
-		const float sLogoSize = LOGO_SIZE_PX;
-		const float sOrbitRadius = ORBIT_RADIUS_PX;
-		const float sOrbitW = ORBIT_TEXT_WIDTH_PX;
-		const float sOrbitH = ORBIT_TEXT_HEIGHT_PX;
-		const float sOrbitSize = ORBIT_RADIUS_PX;
-
-		// 1) 가운데 동그란 로고
-		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_logoTexture->GetSRV().GetAddressOf());
-		DrawUIQuad(dc, centerX, centerY, sLogoSize, sLogoSize, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 2);
-		
+		// 1) 회전하는 텍스트(이미지)
 		if (g_orbitTextTexture)
 		{
 			g_orbitAngle += engine::Time::DeltaTime() * ORBIT_SPEED_RAD_PER_SEC;
 			dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_orbitTextTexture->GetSRV().GetAddressOf());
 
-			DrawUIQuad(dc, centerX, centerY, sOrbitSize, sOrbitSize, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 0, g_orbitAngle);
+			DrawUIQuad(dc, centerX, centerY, ORBIT_RADIUS_PX, ORBIT_RADIUS_PX, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 0, g_orbitAngle);
 		}
+
+		// 2) 가운데 동그란 로고
+		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_logoTexture->GetSRV().GetAddressOf());
+		DrawUIQuad(dc, centerX, centerY, LOGO_SIZE_PX, LOGO_SIZE_PX, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 2);
+		
 
 		ID3D11ShaderResourceView* nullSRV = nullptr;
 		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, &nullSRV);
