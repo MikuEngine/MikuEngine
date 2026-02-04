@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -314,6 +314,9 @@ namespace game
 
 		m_logicFSM->SetParameter("IsMoving", isMoving);
 
+		if (m_aimPointer)
+			m_aimPointer->SetMoving(isMoving);
+
 		if (isMoving)
 		{
 			m_logicFSM->SetParameter("MoveX", fixedInputDir.x);
@@ -332,10 +335,19 @@ namespace game
 			m_logicFSM->SetTrigger("Attack");
 		}
 
-		// Held 시 파라미터 (연속 발사)
-		m_logicFSM->SetParameter("IsShooting", isMouseHeld);
-		if (!isMouseHeld)
-			m_hasFiredThisSession = false;  // 손 떼면 다음 클릭에서 첫 발 즉시 허용
+		// Held 시 파라미터 (연속 발사). 한 번 클릭 시: 손 떼도 1발 나갈 때까지 IdleShoot 유지
+		{
+			std::string state = m_logicFSM->GetCurrentState();
+			bool inShootState = (state == "IdleShoot" || state == "WalkShoot");
+			bool keepForFirstShot = inShootState && !m_hasFiredThisSession;
+			m_logicFSM->SetParameter("IsShooting", isMouseHeld || keepForFirstShot);
+		}
+		// Idle/Walk로 돌아왔을 때 다음 클릭을 위해 세션 플래그 리셋
+		{
+			std::string state = m_logicFSM->GetCurrentState();
+			if (state != "IdleShoot" && state != "WalkShoot")
+				m_hasFiredThisSession = false;
+		}
 
 		// ─────────────────────────────────────────────
 		// 3. 대쉬 입력 (Shift/Space)
@@ -827,13 +839,18 @@ namespace game
 		}
 
 		// ─────────────────────────────────────────────
-		// 발사 조건: 마우스 홀드 + 쿨다운 + (애니 발사 프레임 도달 OR 이번 세션 첫 발)
-		// → 첫 발은 즉시, 연사는 애니 발사 모션과 동기화
+		// 발사 조건: 쿨다운 + 애니 발사 프레임 도달(총 내미는 포즈)
+		// - 꾹 누르면: 마우스 홀드 시 발사
+		// - 한 번 클릭: 손 떼도 IdleShoot 유지 → 애니 발사 프레임 도달 시 1발만 발사
 		// ─────────────────────────────────────────────
 		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
-		bool canFireThisFrame = m_canFireNow || !m_hasFiredThisSession;
+		std::string shootState = m_logicFSM->GetCurrentState();
+		bool inShootState = (shootState == "IdleShoot" || shootState == "WalkShoot");
+		bool allowFirstShotWithoutHold = inShootState && !m_hasFiredThisSession && m_canFireNow && m_fireTimer <= 0.0f;
 
-		if (isMouseHeld && m_fireTimer <= 0.0f && canFireThisFrame)
+		bool doFire = m_fireTimer <= 0.0f && m_canFireNow && (isMouseHeld || allowFirstShotWithoutHold);
+
+		if (doFire)
 		{
 			// 발사!
 			if (m_bulletFactory && m_aimPointer)
@@ -918,8 +935,8 @@ namespace game
 				}
 
 				m_fireTimer = m_fireRate;
-				m_hasFiredThisSession = true;
 				m_canFireNow = false;
+				m_hasFiredThisSession = true;
 			}
 		}
 	}

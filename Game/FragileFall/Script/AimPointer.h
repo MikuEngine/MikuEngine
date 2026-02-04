@@ -39,8 +39,14 @@ namespace game
 
         // 월드 좌표 계산 설정
         float m_targetPlaneY = 1.5f;  // 레이캐스트 대상 평면의 Y 높이 (총알 발사 높이)
+        /** 서서 쏠 때는 0, 걸을 때만 적용되는 에임 Y 보정 (양수=위, 음수=아래). 서서 쏠 때는 Target Plane Y로 조정 */
+        float m_aimYOffsetWhenMoving = 0.0f;
+        bool m_isMoving = false;  // 플레이어가 이동 중인지 (외부에서 SetMoving으로 설정)
 
     public:
+        /** 이동 중일 때만 Y 보정 적용. 서서 쏠 때는 0, 걸을 때만 m_aimYOffsetWhenMoving 사용 */
+        void SetMoving(bool moving) { m_isMoving = moving; }
+
         void Start() override;
         void Update() override;
 

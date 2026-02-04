@@ -216,15 +216,17 @@ namespace game
         engine::Vector3 rayDir = rayEnd - rayOrigin;
         rayDir.Normalize();
 
-        // Y=m_targetPlaneY 평면과의 교점 계산
+        // 서서 쏠 때는 보정 0, 걸을 때만 m_aimYOffsetWhenMoving 적용
+        float effectiveOffset = m_isMoving ? m_aimYOffsetWhenMoving : 0.0f;
+        float planeY = m_targetPlaneY + effectiveOffset;
         if (std::abs(rayDir.y) > 0.0001f)
         {
-            float t = (m_targetPlaneY - rayOrigin.y) / rayDir.y;
+            float t = (planeY - rayOrigin.y) / rayDir.y;
 
             if (t > 0.0f)
             {
                 m_worldPosition = rayOrigin + rayDir * t;
-                m_worldPosition.y = m_targetPlaneY;
+                m_worldPosition.y = planeY;
             }
             else
             {
@@ -257,6 +259,10 @@ namespace game
         {
             ImGui::SetTooltip("The Y height of the plane to raycast against.\nSet this to match your bullet firing height.");
         }
+        ImGui::DragFloat("Aim Y Offset (when moving)", &m_aimYOffsetWhenMoving, 0.05f, -5.0f, 5.0f);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("걸을 때만 적용되는 에임 Y 보정. 서서 쏠 때는 0 (Target Plane Y로 조정). 양수=위, 음수=아래");
+        ImGui::Text("Moving: %s", m_isMoving ? "Yes" : "No");
 
         ImGui::Separator();
         ImGui::Text("Canvas Settings");
@@ -302,6 +308,7 @@ namespace game
         j["CursorSize"] = m_cursorSize;
         j["CursorPivot"] = m_cursorPivot;
         j["TargetPlaneY"] = m_targetPlaneY;
+        j["AimYOffsetWhenMoving"] = m_aimYOffsetWhenMoving;
     }
 
     void AimPointer::Load(const engine::json& j)
@@ -314,6 +321,9 @@ namespace game
         engine::JsonGet(j, "CursorSize", m_cursorSize);
         engine::JsonGet(j, "CursorPivot", m_cursorPivot);
         engine::JsonGet(j, "TargetPlaneY", m_targetPlaneY);
+        engine::JsonGet(j, "AimYOffsetWhenMoving", m_aimYOffsetWhenMoving);
+        if (j.contains("AimYOffset") && !j.contains("AimYOffsetWhenMoving"))
+            m_aimYOffsetWhenMoving = j["AimYOffset"].get<float>();
     }
 }
 
