@@ -57,6 +57,7 @@ namespace engine
 
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Static_VS.hlsl");
+        m_spotShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Spot_Static_VS.hlsl");
         m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Static_VS.hlsl");
         m_pointShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Point_VS.hlsl");
 
@@ -790,6 +791,10 @@ namespace engine
             deviceContext->VSSetShader(m_shadowVS->GetRawShader(), nullptr, 0);
             break;
 
+        case LightType::Spot:
+            deviceContext->VSSetShader(m_spotShadowVS->GetRawShader(), nullptr, 0);
+            break;
+
         case LightType::Point:
             deviceContext->VSSetShader(m_pointShadowVS->GetRawShader(), nullptr, 0);
             break;
@@ -811,6 +816,11 @@ namespace engine
                 switch (lightType)
                 {
                 case LightType::Directional:
+                    deviceContext->PSSetShader(nullptr, nullptr, 0);
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                    break;
+
+                case LightType::Spot:
                     deviceContext->PSSetShader(nullptr, nullptr, 0);
                     deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
                     break;
@@ -837,6 +847,11 @@ namespace engine
                 switch (lightType)
                 {
                 case LightType::Directional:
+                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                    break;
+
+                case LightType::Spot:
                     deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
                     deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
                     break;

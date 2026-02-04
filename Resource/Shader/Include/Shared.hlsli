@@ -25,6 +25,7 @@ TextureCube g_texIBLIrradiance          : register(t22);
 TextureCube g_texIBLSpecular            : register(t23);
 Texture2D g_texIBLSpecularBRDFLUT       : register(t24);
 TextureCubeArray g_texPointShadowMap    : register(t25);
+Texture2DArray g_texSpotShadowMap       : register(t26);
 
 // utility
 Texture2D g_texBlit                     : register(t30);
@@ -160,7 +161,10 @@ cbuffer LocalLight : register(b6)
     
     int g_localLightShadowIndex;
     int g_useLocalLightShadow;
-    float2 __pad1_LocalLight;
+    int g_spotShadowIndex;
+    int g_useSpotShadow;
+
+    matrix g_spotLightViewProjection; // for spot shadow sampling
 };
 
 cbuffer ScreenSize : register(b7)
@@ -216,6 +220,11 @@ cbuffer ShadowPoint : register(b11)
     float g_shadowLightRange;
     int g_shadowLightIndex;
     float3 __pad_ShadowPoint;
+};
+
+cbuffer ShadowSpot : register(b12)
+{
+    matrix g_spotShadowDepthViewProj;  // view-proj for rendering spot shadow depth (VS only)
 };
 
 struct VS_INPUT_POSITION

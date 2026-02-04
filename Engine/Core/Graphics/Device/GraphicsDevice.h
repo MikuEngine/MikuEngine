@@ -67,6 +67,7 @@ namespace engine
         std::unique_ptr<Texture> m_shadowDepthBuffer;
         std::unique_ptr<Texture> m_pointShadowLinearBuffer;
         std::unique_ptr<Texture> m_pointShadowDepthBuffer;
+        std::unique_ptr<Texture> m_spotShadowDepthBuffer; // Texture2D array, one slice per spot light
 
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_gameDepthReadOnlyDSV;
 
@@ -123,6 +124,7 @@ namespace engine
         D3D11_VIEWPORT m_backBufferViewport{};
         D3D11_VIEWPORT m_shadowViewport{};
         D3D11_VIEWPORT m_pointShadowViewport{};
+        D3D11_VIEWPORT m_spotShadowViewport{};
 
         UINT m_syncInterval = 0;
         UINT m_presentFlags = 0;
@@ -137,6 +139,7 @@ namespace engine
 
     public:
         static constexpr int MAX_POINT_SHADOWS = 4; // 동시에 그림자 켤 수 있는 최대 라이트 수
+        static constexpr int MAX_SPOT_SHADOWS = 4;  // 동시에 스포트라이트 그림자 켤 수 있는 최대 수
 
     private:
         GraphicsDevice();
@@ -170,6 +173,9 @@ namespace engine
 
         void BeginDrawPointShadowPass();
         void EndDrawPointShadowPass();
+
+        void BeginDrawSpotShadowPass(int arraySlice);
+        void EndDrawSpotShadowPass();
 
         void BeginDrawGeometryPass();
         void EndDrawGeometryPass();

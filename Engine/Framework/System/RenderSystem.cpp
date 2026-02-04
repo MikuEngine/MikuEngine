@@ -188,6 +188,11 @@ namespace engine
             m_shadowPointGS = ResourceManager::Get().GetOrCreateGeometryShader("Resource/Shader/Geometry/Shadow_Point_GS.hlsl");
             m_shadowPointCB = ResourceManager::Get().GetOrCreateConstantBuffer("ShadowPoint", sizeof(CbShadowPoint));
         }
+
+        // spot shadow
+        {
+            m_shadowSpotCB = ResourceManager::Get().GetOrCreateConstantBuffer("ShadowSpot", sizeof(CbShadowSpot));
+        }
     }
 
     void RenderSystem::Update()
@@ -348,6 +353,7 @@ namespace engine
             }
 
             DrawPointLightShadow();
+            DrawSpotLightShadow();
 
             graphics.BeginDrawGeometryPass();
             {
@@ -981,6 +987,72 @@ namespace engine
         context->GSSetShader(nullptr, nullptr, 0);
     }
 
+    void RenderSystem::DrawSpotLightShadow()
+    {
+        auto& graphics = GraphicsDevice::Get();
+        auto* context = graphics.GetDeviceContext().Get();
+        auto& lightSystem = SystemManager::Get().GetLightSystem();
+        const auto& lights = lightSystem.GetLights();
+
+        context->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::ShadowSpot), 1, m_shadowSpotCB->GetBuffer().GetAddressOf());
+
+        int shadowIndex = 0;
+        for (auto light : lights)
+        {
+            if (!light->IsActive() || !light->IsCastShadows() || light->GetLightType() != LightType::Spot)
+            {
+                continue;
+            }
+
+            if (shadowIndex >= GraphicsDevice::MAX_SPOT_SHADOWS)
+            {
+                break;
+            }
+
+            light->SetShadowIndex(shadowIndex);
+
+            Matrix lightWorld = light->GetTransform()->GetWorld();
+            Vector3 forward(lightWorld._31, lightWorld._32, lightWorld._33);
+            Vector3 up(lightWorld._21, lightWorld._22, lightWorld._23);
+            forward.Normalize();
+            up.Normalize();
+            Vector3 lightPos = light->GetTransform()->GetWorldPosition();
+            float range = light->GetRange();
+            float angle = light->GetAngle(); // half-angle in degrees
+
+            // 콘 메쉬가 range*2 높이로 그려지므로 far는 그보다 약간 더 멀리 (잘림 방지 여유)
+            // 콘 끝(range*2) + 여유; DrawLocalLight의 spotShadowFar와 동일해야 함
+            const float spotShadowFar = range * 2.0f * 1.2f;
+            Matrix lightView = DirectX::XMMatrixLookAtLH(lightPos, lightPos + forward, up);
+            Matrix lightProj = DirectX::XMMatrixPerspectiveFovLH(ToRadian(angle * 2.0f), 1.0f, 0.1f, spotShadowFar);
+
+            CbShadowSpot cb{};
+            cb.spotLightViewProjection = (lightView * lightProj).Transpose();
+            context->UpdateSubresource(m_shadowSpotCB->GetRawBuffer(), 0, nullptr, &cb, 0, 0);
+
+            graphics.BeginDrawSpotShadowPass(shadowIndex);
+            {
+                for (auto renderer : m_opaqueList)
+                {
+                    if (renderer->IsActive() && renderer->IsCastShadow())
+                    {
+                        renderer->DrawShadow(RenderType::Opaque, LightType::Spot);
+                    }
+                }
+                for (auto renderer : m_cutoutList)
+                {
+                    if (renderer->IsActive() && renderer->IsCastShadow())
+                    {
+                        renderer->DrawShadow(RenderType::Cutout, LightType::Spot);
+                    }
+                }
+            }
+            graphics.EndDrawSpotShadowPass();
+
+            ++shadowIndex;
+        }
+    }
+
     void RenderSystem::DrawGlobalLight()
     {
         const auto& context = GraphicsDevice::Get().GetDeviceContext();
@@ -1006,6 +1078,8 @@ namespace engine
         context->OMSetDepthStencilState(m_lightVolumeDSS->GetRawDepthStencilState(), 0);
         static const float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
         context->OMSetBlendState(m_additiveBS->GetRawBlendState(), blendFactor, 0xffffffff);
+
+        context->PSSetSamplers(static_cast<UINT>(SamplerSlot::Comparison), 1, m_comparisonSamplerState->GetSamplerState().GetAddressOf());
 
         // CB 바인딩
         context->PSSetConstantBuffers(6, 1, m_localLightCB->GetBuffer().GetAddressOf());
@@ -1111,12 +1185,25 @@ namespace engine
                 cbData.lightColor = light->GetColor();
                 cbData.lightIntensity = light->GetIntensity();
                 cbData.lightPosition = Vector3(lightWorld._41, lightWorld._42, lightWorld._43);
-                cbData.lightRange = range;
+                // 콘 높이가 range*2 이므로 조명/섀도우 적용 범위도 동일하게 (안 하면 range에서 잘려 보임)
+                cbData.lightRange = range * 2.0f;
 
                 // Light Direction: 이제 Z+ (Forward) 벡터를 사용
                 cbData.lightDirection = forward;
 
                 cbData.lightAngle = angle;
+
+                // Spot shadow: view-projection for sampling (far = 콘 끝 + 여유)
+                const float spotShadowFar = range * 2.0f * 1.2f;
+                Vector3 spotLightPos(lightWorld._41, lightWorld._42, lightWorld._43);
+                Matrix spotView = DirectX::XMMatrixLookAtLH(spotLightPos, spotLightPos + forward, up);
+                Matrix spotProj = DirectX::XMMatrixPerspectiveFovLH(ToRadian(angle * 2.0f), 1.0f, 0.1f, spotShadowFar);
+                cbData.spotLightViewProjection = (spotView * spotProj).Transpose();
+                int spotShadowIdx = light->GetShadowIndex();
+                cbData.useSpotShadow = (spotShadowIdx >= 0 && light->IsCastShadows()) ? 1 : 0;
+                cbData.spotShadowIndex = spotShadowIdx >= 0 ? spotShadowIdx : 0;
+                if (spotShadowIdx >= 0)
+                    light->SetShadowIndex(-1); // reset after use (same as point)
 
                 // 셰이더 설정 및 그리기
                 context->PSSetShader(m_spotLightPS->GetRawShader(), nullptr, 0);

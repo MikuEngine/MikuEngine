@@ -91,6 +91,7 @@ namespace engine
         // 셰이더 로드 (기본)
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Skinned_VS.hlsl"); // Skinned Shadow VS
+        m_spotShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Spot_Skinned_VS.hlsl");
         m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Skinned_VS.hlsl");
         m_pointShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Point_Skinned_VS.hlsl");
 
@@ -127,6 +128,7 @@ namespace engine
                 m_vsFilePath = "Resource/Shader/Vertex/Rigid_VS.hlsl";
                 m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
                 m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Rigid_VS.hlsl");
+                m_spotShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Spot_Rigid_VS.hlsl");
                 m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Rigid_VS.hlsl");
                 m_pointShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Point_Rigid_VS.hlsl");
 
@@ -140,6 +142,7 @@ namespace engine
                 m_vsFilePath = "Resource/Shader/Vertex/Skinned_VS.hlsl";
                 m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
                 m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Skinned_VS.hlsl");
+                m_spotShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Spot_Skinned_VS.hlsl");
                 m_simpleVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Simple_Skinned_VS.hlsl");
                 m_pointShadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Point_Skinned_VS.hlsl");
 
@@ -445,6 +448,10 @@ namespace engine
             deviceContext->VSSetShader(m_shadowVS->GetRawShader(), nullptr, 0);
             break;
 
+        case LightType::Spot:
+            deviceContext->VSSetShader(m_spotShadowVS->GetRawShader(), nullptr, 0);
+            break;
+
         case LightType::Point:
             deviceContext->VSSetShader(m_pointShadowVS->GetRawShader(), nullptr, 0);
             break;
@@ -483,6 +490,11 @@ namespace engine
                     deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
                     break;
 
+                case LightType::Spot:
+                    deviceContext->PSSetShader(nullptr, nullptr, 0);
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                    break;
+
                 case LightType::Point:
                     deviceContext->PSSetShader(m_pointShadowPS->GetRawShader(), nullptr, 0);
                     deviceContext->DrawIndexedInstanced(meshSection.indexCount, 6, meshSection.indexOffset, meshSection.vertexOffset, 0);
@@ -505,6 +517,11 @@ namespace engine
                 switch (lightType)
                 {
                 case LightType::Directional:
+                    deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
+                    deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
+                    break;
+
+                case LightType::Spot:
                     deviceContext->PSSetShader(m_maskCutoutPS->GetRawShader(), nullptr, 0);
                     deviceContext->DrawIndexed(meshSection.indexCount, meshSection.indexOffset, meshSection.vertexOffset);
                     break;
