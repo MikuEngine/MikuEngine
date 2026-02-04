@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundGray.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -194,7 +194,8 @@ namespace game
         //     현재 +Z로 이동 중 → 가능한 방향: -X, -Z → 90도 회전은 -X
         
         // 현재 방향의 90도 좌/우 방향 계산
-        MoveDirection left90, right90;
+        MoveDirection left90 = MoveDirection::PlusX;
+        MoveDirection right90 = MoveDirection::MinusX;
         switch (m_currentDirection)
         {
         case MoveDirection::PlusX:
@@ -212,6 +213,8 @@ namespace game
         case MoveDirection::MinusZ:
             left90 = MoveDirection::PlusX;
             right90 = MoveDirection::MinusX;
+            break;
+        default:
             break;
         }
         

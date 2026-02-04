@@ -129,8 +129,8 @@ namespace game
             m_bulletParams.type = BulletType::Curve;
             m_bulletParams.speed = m_bulletSpeed;           // 나선형에서는 미사용
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.angularSpeed = 2.0f;             // 회전 속도 (rad/s)
-            m_bulletParams.radiusGrowthRate = 3.0f;         // 반지름 증가율 (m/s)
+            m_bulletParams.angularSpeed = m_curvedAngularSpeed;      // 에디터 설정값
+            m_bulletParams.radiusGrowthRate = m_curvedRadiusGrowth;  // 에디터 설정값
             m_bulletParams.damage = 20;
             m_rotationSpeed = 15.0f;
 			break;
@@ -381,17 +381,12 @@ namespace game
         // ─────────────────────────────────────────────
         // 둔탁 파랑
         // 
-        // 고정된 위치에서 플레이어에게 투사체 3개를 날림
+        // 고정된 위치에서 플레이어에게 3방향 투사체 발사
+        // - m_spreadAngle: 좌우 퍼짐 각도 (인스펙터에서 설정 가능)
         // ─────────────────────────────────────────────
         case MonsterTier::Blue:
         {
-			engine::Vector3 RotattedDirection1 = engine::Vector3::Transform(direction, engine::Matrix::CreateRotationY(0.2f));
-			engine::Vector3 RotattedDirection2 = engine::Vector3::Transform(direction, engine::Matrix::CreateRotationY(-0.2f));
-
-            m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-            m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection1, m_bulletParams);
-            m_bulletFactory->LinearFireMonster(firePosition, RotattedDirection2, m_bulletParams);
-
+            m_bulletFactory->ThreewayFireMonster(firePosition, direction, m_spreadAngle, m_bulletParams);
             break;
         }
         // ─────────────────────────────────────────────
@@ -400,13 +395,14 @@ namespace game
         // 고정된 위치에서 4방향 나선형 탄환 발사
         // - 팩토리가 +X, -X, +Z, -Z 방향으로 4발 생성
         // - 각 탄환은 CurvedMovement로 나선 궤도 이동
+        // - m_curvedAngularSpeed, m_curvedRadiusGrowth: 실시간 반영
         // ─────────────────────────────────────────────
         case MonsterTier::Red:
         {
             engine::Vector3 curvedFirePos = firePosition;
             curvedFirePos.y = 2.2f;  // Y 오프셋
             
-            m_bulletFactory->CurvedFireMonster(curvedFirePos, m_bulletParams);
+            m_bulletFactory->CurvedFireMonster(curvedFirePos, m_curvedAngularSpeed, m_curvedRadiusGrowth, m_bulletParams);
             break;
 		}
         // ─────────────────────────────────────────────
@@ -560,6 +556,45 @@ namespace game
             
             ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
                 "(Angle calculated at fire time based on player distance)");
+        }
+
+        // ─────────────────────────────────────────────
+        // 3방향 발사 설정 (Blue일 때만 표시)
+        // ─────────────────────────────────────────────
+        if (m_monsterTier == MonsterTier::Blue)
+        {
+            ImGui::Separator();
+            ImGui::Text("=== Threeway Bullet Settings ===");
+            
+            ImGui::DragFloat("Spread Angle", &m_spreadAngle, 0.01f, 0.0f, 1.5f, "%.2f rad");
+            
+            // 각도(degree) 변환 표시
+            float spreadDeg = m_spreadAngle * 180.0f / 3.14159265f;
+            ImGui::Text("  = %.1f degrees", spreadDeg);
+            
+            ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+                "(Left: -%.2f rad, Center: 0, Right: +%.2f rad)", m_spreadAngle, m_spreadAngle);
+        }
+
+        // ─────────────────────────────────────────────
+        // 나선형 발사 설정 (Red일 때만 표시)
+        // ─────────────────────────────────────────────
+        if (m_monsterTier == MonsterTier::Red)
+        {
+            ImGui::Separator();
+            ImGui::Text("=== Curved (Spiral) Bullet Settings ===");
+            
+            ImGui::DragFloat("Angular Speed", &m_curvedAngularSpeed, 0.1f, 0.1f, 10.0f, "%.1f rad/s");
+            ImGui::DragFloat("Radius Growth", &m_curvedRadiusGrowth, 0.1f, 0.1f, 20.0f, "%.1f m/s");
+            
+            ImGui::Spacing();
+            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Preview:");
+            ImGui::Text("  Angular Speed: Higher = tighter spiral");
+            ImGui::Text("  Radius Growth: Higher = faster expansion");
+            
+            // 1초 후 반지름 표시
+            ImGui::Text("  Radius at 1s: %.1f m", m_curvedRadiusGrowth * 1.0f);
+            ImGui::Text("  Radius at 2s: %.1f m", m_curvedRadiusGrowth * 2.0f);
         }
 
         // 런타임 정보

@@ -46,9 +46,22 @@ namespace game
 
         // ─────────────────────────────────────────────
         // 나선형 총알 발사 (4발, +X/-X/+Z/-Z 방향)
+        // angularSpeed: 회전 속도 (rad/s)
+        // radiusGrowthRate: 반지름 증가율 (m/s)
         // ─────────────────────────────────────────────
         void CurvedFireMonster(const engine::Vector3& position,
+                               float angularSpeed,
+                               float radiusGrowthRate,
                                const BulletParams& params);
+
+        // ─────────────────────────────────────────────
+        // 3방향 총알 발사 (중앙 + 좌우 퍼짐)
+        // spreadAngle: 좌우 퍼짐 각도 (라디안)
+        // ─────────────────────────────────────────────
+        void ThreewayFireMonster(const engine::Vector3& position,
+                                 const engine::Vector3& direction,
+                                 float spreadAngle,
+                                 const BulletParams& params);
 
     private:
         // ─────────────────────────────────────────────
