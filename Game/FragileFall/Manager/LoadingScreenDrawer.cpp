@@ -76,6 +76,10 @@ namespace game
 
 		int g_loadStep = 0;
 		float g_loadingDotsTime = 0.0f;
+
+		constexpr float LOADING_TEXT_GRACE_SEC = 0.0f;
+		constexpr float LOADING_STEP_SEC = 0.30f;
+		float g_loadingElapsed = 0.0f;
 	}
 
 	static bool NextUtf8Codepoint(const char*& p, const char* end, uint32_t& outCp)
@@ -444,22 +448,29 @@ namespace game
 		// 3) 로고 아래 텍스트
 		if (g_loadingFont)
 		{
-			g_loadingDotsTime += engine::Time::UnscaledDeltaTime(); // 로딩 화면은 Unscaled 추천
-
-			// 0.25초마다 한 단계씩(원하시면 조절)
-			const float stepSec = 0.30f;
-			g_loadStep = (int)floorf(g_loadingDotsTime / stepSec) % 7;
+			g_loadingDotsTime += engine::Time::UnscaledDeltaTime();
 
 			std::string loadingStr;
-			switch (g_loadStep)
+
+			if (g_loadingElapsed < LOADING_TEXT_GRACE_SEC)
 			{
-			case 0: loadingStr = "로"; break;
-			case 1: loadingStr = "로딩"; break;
-			case 2: loadingStr = "로딩중"; break;
-			case 3: loadingStr = "로딩중."; break;
-			case 4: loadingStr = "로딩중.."; break;
-			case 5: loadingStr = "로딩중..."; break;
-			default: loadingStr = ""; break;
+				loadingStr = "로딩중...";
+			}
+			else
+			{
+				// (B) 이후엔 단계 애니메이션
+				g_loadingDotsTime += engine::Time::UnscaledDeltaTime();
+				g_loadStep = (int)floorf(g_loadingDotsTime / LOADING_STEP_SEC) % 6; // 0~5
+
+				switch (g_loadStep)
+				{
+				case 0: loadingStr = "로"; break;
+				case 1: loadingStr = "로딩"; break;
+				case 2: loadingStr = "로딩중"; break;
+				case 3: loadingStr = "로딩중."; break;
+				case 4: loadingStr = "로딩중.."; break;
+				default: loadingStr = "로딩중..."; break;
+				}
 			}
 
 			// 중앙 정렬을 위한 가로 폭 사전 계산
@@ -502,6 +513,7 @@ namespace game
 
 	void LoadingScreenDrawer::OnSceneTransitionBegin()
 	{
+		g_loadingElapsed = 0.0f;
 		g_loadingDotsTime = 0.0f;
 		g_loadStep = 0;
 		g_sceneLoadAnimTime = 0.0f;
