@@ -11605,8 +11605,8 @@
                     "BaseBulletRange": 10.0,
                     "BaseBulletSizeScale": 1.0,
                     "BaseBulletSpeed": 15.0,
-                    "BulletStartOffsetY": 2.5,
-                    "BulletStartOffsetForward": 1.5,
+                    "BulletStartOffsetY": 1.7000000476837158,
+                    "BulletStartOffsetForward": -0.5,
                     "PlayerAnimMeshObjectName": "PlayerAnimMesh",
                     "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
@@ -11637,7 +11637,8 @@
                         "x": 0.5,
                         "y": 0.5
                     },
-                    "TargetPlaneY": 2.5
+                    "TargetPlaneY": 1.7000000476837158,
+                    "AimYOffsetWhenMoving": -0.30000001192092896
                 },
                 {
                     "Type": "LogicFSM",
