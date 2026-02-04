@@ -42,7 +42,8 @@ namespace game
 		std::shared_ptr<engine::VertexBuffer> g_quadVB;
 		std::shared_ptr<engine::IndexBuffer> g_quadIB;
 		std::shared_ptr<engine::InputLayout> g_inputLayout;
-		std::shared_ptr<engine::BlendState> g_blendAlpha;
+		std::shared_ptr<engine::BlendState> g_blendStraight;
+		std::shared_ptr<engine::BlendState> g_blendPremul;
 		std::shared_ptr<engine::DepthStencilState> g_depthNone;
 		std::shared_ptr<engine::FontData> g_loadingFont;
 
@@ -125,7 +126,7 @@ namespace game
 			auto& rm = engine::ResourceManager::Get();
 
 			g_logoTexture = rm.GetOrCreateTexture("Resource/Texture/Miku.png", engine::LifeScope::Global);
-			g_orbitTextTexture = rm.GetOrCreateTexture("Resource/Texture/ExcutionTargetTemp.png", engine::LifeScope::Global);
+			g_orbitTextTexture = rm.GetOrCreateTexture("Resource/Texture/Moon.png", engine::LifeScope::Global);
 			g_sceneLoadAnimTexture = rm.GetOrCreateTexture("Resource/Texture/Flame.png", engine::LifeScope::Global);
 			g_sceneLoadSpriteData = engine::AssetManager::Get().GetOrCreateSpriteData("Resource/Data/SpriteSheet/Flame.spritedata", engine::LifeScope::Global);
 			g_sceneLoadAnimData = engine::AssetManager::Get().GetOrCreateSpriteAnimationData("Resource/Data/SpriteAnim/Flame_a.animdata", engine::LifeScope::Global);
@@ -141,7 +142,8 @@ namespace game
 			g_quadVB = rm.GetGeometryVertexBuffer("DefaultQuad");
 			g_quadIB = rm.GetGeometryIndexBuffer("DefaultQuad");
 			g_inputLayout = g_uiVS->GetOrCreateInputLayout<engine::PositionTexCoordVertex>();
-			g_blendAlpha = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlend);
+			g_blendStraight = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlend);
+			g_blendPremul = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlendPremultiplied);
 			g_depthNone = rm.GetDefaultDepthStencilState(engine::DefaultDepthStencilType::None);
 			g_whiteTexture = rm.GetDefaultTexture(engine::DefaultTextureType::White);
 
@@ -174,14 +176,20 @@ namespace game
 		// 1. NDC 변환
 		const float tx = (centerPxX / vp.Width) * 2.0f - 1.0f;
 		const float ty = 1.0f - (centerPxY / vp.Height) * 2.0f;
+
 		const float sx = (sizePxW / vp.Width) * 2.0f;
 		const float sy = (sizePxH / vp.Height) * 2.0f;
+
+		const float aspect = vp.Width / vp.Height;
+		const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(1.0f, aspect, 1.0f);
+		const DirectX::XMMATRIX SInv = DirectX::XMMatrixScaling(1.0f, 1.0f / aspect, 1.0f);
+		const DirectX::XMMATRIX Rcorr = SInv * DirectX::XMMatrixRotationZ(rotationRad) * S;
 
 		// 2. 데이터 구성
 		engine::CbUIElement cbUI = {};
 		cbUI.clip = DirectX::XMMatrixTranspose(
 			DirectX::XMMatrixScaling(sx, sy, 1.0f) *
-			DirectX::XMMatrixRotationZ(rotationRad) *
+			Rcorr *
 			DirectX::XMMatrixTranslation(tx, ty, 0.0f)
 		);
 		cbUI.color = color;
@@ -194,16 +202,18 @@ namespace game
 			cbUI.mask0 = engine::Vector4(centerPxX, centerPxY, sizePxW * 0.5f, 0.0f);
 		}
 
-		// 3. GPU 업데이트 및 명시적 바인딩 (이 부분이 핵심입니다)
 		dc->UpdateSubresource(g_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 
-		// 슬롯 번호는 engine::ConstantBufferSlot::UIElement (Shared.hlsli의 b4 예상)
 		ID3D11Buffer* cbPtr = g_uiCB->GetBuffer().Get();
 		dc->VSSetConstantBuffers(static_cast<UINT>(engine::ConstantBufferSlot::UIElement), 1, &cbPtr);
 		dc->PSSetConstantBuffers(static_cast<UINT>(engine::ConstantBufferSlot::UIElement), 1, &cbPtr);
 
 		// 4. 그리기
 		dc->DrawIndexed(g_quadIB->GetIndexCount(), 0, 0);
+
+		ID3D11Buffer* nullPtr = nullptr;
+		dc->VSSetConstantBuffers(static_cast<UINT>(engine::ConstantBufferSlot::UIElement), 1, &nullPtr);
+		dc->PSSetConstantBuffers(static_cast<UINT>(engine::ConstantBufferSlot::UIElement), 1, &nullPtr);
 	}
 
 	static void DrawTextQuad(
@@ -272,14 +282,15 @@ namespace game
 		}
 	}
 
-	static void DrawFirstLoadScreen(const D3D11_VIEWPORT& vp, float scale)
+	static void DrawFirstLoadScreen()
 	{
 		auto& gd = engine::GraphicsDevice::Get();
 		auto* dc = gd.GetDeviceContext().Get();
+		const D3D11_VIEWPORT vp = gd.GetViewport();
 
 		const float centerX = vp.Width * 0.5f;
 		const float centerY = vp.Height * 0.5f;
-
+		const float aspect = vp.Width / vp.Height;
 		// IA
 		dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		dc->IASetInputLayout(g_inputLayout->GetRawInputLayout());
@@ -294,7 +305,7 @@ namespace game
 		// State
 		{
 			float blendFactor[4] = { 0, 0, 0, 0 };
-			dc->OMSetBlendState(g_blendAlpha->GetBlendState().Get(), blendFactor, 0xffffffff);
+			dc->OMSetBlendState(g_blendPremul->GetBlendState().Get(), blendFactor, 0xffffffff);
 			dc->OMSetDepthStencilState(g_depthNone->GetDepthStencilState().Get(), 0);
 		}
 
@@ -303,56 +314,35 @@ namespace game
 		dc->PSSetSamplers(static_cast<UINT>(engine::SamplerSlot::Linear), 1, g_linearSampler->GetSamplerState().GetAddressOf());
 
 		// 스케일링된 수치 계산
-		const float sLogoSize = LOGO_SIZE_PX * scale;
-		const float sOrbitRadius = ORBIT_RADIUS_PX * scale;
-		const float sOrbitW = ORBIT_TEXT_WIDTH_PX * scale;
-		const float sOrbitH = ORBIT_TEXT_HEIGHT_PX * scale;
-		const float sOrbitSize = ORBIT_RADIUS_PX * 2.0f * scale;
+		const float sLogoSize = LOGO_SIZE_PX;
+		const float sOrbitRadius = ORBIT_RADIUS_PX;
+		const float sOrbitW = ORBIT_TEXT_WIDTH_PX;
+		const float sOrbitH = ORBIT_TEXT_HEIGHT_PX;
+		const float sOrbitSize = ORBIT_RADIUS_PX;
 
 		// 1) 가운데 동그란 로고
 		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_logoTexture->GetSRV().GetAddressOf());
 		DrawUIQuad(dc, centerX, centerY, sLogoSize, sLogoSize, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 2);
+		
+		if (g_orbitTextTexture)
+		{
+			g_orbitAngle += engine::Time::DeltaTime() * ORBIT_SPEED_RAD_PER_SEC;
+			dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_orbitTextTexture->GetSRV().GetAddressOf());
 
-		//// 2) 로고 외부를 도는 텍스트 이미지
-		//if (g_orbitTextTexture)
-		//{
-		//	// 시간에 따라 각도 업데이트 (제자리 회전)
-		//	g_orbitAngle += engine::Time::DeltaTime() * ORBIT_SPEED_RAD_PER_SEC;
-
-		//	dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_orbitTextTexture->GetSRV().GetAddressOf());
-
-		//	DrawUIQuad(dc, centerX, centerY, sOrbitSize, sOrbitSize, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 0, g_orbitAngle);
-		//}
-
-		// 2) 로고 아래 텍스트
-		//if (g_loadingFont)
-		//{
-		//	std::string loadingStr = "Miku Engine";
-
-		//	// 중앙 정렬을 위한 가로 폭 사전 계산
-		//	float totalWidth = 0.0f;
-		//	const char* p = loadingStr.data();
-		//	const char* end = p + loadingStr.size();
-		//	uint32_t cp;
-		//	while (NextUtf8Codepoint(p, end, cp)) {
-		//		totalWidth += g_loadingFont->EnsureGlyph(dc, cp).advance;
-		//	}
-
-		//	// 로고에서 일정 거리만큼 아래에 배치
-		//	const float textStartX = centerX - (totalWidth * scale * 0.5f);
-		//	const float textStartY = centerY + (sLogoSize * 0.5f) + (40.0f * scale);
-
-		//	DrawTextQuad(dc, g_loadingFont, loadingStr, textStartX, textStartY, 40, vp, engine::Vector4(1, 1, 1, 1), scale);
-		//}
+			DrawUIQuad(dc, centerX, centerY, sOrbitSize, sOrbitSize, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 0, g_orbitAngle);
+		}
 
 		ID3D11ShaderResourceView* nullSRV = nullptr;
 		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, &nullSRV);
 	}
 
-	static void DrawSceneTransitionScreen(float progress, const D3D11_VIEWPORT& vp, float scale)
+	static void DrawSceneTransitionScreen(float progress)
 	{
 		auto& gd = engine::GraphicsDevice::Get();
 		auto* dc = gd.GetDeviceContext().Get();
+
+		const D3D11_VIEWPORT vp = gd.GetViewport();
+		const float scale = vp.Height / 1080.0f;
 
 		const float centerX = vp.Width * 0.5f;
 		const float animCenterY = vp.Height * SCENE_LOAD_ANIM_Y_RATIO;
@@ -381,7 +371,7 @@ namespace game
 		}
 
 		float blendFactor[4] = { 0, 0, 0, 0 };
-		dc->OMSetBlendState(g_blendAlpha->GetBlendState().Get(), blendFactor, 0xffffffff);
+		dc->OMSetBlendState(g_blendStraight->GetBlendState().Get(), blendFactor, 0xffffffff);
 		dc->OMSetDepthStencilState(g_depthNone->GetDepthStencilState().Get(), 0);
 
 		dc->VSSetShader(g_uiVS->GetRawShader(), nullptr, 0);
@@ -440,10 +430,27 @@ namespace game
 		DrawUIQuad(dc, fillCenterX, barCenterY, fillWidth, sBarH, vp, barFillColor);
 
 		// 3) 그 아래: '로딩중...' 텍스트 이미지
-		if (g_loadingTextTexture)
+		//if (g_loadingTextTexture)
+		//{
+		//	dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_loadingTextTexture->GetSRV().GetAddressOf());
+		//	DrawUIQuad(dc, centerX, textCenterY, sTextW, sTextH, vp);
+		//}
+
+		// 3) 로고 아래 텍스트
+		if (g_loadingFont)
 		{
-			dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_loadingTextTexture->GetSRV().GetAddressOf());
-			DrawUIQuad(dc, centerX, textCenterY, sTextW, sTextH, vp);
+			std::string loadingStr = "로딩중...";
+
+			// 중앙 정렬을 위한 가로 폭 사전 계산
+			float totalWidth = 0.0f;
+			const char* p = loadingStr.data();
+			const char* end = p + loadingStr.size();
+			uint32_t cp;
+			while (NextUtf8Codepoint(p, end, cp)) {
+				totalWidth += g_loadingFont->EnsureGlyph(dc, cp).advance;
+			}
+
+			DrawTextQuad(dc, g_loadingFont, loadingStr, centerX, textCenterY, 40, vp, engine::Vector4(1, 1, 1, 1), scale);
 		}
 
 		ID3D11ShaderResourceView* nullSRV = nullptr;
@@ -454,18 +461,13 @@ namespace game
 	{
 		EnsureResourcesLoaded();
 
-		auto& gd = engine::GraphicsDevice::Get();
-		const D3D11_VIEWPORT vp = gd.GetViewport();
-
-		const float scale = vp.Height / 1080.0f;
-
 		if (g_isFirstLoad)
 		{
-			DrawFirstLoadScreen(vp, scale);
+			DrawFirstLoadScreen();
 		}
 		else
 		{
-			DrawSceneTransitionScreen(progress, vp, scale);
+			DrawSceneTransitionScreen(progress);
 		}
 	}
 
@@ -491,7 +493,9 @@ namespace game
 		g_quadVB.reset();
 		g_quadIB.reset();
 		g_inputLayout.reset();
-		g_blendAlpha.reset();
+		g_blendStraight.reset();
+		g_blendPremul.reset();
 		g_depthNone.reset();
+		g_loadingFont.reset();
 	}
 }

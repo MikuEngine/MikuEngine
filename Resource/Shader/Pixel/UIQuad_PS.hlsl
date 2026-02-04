@@ -500,7 +500,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             ApplyFx_SelectOrbit(uv, finalColor);
             break;
     }
-
+    
     // 5. 최종 보정
     finalColor.rgb = LinearToSRGB(finalColor.rgb);
     return finalColor;
