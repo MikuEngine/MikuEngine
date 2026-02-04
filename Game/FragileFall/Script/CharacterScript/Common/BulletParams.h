@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace game
 {
@@ -37,7 +37,8 @@ namespace game
         // 공통 속성
         // ─────────────────────────────────────────────
         float speed = 10.0f;        // 총알 속도
-        float lifetime = 3.0f;      // 총알 수명 (초)
+        float lifetime = 3.0f;      // 총알 수명 (초) - BulletPlayer는 range 사용, 다른 타입은 lifetime 사용
+        float range = 50.0f;         // 총알 사거리 (BulletPlayer 전용, lifetime 대신 사용)
         float damage = 0.0f;
 
         // ─────────────────────────────────────────────

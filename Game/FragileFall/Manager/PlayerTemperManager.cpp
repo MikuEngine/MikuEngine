@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerTemperManager.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -16,6 +16,7 @@ namespace game
 		float g_addAtkDmg = 0.0f;
 		float g_addAtkSpeed = 0.0f;
 		float g_addBulletLifetime = 0.0f;
+		float g_addBulletRange = 0.0f;
 		float g_addBulletSizeScale = 0.0f;
 		float g_addBulletSpeed = 0.0f;
 
@@ -23,6 +24,7 @@ namespace game
 		float g_mulAtkDmg = 1.0f;
 		float g_mulAtkSpeed = 1.0f;
 		float g_mulBulletLifetime = 1.0f;
+		float g_mulBulletRange = 1.0f;
 		float g_mulBulletSizeScale = 1.0f;
 		float g_mulBulletSpeed = 1.0f;
 
@@ -68,6 +70,11 @@ namespace game
 		float finalBulletLifetime = (baseBulletLifetime + g_addBulletLifetime) * g_mulBulletLifetime;
 		player->SetBulletLifetime(finalBulletLifetime);
 
+		// 총알 사거리
+		float baseBulletRange = player->GetBaseBulletRange();
+		float finalBulletRange = (baseBulletRange + g_addBulletRange) * g_mulBulletRange;
+		player->SetBulletRange(finalBulletRange);
+
 		// 총알 크기
 		float baseBulletSizeScale = player->GetBaseBulletSizeScale();
 		float finalBulletSizeScale = (baseBulletSizeScale + g_addBulletSizeScale) * g_mulBulletSizeScale;
@@ -88,6 +95,7 @@ namespace game
 		g_addAtkDmg = 0.0f;
 		g_addAtkSpeed = 0.0f;
 		g_addBulletLifetime = 0.0f;
+		g_addBulletRange = 0.0f;
 		g_addBulletSizeScale = 0.0f;
 		g_addBulletSpeed = 0.0f;
 
@@ -95,6 +103,7 @@ namespace game
 		g_mulAtkDmg = 1.0f;
 		g_mulAtkSpeed = 1.0f;
 		g_mulBulletLifetime = 1.0f;
+		g_mulBulletRange = 1.0f;
 		g_mulBulletSizeScale = 1.0f;
 		g_mulBulletSpeed = 1.0f;
 
@@ -114,6 +123,9 @@ namespace game
 	void PlayerTemperManager::SetAddBulletLifetime(float value) { g_addBulletLifetime = value; }
 	float PlayerTemperManager::GetAddBulletLifetime() { return g_addBulletLifetime; }
 
+	void PlayerTemperManager::SetAddBulletRange(float value) { g_addBulletRange = value; }
+	float PlayerTemperManager::GetAddBulletRange() { return g_addBulletRange; }
+
 	void PlayerTemperManager::SetAddBulletSizeScale(float value) { g_addBulletSizeScale = value; }
 	float PlayerTemperManager::GetAddBulletSizeScale() { return g_addBulletSizeScale; }
 
@@ -131,6 +143,9 @@ namespace game
 
 	void PlayerTemperManager::SetMulBulletLifetime(float value) { g_mulBulletLifetime = value; }
 	float PlayerTemperManager::GetMulBulletLifetime() { return g_mulBulletLifetime; }
+
+	void PlayerTemperManager::SetMulBulletRange(float value) { g_mulBulletRange = value; }
+	float PlayerTemperManager::GetMulBulletRange() { return g_mulBulletRange; }
 
 	void PlayerTemperManager::SetMulBulletSizeScale(float value) { g_mulBulletSizeScale = value; }
 	float PlayerTemperManager::GetMulBulletSizeScale() { return g_mulBulletSizeScale; }

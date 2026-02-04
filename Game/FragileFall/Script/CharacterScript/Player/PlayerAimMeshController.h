@@ -45,8 +45,8 @@ namespace game
         std::string m_playerObjectName = "Player";
         std::string m_aimPointerMeshObjectName = "AimPointerMesh";
         float m_fixedY = 0.0f;
-        /** 이동 중일 때만 적용. 에임이 하체 방향과 이 각도(도) 이상 벌어졌을 때만 하체 회전. Idle/가만히 있을 때는 미적용(전신 부드럽게 에임 추적) */
-        float m_lowerBodyAimThresholdDeg = 30.0f;
+        /** 이동 중일 때만 적용. 에임이 하체 방향과 이 각도(도) 이상 벌어졌을 때만 하체 회전. 0이면 항상 에임 정확히 추적. Idle/가만히 있을 때는 미적용 */
+        float m_lowerBodyAimThresholdDeg = 0.0f;
         /** 하체 회전 보간 속도 (1초에 이 비율만큼 목표 방향으로 회전, Slerp 계수). 클수록 빨리 맞춤 */
         float m_lowerBodyTurnSpeed = 8.0f;
 
@@ -61,6 +61,10 @@ namespace game
         std::string m_animName_WalkForward = "WalkForward";
         std::string m_animName_WalkBackward = "WalkBackward";
         std::string m_animName_Fire = "Fire";
+        /** 총 메쉬 본 이름 (루트 직계). 비어있지 않으면 손 본을 따라가도록 SetBoneFollowBone 등록 */
+        std::string m_gunBoneName;
+        /** 손 본 이름 (총 본이 이 본의 pose를 따름). m_gunBoneName과 둘 다 설정 시에만 연동 활성화 */
+        std::string m_handBoneName;
 
         // ─────────────────────────────────────────────
         // Forward/Backward 판정 설정
@@ -80,6 +84,14 @@ namespace game
         float m_shootingDuration = 0.5f;   // Shooting 상태 유지 시간
         float m_shootingTimer = 0.0f;      // 남은 Shooting 시간
         bool m_isShooting = false;         // 현재 Shooting 상태
+
+        // ─────────────────────────────────────────────
+        // Fire 애니메이션 발사 프레임 동기화
+        // ─────────────────────────────────────────────
+        /** Fire 애니메이션에서 실제 총알 발사 모션이 나오는 시간 (정규화된 시간, 0.0~1.0) */
+        float m_fireAnimShootFrameTime = 0.2f;  // 기본값: 애니메이션의 20% 지점
+        /** 이전 프레임 Fire 레이어 정규화 시간 (발사 프레임 "통과" 감지용, -1 = 미사용) */
+        float m_prevFireNormalizedTime = -1.0f;
 
         // ─────────────────────────────────────────────
         // Procedural Yaw: 하체 회전 보정용 (이전 프레임 하체 Yaw)

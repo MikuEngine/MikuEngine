@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -34,10 +34,17 @@ namespace game
         std::unique_ptr<IBulletMovement> m_movement;
 
         // ─────────────────────────────────────────────
-        // 수명 (Factory에서 전달받음)
+        // 수명/사거리 (Factory에서 전달받음)
         // ─────────────────────────────────────────────
-        float m_lifetime = 3.0f;
-        float m_elapsedTime = 0.0f;
+        float m_lifetime = 3.0f;        // 하위 호환성용 (사용 안 함)
+        float m_range = 50.0f;         // 사거리 (BulletPlayer는 이 값 사용)
+        float m_elapsedTime = 0.0f;    // 하위 호환성용 (사용 안 함)
+        
+        // ─────────────────────────────────────────────
+        // 사거리 기반 생명주기 관리
+        // ─────────────────────────────────────────────
+        engine::Vector3 m_startPosition = engine::Vector3::Zero;  // 발사 위치
+        engine::Vector3 m_direction = engine::Vector3::Zero;     // 발사 방향 (정규화됨)
 
         // ─────────────────────────────────────────────
         // 런타임 상태
@@ -52,14 +59,16 @@ namespace game
         // ─────────────────────────────────────────────
         // 초기화 (Factory에서 호출)
         // - damage: 플레이어 강화 반영된 데미지 (미전달 시 기본값 사용)
+        // - range: 사거리 (BulletPlayer는 range 사용, lifetime 무시)
         // ─────────────────────────────────────────────
-        void Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg);
+        void Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg, float range = 50.0f);
 
         // ─────────────────────────────────────────────
         // 생명주기
         // ─────────────────────────────────────────────
         void Start() override;
         void Update() override;
+		void LateUpdate() override;
 
         // ─────────────────────────────────────────────
         // 충돌 콜백

@@ -1,10 +1,13 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <DirectXColors.h>
 
+#ifdef _DEBUG
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
 
 #include "Common/Utility/Profiling.h"
 #include "Core/Graphics/Device/GraphicsDevice.h"
@@ -33,8 +36,6 @@
 #include "Framework/Object/Component/Light/LightDebugRenderer.h"
 #include "Framework/Object/Component/Socket/SocketDebugRenderer.h"
 #include "Core/System/VirtualFileSystem.h"
-
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace engine
 {
@@ -167,28 +168,25 @@ namespace engine
 
         UpdateViewportTransformData();
 
+#ifdef _DEBUG
         IMGUI_CHECKVERSION();
-
         ImGui::CreateContext();
-
         ImGui_ImplWin32_Init(m_hWnd);
         ImGui_ImplDX11_Init(GraphicsDevice::Get().GetDevice().Get(), GraphicsDevice::Get().GetDeviceContext().Get());
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
         io.Fonts->Clear();
 
         ImFontConfig cfg{};
         cfg.OversampleH = 2;
         cfg.OversampleV = 2;
-
         const ImWchar* ranges = io.Fonts->GetGlyphRangesKorean();
-
         io.Fonts->AddFontFromFileTTF("Resource/Font/malgun.ttf", 18.0f, &cfg, ranges);
 
         ImGui_ImplDX11_InvalidateDeviceObjects();
         ImGui_ImplDX11_CreateDeviceObjects();
+#endif // _DEBUG
 
         SoundSystem::Get().Initialize();
         
@@ -257,11 +255,10 @@ namespace engine
             callback();
         }
 
+#ifdef _DEBUG
         ImGui_ImplDX11_Shutdown();
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
-
-#ifdef _DEBUG
         EditorManager::Get().Shutdown();
 #endif
         SceneManager::Get().Shutdown();
@@ -496,15 +493,16 @@ namespace engine
 
     LRESULT WinApp::MessageProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
+#ifdef _DEBUG
         // ImGui 컨텍스트가 있을 때만 처리
         if (ImGui::GetCurrentContext() != nullptr)
         {
-            // 우리가 만든 함수로 가로채기
             if (HandleImGuiInput(hWnd, uMsg, wParam, lParam))
             {
                 return true;
             }
         }
+#endif
 
         switch (uMsg)
         {
@@ -761,6 +759,7 @@ namespace engine
 
     bool WinApp::HandleImGuiInput(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
+#ifdef _DEBUG
         // 마우스 좌표가 포함된 메시지인지 확인 (휠 제외)
         bool isMouseCoordMsg = false;
         switch (uMsg)
@@ -779,23 +778,22 @@ namespace engine
             break;
         }
 
-        // 좌표 변환이 필요한 경우
         if (isMouseCoordMsg)
         {
-            // LPARAM에서 OS 기준 좌표 추출
             int x = LOWORD(lParam);
             int y = HIWORD(lParam);
-
-            // 좌표 변환 (Window -> Game Resolution)
             float localX = (x - m_viewportData.viewX) * m_viewportData.scaleX;
             float localY = (y - m_viewportData.viewY) * m_viewportData.scaleY;
-
             LPARAM newLParam = MAKELPARAM(static_cast<short>(localX), static_cast<short>(localY));
-
             return ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, newLParam);
         }
-
-        // 마우스 좌표와 상관없는 메시지 (키보드, 휠 등)는 그대로 전달
         return ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+#else
+        (void)hWnd;
+        (void)uMsg;
+        (void)wParam;
+        (void)lParam;
+        return false;
+#endif
     }
 }

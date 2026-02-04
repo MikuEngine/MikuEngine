@@ -73,6 +73,7 @@ namespace game
         bool ApplyUpgrade(int nodeId);
 
         void SelectNode(int nodeId);
+        void ResetSelection();
 
         void RefreshNodeVisuals();
         void RecomputeUnlocked();

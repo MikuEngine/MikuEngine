@@ -11,6 +11,7 @@
 #include <Framework/Object/Component/UI/UIImage.h>
 #include "Script/UI/UIPopUpAnimator.h"
 #include <Framework/Object/Component/UI/UIProgressBar.h>
+#include <Manager/LoadingScreenDrawer.h>
 
 namespace game
 {
@@ -166,6 +167,7 @@ namespace game
 
     void SceneController_Main::StartGame()
     {
+        game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("z_Hiro_Lobby");
     }
 

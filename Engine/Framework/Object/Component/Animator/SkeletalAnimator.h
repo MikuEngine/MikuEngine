@@ -80,6 +80,7 @@ namespace engine
         std::vector<Bone> m_skeleton;
         BoneMatrixArray m_finalBoneMatrices;
         std::unordered_map<int, Quaternion> m_proceduralRotations;
+        std::unordered_map<std::string, std::string> m_boneFollowMap; // target bone name -> source bone name (target will use source's combined matrix)
         std::unordered_map<std::string, EventCallBack> m_notifyCallbacks;
 
     public:
@@ -102,6 +103,9 @@ namespace engine
         void SetLayerWeight(int layerIndex, float weight);
         void SetLayerBlendMode(int layerIndex, AnimationBlendMode mode);
         void SetProceduralRotation(const std::string& boneName, const Quaternion& rotation);
+        /** targetBoneName will use sourceBoneName's pose each frame (e.g. gun bone follows hand bone). */
+        void SetBoneFollowBone(const std::string& targetBoneName, const std::string& sourceBoneName);
+        void ClearBoneFollowBone(const std::string& targetBoneName);
 
         bool IsFinished(int layerIndex = 0) const;
         bool IsPlaying(int layerIndex = 0) const;
@@ -119,6 +123,8 @@ namespace engine
             bool loop = true,
             int layerIndex = 0,
             float speed = 1.0f);
+        /** 현재 재생 중인 애니메이션의 재생 속도를 동적으로 변경 */
+        void SetLayerSpeed(int layerIndex, float speed);
         void Update() override;
         void DrawTimeline(const std::string& animName);
         void UpdateTimeinePose();

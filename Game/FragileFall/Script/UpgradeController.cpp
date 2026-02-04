@@ -321,6 +321,19 @@ namespace game
         UpdateCostUI();
     }
 
+    void UpgradeController::ResetSelection()
+    {
+        m_selectedNodeId = 0;
+        ClearSelectedInfoUI();
+        HideAllCostSlots();
+
+        // TODO : UX 측면에서 맞는지
+        //m_selected = UpgradeCategory::Attack;
+
+        ApplyCategoryFilter();
+        RefreshNodeVisuals();
+    }
+
     void UpgradeController::RefreshNodeVisuals()
     {
         for (auto& [id, view] : m_views)

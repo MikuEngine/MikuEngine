@@ -14,6 +14,7 @@
 
 #include "Manager/UpgradeProgressManager.h"
 #include "Script/UpgradeController.h"
+#include <Manager/LoadingScreenDrawer.h>
 
 
 namespace game
@@ -82,9 +83,6 @@ namespace game
 
         m_isOptionOpen = false;
         m_isUpgradeOpen = false;
-
-        SetOptionOpen(false);
-        SetUpgradeOpen(false);
 
         auto& app = engine::AppContext::GetApp();
         const auto& s = app.GetUserSettings();
@@ -176,6 +174,7 @@ namespace game
 
     void SceneController_Lobby::EnterPlay()
     {
+        game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("Prototype_Play");
     }
 
@@ -191,6 +190,7 @@ namespace game
 
     void SceneController_Lobby::BackToMain()
     {
+        game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
     }
 
@@ -212,7 +212,7 @@ namespace game
         {
             open ? anim->Open() : anim->Close();
 
-            std::string soundName = open ? "UI_Open" : "UI_Close";
+            std::string soundName = m_isOptionOpen ? "UI_Open" : "UI_Close";
             engine::SoundSystem::Get().PlayUI(soundName);
         }
         else
@@ -228,13 +228,26 @@ namespace game
         if (m_blocker)
             m_blocker->SetActive(open);
 
+        if (!open)
+        {
+            auto* ugdGO = engine::GameObject::Find("UpgradeController");
+            if (ugdGO)
+            {
+                if (auto* uc = ugdGO->GetComponent<game::UpgradeController>())
+                {
+                    // 또는 안전하게 함수를 호출 (추천)
+                    uc->ResetSelection();
+                }
+            }
+        }
+
         if (!m_upgradePopUp) return;
 
         if (auto* anim = m_upgradePopUp->GetComponent<game::UIPopUpAnimator>())
         {
             open ? anim->Open() : anim->Close();
 
-            std::string soundName = open ? "UI_Open" : "UI_Close";
+            std::string soundName = m_isUpgradeOpen ? "UI_Open" : "UI_Close";
             engine::SoundSystem::Get().PlayUI(soundName);
         }
         else

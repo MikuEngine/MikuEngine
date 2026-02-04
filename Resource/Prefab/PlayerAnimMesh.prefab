@@ -12,7 +12,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.1920928955078125e-07,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -33,13 +33,20 @@
                     "PlayerObjectName": "Player",
                     "AimPointerMeshObjectName": "AimPointerMesh",
                     "FixedY": 0.0,
+                    "LowerBodyAimThresholdDeg": 30.0,
+                    "LowerBodyTurnSpeed": 8.0,
                     "AnimName_Idle": "Idle",
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
+                    "FireAnimShootFrameTime": 0.36000001430511475,
+                    "UpperBodyAimOffsetDeg": 90.0,
+                    "UpperBodyYawScale": 2.0,
+                    "GunBoneName": "DEF-Weapon",
+                    "HandBoneName": "Snap-Hand.L",
                     "BackwardThreshold": -0.10000000149011612,
                     "ForwardThreshold": 0.10000000149011612,
-                    "ShootingDuration": 0.9300000071525574
+                    "ShootingDuration": 0.5
                 },
                 {
                     "Type": "AnimFSM",
@@ -47,53 +54,18 @@
                     "LogicFSMObjectName": "Player",
                     "BaseLayerIndex": 0,
                     "UpperBodyLayerIndex": 1,
-                    "EnableProceduralAim": false,
+                    "EnableProceduralAim": true,
                     "MaxYaw": 70.0,
                     "MaxPitch": 45.0,
                     "AimLerpSpeed": 30.0,
-                    "SpineBoneName": "mixamorig:Spine1",
+                    "SpineBoneName": "Spine",
                     "AnimStates": []
-                },
-                {
-                    "Type": "AfterimageRenderer",
-                    "Active": true,
-                    "DrawSolidLayer": true,
-                    "SolidColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "SolidInitialAlpha": 0.699999988079071,
-                    "SolidDecaySpeed": 4.599999904632568,
-                    "SolidDecayMode": 0,
-                    "SolidDecayCurve": 1,
-                    "SolidEmissiveIntensity": 5.800000190734863,
-                    "SolidTrailGradient": 0.7200000286102295,
-                    "SolidMaxSlices": 24,
-                    "SolidSampleInterval": 0.02500000037252903,
-                    "DrawAlphaLayer": false,
-                    "AlphaTint": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "AlphaEmissiveIntensity": 0.0,
-                    "AlphaInitialAlpha": 0.6800000071525574,
-                    "AlphaDecaySpeed": 3.700000047683716,
-                    "AlphaDecayMode": 0,
-                    "AlphaDecayCurve": 1,
-                    "AlphaTrailGradient": 0.9200000166893005,
-                    "AlphaMaxSlices": 24,
-                    "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 289,
-                    "SourceHandleGeneration": 5
                 },
                 {
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
-                    "SocketFilePath": "",
+                    "SocketFilePath": "Resource/Data/Socket/main_character_final.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -200,46 +172,41 @@
                                 "HandThumb4.Right",
                                 "HandIndex4.Right"
                             ]
-                        },
-                        {
-                            "Name": "New Layer",
-                            "Weight": 0.0,
-                            "BlendMode": 0,
-                            "MaskBones": [
-                                "Spine",
-                                "Spine1",
-                                "Spine2",
-                                "Neck",
-                                "Shoulder.Left",
-                                "Shoulder.Right",
-                                "Head",
-                                "Arm.Left",
-                                "Arm.Right",
-                                "HeadTop_End",
-                                "ForeArm.Left",
-                                "ForeArm.Right",
-                                "Hand.Left",
-                                "Hand.Right",
-                                "HandThumb1.Left",
-                                "HandIndex1.Left",
-                                "HandThumb1.Right",
-                                "HandIndex1.Right",
-                                "HandThumb2.Left",
-                                "HandIndex2.Left",
-                                "Snap-Hand.L",
-                                "HandThumb2.Right",
-                                "HandIndex2.Right",
-                                "HandThumb3.Left",
-                                "HandIndex3.Left",
-                                "HandThumb3.Right",
-                                "HandIndex3.Right",
-                                "HandThumb4.Left",
-                                "HandIndex4.Left",
-                                "HandThumb4.Right",
-                                "HandIndex4.Right"
-                            ]
                         }
                     ]
+                },
+                {
+                    "Type": "AfterimageRenderer",
+                    "Active": true,
+                    "DrawSolidLayer": true,
+                    "SolidColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "SolidInitialAlpha": 0.6399999856948853,
+                    "SolidDecaySpeed": 10.0,
+                    "SolidDecayMode": 0,
+                    "SolidDecayCurve": 1,
+                    "SolidEmissiveIntensity": 16.899999618530273,
+                    "SolidTrailGradient": 0.4099999964237213,
+                    "SolidMaxSlices": 24,
+                    "SolidSampleInterval": 0.05000000074505806,
+                    "DrawAlphaLayer": false,
+                    "AlphaTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "AlphaEmissiveIntensity": 0.0,
+                    "AlphaInitialAlpha": 0.699999988079071,
+                    "AlphaDecaySpeed": 1.5,
+                    "AlphaDecayMode": 0,
+                    "AlphaDecayCurve": 1,
+                    "AlphaTrailGradient": 0.9200000166893005,
+                    "AlphaMaxSlices": 24,
+                    "AlphaSampleInterval": 0.0
                 }
             ]
         }

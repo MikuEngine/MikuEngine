@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "ParticleEmitter.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -20,19 +20,60 @@ namespace engine
 		{
 			m_emitterAge += dt;
 
+			// 버스트 처리는 그대로 유지
 			for (auto& burst : m_props.bursts)
 			{
 				ProcessBurst(burst, m_emitterAge, emitterPosition);
 			}
 
-			m_emissionTimer += dt;
-			float emissionInterval = 1.0f / std::max(EPSILON, m_props.emissionRate);
-
-			while (m_emissionTimer >= emissionInterval)
+			// ─────────────────────────────────────────────────────────────
+			// 총알 궤적 끊김 방지: 거리 기반 스폰 (Distance Emission)
+			// ─────────────────────────────────────────────────────────────
+			if (m_props.useDistanceEmission)
 			{
-				Emit(emitterPosition + m_props.positionOffset);
-				m_emissionTimer -= emissionInterval;
+				if (m_isFirstFrame) {
+					m_prevPos = emitterPosition;
+					m_isFirstFrame = false;
+				}
+
+				Vector3 delta = emitterPosition - m_prevPos;
+				float distanceMoved = delta.Length();
+
+				if (distanceMoved > 0.0f)
+				{
+					float totalDistance = distanceMoved + m_distAccumulator;
+
+					int emitCount = static_cast<int>(std::floor(totalDistance / m_props.emitSpacing));
+
+					for (int i = 1; i <= emitCount; ++i)
+					{
+						float t = (i * m_props.emitSpacing - m_distAccumulator) / distanceMoved;
+						Vector3 interpolatedPos = Vector3::Lerp(m_prevPos, emitterPosition, t);
+
+						Emit(interpolatedPos + m_props.positionOffset);
+					}
+
+					m_distAccumulator = totalDistance - (emitCount * m_props.emitSpacing);
+				}
+				m_prevPos = emitterPosition;
 			}
+			else
+			{
+				m_isFirstFrame = true;
+				m_emissionTimer += dt;
+				float emissionInterval = 1.0f / std::max(EPSILON, m_props.emissionRate);
+
+				while (m_emissionTimer >= emissionInterval)
+				{
+					Emit(emitterPosition + m_props.positionOffset);
+					m_emissionTimer -= emissionInterval;
+				}
+			}
+		}
+		else
+		{
+			m_isFirstFrame = true;
+			m_distAccumulator = 0.0f;
 		}
 
 		for (auto& p : m_particles)
@@ -229,6 +270,8 @@ namespace engine
 		j["StartEmissiveIntensity"] = p.startEmissiveIntensity;
 		j["EndEmissiveIntensity"] = p.endEmissiveIntensity;
 		j["Blend"] = static_cast<int>(p.blend);
+		j["UseDistanceEmission"] = p.useDistanceEmission;
+		j["EmitSpacing"] = p.emitSpacing;
 
 		j["SizeBegin"] = p.sizeBegin;
 		j["SizeEnd"] = p.sizeEnd;
@@ -306,6 +349,8 @@ namespace engine
 
 		JsonGet(j, "EmissionRate", p.emissionRate);
 		JsonGet(j, "MaxParticles", p.maxParticles);
+		JsonGet(j, "UseDistanceEmission", p.useDistanceEmission);
+		JsonGet(j, "EmitSpacing", p.emitSpacing);
 
 		int shapeInt = static_cast<int>(p.shape);
 		JsonGet(j, "Shape", shapeInt);

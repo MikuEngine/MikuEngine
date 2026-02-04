@@ -1,6 +1,6 @@
 {
     "Name": "SoundSystemTest",
-    "NumGameObjects": 13,
+    "NumGameObjects": 14,
     "GameObjects": [
         {
             "ID": 0,
@@ -12,7 +12,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 31.5,
+                        "y": 25.0,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -85,333 +85,6 @@
         },
         {
             "ID": 2,
-            "Name": "Player",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 0.019999999552965164,
-                        "y": 0.019999999552965164,
-                        "z": 0.019999999552965164
-                    }
-                },
-                {
-                    "Type": "AimPointer",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
-                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
-                    "UseAlternateCursor": false,
-                    "CursorSize": {
-                        "x": 32.0,
-                        "y": 32.0
-                    },
-                    "CursorPivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "AnimFSM",
-                    "Active": true,
-                    "BaseLayerIndex": 0,
-                    "UpperBodyLayerIndex": 1,
-                    "EnableProceduralAim": false,
-                    "MaxYaw": 70.0,
-                    "MaxPitch": 45.0,
-                    "AimLerpSpeed": 10.0,
-                    "SpineBoneName": "mixamorig:Spine1",
-                    "AnimStates": []
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 10.0,
-                    "angularDamping": 20.0,
-                    "useGravity": false,
-                    "constraints": 42
-                },
-                {
-                    "Type": "SkeletalAnimator",
-                    "Active": true,
-                    "Animations": [
-                        {
-                            "Name": "Fire",
-                            "Path": "Resource/Animation/TestForward.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "Idle",
-                            "Path": "Resource/Animation/TestIdle.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "WalkBackward",
-                            "Path": "Resource/Animation/TestBackward.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "WalkForward",
-                            "Path": "Resource/Animation/TestForward.fbx",
-                            "Notifies": []
-                        }
-                    ],
-                    "Layers": [
-                        {
-                            "Name": "Base Layer",
-                            "Weight": 1.0,
-                            "BlendMode": 0,
-                            "MaskBones": [
-                                "Armature",
-                                "mixamorig:Hips",
-                                "mixamorig:Spine",
-                                "mixamorig:RightUpLeg",
-                                "mixamorig:LeftUpLeg",
-                                "mixamorig:Spine1",
-                                "mixamorig:RightLeg",
-                                "mixamorig:LeftLeg",
-                                "mixamorig:Spine2",
-                                "mixamorig:RightFoot",
-                                "mixamorig:LeftFoot",
-                                "mixamorig:Neck",
-                                "mixamorig:RightShoulder",
-                                "mixamorig:LeftShoulder",
-                                "mixamorig:RightToeBase",
-                                "mixamorig:LeftToeBase",
-                                "mixamorig:Head",
-                                "mixamorig:RightArm",
-                                "mixamorig:LeftArm",
-                                "mixamorig:RightToe_End",
-                                "mixamorig:LeftToe_End",
-                                "mixamorig:HeadTop_End",
-                                "mixamorig:RightForeArm",
-                                "mixamorig:LeftForeArm",
-                                "mixamorig:RightToe_End_end",
-                                "mixamorig:LeftToe_End_end",
-                                "mixamorig:HeadTop_End_end",
-                                "mixamorig:RightHand",
-                                "mixamorig:LeftHand",
-                                "mixamorig:RightHandThumb1",
-                                "mixamorig:RightHandIndex1",
-                                "mixamorig:RightHandMiddle1",
-                                "mixamorig:RightHandRing1",
-                                "mixamorig:RightHandPinky1",
-                                "mixamorig:LeftHandThumb1",
-                                "mixamorig:LeftHandIndex1",
-                                "mixamorig:LeftHandMiddle1",
-                                "mixamorig:LeftHandRing1",
-                                "mixamorig:LeftHandPinky1",
-                                "mixamorig:RightHandThumb2",
-                                "mixamorig:RightHandIndex2",
-                                "mixamorig:RightHandMiddle2",
-                                "mixamorig:RightHandRing2",
-                                "mixamorig:RightHandPinky2",
-                                "mixamorig:LeftHandThumb2",
-                                "mixamorig:LeftHandIndex2",
-                                "mixamorig:LeftHandMiddle2",
-                                "mixamorig:LeftHandRing2",
-                                "mixamorig:LeftHandPinky2",
-                                "mixamorig:RightHandThumb3",
-                                "mixamorig:RightHandIndex3",
-                                "mixamorig:RightHandMiddle3",
-                                "mixamorig:RightHandRing3",
-                                "mixamorig:RightHandPinky3",
-                                "mixamorig:LeftHandThumb3",
-                                "mixamorig:LeftHandIndex3",
-                                "mixamorig:LeftHandMiddle3",
-                                "mixamorig:LeftHandRing3",
-                                "mixamorig:LeftHandPinky3",
-                                "mixamorig:RightHandThumb4",
-                                "mixamorig:RightHandIndex4",
-                                "mixamorig:RightHandMiddle4",
-                                "mixamorig:RightHandRing4",
-                                "mixamorig:RightHandPinky4",
-                                "mixamorig:LeftHandThumb4",
-                                "mixamorig:LeftHandIndex4",
-                                "mixamorig:LeftHandMiddle4",
-                                "mixamorig:LeftHandRing4",
-                                "mixamorig:LeftHandPinky4",
-                                "mixamorig:RightHandThumb4_end",
-                                "mixamorig:RightHandIndex4_end",
-                                "mixamorig:RightHandMiddle4_end",
-                                "mixamorig:RightHandRing4_end",
-                                "mixamorig:RightHandPinky4_end",
-                                "mixamorig:LeftHandThumb4_end",
-                                "mixamorig:LeftHandIndex4_end",
-                                "mixamorig:LeftHandMiddle4_end",
-                                "mixamorig:LeftHandRing4_end",
-                                "mixamorig:LeftHandPinky4_end"
-                            ]
-                        },
-                        {
-                            "Name": "New Layer",
-                            "Weight": 0.0,
-                            "BlendMode": 0,
-                            "MaskBones": [
-                                "mixamorig:Spine",
-                                "mixamorig:Spine1",
-                                "mixamorig:Spine2",
-                                "mixamorig:Neck",
-                                "mixamorig:RightShoulder",
-                                "mixamorig:LeftShoulder",
-                                "mixamorig:Head",
-                                "mixamorig:RightArm",
-                                "mixamorig:LeftArm",
-                                "mixamorig:HeadTop_End",
-                                "mixamorig:RightForeArm",
-                                "mixamorig:LeftForeArm",
-                                "mixamorig:HeadTop_End_end",
-                                "mixamorig:RightHand",
-                                "mixamorig:LeftHand",
-                                "mixamorig:RightHandThumb1",
-                                "mixamorig:RightHandIndex1",
-                                "mixamorig:RightHandMiddle1",
-                                "mixamorig:RightHandRing1",
-                                "mixamorig:RightHandPinky1",
-                                "mixamorig:LeftHandThumb1",
-                                "mixamorig:LeftHandIndex1",
-                                "mixamorig:LeftHandMiddle1",
-                                "mixamorig:LeftHandRing1",
-                                "mixamorig:LeftHandPinky1",
-                                "mixamorig:RightHandThumb2",
-                                "mixamorig:RightHandIndex2",
-                                "mixamorig:RightHandMiddle2",
-                                "mixamorig:RightHandRing2",
-                                "mixamorig:RightHandPinky2",
-                                "mixamorig:LeftHandThumb2",
-                                "mixamorig:LeftHandIndex2",
-                                "mixamorig:LeftHandMiddle2",
-                                "mixamorig:LeftHandRing2",
-                                "mixamorig:LeftHandPinky2",
-                                "mixamorig:RightHandThumb3",
-                                "mixamorig:RightHandIndex3",
-                                "mixamorig:RightHandMiddle3",
-                                "mixamorig:RightHandRing3",
-                                "mixamorig:RightHandPinky3",
-                                "mixamorig:LeftHandThumb3",
-                                "mixamorig:LeftHandIndex3",
-                                "mixamorig:LeftHandMiddle3",
-                                "mixamorig:LeftHandRing3",
-                                "mixamorig:LeftHandPinky3",
-                                "mixamorig:RightHandThumb4",
-                                "mixamorig:RightHandIndex4",
-                                "mixamorig:RightHandMiddle4",
-                                "mixamorig:RightHandRing4",
-                                "mixamorig:RightHandPinky4",
-                                "mixamorig:LeftHandThumb4",
-                                "mixamorig:LeftHandIndex4",
-                                "mixamorig:LeftHandMiddle4",
-                                "mixamorig:LeftHandRing4",
-                                "mixamorig:LeftHandPinky4",
-                                "mixamorig:RightHandThumb4_end",
-                                "mixamorig:RightHandIndex4_end",
-                                "mixamorig:RightHandMiddle4_end",
-                                "mixamorig:RightHandRing4_end",
-                                "mixamorig:RightHandPinky4_end",
-                                "mixamorig:LeftHandThumb4_end",
-                                "mixamorig:LeftHandIndex4_end",
-                                "mixamorig:LeftHandMiddle4_end",
-                                "mixamorig:LeftHandRing4_end",
-                                "mixamorig:LeftHandPinky4_end"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Type": "SkeletalMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/TestBot.fbx",
-                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 0.7413126826286316,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.8629999756813049,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1
-                },
-                {
-                    "Type": "BulletFactory",
-                    "Active": true
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        1.7599999904632568,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 1,
-                    "materialType": 1,
-                    "radius": 1.2899999618530273,
-                    "height": 3.7899999618530273
-                },
-                {
-                    "Type": "PlayerControllerScript",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "MoveSpeed": 5.0,
-                    "FireRate": 0.20000000298023224,
-                    "BulletSpeed": 1.0,
-                    "BulletLifetime": 3.0,
-                    "AimPointerObjectName": "AimPointer",
-                    "EnableUpperBodyAim": true,
-                    "FSMInitialized": false,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_WalkForward": "WalkForward",
-                    "AnimName_WalkBackward": "WalkBackward",
-                    "AnimName_Fire": "Fire",
-                    "ExecutionRange": 10.0
-                }
-            ]
-        },
-        {
-            "ID": 3,
             "Name": "Map",
             "Active": true,
             "Components": [
@@ -438,8 +111,8 @@
             ]
         },
         {
-            "ID": 4,
-            "ParentID": 3,
+            "ID": 3,
+            "ParentID": 2,
             "Name": "Plane",
             "Active": true,
             "Components": [
@@ -467,6 +140,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -488,13 +162,19 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 5,
-            "ParentID": 3,
+            "ID": 4,
+            "ParentID": 2,
             "Name": "Wall_Right",
             "Active": true,
             "Components": [
@@ -522,6 +202,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -543,13 +224,19 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 6,
-            "ParentID": 3,
+            "ID": 5,
+            "ParentID": 2,
             "Name": "Wall_Left",
             "Active": true,
             "Components": [
@@ -577,6 +264,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -598,13 +286,19 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 7,
-            "ParentID": 3,
+            "ID": 6,
+            "ParentID": 2,
             "Name": "Wall_back",
             "Active": true,
             "Components": [
@@ -632,6 +326,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -653,13 +348,19 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 8,
-            "ParentID": 3,
+            "ID": 7,
+            "ParentID": 2,
             "Name": "Rock",
             "Active": true,
             "Components": [
@@ -687,6 +388,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -708,7 +410,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -736,8 +444,8 @@
             ]
         },
         {
-            "ID": 9,
-            "ParentID": 3,
+            "ID": 8,
+            "ParentID": 2,
             "Name": "Wall_front",
             "Active": true,
             "Components": [
@@ -765,6 +473,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -786,13 +495,19 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 10,
-            "ParentID": 3,
+            "ID": 9,
+            "ParentID": 2,
             "Name": "Rock",
             "Active": true,
             "Components": [
@@ -820,6 +535,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -841,7 +557,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -869,8 +591,8 @@
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 3,
+            "ID": 10,
+            "ParentID": 2,
             "Name": "Rock",
             "Active": true,
             "Components": [
@@ -898,6 +620,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -919,7 +642,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -947,8 +676,8 @@
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 3,
+            "ID": 11,
+            "ParentID": 2,
             "Name": "Rock",
             "Active": true,
             "Components": [
@@ -976,6 +705,7 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
@@ -997,7 +727,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -1020,6 +756,448 @@
                         1.059999942779541,
                         1.059999942779541,
                         1.059999942779541
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "Name": "Player",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.019999999552965164,
+                        "y": 0.019999999552965164,
+                        "z": 0.019999999552965164
+                    }
+                },
+                {
+                    "Type": "PlayerControllerScript",
+                    "Active": true,
+                    "MovementAcceleration": 50.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "MoveSpeed": 13.0,
+                    "RotationSpeed": 20.0,
+                    "BaseAtkDmg": 10.0,
+                    "BaseAtkSpeed": 1.399999976158142,
+                    "BaseBulletLifetime": 3.0,
+                    "BaseBulletSizeScale": 1.0,
+                    "BaseBulletSpeed": 15.0,
+                    "BulletStartOffsetY": 2.5,
+                    "BulletStartOffsetForward": 1.5,
+                    "AimPointerObjectName": "AimPointer",
+                    "FSMInitialized": false,
+                    "ExecutionRange": 20.0,
+                    "CollisionPushBackForce": 0.5,
+                    "SlidingSpeedMultiplier": 0.699999988079071,
+                    "DashDuration": 0.30000001192092896,
+                    "DashImpulseMultiplier": 6.0,
+                    "DashDecayRate": 2.0,
+                    "DashCooldown": 0.20000000298023224
+                },
+                {
+                    "Type": "AimPointer",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
+                    },
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "TargetPlaneY": 2.5
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 5.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.8600000143051147,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 1,
+                    "materialType": 0,
+                    "radius": 0.5899999737739563,
+                    "height": 4.75
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "BulletPlayer",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.200000047683716,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -0.7071067690849304,
+                        "w": 0.7071067094802856
+                    },
+                    "Scale": {
+                        "x": 0.7000012993812561,
+                        "y": 0.7000012993812561,
+                        "z": 0.699999988079071
+                    }
+                },
+                {
+                    "Type": "BulletPlayer",
+                    "Active": true
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 0.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": true,
+                    "layer": 3,
+                    "materialType": 1,
+                    "radius": 0.5199999809265137
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.20077204704284668,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true,
+                    "IsPlaying": true,
+                    "AutoDestroy": false,
+                    "Duration": 0.0,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/DefaultParticle.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 2.5,
+                                "y": 2.5,
+                                "z": 2.5
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.4671814441680908,
+                                "y": 0.8457090258598328,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 20.0,
+                            "EndEmissiveIntensity": 0.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 0.15000000596046448,
+                            "SizeEnd": 0.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.4000000059604645,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -180.0,
+                            "RotationSpeedMax": 180.0,
+                            "EmissionRate": 100.0,
+                            "MaxParticles": 1000,
+                            "Shape": 1,
+                            "Radius": 0.6000000238418579,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": []
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/T_Smoke.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 1.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.20000000298023224,
+                                "y": 0.20000000298023224,
+                                "z": 0.20000000298023224
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.800000011920929,
+                                "y": 0.8980392217636108,
+                                "z": 1.0,
+                                "w": 0.3137255012989044
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 0.800000011920929,
+                                "y": 0.8980392217636108,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 8.0,
+                            "EndEmissiveIntensity": 0.0,
+                            "Blend": 1,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 4.0,
+                            "SizeEnd": 6.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.6000000238418579,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -20.0,
+                            "RotationSpeedMax": 20.0,
+                            "EmissionRate": 8.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.5,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": false,
+                            "TextureTilesX": 8,
+                            "TextureTilesY": 8,
+                            "TextureTileCount": 64,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": true,
+                            "Bursts": []
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/DefaultParticle.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.3281853199005127,
+                                "y": 0.6031365394592285,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.5137255191802979,
+                                "y": 0.7137255072593689,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 15.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": true,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 0.4000000059604645,
+                            "SizeEnd": 0.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.20000000298023224,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 2000.0,
+                            "MaxParticles": 2000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": false,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": []
+                        }
                     ]
                 }
             ]

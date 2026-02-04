@@ -31,7 +31,6 @@
                     "Type": "ExecutionIndicatorManager",
                     "Active": true,
                     "IndicatorPrefabName": "ExcutionIndicator",
-                    "RotationDuration": 1.5,
                     "RaycastMaxDistance": 1000.0,
                     "IndicatorOffset": {
                         "x": 0.0,
@@ -43,9 +42,21 @@
                     "LineMonsterOffset": 1.5,
                     "LineBaseLength": 0.5,
                     "LineHeight": 0.6000000238418579,
-                    "DashDistance": 3.0,
-                    "DashInterval": 0.10000000149011612,
-                    "FinalDashThreshold": 2.5
+                    "EffectPrefabName": "ExcutionEffectSprite",
+                    "EffectDuration": 0.800000011920929,
+                    "EffectScaleMultiplier": 1.5,
+                    "MonsterDeathDelay": 0.05000000074505806,
+                    "TriggerWaitFramesRequired": 1
+                },
+                {
+                    "Type": "ExecutionSlowScript",
+                    "Active": true,
+                    "SlowDuration": 1.5,
+                    "TargetTimeScale": 0.20000000298023224,
+                    "UseCrossfade": true,
+                    "FadeInRatio": 0.20000000298023224,
+                    "SustainRatio": 0.6000000238418579,
+                    "FadeOutRatio": 0.20000000298023224
                 }
             ]
         }
