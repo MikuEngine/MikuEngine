@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
@@ -37,6 +37,14 @@ namespace game
             {
                 m_direction = velocity;
                 m_direction.Normalize();
+
+                engine::Matrix lookAtMatrix = engine::Matrix::CreateWorld(
+                    GetTransform()->GetWorldPosition(),
+                    m_direction,
+                    engine::Vector3::Up
+                );
+                engine::Quaternion lookRot = engine::Quaternion::CreateFromRotationMatrix(lookAtMatrix);
+                GetTransform()->SetLocalRotation(lookRot);
             }
             
             // Rigidbody에 초기 속도 설정
@@ -80,6 +88,33 @@ namespace game
         {
             GetGameObject()->Destroy();
             return;
+        }
+    }
+
+    void BulletPlayer::LateUpdate()
+    {
+        if (m_isDying) return;
+
+        // 총알 발사 방향으로 회전
+        if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+        {
+            engine::Vector3 velocity = rb->GetLinearVelocity();
+
+            if (velocity.LengthSquared() > 0.0001f)
+            {
+                engine::Vector3 currentDir = velocity;
+                currentDir.Normalize();
+
+                engine::Matrix lookAtMatrix = engine::Matrix::CreateWorld(
+                    GetTransform()->GetWorldPosition(),
+                    currentDir,
+                    engine::Vector3::Up
+                );
+
+                engine::Quaternion lookRot = engine::Quaternion::CreateFromRotationMatrix(lookAtMatrix);
+
+                GetTransform()->SetLocalRotation(lookRot);
+            }
         }
     }
 
