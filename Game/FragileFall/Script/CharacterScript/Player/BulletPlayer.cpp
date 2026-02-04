@@ -33,21 +33,28 @@ namespace game
         if (m_movement)
         {
             engine::Vector3 velocity = m_movement->GetVelocity();
+
             if (velocity.LengthSquared() > 0.0001f)
             {
                 m_direction = velocity;
                 m_direction.Normalize();
 
+                engine::Vector3 up = engine::Vector3::Up;
+                if (std::abs(m_direction.Dot(up)) > 0.99f)
+                {
+                    up = engine::Vector3::Right;
+                }
+
                 engine::Matrix lookAtMatrix = engine::Matrix::CreateWorld(
-                    GetTransform()->GetWorldPosition(),
+                    m_startPosition,
                     m_direction,
-                    engine::Vector3::Up
+                    up
                 );
+
                 engine::Quaternion lookRot = engine::Quaternion::CreateFromRotationMatrix(lookAtMatrix);
                 GetTransform()->SetLocalRotation(lookRot);
             }
             
-            // Rigidbody에 초기 속도 설정
             if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
             {
                 rb->SetLinearVelocity(velocity);
@@ -91,30 +98,21 @@ namespace game
         }
     }
 
+	// 총알 방향으로 회전
     void BulletPlayer::LateUpdate()
     {
         if (m_isDying) return;
+        auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>();
+        if (!rb) return;
 
-        // 총알 발사 방향으로 회전
-        if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+        if (m_direction.LengthSquared() > 0.0001f)
         {
-            engine::Vector3 velocity = rb->GetLinearVelocity();
+            float yawRad = std::atan2(m_direction.x, m_direction.z);
+            float yawDeg = engine::ToDegree(yawRad);
 
-            if (velocity.LengthSquared() > 0.0001f)
-            {
-                engine::Vector3 currentDir = velocity;
-                currentDir.Normalize();
+            engine::Vector3 euler(90.0f, yawDeg, 0.0f);
 
-                engine::Matrix lookAtMatrix = engine::Matrix::CreateWorld(
-                    GetTransform()->GetWorldPosition(),
-                    currentDir,
-                    engine::Vector3::Up
-                );
-
-                engine::Quaternion lookRot = engine::Quaternion::CreateFromRotationMatrix(lookAtMatrix);
-
-                GetTransform()->SetLocalRotation(lookRot);
-            }
+            GetTransform()->SetLocalRotation(euler);
         }
     }
 

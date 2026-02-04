@@ -53,11 +53,23 @@ namespace game
         bool m_isOptionOpen = false;
         bool m_isUpgradeOpen = false;
 
+        bool m_isPlayerMove = false;
+
+        float m_moveElapsed = 0.0f;
+        float m_moveDuration = 1.5f;
+
+        engine::Vector3 m_moveStartPos = { 0,0,0 };
+        engine::Vector3 m_moveTargetPos = { 0,0,18 };
+
+        engine::Quaternion m_moveStartRot = engine::Quaternion::Identity;
+        engine::Quaternion m_moveTargetRot = engine::Quaternion::Identity;
+
     private:
         // GameObject
         engine::GameObject* m_optionPopUp = nullptr;
         engine::GameObject* m_blocker = nullptr;
         engine::GameObject* m_groupSelect = nullptr;
         engine::GameObject* m_upgradePopUp = nullptr;
+        engine::GameObject* m_playerPreview = nullptr;
     };
 }

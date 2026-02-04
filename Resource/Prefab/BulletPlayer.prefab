@@ -18,8 +18,8 @@
                     "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -0.7071067690849304,
-                        "w": 0.7071067094802856
+                        "z": 0.0,
+                        "w": 1.0
                     },
                     "Scale": {
                         "x": 0.7000012993812561,
@@ -63,7 +63,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sharp_single/blue/crystal_sharp_single_blue.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",

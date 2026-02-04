@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Lobby",
-    "NumGameObjects": 136,
+    "NumGameObjects": 137,
     "GameObjects": [
         {
             "ID": 0,
@@ -12,7 +12,7 @@
                     "Active": true,
                     "Position": {
                         "x": 5.5,
-                        "y": 2.0,
+                        "y": 1.0,
                         "z": 1.0
                     },
                     "Rotation": {
@@ -558,10 +558,10 @@
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
+                        "x": 0.0,
+                        "y": 0.9848077297210693,
+                        "z": 0.0,
+                        "w": 0.17364822328090668
                     },
                     "Scale": {
                         "x": 1.0,
@@ -1113,7 +1113,7 @@
                     "Active": true,
                     "Position": {
                         "x": 2.177973747253418,
-                        "y": -5.960464477539063e-08,
+                        "y": -1.1920928955078125e-07,
                         "z": -9.313225746154785e-10
                     },
                     "Rotation": {
@@ -1236,7 +1236,7 @@
                     "Position": {
                         "x": 6.577991962432861,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": -2.9802322387695313e-08
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -1586,7 +1586,7 @@
                     "Active": true,
                     "Position": {
                         "x": 6.438026428222656,
-                        "y": 0.0,
+                        "y": 2.9802322387695313e-08,
                         "z": -1.7479430437088013
                     },
                     "Rotation": {
@@ -3665,7 +3665,7 @@
             "ID": 51,
             "ParentID": 31,
             "Name": "UI_UpgradePopUp",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -12696,6 +12696,137 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 136,
+            "Name": "PlayerPreview",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 2.877483367919922,
+                        "y": 1.8212423924524046e-07,
+                        "z": 7.1892218589782715
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.9910997748374939,
+                        "z": 0.0,
+                        "w": 0.13312135636806488
+                    },
+                    "Scale": {
+                        "x": 1.000144124031067,
+                        "y": 1.0,
+                        "z": 1.000144124031067
+                    }
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/main_character_final.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 0,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/main_character_animation_idle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Walk",
+                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Player_Rig",
+                                "Hips",
+                                "DEF-Weapon",
+                                "Ctrl-Weapon",
+                                "Spine",
+                                "UpLeg.Left",
+                                "UpLeg.Right",
+                                "Spine1",
+                                "Leg.Left",
+                                "Leg.Right",
+                                "Spine2",
+                                "Foot.Left",
+                                "Foot.Right",
+                                "Neck",
+                                "Shoulder.Left",
+                                "Shoulder.Right",
+                                "ToeBase.Left",
+                                "ToeBase.Right",
+                                "Head",
+                                "Arm.Left",
+                                "Arm.Right",
+                                "Toe_End.Left",
+                                "Toe_End.Right",
+                                "HeadTop_End",
+                                "ForeArm.Left",
+                                "ForeArm.Right",
+                                "Hand.Left",
+                                "Hand.Right",
+                                "HandThumb1.Left",
+                                "HandIndex1.Left",
+                                "HandThumb1.Right",
+                                "HandIndex1.Right",
+                                "HandThumb2.Left",
+                                "HandIndex2.Left",
+                                "Snap-Hand.L",
+                                "HandThumb2.Right",
+                                "HandIndex2.Right",
+                                "HandThumb3.Left",
+                                "HandIndex3.Left",
+                                "HandThumb3.Right",
+                                "HandIndex3.Right",
+                                "HandThumb4.Left",
+                                "HandIndex4.Left",
+                                "HandThumb4.Right",
+                                "HandIndex4.Right"
+                            ]
+                        }
+                    ]
                 }
             ]
         }
