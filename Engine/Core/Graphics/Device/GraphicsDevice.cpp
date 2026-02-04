@@ -127,6 +127,7 @@ namespace engine
         m_gBuffer.Reset();
 
         m_gameDepthReadOnlyDSV.Reset();
+        m_spotShadowDepthBuffer.reset();
         m_pointShadowDepthBuffer.reset();
         m_pointShadowLinearBuffer.reset();
         m_shadowMapRSS.reset();
@@ -259,6 +260,22 @@ namespace engine
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
     }
 
+    void GraphicsDevice::BeginDrawSpotShadowPass(int arraySlice)
+    {
+        m_deviceContext->RSSetViewports(1, &m_spotShadowViewport);
+        m_deviceContext->RSSetState(m_shadowMapRSS->GetRawRasterizerState());
+
+        m_deviceContext->ClearDepthStencilView(m_spotShadowDepthBuffer->GetRawDSV(arraySlice), D3D11_CLEAR_DEPTH, 1.0f, 0);
+        m_deviceContext->OMSetRenderTargets(0, nullptr, m_spotShadowDepthBuffer->GetRawDSV(arraySlice));
+        m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    }
+
+    void GraphicsDevice::EndDrawSpotShadowPass()
+    {
+        m_deviceContext->RSSetState(nullptr);
+        m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+    }
+
     void GraphicsDevice::BeginDrawGeometryPass()
     {
         m_deviceContext->RSSetViewports(1, &m_gameViewport);
@@ -306,6 +323,7 @@ namespace engine
         m_deviceContext->OMSetRenderTargets(1, m_hdrBuffer->GetRTV().GetAddressOf(), m_gameDepthReadOnlyDSV.Get());
         
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::PointShadowMap), 1, m_pointShadowLinearBuffer->GetSRV().GetAddressOf());
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::SpotShadowMap), 1, m_spotShadowDepthBuffer->GetSRV().GetAddressOf());
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferDepth), 1, m_gameDepthBuffer->GetSRV().GetAddressOf());
     }
 
@@ -316,6 +334,7 @@ namespace engine
         ID3D11ShaderResourceView* nullSRVs[m_gBuffer.count]{};
         m_deviceContext->PSSetShaderResources(m_gBuffer.startSlot, m_gBuffer.count, nullSRVs);
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::PointShadowMap), 1, nullSRVs);
+        m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::SpotShadowMap), 1, nullSRVs);
         m_deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::GBufferDepth), 1, nullSRVs);
     }
 
@@ -1305,6 +1324,33 @@ namespace engine
             m_pointShadowViewport.Height = 1024.0f;
             m_pointShadowViewport.MinDepth = 0.0f;
             m_pointShadowViewport.MaxDepth = 1.0f;
+        }
+
+        // spot light shadow (Texture2D array, one slice per spot)
+        {
+            const UINT spotShadowSize = 1024;
+            D3D11_TEXTURE2D_DESC desc{};
+            desc.Width = spotShadowSize;
+            desc.Height = spotShadowSize;
+            desc.MipLevels = 1;
+            desc.ArraySize = MAX_SPOT_SHADOWS;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.Format = DXGI_FORMAT_R32_TYPELESS;
+            desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.CPUAccessFlags = 0;
+            desc.MiscFlags = 0;
+
+            m_spotShadowDepthBuffer = std::make_unique<Texture>();
+            m_spotShadowDepthBuffer->Create(desc, DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_D32_FLOAT);
+
+            m_spotShadowViewport.TopLeftX = 0.0f;
+            m_spotShadowViewport.TopLeftY = 0.0f;
+            m_spotShadowViewport.Width = static_cast<float>(spotShadowSize);
+            m_spotShadowViewport.Height = static_cast<float>(spotShadowSize);
+            m_spotShadowViewport.MinDepth = 0.0f;
+            m_spotShadowViewport.MaxDepth = 1.0f;
         }
 
         m_screenSizeCB = ResourceManager::Get().GetOrCreateConstantBuffer("ScreenSize", sizeof(CbScreenSize));

@@ -12,6 +12,7 @@ namespace engine
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_rtv;
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_dsv;
+        std::vector<Microsoft::WRL::ComPtr<ID3D11DepthStencilView>> m_dsvArray; // per-slice DSV when ArraySize > 1 (non-cube)
         D3D11_TEXTURE2D_DESC m_desc{};
 
     public:
@@ -34,6 +35,8 @@ namespace engine
         ID3D11ShaderResourceView* GetRawSRV() const;
         ID3D11RenderTargetView* GetRawRTV() const;
         ID3D11DepthStencilView* GetRawDSV() const;
+        /** When texture is a 2D array (non-cube), returns DSV for the given slice. */
+        ID3D11DepthStencilView* GetRawDSV(UINT arraySlice) const;
 
         float GetWidth() const;
         float GetHeight() const;

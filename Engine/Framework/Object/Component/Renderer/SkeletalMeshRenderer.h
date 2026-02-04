@@ -40,6 +40,7 @@ namespace engine
 
         std::shared_ptr<VertexShader> m_vs;
         std::shared_ptr<VertexShader> m_shadowVS;
+        std::shared_ptr<VertexShader> m_spotShadowVS;
         std::shared_ptr<VertexShader> m_pointShadowVS;
         std::shared_ptr<VertexShader> m_simpleVS;
 

@@ -67,6 +67,21 @@ float4 main(PS_INPUT input) : SV_Target
         discard;
     }
 
+    // Spot shadow: project world pos to light clip, sample shadow map
+    float spotShadowFactor = 1.0f;
+    if (g_useSpotShadow)
+    {
+        float4 lightClip = mul(float4(worldPosition.xyz, 1.0f), g_spotLightViewProjection);
+        float lightDepth = lightClip.z / lightClip.w;
+        float2 lightUV = lightClip.xy / lightClip.w * 0.5f + 0.5f;
+        lightUV.y = 1.0f - lightUV.y; // D3D NDC to texture UV
+        if (lightDepth >= 0.0f && lightDepth <= 1.0f && lightUV.x >= 0.0f && lightUV.x <= 1.0f && lightUV.y >= 0.0f && lightUV.y <= 1.0f)
+        {
+            const float spotShadowBias = 0.005f;
+            spotShadowFactor = g_texSpotShadowMap.SampleCmp(g_samComparison, float3(lightUV, (float)g_spotShadowIndex), lightDepth + spotShadowBias);
+        }
+    }
+
     float3 h = normalize(l + v);
     float nDotH = saturate(dot(n, h));
     float nDotV = saturate(dot(n, v));
@@ -81,7 +96,7 @@ float4 main(PS_INPUT input) : SV_Target
     float3 diffuseBRDF = kd * baseColor.rgb / PI;
     float3 specularBRDF = (f * d * g) / max(0.0001f, 4.0f * nDotL * nDotV);
 
-    float3 final = (diffuseBRDF + specularBRDF) * g_lightColor * g_lightIntensity * nDotL * attenuation;
+    float3 final = (diffuseBRDF + specularBRDF) * g_lightColor * g_lightIntensity * nDotL * spotShadowFactor * attenuation;
 
     // SSS (wrap diffuse) - per-material strength in ORM.a
     float sssStrength = g_subsurfaceStrength * sssStrengthScale;
@@ -89,11 +104,12 @@ float4 main(PS_INPUT input) : SV_Target
     {
         float wrap = 0.5f;
         float wrapNdotL = saturate((dot(n, l) + wrap) / (1.0f + wrap));
-        final += (sssTint * baseColor) * g_lightColor * g_lightIntensity * wrapNdotL * attenuation * sssStrength;
+        float shadowFactorSSS = lerp(0.25f, 1.0f, spotShadowFactor);
+        final += (sssTint * baseColor) * g_lightColor * g_lightIntensity * wrapNdotL * shadowFactorSSS * attenuation * sssStrength;
         if (nDotL < 0.0f)
         {
             float backlit = -nDotL;
-            final += (sssTint * baseColor) * g_lightColor * g_lightIntensity * backlit * attenuation * sssStrength * 0.45f;
+            final += (sssTint * baseColor) * g_lightColor * g_lightIntensity * backlit * shadowFactorSSS * attenuation * sssStrength * 0.45f;
         }
     }
 

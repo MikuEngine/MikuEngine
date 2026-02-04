@@ -25,6 +25,7 @@ namespace engine
         IBLSpecular = 23,
         IBLSpecularBRDFLUT = 24,
         PointShadowMap = 25,
+        SpotShadowMap = 26,
 
         Blit = 30,
         HDR = 31,
@@ -58,5 +59,6 @@ namespace engine
         PickingId = 9,
         UIElement = 10,
         ShadowPoint = 11,
+        ShadowSpot = 12,
     };
 }

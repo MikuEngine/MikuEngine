@@ -231,21 +231,35 @@ namespace engine
             D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
             dsvDesc.Format = (dsvFormat != DXGI_FORMAT_UNKNOWN) ? dsvFormat : desc.Format;
 
-            // Cube든 CubeArray든 Array든 전부 TEXTURE2DARRAY
-            if (isArray || isCube)
+            if (isArray && !isCube)
+            {
+                // Per-slice DSV for 2D array (e.g. spot shadow maps) so we can render to one slice at a time
+                m_dsvArray.resize(desc.ArraySize);
+                dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+                dsvDesc.Texture2DArray.MipSlice = 0;
+                dsvDesc.Texture2DArray.ArraySize = 1;
+                for (UINT i = 0; i < desc.ArraySize; ++i)
+                {
+                    dsvDesc.Texture2DArray.FirstArraySlice = i;
+                    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> dsv;
+                    HR_CHECK(device->CreateDepthStencilView(m_texture.Get(), &dsvDesc, &dsv));
+                    m_dsvArray[i] = std::move(dsv);
+                }
+            }
+            else if (isCube)
             {
                 dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
                 dsvDesc.Texture2DArray.MipSlice = 0;
                 dsvDesc.Texture2DArray.FirstArraySlice = 0;
                 dsvDesc.Texture2DArray.ArraySize = desc.ArraySize;
+                HR_CHECK(device->CreateDepthStencilView(m_texture.Get(), &dsvDesc, &m_dsv));
             }
             else
             {
                 dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
                 dsvDesc.Texture2D.MipSlice = 0;
+                HR_CHECK(device->CreateDepthStencilView(m_texture.Get(), &dsvDesc, &m_dsv));
             }
-
-            HR_CHECK(device->CreateDepthStencilView(m_texture.Get(), &dsvDesc, &m_dsv));
         }
     }
 
@@ -305,6 +319,15 @@ namespace engine
 
     ID3D11DepthStencilView* Texture::GetRawDSV() const
     {
+        if (!m_dsvArray.empty())
+            return m_dsvArray[0].Get();
+        return m_dsv.Get();
+    }
+
+    ID3D11DepthStencilView* Texture::GetRawDSV(UINT arraySlice) const
+    {
+        if (!m_dsvArray.empty())
+            return arraySlice < m_dsvArray.size() ? m_dsvArray[arraySlice].Get() : nullptr;
         return m_dsv.Get();
     }
 

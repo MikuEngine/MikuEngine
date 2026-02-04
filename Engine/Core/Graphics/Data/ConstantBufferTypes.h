@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <directxtk/SimpleMath.h>
 
@@ -131,7 +131,10 @@ namespace engine
 
 		int localLightShadowIndex;
 		int useLocalLightShadow;
-		float __pad[2];
+		int spotShadowIndex;
+		int useSpotShadow;
+
+		Matrix spotLightViewProjection; // for spot shadow sampling (when useSpotShadow)
 	};
 
 	struct CbScreenSize
@@ -190,6 +193,11 @@ namespace engine
 		float shadowLightRange;
 		int shadowLightIndex;
 		float __pad[3];
+	};
+
+	struct CbShadowSpot
+	{
+		Matrix spotLightViewProjection;
 	};
 
 }

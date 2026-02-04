@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/System/System.h"
 #include "Framework/Object/Component/Renderer/Renderer.h"
@@ -88,6 +88,7 @@ namespace engine
         std::shared_ptr<ConstantBuffer> m_objectCB;
         std::shared_ptr<ConstantBuffer> m_pickingIdCB;
         std::shared_ptr<ConstantBuffer> m_shadowPointCB;
+        std::shared_ptr<ConstantBuffer> m_shadowSpotCB;
 
         std::shared_ptr<BlendState> m_additiveBS;
         std::shared_ptr<RasterizerState> m_frontRSS;
@@ -143,6 +144,7 @@ namespace engine
 
         void DrawGlobalLightShadow();
         void DrawPointLightShadow();
+        void DrawSpotLightShadow();
 
         void DrawGlobalLight();
         void DrawLocalLight();

@@ -814,6 +814,9 @@
     <FxCompile Include="Shader\Pixel\Skybox_PS.hlsl" />
     <FxCompile Include="Shader\Vertex\Skybox_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Shadow_Static_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Spot_Static_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Spot_Rigid_VS.hlsl" />
+    <FxCompile Include="Shader\Vertex\Shadow_Spot_Skinned_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Shadow_Rigid_VS.hlsl" />
     <FxCompile Include="Shader\Vertex\Shadow_Skinned_VS.hlsl" />
     <FxCompile Include="Shader\Pixel\Mask_Cutout_PS.hlsl" />

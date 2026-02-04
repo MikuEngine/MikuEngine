@@ -172,7 +172,7 @@ namespace engine
 
 		if (m_lightType == LightType::Point || m_lightType == LightType::Spot)
 		{
-			ImGui::DragFloat("Range", &m_range, 0.1f, 0.1f, FLT_MAX, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+			ImGui::DragFloat("Range", &m_range, 0.1f, 1.0f, FLT_MAX, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 		}
 		if (m_lightType == LightType::Spot)
 		{

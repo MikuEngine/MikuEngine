@@ -9,8 +9,10 @@
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
+#include <Framework/System/SoundSystem.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
+#include <Framework/Asset/Prefab.h>
 #include <Engine/Core/System/MyTime.h>
 
 namespace game
@@ -594,6 +596,7 @@ namespace game
 		m_fragileTimerStarted = true;
 		
 		// 추후 이펙트나 사운드 추가 가능
+		engine::SoundSystem::Get().Play("Monster_Fragile", "SFX/Monster");
 	}
 
 	void MonsterScript::OnDeath()
@@ -606,6 +609,13 @@ namespace game
 		m_fragileTimerStarted = false;
 		
 		// 추후 Death 애니메이션이나 이펙트 재생 가능
+		auto effect = engine::Prefab::Instantiate("Effect_Break_V1.01_big_white");
+		if (effect && effect->GetTransform())
+		{
+			effect->GetTransform()->SetWorldMatrix(GetTransform()->GetWorld());
+			effect->GetTransform()->SetLocalScale(engine::Vector3(1.0f, 1.0f, 1.0f));
+		}
+		engine::SoundSystem::Get().Play("Player_Break", "SFX/Player");
 	}
 
 	// ═══════════════════════════════════════════════════════════════
