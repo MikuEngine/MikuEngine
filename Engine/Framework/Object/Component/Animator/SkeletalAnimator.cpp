@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SkeletalAnimator.h"
 
 #include "Framework/Asset/AssetManager.h"
@@ -482,7 +482,8 @@ namespace engine
                     continue;
                 }
 
-                if (!layer.mask.empty())
+                // Base layer (0): 항상 전신 적용. 상체 등 상위 레이어만 마스크로 제한
+                if (!layer.mask.empty() && layerIndex != 0)
                 {
                     if (i >= layer.mask.size() || layer.mask[i] == 0)
                     {
@@ -780,7 +781,8 @@ namespace engine
                 auto& layer = m_layers[layerIndex];
                 if (!layer.current.active) continue;
 
-                if (!layer.mask.empty())
+                // Base layer (0): 항상 전신 적용
+                if (!layer.mask.empty() && layerIndex != 0)
                 {
                     if (i >= layer.mask.size() || layer.mask[i] == 0)
                     {
@@ -1276,7 +1278,8 @@ namespace engine
                 auto& layer = m_layers[layerIndex];
                 if (!layer.current.active || !layer.current.data) continue;
 
-                if (!layer.mask.empty() && (i >= layer.mask.size() || layer.mask[i] == 0))
+                // Base layer (0): 항상 전신 적용
+                if (!layer.mask.empty() && layerIndex != 0 && (i >= layer.mask.size() || layer.mask[i] == 0))
                     continue;
 
                 Vector3 curPos, curScale;

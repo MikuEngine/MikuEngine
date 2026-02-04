@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -24,23 +24,14 @@ namespace game
         // ─────────────────────────────────────────────
         BulletParams m_bulletParams;
 
-        // ─────────────────────────────────────────────
-        // 애니메이션 이름 (Initialize에서 설정)
-        // m_animName_Attack은 부모 클래스 MonsterScript에 정의됨
-        // ─────────────────────────────────────────────
-        std::string m_animName_Idle = "Idle";
-        std::string m_animName_EngageMove = "EngageMove";
-        std::string m_animName_EngageStop = "EngageStop";
-        std::string m_animName_EngageAttack = "EngageAttack";
-        std::string m_animName_Fragile = "Fragile";
-        std::string m_animName_Dead = "Dead";
+        // 뾰족 타입은 StaticMesh를 사용하므로 애니메이션 이름 변수 불필요
 
         // ─────────────────────────────────────────────
-        // PointedGreen 고유 변수
+        // Pointed 고유 변수
         // ─────────────────────────────────────────────
         float m_detectionRange = 15.0f;           // 감지 거리 (공격 사거리 * 1.5)
-        float m_attackAnimationDuration = 1.1f;   // 공격 애니메이션 재생 시간 (이동 불가 시간)
-        float m_attackAnimationTimer = 0.0f;      // 공격 애니메이션 타이머
+        float m_attackAnimationDuration = 1.1f;   // 공격 모션 대기 시간 (이동 불가 시간)
+        float m_attackAnimationTimer = 0.0f;      // 공격 모션 타이머
         
         bool m_isPlayerInDetectionRange = false;  // 플레이어가 감지 거리 안에 있는지
         bool m_canFire = false;                   // 발사 가능한지 (쿨타임 체크)

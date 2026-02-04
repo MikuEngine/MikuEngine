@@ -1,13 +1,13 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterDullType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
-#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
-#include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
+
+// 둔탁 타입은 StaticMesh를 사용하므로 SkeletalAnimator/SkeletalMeshRenderer include 불필요
 
 namespace game
 {
@@ -17,38 +17,18 @@ namespace game
     void MonsterDullType::Awake()
     {
         MonsterScript::Awake();
+        
+        // Dull 타입 고정
+        m_attackType = AttackType::Dull;
+        
         // 스탯은 씬 파일에서 로드됨 (Load 함수 참조)
     }
 
     void MonsterDullType::Start()
     {
         MonsterScript::Start();
-
-        // 초기 Idle 애니메이션 재생
-        if (m_skeletalAnimator && !m_animName_Idle.empty())
-        {
-            m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
-        }
-
-        // 테스트용 Tier별 색상 설정
-        switch (m_monsterTier)
-        {
-        case MonsterTier::Gray:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f));
-            break;
-        case MonsterTier::Green:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-            break;
-        case MonsterTier::Blue:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            break;
-        case MonsterTier::Red:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-            break;
-        case MonsterTier::Purple:
-            GetGameObject()->GetComponent<engine::SkeletalMeshRenderer>()->SetBaseColor(DirectX::SimpleMath::Vector4(0.5f, 0.0f, 0.5f, 1.0f));
-            break;
-        }
+        
+        // 둔탁 타입은 StaticMesh를 사용하므로 애니메이션 관련 초기화 불필요
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -112,32 +92,12 @@ namespace game
 
     void MonsterDullType::InitializeAnimFSM()
     {
-        if (!m_animFSM) return;
-
-        // 기존 상태 클리어
-        m_animFSM->ClearStates();
-
-        // ─────────────────────────────────────────────
-        // LogicFSM 상태 → 애니메이션 매핑
-        // 몬스터는 UpperBody/LowerBody 구분 없이 전체 애니메이션 재생
-        // AddSplitState(상태명, 하체애니, 하체루프, 상체애니, 상체루프, 상체웨이트, 크로스페이드)
-        // 상체웨이트 0 = 전체 애니메이션 (상/하체 분리 안 함)
-        // ─────────────────────────────────────────────
-        m_animFSM->AddSplitState("Idle",    m_animName_Idle, true,  "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("Engage",  m_animName_Idle, true,  "", false, 0.0f, 0.1f);     // Engage는 Idle 재생
-        m_animFSM->AddSplitState("Fragile", m_animName_Idle, true,  "", false, 0.0f, 0.1f);     // Fragile은 Idle 재생 (전용 애니메이션 설정 가능)
-        m_animFSM->AddSplitState("Dead",    m_animName_Dead, false, "", false, 0.0f, 0.1f);     // Dead는 루프 안 함
- 
+        // 둔탁 타입은 StaticMesh를 사용하므로 AnimFSM 초기화 불필요
     }
 
     void MonsterDullType::InitializeAnimations()
     {
-        if (!m_skeletalAnimator) return;
-
-        // SkeletalAnimator에 애니메이션 등록
-        // 실제 .fbx 파일 경로는 에디터에서 설정하거나
-        // 씬 파일에서 로드됨
-        // 여기서는 이름만 연결
+        // 둔탁 타입은 StaticMesh를 사용하므로 애니메이션 초기화 불필요
     }
 
     void MonsterDullType::InitializeBullet()
@@ -153,8 +113,15 @@ namespace game
             m_bulletParams.damage = 10;
             break;
         case MonsterTier::Green:
+            // ─────────────────────────────────────────────
+            // 포물선 전용 파라미터 (동글녹색과 동일한 방식)
+            // - launchAngle은 Attack() 시점에 거리 기반 자동 계산
+            // - speed, ownGravity는 에디터에서 설정한 값 사용
+            // ─────────────────────────────────────────────
             m_bulletParams.type = BulletType::Parabolic;
-            m_bulletParams.ownGravity = 9.81f;
+            m_bulletParams.speed = m_parabolicSpeed;      // 에디터 설정값
+            m_bulletParams.launchAngle = 45.0f;           // 기본값 (Attack에서 자동 계산)
+            m_bulletParams.ownGravity = m_ownGravity;     // 에디터 설정값
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 15;
             break;
@@ -373,40 +340,41 @@ namespace game
             break;
         }
         // ─────────────────────────────────────────────
-        // 둔탁 초록
+        // 둔탁 초록 (동글녹색과 동일한 포물선 발사 방식)
         // 
         // 고정된 위치에서 플레이어가 인식범위 접근 시 초록색 곡사포 투사체를 날림
+        // - 에디터 설정: m_parabolicSpeed (속력), m_ownGravity (중력)
+        // - 자동 계산: launchAngle (플레이어 거리 기반, m_useHighArc로 선택)
         // ─────────────────────────────────────────────
 		case MonsterTier::Green:
         {
-            engine::Vector3 startPos = firePosition;
-            engine::Vector3 targetPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-
-            // 수평 벡터와 거리 계산
-            engine::Vector3 diff = targetPos - startPos;
-            engine::Vector3 horizontalDiff = { diff.x, 0.0f, diff.z };
-            float distance = horizontalDiff.Length();
-
-            // 날아가는 시간 설정
-            float travelTime = 1.5f;
-
-            // 수평 속도 계산 (V = S / t)
-            float horizontalSpeed = distance / travelTime;
-            engine::Vector3 horizontalDir = horizontalDiff;
-
-            horizontalDir.Normalize();
-
-            // 수직 초기 속도 계산 (Vy = (dy + 0.5 * g * t^2) / t)
-            float dy = diff.y;
-            float verticalSpeed = (dy + 0.5f * m_bulletParams.ownGravity * travelTime * travelTime) / travelTime;
-
-            engine::Vector3 finalVelocity = (horizontalDir * horizontalSpeed) + (engine::Vector3::Up * verticalSpeed);
-            float finalSpeed = finalVelocity.Length();
-            finalVelocity.Normalize();
-
-            m_bulletParams.speed = finalSpeed;
-            m_bulletFactory->ParabolicFireMonster(startPos, finalVelocity, m_bulletParams);
-
+            // 발사 오프셋 설정
+            float bulletStartOffsetY = 1.5f;
+            
+            engine::Vector3 bulletStartPos = firePosition;
+            bulletStartPos.y = bulletStartOffsetY;
+            
+            // 착탄점 설정 (플레이어 XZ, Y=0)
+            engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+            engine::Vector3 targetPos(playerPos.x, 0.0f, playerPos.z);
+            
+            // 거리 계산 (디버그용)
+            float dx = targetPos.x - bulletStartPos.x;
+            float dz = targetPos.z - bulletStartPos.z;
+            float distance = std::sqrt(dx * dx + dz * dz);
+            
+            // 발사각 자동 계산 (m_useHighArc에 따라 높은/낮은 선택)
+            float angleRad = 0.0f;
+            CalculateParabolicLaunchAngle(bulletStartPos, targetPos, angleRad);
+            
+            // BulletParams에 값 설정
+            m_bulletParams.speed = m_parabolicSpeed;
+            m_bulletParams.launchAngle = angleRad * 180.0f / 3.14159265f;  // 도(degree)로 변환
+            m_bulletParams.ownGravity = m_ownGravity;
+            
+            // 실제 발사
+            m_bulletFactory->ParabolicFireMonster(bulletStartPos, direction, m_bulletParams);
+            
             break;
         }
         // ─────────────────────────────────────────────
@@ -465,10 +433,7 @@ namespace game
             break;
         }
 
-        if (m_skeletalAnimator && !m_animName_Attack.empty())
-        {
-            m_skeletalAnimator->Play(m_animName_Attack, false, 0, 1.0f);
-        }
+        // 둔탁 타입은 StaticMesh를 사용하므로 공격 애니메이션 재생 불필요
 
         m_fireTimer = m_fireRate;
     }
@@ -482,19 +447,18 @@ namespace game
         
         // ─────────────────────────────────────────────
         // 컴포넌트 검증 (에디터 화면에서도 체크)
+        // 둔탁 타입은 StaticMesh 사용 - SkeletalAnimator/AnimFSM 불필요
         // ─────────────────────────────────────────────
         ImGui::Separator();
         ImGui::Text("=== Component Validation ===");
         
         // 에디터 모드를 위한 실시간 컴포넌트 검색 (같은 GameObject 내에서만 검색)
         engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
-        engine::SkeletalAnimator* skeletalAnimator = m_skeletalAnimator ? m_skeletalAnimator : (GetGameObject() ? GetGameObject()->GetComponent<engine::SkeletalAnimator>() : nullptr);
-        engine::AnimFSM* animFSM = m_animFSM ? m_animFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::AnimFSM>() : nullptr);
         engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
         BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
         
-        // 전체 유효성 검사
-        bool allValid = rigidbody && skeletalAnimator && bulletFactory && animFSM && logicFSM;
+        // 전체 유효성 검사 (둔탁: Rigidbody, LogicFSM, BulletFactory만 필수)
+        bool allValid = rigidbody && bulletFactory && logicFSM;
         
         if (allValid)
         {
@@ -510,39 +474,22 @@ namespace game
         ImGui::Text("Rigidbody:         %s", rigidbody ? "[OK]" : "[MISSING]");
         if (!rigidbody) ImGui::SameLine(); if (!rigidbody) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
         
-        ImGui::Text("SkeletalAnimator:  %s", skeletalAnimator ? "[OK]" : "[MISSING]");
-        if (!skeletalAnimator) ImGui::SameLine(); if (!skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-        
         ImGui::Text("BulletFactory:     %s", bulletFactory ? "[OK]" : "[MISSING]");
         if (!bulletFactory) ImGui::SameLine(); if (!bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-        
-        ImGui::Text("AnimFSM:           %s", animFSM ? "[OK]" : "[MISSING]");
-        if (!animFSM) ImGui::SameLine(); if (!animFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
         
         ImGui::Text("LogicFSM:          %s", logicFSM ? "[OK]" : "[MISSING]");
         if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
         ImGui::Unindent();
 
-        // 공격 타입
+        // 공격 타입 (읽기 전용 - Dull 고정)
         ImGui::Separator();
         ImGui::Text("Type:");
+        ImGui::BeginDisabled(true);
         if (ImGui::BeginCombo("Attack Type", GetAttackTypeStr(m_attackType)))
         {
-            for (int i = 0; i < (int)AttackType::Max; ++i)
-            {
-                AttackType currentType = (AttackType)i;
-                bool isSelected = (m_attackType == currentType);
-
-                if (ImGui::Selectable(GetAttackTypeStr(currentType), isSelected))
-                {
-                    m_attackType = currentType;
-                }
-
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();
-            }
             ImGui::EndCombo();
         }
+        ImGui::EndDisabled();
 
         if (ImGui::BeginCombo("Monster Tier", GetMonsterTierStr(m_monsterTier)))
         {
@@ -568,22 +515,61 @@ namespace game
         ImGui::DragFloat("HP", &m_Hp, 0.1f, 1.0f, 10000.0f);
         ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.0f, 15.0f);
 
-        // 설정
+        // 설정 (둔탁은 이동하지 않으므로 Move Speed 제외)
         ImGui::Separator();
         ImGui::Text("Settings:");
-        ImGui::DragFloat("Move Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
         ImGui::DragFloat("Rotation Speed", &m_rotationSpeed, 0.1f, 0.0f, 10.0f);
         ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.1f, 0.1f, 10.0f);
-        ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 0.1f, 0.1f, 100.0f);
+        
+        // Green이 아닐 때만 일반 Bullet Speed 표시
+        if (m_monsterTier != MonsterTier::Green)
+        {
+            ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 0.1f, 0.1f, 100.0f);
+        }
         ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
 
-        // DullGray 고유 설정
-        ImGui::Separator();
-        ImGui::Text("Animation Names:");
-        ImGui::InputText("Idle", &m_animName_Idle);
-        ImGui::InputText("Attack", &m_animName_Attack);
-        ImGui::InputText("Fragile", &m_animName_Fragile);
-        ImGui::InputText("Dead", &m_animName_Dead);
+        // ─────────────────────────────────────────────
+        // 포물선 설정 (Green일 때만 표시 - 동글녹색과 동일)
+        // - 편집 가능: 속력, 자체 중력
+        // - 읽기 전용: 발사각 (플레이어 거리 기반 자동 계산)
+        // ─────────────────────────────────────────────
+        if (m_monsterTier == MonsterTier::Green)
+        {
+            ImGui::Separator();
+            ImGui::Text("=== Parabolic Bullet Settings ===");
+            
+            // 편집 가능한 설정
+            ImGui::DragFloat("Bullet Speed", &m_parabolicSpeed, 0.5f, 1.0f, 50.0f, "%.1f m/s");
+            ImGui::DragFloat("Own Gravity", &m_ownGravity, 0.1f, 1.0f, 30.0f, "%.1f m/s^2");
+            
+            // 최대 사거리 표시 (v² / g)
+            float maxRange = (m_parabolicSpeed * m_parabolicSpeed) / m_ownGravity;
+            ImGui::Text("Max Range (at 45 deg): %.1f m", maxRange);
+            
+            // 사거리 검증
+            if (maxRange < m_AttackRange)
+            {
+                ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), 
+                    "WARNING: Max Range < Attack Range!");
+                ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), 
+                    "Increase Speed or decrease Gravity/AttackRange");
+            }
+            else
+            {
+                ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), 
+                    "OK: Max Range >= Attack Range");
+            }
+            
+            ImGui::Spacing();
+            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime values (read-only):");
+            
+            // 읽기 전용: 마지막으로 계산된 값 표시
+            ImGui::Text("  Launch Angle: %.1f deg", m_bulletParams.launchAngle);
+            ImGui::Text("  Speed: %.1f m/s", m_bulletParams.speed);
+            
+            ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+                "(Angle calculated at fire time based on player distance)");
+        }
 
         // 런타임 정보
         ImGui::Separator();
@@ -677,20 +663,12 @@ namespace game
     void MonsterDullType::Save(engine::json& j) const
     {
         MonsterScript::Save(j);
-        
-        j["AnimName_Idle"] = m_animName_Idle;
-        j["AnimName_Attack"] = m_animName_Attack;
-        j["AnimName_Fragile"] = m_animName_Fragile;
-        j["AnimName_Dead"] = m_animName_Dead;
+        // 둔탁 타입은 StaticMesh 사용 - 애니메이션 관련 직렬화 불필요
     }
 
     void MonsterDullType::Load(const engine::json& j)
     {
         MonsterScript::Load(j);
-        
-        m_animName_Idle = j.value("AnimName_Idle", "Idle");
-        m_animName_Attack = j.value("AnimName_Attack", "Attack");
-        m_animName_Fragile = j.value("AnimName_Fragile", "Fragile");
-        m_animName_Dead = j.value("AnimName_Dead", "Dead");
+        // 둔탁 타입은 StaticMesh 사용 - 애니메이션 관련 직렬화 불필요
     }
 }

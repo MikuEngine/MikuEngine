@@ -77,6 +77,13 @@ namespace engine
         // ─────────────────────────────────────────────
         int m_baseLayerIndex = 0;
         int m_upperBodyLayerIndex = 1;
+
+        // ─────────────────────────────────────────────
+        // 상체 레이어 weight 보간 (Walk+Fire 시 0→1 서서히 적용)
+        // ─────────────────────────────────────────────
+        float m_upperBodyWeightTarget = 0.0f;
+        float m_currentUpperBodyWeight = 0.0f;
+        float m_upperBodyWeightRampDuration = 0.15f;
         
         // ─────────────────────────────────────────────
         // Procedural 상체 회전
@@ -89,7 +96,8 @@ namespace engine
         float m_aimLerpSpeed = 30.0f;  // 빠른 반응을 위해 증가 (기존 10.0f)
         float m_currentYaw = 0.0f;
         float m_currentPitch = 0.0f;
-        std::string m_spineBoneName = "mixamorig:Spine1";
+        float m_yawOffset = 0.0f;  // 프레임당 보정 (OffsetCurrentYaw 누적, UpdateProceduralAim에서 적용 후 초기화)
+        std::string m_spineBoneName = "Spine";
 
     public:
         void Initialize() override;
@@ -137,6 +145,7 @@ namespace engine
         void SetLayerIndices(int baseLayer, int upperBodyLayer);
         int GetBaseLayerIndex() const { return m_baseLayerIndex; }
         int GetUpperBodyLayerIndex() const { return m_upperBodyLayerIndex; }
+        void SetUpperBodyWeightRampDuration(float seconds) { m_upperBodyWeightRampDuration = std::max(0.001f, seconds); }
 
         // ─────────────────────────────────────────────
         // Procedural 상체 회전 (조준)
@@ -147,6 +156,7 @@ namespace engine
         void SetUpperBodyAim(float yawDegrees, float pitchDegrees);
         void SetAimLimits(float maxYaw, float maxPitch);
         void SetSpineBoneName(const std::string& boneName);
+        const std::string& GetSpineBoneName() const { return m_spineBoneName; }
         
         // 현재 Yaw를 오프셋 (하체 회전 보정용)
         // 하체가 회전한 만큼 m_currentYaw를 조정하여 상체가 월드 기준으로 고정되도록 함

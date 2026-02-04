@@ -45,10 +45,18 @@ namespace game
         std::string m_playerObjectName = "Player";
         std::string m_aimPointerMeshObjectName = "AimPointerMesh";
         float m_fixedY = 0.0f;
+        /** 이동 중일 때만 적용. 에임이 하체 방향과 이 각도(도) 이상 벌어졌을 때만 하체 회전. Idle/가만히 있을 때는 미적용(전신 부드럽게 에임 추적) */
+        float m_lowerBodyAimThresholdDeg = 30.0f;
+        /** 하체 회전 보간 속도 (1초에 이 비율만큼 목표 방향으로 회전, Slerp 계수). 클수록 빨리 맞춤 */
+        float m_lowerBodyTurnSpeed = 8.0f;
 
         // ─────────────────────────────────────────────
         // 애니메이션 설정
         // ─────────────────────────────────────────────
+        /** Walk+발사 시 상체 절차 회전에 더하는 Yaw 오프셋(도). Fire 애니가 비스듬히 서서 쏘는 경우 보정용 (예: 왼쪽 보면 +값) */
+        float m_upperBodyAimOffsetDeg = 0.0f;
+        /** 상체 Yaw 스케일. 정면은 맞는데 옆 조준 시 손 방향이 어긋나면 조정 (1=기본, 보통 0.8~1.2) */
+        float m_upperBodyYawScale = 1.0f;
         std::string m_animName_Idle = "Idle";
         std::string m_animName_WalkForward = "WalkForward";
         std::string m_animName_WalkBackward = "WalkBackward";
@@ -73,6 +81,11 @@ namespace game
         float m_shootingTimer = 0.0f;      // 남은 Shooting 시간
         bool m_isShooting = false;         // 현재 Shooting 상태
 
+        // ─────────────────────────────────────────────
+        // Procedural Yaw: 하체 회전 보정용 (이전 프레임 하체 Yaw)
+        // ─────────────────────────────────────────────
+        float m_prevLowerBodyYawDeg = 0.0f;
+
     public:
         void Start() override;
         void Update() override;
@@ -91,6 +104,8 @@ namespace game
         // ─────────────────────────────────────────────
         void InitializeAnimFSM();
         void UpdateAnimation();
+        float CalculateAimYaw() const;       // 캐릭터 전방 대비 에임 방향 Yaw (도)
+        float GetLowerBodyYawDegrees() const; // 메시(하체) 전방 Yaw (도)
         
         // ─────────────────────────────────────────────
         // Forward/Backward 판정

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Animator/Animator.h"
 #include "Framework/Asset/SkeletonData.h"
@@ -92,6 +92,7 @@ namespace engine
 
         void AddLayer(const std::string& layerName, float weight = 1.0f);
         void RemoveLayer(int layerIndex);
+        int GetLayerCount() const { return static_cast<int>(m_layers.size()); }
 
         void AddNotify(const std::string& animName, const std::string& notifyName, float time = 0.0f);
         void BindNotify(const std::string& notifyName, EventCallBack callback);

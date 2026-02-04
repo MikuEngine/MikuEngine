@@ -5,6 +5,9 @@
 #include "Framework/Object/GameObject/GameObject.h"
 #include "Framework/Scene/SceneManager.h"
 #include "Framework/Scene/Scene.h"
+#include "Engine/Core/System/MyTime.h"
+#include <algorithm>
+#include <cmath>
 
 namespace engine
 {
@@ -57,6 +60,24 @@ namespace engine
 
     void AnimFSM::UpdateFSM()
     {
+        // 상체 레이어 weight 보간 (레이어 간 전환 시 부드럽게)
+        if (m_animator)
+        {
+            float diff = m_upperBodyWeightTarget - m_currentUpperBodyWeight;
+            if (std::abs(diff) < 0.001f)
+            {
+                m_currentUpperBodyWeight = m_upperBodyWeightTarget;
+            }
+            else
+            {
+                float step = (Time::DeltaTime() / std::max(0.001f, m_upperBodyWeightRampDuration));
+                if (step >= std::abs(diff))
+                    m_currentUpperBodyWeight = m_upperBodyWeightTarget;
+                else
+                    m_currentUpperBodyWeight += (diff > 0.0f ? step : -step);
+            }
+            m_animator->SetLayerWeight(m_upperBodyLayerIndex, m_currentUpperBodyWeight);
+        }
         // Procedural 조준 업데이트
         UpdateProceduralAim();
     }
@@ -162,11 +183,7 @@ namespace engine
     void AnimFSM::SetProceduralAimEnabled(bool enabled)
     {
         m_enableProceduralAim = enabled;
-        
-        if (!enabled && m_animator)
-        {
-            m_animator->SetProceduralRotation(m_spineBoneName, Quaternion::Identity);
-        }
+        // Identity는 weight가 0으로 내려간 뒤 UpdateProceduralAim에서만 설정 (걸으며 쏘다가 손 떼면 휙 도는 현상 방지)
     }
 
     void AnimFSM::SetUpperBodyYaw(float degrees)
@@ -198,23 +215,27 @@ namespace engine
 
     void AnimFSM::OffsetCurrentYaw(float offsetDegrees)
     {
-        // 하체 회전 보정: 하체가 회전한 만큼 m_currentYaw를 조정
-        // 이렇게 하면 상체가 월드 기준으로 같은 방향을 유지함
-        m_currentYaw += offsetDegrees;
-        
-        // -180 ~ 180 범위로 정규화 (선택사항)
-        while (m_currentYaw > 180.0f) m_currentYaw -= 360.0f;
-        while (m_currentYaw < -180.0f) m_currentYaw += 360.0f;
+        // 하체 회전 보정: 이 프레임에 적용할 오프셋 누적
+        // UpdateProceduralAim()에서 m_currentYaw = m_upperBodyYaw + m_yawOffset 후 초기화됨
+        m_yawOffset += offsetDegrees;
     }
 
     void AnimFSM::UpdateProceduralAim()
     {
-        if (!m_enableProceduralAim) return;
-        
-        // 보간 없이 즉시 적용
-        m_currentYaw = m_upperBodyYaw;
-        m_currentPitch = m_upperBodyPitch;
-        
+        // weight가 거의 0이면 프로시저럴 끔 (걸으며 쏘다가 손 뗀 뒤 보간 끝났을 때만 Identity)
+        if (m_currentUpperBodyWeight < 0.001f)
+        {
+            if (m_animator && !m_enableProceduralAim)
+                m_animator->SetProceduralRotation(m_spineBoneName, Quaternion::Identity);
+            return;
+        }
+        // 활성화 중일 때만 목표 yaw/pitch 갱신 (꺼진 뒤 weight 보간 중에는 마지막 값 유지)
+        if (m_enableProceduralAim)
+        {
+            m_currentYaw = m_upperBodyYaw + m_yawOffset;
+            m_yawOffset = 0.0f;
+            m_currentPitch = m_upperBodyPitch;
+        }
         ApplyProceduralRotation();
     }
 
@@ -222,16 +243,16 @@ namespace engine
     {
         if (!m_animator) return;
         
-        // degree → radian
         float yawRad = ToRadian(m_currentYaw);
         float pitchRad = ToRadian(m_currentPitch);
         
-        // Quaternion 생성
         Quaternion yawRot = Quaternion::CreateFromAxisAngle(Vector3::UnitY, yawRad);
         Quaternion pitchRot = Quaternion::CreateFromAxisAngle(Vector3::UnitX, pitchRad);
-        Quaternion finalRot = yawRot * pitchRot;
+        Quaternion fullRot = yawRot * pitchRot;
         
-        // SkeletalAnimator에 적용
+        // 상체 weight에 비례해 프로시저럴 회전 적용 (weight 0→1 보간과 동기화)
+        float t = std::clamp(m_currentUpperBodyWeight, 0.0f, 1.0f);
+        Quaternion finalRot = Quaternion::Slerp(Quaternion::Identity, fullRot, t);
         m_animator->SetProceduralRotation(m_spineBoneName, finalRot);
     }
 
@@ -306,6 +327,10 @@ namespace engine
 
     void AnimFSM::PlayDefaultAnimation(const AnimState& state)
     {
+        // 단일 레이어 재생 시 상체 레이어 비활성화 (이전 Split 상태에서 전환 시 상체 잔상 제거)
+        m_upperBodyWeightTarget = 0.0f;
+        m_currentUpperBodyWeight = 0.0f;
+        m_animator->SetLayerWeight(m_upperBodyLayerIndex, 0.0f);
         m_animator->PlayCrossFade(
             state.animationName,
             state.crossFadeDuration,
@@ -327,16 +352,16 @@ namespace engine
             1.0f
         );
         
-        // 상체 (Upper Body Layer) - 웨이트에 따라 활성화
+        // 상체 (Upper Body Layer) - 목표 weight만 설정, 실제 weight는 UpdateFSM에서 보간. 프로시저럴은 ApplyProceduralRotation에서 weight에 비례 적용
         if (state.upperBodyWeight > 0.0f && !state.upperAnimation.empty())
         {
-            m_animator->SetLayerWeight(m_upperBodyLayerIndex, state.upperBodyWeight);
-            m_animator->Play(state.upperAnimation, state.upperLoop, m_upperBodyLayerIndex, 1.0f);
+            m_upperBodyWeightTarget = state.upperBodyWeight;
+            if (m_animator->GetCurrentAnimationName(m_upperBodyLayerIndex) != state.upperAnimation)
+                m_animator->Play(state.upperAnimation, state.upperLoop, m_upperBodyLayerIndex, 1.0f);
         }
         else
         {
-            // 상체 레이어 비활성화 (하체 애니메이션이 전체에 적용)
-            m_animator->SetLayerWeight(m_upperBodyLayerIndex, 0.0f);
+            m_upperBodyWeightTarget = 0.0f;
         }
     }
 

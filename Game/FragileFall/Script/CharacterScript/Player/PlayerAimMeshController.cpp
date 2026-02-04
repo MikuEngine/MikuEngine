@@ -8,8 +8,11 @@
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/AnimFSM.h>
 #include <Framework/Object/Component/LogicFSM.h>
+#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Engine/Core/System/Input.h>
+#include <Engine/Core/System/MyTime.h>
 #include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
+#include <Engine/Common/Math/MathUtility.h>
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -28,6 +31,19 @@ namespace game
             InitializeAnimFSM();
             m_animFSMInitialized = true;
         }
+
+        // 상체 레이어 마스크: Walk+발사 시 Spine 이상만 상체 애니(Fire) 적용
+        auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
+        if (animator && m_animFSM)
+        {
+            int upperLayer = m_animFSM->GetUpperBodyLayerIndex();
+            if (animator->GetLayerCount() <= upperLayer)
+            {
+                animator->AddLayer("Upper Body", 0.0f);
+            }
+            std::vector<std::string> spineBones = { m_animFSM->GetSpineBoneName() };
+            animator->SetLayerMask(upperLayer, spineBones, true, true);
+        }
         
         UpdatePositionAndRotation();
     }
@@ -45,6 +61,9 @@ namespace game
         UpdateShootingState();
         UpdatePositionAndRotation();
         UpdateAnimation();
+        // 메시 쪽 AnimFSM은 플레이어(로직) 오브젝트가 아니라 이 오브젝트에 붙어 있으므로 여기서 UpdateFSM 호출 (상체 weight 보간, procedural)
+        if (m_animFSM)
+            m_animFSM->UpdateFSM();
     }
 
     void PlayerAimMeshController::CacheReferences()
@@ -135,14 +154,41 @@ namespace game
         UpdateForwardBackward(direction);
 
         // ─────────────────────────────────────────────
-        // 5. 회전 계산: +Z가 항상 AimPointerMesh를 향하도록
-        //    Backward 여부와 상관없이 항상 에임 방향을 바라봄
-        //    → 캐릭터 정면이 항상 에임을 향함
-        //    → Backward 애니메이션 시 "뒤로 걷는" 모션이 자연스럽게 표현됨
+        // 5. 회전
+        //    - Idle/가만히 있을 때: 항상 에임 방향으로 부드럽게 회전 (보간).
+        //    - 이동 중(Walk): 임계각 초과일 때만 하체를 에임 쪽으로 보간 회전; 그 미만이면 상체만 에임 추적.
         // ─────────────────────────────────────────────
-        float yawAngle = std::atan2(direction.x, direction.z);
-        engine::Quaternion rotation = engine::Quaternion::CreateFromYawPitchRoll(yawAngle, 0.0f, 0.0f);
-        GetTransform()->SetLocalRotation(rotation);
+        float targetYaw = std::atan2(direction.x, direction.z);
+        engine::Quaternion targetRotation = engine::Quaternion::CreateFromYawPitchRoll(targetYaw, 0.0f, 0.0f);
+        engine::Quaternion currentRotation = GetTransform()->GetLocalRotation();
+
+        bool shouldRotateTowardAim = false;
+        if (m_logicFSM && m_logicFSM->GetBoolParameter("IsMoving"))
+        {
+            // 이동 중: 임계각 초과일 때만 하체 회전
+            engine::Vector3 currentForward = GetTransform()->GetForward();
+            currentForward.y = 0.0f;
+            if (currentForward.LengthSquared() >= 0.0001f)
+            {
+                currentForward.Normalize();
+                float dot = currentForward.Dot(direction);
+                engine::Vector3 cross = currentForward.Cross(direction);
+                float angleDeg = engine::ToDegree(std::atan2(cross.y, dot));
+                if (angleDeg < 0.0f) angleDeg = -angleDeg;
+                shouldRotateTowardAim = (angleDeg > m_lowerBodyAimThresholdDeg);
+            }
+            else
+                shouldRotateTowardAim = true;
+        }
+        else
+            shouldRotateTowardAim = true;  // Idle/가만히: 항상 에임 쪽으로
+
+        if (shouldRotateTowardAim)
+        {
+            float t = std::min(1.0f, m_lowerBodyTurnSpeed * engine::Time::DeltaTime());
+            engine::Quaternion newRotation = engine::Quaternion::Slerp(currentRotation, targetRotation, t);
+            GetTransform()->SetLocalRotation(newRotation);
+        }
     }
 
     engine::Vector3 PlayerAimMeshController::GetMoveInputDirection() const
@@ -220,20 +266,21 @@ namespace game
         m_animFSM->ClearStates();
 
         // ─────────────────────────────────────────────
-        // 상/하체 분리 애니메이션 상태 등록
-        // 비발사 상태: 상체 웨이트 0 (비활성화)
-        // 발사 상태: 상체 웨이트 1 + Fire 애니메이션
+        // 비발사: 상체 레이어 비활성화 (하체 애니만 전신)
+        // Idle+발사: 전신 Fire (상하체 분리 없음)
+        // Walk+발사: 하체 Walk + 상체 Fire (Split, 추후 procedural 보정)
         // ─────────────────────────────────────────────
 
-        // 비발사 상태 (상체 레이어 비활성화)
         m_animFSM->AddSplitState("Idle", m_animName_Idle, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("WalkForward", m_animName_WalkForward, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("WalkBackward", m_animName_WalkBackward, true, "", false, 0.0f, 0.1f);
 
-        // 발사 상태 (하체: 이동 애니, 상체: Fire 애니)
-        m_animFSM->AddSplitState("IdleShoot", m_animName_Idle, true, m_animName_Fire, false, 1.0f, 0.1f);
-        m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, m_animName_Fire, false, 1.0f, 0.1f);
-        m_animFSM->AddSplitState("WalkBackwardShoot", m_animName_WalkBackward, true, m_animName_Fire, false, 1.0f, 0.1f);
+        // Idle+발사: 전신 Fire 단일 재생 (Default)
+        m_animFSM->AddDefaultState("IdleShoot", m_animName_Fire, false, 0.1f, 0, 1.0f);
+
+        // Walk+발사: 하체 이동 애니 + 상체 Fire (Split). 상체 Fire는 꾹 누르는 동안 계속 재생(루프)
+        m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, m_animName_Fire, true, 1.0f, 0.1f);
+        m_animFSM->AddSplitState("WalkBackwardShoot", m_animName_WalkBackward, true, m_animName_Fire, true, 1.0f, 0.1f);
     }
 
     void PlayerAimMeshController::UpdateAnimation()
@@ -244,7 +291,8 @@ namespace game
         // LogicFSM 상태 + 이동 방향 → AnimFSM 상태 결정
         // ─────────────────────────────────────────────
         bool isMoving = m_logicFSM->GetBoolParameter("IsMoving");
-        bool isShooting = m_isShooting;  // PCS 콜백으로 제어
+        // 발사 애니는 '마우스 홀드' 기준(LogicFSM IsShooting) 사용. 타이머(m_isShooting) 쓰면 연사 쿨 중 한 프레임 false 되어 Walk으로 튐
+        bool isShooting = m_logicFSM->GetBoolParameter("IsShooting");
         bool isBackward = m_isBackward;
 
         // AnimFSM 상태 결정
@@ -283,6 +331,61 @@ namespace game
 
         // AnimFSM에 상태 전달
         m_animFSM->SetAnimState(animState);
+
+        // Procedural 상체 회전: Walk+발사일 때만 활성화 (Idle+발사는 전신 Fire라 보정 불필요)
+        bool needProceduralAim = (animState == "WalkForwardShoot" || animState == "WalkBackwardShoot");
+        m_animFSM->SetProceduralAimEnabled(needProceduralAim);
+
+        if (needProceduralAim)
+        {
+            // 에임 방향 대비 상체 Yaw (캐릭터 전방 → 에임 방향 각도). 오프셋 + 스케일(옆 조준 시 손 방향 보정)
+            float aimYaw = (CalculateAimYaw() + m_upperBodyAimOffsetDeg) * m_upperBodyYawScale;
+            m_animFSM->SetUpperBodyYaw(aimYaw);
+
+            // 하체(메시) 회전 보정: 하체가 회전한 만큼 상체 Yaw에서 빼서 월드 기준 에임 유지
+            float currentLowerYaw = GetLowerBodyYawDegrees();
+            float deltaYaw = currentLowerYaw - m_prevLowerBodyYawDeg;
+            while (deltaYaw > 180.0f)  deltaYaw -= 360.0f;
+            while (deltaYaw < -180.0f) deltaYaw += 360.0f;
+            m_animFSM->OffsetCurrentYaw(-deltaYaw);
+            m_prevLowerBodyYawDeg = currentLowerYaw;
+        }
+        else
+        {
+            m_prevLowerBodyYawDeg = GetLowerBodyYawDegrees();
+        }
+    }
+
+    float PlayerAimMeshController::CalculateAimYaw() const
+    {
+        if (!m_aimPointerMeshObject) return 0.0f;
+
+        engine::Vector3 meshPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 aimPos = m_aimPointerMeshObject->GetTransform()->GetWorldPosition();
+        engine::Vector3 toAim = aimPos - meshPos;
+        toAim.y = 0.0f;
+        if (toAim.LengthSquared() < 0.001f) return 0.0f;
+        toAim.Normalize();
+
+        engine::Vector3 forward = GetTransform()->GetForward();
+        forward.y = 0.0f;
+        if (forward.LengthSquared() < 0.001f) return 0.0f;
+        forward.Normalize();
+
+        float dotProduct = forward.Dot(toAim);
+        engine::Vector3 crossProduct = forward.Cross(toAim);
+        float angleRad = std::atan2(crossProduct.y, dotProduct);
+        return engine::ToDegree(angleRad);
+    }
+
+    float PlayerAimMeshController::GetLowerBodyYawDegrees() const
+    {
+        engine::Vector3 forward = GetTransform()->GetForward();
+        forward.y = 0.0f;
+        if (forward.LengthSquared() < 0.001f) return 0.0f;
+        forward.Normalize();
+        float rad = std::atan2(forward.x, forward.z);
+        return engine::ToDegree(rad);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -314,6 +417,12 @@ namespace game
         // 위치 설정
         ImGui::Text("Position Settings:");
         ImGui::DragFloat("Fixed Y", &m_fixedY, 0.1f, -100.0f, 100.0f);
+        ImGui::DragFloat("Lower Body Aim Threshold (deg)", &m_lowerBodyAimThresholdDeg, 1.0f, 0.0f, 180.0f);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("이동 중일 때만 적용. 에임이 하체와 이 각도 이상 벌어졌을 때만 하체 회전");
+        ImGui::DragFloat("Lower Body Turn Speed", &m_lowerBodyTurnSpeed, 0.5f, 0.5f, 30.0f);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("하체 회전 보간 속도. 클수록 빨리 에임 방향으로 맞춤");
 
         ImGui::Separator();
 
@@ -323,6 +432,12 @@ namespace game
         ImGui::InputText("WalkForward", &m_animName_WalkForward);
         ImGui::InputText("WalkBackward", &m_animName_WalkBackward);
         ImGui::InputText("Fire", &m_animName_Fire);
+        ImGui::DragFloat("Upper Body Aim Offset (deg)", &m_upperBodyAimOffsetDeg, 1.0f, -90.0f, 90.0f);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Walk+발사 시 상체 조준 Yaw 보정. Fire 애니가 비스듬히 서서 쏘면 조정 (왼쪽 보면 +)");
+        ImGui::DragFloat("Upper Body Yaw Scale", &m_upperBodyYawScale, 0.05f, 0.5f, 2.0f);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("옆 조준 시 손 방향 어긋남 보정. 1=기본, 손이 덜 돌면 >1, 과하게 돌면 <1");
 
         ImGui::Separator();
 
@@ -379,12 +494,16 @@ namespace game
         j["PlayerObjectName"] = m_playerObjectName;
         j["AimPointerMeshObjectName"] = m_aimPointerMeshObjectName;
         j["FixedY"] = m_fixedY;
+        j["LowerBodyAimThresholdDeg"] = m_lowerBodyAimThresholdDeg;
+        j["LowerBodyTurnSpeed"] = m_lowerBodyTurnSpeed;
 
         // 애니메이션 이름
         j["AnimName_Idle"] = m_animName_Idle;
         j["AnimName_WalkForward"] = m_animName_WalkForward;
         j["AnimName_WalkBackward"] = m_animName_WalkBackward;
         j["AnimName_Fire"] = m_animName_Fire;
+        j["UpperBodyAimOffsetDeg"] = m_upperBodyAimOffsetDeg;
+        j["UpperBodyYawScale"] = m_upperBodyYawScale;
 
         // Forward/Backward 판정 설정
         j["BackwardThreshold"] = m_backwardThreshold;
@@ -401,12 +520,16 @@ namespace game
         engine::JsonGet(j, "PlayerObjectName", m_playerObjectName);
         engine::JsonGet(j, "AimPointerMeshObjectName", m_aimPointerMeshObjectName);
         engine::JsonGet(j, "FixedY", m_fixedY);
+        engine::JsonGet(j, "LowerBodyAimThresholdDeg", m_lowerBodyAimThresholdDeg);
+        engine::JsonGet(j, "LowerBodyTurnSpeed", m_lowerBodyTurnSpeed);
 
         // 애니메이션 이름
         engine::JsonGet(j, "AnimName_Idle", m_animName_Idle);
         engine::JsonGet(j, "AnimName_WalkForward", m_animName_WalkForward);
         engine::JsonGet(j, "AnimName_WalkBackward", m_animName_WalkBackward);
         engine::JsonGet(j, "AnimName_Fire", m_animName_Fire);
+        engine::JsonGet(j, "UpperBodyAimOffsetDeg", m_upperBodyAimOffsetDeg);
+        engine::JsonGet(j, "UpperBodyYawScale", m_upperBodyYawScale);
 
         // Forward/Backward 판정 설정
         engine::JsonGet(j, "BackwardThreshold", m_backwardThreshold);
