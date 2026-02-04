@@ -221,6 +221,9 @@ namespace engine
 
         if (auto* g = GetOrCreateChannelGroup("SFX"))
             g->setVolume(Clamp01(m_sfx));
+
+        if (auto* g = GetOrCreateChannelGroup("UI"))
+			g->setVolume(Clamp01(m_sfx));
     }
 
     float SoundSystem::Clamp01(float v)
@@ -710,7 +713,7 @@ namespace engine
         }
     }
 
-    void SoundSystem::PlayUI(const std::string name) { Play(name, "SFX", m_sfx, 1.0f, LifeScope::Global); }
+    void SoundSystem::PlayUI(const std::string name) { Play(name, "SFX", 1.0f, 1.0f, LifeScope::Global); }
     void SoundSystem::SetMasterVolume(float v) { m_master = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetBGMVolume(float v) { m_bgm = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetSFXVolume(float v) { m_sfx = Clamp01(v); ApplyVolumes(); }
