@@ -37,7 +37,7 @@ namespace game
         void Back();
 
         // OnHover
-        void ShowEffect();
+        void ShowEffect(const std::string& targetName, bool hovered);
 
         // Slider
         void OnBGMChanged(float v);
@@ -52,6 +52,8 @@ namespace game
     private:
         bool m_bound = false;
 
+        bool m_entered = false;
+
         bool m_isOptionOpen = false;
         bool m_isUpgradeOpen = false;
 
@@ -59,7 +61,7 @@ namespace game
         bool m_walkStarted = false;
 
         float m_moveElapsed = 0.0f;
-        float m_moveDuration = 1.5f;
+        float m_moveDuration = 0.9f;
 
         engine::Vector3 m_moveStartPos = { 0,0,0 };
         engine::Vector3 m_moveTargetPos = { 0,0,18 };
