@@ -61,6 +61,7 @@ namespace game
         std::string m_animName_WalkForward = "WalkForward";
         std::string m_animName_WalkBackward = "WalkBackward";
         std::string m_animName_Fire = "Fire";
+        std::string m_animName_Dash = "Dash";
         /** 총 메쉬 본 이름 (루트 직계). 비어있지 않으면 손 본을 따라가도록 SetBoneFollowBone 등록 */
         std::string m_gunBoneName;
         /** 손 본 이름 (총 본이 이 본의 pose를 따름). m_gunBoneName과 둘 다 설정 시에만 연동 활성화 */

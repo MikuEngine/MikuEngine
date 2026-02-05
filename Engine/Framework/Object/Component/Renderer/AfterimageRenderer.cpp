@@ -46,6 +46,44 @@ namespace engine
 		m_vs = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Skinned_VS.hlsl");
 		m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/LightTransparent_PS.hlsl");
 		m_emissivePS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/EmissiveTransparent_PS.hlsl");
+		m_silhouettePS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Silhouette_PS.hlsl");
+
+		// 2패스 실루엣: 1패스 스텐실 쓰기, 2패스 스텐실 테스트 후 단색 채우기
+		{
+			D3D11_DEPTH_STENCIL_DESC desc{};
+			desc.DepthEnable = TRUE;
+			desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+			desc.DepthFunc = D3D11_COMPARISON_LESS;
+			desc.StencilEnable = TRUE;
+			desc.StencilReadMask = 0xFF;
+			desc.StencilWriteMask = 0xFF;
+			desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+			desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+			desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+			desc.BackFace = desc.FrontFace;
+			m_dssStencilWrite = ResourceManager::Get().GetOrCreateDepthStencilState("AfterimageStencilWrite", desc);
+		}
+		{
+			D3D11_DEPTH_STENCIL_DESC desc{};
+			desc.DepthEnable = FALSE;
+			desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+			desc.DepthFunc = D3D11_COMPARISON_LESS;
+			desc.StencilEnable = TRUE;
+			desc.StencilReadMask = 0xFF;
+			desc.StencilWriteMask = 0xFF;
+			desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+			desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_ZERO;
+			desc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+			desc.BackFace = desc.FrontFace;
+			m_dssStencilTest = ResourceManager::Get().GetOrCreateDepthStencilState("AfterimageStencilTest", desc);
+		}
+		{
+			D3D11_BLEND_DESC desc{};
+			desc.RenderTarget[0].RenderTargetWriteMask = 0;
+			m_blendColorWriteNone = ResourceManager::Get().GetOrCreateBlendState("AfterimageColorWriteNone", desc);
+		}
 
 		Renderer::Initialize();
 
@@ -214,7 +252,8 @@ namespace engine
 
 		// D-1: 소스 없음·리소스 미로드 시 스킵
 		if (!m_source || !m_isRefreshed || !m_meshData || !m_materialData ||
-			!m_vertexBuffer || !m_indexBuffer || !m_inputLayout || !m_vs || !m_transparentPS || !m_emissivePS)
+			!m_vertexBuffer || !m_indexBuffer || !m_inputLayout || !m_vs || !m_transparentPS || !m_emissivePS ||
+			!m_silhouettePS || !m_dssStencilWrite || !m_dssStencilTest || !m_blendColorWriteNone)
 		{
 			return;
 		}
@@ -226,55 +265,38 @@ namespace engine
 		const auto& deviceContext = GraphicsDevice::Get().GetDeviceContext();
 		static const UINT s_vertexBufferOffset = 0;
 		const UINT s_vertexBufferStride = m_vertexBuffer->GetBufferStride();
+		static constexpr float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
+		const auto& meshSections = m_meshData->GetMeshSections();
+		constexpr UINT stencilRef = 1;
 
-		// D-2: 파이프라인 설정 (VB, IB, InputLayout, Rasterizer, Sampler, Bone CB, Blend/Depth, VS/PS)
-		// 잔상은 CullBack 사용(소스 메쉬가 머리카락 등으로 CullNone이어도 백페이스 안 그리기)
-		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
-		deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
-		deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+		auto restoreMeshPipeline = [&]()
+		{
+			deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer->GetBuffer().GetAddressOf(), &s_vertexBufferStride, &s_vertexBufferOffset);
+			deviceContext->IASetIndexBuffer(m_indexBuffer->GetRawBuffer(), DXGI_FORMAT_R32_UINT, 0);
+			deviceContext->IASetInputLayout(m_inputLayout->GetRawInputLayout());
+			deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
+			deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object), 1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
+			deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Bone), 1, m_boneConstantBuffer->GetBuffer().GetAddressOf());
+		};
+
+		// D-2: 공통 파이프라인 (VB, IB, InputLayout, Rasterizer, Sampler, VS, Object/Bone CB)
+		restoreMeshPipeline();
 		deviceContext->RSSetState(m_rasterizerState->GetRawRasterizerState());
 		deviceContext->PSSetSamplers(static_cast<UINT>(SamplerSlot::Linear), 1, m_samplerState->GetSamplerState().GetAddressOf());
-
-		deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Bone), 1, m_boneConstantBuffer->GetBuffer().GetAddressOf());
-		// 본 데이터는 슬라이스별로 UpdateSubresource 함 (슬라이스에 boneSnapshot 있으면 녹화 순간 포즈, 없으면 소스 현재)
-
-		static constexpr float blendFactor[4]{ 1.0f, 1.0f, 1.0f, 1.0f };
-		auto depthState = ResourceManager::Get().GetDefaultDepthStencilState(DefaultDepthStencilType::DepthRead);
-		deviceContext->OMSetDepthStencilState(depthState->GetRawDepthStencilState(), 0);
-
-		deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
-		deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
 		deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
-		deviceContext->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Object), 1, m_objectConstantBuffer->GetBuffer().GetAddressOf());
 
-		const auto& meshSections = m_meshData->GetMeshSections();
-
-		auto drawOneSlice = [&](const AfterimageSlice& slice, const Vector4& baseColor, float alpha, float emissiveIntensity, PixelShader* ps)
+		// 2패스 실루엣: 슬라이스마다 1패스(스텐실 쓰기, 컬러 끔) → 2패스(풀스크린 단색, 스텐실 테스트) → 알파 중첩 없음
+		auto drawSlicePass1Mesh = [&](const AfterimageSlice& slice)
 		{
 			CbObject cbObject{};
 			cbObject.world = slice.world.Transpose();
 			cbObject.worldInverseTranspose = slice.world.Invert().Transpose();
 			cbObject.boneIndex = -1;
-
-			CbMaterial cbMaterial{};
-			cbMaterial.materialBaseColor = Vector4(baseColor.x, baseColor.y, baseColor.z, 1.0f);
-			cbMaterial.materialEmissive = Vector3(baseColor.x, baseColor.y, baseColor.z);
-			cbMaterial.materialRoughness = 0.0f;
-			cbMaterial.materialMetalness = 0.0f;
-			cbMaterial.materialAmbientOcclusion = 1.0f;
-			cbMaterial.materialEmissiveIntensity = emissiveIntensity;
-			cbMaterial.materialAlpha = alpha;
-			cbMaterial.overrideMaterial = 1;
-
-			deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMaterial, 0, 0);
-			deviceContext->PSSetShader(ps->GetRawShader(), nullptr, 0);
-
 			for (const auto& section : meshSections)
 			{
 				const auto textureSRVs = m_textures[section.materialIndex].AsRawArray();
 				deviceContext->PSSetShaderResources(static_cast<UINT>(TextureSlot::BaseColor), static_cast<UINT>(textureSRVs.size()), textureSRVs.data());
-
 				if (m_meshData->IsRigid())
 					cbObject.boneIndex = static_cast<int>(section.boneIndex);
 				else
@@ -284,30 +306,57 @@ namespace engine
 			}
 		};
 
-		// 솔리드 레이어: emissive*alpha 출력 → 프리멀티플라이드 블렌드
+		// 솔리드 레이어: 슬라이스마다 2패스
+		auto blendPremul = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlendPremultiplied);
 		if (m_drawSolidLayer && !m_slicesSolid.empty())
 		{
-			auto blendPremul = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlendPremultiplied);
-			deviceContext->OMSetBlendState(blendPremul->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
 			for (const auto& slice : m_slicesSolid)
 			{
 				const CbBone* boneData = slice.boneSnapshot.has_value() ? &*slice.boneSnapshot : &m_boneTransformData;
 				deviceContext->UpdateSubresource(m_boneConstantBuffer->GetRawBuffer(), 0, nullptr, boneData, 0, 0);
-				drawOneSlice(slice, m_solidColor, slice.alpha, m_solidEmissiveIntensity, m_emissivePS.get());
+				deviceContext->OMSetBlendState(m_blendColorWriteNone->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
+				deviceContext->OMSetDepthStencilState(m_dssStencilWrite->GetRawDepthStencilState(), stencilRef);
+				deviceContext->PSSetShader(m_emissivePS->GetRawShader(), nullptr, 0);
+				drawSlicePass1Mesh(slice);
+
+				deviceContext->OMSetDepthStencilState(m_dssStencilTest->GetRawDepthStencilState(), stencilRef);
+				deviceContext->OMSetBlendState(blendPremul->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
+				CbMaterial cbMat{};
+				cbMat.materialBaseColor = Vector4(m_solidColor.x * slice.alpha, m_solidColor.y * slice.alpha, m_solidColor.z * slice.alpha, slice.alpha);
+				cbMat.materialEmissive = Vector3(m_solidColor.x, m_solidColor.y, m_solidColor.z);
+				cbMat.materialEmissiveIntensity = m_solidEmissiveIntensity;
+				cbMat.materialAlpha = 1.0f;
+				deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMat, 0, 0);
+				deviceContext->PSSetShader(m_silhouettePS->GetRawShader(), nullptr, 0);
+				GraphicsDevice::Get().DrawFullscreenQuad();
+				restoreMeshPipeline();
 			}
 		}
-		// 알파 레이어: 라이팅 PS, 일반 AlphaBlend
+		// 알파 레이어: 슬라이스마다 2패스
+		auto blendAlpha = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlend);
 		if (m_drawAlphaLayer && !m_slicesAlpha.empty())
 		{
-			auto blendAlpha = ResourceManager::Get().GetDefaultBlendState(DefaultBlendType::AlphaBlend);
-			deviceContext->OMSetBlendState(blendAlpha->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
-			deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
 			for (const auto& slice : m_slicesAlpha)
 			{
 				const CbBone* boneData = slice.boneSnapshot.has_value() ? &*slice.boneSnapshot : &m_boneTransformData;
 				deviceContext->UpdateSubresource(m_boneConstantBuffer->GetRawBuffer(), 0, nullptr, boneData, 0, 0);
+				deviceContext->OMSetBlendState(m_blendColorWriteNone->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
+				deviceContext->OMSetDepthStencilState(m_dssStencilWrite->GetRawDepthStencilState(), stencilRef);
+				deviceContext->PSSetShader(m_transparentPS->GetRawShader(), nullptr, 0);
+				drawSlicePass1Mesh(slice);
+
 				const float alpha = slice.alpha * m_alphaTint.w;
-				drawOneSlice(slice, m_alphaTint, alpha, m_alphaEmissiveIntensity, m_transparentPS.get());
+				deviceContext->OMSetDepthStencilState(m_dssStencilTest->GetRawDepthStencilState(), stencilRef);
+				deviceContext->OMSetBlendState(blendAlpha->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
+				CbMaterial cbMat{};
+				cbMat.materialBaseColor = Vector4(m_alphaTint.x, m_alphaTint.y, m_alphaTint.z, alpha);
+				cbMat.materialEmissive = Vector3(m_alphaTint.x, m_alphaTint.y, m_alphaTint.z);
+				cbMat.materialEmissiveIntensity = m_alphaEmissiveIntensity;
+				cbMat.materialAlpha = 1.0f;
+				deviceContext->UpdateSubresource(m_materialConstantBuffer->GetRawBuffer(), 0, nullptr, &cbMat, 0, 0);
+				deviceContext->PSSetShader(m_silhouettePS->GetRawShader(), nullptr, 0);
+				GraphicsDevice::Get().DrawFullscreenQuad();
+				restoreMeshPipeline();
 			}
 		}
 

@@ -858,6 +858,7 @@
     <FxCompile Include="Shader\Pixel\Particle_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\UIQuadOutline_PS.hlsl" />
     <FxCompile Include="Shader\Pixel\EmissiveTransparent_PS.hlsl" />
+    <FxCompile Include="Shader\Pixel\Silhouette_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Include\Shared.hlsli" />

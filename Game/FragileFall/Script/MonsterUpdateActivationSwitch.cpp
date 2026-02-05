@@ -64,12 +64,18 @@ namespace game
 
     void MonsterUpdateActivationSwitch::Save(engine::json& j) const
     {
+        // 베이스 클래스 Save 호출 (Type 필드 직렬화 - 필수!)
+        Object::Save(j);
+        
         j["ActivationDelay"] = m_activationDelay;
         j["IsUpdateAllowed"] = m_isUpdateAllowed;  // 수동 설정 저장
     }
 
     void MonsterUpdateActivationSwitch::Load(const engine::json& j)
     {
+        // 베이스 클래스 Load 호출 (Type 필드 역직렬화 - 필수!)
+        Object::Load(j);
+        
         m_activationDelay = j.value("ActivationDelay", 1.0f);
         m_isUpdateAllowed = j.value("IsUpdateAllowed", false);
     }

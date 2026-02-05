@@ -287,6 +287,8 @@ namespace game
         // ─────────────────────────────────────────────
         // 대쉬 시스템 접근자
         // ─────────────────────────────────────────────
+        bool IsDashing() const { return m_isDashing; }
+        const engine::Vector3& GetDashDirection() const { return m_dashDirection; }
         int GetMaxDashCount() const { return m_MaxDashCount; }
         int GetCurrentDashCount() const { return m_CurrentDashCount; }
         float GetDashRechargeTimer() const { return m_dashRechargeTimer; }
