@@ -135,6 +135,28 @@ namespace engine
 		GameObject* parent = GetGameObject();
 		if (!parent) return;
 
+		{
+			bool created = false;
+			// "Background"라는 이름으로 자식 생성
+			GameObject* bgo = EnsureChildUI(parent, "Background", created);
+			if (bgo)
+			{
+				if (!bgo->GetComponent<UIImage>())
+					bgo->AddComponent<UIImage>();
+
+				RectTransform* brt = bgo->GetComponent<RectTransform>();
+				if (created)
+				{
+					// 배경은 기본적으로 UIScrollView 전체를 꽉 채우도록 설정
+					brt->SetAnchorMin({ 0.0f, 0.0f });
+					brt->SetAnchorMax({ 1.0f, 1.0f });
+					brt->SetPivot({ 0.5f, 0.5f });
+					brt->SetAnchoredPosition({ 0.0f, 0.0f });
+					brt->SetSize(0.0f, 0.0f);
+				}
+			}
+		}
+
 		// Viewport
 		{
 			bool created = false;
