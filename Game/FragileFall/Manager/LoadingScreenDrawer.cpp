@@ -150,7 +150,7 @@ namespace game
 			g_quadIB = rm.GetGeometryIndexBuffer("DefaultQuad");
 			g_inputLayout = g_uiVS->GetOrCreateInputLayout<engine::PositionTexCoordVertex>();
 			g_blendStraight = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlend);
-			g_blendPremul = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlend);
+			g_blendPremul = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlendPremultiplied);
 			g_depthNone = rm.GetDefaultDepthStencilState(engine::DefaultDepthStencilType::None);
 			g_whiteTexture = rm.GetDefaultTexture(engine::DefaultTextureType::White);
 
@@ -312,7 +312,7 @@ namespace game
 		// State
 		{
 			float blendFactor[4] = { 0, 0, 0, 0 };
-			dc->OMSetBlendState(g_blendPremul->GetBlendState().Get(), blendFactor, 0xffffffff);
+			dc->OMSetBlendState(g_blendStraight->GetBlendState().Get(), blendFactor, 0xffffffff);
 			dc->OMSetDepthStencilState(g_depthNone->GetDepthStencilState().Get(), 0);
 		}
 

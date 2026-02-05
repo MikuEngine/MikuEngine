@@ -93,6 +93,9 @@ namespace game
         if (m_bound) return;
         m_bound = true;
 
+        auto* clickGO = engine::GameObject::Find("UIClickArea");
+        m_interaction = clickGO->GetComponent<LobbyInteraction>();
+
         BindButton("UI_EnterPlay", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->EnterPlay(); });
         BindButton("UI_OpenUpgrade", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->OpenUpgrade(); });
         BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->OpenOption(); });
@@ -113,6 +116,9 @@ namespace game
     {
         if (!TimeScaler::IsActive())
             TimeScaler::PlayWorld();
+
+        auto* clickGO = engine::GameObject::Find("UIClickArea");
+        m_interaction = clickGO->GetComponent<LobbyInteraction>();
 
         m_optionPopUp = engine::GameObject::Find("UI_OptionPopUp");
         if (m_optionPopUp) m_optionPopUp->SetActive(false);
@@ -152,10 +158,6 @@ namespace game
 
         auto* playerAnim = m_playerPreview->GetComponent<engine::SkeletalAnimator>();
         if (playerAnim) playerAnim->Play("Idle", true);
-
-
-        auto* clickGO = engine::GameObject::Find("UIClickArea");
-        m_interaction = clickGO->GetComponent<LobbyInteraction>();
 
         // Load =======================================================
         auto* ugdGO = engine::GameObject::Find("UpgradeController");
@@ -246,8 +248,6 @@ namespace game
         Object::Load(j);
         engine::JsonGet(j, "OptionOpen", m_isOptionOpen);
         engine::JsonGet(j, "UpgradeOpen", m_isUpgradeOpen);
-        SetOptionOpen(m_isOptionOpen);
-        SetUpgradeOpen(m_isUpgradeOpen);
     }
 
     void SceneController_Lobby::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
@@ -345,6 +345,11 @@ namespace game
     {
         m_isOptionOpen = open;
 
+        // 로비에서 상호작용 되는거 비활성화
+        bool shouldEnableInteraction = !m_isOptionOpen && !m_isUpgradeOpen && !m_entered;
+        if (m_interaction)
+            m_interaction->SetInteractionActive(shouldEnableInteraction);
+
         const bool shouldStop = (m_isOptionOpen || m_isUpgradeOpen);
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
@@ -370,6 +375,11 @@ namespace game
     void SceneController_Lobby::SetUpgradeOpen(bool open)
     {
         m_isUpgradeOpen = open;
+
+        // 로비에서 상호작용 되는거 비활성화
+        bool shouldEnableInteraction = !m_isOptionOpen && !m_isUpgradeOpen && !m_entered;
+        if (m_interaction)
+            m_interaction->SetInteractionActive(shouldEnableInteraction);
 
         const bool shouldStop = (m_isOptionOpen || m_isUpgradeOpen);
         if (shouldStop) TimeScaler::StopWorld();
