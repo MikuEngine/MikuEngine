@@ -1,6 +1,6 @@
 {
     "Name": "z_M_RoundTestScene",
-    "NumGameObjects": 88,
+    "NumGameObjects": 89,
     "GameObjects": [
         {
             "ID": 0,
@@ -19090,7 +19090,7 @@
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
-                    "OwnGravity": 9.8100004196167,
+                    "OwnGravity": 25.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -19101,10 +19101,12 @@
                     "AnimName_Repositioning": "Repositioning",
                     "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead",
-                    "MaxJumpStepDistance": 8.0,
+                    "MaxJumpStepDistance": 15.0,
                     "JumpPrepareTime": 0.5,
-                    "LandingCheckRadius": 0.699999988079071,
-                    "GroundY": 1.5,
+                    "LaunchAngle": 55.0,
+                    "LandingCheckRadius": 0.30000001192092896,
+                    "GroundY": 0.0,
+                    "GroundYOffset": 1.5,
                     "JumpCheckDelay": 0.05000000074505806,
                     "LandingYThreshold": 1.7000000476837158,
                     "LandingThreshold": 0.004999999888241291
@@ -19165,6 +19167,86 @@
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 88,
+            "Name": "LandingPointCheckDebugTrg",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 1.5,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 11,
+                    "materialType": 0,
+                    "radius": 1.2999999523162842
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }

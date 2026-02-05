@@ -9,6 +9,8 @@
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Physics/PhysicsSystem.h>
 #include <Framework/System/SystemManager.h>
+#include <Framework/Scene/SceneManager.h>
+#include <Framework/Scene/Scene.h>
 
 namespace game
 {
@@ -38,6 +40,15 @@ namespace game
         {
             m_originalLayer = collider->GetLayer();
         }
+        
+        // 착지점 디버그 체커 찾기
+        if (auto* scene = engine::SceneManager::Get().GetScene())
+        {
+            m_landingChecker = scene->FindGameObject("LandingPointCheckDebugTrg");
+        }
+        
+        // 초기 Y 위치 보정 (지면 + 오프셋)
+        CorrectYPosition();
     }
     
     // ═══════════════════════════════════════════════════════════════
@@ -255,6 +266,12 @@ namespace game
         {
             m_targetLandingPos = validLanding;
             
+            // 랜딩체커 시각화 (디버그)
+            if (m_landingChecker && m_landingChecker->GetTransform())
+            {
+                m_landingChecker->GetTransform()->SetLocalPosition(m_targetLandingPos);
+            }
+            
             // EngageJump 전이
             if (m_logicFSM)
             {
@@ -304,6 +321,8 @@ namespace game
         else if (state == "EngageJump")
         {
             ExecuteEngageJumpBehaviorPhysics();
+            // 점프 중에는 Y 보정 안 함 (포물선 운동 중)
+            return;
         }
         else if (state == "EngageStop")
         {
@@ -327,6 +346,11 @@ namespace game
         {
             ExecuteDeadBehaviorPhysics();
         }
+        
+        // ─────────────────────────────────────────────
+        // 모든 상태에서 Y 위치 체크 (점프 중 제외)
+        // ─────────────────────────────────────────────
+        CorrectYPosition();
     }
     
     void MonsterRoundRed::ExecuteEngageJumpReadyBehaviorPhysics()
@@ -336,6 +360,9 @@ namespace game
         
         // 플레이어 방향 바라보기
         RotateTowardsPlayer();
+        
+        // Y 위치 유지 (지면 + 오프셋)
+        CorrectYPosition();
     }
     
     void MonsterRoundRed::ExecuteEngageJumpBehaviorPhysics()
@@ -348,21 +375,22 @@ namespace game
         if (m_landingSignal)
         {
             engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+            float targetY = m_groundY + m_groundYOffset;
             
-            // Y 위치를 지면으로 서서히 보정
-            if (currentPos.y > m_groundY)
+            // Y 위치를 목표 높이로 서서히 보정
+            if (currentPos.y > targetY)
             {
-                currentPos.y = std::max(m_groundY, currentPos.y - 0.1f);
+                currentPos.y = std::max(targetY, currentPos.y - 0.1f);
                 GetTransform()->SetLocalPosition(currentPos);
             }
             
             // ─────────────────────────────────────────────
-            // 4. Y 좌표가 지면에 충분히 가까우면 착지 판정
+            // 4. Y 좌표가 목표 높이에 충분히 가까우면 착지 판정
             // ─────────────────────────────────────────────
-            if (std::abs(currentPos.y - m_groundY) <= m_landingThreshold)
+            if (std::abs(currentPos.y - targetY) <= m_landingThreshold)
             {
-                // 정확한 지면 위치로 고정
-                currentPos.y = m_groundY;
+                // 정확한 위치로 고정
+                currentPos.y = targetY;
                 GetTransform()->SetLocalPosition(currentPos);
                 
                 // 착지 완료
@@ -483,7 +511,7 @@ namespace game
         }
         
         // ─────────────────────────────────────────────
-        // 45도 포물선 초속도 계산
+        // 포물선 초속도 계산 (m_launchAngle 사용)
         // ─────────────────────────────────────────────
         engine::Vector3 myPos = GetTransform()->GetWorldPosition();
         
@@ -493,8 +521,15 @@ namespace game
             engine::Vector3(landingPos.x, 0, landingPos.z)
         );
         
-        // 공식: v = sqrt(d * g) (45도일 때)
-        float jumpSpeed = std::sqrt(horizontalDist * m_ownGravity);
+        // 각도를 라디안으로 변환
+        constexpr float kDegToRad = 3.14159265f / 180.0f;
+        float angleRad = m_launchAngle * kDegToRad;
+        
+        // 포물선 공식: v = sqrt(d * g / sin(2θ))
+        float sin2Angle = std::sin(2.0f * angleRad);
+        if (sin2Angle < 0.0001f) sin2Angle = 0.0001f;  // 0으로 나누기 방지
+        
+        float jumpSpeed = std::sqrt((horizontalDist * m_ownGravity) / sin2Angle);
         
         // 방향 계산
         engine::Vector3 direction = landingPos - myPos;
@@ -508,12 +543,12 @@ namespace game
             direction = engine::Vector3::UnitX;
         }
         
-        // 초기 속도 설정 (45도)
-        constexpr float kCos45 = 0.7071f;  // cos(45°)
-        constexpr float kSin45 = 0.7071f;  // sin(45°)
+        // 초기 속도 설정 (m_launchAngle)
+        float cosAngle = std::cos(angleRad);
+        float sinAngle = std::sin(angleRad);
         
-        engine::Vector3 velocity = direction * (jumpSpeed * kCos45);
-        velocity.y = jumpSpeed * kSin45;
+        engine::Vector3 velocity = direction * (jumpSpeed * cosAngle);
+        velocity.y = jumpSpeed * sinAngle;
         
         // Rigidbody에 속도 설정
         if (m_rigidbody)
@@ -543,6 +578,52 @@ namespace game
             vel.y = 0.0f;  // Y 속도 제거
             vel *= 0.5f;   // 수평 속도 감쇠
             m_rigidbody->SetLinearVelocity(vel);
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // Y 위치 보정 (지면 + 오프셋 유지)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundRed::CorrectYPosition()
+    {
+        float targetY = m_groundY + m_groundYOffset;
+        engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+        
+        // ─────────────────────────────────────────────
+        // 긴급 상황: Y <= 0 (지면 아래로 가라앉음)
+        // ─────────────────────────────────────────────
+        if (currentPos.y <= 0.0f)
+        {
+            currentPos.y = targetY;
+            
+            // ForceSetPosition으로 강제 복구 (속도도 제거)
+            if (m_rigidbody)
+            {
+                m_rigidbody->ForceSetPosition(currentPos, true);
+            }
+            else
+            {
+                GetTransform()->SetLocalPosition(currentPos);
+            }
+            
+            return;  // 긴급 복구 완료
+        }
+        
+        // ─────────────────────────────────────────────
+        // 일반 상황: 목표 Y와 차이가 있으면 부드럽게 보정
+        // ─────────────────────────────────────────────
+        if (std::abs(currentPos.y - targetY) > m_landingThreshold)
+        {
+            currentPos.y = targetY;
+            GetTransform()->SetLocalPosition(currentPos);
+            
+            // Y 속도도 제거 (떠있는 상태 유지)
+            if (m_rigidbody)
+            {
+                engine::Vector3 vel = m_rigidbody->GetLinearVelocity();
+                vel.y = 0.0f;
+                m_rigidbody->SetLinearVelocity(vel);
+            }
         }
     }
     
@@ -630,14 +711,16 @@ namespace game
         ImGui::Text("=== Jump Settings ===");
         ImGui::DragFloat("Max Jump Distance", &m_maxJumpStepDistance, 0.5f, 1.0f, 50.0f, "%.1f m");
         ImGui::DragFloat("Jump Prepare Time", &m_jumpPrepareTime, 0.05f, 0.1f, 2.0f, "%.2f sec");
+        ImGui::DragFloat("Launch Angle", &m_launchAngle, 1.0f, 15.0f, 75.0f, "%.1f deg");
         ImGui::DragFloat("Own Gravity", &m_ownGravity, 0.1f, 1.0f, 30.0f, "%.1f m/s^2");
         ImGui::DragFloat("Landing Check Radius", &m_landingCheckRadius, 0.1f, 0.1f, 5.0f, "%.1f m");
         
         ImGui::Separator();
         ImGui::Text("=== Landing Detection Settings ===");
         ImGui::DragFloat("Ground Y", &m_groundY, 0.1f, -10.0f, 10.0f, "%.2f m");
+        ImGui::DragFloat("Ground Y Offset", &m_groundYOffset, 0.1f, 0.0f, 5.0f, "%.2f m");
         ImGui::DragFloat("Jump Check Delay", &m_jumpCheckDelay, 0.01f, 0.0f, 1.0f, "%.3f sec");
-        ImGui::DragFloat("Landing Y Threshold", &m_landingYThreshold, 0.01f, 0.0f, 1.0f, "%.3f m");
+        ImGui::DragFloat("Landing Y Threshold", &m_landingYThreshold, 0.1f, 0.0f, 5.0f, "%.2f m");
         ImGui::DragFloat("Landing Threshold", &m_landingThreshold, 0.001f, 0.0f, 0.1f, "%.4f m");
         
         // 최대 사거리 표시 (45도 포물선)
@@ -688,11 +771,13 @@ namespace game
         // Red 전용 데이터 저장
         j["MaxJumpStepDistance"] = m_maxJumpStepDistance;
         j["JumpPrepareTime"] = m_jumpPrepareTime;
+        j["LaunchAngle"] = m_launchAngle;
         j["OwnGravity"] = m_ownGravity;
         j["LandingCheckRadius"] = m_landingCheckRadius;
         
         // 착지 감지 설정
         j["GroundY"] = m_groundY;
+        j["GroundYOffset"] = m_groundYOffset;
         j["JumpCheckDelay"] = m_jumpCheckDelay;
         j["LandingYThreshold"] = m_landingYThreshold;
         j["LandingThreshold"] = m_landingThreshold;
@@ -705,13 +790,15 @@ namespace game
         // Red 전용 데이터 로드
         m_maxJumpStepDistance = j.value("MaxJumpStepDistance", 10.0f);
         m_jumpPrepareTime = j.value("JumpPrepareTime", 0.5f);
+        m_launchAngle = j.value("LaunchAngle", 45.0f);
         m_ownGravity = j.value("OwnGravity", 9.81f);
         m_landingCheckRadius = j.value("LandingCheckRadius", 0.7f);
         
         // 착지 감지 설정
         m_groundY = j.value("GroundY", 0.0f);
+        m_groundYOffset = j.value("GroundYOffset", 1.5f);
         m_jumpCheckDelay = j.value("JumpCheckDelay", 0.05f);
-        m_landingYThreshold = j.value("LandingYThreshold", 0.05f);
+        m_landingYThreshold = j.value("LandingYThreshold", 1.7f);
         m_landingThreshold = j.value("LandingThreshold", 0.005f);
     }
 }

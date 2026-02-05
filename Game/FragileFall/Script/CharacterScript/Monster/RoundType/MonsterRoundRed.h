@@ -25,6 +25,7 @@ namespace game
         // ─────────────────────────────────────────────
         float m_maxJumpStepDistance = 10.0f;       // 점프 최대 거리 (m)
         float m_jumpPrepareTime = 0.5f;            // 점프 준비 시간 (초)
+        float m_launchAngle = 45.0f;               // 점프 발사 각도 (도)
         float m_ownGravity = 9.81f;                // 자체 중력 가속도 (m/s^2)
         float m_landingCheckRadius = 0.7f;         // 착지점 체크 반경 (m)
         
@@ -34,6 +35,7 @@ namespace game
         float m_jumpPrepareTimer = 0.0f;           // 준비 타이머
         engine::Vector3 m_targetLandingPos = engine::Vector3::Zero;  // 목표 착지점
         bool m_hasValidLandingPos = false;         // 유효한 착지점 있는지
+        engine::GameObject* m_landingChecker = nullptr;  // 착지점 디버그 체커
         
         // ─────────────────────────────────────────────
         // 점프 중 상태 (런타임)
@@ -47,8 +49,9 @@ namespace game
         // 착지 감지 설정 (인스펙터 직렬화)
         // ─────────────────────────────────────────────
         float m_groundY = 0.0f;                    // 지면 Y 좌표
+        float m_groundYOffset = 1.5f;              // 지면으로부터 떠있는 높이 (m)
         float m_jumpCheckDelay = 0.05f;            // 점프 후 착지 체크 시작 시간 (초)
-        float m_landingYThreshold = 0.05f;         // 착지 시작 높이 (Y <= 이 값이면 착지 신호)
+        float m_landingYThreshold = 1.7f;          // 착지 시작 높이 (Y <= 이 값이면 착지 신호)
         float m_landingThreshold = 0.005f;         // 착지 판정 쓰레스홀드 (지면과의 거리)
         
     public:
@@ -101,6 +104,11 @@ namespace game
         // ─────────────────────────────────────────────
         void StartJump(const engine::Vector3& landingPos);
         void OnLanding();
+        
+        // ─────────────────────────────────────────────
+        // Y 위치 보정 (지면 + 오프셋 유지)
+        // ─────────────────────────────────────────────
+        void CorrectYPosition();
         
         // ─────────────────────────────────────────────
         // 오버라이드 (Red 전용 로직)
