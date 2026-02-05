@@ -259,6 +259,7 @@
     <ClInclude Include="Script\CornerTrigger.h" />
     <ClInclude Include="Script\ExecutionEffectScript.h" />
     <ClInclude Include="Script\ExecutionSlowScript.h" />
+    <ClInclude Include="Script\Interface\IDamageable.h" />
     <ClInclude Include="Script\ItemType.h" />
     <ClInclude Include="Script\LobbyInteraction.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />

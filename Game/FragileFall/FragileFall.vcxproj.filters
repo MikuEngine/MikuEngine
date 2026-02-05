@@ -147,5 +147,6 @@
     <ClInclude Include="Script\MonsterUpdateActivationSwitch.h" />
     <ClInclude Include="Script\ParticleAttachment.h" />
     <ClInclude Include="Script\LobbyInteraction.h" />
+    <ClInclude Include="Script\Interface\IDamageable.h" />
   </ItemGroup>
 </Project>

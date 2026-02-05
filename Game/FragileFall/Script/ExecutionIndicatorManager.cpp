@@ -11,6 +11,7 @@
 
 #include <Core/System/Input.h>
 #include <Core/System/MyTime.h>
+#include <optional>
 #include <Common/Utility/MousePicking.h>
 
 #include <Framework/Asset/Prefab.h>
@@ -27,6 +28,7 @@
 #include <Framework/Object/Component/CapsuleCollider.h>
 #include <Framework/Object/Component/LogicFSM.h>
 #include <Framework/Object/Component/Rigidbody.h>
+#include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
 
 namespace game
 {
@@ -85,6 +87,18 @@ namespace game
         {
             UpdateTriggerWait();
             return;
+        }
+
+        // 처형 애니메이션 재생 비율 대기 (제자리 애니 → 비율 도달 시 순간이동). 최소 재생 시간도 만족해야 발동
+        if (m_isWaitingForExecutionAnim)
+        {
+            float normTime = m_player ? m_player->GetExecutionAnimNormalizedTime() : -1.0f;
+            float elapsed = engine::Time::UnscaledTime() - m_executionAnimWaitStartTime;
+            if (normTime >= m_executionTeleportAtNormalizedTime && elapsed >= m_executionMinDuration)
+            {
+                m_isWaitingForExecutionAnim = false;
+                PerformTeleport();
+            }
         }
 
         // Idle 전이 대기 중
@@ -462,7 +476,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 연속 처형: 기존 처형 진행 중이면 정리 후 새 처형 시작
         // ─────────────────────────────────────────────
-        if (m_isWaitingForDeath || m_isWaitingForIdle)
+        if (m_isWaitingForDeath || m_isWaitingForIdle || m_isWaitingForExecutionAnim)
         {
             // 이전 몬스터 즉시 Death 처리
             if (m_executingGameObject && m_isWaitingForDeath)
@@ -473,6 +487,8 @@ namespace game
             // 상태 리셋
             m_isWaitingForDeath = false;
             m_isWaitingForIdle = false;
+            m_isWaitingForExecutionAnim = false;
+            m_executionAnimWaitStartTime = 0.0f;
             m_deathTimer = 0.0f;
         }
 
@@ -552,6 +568,8 @@ namespace game
 
         // 상태 초기화 (플레이어/몬스터 상태 유지)
         m_isWaitingForTrigger = false;
+        m_isWaitingForExecutionAnim = false;
+        m_executionAnimWaitStartTime = 0.0f;
         m_triggerWaitFrames = 0;
         m_executingGameObject = nullptr;
 
@@ -646,24 +664,20 @@ namespace game
             m_isWaitingForTrigger = false;
 
             // ─────────────────────────────────────────────
-            // 트리거 확인 성공 → 처형 진행
+            // 트리거 확인 성공 → 처형 진행 (제자리 애니 재생 후 비율 도달 시 순간이동)
+            // 슬로우는 PerformTeleport()에서 순간이동·처형 시점에 시작 (애니 재생 중엔 노멀 속도)
             // ─────────────────────────────────────────────
 
-            // 1. 슬로우 효과 시작
-            if (m_slowScript)
-            {
-                m_slowScript->StartSlowMotion();
-            }
-
-            // 2. 플레이어 Execution 스테이트로 전이
+            // 1. 플레이어 Execution 상태 전이 (제자리에서 처형 애니 재생)
             engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
             if (playerFSM)
             {
                 playerFSM->SetTrigger("ExecuteMonster");
             }
 
-            // 3. 텔레포트 실행
-            PerformTeleport();
+            // 2. 처형 애니 재생 비율 도달까지 대기, 도달 시 PerformTeleport()에서 순간이동·슬로우·처형·상태 종료
+            m_isWaitingForExecutionAnim = true;
+            m_executionAnimWaitStartTime = engine::Time::UnscaledTime();
         }
     }
 
@@ -674,6 +688,35 @@ namespace game
     void ExecutionIndicatorManager::PerformTeleport()
     {
         if (!m_executingGameObject || !m_player) return;
+
+        engine::Transform* monsterTransform = m_executingGameObject->GetTransform();
+        engine::Vector3 monsterPos = monsterTransform ? monsterTransform->GetWorldPosition() : engine::Vector3::Zero;
+
+        // 슬로우 모션: 순간이동·처형이 실행되는 이 순간부터 시작 (애니 재생 중엔 노멀 속도)
+        if (m_slowScript)
+        {
+            m_slowScript->StartSlowMotion();
+        }
+
+        // ─────────────────────────────────────────────
+        // 텔레포트 잔상: 플레이어 메시 현재 위치 → 몬스터 위치 구간에 Afterimage 슬라이스 채움 (순간이동 직전)
+        // ─────────────────────────────────────────────
+        if (monsterTransform && m_teleportAfterimageNumSlices > 0)
+        {
+            if (engine::AfterimageRenderer* afterimage = m_player->GetAfterImage())
+            {
+                engine::Matrix fromWorld = afterimage->GetGameObject()->GetTransform()->GetWorld();
+                engine::Matrix toWorld = fromWorld;
+                toWorld._41 = monsterPos.x;
+                toWorld._42 = monsterPos.y;
+                toWorld._43 = monsterPos.z;
+                afterimage->ClearSlices();
+                std::optional<float> gradOverride = m_teleportAfterimageUseDefaultGradient
+                    ? std::nullopt
+                    : std::optional<float>(m_teleportAfterimageTrailGradient);
+                afterimage->RecordTeleportPath(fromWorld, toWorld, m_teleportAfterimageNumSlices, gradOverride);
+            }
+        }
 
         // ─────────────────────────────────────────────
         // 라인 즉시 숨김
@@ -694,11 +737,8 @@ namespace game
         // ─────────────────────────────────────────────
         // 처형 이펙트 인스턴시에이트 (몬스터 위치)
         // ─────────────────────────────────────────────
-        engine::Transform* monsterTransform = m_executingGameObject->GetTransform();
         if (monsterTransform)
         {
-            engine::Vector3 monsterPos = monsterTransform->GetWorldPosition();
-            
             // 이펙트 프리팹 생성
             engine::GameObject* effect = engine::Prefab::Instantiate(m_effectPrefabName);
             if (effect)
@@ -781,6 +821,32 @@ namespace game
         {
             ImGui::SetTooltip("Delay after teleport before monster death");
         }
+
+        ImGui::Separator();
+        ImGui::Text("Execution Timing (when to teleport):");
+        ImGui::DragFloat("Teleport At Normalized Time (0~1)", &m_executionTeleportAtNormalizedTime, 0.01f, 0.0f, 1.0f, "%.2f");
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("처형 애니 재생 비율. 이 값에 도달하면 순간이동·처형 실행 (0.5 = 50%%, 0.3 = 빨리, 0.7 = 늦게)");
+        }
+        ImGui::DragFloat("Execution Min Duration (sec)", &m_executionMinDuration, 0.05f, 0.0f, 2.0f, "%.2f");
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("처형 애니 최소 재생 시간. 이 시간이 지나야 비율 조건과 함께 처형 발동 (가까운 적이어도 애니가 잠깐 보이게)");
+        int teleportSlices = static_cast<int>(m_teleportAfterimageNumSlices);
+        ImGui::DragInt("Teleport Afterimage Slices", &teleportSlices, 1, 0, 64);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("처형 순간이동 시 출발→도착 구간에 넣을 잔상(Afterimage) 슬라이스 수. 0이면 잔상 없음");
+        m_teleportAfterimageNumSlices = static_cast<size_t>(std::max(0, teleportSlices));
+        ImGui::Checkbox("Teleport Afterimage Use Default Gradient", &m_teleportAfterimageUseDefaultGradient);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("체크 시 AfterimageRenderer 기본 trail gradient 사용, 해제 시 아래 값으로 오버라이드");
+        if (!m_teleportAfterimageUseDefaultGradient)
+        {
+            ImGui::DragFloat("Teleport Afterimage Trail Gradient", &m_teleportAfterimageTrailGradient, 0.01f, 0.0f, 1.0f, "%.2f");
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("1에 가까울수록 구간 전체 비슷한 알파, 작을수록 앞쪽이 빨리 흐려짐 (예: 0.97)");
+        }
+
         ImGui::DragInt("Trigger Wait Frames", &m_triggerWaitFramesRequired, 1, 1, 10);
         if (ImGui::IsItemHovered())
         {
@@ -799,6 +865,7 @@ namespace game
         ImGui::Separator();
         ImGui::Text("Execution State:");
         ImGui::Text("Waiting for Trigger: %s", m_isWaitingForTrigger ? "Yes" : "No");
+        ImGui::Text("Waiting for Execution Anim: %s", m_isWaitingForExecutionAnim ? "Yes" : "No");
         ImGui::Text("Waiting for Idle: %s", m_isWaitingForIdle ? "Yes" : "No");
         ImGui::Text("Waiting for Death: %s", m_isWaitingForDeath ? "Yes" : "No");
         
@@ -831,6 +898,11 @@ namespace game
         j["EffectDuration"] = m_effectDuration;
         j["EffectScaleMultiplier"] = m_effectScaleMultiplier;
         j["MonsterDeathDelay"] = m_monsterDeathDelay;
+        j["ExecutionTeleportAtNormalizedTime"] = m_executionTeleportAtNormalizedTime;
+        j["ExecutionMinDuration"] = m_executionMinDuration;
+        j["TeleportAfterimageNumSlices"] = static_cast<int>(m_teleportAfterimageNumSlices);
+        j["TeleportAfterimageUseDefaultGradient"] = m_teleportAfterimageUseDefaultGradient;
+        j["TeleportAfterimageTrailGradient"] = m_teleportAfterimageTrailGradient;
         j["TriggerWaitFramesRequired"] = m_triggerWaitFramesRequired;
     }
 
@@ -853,6 +925,15 @@ namespace game
         engine::JsonGet(j, "EffectDuration", m_effectDuration);
         engine::JsonGet(j, "EffectScaleMultiplier", m_effectScaleMultiplier);
         engine::JsonGet(j, "MonsterDeathDelay", m_monsterDeathDelay);
+        engine::JsonGet(j, "ExecutionTeleportAtNormalizedTime", m_executionTeleportAtNormalizedTime);
+        engine::JsonGet(j, "ExecutionMinDuration", m_executionMinDuration);
+        engine::JsonGet(j, "TeleportAfterimageUseDefaultGradient", m_teleportAfterimageUseDefaultGradient);
+        engine::JsonGet(j, "TeleportAfterimageTrailGradient", m_teleportAfterimageTrailGradient);
+        if (j.contains("TeleportAfterimageNumSlices"))
+        {
+            int n = j["TeleportAfterimageNumSlices"].get<int>();
+            m_teleportAfterimageNumSlices = static_cast<size_t>(std::max(0, n));
+        }
         engine::JsonGet(j, "TriggerWaitFramesRequired", m_triggerWaitFramesRequired);
     }
 }

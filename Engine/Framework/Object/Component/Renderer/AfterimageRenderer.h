@@ -127,7 +127,8 @@ namespace engine
 		/// 순간이동 등에서 기존 잔상을 즉시 제거할 때 호출
 		void ClearSlices();
 		/// 순간이동 구간(from → to)에 보간 슬라이스를 numSlices개 채움. 기록 상태와 무관하게 호출 가능.
-		void RecordTeleportPath(const Matrix& fromWorld, const Matrix& toWorld, size_t numSlices);
+		/// overrideTrailGradient: 값이 있으면 이번 호출에서만 해당 값을 solid/alpha trail gradient로 사용. 없으면 기존 m_solidTrailGradient/m_alphaTrailGradient 사용.
+		void RecordTeleportPath(const Matrix& fromWorld, const Matrix& toWorld, size_t numSlices, std::optional<float> overrideTrailGradient = std::nullopt);
 
 		// 솔리드 레이어 전용
 		void SetSolidMaxSlices(size_t count);

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -21,6 +21,7 @@
 #include <Engine/Core/System/MyTime.h>
 #include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
 #include <Engine/Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
+#include <Engine/Framework/Object/Component/Animator/SkeletalAnimator.h>
 
 
 namespace game
@@ -590,31 +591,26 @@ namespace game
 		}
 	}
 
+	float PlayerControllerScript::GetExecutionAnimNormalizedTime() const
+	{
+		if (!IsInState("Execution")) return -1.0f;
+		engine::Scene* scene = engine::SceneManager::Get().GetScene();
+		if (!scene || m_playerAnimMeshObjectName.empty()) return -1.0f;
+		engine::GameObject* meshGO = scene->FindGameObject(m_playerAnimMeshObjectName);
+		if (!meshGO) return -1.0f;
+		engine::SkeletalAnimator* animator = meshGO->GetComponent<engine::SkeletalAnimator>();
+		if (!animator) return -1.0f;
+		return animator->GetNormalizedTime(0);
+	}
+
 	void PlayerControllerScript::StartExecution(engine::GameObject* targetMonster)
 	{
 		if (!targetMonster || !m_logicFSM) return;
 
-		// 1. ExecuteMonster 트리거로 Execution 상태 전이
+		// ExecuteMonster 트리거로 Execution 상태 전이 (순간이동·처형은 ExecutionIndicatorManager가 애니 재생 비율 도달 후 수행)
 		m_logicFSM->SetTrigger("ExecuteMonster");
-
-		// 2. 몬스터 위치로 플레이어 순간이동
-		engine::Transform* monsterTransform = targetMonster->GetTransform();
-		if (monsterTransform)
-		{
-			engine::Vector3 targetPos = monsterTransform->GetWorldPosition();
-
-			// Rigidbody가 있으면 ForceSetPosition 사용 (Dynamic/Kinematic 모두)
-			if (m_rigidbody)
-			{
-				m_rigidbody->ForceSetPosition(targetPos, true);  // 속도 리셋
-			}
-			else if (GetTransform())
-			{
-				// Rigidbody가 없는 경우 Transform 직접 설정
-				GetTransform()->SetLocalPosition(targetPos);
-			}
-		}
 	}
+
 
 	// ═══════════════════════════════════════════════════════════════
 	// FSM 초기화

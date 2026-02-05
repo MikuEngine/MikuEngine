@@ -59,7 +59,7 @@ namespace game
         m_txt = FindUITextInChildren(go);
         if (m_txt)
         {
-            m_baseFontSize = m_txt->GetFontPixelSize();
+            m_baseFontSize = static_cast<float>(m_txt->GetFontPixelSize());
         }
 
         m_btn->AddOnHover(std::move([self = engine::Ptr<UIHoverScale>(this)](bool hovered)
@@ -116,7 +116,7 @@ namespace game
 
         if (m_txt)
         {
-            m_txt->SetFontPixelSize(m_baseFontSize * mul);
+            m_txt->SetFontPixelSize(static_cast<int>(m_baseFontSize * mul));
 
             if (m_useBold) m_txt->SetBold(true);
         }

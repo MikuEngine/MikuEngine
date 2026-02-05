@@ -1411,7 +1411,7 @@
             "ID": 16,
             "ParentID": 15,
             "Name": "UI_OptionPopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -1811,7 +1811,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
@@ -1850,7 +1850,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 15.0
+                        "y": 30.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -3656,7 +3656,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -300.0
+                        "y": -220.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -3689,7 +3689,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 2,
                     "LetterSpacingPx": -0.057999998331069946,
@@ -4612,7 +4612,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -190.0
+                        "y": -130.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -4779,7 +4779,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteNormal": "Resource/Texture/UI/Button/Button_02.png",
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
@@ -4815,7 +4815,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TexturePath": "Resource/Texture/UI/Button/Button_02.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4898,7 +4898,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": -10.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -4923,7 +4923,7 @@
                     "RaycastTarget": false,
                     "Text": "종료",
                     "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
+                    "FontPx": 40,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -4993,15 +4993,15 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteNormal": "Resource/Texture/UI/Button/Button_02.png",
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
                     "TintOnly": true,
                     "TintNormal": {
                         "x": 0.0,
-                        "y": 0.3082849383354187,
-                        "z": 0.9073358774185181,
+                        "y": 0.3397696018218994,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "TintHover": {
@@ -5029,7 +5029,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TexturePath": "Resource/Texture/UI/Button/Button_02.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5054,8 +5054,8 @@
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 0.0,
-                        "y": 0.09503960609436035,
-                        "z": 0.8232583999633789,
+                        "y": 0.11544337868690491,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -5112,7 +5112,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": -10.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -5137,7 +5137,7 @@
                     "RaycastTarget": false,
                     "Text": "취소",
                     "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
+                    "FontPx": 40,
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,

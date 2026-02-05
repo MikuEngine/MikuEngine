@@ -475,10 +475,12 @@ namespace engine
 		m_slicesAlpha.clear();
 	}
 
-	void AfterimageRenderer::RecordTeleportPath(const Matrix& fromWorld, const Matrix& toWorld, size_t numSlices)
+	void AfterimageRenderer::RecordTeleportPath(const Matrix& fromWorld, const Matrix& toWorld, size_t numSlices, std::optional<float> overrideTrailGradient)
 	{
 		if (numSlices == 0)
 			return;
+		const float solidGrad = overrideTrailGradient.value_or(m_solidTrailGradient);
+		const float alphaGrad = overrideTrailGradient.value_or(m_alphaTrailGradient);
 		const Vector3 fromPos = fromWorld.Translation();
 		const Vector3 toPos = toWorld.Translation();
 		for (size_t i = 1; i <= numSlices; ++i)
@@ -503,7 +505,7 @@ namespace engine
 			if (m_drawSolidLayer)
 			{
 				for (auto& s : m_slicesSolid)
-					s.alpha *= m_solidTrailGradient;
+					s.alpha *= solidGrad;
 				m_slicesSolid.push_back(sliceSolid);
 				while (m_slicesSolid.size() > m_solidMaxSlices)
 					m_slicesSolid.erase(m_slicesSolid.begin());
@@ -511,7 +513,7 @@ namespace engine
 			if (m_drawAlphaLayer)
 			{
 				for (auto& s : m_slicesAlpha)
-					s.alpha *= m_alphaTrailGradient;
+					s.alpha *= alphaGrad;
 				m_slicesAlpha.push_back(sliceAlpha);
 				while (m_slicesAlpha.size() > m_alphaMaxSlices)
 					m_slicesAlpha.erase(m_slicesAlpha.begin());
