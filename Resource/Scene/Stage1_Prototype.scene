@@ -11871,13 +11871,13 @@
                         1.0
                     ],
                     "SolidInitialAlpha": 0.6399999856948853,
-                    "SolidDecaySpeed": 10.0,
+                    "SolidDecaySpeed": 7.599999904632568,
                     "SolidDecayMode": 0,
                     "SolidDecayCurve": 1,
-                    "SolidEmissiveIntensity": 16.899999618530273,
+                    "SolidEmissiveIntensity": 11.300000190734863,
                     "SolidTrailGradient": 0.4099999964237213,
                     "SolidMaxSlices": 24,
-                    "SolidSampleInterval": 0.05000000074505806,
+                    "SolidSampleInterval": 0.03500000014901161,
                     "DrawAlphaLayer": false,
                     "AlphaTint": [
                         1.0,
