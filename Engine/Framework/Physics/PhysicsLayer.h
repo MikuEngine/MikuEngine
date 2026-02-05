@@ -30,6 +30,7 @@ namespace engine
             ExplosionTrigger = 11,          // 폭발 트리거 (Player, Wall만 충돌)
             JumpingEnemy = 12,              // 점프 중인 적 (Environment 충돌 무시, Wall/Player는 충돌)
             RadiusChecker = 13,             // 반경 체크용 디버그 오브젝트 (모든 충돌 무시)
+            SplittingEnemy = 14,            // 분열 몬스터 (Enemy와 동일, 자기 자신끼리는 충돌 안 함)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -53,6 +54,7 @@ namespace engine
             ExplosionTriggerMask = (1u << ExplosionTrigger),
             JumpingEnemyMask = (1u << JumpingEnemy),
             RadiusCheckerMask = (1u << RadiusChecker),
+            SplittingEnemyMask = (1u << SplittingEnemy),
 
             All = 0xFFFFFFFF
         };
@@ -81,7 +83,8 @@ namespace engine
                 "ExplosionTrigger", // 11
                 "JumpingEnemy", // 12
                 "RadiusChecker", // 13
-                "Layer14", "Layer15",
+                "SplittingEnemy", // 14
+                "Layer15",
                 "Layer16", "Layer17", "Layer18", "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
@@ -259,6 +262,14 @@ namespace engine
             SetCollision(RadiusChecker, EnemyParabolicProjectile, false);
             SetCollision(RadiusChecker, ExplosionTrigger, false);
             SetCollision(RadiusChecker, JumpingEnemy, false);
+            SetCollision(RadiusChecker, SplittingEnemy, false);
+            
+            // ═══════════════════════════════════════
+            // SplittingEnemy 충돌 규칙
+            // Enemy와 동일하지만, 자기 자신(SplittingEnemy)끼리는 충돌 안 함
+            // ═══════════════════════════════════════
+            SetCollision(SplittingEnemy, SplittingEnemy, false);  // 분열 몬스터끼리 충돌 안 함
+            // 나머지는 기본값 All에 의해 Enemy와 동일하게 충돌함
             SetCollision(RadiusChecker, RadiusChecker, false);
   
         }

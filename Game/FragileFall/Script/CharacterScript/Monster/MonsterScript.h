@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -283,7 +283,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 체력 관리
         // ─────────────────────────────────────────────
-        void CheckHealth();
+        virtual void CheckHealth();
         void TriggerFragile();
         void TriggerDeath();  // Execution에서 호출
         virtual void OnFragile();
