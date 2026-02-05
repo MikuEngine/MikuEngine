@@ -46,13 +46,12 @@ namespace game
         AimCursorState m_cursor = AimCursorState::Default;
         std::unordered_map<AimCursorState, std::string> m_cursorTextures;
         std::array<std::string, (int)AimCursorState::Count> m_cursorTexByState;
+        std::array<engine::Vector2, (int)AimCursorState::Count> m_cursorPivotByState;
 
-        std::string m_cursorTexturePrimary = "Resource/Texture/UI/Image/Cursor_Default.png";
-        std::string m_cursorTextureAlternate = "Resource/Texture/UI/Image/Cursor_Click.png";
+        engine::Vector2 m_cursorSize{ 30.0f, 30.0f };
+        engine::Vector2 m_cursorPivot{ 0.0f, 0.0f };
 
-        bool m_useAlternateCursor = false;
-        engine::Vector2 m_cursorSize{ 32.0f, 32.0f };
-        engine::Vector2 m_cursorPivot{ 0.5f, 0.5f };
+
 
         // 월드 좌표 계산 설정
         float m_targetPlaneY = 1.5f;  // 레이캐스트 대상 평면의 Y 높이 (총알 발사 높이)
@@ -64,6 +63,7 @@ namespace game
         /** 이동 중일 때만 Y 보정 적용. 서서 쏠 때는 0, 걸을 때만 m_aimYOffsetWhenMoving 사용 */
         void SetMoving(bool moving) { m_isMoving = moving; }
 
+        void Awake() override;
         void Start() override;
         void Update() override;
 
@@ -74,10 +74,6 @@ namespace game
         const engine::Vector3& GetWorldPosition() const { return m_worldPosition; }
 
         // 커서 이미지 교체 헬퍼
-        // 사용 예:
-        //   SetCursorTexture(false); // 기본 커서
-        //   SetCursorTexture(true);  // 대체 커서
-        void SetCursorTexture(bool useAlternate);
         void SetCursorTexture(AimCursorState state);
 
     public:
@@ -88,6 +84,10 @@ namespace game
     private:
         void EnsureUICursor();
         void UpdateWorldPositionFromMouse(const engine::Vector2& mousePos);
+
+    private:
+        void TickWorldAim(const engine::Vector2& mousePx);  // 월드계산(기존 로직 호출)
+        void TickUICursor(const engine::Vector2& mousePx);  // UI 표시
     };
 }
 

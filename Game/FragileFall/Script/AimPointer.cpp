@@ -15,146 +15,78 @@
 
 namespace game
 {
-    void AimPointer::Start()
-    {       
-        LOG_PRINT("[AimPointer] Started");
+    void AimPointer::Awake()
+    {
+        m_cursorTexByState[(int)AimCursorState::Default] = "Resource/Texture/UI/Image/Cursor_Default.png";
+        m_cursorTexByState[(int)AimCursorState::Clicked] = "Resource/Texture/UI/Image/Cursor_Click.png";
 
-        //m_cursorTexByState[(int)AimCursorState::Default] = "Resource/Texture/UI/Image/Cursor_Default.png";
-        //m_cursorTexByState[(int)AimCursorState::Clicked] = "Resource/Texture/UI/Image/Cursor_Click.png";
         //m_cursorTexByState[(int)AimCursorState::AimIdle] = "Resource/Texture/Aim_Idle.png";
         //m_cursorTexByState[(int)AimCursorState::AimFiring] = "Resource/Texture/Aim_Firing.png";
         //m_cursorTexByState[(int)AimCursorState::AimExecute] = "Resource/Texture/Aim_Execute.png";
 
-        //if (m_cursorTexByState.empty()) return;
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        m_cursorPivotByState[(int)AimCursorState::Default] = { 0.0f, 0.0f };
+        m_cursorPivotByState[(int)AimCursorState::Clicked] = { 0.0f, 0.0f };
+    }
+
+    void AimPointer::Start()
+    {       
+        LOG_PRINT("[AimPointer] Started");
 
         EnsureUICursor();
+        SetCursorTexture(AimCursorState::Default);
 
-        SetCursorTexture(m_useAlternateCursor);
-        //SetCursorTexture(AimCursorState::Default);
-
-        UpdateWorldPositionFromMouse(engine::Input::GetMousePosition());
+        // 시작할 때 한번 마우스 위치 세팅
+        const engine::Vector2 mousePx = engine::Input::GetMousePosition();
+        TickWorldAim(mousePx);
+        TickUICursor(mousePx);
     }
 
     void AimPointer::Update()
     {
-        
-
-        EnsureUICursor();
-
-        // 마우스 UI 좌표 -> UI 이미지 위치
+        // 클라이언트 상의 마우스 위치
         engine::Vector2 mousePx = engine::Input::GetMousePosition();
 
-        if (m_cursorRect && m_canvas)
-        {
-            const engine::Vector2 s = m_canvas->GetUIScale();
-            const engine::Vector2 o = m_canvas->GetUIOffset();
-
-            engine::Vector2 mouseRef{
-                (mousePx.x - o.x) / s.x,
-                (mousePx.y - o.y) / s.y
-            };
-
-            m_cursorRect->SetAnchoredPosition(mouseRef);
-        }
-
-        // P 키로 커서 이미지 교체
-        if (engine::Input::IsKeyPressed(engine::Keys::P))
-        {
-            SetCursorTexture(!m_useAlternateCursor);
-        }
-
-        // 월드 좌표 계산 (기존 로직 개선)
-        UpdateWorldPositionFromMouse(mousePx);
-    }
-
-    void AimPointer::SetCursorTexture(bool useAlternate)
-    {
-        m_useAlternateCursor = useAlternate;
-
-        EnsureUICursor();
-
-        if (!m_cursorImage)
-            return;
-
-        const std::string& path = m_useAlternateCursor ? m_cursorTextureAlternate : m_cursorTexturePrimary;
-        if (!path.empty() && path != "None")
-        {
-            m_cursorImage->SetTexture(path);
-        }
+        TickUICursor(mousePx);
+        TickWorldAim(mousePx);
     }
 
     void AimPointer::SetCursorTexture(AimCursorState state)
     {
-        if (m_cursor == state)
-            return;
+        EnsureUICursor();
+        if (!m_cursorImage || !m_cursorRect) return;
+
+        const std::string& path = m_cursorTexByState[(int)state];
+        if (!path.empty() && path != "None")
+            m_cursorImage->SetTexture(path);
+
+        m_cursorRect->SetPivot(m_cursorPivotByState[(int)state]);
+        m_cursorRect->SetSize(m_cursorSize.x, m_cursorSize.y);
 
         m_cursor = state;
-
-        auto it = m_cursorTextures.find(state);
-        if (it != m_cursorTextures.end())
-        {
-            m_cursorImage->SetTexture(it->second);
-        }
     }
 
     void AimPointer::EnsureUICursor()
     {
         // 이미 초기화되어 있으면 스킵
-        if (m_cursorImage && m_cursorRect && m_canvas)
-        {
-            return;
-        }
-
-        // 씬에서 Canvas 오브젝트 찾기
-        auto* scene = engine::SceneManager::Get().GetScene();
-        if (!scene)
-            return;
-
-        engine::GameObject* canvasGO = scene->FindGameObject(m_canvasObjectName);
-        if (!canvasGO)
-        {
-            // Canvas 오브젝트가 없으면 생성
-            canvasGO = scene->CreateGameObject(m_canvasObjectName);
-            canvasGO->AddComponent<engine::Canvas>();
-            LOG_PRINT("[AimPointer] Created Canvas object: %s", m_canvasObjectName.c_str());
-        }
+        if (m_canvas && m_cursorObject && m_cursorImage && m_cursorRect) return;
+            
+        // 1) Canvas는 반드시 존재해야 함
+        auto* canvasGO = engine::GameObject::Find(m_canvasObjectName);
+        if (!canvasGO) return;
 
         m_canvas = canvasGO->GetComponent<engine::Canvas>();
-        if (!m_canvas)
-        {
-            m_canvas = canvasGO->AddComponent<engine::Canvas>();
-        }
+        if (!m_canvas) return;
 
-        // 커서 자식 오브젝트 찾기/생성
-        if (!m_cursorObject)
-        {
-            // Canvas 자식 중에서 "AimCursor" 찾기
-            auto* canvasTransform = canvasGO->GetTransform();
-            for (auto* child : canvasTransform->GetChildren())
-            {
-                if (child->GetGameObject()->GetName() == "AimCursor")
-                {
-                    m_cursorObject = child->GetGameObject();
-                    break;
-                }
-            }
+        auto* cursorGO = engine::GameObject::Find("AimCursor");
+        if (!cursorGO) return;
 
-            // 없으면 생성
-            if (!m_cursorObject)
-            {
-                m_cursorObject = scene->CreateGameObject("AimCursor");
-                m_cursorObject->GetTransform()->SetParent(canvasTransform);
-                LOG_PRINT("[AimPointer] Created cursor object: AimCursor");
-            }
-        }
+        m_cursorObject = cursorGO;
 
-        // UIImage 설정
+        m_cursorImage = cursorGO->GetComponent<engine::UIImage>();
         if (!m_cursorImage)
-        {
-            m_cursorImage = m_cursorObject->GetComponent<engine::UIImage>();
-            if (!m_cursorImage)
-                m_cursorImage = m_cursorObject->AddComponent<engine::UIImage>();
-        }
+            m_cursorImage = cursorGO->AddComponent<engine::UIImage>();
 
         if (m_cursorImage)
         {
@@ -162,25 +94,11 @@ namespace game
             m_cursorImage->SetAlphaBlend(true);
         }
 
-        // RectTransform 설정
-        if (!m_cursorRect)
-        {
-            m_cursorRect = m_cursorImage ? m_cursorImage->GetRectTransform() : nullptr;
-            if (!m_cursorRect)
-            {
-                m_cursorRect = m_cursorObject->GetComponent<engine::RectTransform>();
-                if (!m_cursorRect)
-                    m_cursorRect = m_cursorObject->AddComponent<engine::RectTransform>();
-            }
-        }
+        m_cursorRect = cursorGO->GetComponent<engine::RectTransform>();
+        if (!m_cursorRect) return;
 
-        if (m_cursorRect)
-        {
-            m_cursorRect->SetAnchorMin({ 0.0f, 0.0f });
-            m_cursorRect->SetAnchorMax({ 0.0f, 0.0f });
-            m_cursorRect->SetPivot(m_cursorPivot);
-            m_cursorRect->SetSize(m_cursorSize.x, m_cursorSize.y);
-        }
+        m_cursorRect->SetAnchorMin({ 0.5f, 0.5f });
+        m_cursorRect->SetAnchorMax({ 0.5f, 0.5f });
     }
 
     void AimPointer::UpdateWorldPositionFromMouse(const engine::Vector2& mousePos)
@@ -266,6 +184,43 @@ namespace game
         }
     }
 
+    void AimPointer::TickWorldAim(const engine::Vector2& mousePx)
+    {
+        UpdateWorldPositionFromMouse(mousePx);
+    }
+
+    void AimPointer::TickUICursor(const engine::Vector2& mousePx)
+    {
+        EnsureUICursor();
+        if (!m_canvas || !m_cursorObject) return;
+
+        const engine::Vector2 s = m_canvas->GetUIScale();
+        const engine::Vector2 o = m_canvas->GetUIOffset();
+        if (s.x == 0.0f || s.y == 0.0f) return;
+
+        engine::Vector2 mouseRefTL{
+            (mousePx.x - o.x) / s.x,
+            (mousePx.y - o.y) / s.y
+        };
+
+        const engine::Vector2 ref = m_canvas->GetReferenceResolution();
+        engine::Vector2 mouseRefCenter{
+            mouseRefTL.x - ref.x * 0.5f,
+            mouseRefTL.y - ref.y * 0.5f
+        };
+
+        m_cursorRect->SetAnchoredPosition(mouseRefCenter);
+
+        if (engine::Input::IsKeyPressed(engine::Keys::P))
+        {
+            auto next = (m_cursor == AimCursorState::Default)
+                ? AimCursorState::Clicked
+                : AimCursorState::Default;
+
+            SetCursorTexture(next);
+        }
+    }
+
     engine::Vector3 AimPointer::GetDirectionFrom(const engine::Vector3& fromPosition) const
     {
         engine::Vector3 direction = m_worldPosition - fromPosition;
@@ -292,66 +247,128 @@ namespace game
         ImGui::Text("Moving: %s", m_isMoving ? "Yes" : "No");
 
         ImGui::Separator();
-        ImGui::Text("Canvas Settings");
-        ImGui::InputText("Canvas Object Name", &m_canvasObjectName);
-        ImGui::Text("Canvas: %s", m_canvas ? "Found" : "NOT FOUND");
-
-        ImGui::Separator();
         ImGui::Text("UI Cursor");
         ImGui::Text("Press P to swap cursor image.");
 
-        if (ImGui::InputText("Cursor Texture A", &m_cursorTexturePrimary))
-        {
-            if (!m_useAlternateCursor)
-                SetCursorTexture(false);
-        }
+        std::string selectedTex[5] = {};
+        static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga" };
 
-        if (ImGui::InputText("Cursor Texture B", &m_cursorTextureAlternate))
+        if (engine::DrawFileSelector("Default", "Resource/Texture/UI/Image", texExtensions, selectedTex[0]))
         {
-            if (m_useAlternateCursor)
-                SetCursorTexture(true);
+            m_cursorTexByState[0] = selectedTex[0];
         }
+        ImGui::SameLine();
+        ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[0]).filename().string().c_str());
+
+        if (engine::DrawFileSelector("Clicked", "Resource/Texture/UI/Image", texExtensions, selectedTex[1]))
+        {
+            m_cursorTexByState[1] = selectedTex[1];
+        }
+        ImGui::SameLine();
+        ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[1]).filename().string().c_str());
+
+        if (engine::DrawFileSelector("AimIdle", "Resource/Texture/UI/Image", texExtensions, selectedTex[2]))
+        {
+            m_cursorTexByState[2] = selectedTex[2];
+        }
+        ImGui::SameLine();
+        ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[2]).filename().string().c_str());
+        
+        if (engine::DrawFileSelector("AimFiring", "Resource/Texture/UI/Image", texExtensions, selectedTex[3]))
+        {
+            m_cursorTexByState[3] = selectedTex[3];
+        }
+        ImGui::SameLine();
+        ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[3]).filename().string().c_str());
+
+        if (engine::DrawFileSelector("AimExecute", "Resource/Texture/UI/Image", texExtensions, selectedTex[4]))
+        {
+            m_cursorTexByState[4] = selectedTex[4];
+        }
+        ImGui::SameLine();
+        ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[4]).filename().string().c_str());
 
         if (ImGui::DragFloat2("Cursor Size", &m_cursorSize.x, 1.0f, 1.0f, 1024.0f))
         {
             if (m_cursorRect)
                 m_cursorRect->SetSize(m_cursorSize.x, m_cursorSize.y);
         }
-
-        if (ImGui::DragFloat2("Cursor Pivot", &m_cursorPivot.x, 0.01f, 0.0f, 1.0f))
-        {
-            if (m_cursorRect)
-                m_cursorRect->SetPivot(m_cursorPivot);
-        }
     }
 
     void AimPointer::Save(engine::json& j) const
     {        
         Object::Save(j);
+
         j["CanvasObjectName"] = m_canvasObjectName;
-        j["CursorTexturePrimary"] = m_cursorTexturePrimary;
-        j["CursorTextureAlternate"] = m_cursorTextureAlternate;
-        j["UseAlternateCursor"] = m_useAlternateCursor;
         j["CursorSize"] = m_cursorSize;
-        j["CursorPivot"] = m_cursorPivot;
+        //j["CursorPivot"] = m_cursorPivot;
+
         j["TargetPlaneY"] = m_targetPlaneY;
         j["AimYOffsetWhenMoving"] = m_aimYOffsetWhenMoving;
+
+        // 상태별 텍스처 배열 저장
+        engine::json cursorTextures = engine::json::array();
+        for (int i = 0; i < (int)AimCursorState::Count; ++i)
+        {
+            cursorTextures.push_back(m_cursorTexByState[i]);
+        }
+        j["CursorTexturesByState"] = cursorTextures;
+
+        engine::json cursorPivots = engine::json::array();
+        for (int i = 0; i < (int)AimCursorState::Count; ++i)
+            cursorPivots.push_back(m_cursorPivotByState[i]);
+        j["CursorPivotsByState"] = cursorPivots;
+
+        j["CursorState"] = (int)m_cursor;
     }
 
     void AimPointer::Load(const engine::json& j)
     {      
         Object::Load(j);
+
         engine::JsonGet(j, "CanvasObjectName", m_canvasObjectName);
-        engine::JsonGet(j, "CursorTexturePrimary", m_cursorTexturePrimary);
-        engine::JsonGet(j, "CursorTextureAlternate", m_cursorTextureAlternate);
-        engine::JsonGet(j, "UseAlternateCursor", m_useAlternateCursor);
+
         engine::JsonGet(j, "CursorSize", m_cursorSize);
-        engine::JsonGet(j, "CursorPivot", m_cursorPivot);
+        //engine::JsonGet(j, "CursorPivot", m_cursorPivot);
         engine::JsonGet(j, "TargetPlaneY", m_targetPlaneY);
         engine::JsonGet(j, "AimYOffsetWhenMoving", m_aimYOffsetWhenMoving);
         if (j.contains("AimYOffset") && !j.contains("AimYOffsetWhenMoving"))
             m_aimYOffsetWhenMoving = j["AimYOffset"].get<float>();
+
+        int state = (int)AimCursorState::Default;
+        engine::JsonGet(j, "CursorState", state);
+        m_cursor = (AimCursorState)state;
+
+        {
+            int idx = 0;
+            std::fill(m_cursorTexByState.begin(), m_cursorTexByState.end(), std::string{});
+            engine::JsonArrayForEach(j, "CursorTexturesByState",
+                [this, &idx](const engine::json& v)
+                {
+                    if (idx >= (int)AimCursorState::Count)
+                        return;
+
+                    m_cursorTexByState[idx] = v.get<std::string>();
+                    ++idx;
+                }
+            );
+        }
+
+        {
+            int idx = 0;
+            for (int i = 0; i < (int)AimCursorState::Count; ++i)
+                m_cursorPivotByState[i] = m_cursorPivot; // 기본값으로 초기화
+
+            engine::JsonArrayForEach(j, "CursorPivotsByState",
+                [this, &idx](const engine::json& v)
+                {
+                    if (idx >= (int)AimCursorState::Count) return;
+                    m_cursorPivotByState[idx] = v.get<engine::Vector2>();
+                    ++idx;
+                });
+        }
+
+        EnsureUICursor();
+        SetCursorTexture(m_cursor);
     }
 }
-
-
