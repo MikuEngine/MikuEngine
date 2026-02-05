@@ -251,7 +251,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "Fragile\n        Fall",
+                    "Text": "Fragile\nFall",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 150,
                     "Color": {
@@ -262,7 +262,7 @@
                     },
                     "AlphaBlend": true,
                     "Bold": true,
-                    "AlignH": 0,
+                    "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
@@ -354,8 +354,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 120.0,
-                        "y": -70.0
+                        "x": -80.0,
+                        "y": 0.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
