@@ -41,7 +41,7 @@ float4 main(PS_INPUT input) : SV_Target
     {
         float closestDistNorm = g_texPointShadowMap.Sample(g_samLinear, float4(normalize(-l), (float) g_localLightShadowIndex)).r;
         float closestDist = closestDistNorm * g_lightRange;
-        if (dist > closestDist + 0.005f)
+        if (dist > closestDist + g_shadowBias)
             pointShadowFactor = 0.0f;
     }
     

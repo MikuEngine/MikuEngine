@@ -49,7 +49,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     float nDotH = saturate(dot(n, h));
     
     float rawNDotL = dot(n, l);
-    // 0.0을 기준으로 빛을 받으면 1, 아니면 0으로 딱 끊어버림
+    // 0.0?? ???????? ???? ?????? 1, ???? 0???? ?? ???????
     float nDotL = rawNDotL > 0.0f ? 1.0f : 0.0f;
     
     //float nDotL = saturate(dot(n, l));
@@ -89,7 +89,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
                         float2 offset = float2(x, y) * texelSize;
                         float2 sampleUV = shadowMapUV + offset;
 
-                        sum += g_texShadowMap.SampleCmpLevelZero(g_samComparison, sampleUV, currentShadowDepth - 0.00001f);
+                        sum += g_texShadowMap.SampleCmpLevelZero(g_samComparison, sampleUV, currentShadowDepth - g_mainLightShadowBias);
                     }
                 }
                 shadowFactor = sum / ((max * 2 + 1) * (max * 2 + 1));
@@ -102,7 +102,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             {
                 shadowFactor = 1.0f;
             }
-            else if (currentShadowDepth > sampleShadowDepth + 0.001f)
+            else if (currentShadowDepth > sampleShadowDepth + g_mainLightShadowBias)
             {
                 shadowFactor = 0.0f;
             }

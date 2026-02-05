@@ -102,7 +102,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             {
                 shadowFactor = 1.0f;
             }
-            else if (currentShadowDepth > sampleShadowDepth + 0.005f)
+            else if (currentShadowDepth > sampleShadowDepth + g_mainLightShadowBias)
             {
                 shadowFactor = 0.0f;
             }

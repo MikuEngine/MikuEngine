@@ -77,7 +77,7 @@ cbuffer Frame : register(b0) // 프레임 당 한번만 갱신되는 버퍼
     float g_fxaaQualitySubpix; // 0.0 to 1.0 (default: 0.75)
     float g_fxaaQualityEdgeThreshold; // 0.063 to 0.333 (default: 0.166)
     float g_fxaaQualityEdgeThresholdMin; // 0.0312 to 0.0833 (default: 0.0833)
-    float __pad_fxaa;
+    float g_mainLightShadowBias;
     
     // 스카이박스/IBL 설정
     float3 g_skyboxColor;
@@ -165,6 +165,9 @@ cbuffer LocalLight : register(b6)
     int g_useSpotShadow;
 
     matrix g_spotLightViewProjection; // for spot shadow sampling
+    float g_shadowBias;               // per-light shadow bias (point/spot 공통)
+    float g_spotShadowMapSize;        // PCF texel size = 1.0/this (스포트 1024)
+    float2 __pad_spot;
 };
 
 cbuffer ScreenSize : register(b7)

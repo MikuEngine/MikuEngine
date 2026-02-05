@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <directxtk/SimpleMath.h>
 
@@ -47,7 +47,7 @@ namespace engine
 		float fxaaQualitySubpix;           // 0.0 to 1.0 (default: 0.75)
 		float fxaaQualityEdgeThreshold;    // 0.063 to 0.333 (default: 0.166)
 		float fxaaQualityEdgeThresholdMin; // 0.0312 to 0.0833 (default: 0.0833)
-		float __pad_fxaa;
+		float mainLightShadowBias;
 		
 		// 스카이박스/IBL 설정
 		Vector3 skyboxColor;
@@ -135,6 +135,9 @@ namespace engine
 		int useSpotShadow;
 
 		Matrix spotLightViewProjection; // for spot shadow sampling (when useSpotShadow)
+		float shadowBias;              // 라이트별 shadow bias (point/spot 공통)
+		float spotShadowMapSize;        // PCF용 texel 크기 계산 (스포트 전용, 예: 1024)
+		float __pad_spot[2];
 	};
 
 	struct CbScreenSize

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -26,7 +26,7 @@ namespace engine
         float m_lightHeightRatio = 0.9f;
         float m_range = 10.0f;
         float m_angle = 45.0f;
-        float m_shadowBias = 0.005f;
+        float m_shadowBias = 0.0001f;  // 거의 0에 가깝게 (0.005 등 크면 잘림/이상 현상)
         int m_shadowIndex = -1;
         bool m_castShadows = false;
 
