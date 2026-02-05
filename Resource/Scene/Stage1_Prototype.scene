@@ -11950,6 +11950,7 @@
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
                     "AnimName_Dash": "Dash",
+                    "AnimName_Execution": "Execution",
                     "FireAnimShootFrameTime": 0.36000001430511475,
                     "UpperBodyAimOffsetDeg": 90.0,
                     "UpperBodyYawScale": 2.0,
@@ -12175,6 +12176,11 @@
                     "EffectDuration": 0.800000011920929,
                     "EffectScaleMultiplier": 1.5,
                     "MonsterDeathDelay": 0.05000000074505806,
+                    "ExecutionTeleportAtNormalizedTime": 0.10000000149011612,
+                    "ExecutionMinDuration": 0.4000000059604645,
+                    "TeleportAfterimageNumSlices": 12,
+                    "TeleportAfterimageUseDefaultGradient": false,
+                    "TeleportAfterimageTrailGradient": 0.699999988079071,
                     "TriggerWaitFramesRequired": 1
                 },
                 {

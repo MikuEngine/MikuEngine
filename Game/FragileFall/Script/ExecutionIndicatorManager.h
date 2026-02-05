@@ -74,9 +74,24 @@ namespace game
         float m_effectDuration = 0.2f;            // 이펙트 지속 시간 (초)
         float m_effectScaleMultiplier = 1.5f;     // 이펙트 최종 스케일 배율
         float m_monsterDeathDelay = 0.05f;        // 텔레포트 후 몬스터 Death까지 대기 시간 (초)
+        /** 처형 애니메이션 재생 비율(0~1) 도달 시 순간이동·처형 실행. 0.5 = 50% 재생 후 */
+        float m_executionTeleportAtNormalizedTime = 0.5f;
+        /** 처형 애니 최소 재생 시간(초). 이 시간이 지나야 비율 조건과 함께 처형 발동 (가까운 적이어도 애니가 잠깐은 보이게) */
+        float m_executionMinDuration = 0.4f;
+        /** 처형 순간이동 시 잔상(Afterimage) 구간에 넣을 슬라이스 수. 0이면 잔상 미사용. 클수록 잔상이 길고 촘촘함 */
+        size_t m_teleportAfterimageNumSlices = 32;
+        /** true면 AfterimageRenderer 기본 trail gradient 사용, false면 아래 값으로 오버라이드 */
+        bool m_teleportAfterimageUseDefaultGradient = false;
+        /** 텔레포트 잔상용 trail gradient 오버라이드 (0~1). 1에 가까울수록 구간 전체 비슷한 알파, 작을수록 앞쪽이 빨리 흐려짐. UseDefaultGradient가 true면 무시 */
+        float m_teleportAfterimageTrailGradient = 0.97f;
 
         // 처형 런타임 상태
         engine::Ptr<engine::GameObject> m_executingGameObject;
+
+        /** 제자리에서 처형 애니 재생 중, 이 비율 도달 시 순간이동 대기 */
+        bool m_isWaitingForExecutionAnim = false;
+        /** 처형 애니 대기 시작 시각 (UnscaledTime). 최소 재생 시간 체크용 */
+        float m_executionAnimWaitStartTime = 0.0f;
 
         // 몬스터 Death 타이머
         bool m_isWaitingForDeath = false;

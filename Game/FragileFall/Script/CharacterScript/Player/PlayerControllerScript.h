@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -338,6 +338,10 @@ namespace game
         void SetBulletSpeed(float value) { m_bulletSpeed = value; }
         void SetIsBulletDouble(bool value) { m_isBulletDouble = value; }
         void SetAfterImage(engine::AfterimageRenderer* comp) { m_afterimage = comp; }
+        engine::AfterimageRenderer* GetAfterImage() const { return m_afterimage; }
+
+        // 처형: Execution 상태일 때 재생 중인 처형 애니메이션의 정규화 시간 (0~1). 아니면 -1
+        float GetExecutionAnimNormalizedTime() const;
 
         // 처형 시작 (ExecutionIndicatorManager에서 호출)
         void StartExecution(engine::GameObject* targetMonster);

@@ -145,5 +145,6 @@
     <ClInclude Include="Script\CharacterScript\Common\ExplosionDamageTrigger.h" />
     <ClInclude Include="Script\MonsterUpdateActivationSwitch.h" />
     <ClInclude Include="Script\ParticleAttachment.h" />
+    <ClInclude Include="Script\Interface\IDamageable.h" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerAimMeshController.h"
 
 #include "Script/AimModeController.h"
@@ -221,6 +221,10 @@ namespace game
         // ─────────────────────────────────────────────
         UpdateForwardBackward(direction);
 
+        // 처형 중에는 위치만 따라가고 회전은 갱신하지 않음 (마지막 방향 유지)
+        if (m_logicFSM && m_logicFSM->GetCurrentState() == "Execution")
+            return;
+
         // ─────────────────────────────────────────────
         // 5. 회전
         //    - 대쉬 중: 이동 방향으로 즉시 맞춤 (보간 없음).
@@ -376,6 +380,9 @@ namespace game
 
         // 대쉬: 전신 단일 애니, 한 번 재생 (loop=false)
         m_animFSM->AddDefaultState("Dash", m_animName_Dash, false, 0.1f, 0, 1.0f);
+
+        // 처형: 전신 단일 애니, 한 번 재생 (loop=false). LogicFSM이 Execution일 때 재생
+        m_animFSM->AddDefaultState("Execution", m_animName_Execution, false, 0.1f, 0, 1.0f);
     }
 
     void PlayerAimMeshController::UpdateAnimation()
@@ -395,8 +402,13 @@ namespace game
         std::string animState;
         std::string logicState = m_logicFSM->GetCurrentState();
 
+        // 처형 중에는 처형 애니메이션 고정
+        if (logicState == "Execution")
+        {
+            animState = "Execution";
+        }
         // 대쉬 중에는 대쉬 애니메이션 고정
-        if (logicState == "Dash")
+        else if (logicState == "Dash")
         {
             animState = "Dash";
         }
@@ -535,6 +547,9 @@ namespace game
         ImGui::InputText("WalkBackward", &m_animName_WalkBackward);
         ImGui::InputText("Fire", &m_animName_Fire);
         ImGui::InputText("Dash", &m_animName_Dash);
+        ImGui::InputText("Execution", &m_animName_Execution);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("LogicFSM이 Execution일 때 재생하는 처형 애니메이션 클립 이름");
         ImGui::DragFloat("Fire Anim Shoot Frame Time", &m_fireAnimShootFrameTime, 0.01f, 0.0f, 1.0f);
         if (ImGui::IsItemHovered())
         {
@@ -622,6 +637,7 @@ namespace game
         j["AnimName_WalkBackward"] = m_animName_WalkBackward;
         j["AnimName_Fire"] = m_animName_Fire;
         j["AnimName_Dash"] = m_animName_Dash;
+        j["AnimName_Execution"] = m_animName_Execution;
         j["FireAnimShootFrameTime"] = m_fireAnimShootFrameTime;
         j["UpperBodyAimOffsetDeg"] = m_upperBodyAimOffsetDeg;
         j["UpperBodyYawScale"] = m_upperBodyYawScale;
@@ -652,6 +668,7 @@ namespace game
         engine::JsonGet(j, "AnimName_WalkBackward", m_animName_WalkBackward);
         engine::JsonGet(j, "AnimName_Fire", m_animName_Fire);
         engine::JsonGet(j, "AnimName_Dash", m_animName_Dash);
+        engine::JsonGet(j, "AnimName_Execution", m_animName_Execution);
         engine::JsonGet(j, "FireAnimShootFrameTime", m_fireAnimShootFrameTime);
         engine::JsonGet(j, "UpperBodyAimOffsetDeg", m_upperBodyAimOffsetDeg);
         engine::JsonGet(j, "UpperBodyYawScale", m_upperBodyYawScale);
