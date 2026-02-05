@@ -6,6 +6,8 @@
 
 namespace game
 {
+    class LobbyInteraction;
+
     class SceneController_Lobby :
         public engine::Script<SceneController_Lobby>
     {
@@ -75,5 +77,7 @@ namespace game
         engine::GameObject* m_groupSelect = nullptr;
         engine::GameObject* m_upgradePopUp = nullptr;
         engine::GameObject* m_playerPreview = nullptr;
+
+        LobbyInteraction* m_interaction;
     };
 }
