@@ -334,6 +334,12 @@ namespace game
 		{
 			m_logicFSM->SetTrigger("Attack");
 		}
+		// Walk/Idle인데 Fire를 계속 누르고 있으면 Attack 트리거 (대시 종료 후 등에서 발사 재개)
+		{
+			std::string state = m_logicFSM->GetCurrentState();
+			if ((state == "Walk" || state == "Idle") && isMouseHeld)
+				m_logicFSM->SetTrigger("Attack");
+		}
 
 		// Held 시 파라미터 (연속 발사). 한 번 클릭 시: 손 떼도 1발 나갈 때까지 IdleShoot 유지
 		{

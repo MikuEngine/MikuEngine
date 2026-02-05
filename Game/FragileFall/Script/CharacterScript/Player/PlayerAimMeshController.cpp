@@ -223,41 +223,63 @@ namespace game
 
         // ─────────────────────────────────────────────
         // 5. 회전
-        //    - Idle/가만히 있을 때: 항상 에임 방향으로 부드럽게 회전 (보간).
-        //    - 이동 중(Walk): 임계각 초과일 때만 하체를 에임 쪽으로 보간 회전; 그 미만이면 상체만 에임 추적.
+        //    - 대쉬 중: 이동 방향으로 즉시 맞춤 (보간 없음).
+        //    - Idle/가만히: 항상 에임 방향으로 부드럽게 회전 (보간).
+        //    - 이동 중(Walk): 임계각 초과일 때만 하체를 에임 쪽으로 보간 회전.
         // ─────────────────────────────────────────────
-        float targetYaw = std::atan2(direction.x, direction.z);
+        engine::Vector3 rotateDirection = direction;
+        bool instantRotation = false;
+
+        if (m_playerControllerScript && m_playerControllerScript->IsDashing())
+        {
+            engine::Vector3 dashDir = m_playerControllerScript->GetDashDirection();
+            dashDir.y = 0.0f;
+            if (dashDir.LengthSquared() >= 0.0001f)
+            {
+                dashDir.Normalize();
+                rotateDirection = dashDir;
+                instantRotation = true;  // 대쉬는 보간 없이 이동 방향으로 즉시
+            }
+        }
+
+        float targetYaw = std::atan2(rotateDirection.x, rotateDirection.z);
         engine::Quaternion targetRotation = engine::Quaternion::CreateFromYawPitchRoll(targetYaw, 0.0f, 0.0f);
         engine::Quaternion currentRotation = GetTransform()->GetLocalRotation();
 
-        bool shouldRotateTowardAim = false;
-        if (m_logicFSM && m_logicFSM->GetBoolParameter("IsMoving"))
+        if (instantRotation)
         {
-            // 이동 중: 걸으며 쏠 때는 임계값 0(항상 에임 추적), 그냥 걸을 때만 설정된 임계값 사용 (옆/뒤 달리기용)
-            bool isShooting = m_logicFSM->GetBoolParameter("IsShooting");
-            float effectiveThreshold = isShooting ? 0.0f : m_lowerBodyAimThresholdDeg;
-            engine::Vector3 currentForward = GetTransform()->GetForward();
-            currentForward.y = 0.0f;
-            if (currentForward.LengthSquared() >= 0.0001f)
+            GetTransform()->SetLocalRotation(targetRotation);
+        }
+        else
+        {
+            bool shouldRotateTowardAim = false;
+            if (m_logicFSM && m_logicFSM->GetBoolParameter("IsMoving"))
             {
-                currentForward.Normalize();
-                float dot = currentForward.Dot(direction);
-                engine::Vector3 cross = currentForward.Cross(direction);
-                float angleDeg = engine::ToDegree(std::atan2(cross.y, dot));
-                if (angleDeg < 0.0f) angleDeg = -angleDeg;
-                shouldRotateTowardAim = (angleDeg > effectiveThreshold);
+                bool isShooting = m_logicFSM->GetBoolParameter("IsShooting");
+                float effectiveThreshold = isShooting ? 0.0f : m_lowerBodyAimThresholdDeg;
+                engine::Vector3 currentForward = GetTransform()->GetForward();
+                currentForward.y = 0.0f;
+                if (currentForward.LengthSquared() >= 0.0001f)
+                {
+                    currentForward.Normalize();
+                    float dot = currentForward.Dot(direction);
+                    engine::Vector3 cross = currentForward.Cross(direction);
+                    float angleDeg = engine::ToDegree(std::atan2(cross.y, dot));
+                    if (angleDeg < 0.0f) angleDeg = -angleDeg;
+                    shouldRotateTowardAim = (angleDeg > effectiveThreshold);
+                }
+                else
+                    shouldRotateTowardAim = true;
             }
             else
                 shouldRotateTowardAim = true;
-        }
-        else
-            shouldRotateTowardAim = true;  // Idle/가만히: 항상 에임 쪽으로
 
-        if (shouldRotateTowardAim)
-        {
-            float t = std::min(1.0f, m_lowerBodyTurnSpeed * engine::Time::DeltaTime());
-            engine::Quaternion newRotation = engine::Quaternion::Slerp(currentRotation, targetRotation, t);
-            GetTransform()->SetLocalRotation(newRotation);
+            if (shouldRotateTowardAim)
+            {
+                float t = std::min(1.0f, m_lowerBodyTurnSpeed * engine::Time::DeltaTime());
+                engine::Quaternion newRotation = engine::Quaternion::Slerp(currentRotation, targetRotation, t);
+                GetTransform()->SetLocalRotation(newRotation);
+            }
         }
     }
 
@@ -351,6 +373,9 @@ namespace game
         // Walk+발사: 하체 이동 애니 + 상체 Fire (Split). 상체 Fire는 꾹 누르는 동안 계속 재생(루프)
         m_animFSM->AddSplitState("WalkForwardShoot", m_animName_WalkForward, true, m_animName_Fire, true, 1.0f, 0.1f);
         m_animFSM->AddSplitState("WalkBackwardShoot", m_animName_WalkBackward, true, m_animName_Fire, true, 1.0f, 0.1f);
+
+        // 대쉬: 전신 단일 애니, 한 번 재생 (loop=false)
+        m_animFSM->AddDefaultState("Dash", m_animName_Dash, false, 0.1f, 0, 1.0f);
     }
 
     void PlayerAimMeshController::UpdateAnimation()
@@ -368,8 +393,14 @@ namespace game
 
         // AnimFSM 상태 결정
         std::string animState;
+        std::string logicState = m_logicFSM->GetCurrentState();
 
-        if (isShooting)
+        // 대쉬 중에는 대쉬 애니메이션 고정
+        if (logicState == "Dash")
+        {
+            animState = "Dash";
+        }
+        else if (isShooting)
         {
             if (!isMoving)
             {
@@ -503,6 +534,7 @@ namespace game
         ImGui::InputText("WalkForward", &m_animName_WalkForward);
         ImGui::InputText("WalkBackward", &m_animName_WalkBackward);
         ImGui::InputText("Fire", &m_animName_Fire);
+        ImGui::InputText("Dash", &m_animName_Dash);
         ImGui::DragFloat("Fire Anim Shoot Frame Time", &m_fireAnimShootFrameTime, 0.01f, 0.0f, 1.0f);
         if (ImGui::IsItemHovered())
         {
@@ -589,6 +621,7 @@ namespace game
         j["AnimName_WalkForward"] = m_animName_WalkForward;
         j["AnimName_WalkBackward"] = m_animName_WalkBackward;
         j["AnimName_Fire"] = m_animName_Fire;
+        j["AnimName_Dash"] = m_animName_Dash;
         j["FireAnimShootFrameTime"] = m_fireAnimShootFrameTime;
         j["UpperBodyAimOffsetDeg"] = m_upperBodyAimOffsetDeg;
         j["UpperBodyYawScale"] = m_upperBodyYawScale;
@@ -618,6 +651,7 @@ namespace game
         engine::JsonGet(j, "AnimName_WalkForward", m_animName_WalkForward);
         engine::JsonGet(j, "AnimName_WalkBackward", m_animName_WalkBackward);
         engine::JsonGet(j, "AnimName_Fire", m_animName_Fire);
+        engine::JsonGet(j, "AnimName_Dash", m_animName_Dash);
         engine::JsonGet(j, "FireAnimShootFrameTime", m_fireAnimShootFrameTime);
         engine::JsonGet(j, "UpperBodyAimOffsetDeg", m_upperBodyAimOffsetDeg);
         engine::JsonGet(j, "UpperBodyYawScale", m_upperBodyYawScale);

@@ -11719,6 +11719,7 @@
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
+                    "AnimName_Dash": "Dash",
                     "FireAnimShootFrameTime": 0.36000001430511475,
                     "UpperBodyAimOffsetDeg": 90.0,
                     "UpperBodyYawScale": 2.0,
@@ -11779,6 +11780,11 @@
                     "Type": "SkeletalAnimator",
                     "Active": true,
                     "Animations": [
+                        {
+                            "Name": "Dash",
+                            "Path": "Resource/Animation/main_character_animation_dash.fbx",
+                            "Notifies": []
+                        },
                         {
                             "Name": "Fire",
                             "Path": "Resource/Animation/main_character_animation_shooting.fbx",
