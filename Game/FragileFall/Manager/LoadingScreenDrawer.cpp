@@ -132,7 +132,7 @@ namespace game
 		{
 			auto& rm = engine::ResourceManager::Get();
 
-			g_logoTexture = rm.GetOrCreateTexture("Resource/Texture/UI/Image/MiratsuMiku.png", engine::LifeScope::Global);
+			g_logoTexture = rm.GetOrCreateTexture("Resource/Texture/UI/Image/EngineLogo.png", engine::LifeScope::Global);
 			g_orbitTextTexture = rm.GetOrCreateTexture("Resource/Texture/UI/Image/CircleText.png", engine::LifeScope::Global);
 			g_sceneLoadAnimTexture = rm.GetOrCreateTexture("Resource/Texture/Flame.png", engine::LifeScope::Global);
 			g_sceneLoadSpriteData = engine::AssetManager::Get().GetOrCreateSpriteData("Resource/Data/SpriteSheet/Flame.spritedata", engine::LifeScope::Global);
@@ -150,7 +150,7 @@ namespace game
 			g_quadIB = rm.GetGeometryIndexBuffer("DefaultQuad");
 			g_inputLayout = g_uiVS->GetOrCreateInputLayout<engine::PositionTexCoordVertex>();
 			g_blendStraight = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlend);
-			g_blendPremul = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlendPremultiplied);
+			g_blendPremul = rm.GetDefaultBlendState(engine::DefaultBlendType::AlphaBlend);
 			g_depthNone = rm.GetDefaultDepthStencilState(engine::DefaultDepthStencilType::None);
 			g_whiteTexture = rm.GetDefaultTexture(engine::DefaultTextureType::White);
 
@@ -331,7 +331,7 @@ namespace game
 
 		// 2) 가운데 동그란 로고
 		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_logoTexture->GetSRV().GetAddressOf());
-		DrawUIQuad(dc, centerX, centerY, LOGO_SIZE_PX, LOGO_SIZE_PX, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 2);
+		DrawUIQuad(dc, centerX, centerY, LOGO_SIZE_PX, LOGO_SIZE_PX, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 1);
 		
 
 		ID3D11ShaderResourceView* nullSRV = nullptr;

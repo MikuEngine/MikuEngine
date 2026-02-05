@@ -101,7 +101,7 @@ namespace game
         BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->Back(); });
         BindButton("UI_CloseButton_Upgrade", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->HandleEscape(); });
 
-        BindButton("UI_EnterPlay", [self = engine::Ptr<SceneController_Lobby>(this)](bool) {if (self) self->ShowEffect(); });
+        BindButton("UI_EnterPlay", [self = engine::Ptr<SceneController_Lobby>(this)](bool hovered) {if (self) self->ShowEffect("UI_EnterPlay", hovered); });
 
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Lobby>(this)](float v) {if (self) self->OnBGMChanged(v); });
@@ -171,7 +171,8 @@ namespace game
     {
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
-            HandleEscape();
+            if (!m_entered)
+                HandleEscape();
         }
 
         if (m_playerPreview && m_isPlayerMove)
@@ -287,6 +288,9 @@ namespace game
     {
         if (!m_playerPreview) return;
         
+        // 진입하면 ESC 등 비활성화
+        m_entered = true;
+
         // 진입하면 입력 차단(화면은 어두워지지 않게)
         if (m_blocker)
         {
@@ -295,6 +299,7 @@ namespace game
             img->SetColor({ 0,0,0,0 });
         }
 
+        // 로비에서 상호작용 되는거 비활성화
         m_interaction->SetInteractionActive(false);
 
         auto* tr = m_playerPreview->GetTransform();
@@ -424,9 +429,22 @@ namespace game
         SetOptionOpen(false);
     }
 
-    void SceneController_Lobby::ShowEffect()
+    void SceneController_Lobby::ShowEffect(const std::string& targetName, bool hovered)
     {
+        auto* targetGO = engine::GameObject::Find(targetName);
+        if (!targetGO) return;
 
+        auto img = targetGO->GetComponent<engine::UIImage>();
+        if (!img) return;
+
+        if (hovered)
+        {
+            img->SetEffect(engine::UIEffectType::AbyssalDecay);
+        }
+        else
+        {
+            img->ClearEffect();
+        }
     }
 
     void SceneController_Lobby::OnBGMChanged(float v)
