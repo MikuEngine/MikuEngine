@@ -11742,6 +11742,7 @@
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
+                    "AnimName_Dash": "Dash",
                     "FireAnimShootFrameTime": 0.36000001430511475,
                     "UpperBodyAimOffsetDeg": 90.0,
                     "UpperBodyYawScale": 2.0,
@@ -11802,6 +11803,11 @@
                     "Type": "SkeletalAnimator",
                     "Active": true,
                     "Animations": [
+                        {
+                            "Name": "Dash",
+                            "Path": "Resource/Animation/main_character_animation_dash.fbx",
+                            "Notifies": []
+                        },
                         {
                             "Name": "Fire",
                             "Path": "Resource/Animation/main_character_animation_shooting.fbx",
@@ -11888,13 +11894,13 @@
                         1.0
                     ],
                     "SolidInitialAlpha": 0.6399999856948853,
-                    "SolidDecaySpeed": 10.0,
+                    "SolidDecaySpeed": 7.599999904632568,
                     "SolidDecayMode": 0,
                     "SolidDecayCurve": 1,
-                    "SolidEmissiveIntensity": 16.899999618530273,
+                    "SolidEmissiveIntensity": 11.300000190734863,
                     "SolidTrailGradient": 0.4099999964237213,
                     "SolidMaxSlices": 24,
-                    "SolidSampleInterval": 0.05000000074505806,
+                    "SolidSampleInterval": 0.03500000014901161,
                     "DrawAlphaLayer": false,
                     "AlphaTint": [
                         1.0,

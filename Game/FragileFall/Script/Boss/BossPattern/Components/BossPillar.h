@@ -1,13 +1,15 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include "Script/Interface/IDamageable.h"
 
 namespace game
 {
     class BossScript;
 
     class BossPillar :
-        public engine::Script<BossPillar>
+        public engine::Script<BossPillar>,
+        public IDamageable
     {
         REGISTER_SCRIPT(BossPillar, Script)
 
@@ -22,7 +24,7 @@ namespace game
     public:
         void Update() override;
 
-        void TakeDamage(float damage);
+        void TakeDamage(float damage) override;
         void Execute();
 
         bool IsCrystalized();

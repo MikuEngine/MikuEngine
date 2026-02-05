@@ -18,6 +18,8 @@ namespace engine
 	class InputLayout;
 	class SamplerState;
 	class RasterizerState;
+	class DepthStencilState;
+	class BlendState;
 
 	// A-1: 잔상 한 슬라이스 (위치·회전 + 알파). 스킨 메쉬일 때 녹화 순간의 본 포즈를 저장해 본체 애니와 무관하게 고정
 	struct AfterimageSlice
@@ -68,6 +70,10 @@ namespace engine
 		std::shared_ptr<VertexShader> m_vs;
 		std::shared_ptr<PixelShader> m_transparentPS;   // 알파 레이어 (라이팅)
 		std::shared_ptr<PixelShader> m_emissivePS;       // 솔리드 레이어 (언릿/이미시브)
+		std::shared_ptr<PixelShader> m_silhouettePS;     // 2패스 실루엣 채우기용 (단색+알파)
+		std::shared_ptr<DepthStencilState> m_dssStencilWrite;  // 1패스: 스텐실만 쓰기
+		std::shared_ptr<DepthStencilState> m_dssStencilTest;   // 2패스: 스텐실 테스트, 통과 시 0으로
+		std::shared_ptr<BlendState> m_blendColorWriteNone;     // 1패스: 컬러 쓰기 끔
 		std::vector<Textures> m_textures;
 		std::shared_ptr<InputLayout> m_inputLayout;
 		std::shared_ptr<SamplerState> m_samplerState;

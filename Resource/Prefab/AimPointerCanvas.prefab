@@ -54,47 +54,6 @@
                     "Active": true,
                     "LockRectTransform": true,
                     "SortingOrder": 10
-                },
-                {
-                    "Type": "AimPointer",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorSize": {
-                        "x": 30.0,
-                        "y": 30.0
-                    },
-                    "TargetPlaneY": 1.5,
-                    "AimYOffsetWhenMoving": 0.0,
-                    "CursorTexturesByState": [
-                        "Resource/Texture/UI/Image/Cursor_Default.png",
-                        "Resource/Texture/UI/Image/Cursor_Click.png",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
                 }
             ]
         },

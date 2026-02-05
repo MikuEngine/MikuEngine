@@ -3,10 +3,12 @@
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Asset/Prefab.h>
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
 #include "Script/Boss/BossPattern/Components/BossProjectile.h"
 #include "Script/Boss/BossScript.h"
+#include "Script/Interface/IDamageable.h"
 
 namespace game
 {
@@ -124,10 +126,14 @@ namespace game
         if (m_isDying) return;
         if (!info.gameObject) return;
 
-        // MonsterScript와 충돌했는지 확인 (우선 체크)
-        if (auto* monster = info.gameObject->GetComponent<MonsterScript>())
+		// IDamageable 상속
+        // MonsterScript
+        // BossPillar
+        // BossProjectile
+        // BossScript
+        if (auto* target = info.gameObject->GetInterface<IDamageable>())
         {
-            monster->TakeDamage(m_damage);
+            target->TakeDamage(m_damage);
 
             // dying 상태로 전환
             m_isDying = true;
@@ -141,58 +147,33 @@ namespace game
             return;
         }
 
-        if (auto* pillar = info.gameObject->GetComponent<BossPillar>())
-        {
-            pillar->TakeDamage(m_damage);
+        // 환경, 벽과 충돌 시
+        auto collider = info.gameObject->GetComponent<engine::Collider>();
+        if (!collider) return;
+        auto layer = collider->GetLayer();
 
-            // dying 상태로 전환
-            m_isDying = true;
-            m_deathTimer = 0.0f;
-
-            // 속도 정지
-            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
-            {
-                rb->SetLinearVelocity(engine::Vector3::Zero);
-            }
-            return;
-        }
-
-        // BossProjectile과 충돌 시 결정화 처리
-        if (auto* projectile = info.gameObject->GetComponent<BossProjectile>())
-        {
-            // 결정화 가능한 상태면 결정화 처리
-            if (!projectile->IsCrystallized())
-            {
-                projectile->OnCrystallized();
-            }
-
-            // dying 상태로 전환
-            m_isDying = true;
-            m_deathTimer = 0.0f;
-
-            // 속도 정지
-            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
-            {
-                rb->SetLinearVelocity(engine::Vector3::Zero);
-            }
-            return;
-        }
-
-        if (auto* boss = info.gameObject->GetComponent<BossScript>())
-        {
-            boss->TakeDamage(m_damage);
-
-            // dying 상태로 전환
-            m_isDying = true;
-            m_deathTimer = 0.0f;
-
-            // 속도 정지
-            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
-            {
-                rb->SetLinearVelocity(engine::Vector3::Zero);
-            }
-            return;
-        }
+        bool isEnvironment = (layer == engine::PhysicsLayer::Environment);
+        bool isWall = (layer == engine::PhysicsLayer::Wall);
         
+        if (isEnvironment || isWall)
+        {
+            // dying 상태로 전환
+            m_isDying = true;
+            m_deathTimer = 0.0f;
+
+            // 속도 정지
+            if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
+            {
+                rb->SetLinearVelocity(engine::Vector3::Zero);
+            }
+
+            auto effect = engine::Prefab::Instantiate("Effect_Bullet_Destory_V1.00");
+            if (effect && effect->GetTransform())
+            {
+                effect->GetTransform()->SetWorldMatrix(GetTransform()->GetWorld());
+                effect->GetTransform()->SetLocalScale(engine::Vector3(1.0f, 1.0f, 1.0f));
+            }
+            return;
+        }
     }
 }

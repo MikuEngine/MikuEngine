@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -15,7 +15,7 @@ namespace engine
 
 namespace game
 {
-    class AimPointer;
+    class AimModeController;
     class BulletFactory;
     
     // 발사 이벤트 콜백 타입
@@ -88,7 +88,7 @@ namespace game
         // 컴포넌트 참조
         // ─────────────────────────────────────────────
         engine::Rigidbody* m_rigidbody = nullptr;
-        AimPointer* m_aimPointer = nullptr;
+        AimModeController* m_aimPointer = nullptr;
         BulletFactory* m_bulletFactory = nullptr;
 
         //HP
@@ -287,6 +287,8 @@ namespace game
         // ─────────────────────────────────────────────
         // 대쉬 시스템 접근자
         // ─────────────────────────────────────────────
+        bool IsDashing() const { return m_isDashing; }
+        const engine::Vector3& GetDashDirection() const { return m_dashDirection; }
         int GetMaxDashCount() const { return m_MaxDashCount; }
         int GetCurrentDashCount() const { return m_CurrentDashCount; }
         float GetDashRechargeTimer() const { return m_dashRechargeTimer; }

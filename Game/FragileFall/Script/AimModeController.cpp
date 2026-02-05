@@ -1,5 +1,5 @@
 ﻿#include "GamePCH.h"
-#include "AimPointer.h"
+#include "AimModeController.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
 #include <Framework/Scene/SceneManager.h>
@@ -15,7 +15,7 @@
 
 namespace game
 {
-    void AimPointer::Awake()
+    void AimModeController::Awake()
     {
         m_cursorTexByState[(int)AimCursorState::Default] = "Resource/Texture/UI/Image/Cursor_Default.png";
         m_cursorTexByState[(int)AimCursorState::Clicked] = "Resource/Texture/UI/Image/Cursor_Click.png";
@@ -28,31 +28,77 @@ namespace game
 
         m_cursorPivotByState[(int)AimCursorState::Default] = { 0.0f, 0.0f };
         m_cursorPivotByState[(int)AimCursorState::Clicked] = { 0.0f, 0.0f };
+
+        m_cursorPivotByState[(int)AimCursorState::AimIdle] = { 0.5f, 0.5f };
+        m_cursorPivotByState[(int)AimCursorState::AimFiring] = { 0.5f, 0.5f };
+        m_cursorPivotByState[(int)AimCursorState::AimExecute] = { 0.5f, 0.5f };
     }
 
-    void AimPointer::Start()
+    void AimModeController::Start()
     {       
         LOG_PRINT("[AimPointer] Started");
 
         EnsureUICursor();
-        SetCursorTexture(AimCursorState::Default);
 
-        // 시작할 때 한번 마우스 위치 세팅
         const engine::Vector2 mousePx = engine::Input::GetMousePosition();
-        TickWorldAim(mousePx);
-        TickUICursor(mousePx);
+        const AimMode mode = ComputeEffectiveMode();
+
+        m_cursor = AimCursorState::Count; // "무효 값"으로 만들어서 아래에서 반드시 SetCursorTexture 호출되게
+        const AimCursorState desired = ComputeDesiredCursorState(mode);
+        SetCursorTexture(desired);
+
+        TickWorldAim(mousePx, mode);
+        TickUICursor(mousePx, mode);
     }
 
-    void AimPointer::Update()
+    void AimModeController::Update()
     {
         // 클라이언트 상의 마우스 위치
         engine::Vector2 mousePx = engine::Input::GetMousePosition();
+        const AimMode mode = ComputeEffectiveMode();
 
-        TickUICursor(mousePx);
-        TickWorldAim(mousePx);
+        TickWorldAim(mousePx, mode);
+        TickUICursor(mousePx, mode);
     }
 
-    void AimPointer::SetCursorTexture(AimCursorState state)
+    void AimModeController::SetCombatAimEnabled(bool enabled)
+    {
+        m_combatAimEnabled = enabled;
+    }
+
+    void AimModeController::SetPaused(bool paused)
+    {
+        m_paused = paused;
+    }
+
+    void AimModeController::SetCursorVisible(bool visible)
+    {
+        if (m_cursorObject)
+            m_cursorObject->SetActive(visible);
+    }
+
+    AimModeController::AimCursorState AimModeController::ComputeDesiredCursorState(AimMode mode) const
+    {
+        const bool leftDown = engine::Input::IsMousePressed(engine::Input::Buttons::LEFT) ||
+            engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
+
+        if (mode == AimMode::Pointer)
+            return leftDown ? AimCursorState::Clicked : AimCursorState::Default;
+
+        return leftDown ? AimCursorState::AimFiring : AimCursorState::AimIdle; //(여기서 처형 가능이거나, 마우스를 적 위에 올릴 시)
+    }
+    AimModeController::AimMode AimModeController::ComputeEffectiveMode() const
+    {
+        if (m_paused)
+            return AimMode::Pointer;
+
+        if (m_combatAimEnabled)
+            return AimMode::CombatAim;
+
+        return m_baseMode;
+    }
+
+    void AimModeController::SetCursorTexture(AimCursorState state)
     {
         EnsureUICursor();
         if (!m_cursorImage || !m_cursorRect) return;
@@ -67,7 +113,7 @@ namespace game
         m_cursor = state;
     }
 
-    void AimPointer::EnsureUICursor()
+    void AimModeController::EnsureUICursor()
     {
         // 이미 초기화되어 있으면 스킵
         if (m_canvas && m_cursorObject && m_cursorImage && m_cursorRect) return;
@@ -101,7 +147,7 @@ namespace game
         m_cursorRect->SetAnchorMax({ 0.5f, 0.5f });
     }
 
-    void AimPointer::UpdateWorldPositionFromMouse(const engine::Vector2& mousePos)
+    void AimModeController::UpdateWorldPositionFromMouse(const engine::Vector2& mousePos)
     {
         // 카메라 찾기
         engine::Camera* camera = nullptr;
@@ -184,15 +230,20 @@ namespace game
         }
     }
 
-    void AimPointer::TickWorldAim(const engine::Vector2& mousePx)
+    void AimModeController::TickWorldAim(const engine::Vector2& mousePx, AimMode mode)
     {
+        //if (mode != AimMode::CombatAim)
+        //    return;
+
         UpdateWorldPositionFromMouse(mousePx);
     }
 
-    void AimPointer::TickUICursor(const engine::Vector2& mousePx)
+    void AimModeController::TickUICursor(const engine::Vector2& mousePx, AimMode mode)
     {
         EnsureUICursor();
         if (!m_canvas || !m_cursorObject) return;
+
+        SetCursorVisible(true);
 
         const engine::Vector2 s = m_canvas->GetUIScale();
         const engine::Vector2 o = m_canvas->GetUIOffset();
@@ -211,17 +262,22 @@ namespace game
 
         m_cursorRect->SetAnchoredPosition(mouseRefCenter);
 
+        const AimCursorState desired = ComputeDesiredCursorState(mode);
+        if (desired != m_cursor)
+            SetCursorTexture(desired);
+
+        // Debug
         if (engine::Input::IsKeyPressed(engine::Keys::P))
         {
             auto next = (m_cursor == AimCursorState::Default)
                 ? AimCursorState::Clicked
                 : AimCursorState::Default;
-
+            
             SetCursorTexture(next);
         }
     }
 
-    engine::Vector3 AimPointer::GetDirectionFrom(const engine::Vector3& fromPosition) const
+    engine::Vector3 AimModeController::GetDirectionFrom(const engine::Vector3& fromPosition) const
     {
         engine::Vector3 direction = m_worldPosition - fromPosition;
         direction.y = 0.0f;  // XZ 평면에서의 방향 (Y축 무시)
@@ -229,7 +285,7 @@ namespace game
         return direction;
     }
 
-    void AimPointer::OnGui()
+    void AimModeController::OnGui()
     {      
         ImGui::Text("World Position: (%.2f, %.2f, %.2f)",
             m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
@@ -295,7 +351,7 @@ namespace game
         }
     }
 
-    void AimPointer::Save(engine::json& j) const
+    void AimModeController::Save(engine::json& j) const
     {        
         Object::Save(j);
 
@@ -322,7 +378,7 @@ namespace game
         j["CursorState"] = (int)m_cursor;
     }
 
-    void AimPointer::Load(const engine::json& j)
+    void AimModeController::Load(const engine::json& j)
     {      
         Object::Load(j);
 

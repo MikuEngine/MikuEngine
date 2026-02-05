@@ -1,9 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
 #include "Script/MonsterGenerator/MonsterData.h"
+#include "Script/Interface/IDamageable.h"
 
 namespace engine
 {
@@ -42,7 +43,9 @@ namespace game
     //   - m_difficulty: 난이도 (MonsterPartyGenerator용)
     //   - m_detectionRange: 인식범위
     // ═══════════════════════════════════════════════════════════════
-    class MonsterScript : public BaseControllerScript
+    class MonsterScript :
+        public BaseControllerScript,
+        public IDamageable
     {
         REGISTER_SCRIPT(MonsterScript, BaseControllerScript)
 
@@ -317,7 +320,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 외부 데미지 처리 (총알 등에서 호출)
         // ─────────────────────────────────────────────
-        virtual void TakeDamage(float damage);
+        virtual void TakeDamage(float damage) override;
         
         // ─────────────────────────────────────────────
         // 총알 타입 확인 (UI 분기용)

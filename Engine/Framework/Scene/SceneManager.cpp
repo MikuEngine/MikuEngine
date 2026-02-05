@@ -187,6 +187,8 @@ namespace engine
             // 추가적으로 하고싶은 작업
             Time::Reset();
 
+            Time::Update();
+
             m_isSceneStarted = true;
         }
     }

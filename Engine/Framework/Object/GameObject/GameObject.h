@@ -84,6 +84,22 @@ namespace engine
             return nullptr;
         }
 
+        template <typename T>
+        T* GetInterface()
+        {
+            for (const auto& component : m_components)
+            {
+                T* target = dynamic_cast<T*>(component.get());
+
+                if (target != nullptr)
+                {
+                    return target;
+                }
+            }
+
+            return nullptr;
+        }
+
         const std::vector<std::unique_ptr<Component>>& GetComponents() const;
         void RemoveComponent(size_t index);
 
