@@ -38,6 +38,18 @@ namespace game
     {       
         LOG_PRINT("[AimPointer] Started");
 
+        std::string sceneName = engine::SceneManager::Get().GetScene()->GetName();
+
+        // 로비가 아닐 때만 전투 에임 활성화
+        if (sceneName != "z_Hiro_Lobby" && sceneName != "z_Hiro_Main")
+        {
+            SetCombatAimEnabled(true);
+        }
+        else
+        {
+            SetCombatAimEnabled(false);
+        }
+
         EnsureUICursor();
 
         const engine::Vector2 mousePx = engine::Input::GetMousePosition();
@@ -69,6 +81,7 @@ namespace game
     void AimModeController::SetPaused(bool paused)
     {
         m_paused = paused;
+
     }
 
     void AimModeController::SetCursorVisible(bool visible)
@@ -262,14 +275,18 @@ namespace game
 
         m_cursorRect->SetAnchoredPosition(mouseRefCenter);
 
-        // Debug
-        if (engine::Input::IsKeyPressed(engine::Keys::P))
-        {
-            m_debugIndex = m_debugIndex % (int)AimCursorState::Count;
+        // 클릭시 변환
+        const AimCursorState desired = ComputeDesiredCursorState(mode);
+        if (desired != m_cursor)
+            SetCursorTexture(desired);
 
-            SetCursorTexture((AimCursorState)m_debugIndex);
-            m_debugIndex++;
-        }
+        // Debug
+        //if (engine::Input::IsKeyPressed(engine::Keys::P))
+        //{
+        //    m_debugIndex++;
+        //    m_debugIndex = m_debugIndex % (int)AimCursorState::Count;
+        //    SetCursorTexture((AimCursorState)m_debugIndex);
+        //}
     }
 
     engine::Vector3 AimModeController::GetDirectionFrom(const engine::Vector3& fromPosition) const
