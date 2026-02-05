@@ -111,19 +111,42 @@
                     "Type": "AimPointer",
                     "Active": true,
                     "CanvasObjectName": "AimPointerCanvas",
-                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
-                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
-                    "UseAlternateCursor": false,
                     "CursorSize": {
                         "x": 32.0,
                         "y": 32.0
                     },
-                    "CursorPivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
                     "TargetPlaneY": 2.5,
-                    "AimYOffsetWhenMoving": 0.0
+                    "AimYOffsetWhenMoving": 0.0,
+                    "CursorTexturesByState": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "CursorPivotsByState": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    ],
+                    "CursorState": 0
                 },
                 {
                     "Type": "LogicFSM",
@@ -18421,6 +18444,9 @@
                     "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863,
+                    "UseHighArc": false,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18432,7 +18458,7 @@
                     "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead",
                     "MoveDurationMin": 1.0,
-                    "MoveDurationMax": 4.0,
+                    "MoveDurationMax": 1.2000000476837158,
                     "RaycastDetectionRange": 100.0,
                     "PlayerIgnoreCountMin": 1,
                     "PlayerIgnoreCountMax": 3,
@@ -18582,9 +18608,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 21.75356101989746,
-                        "y": 1.5,
-                        "z": 9.446041107177734
+                        "x": -8.818670272827148,
+                        "y": 1.5000009536743164,
+                        "z": -0.6432645320892334
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -18654,7 +18680,7 @@
                     "MonsterTier": 0,
                     "Hp": 100.0,
                     "MaxHp": 100.0,
-                    "MoveSpeed": 12.0,
+                    "MoveSpeed": 0.0,
                     "AttackDamage": 10.0,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
@@ -18667,8 +18693,11 @@
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
-                    "ParabolicSpeed": 17.0,
-                    "OwnGravity": 17.0,
+                    "ParabolicSpeed": 18.299999237060547,
+                    "OwnGravity": 13.0,
+                    "UseHighArc": false,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18773,7 +18802,7 @@
         {
             "ID": 84,
             "Name": "Monster_RoundType_Blue",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -18872,6 +18901,9 @@
                     "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863,
+                    "UseHighArc": false,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18972,7 +19004,7 @@
         {
             "ID": 86,
             "Name": "Monster_RoundType_Red",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -19032,9 +19064,9 @@
                     "Type": "Rigidbody",
                     "Active": true,
                     "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
+                    "mass": 10.0,
+                    "linearDamping": 0.0,
+                    "angularDamping": 0.0,
                     "useGravity": false,
                     "constraints": 40
                 },
@@ -19091,6 +19123,9 @@
                     "CurvedRadiusGrowth": 3.0,
                     "ParabolicSpeed": 15.0,
                     "OwnGravity": 25.0,
+                    "UseHighArc": false,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
@@ -198,8 +198,8 @@ namespace game
 			return std::make_unique<LinearMovement>();
 
 		case BulletType::Parabolic:
-			// launchAngle, ownGravity 사용
-			return std::make_unique<ParabolicMovement>(params.ownGravity, params.launchAngle);
+			// launchAngle, ownGravity, maxLaunchAngle 사용
+			return std::make_unique<ParabolicMovement>(params.ownGravity, params.launchAngle, params.maxLaunchAngle);
 
 		case BulletType::Curve:
 			// 나선형 이동 (angularSpeed, radiusGrowthRate 사용)
@@ -269,12 +269,12 @@ namespace game
 			case BulletType::Parabolic:
 			case BulletType::Field:
 				ImGui::Text("=== Parabolic Settings ===");
-				ImGui::Text("Launch Angle: %.1f deg (auto)", params.launchAngle);
+				ImGui::Text("Launch Angle: %.1f deg (auto, range: %.1f~%.1f)", 
+					params.launchAngle, params.minLaunchAngle, params.maxLaunchAngle);
+				ImGui::Text("Speed: %.1f m/s (adjusted)", params.speed);
 				ImGui::Text("Own Gravity: %.2f m/s^2", params.ownGravity);
-				{
-					float maxRange = (params.speed * params.speed) / params.ownGravity;
-					ImGui::Text("Max Range: %.1f m", maxRange);
-				}
+				ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), 
+					"(Speed varies by distance in 45~%.1f deg range)", params.maxLaunchAngle);
 				break;
 				
 			case BulletType::Curve:

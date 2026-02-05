@@ -143,14 +143,17 @@ namespace game
         engine::Rigidbody* m_rigidbody = nullptr;
         engine::Vector3 m_velocity = engine::Vector3::Zero;
         float m_ownGravity = 9.81f;
-        float m_launchAngle = 45.0f;  // 도(degree) 단위
+        float m_launchAngle = 45.0f;      // 도(degree) 단위
+        float m_maxLaunchAngle = 70.0f;   // 최대 발사각 (이 각도에서 최대 사거리)
 
     public:
         // ownGravity: 자체 중력 가속도
-        // launchAngle: 발사 상방 각도 (0~89도)
-        ParabolicMovement(float ownGravity, float launchAngle) 
+        // launchAngle: 발사 상방 각도 (minLaunchAngle~maxLaunchAngle)
+        // maxLaunchAngle: 최대 발사각 (이 각도에서 최대 사거리 도달)
+        ParabolicMovement(float ownGravity, float launchAngle, float maxLaunchAngle) 
             : m_ownGravity(ownGravity)
-            , m_launchAngle(launchAngle) 
+            , m_launchAngle(launchAngle)
+            , m_maxLaunchAngle(maxLaunchAngle)
         {}
 
         void Initialize(engine::GameObject* owner, const engine::Vector3& direction, float speed) override
@@ -162,6 +165,7 @@ namespace game
 
             // launchAngle 적용하여 초기 속도 계산
             // direction은 XZ 평면의 수평 발사 방향으로 가정
+            // 주의: speed는 이미 MonsterScript에서 거리별로 보정된 값임
             
             // 수평 방향 (XZ 평면)
             engine::Vector3 horizontalDir = direction;
@@ -179,7 +183,7 @@ namespace game
             constexpr float kDegToRad = 3.14159265f / 180.0f;
             float angleRad = m_launchAngle * kDegToRad;
 
-            // 초기 속도 벡터 계산
+            // 초기 속도 벡터 계산 (전달받은 speed 그대로 사용)
             float cosAngle = std::cos(angleRad);
             float sinAngle = std::sin(angleRad);
 

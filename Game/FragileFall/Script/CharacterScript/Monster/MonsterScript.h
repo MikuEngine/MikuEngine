@@ -124,6 +124,14 @@ namespace game
         float m_parabolicSpeed = 15.0f;       // 포물선 총알 속력 (m/s)
         float m_ownGravity = 9.8f;            // 자체 중력 가속도 (m/s²)
         bool m_useHighArc = false;            // true: 높은 발사각 (곡선 화려), false: 낮은 발사각 (빠른 도달)
+        float m_minLaunchAngle = 20.0f;       // 최소 발사각 (도)
+        float m_maxLaunchAngle = 70.0f;       // 최대 발사각 (도) - 이 각도에서 최대 사거리 도달
+        
+        // ─────────────────────────────────────────────
+        // 사전 계산된 사거리 값 (InitializeBullet에서 계산)
+        // ─────────────────────────────────────────────
+        float m_range45 = 0.0f;               // 45도 사거리 (속도 고정)
+        float m_range70 = 0.0f;               // maxLaunchAngle 사거리 (속도 보정 포함)
 
         // ─────────────────────────────────────────────
         // 런타임 상태
@@ -221,17 +229,25 @@ namespace game
         virtual void Attack(float deltaTime);
 
         // ─────────────────────────────────────────────
-        // 포물선 발사각 자동 계산 (Parabolic 타입용)
+        // 포물선 사거리 사전 계산 (InitializeBullet에서 호출)
+        // - 45도 사거리, maxLaunchAngle 사거리 계산
+        // ─────────────────────────────────────────────
+        void CalculateParabolicRanges();
+        
+        // ─────────────────────────────────────────────
+        // 포물선 발사각 및 속도 자동 계산 (Parabolic 타입용)
         // - 입력: 발사 위치, 착탄점
-        // - 사용: m_parabolicSpeed, m_ownGravity, m_useHighArc
-        // - 출력: launchAngle (라디안)
-        // - m_useHighArc=true: 높은 발사각 (곡선 화려)
-        // - m_useHighArc=false: 낮은 발사각 (빠른 도달)
+        // - 사용: m_parabolicSpeed, m_ownGravity, m_minLaunchAngle, m_maxLaunchAngle
+        // - 출력: launchAngle (라디안), speed (보정된 속도)
+        // - 구간 1 (R <= R_45): 20~45도, 물리 계산, 속도 고정
+        // - 구간 2 (R_45 < R <= R_70): 45~70도, 선형 매핑, 속도 역산
+        // - 구간 3 (R > R_70): 70도 고정, 최대 속도
         // ─────────────────────────────────────────────
         bool CalculateParabolicLaunchAngle(
             const engine::Vector3& startPos,   // 발사 위치 (오프셋 적용된 실제 위치)
-            const engine::Vector3& targetPos,  // 착탄점 (플레이어 XZ, Y=0)
-            float& outAngleRad                 // 출력: 발사각 (라디안)
+            const engine::Vector3& targetPos,  // 착탄점 (플레이어 XZ, Y=지정값)
+            float& outAngleRad,                // 출력: 발사각 (라디안)
+            float& outSpeed                    // 출력: 보정된 속도 (m/s)
         ) const;
         
         // ─────────────────────────────────────────────

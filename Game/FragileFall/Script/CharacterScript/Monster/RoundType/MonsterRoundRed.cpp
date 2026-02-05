@@ -370,24 +370,23 @@ namespace game
         if (!m_isJumping || !m_rigidbody) return;
         
         // ─────────────────────────────────────────────
-        // 3. 착지 신호 받으면 Y 위치 보정
+        // 중력 적용 (착지 신호 여부와 무관하게 계속 적용)
+        // ─────────────────────────────────────────────
+        engine::Vector3 gravityForce(0.0f, -m_ownGravity, 0.0f);
+        m_rigidbody->AddForce(gravityForce, engine::ForceMode::Acceleration);
+        
+        // ─────────────────────────────────────────────
+        // 착지 신호 받으면 Y 위치 체크
         // ─────────────────────────────────────────────
         if (m_landingSignal)
         {
             engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
             float targetY = m_groundY + m_groundYOffset;
             
-            // Y 위치를 목표 높이로 서서히 보정
-            if (currentPos.y > targetY)
-            {
-                currentPos.y = std::max(targetY, currentPos.y - 0.1f);
-                GetTransform()->SetLocalPosition(currentPos);
-            }
-            
             // ─────────────────────────────────────────────
-            // 4. Y 좌표가 목표 높이에 충분히 가까우면 착지 판정
+            // Y 좌표가 목표 높이에 도달하면 착지 판정
             // ─────────────────────────────────────────────
-            if (std::abs(currentPos.y - targetY) <= m_landingThreshold)
+            if (currentPos.y <= targetY)
             {
                 // 정확한 위치로 고정
                 currentPos.y = targetY;
@@ -401,12 +400,6 @@ namespace game
                     m_logicFSM->SetParameter("JumpComplete", true);
                 }
             }
-        }
-        else
-        {
-            // 착지 신호 전: 중력만 적용
-            engine::Vector3 gravityForce(0.0f, -m_ownGravity, 0.0f);
-            m_rigidbody->AddForce(gravityForce, engine::ForceMode::Acceleration);
         }
     }
     
@@ -723,9 +716,17 @@ namespace game
         ImGui::DragFloat("Landing Y Threshold", &m_landingYThreshold, 0.1f, 0.0f, 5.0f, "%.2f m");
         ImGui::DragFloat("Landing Threshold", &m_landingThreshold, 0.001f, 0.0f, 0.1f, "%.4f m");
         
-        // 최대 사거리 표시 (45도 포물선)
-        float maxRange = (m_maxJumpStepDistance * m_maxJumpStepDistance * m_ownGravity) / m_ownGravity;
-        ImGui::Text("Theoretical Max Range: %.1f m", maxRange);
+        // 최대 사거리 표시 (45도 포물선, 이상적인 경우)
+        constexpr float kDegToRad = 3.14159265f / 180.0f;
+        float angleRad = m_launchAngle * kDegToRad;
+        float sin2Angle = std::sin(2.0f * angleRad);
+        float theoreticalMaxRange = 0.0f;
+        if (sin2Angle > 0.0001f)
+        {
+            float maxSpeed = std::sqrt((m_maxJumpStepDistance * m_ownGravity) / sin2Angle);
+            theoreticalMaxRange = (maxSpeed * maxSpeed * sin2Angle) / m_ownGravity;
+        }
+        ImGui::Text("Theoretical Max Range: %.1f m (no damping)", theoreticalMaxRange);
         
         // 런타임 정보
         ImGui::Separator();

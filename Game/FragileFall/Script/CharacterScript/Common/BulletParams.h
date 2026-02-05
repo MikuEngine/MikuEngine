@@ -45,8 +45,10 @@ namespace game
         // 포물선용 (Parabolic 타입에서만 사용)
         // - 다른 타입에서는 이 값들을 무시함
         // ─────────────────────────────────────────────
-        float launchAngle = 45.0f;  // 발사 상방 각도 (0~89도)
-        float ownGravity = 9.8f;    // 자체 중력 가속도 (PhysX 글로벌 중력과 별개)
+        float launchAngle = 45.0f;      // 발사 상방 각도 (자동 계산됨, minLaunchAngle~maxLaunchAngle 범위)
+        float minLaunchAngle = 20.0f;   // 최소 발사각 (도)
+        float maxLaunchAngle = 70.0f;   // 최대 발사각 (도) - 이 각도에서 최대 사거리 도달
+        float ownGravity = 9.8f;        // 자체 중력 가속도 (PhysX 글로벌 중력과 별개)
 
         // ─────────────────────────────────────────────
         // 곡선/나선용 (Curve 타입에서 사용)
