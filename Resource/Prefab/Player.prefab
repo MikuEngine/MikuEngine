@@ -40,11 +40,11 @@
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
                     "BaseBulletLifetime": 3.0,
-                    "BaseBulletRange": 3.0,
+                    "BaseBulletRange": 10.0,
                     "BaseBulletSizeScale": 1.0,
                     "BaseBulletSpeed": 15.0,
-                    "BulletStartOffsetY": 2.5,
-                    "BulletStartOffsetForward": 1.5,
+                    "BulletStartOffsetY": 1.7000000476837158,
+                    "BulletStartOffsetForward": -0.5,
                     "PlayerAnimMeshObjectName": "PlayerAnimMesh",
                     "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
@@ -59,23 +59,6 @@
                     "DashCooldown": 0.20000000298023224,
                     "MaxDashCount": 3,
                     "DashRechargeTime": 1.0
-                },
-                {
-                    "Type": "AimPointer",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
-                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
-                    "UseAlternateCursor": false,
-                    "CursorSize": {
-                        "x": 32.0,
-                        "y": 32.0
-                    },
-                    "CursorPivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "TargetPlaneY": 2.5
                 },
                 {
                     "Type": "LogicFSM",
@@ -116,6 +99,47 @@
                     "materialType": 0,
                     "radius": 0.5899999737739563,
                     "height": 4.75
+                },
+                {
+                    "Type": "AimModeController",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorSize": {
+                        "x": 30.0,
+                        "y": 30.0
+                    },
+                    "TargetPlaneY": 1.5,
+                    "AimYOffsetWhenMoving": 0.0,
+                    "CursorTexturesByState": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "CursorPivotsByState": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    ],
+                    "CursorState": 0
                 }
             ]
         }
