@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterPointedType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -8,6 +8,7 @@
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
+#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 
 namespace game
 {
@@ -32,7 +33,7 @@ namespace game
         if (m_pathfindingAgent)
         {
             m_pathfindingAgent->SetPathUpdateInterval(0.5f);        // 0.5초마다 경로 재계산
-            m_pathfindingAgent->SetWaypointReachDistance(0.3f);     // waypoint 도달 거리
+            m_pathfindingAgent->SetWaypointReachDistance(0.6f);    // 속도 높을 때 오버슈트 방지 (넉넉한 도달 거리)
             m_pathfindingAgent->SetTargetMoveThreshold(2.0f);       // 목표가 2.0f 이상 움직이면 재계산
         }
     }
@@ -286,15 +287,34 @@ namespace game
             direction = CalculateDirectionToPlayer();
         else
         {
-            engine::Vector3 toWaypoint = nextWaypoint - currentPos;
-            toWaypoint.y = 0.0f;
-            if (toWaypoint.LengthSquared() > 0.0001f)
+            // 속도가 높을 때 웨이포인트를 지나쳐 반대 방향 힘이 가해지는 것 방지 (오버슈트 시 다음 웨이포인트로 전진)
+            engine::Vector3 nextInPath = m_pathfindingAgent->GetNextWaypoint();
+            if (nextInPath.LengthSquared() > 0.0001f)
             {
-                toWaypoint.Normalize();
-                direction = toWaypoint;
+                engine::Vector3 toCur = nextWaypoint - currentPos;
+                toCur.y = 0.0f;
+                engine::Vector3 toNext = nextInPath - currentPos;
+                toNext.y = 0.0f;
+                if (toNext.LengthSquared() < toCur.LengthSquared())
+                {
+                    m_pathfindingAgent->AdvanceToNextWaypoint();
+                    hasValidWaypoint = m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
+                    if (!hasValidWaypoint)
+                        direction = CalculateDirectionToPlayer();
+                }
             }
-            else
-                direction = CalculateDirectionToPlayer();
+            if (hasValidWaypoint)
+            {
+                engine::Vector3 toWaypoint = nextWaypoint - currentPos;
+                toWaypoint.y = 0.0f;
+                if (toWaypoint.LengthSquared() > 0.0001f)
+                {
+                    toWaypoint.Normalize();
+                    direction = toWaypoint;
+                }
+                else
+                    direction = CalculateDirectionToPlayer();
+            }
         }
 
         direction.y = 0.0f;
@@ -319,7 +339,9 @@ namespace game
         }
         
         float dist = GetDistanceToPlayer();
-        float rangeBuffer = (GetCurrentState() == "EngageStop") ? 1.2f : 1.0f;
+        // 사거리 경계 움찔 방지: 정지/공격 중일 때는 나갈 때만 1.2배로 히스테리시스 적용
+        std::string state = GetCurrentState();
+        float rangeBuffer = (state == "EngageStop" || state == "EngageAttack") ? 1.2f : 1.0f;
 
         // 플레이어와의 거리 체크
         m_isPlayerInDetectionRange = (dist <= m_detectionRange);
@@ -353,6 +375,21 @@ namespace game
         if (m_fireTimer > 0.0f)
         {
             m_fireTimer -= deltaTime;
+        }
+
+        // 달리기 애니메이션 재생 속도 = 몬스터 이동 속도에 비례 (이동 상태에서만)
+        const float kBaseMoveSpeed = 10.0f;  // 애니 기준 속도, 필요 시 튜닝
+        if (m_skeletalAnimator && m_animFSM)
+        {
+            int baseLayer = m_animFSM->GetBaseLayerIndex();
+            float animSpeed = 1.0f;
+            if (state == "EngageMove")
+                animSpeed = std::max(0.1f, m_moveSpeed / kBaseMoveSpeed);
+            else if (state == "Flee")
+                animSpeed = std::max(0.1f, (m_moveSpeed * m_fleeSpeedMultiplier) / kBaseMoveSpeed);
+            else if (state == "Redemption")
+                animSpeed = std::max(0.1f, (m_moveSpeed * m_redemptionSpeedMultiplier) / kBaseMoveSpeed);
+            m_skeletalAnimator->SetLayerSpeed(baseLayer, animSpeed);
         }
 
         if (state == "Flee")
