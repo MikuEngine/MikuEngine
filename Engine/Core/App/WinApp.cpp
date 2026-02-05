@@ -392,7 +392,8 @@ namespace engine
                     return;
                 }
             }
-            SceneManager::Get().ProcessPendingAdds(false);    
+            SceneManager::Get().ProcessPendingAdds(false);
+            SceneManager::Get().ProcessPendingKills();
             break;
 
         case EditorState::Play:

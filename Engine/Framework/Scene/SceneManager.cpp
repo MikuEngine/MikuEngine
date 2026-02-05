@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "SceneManager.h"
 
 #include "Framework/Scene/Scene.h"
@@ -8,8 +8,6 @@
 #include "Framework/System/SoundSystem.h"
 #include "Framework/System/LoadingScreenRenderer.h"
 #include "Framework/System/SystemManager.h"
-#include "Framework/Physics/PhysicsSystem.h"
-#include "Framework/Physics/CollisionSystem.h"
 
 namespace engine
 {
@@ -47,11 +45,8 @@ namespace engine
             m_isSceneChanged = false;
             m_sceneState = SceneState::Loading;
             
-            // CollisionSystem의 활성 쌍 클리어
-            SystemManager::Get().GetCollisionSystem().ClearActivePairs();
-            
-            // PhysX 씬 먼저 정리 (GameObject 파괴 전에 PxActor 해제)          
-            m_scene->ClearPhysicsScene();
+            // 물리 씬 정리 (GameObject 파괴 전에 PxActor 해제)          
+            m_scene->StopPhysics();
 
             if (isPlaying)
             {
@@ -111,7 +106,7 @@ namespace engine
                 m_sceneLoadDoneByWorker = false;
 
                 // 물리 씬 생성 (씬 로드 후)
-                SystemManager::Get().GetPhysicsSystem().CreateScenePhysics();
+                m_scene->StartPhysics();
 
                 m_sceneState = SceneState::Active;
 

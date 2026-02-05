@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <functional>
 
@@ -109,6 +109,10 @@ namespace engine
         // ═══════════════════════════════════════
         // 물리 시스템 인터페이스
         // ═══════════════════════════════════════
+        
+        // 물리 씬 시작/종료 (에디터 Play/Stop 및 씬 로드 시 사용)
+        void StartPhysics();
+        void StopPhysics();
         
         // 물리 씬 생성/정리 (PhysicsSystem에서 호출)
         void CreatePhysicsScene(physx::PxScene* pxScene, physx::PxControllerManager* controllerManager);

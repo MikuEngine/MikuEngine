@@ -19,6 +19,8 @@
 #include "Framework/System/SystemManager.h"
 #include "Framework/System/CameraSystem.h"
 #include "Framework/Physics/PhysicsCallback.h"
+#include "Framework/Physics/PhysicsSystem.h"
+#include "Framework/Physics/CollisionSystem.h"
 
 #include <PxPhysicsAPI.h>
 
@@ -305,12 +307,26 @@ namespace engine
         for (auto gameObject : m_gameObjectKillList)
         {
             std::int32_t index = gameObject->m_sceneIndex;
-            std::int32_t lastIndex = static_cast<std::int32_t>(m_gameObjects.size() - 1);
-
-            if (index < 0 || index >= m_gameObjects.size() || m_gameObjects[index].get() != gameObject)
+            
+            // 인덱스가 유효하지 않으면 포인터로 다시 찾기
+            if (index < 0 || index >= static_cast<std::int32_t>(m_gameObjects.size()) || m_gameObjects[index].get() != gameObject)
             {
-                continue;
+                // 포인터로 검색
+                auto it = std::find_if(m_gameObjects.begin(), m_gameObjects.end(),
+                    [gameObject](const std::unique_ptr<GameObject>& go)
+                    {
+                        return go.get() == gameObject;
+                    });
+                
+                if (it == m_gameObjects.end())
+                {
+                    continue; // 이미 삭제됨
+                }
+                
+                index = static_cast<std::int32_t>(std::distance(m_gameObjects.begin(), it));
             }
+            
+            std::int32_t lastIndex = static_cast<std::int32_t>(m_gameObjects.size() - 1);
 
             if (gameObject->IsActive())
             {
@@ -342,16 +358,10 @@ namespace engine
             return;
         }
         
-        std::erase_if(m_gameObjects, [gameObject](const std::unique_ptr<GameObject>& go)
-            {
-                // 나 자신이거나, 자손이면 삭제
-                return (go.get() == gameObject) || go->GetTransform()->IsDescendantOf(gameObject->GetTransform());
-            });
-        // 인덱스 전체 재정비
-        for (std::int32_t i = 0; i < static_cast<std::int32_t>(m_gameObjects.size()); ++i)
-        {
-            m_gameObjects[i]->m_sceneIndex = i;
-        }
+        // GameObject::Destroy()가 자식까지 재귀적으로 RegisterPendingKill 호출
+        gameObject->Destroy();
+        
+        // ProcessPendingKills는 다음 프레임에서 자동 호출됨
     }
 
     void Scene::Save()
@@ -632,6 +642,17 @@ namespace engine
     // ═══════════════════════════════════════════════════════════════
     // 물리 시스템 인터페이스
     // ═══════════════════════════════════════════════════════════════
+
+    void Scene::StartPhysics()
+    {
+        SystemManager::Get().GetPhysicsSystem().CreateScenePhysics();
+    }
+
+    void Scene::StopPhysics()
+    {
+        SystemManager::Get().GetCollisionSystem().ClearActivePairs();
+        ClearPhysicsScene();
+    }
 
     void Scene::CreatePhysicsScene(physx::PxScene* pxScene, physx::PxControllerManager* controllerManager)
     {

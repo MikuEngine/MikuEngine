@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "EditorManager.h"
 
 #include <fstream>
@@ -34,8 +34,6 @@
 
 #include "Framework/Physics/PhysicsDebugRenderer.h"
 #include "Framework/Object/Component/Light/LightDebugRenderer.h"
-#include "Framework/Physics/PhysicsSystem.h"
-#include "Framework/Physics/CollisionSystem.h"
 #include "Framework/Object/Component/Socket/SocketDebugRenderer.h"
 
 #include "Framework/Asset/Prefab.h"
@@ -258,7 +256,7 @@ namespace engine
                 scene->LoadFromJson(g_tempScene);
 
                 // 물리 씬 생성
-                SystemManager::Get().GetPhysicsSystem().CreateScenePhysics();
+                scene->StartPhysics();
 
                 m_editorState = EditorState::Play;
 
@@ -272,7 +270,7 @@ namespace engine
                 auto scene = SceneManager::Get().GetScene();
                 
                 // 물리 씬 정리
-                SystemManager::Get().GetPhysicsSystem().ClearScenePhysics();
+                scene->StopPhysics();
                 
                 if (scene && !g_tempScene.empty())
                 {
@@ -873,19 +871,6 @@ namespace engine
             // 여기서 바로 삭제 (Delete 키 확인 로직 없이 심플하게 메뉴만)
             if (ImGui::MenuItem("Delete"))
             {
-                // 자식이 있는 오브젝트는 삭제 불가
-                if (!gameObject->GetTransform()->GetChildren().empty())
-                {
-                    LOG_INFO("[Editor] Cannot delete '{}': has {} children. Delete children first.",
-                        gameObject->GetName(), gameObject->GetTransform()->GetChildren().size());
-                    ImGui::EndPopup();
-                    if (opened)
-                    {
-                        ImGui::TreePop();
-                    }
-                    return;
-                }
-
                 if (m_selectedObject == gameObject)
                 {
                     m_selectedObject = nullptr;
