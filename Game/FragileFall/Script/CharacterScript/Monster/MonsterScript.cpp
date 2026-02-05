@@ -1,8 +1,9 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include "Script/MonsterUpdateActivationSwitch.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
@@ -71,6 +72,25 @@ namespace game
 		m_fireTimer = m_fireRate;
 	}
 
+	void MonsterScript::Update()
+	{
+		// 업데이트 중지 체크
+		CheckAndApplyUpdateSwitch();
+		if (!m_isDoUpdate) return;
+
+		// 부모 클래스 Update 호출
+		BaseControllerScript::Update();
+	}
+
+	void MonsterScript::FixedUpdate()
+	{
+		// 물리 업데이트 중지 체크
+		if (!m_isDoUpdate) return;
+
+		// 부모 클래스 FixedUpdate 호출
+		BaseControllerScript::FixedUpdate();
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 컴포넌트 캐싱
 	// ═══════════════════════════════════════════════════════════════
@@ -94,6 +114,50 @@ namespace game
 		if (m_skeletalMeshRenderer)
 		{
 			m_originalColor = m_skeletalMeshRenderer->GetBaseColor();
+		}
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 업데이트 중지 시스템
+	// ═══════════════════════════════════════════════════════════════
+	void MonsterScript::CheckAndApplyUpdateSwitch()
+	{
+		// 이미 스위치가 활성화되었으면 더 이상 체크 안 함 (최적화)
+		if (m_hasSwitchActivated)
+		{
+			m_isDoUpdate = true;
+			return;
+		}
+
+		// 스위치를 아직 찾지 못했으면 찾기 (한 번만 실행)
+		if (!m_updateSwitch)
+		{
+			auto* scene = engine::SceneManager::Get().GetScene();
+			if (scene)
+			{
+				auto* switchObj = scene->FindGameObject("MonsterUpdateSwitch");
+				if (switchObj)
+				{
+					m_updateSwitch = switchObj->GetComponent<MonsterUpdateActivationSwitch>();
+				}
+			}
+		}
+
+		// 스위치 상태 반영
+		if (m_updateSwitch)
+		{
+			m_isDoUpdate = m_updateSwitch->m_isUpdateAllowed;
+
+			// 스위치가 활성화되면 더 이상 체크 안 함
+			if (m_isDoUpdate)
+			{
+				m_hasSwitchActivated = true;
+			}
+		}
+		else
+		{
+			// 스위치가 없으면 기본값 유지 (업데이트 허용)
+			m_isDoUpdate = true;
 		}
 	}
 

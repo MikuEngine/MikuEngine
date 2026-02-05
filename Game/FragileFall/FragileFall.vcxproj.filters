@@ -68,6 +68,7 @@
     <ClCompile Include="Script\Scene\TutorialController.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterSpawner.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\ExplosionDamageTrigger.cpp" />
+    <ClCompile Include="Script\MonsterUpdateActivationSwitch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -141,5 +142,6 @@
     <ClInclude Include="Script\Scene\TutorialController.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterSpawner.h" />
     <ClInclude Include="Script\CharacterScript\Common\ExplosionDamageTrigger.h" />
+    <ClInclude Include="Script\MonsterUpdateActivationSwitch.h" />
   </ItemGroup>
 </Project>
