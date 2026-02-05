@@ -103,6 +103,8 @@ namespace engine
 		bool m_dragFromHandle = false;
 		bool m_dirty = true;
 
+		bool m_handleDrivesByAnchors = true;
+
 		bool m_useFill = true;
 
 		std::string m_bgSprite;

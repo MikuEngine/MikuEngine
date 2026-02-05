@@ -252,8 +252,10 @@ namespace engine
 		GameObject* parent = GetGameObject();
 		if (!parent) return;
 
-		auto makeChild = [&](const char* name) -> GameObject*
+		auto makeChild = [&](const char* name, bool& outCreated) -> GameObject*
 			{
+				outCreated = false;
+
 				if (GameObject* exist = FindChildByName(parent, name))
 					return exist;
 
@@ -269,12 +271,14 @@ namespace engine
 				if (!go->GetComponent<RectTransform>())
 					go->AddComponent<RectTransform>();
 
+				outCreated = true;
 				return go;
 			};
 
 		// Background
 		{
-			GameObject* go = makeChild("Background");
+			bool created = false;
+			GameObject* go = makeChild("Background", created);
 			if (go)
 			{
 				if (!go->GetComponent<UIImage>())
@@ -283,18 +287,23 @@ namespace engine
 				m_background = go->GetComponent<UIImage>();
 
 				RectTransform* rt = go->GetComponent<RectTransform>();
-				rt->SetAnchorMin({ 0.0f, 0.0f });
-				rt->SetAnchorMax({ 1.0f, 1.0f });
-				rt->SetPivot({ 0.5f, 0.5f });
-				rt->SetAnchoredPosition({ 0.0f, 0.0f });
-				rt->SetSize(0.0f, 0.0f);
+
+				if (created)
+				{
+					rt->SetAnchorMin({ 0.0f, 0.0f });
+					rt->SetAnchorMax({ 1.0f, 1.0f });
+					rt->SetPivot({ 0.5f, 0.5f });
+					rt->SetAnchoredPosition({ 0.0f, 0.0f });
+					rt->SetSize(0.0f, 0.0f);
+				}
 			}
 		}
 
 		// Fill
 		if (m_useFill)
 		{
-			GameObject* go = makeChild("Fill");
+			bool created = false;
+			GameObject* go = makeChild("Fill", created);
 			if (go)
 			{
 				if (!go->GetComponent<UIImage>())
@@ -303,14 +312,18 @@ namespace engine
 				m_fill = go->GetComponent<UIImage>();
 
 				RectTransform* rt = go->GetComponent<RectTransform>();
-				rt->SetAnchorMin({ 0.0f, 0.0f });
-				rt->SetAnchorMax({ 1.0f, 1.0f });
-				rt->SetPivot({ 0.5f, 0.5f });
-				rt->SetAnchoredPosition({ 0.0f, 0.0f });
-				rt->SetSize(0.0f, 0.0f);
 
-				if (m_fillMode == FillMode::PixelMask)
-					m_fill->SetMaskMode(MaskMode::Rect);
+				if (created)
+				{
+					rt->SetAnchorMin({ 0.0f, 0.0f });
+					rt->SetAnchorMax({ 1.0f, 1.0f });
+					rt->SetPivot({ 0.5f, 0.5f });
+					rt->SetAnchoredPosition({ 0.0f, 0.0f });
+					rt->SetSize(0.0f, 0.0f);
+				}
+
+				if (m_fillMode == FillMode::PixelMask) m_fill->SetMaskMode(MaskMode::Rect);
+				else                                   m_fill->SetMaskMode(MaskMode::None);
 			}
 		}
 		else
@@ -320,7 +333,8 @@ namespace engine
 
 		// Handle
 		{
-			GameObject* hGO = makeChild("Handle");
+			bool created = false;
+			GameObject* hGO = makeChild("Handle", created);
 			if (hGO)
 			{
 				if (!hGO->GetComponent<UIImage>())
@@ -329,10 +343,11 @@ namespace engine
 				m_handle = hGO->GetComponent<UIImage>();
 
 				RectTransform* rt = hGO->GetComponent<RectTransform>();
-				rt->SetAnchorMin({ 0.5f, 0.5f });
-				rt->SetAnchorMax({ 0.5f, 0.5f });
-				rt->SetPivot({ 0.5f, 0.5f });
-				rt->SetAnchoredPosition({ 0.0f, 0.0f });
+
+				if (created)
+				{
+					rt->SetAnchoredPosition({ 0.0f, 0.0f });
+				}
 			}
 		}
 
@@ -384,6 +399,37 @@ namespace engine
 		m_background = newBg;
 		m_fill = newFill;
 		m_handle = newHandle;
+
+		// 리소스 변경 저장
+		if (m_background)
+		{
+			const std::string cur = m_background->GetTexturePath();
+			if (!cur.empty() && cur != m_bgSprite)
+			{
+				m_bgSprite = cur;
+				m_dirty = true;
+			}
+		}
+
+		if (m_fill)
+		{
+			const std::string cur = m_fill->GetTexturePath();
+			if (!cur.empty() && cur != m_fillSprite)
+			{
+				m_fillSprite = cur;
+				m_dirty = true;
+			}
+		}
+
+		if (m_handle)
+		{
+			const std::string cur = m_handle->GetTexturePath();
+			if (!cur.empty() && cur != m_handleSprite)
+			{
+				m_handleSprite = cur;
+				m_dirty = true;
+			}
+		}
 
 		if (bgChanged)
 		{
@@ -578,28 +624,38 @@ namespace engine
 
 		const float tPos = Value01ToPos01(v, min01, max01);
 
-		float ax = 0.5f;
-		float ay = 0.5f;
+		Vector2 currentMin = handleRT->GetAnchorMin();
+		Vector2 currentMax = handleRT->GetAnchorMax();
+
+		float targetMinX = currentMin.x;
+		float targetMaxX = currentMax.x;
+		float targetMinY = currentMin.y;
+		float targetMaxY = currentMax.y;
 
 		switch (m_direction)
 		{
 		case Direction::LeftToRight:
-			ax = tPos; ay = 0.5f;
+			// X축은 이동 위치(tPos)로 고정, Y축은 에디터의 범위를 유지
+			targetMinX = targetMaxX = tPos;
 			break;
+
 		case Direction::RightToLeft:
-			ax = 1.0f - tPos; ay = 0.5f;
+			targetMinX = targetMaxX = 1.0f - tPos;
 			break;
+
 		case Direction::BottomToTop:
-			ax = 0.5f; ay = tPos;
+			// Y축은 이동 위치(tPos)로 고정, X축은 에디터의 범위를 유지
+			targetMinY = targetMaxY = tPos;
 			break;
+
 		case Direction::TopToBottom:
-			ax = 0.5f; ay = 1.0f - tPos;
+			targetMinY = targetMaxY = 1.0f - tPos;
 			break;
 		}
 
-		handleRT->SetPivot({ 0.5f, 0.5f });
-		handleRT->SetAnchorMin({ ax, ay });
-		handleRT->SetAnchorMax({ ax, ay });
+		// 3. 최종 계산된 앵커 적용
+		handleRT->SetAnchorMin({ targetMinX, targetMinY });
+		handleRT->SetAnchorMax({ targetMaxX, targetMaxY });
 		handleRT->SetAnchoredPosition({ 0.0f, 0.0f });
 	}
 
@@ -786,16 +842,9 @@ namespace engine
 		}
 
 		const float value01 = Pos01ToValue01(Clamp01(t), min01, max01);
-		LOG_PRINT("UISlider mouseRef=({}, {}) barRef=({}, {}, {}, {}) minMax=({}, {}) t={} value={}",
-			mousePos.x, mousePos.y,
-			barRect.x, barRect.y, barRect.w, barRect.h,
-			min01, max01,
-			t, value01);
-
 
 		SetValue(value01, true);
 	}
-
 
 	bool UISlider::IsMouseOnHandle(const Vector2& screenMousePos) const
 	{

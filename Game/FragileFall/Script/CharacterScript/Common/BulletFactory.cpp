@@ -1,9 +1,10 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Monster/RoundType/MonsterRoundType.h"
 #include "Script/CharacterScript/Monster/RoundType/MonsterRoundGreen.h"
+#include "Script/ParticleAttachment.h"
 
 #include <Framework/Asset/Prefab.h>
 #include <Framework/System/SoundSystem.h>
@@ -35,6 +36,13 @@ namespace game
 		auto* bullet = go->GetComponent<BulletPlayer>();
 		bullet->Setup(std::move(movement), params.lifetime, params.damage, params.range);
 
+		// effect
+		auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
+		if (effect)
+		{
+			effect->GetComponent<ParticleAttachment>()->SetTarget(go);
+		}
+
 		engine::SoundSystem::Get().Play("Player_Shot_Random", "SFX/Player");
 	}
 
@@ -63,6 +71,12 @@ namespace game
 
 		bullet->Setup(std::move(movement), params, this);
 
+		// effect
+		auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
+		if (effect)
+		{
+			effect->GetComponent<ParticleAttachment>()->SetTarget(go);
+		}
 	}
 
 	// 포물선 탄환
@@ -78,6 +92,13 @@ namespace game
 		auto* bullet = go->GetComponent<BulletMonster>();
 		
 		bullet->Setup(std::move(movement), params, this);
+
+		// effect
+		auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
+		if (effect)
+		{
+			effect->GetComponent<ParticleAttachment>()->SetTarget(go);
+		}
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -123,6 +144,13 @@ namespace game
 			{
 				bullet->Setup(std::move(movement), curvedParams, this);
 			}
+
+			// effect
+			auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
+			if (effect)
+			{
+				effect->GetComponent<ParticleAttachment>()->SetTarget(go);
+			}
 		}
 	}
 
@@ -162,6 +190,13 @@ namespace game
 			if (bullet)
 			{
 				bullet->Setup(std::move(movement), params, this);
+			}
+
+			// effect
+			auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
+			if (effect)
+			{
+				effect->GetComponent<ParticleAttachment>()->SetTarget(go);
 			}
 		}
 	}
