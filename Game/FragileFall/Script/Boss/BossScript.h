@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include "Script/Interface/IDamageable.h"
 
 namespace engine
 {
@@ -16,7 +17,8 @@ namespace game
     class BossPillar;
 
     class BossScript :
-        public engine::Script<BossScript>
+        public engine::Script<BossScript>,
+        public IDamageable
     {
         REGISTER_SCRIPT(BossScript, Script)
 
@@ -70,7 +72,7 @@ namespace game
         void OnPatternStarted(const std::string& patternName);
         void OnPatternFinished(const std::string& patternName);
 
-        void TakeDamage(float damage);
+        void TakeDamage(float damage) override;
         void CheckHealth();
         void OnDeath();
 

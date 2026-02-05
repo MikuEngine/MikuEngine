@@ -231,7 +231,7 @@ namespace game
 		if (!info.gameObject) return;
 
 		// ─────────────────────────────────────────────
-		//포물선 타입: 플레이어 충돌 시 착탄점에서 폭발		
+		// 포물선 타입: 플레이어 충돌 시 착탄점에서 폭발		
 		// ─────────────────────────────────────────────
 		
 		if (m_params.type == BulletType::Parabolic)
@@ -248,9 +248,22 @@ namespace game
 			return;
 		}		
 
-		// 일반 타입: 플레이어와 충돌
-		if (info.gameObject->GetComponent<PlayerControllerScript>())
+		auto collider = info.gameObject->GetComponent<engine::Collider>();
+		if (!collider) return;
+		auto layer = collider->GetLayer();
+
+		bool isPlayer = (layer == engine::PhysicsLayer::Player);
+		bool isEnvironment = (layer == engine::PhysicsLayer::Environment);
+		bool isWall = (layer == engine::PhysicsLayer::Wall);
+
+		// 일반 타입: 플레이어, 환경, 벽과 충돌 시
+		if (isPlayer || isEnvironment || isWall)
 		{
+			//if (isPlayer)
+			//{
+			//	player->onHit(m_params.damage);
+			//}
+
 			m_isDying = true;
 			m_deathTimer = 0.0f;
 			m_shouldSpawnExplosion = false;
@@ -258,6 +271,13 @@ namespace game
 			if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
 			{
 				rb->SetLinearVelocity(engine::Vector3::Zero);
+			}
+
+			auto effect = engine::Prefab::Instantiate("Effect_Bullet_Destory_V1.00");
+			if (effect && effect->GetTransform())
+			{
+				effect->GetTransform()->SetWorldMatrix(GetTransform()->GetWorld());
+				effect->GetTransform()->SetLocalScale(engine::Vector3(1.0f, 1.0f, 1.0f));
 			}
 		}
 	}
@@ -284,7 +304,6 @@ namespace game
 				DieWithExplosion(impactPoint);
 			}
 		}
-		
 	}
 
 	// ═══════════════════════════════════════════════════════════════
