@@ -29,7 +29,7 @@ namespace game
         // ─────────────────────────────────────────────
         BulletParams m_bulletParams;
 
-        // 뾰족 타입은 StaticMesh를 사용하므로 애니메이션 이름 변수 불필요
+        // SkeletalMesh + AnimFSM: 클립 이름 Idle, WalkForward, Fire (프리팹 SkeletalAnimator에 등록)
 
         // ─────────────────────────────────────────────
         // Pointed 고유 변수

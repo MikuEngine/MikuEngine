@@ -3,12 +3,9 @@
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
 
+#include <Framework/Object/Component/AnimFSM.h>
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 #include <Framework/Object/Component/Rigidbody.h>
-
-
-
-// 뾰족 타입은 StaticMesh를 사용하므로 SkeletalAnimator/SkeletalMeshRenderer include 불필요
 
 namespace game
 {
@@ -36,8 +33,6 @@ namespace game
             m_pathfindingAgent->SetWaypointReachDistance(1.0f);     // waypoint 도달 거리
             m_pathfindingAgent->SetTargetMoveThreshold(2.0f);       // 목표가 2.0f 이상 움직이면 재계산
         }
-
-        // 뾰족 타입은 StaticMesh를 사용하므로 애니메이션 관련 초기화 불필요
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -154,12 +149,30 @@ namespace game
 
     void MonsterPointedType::InitializeAnimFSM()
     {
-        // 뾰족 타입은 StaticMesh를 사용하므로 AnimFSM 초기화 불필요
+        if (!m_animFSM) return;
+
+        m_animFSM->ClearStates();
+
+        // LogicFSM 상태 이름과 동일한 Anim 상태 등록 → 상태 전환 시 해당 클립 자동 재생
+        // 클립: Idle, WalkForward, Fire (SkeletalAnimator에 등록된 이름)
+        const float kCrossFade = 0.1f;
+        const int kLayer = 0;
+        const float kSpeed = 1.0f;
+
+        m_animFSM->AddDefaultState("Idle", "Idle", true, kCrossFade, kLayer, kSpeed);
+        m_animFSM->AddDefaultState("EngageMove", "WalkForward", true, kCrossFade, kLayer, kSpeed);
+        m_animFSM->AddDefaultState("EngageStop", "Idle", true, kCrossFade, kLayer, kSpeed);
+        m_animFSM->AddDefaultState("EngageAttack", "Fire", true, kCrossFade, kLayer, kSpeed);
+        m_animFSM->AddDefaultState("Flee", "WalkForward", true, kCrossFade, kLayer, kSpeed);
+        m_animFSM->AddDefaultState("Redemption", "WalkForward", true, kCrossFade, kLayer, kSpeed);
+        m_animFSM->AddDefaultState("Laststand", "Idle", true, kCrossFade, kLayer, kSpeed);
+        m_animFSM->AddDefaultState("Fragile", "Idle", true, kCrossFade, kLayer, kSpeed);
+        m_animFSM->AddDefaultState("Dead", "Idle", true, kCrossFade, kLayer, kSpeed);
     }
 
     void MonsterPointedType::InitializeAnimations()
     {
-        // 뾰족 타입은 StaticMesh를 사용하므로 애니메이션 초기화 불필요
+        // 클립 목록(Idle, WalkForward, Fire)은 프리팹 SkeletalAnimator에서 설정
     }
 
     void MonsterPointedType::InitializeBullet()
