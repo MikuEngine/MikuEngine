@@ -23,6 +23,7 @@ namespace game
         
         // Round 타입 고정
         m_attackType = AttackType::Round;
+        m_isDoUpdate = false;
     }
 
     void MonsterRoundType::Start()
@@ -45,6 +46,23 @@ namespace game
         {
             m_skeletalAnimator->Play(m_animName_Idle, true, 0, 1.0f);
         }
+    }
+
+    void MonsterRoundType::Update()
+    {
+        // 업데이트 중지 체크
+        CheckAndApplyUpdateSwitch();
+        if (!m_isDoUpdate) return;
+
+        MonsterScript::Update();
+    }
+
+    void MonsterRoundType::FixedUpdate()
+    {
+        // 물리 업데이트 중지 체크
+        if (!m_isDoUpdate) return;
+
+        MonsterScript::FixedUpdate();
     }
 
     // ═══════════════════════════════════════════════════════════════

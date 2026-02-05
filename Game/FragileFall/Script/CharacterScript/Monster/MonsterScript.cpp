@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -74,19 +74,12 @@ namespace game
 
 	void MonsterScript::Update()
 	{
-		// 업데이트 중지 체크
-		CheckAndApplyUpdateSwitch();
-		if (!m_isDoUpdate) return;
-
 		// 부모 클래스 Update 호출
 		BaseControllerScript::Update();
 	}
 
 	void MonsterScript::FixedUpdate()
 	{
-		// 물리 업데이트 중지 체크
-		if (!m_isDoUpdate) return;
-
 		// 부모 클래스 FixedUpdate 호출
 		BaseControllerScript::FixedUpdate();
 	}

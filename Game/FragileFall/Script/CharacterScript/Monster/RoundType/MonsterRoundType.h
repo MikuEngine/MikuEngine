@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -111,6 +111,8 @@ namespace game
     public:
         void Awake() override;
         void Start() override;
+        void Update() override;
+        void FixedUpdate() override;
 
         // ─────────────────────────────────────────────
         // 접근자
