@@ -71,6 +71,8 @@ namespace game
         AimMode ComputeEffectiveMode() const;
         void SetCursorTexture(AimCursorState state);
 
+        // DebugIndex
+        int m_debugIndex = 0;
 
         // World Aim
         engine::Vector3 m_worldPosition;  // 마우스 월드 좌표

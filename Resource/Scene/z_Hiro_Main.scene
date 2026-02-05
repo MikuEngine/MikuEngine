@@ -1411,7 +1411,7 @@
             "ID": 16,
             "ParentID": 15,
             "Name": "UI_OptionPopUp",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -1580,7 +1580,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteNormal": "Resource/Texture/UI/Button/Button_02.png",
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
@@ -1616,7 +1616,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TexturePath": "Resource/Texture/UI/Button/Button_02.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1706,7 +1706,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": -10.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -1812,7 +1812,7 @@
                     },
                     "AlphaBlend": true,
                     "Bold": true,
-                    "AlignH": 0,
+                    "AlignH": 1,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
@@ -2143,9 +2143,9 @@
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
-                        "y": 570.0,
+                        "y": 585.0,
                         "z": 1260.0,
-                        "w": 620.0
+                        "w": 635.0
                     },
                     "MaskMode": 1,
                     "Mask0": {
@@ -2543,9 +2543,9 @@
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
-                        "y": 700.0,
+                        "y": 715.0,
                         "z": 1260.0,
-                        "w": 750.0
+                        "w": 765.0
                     },
                     "MaskMode": 1,
                     "Mask0": {
@@ -2943,9 +2943,9 @@
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
-                        "y": 830.0,
+                        "y": 845.0,
                         "z": 1260.0,
-                        "w": 880.0
+                        "w": 895.0
                     },
                     "MaskMode": 1,
                     "Mask0": {
@@ -3458,7 +3458,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteNormal": "Resource/Texture/UI/Button/Button_02.png",
                     "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
                     "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
                     "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
@@ -3494,7 +3494,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TexturePath": "Resource/Texture/UI/Button/Button_02.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3584,7 +3584,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": -10.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
