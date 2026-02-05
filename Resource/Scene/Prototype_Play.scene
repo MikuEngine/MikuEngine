@@ -1,6 +1,6 @@
 {
     "Name": "Prototype_Play",
-    "NumGameObjects": 90,
+    "NumGameObjects": 92,
     "GameObjects": [
         {
             "ID": 0,
@@ -87,10 +87,13 @@
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
                     "BaseBulletLifetime": 3.0,
+                    "BaseBulletRange": 50.0,
                     "BaseBulletSizeScale": 1.0,
                     "BaseBulletSpeed": 15.0,
                     "BulletStartOffsetY": 2.5,
                     "BulletStartOffsetForward": 1.5,
+                    "PlayerAnimMeshObjectName": "PlayerAnimMesh",
+                    "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
                     "ExecutionRange": 20.0,
@@ -99,24 +102,51 @@
                     "DashDuration": 0.30000001192092896,
                     "DashImpulseMultiplier": 6.0,
                     "DashDecayRate": 2.0,
-                    "DashCooldown": 0.20000000298023224
+                    "DashAfterimageCutoffRatio": 0.699999988079071,
+                    "DashCooldown": 0.20000000298023224,
+                    "MaxDashCount": 3,
+                    "DashRechargeTime": 1.0
                 },
                 {
                     "Type": "AimPointer",
                     "Active": true,
                     "CanvasObjectName": "AimPointerCanvas",
-                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
-                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
-                    "UseAlternateCursor": false,
                     "CursorSize": {
                         "x": 32.0,
                         "y": 32.0
                     },
-                    "CursorPivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "TargetPlaneY": 2.5
+                    "TargetPlaneY": 2.5,
+                    "AimYOffsetWhenMoving": 0.0,
+                    "CursorTexturesByState": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "CursorPivotsByState": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    ],
+                    "CursorState": 0
                 },
                 {
                     "Type": "LogicFSM",
@@ -11544,7 +11574,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
@@ -11600,7 +11636,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -11689,7 +11731,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -11778,7 +11826,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -11867,7 +11921,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -11956,7 +12016,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -12045,7 +12111,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -12134,7 +12206,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -12223,7 +12301,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -12579,8 +12663,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12791,8 +12873,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12941,8 +13021,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13163,8 +13241,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13385,8 +13461,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13650,8 +13724,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13800,8 +13872,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14140,8 +14210,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14248,8 +14316,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14356,8 +14422,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14546,8 +14610,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14654,8 +14716,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14762,8 +14822,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14952,8 +15010,6 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15060,8 +15116,6 @@
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15168,8 +15222,6 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15499,8 +15551,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15931,8 +15981,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16147,8 +16195,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16334,8 +16380,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16478,8 +16522,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16694,8 +16736,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16881,8 +16921,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -17123,8 +17161,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -17231,8 +17267,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "Resource/Texture/Miku.png",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -17390,7 +17424,13 @@
                     "MaterialEmissiveIntensity": 5.309999942779541,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "OrbitScript",
@@ -17456,7 +17496,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "AimPointerMeshScript",
@@ -17517,7 +17563,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "SkeletalAnimator",
@@ -17639,12 +17691,20 @@
                     "PlayerObjectName": "Player",
                     "AimPointerMeshObjectName": "AimPointerMesh",
                     "FixedY": 0.0,
+                    "LowerBodyAimThresholdDeg": 0.0,
+                    "LowerBodyTurnSpeed": 8.0,
                     "AnimName_Idle": "Idle",
                     "AnimName_WalkForward": "WalkForward",
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
+                    "FireAnimShootFrameTime": 0.20000000298023224,
+                    "UpperBodyAimOffsetDeg": 0.0,
+                    "UpperBodyYawScale": 1.0,
+                    "GunBoneName": "",
+                    "HandBoneName": "",
                     "BackwardThreshold": -0.10000000149011612,
-                    "ForwardThreshold": 0.10000000149011612
+                    "ForwardThreshold": 0.10000000149011612,
+                    "ShootingDuration": 0.5
                 },
                 {
                     "Type": "AnimFSM",
@@ -17690,9 +17750,7 @@
                     "AlphaDecayCurve": 1,
                     "AlphaTrailGradient": 0.9200000166893005,
                     "AlphaMaxSlices": 24,
-                    "AlphaSampleInterval": 0.0,
-                    "SourceHandleIndex": 49,
-                    "SourceHandleGeneration": 12
+                    "AlphaSampleInterval": 0.0
                 }
             ]
         },
@@ -17743,8 +17801,11 @@
                     "FireRate": 0.009999999776482582,
                     "BulletSpeed": 0.0,
                     "BulletLifetime": 0.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "ParabolicSpeed": 15.0,
+                    "OwnGravity": 9.800000190734863,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -17759,7 +17820,14 @@
                     "MoveDurationMax": 4.0,
                     "RaycastDetectionRange": 100.0,
                     "PlayerIgnoreCountMin": 1,
-                    "PlayerIgnoreCountMax": 3
+                    "PlayerIgnoreCountMax": 3,
+                    "BoundaryMinX": -50.0,
+                    "BoundaryMaxX": 50.0,
+                    "BoundaryMinZ": -50.0,
+                    "BoundaryMaxZ": 50.0,
+                    "ObstacleCheckDistance": 2.0,
+                    "RepositioningSpeed": 5.0,
+                    "RepositioningDuration": 2.0
                 },
                 {
                     "Type": "StaticMeshRenderer",
@@ -17787,7 +17855,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "Rigidbody",
@@ -17935,8 +18009,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -18058,8 +18130,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "None",
-                    "RampPath": "None",
-                    "NoisePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -18501,7 +18571,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "MonsterRoundGreen",
@@ -18525,8 +18601,11 @@
                     "FireRate": 5.0,
                     "BulletSpeed": 10.0,
                     "BulletLifetime": 5.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "ParabolicSpeed": 15.0,
+                    "OwnGravity": 9.800000190734863,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18769,7 +18848,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "UIText",
@@ -18919,15 +19004,23 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 12.0,
                     "BulletLifetime": 3.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "ParabolicSpeed": 15.0,
+                    "OwnGravity": 9.800000190734863,
                     "AttackAnimationDuration": 1.2000000476837158,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead"
+                    "FleeRange": 10.0,
+                    "SafeRange": 14.0,
+                    "FleeSpeedMultiplier": 1.7000000476837158,
+                    "FleeDistanceMin": 20.0,
+                    "FleeDistanceMax": 70.0,
+                    "RedemptionSpeedMultiplier": 1.5,
+                    "LaststandRetryInterval": 5.0,
+                    "MapBoundXMin": -29.5,
+                    "MapBoundXMax": 29.5,
+                    "MapBoundZMin": -18.5,
+                    "MapBoundZMax": 19.5
                 },
                 {
                     "Type": "Rigidbody",
@@ -19118,7 +19211,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "CapsuleCollider",
@@ -19253,15 +19352,23 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 12.0,
                     "BulletLifetime": 3.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "ParabolicSpeed": 15.0,
+                    "OwnGravity": 9.800000190734863,
                     "AttackAnimationDuration": 1.2000000476837158,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead"
+                    "FleeRange": 10.0,
+                    "SafeRange": 14.0,
+                    "FleeSpeedMultiplier": 1.7000000476837158,
+                    "FleeDistanceMin": 20.0,
+                    "FleeDistanceMax": 70.0,
+                    "RedemptionSpeedMultiplier": 1.5,
+                    "LaststandRetryInterval": 5.0,
+                    "MapBoundXMin": -29.5,
+                    "MapBoundXMax": 29.5,
+                    "MapBoundZMin": -18.5,
+                    "MapBoundZMax": 19.5
                 },
                 {
                     "Type": "Rigidbody",
@@ -19452,7 +19559,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "CapsuleCollider",
@@ -19587,15 +19700,23 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 12.0,
                     "BulletLifetime": 3.0,
-                    "SpeedScale": 10.0,
-                    "ParabolicHeightScale": 5.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "ParabolicSpeed": 15.0,
+                    "OwnGravity": 9.800000190734863,
                     "AttackAnimationDuration": 1.2000000476837158,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead"
+                    "FleeRange": 10.0,
+                    "SafeRange": 14.0,
+                    "FleeSpeedMultiplier": 1.7000000476837158,
+                    "FleeDistanceMin": 20.0,
+                    "FleeDistanceMax": 70.0,
+                    "RedemptionSpeedMultiplier": 1.5,
+                    "LaststandRetryInterval": 5.0,
+                    "MapBoundXMin": -29.5,
+                    "MapBoundXMax": 29.5,
+                    "MapBoundZMin": -18.5,
+                    "MapBoundZMax": 19.5
                 },
                 {
                     "Type": "Rigidbody",
@@ -19786,7 +19907,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "CapsuleCollider",
@@ -19871,6 +19998,208 @@
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 90,
+            "Name": "AimPointerCanvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                },
+                {
+                    "Type": "AimPointer",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorSize": {
+                        "x": 30.0,
+                        "y": 30.0
+                    },
+                    "TargetPlaneY": 1.5,
+                    "AimYOffsetWhenMoving": 0.0,
+                    "CursorTexturesByState": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "CursorPivotsByState": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    ],
+                    "CursorState": 0
+                }
+            ]
+        },
+        {
+            "ID": 91,
+            "ParentID": 90,
+            "Name": "AimCursor",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 30.0,
+                    "Height": 30.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/Image/Cursor_Default.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
                 }
             ]
         }

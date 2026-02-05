@@ -6,6 +6,7 @@ namespace engine
     {
     public:
         static void Update();
+        static void Reset();
 
         static float DeltaTime(size_t scaleSlot = 0);
         static float FixedDeltaTime();

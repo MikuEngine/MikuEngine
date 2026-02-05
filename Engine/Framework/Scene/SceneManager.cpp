@@ -183,8 +183,9 @@ namespace engine
             }
 
             m_onSceneStartCallbacks.clear();
-
+                        
             // 추가적으로 하고싶은 작업
+            Time::Reset();
 
             Time::Update();
 

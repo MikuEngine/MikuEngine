@@ -18,6 +18,7 @@ namespace game
     class BulletFactory;
     class PlayerControllerScript;
     class ExecutionIndicatorManager;  // friend 선언용 전방 선언
+    class MonsterUpdateActivationSwitch;  // 업데이트 스위치
 
     // ═══════════════════════════════════════════════════════════════
     // MonsterScript - 몬스터 공통 기반 클래스
@@ -56,6 +57,7 @@ namespace game
         engine::SkeletalAnimator* m_skeletalAnimator = nullptr;
         BulletFactory* m_bulletFactory = nullptr;
         engine::PathfindingAgent* m_pathfindingAgent = nullptr;  // 경로 찾기 에이전트
+        MonsterUpdateActivationSwitch* m_updateSwitch = nullptr;  // 업데이트 스위치 (씬에서 찾음)
 
         // ─────────────────────────────────────────────
         // 플레이어 추적
@@ -127,6 +129,12 @@ namespace game
         bool m_fsmInitialized = false;
         
         // ─────────────────────────────────────────────
+        // 업데이트 중지 시스템 (MonsterUpdateSwitch 연동)
+        // ─────────────────────────────────────────────
+        bool m_isDoUpdate = true;                    // 업데이트 실행 여부 (기본값: true)
+        bool m_hasSwitchActivated = false;           // 스위치가 한 번이라도 활성화되었는지
+        
+        // ─────────────────────────────────────────────
         // Fragile 부활 시스템
         // ─────────────────────────────────────────────
         float m_fragileTimer = 0.0f;         // Fragile 상태 경과 시간
@@ -155,6 +163,8 @@ namespace game
     public:
         virtual void Awake() override;
         virtual void Start() override;
+        void Update() override;       // 업데이트 중지 체크 포함
+        void FixedUpdate() override;  // 물리 업데이트 중지 체크 포함
 
     protected:
         // ─────────────────────────────────────────────
@@ -298,6 +308,12 @@ namespace game
         // - 자식 클래스에서 오버라이드하여 Parabolic 여부 반환
         // ─────────────────────────────────────────────
         virtual bool IsParabolicBullet() const { return false; }
+        
+        // ─────────────────────────────────────────────
+        // 업데이트 중지 시스템 (MonsterUpdateSwitch 연동)
+        // - 팀원과 조율 후 Start()에서 호출 필요
+        // ─────────────────────────────────────────────
+        void CheckAndApplyUpdateSwitch();
         
         // ─────────────────────────────────────────────
         // 접근자 (Getters)

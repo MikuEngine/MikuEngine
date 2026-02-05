@@ -43,6 +43,16 @@
 		],
 		"Option": "SFX/Monster"
 	},
+		{ 
+		"Type": "SoundQue",
+		"Name": "Item_Gain_Random",
+		"Paths": [
+			"Resource/Sound/SFX/Item/Item_Gain_1.wav",
+			"Resource/Sound/SFX/Item/Item_Gain_2.wav",
+			"Resource/Sound/SFX/Item/Item_Gain_3.wav"
+		],
+		"Option": "SFX/Item"
+	},
 	{ "Type": "Sound", "Path": "Resource/Sound/Suki_Yuki_Maji_Magic.mp3", "Option": "BGM" },
 	{ "Type": "Sound", "Name": "UI_Open", "Path": "Resource/Sound/SFX/UI/UI_Open.wav", "Option": "SFX/UI" },
 	{ "Type": "Sound", "Name": "UI_Close", "Path": "Resource/Sound/SFX/UI/UI_Close.wav", "Option": "SFX/UI" },

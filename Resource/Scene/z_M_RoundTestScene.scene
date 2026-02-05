@@ -1,6 +1,6 @@
 {
     "Name": "z_M_RoundTestScene",
-    "NumGameObjects": 89,
+    "NumGameObjects": 90,
     "GameObjects": [
         {
             "ID": 0,
@@ -18372,7 +18372,7 @@
         {
             "ID": 80,
             "Name": "Monster_RoundType_Gray",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -18576,7 +18576,7 @@
         {
             "ID": 82,
             "Name": "Monster_RoundType_Green",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -18773,7 +18773,7 @@
         {
             "ID": 84,
             "Name": "Monster_RoundType_Blue",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -19247,6 +19247,39 @@
                         1.0,
                         1.0
                     ]
+                }
+            ]
+        },
+        {
+            "ID": 89,
+            "Name": "MonsterUpdateSwitch",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MonsterUpdateActivationSwitch",
+                    "Active": true,
+                    "ActivationDelay": 3.0,
+                    "IsUpdateAllowed": false
                 }
             ]
         }
