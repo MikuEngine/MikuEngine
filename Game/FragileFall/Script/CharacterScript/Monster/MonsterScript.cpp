@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -69,7 +69,7 @@ namespace game
 		FindPlayer();
 
 		// 첫 발사 쿨타임 설정 (게임 시작 즉시 발사 방지)
-		m_fireTimer = m_fireRate;
+		m_fireTimer = 0.0f;
 	}
 
 	void MonsterScript::Update()
@@ -639,7 +639,16 @@ namespace game
 
 		if (m_Hp <= 0 && currentState != "Fragile" && currentState != "Dead")
 		{
-			TriggerFragile();
+			// Pointed 타입만 Fragile 상태를 거침 (부활 가능, Execution 대상)
+			// Dull, Round 타입은 Fragile 없이 바로 Dead로 전이
+			if (m_attackType == AttackType::Pointed)
+			{
+				TriggerFragile();
+			}
+			else
+			{
+				TriggerDeath();
+			}
 		}
 	}
 

@@ -154,14 +154,13 @@ namespace game
         if (!m_logicFSM) return;
 
         // ─────────────────────────────────────────────
-        // 상태 정의
+        // 상태 정의 (Fragile 없음)
         // ─────────────────────────────────────────────
         AddFSMState("Idle", true);
         AddFSMState("IdleMove", false);
         AddFSMState("EngageMove", false);
         AddFSMState("EngageCollision", false);   // 충돌로 돌진 종료 → 회전+감속
         AddFSMState("EngageArrival", false);     // 목표 도달로 돌진 종료 → 직진+감속
-        AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
         m_logicFSM->Initialize();
@@ -174,7 +173,6 @@ namespace game
         m_logicFSM->SetParameter("EngageCollision", false);    // 충돌로 돌진 종료
         m_logicFSM->SetParameter("EngageArrival", false);      // 목표 도달로 돌진 종료
         m_logicFSM->SetParameter("TransitionComplete", false); // Collision/Arrival 완료
-        m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
 
         // ─────────────────────────────────────────────
@@ -199,15 +197,12 @@ namespace game
         // EngageArrival → Idle (1초 후)
         AddFSMTransition("EngageArrival", "Idle", "TransitionComplete", BoolTrue());
 
-        // Fragile 전이
-        AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("IdleMove", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageMove", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageCollision", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageArrival", "Fragile", "Fragile", Trigger());
-
-        AddFSMTransition("Fragile", "Dead", "Die", Trigger());
-        AddFSMTransition("Fragile", "Idle", "Revive", Trigger());
+        // Any → Dead (Round 타입은 Fragile 없이 바로 Dead로 전이)
+        AddFSMTransition("Idle", "Dead", "Die", Trigger());
+        AddFSMTransition("IdleMove", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageMove", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageCollision", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageArrival", "Dead", "Die", Trigger());
 
         m_logicFSM->InitializeCurrentState();
     }

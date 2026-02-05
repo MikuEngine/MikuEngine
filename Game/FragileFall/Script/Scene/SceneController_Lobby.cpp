@@ -19,6 +19,8 @@
 
 #include "Manager/TimeScaler.h"
 
+#include "Script/LobbyInteraction.h"
+
 namespace game
 {
     namespace
@@ -151,6 +153,10 @@ namespace game
         auto* playerAnim = m_playerPreview->GetComponent<engine::SkeletalAnimator>();
         if (playerAnim) playerAnim->Play("Idle", true);
 
+
+        auto* clickGO = engine::GameObject::Find("UIClickArea");
+        m_interaction = clickGO->GetComponent<LobbyInteraction>();
+
         // Load =======================================================
         auto* ugdGO = engine::GameObject::Find("UpgradeController");
         if (!ugdGO) return;
@@ -217,7 +223,7 @@ namespace game
             {
                 m_isPlayerMove = false;
                 game::LoadingScreenDrawer::OnSceneTransitionBegin();
-                engine::SceneManager::Get().ChangeScene("Prototype_Play");
+                engine::SceneManager::Get().ChangeScene("Stage1_Prototype");
             }
         }
     }
@@ -288,6 +294,8 @@ namespace game
             auto* img = m_blocker->GetComponent<engine::UIImage>();
             img->SetColor({ 0,0,0,0 });
         }
+
+        m_interaction->SetInteractionActive(false);
 
         auto* tr = m_playerPreview->GetTransform();
         if (!tr) return;

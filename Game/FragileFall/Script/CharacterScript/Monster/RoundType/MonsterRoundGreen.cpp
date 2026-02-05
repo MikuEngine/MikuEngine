@@ -156,12 +156,11 @@ namespace game
         if (!m_logicFSM) return;
 
         // ─────────────────────────────────────────────
-        // 상태 정의 (Green 전용)
+        // 상태 정의 (Green 전용 - Fragile 없음)
         // ─────────────────────────────────────────────
         AddFSMState("Idle", true);           // 기본 상태 (대기)
         AddFSMState("EngageMove", false);    // 대각선 등속 운동
         AddFSMState("EngageAttack", false);  // 공격 (이동 유지)
-        AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
         // ─────────────────────────────────────────────
@@ -176,7 +175,6 @@ namespace game
         m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
         m_logicFSM->SetParameter("CanFire", m_canFire);
         m_logicFSM->SetParameter("AttackComplete", false);
-        m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
 
         // ─────────────────────────────────────────────
@@ -192,16 +190,10 @@ namespace game
         // EngageAttack → EngageMove (공격 완료, 다음 프레임)
         AddFSMTransition("EngageAttack", "EngageMove", "AttackComplete", BoolTrue());
 
-        // Fragile 전이 (트리거 - 우선순위 높음)
-        AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageMove", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageAttack", "Fragile", "Fragile", Trigger());
-
-        // Fragile → Dead (Execution, Die 트리거)
-        AddFSMTransition("Fragile", "Dead", "Die", Trigger());
-        
-        // Fragile → Idle (부활, Revive 트리거)
-        AddFSMTransition("Fragile", "Idle", "Revive", Trigger());
+        // Any → Dead (Round 타입은 Fragile 없이 바로 Dead로 전이)
+        AddFSMTransition("Idle", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageMove", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageAttack", "Dead", "Die", Trigger());
 
         // ─────────────────────────────────────────────
         // 초기 상태 설정

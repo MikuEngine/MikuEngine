@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundRed.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -59,14 +59,13 @@ namespace game
         if (!m_logicFSM) return;
 
         // ─────────────────────────────────────────────
-        // 상태 정의
+        // 상태 정의 (Fragile 없음)
         // ─────────────────────────────────────────────
         AddFSMState("Idle", true);              // 기본 상태
         AddFSMState("EngageJumpReady", false);  // 점프 준비 (착지점 탐색)
         AddFSMState("EngageJump", false);       // 점프 중
         AddFSMState("EngageStop", false);       // 공격 사거리 내 정지
         AddFSMState("EngageAttack", false);     // 공격
-        AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
         // ─────────────────────────────────────────────
@@ -83,7 +82,6 @@ namespace game
         m_logicFSM->SetParameter("JumpComplete", false);       // 점프 착지 완료
         m_logicFSM->SetParameter("CanFire", m_canFire);
         m_logicFSM->SetParameter("AttackComplete", false);
-        m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
 
         // ─────────────────────────────────────────────
@@ -120,16 +118,12 @@ namespace game
         // EngageAttack → EngageAttack (공격 완료, 사거리 안, 즉시 재공격)
         AddFSMTransition("EngageAttack", "EngageAttack", "AttackComplete", BoolTrue(), "PlayerInRange", BoolTrue(), "CanFire", BoolTrue());
 
-        // Any → Fragile
-        AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageJumpReady", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageJump", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageStop", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageAttack", "Fragile", "Fragile", Trigger());
-
-        // Fragile → Dead / Revive
-        AddFSMTransition("Fragile", "Dead", "Die", Trigger());
-        AddFSMTransition("Fragile", "Idle", "Revive", Trigger());
+        // Any → Dead (Round 타입은 Fragile 없이 바로 Dead로 전이)
+        AddFSMTransition("Idle", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageJumpReady", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageJump", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageStop", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageAttack", "Dead", "Die", Trigger());
 
         // ─────────────────────────────────────────────
         // 초기 상태 설정
@@ -189,6 +183,30 @@ namespace game
             if (m_logicFSM)
             {
                 m_logicFSM->SetParameter("JumpComplete", false);
+            }
+        }
+        else if (state == "EngageAttack")
+        {
+            // ─────────────────────────────────────────────
+            // 공격점프 시스템 초기화
+            // ─────────────────────────────────────────────
+            m_fallAtkPhase = FallAttackPhase::Prepare;
+            m_fallAtkTimer = 0.0f;
+            m_fallAtkJumping = false;
+            m_fallAtkLandDelayStarted = false;
+            m_fallAtkStartPos = engine::Vector3::Zero;
+            m_fallAtkTargetPos = engine::Vector3::Zero;
+            
+            // Environment 충돌 무시 (공격점프~착지 동안)
+            if (auto* collider = GetGameObject()->GetComponent<engine::Collider>())
+            {
+                m_originalLayer = collider->GetLayer();
+                collider->SetLayer(engine::PhysicsLayer::Index::JumpingEnemy);
+            }
+            
+            if (m_logicFSM)
+            {
+                m_logicFSM->SetParameter("AttackComplete", false);
             }
         }
     }
@@ -331,8 +349,27 @@ namespace game
         }
         else if (state == "EngageAttack")
         {
-            StopAllMovement();
-            RotateTowardsPlayer();
+            // ─────────────────────────────────────────────
+            // 공격점프 물리 처리 (단계별)
+            // ─────────────────────────────────────────────
+            switch (m_fallAtkPhase)
+            {
+            case FallAttackPhase::Prepare:
+                ExecuteFallAttackPreparePhysics();
+                break;
+            case FallAttackPhase::Jump:
+                ExecuteFallAttackJumpPhysics();
+                return;  // Y 보정 안 함
+            case FallAttackPhase::Fall:
+                ExecuteFallAttackFallPhysics();
+                return;  // Y 보정 안 함
+            case FallAttackPhase::Land:
+                ExecuteFallAttackLandPhysics();
+                break;
+            default:
+                StopAllMovement();
+                break;
+            }
         }
         else if (state == "Idle")
         {
@@ -626,45 +663,151 @@ namespace game
     void MonsterRoundRed::InitializeBullet()
     {
         // Red: 기본 Linear 총알 (추후 특수 패턴으로 변경 가능)
-        m_bulletParams.type = BulletType::Linear;
+        m_bulletParams.type = BulletType::Curve;
         m_bulletParams.speed = m_bulletSpeed;
         m_bulletParams.lifetime = m_bulletLifetime;
         m_bulletParams.damage = m_attackDamage;
+        m_bulletParams.angularSpeed = 0.0;      // 회전 속도 (rad/s)
+        m_bulletParams.radiusGrowthRate = m_bulletSpeed;  // 반지름 증가율 (m/s)
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 공격 (Red 전용)
+    // 공격 (Red 전용 - 공격점프 시스템)
+    // 
+    // 로직:
+    //   1. Prepare: 대기 시간 후 플레이어 좌표 캡처
+    //   2. Jump: 상방 각도로 점프, XZ 도달 시 Velocity 0
+    //   3. Fall: 수직 낙하 (OwnFallAtkGravity)
+    //   4. Land: 착지 시 4방향 총알 발사, 사거리 체크 후 반복/전이
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundRed::Attack(float deltaTime)
     {
-        // 공격 애니메이션 타이머 업데이트
-        m_attackAnimationTimer += deltaTime;
-
-        // 발사 가능 상태
-        if (m_fireTimer <= 0.0f)
+        switch (m_fallAtkPhase)
         {
-            if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
-            {
-                // Red: 단순 직선 발사 (추후 특수 패턴으로 변경)
-                engine::Vector3 direction = CalculateDirectionToPlayer();
-                engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
-                
-                m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-
-                // 공격 애니메이션 재생
-                if (m_skeletalAnimator && !m_animName_EngageAttack.empty())
-                {
-                    m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
-                }
-
-                // 발사 쿨타임 리셋
-                m_fireTimer = m_fireRate;
-            }
+        case FallAttackPhase::Prepare:
+            ExecuteFallAttackPrepare(deltaTime);
+            break;
+            
+        case FallAttackPhase::Jump:
+            ExecuteFallAttackJump(deltaTime);
+            break;
+            
+        case FallAttackPhase::Fall:
+            ExecuteFallAttackFall(deltaTime);
+            break;
+            
+        case FallAttackPhase::Land:
+            ExecuteFallAttackLand(deltaTime);
+            break;
+            
+        case FallAttackPhase::None:
+        default:
+            // 공격 상태가 아님 - 초기화 필요
+            m_fallAtkPhase = FallAttackPhase::Prepare;
+            m_fallAtkTimer = 0.0f;
+            break;
         }
-
-        // 공격 애니메이션 완료 체크
-        if (m_attackAnimationTimer >= m_attackAnimationDuration)
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 공격 단계별 비물리 처리 (Update에서 호출)
+    // ═══════════════════════════════════════════════════════════════
+    
+    void MonsterRoundRed::ExecuteFallAttackPrepare(float deltaTime)
+    {
+        // 준비 타이머 증가
+        m_fallAtkTimer += deltaTime;
+        
+        // 대기 시간 완료
+        if (m_fallAtkTimer >= m_fallAtkPrepareTime)
         {
+            // 플레이어 좌표 캡처
+            CaptureAttackLandingPosition();
+            
+            // 공격점프 시작
+            StartFallAttackJump();
+            
+            // 다음 단계로 전이
+            m_fallAtkPhase = FallAttackPhase::Jump;
+        }
+    }
+    
+    void MonsterRoundRed::ExecuteFallAttackJump(float deltaTime)
+    {
+        // XZ 도달 판정
+        if (HasReachedAttackLandingXZ())
+        {
+            // Velocity 0으로 설정 (공중에서 정지)
+            if (m_rigidbody)
+            {
+                m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
+            }
+            
+            // 낙하 시작 Y 좌표 저장 (선형 보간 계산용)
+            m_fallAtkStartY = GetTransform()->GetWorldPosition().y;
+            
+            // 다음 단계로 전이
+            m_fallAtkPhase = FallAttackPhase::Fall;
+        }
+    }
+    
+    void MonsterRoundRed::ExecuteFallAttackFall(float deltaTime)
+    {
+        // 착지 판정
+        if (CheckFallAttackLanding())
+        {
+            // 착지 처리 (총알 발사 포함)
+            OnFallAttackLanding();
+            
+            // 다음 단계로 전이
+            m_fallAtkPhase = FallAttackPhase::Land;
+        }
+    }
+    
+    void MonsterRoundRed::ExecuteFallAttackLand(float deltaTime)
+    {
+        // ─────────────────────────────────────────────
+        // 착지 후딜레이 처리
+        // ─────────────────────────────────────────────
+        if (!m_fallAtkLandDelayStarted)
+        {
+            // 후딜레이 시작
+            m_fallAtkLandDelayStarted = true;
+            m_fallAtkTimer = 0.0f;
+        }
+        
+        m_fallAtkTimer += deltaTime;
+        
+        // 후딜레이 완료 전이면 대기
+        if (m_fallAtkTimer < m_fallAtkLandDelay)
+        {
+            return;
+        }
+        
+        // ─────────────────────────────────────────────
+        // 후딜레이 완료 → 사거리 체크
+        // ─────────────────────────────────────────────
+        m_isPlayerInRange = IsPlayerInRange();
+        m_fallAtkLandDelayStarted = false;  // 플래그 리셋
+        
+        if (m_isPlayerInRange)
+        {
+            // 사거리 내: 다시 Prepare로 (재공격)
+            m_fallAtkPhase = FallAttackPhase::Prepare;
+            m_fallAtkTimer = 0.0f;
+        }
+        else
+        {
+            // 사거리 밖: 공격 완료 → FSM이 다른 상태로 전이
+            m_fallAtkPhase = FallAttackPhase::None;
+            m_fallAtkJumping = false;
+            
+            // 레이어 복원 (Environment 충돌 재활성화)
+            if (auto* collider = GetGameObject()->GetComponent<engine::Collider>())
+            {
+                collider->SetLayer(m_originalLayer);
+            }
+            
             if (m_logicFSM)
             {
                 m_logicFSM->SetParameter("AttackComplete", true);
@@ -686,6 +829,244 @@ namespace game
     {
         std::string state = GetCurrentState();
         return state == "EngageAttack" && !m_isFragile && !m_isDead;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 공격 단계별 물리 처리 (FixedUpdate에서 호출)
+    // ═══════════════════════════════════════════════════════════════
+    
+    void MonsterRoundRed::ExecuteFallAttackPreparePhysics()
+    {
+        // 준비 중: 정지 + 플레이어 방향 회전
+        StopAllMovement();
+        RotateTowardsPlayer();
+    }
+    
+    void MonsterRoundRed::ExecuteFallAttackJumpPhysics()
+    {
+        // 공격점프 중: 의사중력 적용 (포물선 운동)
+        if (m_rigidbody)
+        {
+            constexpr float kFallAtkJumpGravity = 40.0f;  // 공격점프 전용 중력 (고정)
+            engine::Vector3 gravity(0.0f, -kFallAtkJumpGravity, 0.0f);
+            m_rigidbody->AddForce(gravity, engine::ForceMode::Acceleration);
+        }
+    }
+    
+    void MonsterRoundRed::ExecuteFallAttackFallPhysics()
+    {
+        if (!m_rigidbody) return;
+        
+        // ─────────────────────────────────────────────
+        // 높이 기반 선형 보간 낙하 속도
+        // ─────────────────────────────────────────────
+        float currentY = GetTransform()->GetWorldPosition().y;
+        float targetY = m_groundY + m_groundYOffset;
+        
+        // 진행률 계산 (0 = 시작, 1 = 착지)
+        float totalHeight = m_fallAtkStartY - targetY;
+        float t = 0.0f;
+        
+        if (totalHeight > 0.001f)
+        {
+            t = (m_fallAtkStartY - currentY) / totalHeight;
+            t = std::clamp(t, 0.0f, 1.0f);
+        }
+        
+        // 선형 보간: 초기 속도 → 종점 속도
+        float fallSpeed = m_fallAtkInitialFallSpeed + 
+            (m_fallAtkTerminalFallSpeed - m_fallAtkInitialFallSpeed) * t;
+        
+        // 하방 속도 설정 (직접 Velocity 지정)
+        m_rigidbody->SetLinearVelocity(engine::Vector3(0.0f, -fallSpeed, 0.0f));
+    }
+    
+    void MonsterRoundRed::ExecuteFallAttackLandPhysics()
+    {
+        // 착지 후: 정지
+        StopAllMovement();
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 공격점프 헬퍼 함수
+    // ═══════════════════════════════════════════════════════════════
+    
+    void MonsterRoundRed::CaptureAttackLandingPosition()
+    {
+        if (!m_targetPlayer) return;
+        
+        // 플레이어 좌표 캡처 (XZ만 사용, Y는 착지 판정에서 m_groundY + m_groundYOffset)
+        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+        m_fallAtkTargetPos = playerPos;
+        
+        // ─────────────────────────────────────────────
+        // 플레이어 이동 감지 → 예측 착지점 계산
+        // ─────────────────────────────────────────────
+        if (auto* playerRigidbody = m_targetPlayer->GetGameObject()->GetComponent<engine::Rigidbody>())
+        {
+            engine::Vector3 playerVel = playerRigidbody->GetLinearVelocity();
+            playerVel.y = 0.0f;  // XZ 평면만 고려
+            
+            float speed = std::sqrt(playerVel.x * playerVel.x + playerVel.z * playerVel.z);
+            
+            if (speed >= m_fallAtkMoveThreshold)
+            {
+                // 플레이어 이동 중 → 이동 방향으로 m_fallAtkPredictOffset만큼 앞
+                engine::Vector3 moveDir = playerVel;
+                moveDir.Normalize();
+                m_fallAtkTargetPos.x += moveDir.x * m_fallAtkPredictOffset;
+                m_fallAtkTargetPos.z += moveDir.z * m_fallAtkPredictOffset;
+            }
+            // 플레이어 정지 중 → 현재 위치 그대로 사용
+        }
+        
+        m_fallAtkTargetPos.y = m_groundY + m_groundYOffset;  // 착지 높이로 설정
+        
+        // 시작 위치 저장 (XZ 도달 판정용)
+        m_fallAtkStartPos = GetTransform()->GetWorldPosition();
+        
+        // ─────────────────────────────────────────────
+        // 착지점 마커 이동 (디버그 시각화)
+        // ─────────────────────────────────────────────
+        if (m_landingChecker && m_landingChecker->GetTransform())
+        {
+            m_landingChecker->GetTransform()->SetLocalPosition(m_fallAtkTargetPos);
+        }
+    }
+    
+    void MonsterRoundRed::StartFallAttackJump()
+    {
+        if (!m_rigidbody) return;
+        
+        m_fallAtkJumping = true;
+        
+        // ─────────────────────────────────────────────
+        // 공격점프 초속도 계산
+        // ─────────────────────────────────────────────
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        
+        // XZ 방향 계산 (착지점 방향)
+        engine::Vector3 direction = m_fallAtkTargetPos - myPos;
+        direction.y = 0.0f;
+        if (direction.LengthSquared() > 0.0001f)
+        {
+            direction.Normalize();
+        }
+        else
+        {
+            direction = engine::Vector3::UnitX;
+        }
+        
+        // 각도를 라디안으로 변환
+        constexpr float kDegToRad = 3.14159265f / 180.0f;
+        float angleRad = m_fallAtkLaunchAngle * kDegToRad;
+        
+        // 초기 속도 설정 (상방 각도)
+        float cosAngle = std::cos(angleRad);
+        float sinAngle = std::sin(angleRad);
+        
+        engine::Vector3 velocity = direction * (m_fallAtkJumpSpeed * cosAngle);
+        velocity.y = m_fallAtkJumpSpeed * sinAngle;
+        
+        // Rigidbody에 속도 설정
+        m_rigidbody->SetLinearVelocity(velocity);
+    }
+    
+    bool MonsterRoundRed::HasReachedAttackLandingXZ() const
+    {
+        engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+        
+        // XZ 평면에서 계산
+        float startX = m_fallAtkStartPos.x;
+        float startZ = m_fallAtkStartPos.z;
+        float targetX = m_fallAtkTargetPos.x;
+        float targetZ = m_fallAtkTargetPos.z;
+        float currentX = currentPos.x;
+        float currentZ = currentPos.z;
+        
+        // 시작점 → 착지점 방향 벡터
+        float toTargetX = targetX - startX;
+        float toTargetZ = targetZ - startZ;
+        float totalDist = std::sqrt(toTargetX * toTargetX + toTargetZ * toTargetZ);
+        
+        if (totalDist < 0.001f) return true;  // 거의 같은 위치
+        
+        // 정규화
+        float dirX = toTargetX / totalDist;
+        float dirZ = toTargetZ / totalDist;
+        
+        // 시작점 → 현재 위치 벡터
+        float toCurrentX = currentX - startX;
+        float toCurrentZ = currentZ - startZ;
+        
+        // 착지점 기준 - threshold 위치까지의 거리
+        float thresholdDist = totalDist - m_fallAtkLandingThreshold;
+        
+        // 현재 위치의 투영 거리 (내적)
+        float projectedDist = toCurrentX * dirX + toCurrentZ * dirZ;
+        
+        // threshold 거리를 넘었는지 판정
+        return projectedDist >= thresholdDist;
+    }
+    
+    bool MonsterRoundRed::CheckFallAttackLanding() const
+    {
+        float targetY = m_groundY + m_groundYOffset;
+        float currentY = GetTransform()->GetWorldPosition().y;
+        
+        return currentY <= targetY;
+    }
+    
+    void MonsterRoundRed::OnFallAttackLanding()
+    {
+        LOG_INFO("[MonsterRoundRed] OnFallAttackLanding called!");
+        
+        // ─────────────────────────────────────────────
+        // Y 위치 보정
+        // ─────────────────────────────────────────────
+        engine::Vector3 pos = GetTransform()->GetWorldPosition();
+        pos.y = m_groundY + m_groundYOffset;
+        GetTransform()->SetLocalPosition(pos);
+        
+        // ─────────────────────────────────────────────
+        // 속도 0
+        // ─────────────────────────────────────────────
+        if (m_rigidbody)
+        {
+            m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
+        }
+        
+        m_fallAtkJumping = false;
+        
+        // ─────────────────────────────────────────────
+        // 4방향 총알 발사
+        // ─────────────────────────────────────────────
+        FireFallAttackBullets();
+    }
+    
+    void MonsterRoundRed::FireFallAttackBullets()
+    {
+        if (!m_bulletFactory)
+        {
+            LOG_ERROR("[MonsterRoundRed] FireFallAttackBullets: m_bulletFactory is NULL!");
+            return;
+        }
+        
+        LOG_INFO("[MonsterRoundRed] FireFallAttackBullets: Firing 4-way bullets!");
+        
+        engine::Vector3 firePos = GetTransform()->GetWorldPosition();
+        
+        // ─────────────────────────────────────────────
+        // CurvedFireMonster 호출
+        // - angularSpeed = 0: 나선 회전 없음 (직선)
+        // - radiusGrowthRate = bulletSpeed: 4방향 직선 발사
+        // ─────────────────────────────────────────────
+        m_bulletFactory->CurvedFireMonster(
+            firePos,
+            m_bulletParams.angularSpeed,          
+            m_bulletParams.radiusGrowthRate,    // radiusGrowthRate = 총알 속도
+            m_bulletParams
+        );
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -727,6 +1108,59 @@ namespace game
             theoreticalMaxRange = (maxSpeed * maxSpeed * sin2Angle) / m_ownGravity;
         }
         ImGui::Text("Theoretical Max Range: %.1f m (no damping)", theoreticalMaxRange);
+        
+        // ─────────────────────────────────────────────
+        // 공격점프 설정
+        // ─────────────────────────────────────────────
+        ImGui::Separator();
+        ImGui::Text("=== Fall Attack Settings ===");
+        ImGui::DragFloat("Prepare Time", &m_fallAtkPrepareTime, 0.05f, 0.0f, 3.0f, "%.2f sec");
+        ImGui::DragFloat("Launch Angle##FallAtk", &m_fallAtkLaunchAngle, 1.0f, 45.0f, 85.0f, "%.1f deg");
+        ImGui::DragFloat("Jump Speed##FallAtk", &m_fallAtkJumpSpeed, 1.0f, 10.0f, 100.0f, "%.1f m/s");
+        ImGui::DragFloat("XZ Landing Threshold", &m_fallAtkLandingThreshold, 0.01f, 0.01f, 2.0f, "%.2f m");
+        
+        ImGui::Separator();
+        ImGui::Text("=== Fall Attack Prediction ===");
+        ImGui::DragFloat("Predict Offset", &m_fallAtkPredictOffset, 0.1f, 0.0f, 10.0f, "%.1f m");
+        ImGui::DragFloat("Move Threshold", &m_fallAtkMoveThreshold, 0.1f, 0.1f, 5.0f, "%.1f m/s");
+        
+        ImGui::Separator();
+        ImGui::Text("=== Fall Speed (Height-based Lerp) ===");
+        ImGui::DragFloat("Initial Fall Speed", &m_fallAtkInitialFallSpeed, 1.0f, 1.0f, 100.0f, "%.1f m/s");
+        ImGui::DragFloat("Terminal Fall Speed", &m_fallAtkTerminalFallSpeed, 1.0f, 1.0f, 150.0f, "%.1f m/s");
+        
+        ImGui::Separator();
+        ImGui::Text("=== Fall Attack Timing ===");
+        ImGui::DragFloat("Land Delay", &m_fallAtkLandDelay, 0.1f, 0.0f, 5.0f, "%.1f sec");
+        
+        // ─────────────────────────────────────────────
+        // 공격점프 사거리 (이동 점프와 독립)
+        // ─────────────────────────────────────────────
+        ImGui::DragFloat("Attack Range (Fall Atk)", &m_AttackRange, 0.5f, 1.0f, 50.0f, "%.1f m");
+        
+        // 공격점프 런타임 정보
+        ImGui::Separator();
+        ImGui::Text("=== Fall Attack Runtime ===");
+        
+        const char* phaseNames[] = { "None", "Prepare", "Jump", "Fall", "Land" };
+        int phaseIndex = static_cast<int>(m_fallAtkPhase);
+        if (phaseIndex >= 0 && phaseIndex < 5)
+        {
+            ImGui::Text("Phase: %s", phaseNames[phaseIndex]);
+        }
+        else
+        {
+            ImGui::Text("Phase: Unknown (%d)", phaseIndex);
+        }
+        
+        ImGui::Text("Prepare Timer: %.2f / %.2f", m_fallAtkTimer, m_fallAtkPrepareTime);
+        ImGui::Text("Is Fall Attack Jumping: %s", m_fallAtkJumping ? "Yes" : "No");
+        
+        if (m_fallAtkTargetPos != engine::Vector3::Zero)
+        {
+            ImGui::Text("Target Pos: (%.1f, %.1f, %.1f)", 
+                m_fallAtkTargetPos.x, m_fallAtkTargetPos.y, m_fallAtkTargetPos.z);
+        }
         
         // 런타임 정보
         ImGui::Separator();
@@ -782,6 +1216,18 @@ namespace game
         j["JumpCheckDelay"] = m_jumpCheckDelay;
         j["LandingYThreshold"] = m_landingYThreshold;
         j["LandingThreshold"] = m_landingThreshold;
+        
+        // 공격점프 설정
+        j["FallAtkPrepareTime"] = m_fallAtkPrepareTime;
+        j["FallAtkLaunchAngle"] = m_fallAtkLaunchAngle;
+        j["FallAtkJumpSpeed"] = m_fallAtkJumpSpeed;
+        j["FallAtkLandingThreshold"] = m_fallAtkLandingThreshold;
+        j["FallAtkPredictOffset"] = m_fallAtkPredictOffset;
+        j["FallAtkMoveThreshold"] = m_fallAtkMoveThreshold;
+        j["FallAtkInitialFallSpeed"] = m_fallAtkInitialFallSpeed;
+        j["FallAtkTerminalFallSpeed"] = m_fallAtkTerminalFallSpeed;
+        j["FallAtkLandDelay"] = m_fallAtkLandDelay;
+        // AttackRange는 부모 클래스에서 저장됨 (공격점프 사거리로 사용)
     }
 
     void MonsterRoundRed::Load(const engine::json& j)
@@ -801,5 +1247,17 @@ namespace game
         m_jumpCheckDelay = j.value("JumpCheckDelay", 0.05f);
         m_landingYThreshold = j.value("LandingYThreshold", 1.7f);
         m_landingThreshold = j.value("LandingThreshold", 0.005f);
+        
+        // 공격점프 설정
+        m_fallAtkPrepareTime = j.value("FallAtkPrepareTime", 0.3f);
+        m_fallAtkLaunchAngle = j.value("FallAtkLaunchAngle", 75.0f);
+        m_fallAtkJumpSpeed = j.value("FallAtkJumpSpeed", 40.0f);
+        m_fallAtkLandingThreshold = j.value("FallAtkLandingThreshold", 0.1f);
+        m_fallAtkPredictOffset = j.value("FallAtkPredictOffset", 1.5f);
+        m_fallAtkMoveThreshold = j.value("FallAtkMoveThreshold", 1.0f);
+        m_fallAtkInitialFallSpeed = j.value("FallAtkInitialFallSpeed", 20.0f);
+        m_fallAtkTerminalFallSpeed = j.value("FallAtkTerminalFallSpeed", 50.0f);
+        m_fallAtkLandDelay = j.value("FallAtkLandDelay", 1.0f);
+        // AttackRange는 부모 클래스에서 로드됨 (공격점프 사거리로 사용)
     }
 }

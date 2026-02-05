@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -305,7 +305,7 @@ namespace game
         // Dead 상태 후 파괴 타이머
         // ─────────────────────────────────────────────
         float m_deathTimer = 0.0f;
-        float m_deathDelay = 2.0f;  // Dead 상태 후 파괴까지 대기 시간 (초)
+        float m_deathDelay = 0.2f;  // Dead 상태 후 파괴까지 대기 시간 (초)
         bool m_deathTimerStarted = false;
         
         // ─────────────────────────────────────────────

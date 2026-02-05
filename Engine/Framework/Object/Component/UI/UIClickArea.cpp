@@ -42,6 +42,21 @@ namespace engine
 		m_onHover.push_back(std::move(cb));
 	}
 
+	void UIClickArea::AddOnBeginDrag(BeginDragCallback&& cb)
+	{
+		m_onBeginDrag.push_back(std::move(cb));
+	}
+
+	void UIClickArea::AddOnDrag(DragCallback&& cb)
+	{
+		m_onDrag.push_back(std::move(cb));
+	}
+
+	void UIClickArea::AddOnEndDrag(EndDragCallback&& cb)
+	{
+		m_onEndDrag.push_back(std::move(cb));
+	}
+
 	void UIClickArea::SetInteractable(bool v)
 	{
 		m_interactable = v;
@@ -79,6 +94,27 @@ namespace engine
 			if (sv->HitTestPoint(mousePos))
 				sv->OnScroll(mousePos, wheelDelta);
 		}
+	}
+
+	void UIClickArea::OnBeginDrag(const Vector2& mousePos, int mouseButton)
+	{
+		if (!m_interactable) return;
+		for (auto& cb : m_onBeginDrag)
+			cb(mousePos, mouseButton);
+	}
+
+	void UIClickArea::OnDrag(const Vector2& mousePos, const Vector2& delta, int mouseButton)
+	{
+		if (!m_interactable) return;
+		for (auto& cb : m_onDrag)
+			cb(mousePos, delta, mouseButton);
+	}
+
+	void UIClickArea::OnEndDrag(const Vector2& mousePos, int mouseButton)
+	{
+		if (!m_interactable) return;
+		for (auto& cb : m_onEndDrag)
+			cb(mousePos, mouseButton);
 	}
 
 	void UIClickArea::Save(json& j) const
