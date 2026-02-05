@@ -4,7 +4,7 @@
 
 namespace game
 {
-    class AimPointer;
+    class AimModeController;
 
     // ═══════════════════════════════════════════════════════════════
     // AimPointerMeshScript
@@ -23,7 +23,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 참조
         // ─────────────────────────────────────────────
-        AimPointer* m_aimPointer = nullptr;
+        AimModeController* m_aimPointer = nullptr;
 
         // ─────────────────────────────────────────────
         // 설정

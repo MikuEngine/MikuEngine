@@ -1,7 +1,7 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerAimMeshController.h"
 
-#include "Script/AimPointer.h"
+#include "Script/AimModeController.h"
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
@@ -167,7 +167,7 @@ namespace game
         // Player의 AimPointer
         if (!m_aimPointer && m_playerObject)
         {
-            m_aimPointer = m_playerObject->GetComponent<AimPointer>();
+            m_aimPointer = m_playerObject->GetComponent<AimModeController>();
         }
         
         // PlayerControllerScript 참조 및 콜백 등록

@@ -4,7 +4,7 @@
 #include <algorithm>  // std::remove_if
 #include <cmath>      // expf
 
-#include "Script/AimPointer.h"
+#include "Script/AimModeController.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Manager/PlayerTemperManager.h"
@@ -206,7 +206,7 @@ namespace game
 		// ─────────────────────────────────────────────
 		// AimPointer: 마우스 조준 방향 계산용
 		// ─────────────────────────────────────────────
-		m_aimPointer = GetGameObject()->GetComponent<AimPointer>();
+		m_aimPointer = GetGameObject()->GetComponent<AimModeController>();
 		if (!m_aimPointer)
 		{
 			auto* scene = engine::SceneManager::Get().GetScene();
@@ -215,7 +215,7 @@ namespace game
 				// 설정된 이름으로 씬에서 검색
 				if (auto* aimGO = scene->FindGameObject(m_aimPointerObjectName))
 				{
-					m_aimPointer = aimGO->GetComponent<AimPointer>();
+					m_aimPointer = aimGO->GetComponent<AimModeController>();
 				}
 				// 이름에 "AimPointer"가 포함된 오브젝트 검색 (폴백)
 				if (!m_aimPointer)
@@ -224,7 +224,7 @@ namespace game
 					{
 						if (go && go->GetName().find("AimPointer") != std::string::npos)
 						{
-							m_aimPointer = go->GetComponent<AimPointer>();
+							m_aimPointer = go->GetComponent<AimModeController>();
 							if (m_aimPointer) break;
 						}
 					}
@@ -1001,7 +1001,7 @@ namespace game
 		// 캐시된 참조 또는 직접 조회 (에디터에서 실시간 확인용)
 		engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
 		engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
-		AimPointer* aimPointer = m_aimPointer ? m_aimPointer : (GetGameObject() ? GetGameObject()->GetComponent<AimPointer>() : nullptr);
+		AimModeController* aimPointer = m_aimPointer ? m_aimPointer : (GetGameObject() ? GetGameObject()->GetComponent<AimModeController>() : nullptr);
 		BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
 
 		// 전체 유효성 확인

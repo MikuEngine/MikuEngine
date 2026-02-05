@@ -13,10 +13,17 @@ namespace engine
 
 namespace game
 {
-    class AimPointer :
-        public engine::Script<AimPointer>
+    class AimModeController :
+        public engine::Script<AimModeController>
     {
-        REGISTER_SCRIPT(AimPointer, Script)
+        REGISTER_SCRIPT(AimModeController, Script)
+
+    public:
+        enum class AimMode
+        {
+            Pointer,     // 기본 UI 포인터(메뉴/로비 등)
+            CombatAim,   // 전투 조준(월드 에임 + 레티클/커서)
+        };
 
     private:
         enum class AimCursorState
@@ -31,6 +38,41 @@ namespace game
             Count
         };
 
+    public:
+        void Awake() override;
+        void Start() override;
+        void Update() override;
+
+        void OnGui() override;
+        void Save(engine::json& j) const override;
+        void Load(const engine::json& j) override;
+
+    public:
+        void SetCombatAimEnabled(bool enabled); // 전투모드 on/off
+        void SetPaused(bool paused);            // 퍼즈상태
+
+        AimMode GetEffectiveMode() const { return ComputeEffectiveMode(); }
+
+    public:
+        /** 이동 중일 때만 Y 보정 적용. 서서 쏠 때는 0, 걸을 때만 m_aimYOffsetWhenMoving 사용 */
+        void SetMoving(bool moving) { m_isMoving = moving; }
+
+        // 플레이어에서 에임포인터 방향을 얻는 함수
+        engine::Vector3 GetDirectionFrom(const engine::Vector3& fromPosition) const;
+
+        // 현재 에임포인터 월드 위치
+        const engine::Vector3& GetWorldPosition() const { return m_worldPosition; }
+
+    private:
+        AimMode m_baseMode = AimMode::Pointer;
+        bool    m_combatAimEnabled = false;
+        bool    m_paused = false;
+
+        AimMode ComputeEffectiveMode() const;
+        void SetCursorTexture(AimCursorState state);
+
+
+        // World Aim
         engine::Vector3 m_worldPosition;  // 마우스 월드 좌표
 
         // UI 커서 컴포넌트 (씬의 Canvas 오브젝트에서 관리)
@@ -51,44 +93,22 @@ namespace game
         engine::Vector2 m_cursorSize{ 30.0f, 30.0f };
         engine::Vector2 m_cursorPivot{ 0.0f, 0.0f };
 
-
-
         // 월드 좌표 계산 설정
         float m_targetPlaneY = 1.5f;  // 레이캐스트 대상 평면의 Y 높이 (총알 발사 높이)
         /** 서서 쏠 때는 0, 걸을 때만 적용되는 에임 Y 보정 (양수=위, 음수=아래). 서서 쏠 때는 Target Plane Y로 조정 */
         float m_aimYOffsetWhenMoving = 0.0f;
         bool m_isMoving = false;  // 플레이어가 이동 중인지 (외부에서 SetMoving으로 설정)
 
-    public:
-        /** 이동 중일 때만 Y 보정 적용. 서서 쏠 때는 0, 걸을 때만 m_aimYOffsetWhenMoving 사용 */
-        void SetMoving(bool moving) { m_isMoving = moving; }
-
-        void Awake() override;
-        void Start() override;
-        void Update() override;
-
-        // 플레이어에서 에임포인터 방향을 얻는 함수
-        engine::Vector3 GetDirectionFrom(const engine::Vector3& fromPosition) const;
-
-        // 현재 에임포인터 월드 위치
-        const engine::Vector3& GetWorldPosition() const { return m_worldPosition; }
-
-        // 커서 이미지 교체 헬퍼
-        void SetCursorTexture(AimCursorState state);
-
-    public:
-        void OnGui() override;
-        void Save(engine::json& j) const override;
-        void Load(const engine::json& j) override;
 
     private:
         void EnsureUICursor();
         void UpdateWorldPositionFromMouse(const engine::Vector2& mousePos);
 
+        void SetCursorVisible(bool visible);
+        AimCursorState ComputeDesiredCursorState(AimMode mode) const;
+
     private:
-        void TickWorldAim(const engine::Vector2& mousePx);  // 월드계산(기존 로직 호출)
-        void TickUICursor(const engine::Vector2& mousePx);  // UI 표시
+        void TickWorldAim(const engine::Vector2& mousePx, AimMode mode);  // 월드계산(기존 로직 호출)
+        void TickUICursor(const engine::Vector2& mousePx, AimMode mode);  // UI 표시
     };
 }
-
-
