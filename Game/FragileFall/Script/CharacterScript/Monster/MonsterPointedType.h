@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -94,7 +94,9 @@ namespace game
         void InitializeAnimFSM() override;
         void InitializeAnimations() override;
         void InitializeBullet() override;
-        
+
+        void MoveTowardsPlayer() override;
+
         // 입력 처리 (FSM 파라미터 업데이트)
         void ProcessInput() override;
        
@@ -139,6 +141,9 @@ namespace game
         
         // 헬퍼 함수
         bool IsPlayerInDetectionRange() const;
+
+        // Y축 회전 (길찾기/Engage 시 방향 전환용, BaseControllerScript 로직 무관)
+        void RotateTowardsDirection(const engine::Vector3& targetDirection);
 
         // 뾰족 보라 - 패스파인딩 기반 도망
         bool TrySelectFleeTarget();             // 도망 위치 선정 시도 (최대 10회)

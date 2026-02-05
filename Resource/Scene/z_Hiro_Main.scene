@@ -1,6 +1,6 @@
 {
     "Name": "z_Hiro_Main",
-    "NumGameObjects": 60,
+    "NumGameObjects": 61,
     "GameObjects": [
         {
             "ID": 0,
@@ -251,7 +251,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "Fragile\n        Fall",
+                    "Text": "Fragile\nFall",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 150,
                     "Color": {
@@ -262,7 +262,7 @@
                     },
                     "AlphaBlend": true,
                     "Bold": true,
-                    "AlignH": 0,
+                    "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
@@ -354,8 +354,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 120.0,
-                        "y": -70.0
+                        "x": -80.0,
+                        "y": 0.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -500,18 +500,18 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
+                        "x": 0.8392156958580017,
+                        "y": 0.8392156958580017,
+                        "z": 0.8392156958580017,
                         "w": 1.0
                     },
                     "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
+                        "x": 0.6666666865348816,
+                        "y": 0.6666666865348816,
+                        "z": 0.6666666865348816,
                         "w": 1.0
                     },
                     "TintDisabled": {
@@ -554,7 +554,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
@@ -581,7 +581,8 @@
                     "Type": "UIHoverScale",
                     "Active": true,
                     "HoverScale": 1.100000023841858,
-                    "Speed": 12.0
+                    "Speed": 12.0,
+                    "Bold": true
                 }
             ]
         },
@@ -641,7 +642,7 @@
                     "RaycastTarget": false,
                     "Text": "게임 시작",
                     "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPx": 50,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -720,7 +721,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "TintHover": {
                         "x": 0.837837815284729,
@@ -774,7 +775,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
@@ -801,7 +802,8 @@
                     "Type": "UIHoverScale",
                     "Active": true,
                     "HoverScale": 1.100000023841858,
-                    "Speed": 12.0
+                    "Speed": 12.0,
+                    "Bold": true
                 }
             ]
         },
@@ -861,7 +863,7 @@
                     "RaycastTarget": false,
                     "Text": "설정",
                     "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPx": 50,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -940,7 +942,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "TintHover": {
                         "x": 0.837837815284729,
@@ -994,7 +996,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
@@ -1021,7 +1023,8 @@
                     "Type": "UIHoverScale",
                     "Active": true,
                     "HoverScale": 1.100000023841858,
-                    "Speed": 12.0
+                    "Speed": 12.0,
+                    "Bold": true
                 }
             ]
         },
@@ -1081,7 +1084,7 @@
                     "RaycastTarget": false,
                     "Text": "크레딧",
                     "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPx": 50,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -1160,7 +1163,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "TintHover": {
                         "x": 0.837837815284729,
@@ -1214,7 +1217,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
@@ -1241,7 +1244,8 @@
                     "Type": "UIHoverScale",
                     "Active": true,
                     "HoverScale": 1.100000023841858,
-                    "Speed": 12.0
+                    "Speed": 12.0,
+                    "Bold": true
                 }
             ]
         },
@@ -1301,7 +1305,7 @@
                     "RaycastTarget": false,
                     "Text": "게임 종료",
                     "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPx": 50,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -1344,10 +1348,6 @@
                 },
                 {
                     "Type": "SceneController_Main",
-                    "Active": true
-                },
-                {
-                    "Type": "TutorialController",
                     "Active": true
                 }
             ]
@@ -1670,7 +1670,8 @@
                     "Type": "UIHoverScale",
                     "Active": true,
                     "HoverScale": 1.100000023841858,
-                    "Speed": 12.0
+                    "Speed": 12.0,
+                    "Bold": false
                 }
             ]
         },
@@ -1777,9 +1778,9 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -300.0
+                        "y": -230.0
                     },
-                    "Width": 150.0,
+                    "Width": 100.0,
                     "Height": 100.0,
                     "Pivot": {
                         "x": 0.5,
@@ -1800,7 +1801,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "설정\n",
+                    "Text": "설정",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 70,
                     "Color": {
@@ -1821,6 +1822,56 @@
         {
             "ID": 20,
             "ParentID": 16,
+            "Name": "UIObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 15.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 21,
+            "ParentID": 20,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -1901,8 +1952,8 @@
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 20,
+            "ID": 22,
+            "ParentID": 21,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -2007,8 +2058,8 @@
             ]
         },
         {
-            "ID": 22,
-            "ParentID": 20,
+            "ID": 23,
+            "ParentID": 21,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -2092,9 +2143,9 @@
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
-                        "y": 555.0,
+                        "y": 570.0,
                         "z": 1260.0,
-                        "w": 605.0
+                        "w": 620.0
                     },
                     "MaskMode": 1,
                     "Mask0": {
@@ -2113,8 +2164,8 @@
             ]
         },
         {
-            "ID": 23,
-            "ParentID": 20,
+            "ID": 24,
+            "ParentID": 21,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -2219,8 +2270,8 @@
             ]
         },
         {
-            "ID": 24,
-            "ParentID": 16,
+            "ID": 25,
+            "ParentID": 20,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -2301,8 +2352,8 @@
             ]
         },
         {
-            "ID": 25,
-            "ParentID": 24,
+            "ID": 26,
+            "ParentID": 25,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -2407,8 +2458,8 @@
             ]
         },
         {
-            "ID": 26,
-            "ParentID": 24,
+            "ID": 27,
+            "ParentID": 25,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -2492,9 +2543,9 @@
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
-                        "y": 685.0,
+                        "y": 700.0,
                         "z": 1260.0,
-                        "w": 735.0
+                        "w": 750.0
                     },
                     "MaskMode": 1,
                     "Mask0": {
@@ -2513,8 +2564,8 @@
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 24,
+            "ID": 28,
+            "ParentID": 25,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -2619,8 +2670,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 16,
+            "ID": 29,
+            "ParentID": 20,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -2701,8 +2752,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 28,
+            "ID": 30,
+            "ParentID": 29,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -2807,8 +2858,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 28,
+            "ID": 31,
+            "ParentID": 29,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -2892,9 +2943,9 @@
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
-                        "y": 815.0,
+                        "y": 830.0,
                         "z": 1260.0,
-                        "w": 865.0
+                        "w": 880.0
                     },
                     "MaskMode": 1,
                     "Mask0": {
@@ -2913,8 +2964,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 28,
+            "ID": 32,
+            "ParentID": 29,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -3019,8 +3070,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 16,
+            "ID": 33,
+            "ParentID": 20,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -3091,8 +3142,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 16,
+            "ID": 34,
+            "ParentID": 20,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -3163,8 +3214,8 @@
             ]
         },
         {
-            "ID": 34,
-            "ParentID": 16,
+            "ID": 35,
+            "ParentID": 20,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -3235,7 +3286,7 @@
             ]
         },
         {
-            "ID": 35,
+            "ID": 36,
             "ParentID": 15,
             "Name": "UI_CreditPopUp",
             "Active": false,
@@ -3354,8 +3405,8 @@
             ]
         },
         {
-            "ID": 36,
-            "ParentID": 35,
+            "ID": 37,
+            "ParentID": 36,
             "Name": "UI_CloseButton_Credit",
             "Active": true,
             "Components": [
@@ -3497,13 +3548,14 @@
                     "Type": "UIHoverScale",
                     "Active": true,
                     "HoverScale": 1.100000023841858,
-                    "Speed": 12.0
+                    "Speed": 12.0,
+                    "Bold": false
                 }
             ]
         },
         {
-            "ID": 37,
-            "ParentID": 36,
+            "ID": 38,
+            "ParentID": 37,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -3574,8 +3626,8 @@
             ]
         },
         {
-            "ID": 38,
-            "ParentID": 35,
+            "ID": 39,
+            "ParentID": 36,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -3646,8 +3698,8 @@
             ]
         },
         {
-            "ID": 39,
-            "ParentID": 35,
+            "ID": 40,
+            "ParentID": 36,
             "Name": "NameTag",
             "Active": true,
             "Components": [
@@ -3759,8 +3811,8 @@
             ]
         },
         {
-            "ID": 40,
-            "ParentID": 39,
+            "ID": 41,
+            "ParentID": 40,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -3831,8 +3883,8 @@
             ]
         },
         {
-            "ID": 41,
-            "ParentID": 39,
+            "ID": 42,
+            "ParentID": 40,
             "Name": "Text_Name",
             "Active": true,
             "Components": [
@@ -3903,8 +3955,8 @@
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 35,
+            "ID": 43,
+            "ParentID": 36,
             "Name": "NameTag",
             "Active": true,
             "Components": [
@@ -4016,8 +4068,8 @@
             ]
         },
         {
-            "ID": 43,
-            "ParentID": 42,
+            "ID": 44,
+            "ParentID": 43,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -4088,8 +4140,8 @@
             ]
         },
         {
-            "ID": 44,
-            "ParentID": 42,
+            "ID": 45,
+            "ParentID": 43,
             "Name": "Text_Name",
             "Active": true,
             "Components": [
@@ -4160,8 +4212,8 @@
             ]
         },
         {
-            "ID": 45,
-            "ParentID": 35,
+            "ID": 46,
+            "ParentID": 36,
             "Name": "NameTag",
             "Active": true,
             "Components": [
@@ -4273,8 +4325,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 45,
+            "ID": 47,
+            "ParentID": 46,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -4345,8 +4397,8 @@
             ]
         },
         {
-            "ID": 47,
-            "ParentID": 45,
+            "ID": 48,
+            "ParentID": 46,
             "Name": "Text_Name",
             "Active": true,
             "Components": [
@@ -4417,7 +4469,7 @@
             ]
         },
         {
-            "ID": 48,
+            "ID": 49,
             "ParentID": 15,
             "Name": "UI_RealQuitPopUp",
             "Active": false,
@@ -4530,8 +4582,8 @@
             ]
         },
         {
-            "ID": 49,
-            "ParentID": 48,
+            "ID": 50,
+            "ParentID": 49,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -4602,8 +4654,8 @@
             ]
         },
         {
-            "ID": 50,
-            "ParentID": 48,
+            "ID": 51,
+            "ParentID": 49,
             "Name": "Notice",
             "Active": true,
             "Components": [
@@ -4674,8 +4726,8 @@
             ]
         },
         {
-            "ID": 51,
-            "ParentID": 48,
+            "ID": 52,
+            "ParentID": 49,
             "Name": "OK_Button",
             "Active": true,
             "Components": [
@@ -4816,8 +4868,8 @@
             ]
         },
         {
-            "ID": 52,
-            "ParentID": 51,
+            "ID": 53,
+            "ParentID": 52,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -4888,8 +4940,8 @@
             ]
         },
         {
-            "ID": 53,
-            "ParentID": 48,
+            "ID": 54,
+            "ParentID": 49,
             "Name": "Cancel_Button",
             "Active": true,
             "Components": [
@@ -5030,8 +5082,8 @@
             ]
         },
         {
-            "ID": 54,
-            "ParentID": 53,
+            "ID": 55,
+            "ParentID": 54,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -5102,7 +5154,7 @@
             ]
         },
         {
-            "ID": 55,
+            "ID": 56,
             "Name": "Canvas_Blocker",
             "Active": true,
             "Components": [
@@ -5157,8 +5209,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 55,
+            "ID": 57,
+            "ParentID": 56,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -5270,7 +5322,7 @@
             ]
         },
         {
-            "ID": 57,
+            "ID": 58,
             "Name": "SoundObject",
             "Active": true,
             "Components": [
@@ -5311,7 +5363,7 @@
             ]
         },
         {
-            "ID": 58,
+            "ID": 59,
             "Name": "AimPointerCanvas",
             "Active": true,
             "Components": [
@@ -5407,8 +5459,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 58,
+            "ID": 60,
+            "ParentID": 59,
             "Name": "AimCursor",
             "Active": true,
             "Components": [

@@ -1,6 +1,6 @@
 {
     "Name": "Stage1_Prototype",
-    "NumGameObjects": 49,
+    "NumGameObjects": 51,
     "GameObjects": [
         {
             "ID": 0,
@@ -9112,220 +9112,6 @@
         },
         {
             "ID": 2,
-            "Name": "PlayerAnimMesh",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "PlayerAimMeshController",
-                    "Active": true,
-                    "PlayerObjectName": "Player",
-                    "AimPointerMeshObjectName": "AimPointerMesh",
-                    "FixedY": 0.0,
-                    "LowerBodyAimThresholdDeg": 30.0,
-                    "LowerBodyTurnSpeed": 8.0,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_WalkForward": "WalkForward",
-                    "AnimName_WalkBackward": "WalkBackward",
-                    "AnimName_Fire": "Fire",
-                    "AnimName_Dash": "Dash",
-                    "FireAnimShootFrameTime": 0.36000001430511475,
-                    "UpperBodyAimOffsetDeg": 90.0,
-                    "UpperBodyYawScale": 2.0,
-                    "GunBoneName": "DEF-Weapon",
-                    "HandBoneName": "Snap-Hand.L",
-                    "BackwardThreshold": -0.10000000149011612,
-                    "ForwardThreshold": 0.10000000149011612,
-                    "ShootingDuration": 0.5
-                },
-                {
-                    "Type": "AnimFSM",
-                    "Active": true,
-                    "LogicFSMObjectName": "Player",
-                    "BaseLayerIndex": 0,
-                    "UpperBodyLayerIndex": 1,
-                    "EnableProceduralAim": true,
-                    "MaxYaw": 70.0,
-                    "MaxPitch": 45.0,
-                    "AimLerpSpeed": 30.0,
-                    "SpineBoneName": "Spine",
-                    "AnimStates": []
-                },
-                {
-                    "Type": "SkeletalMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/main_character_final.fbx.socketdata",
-                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "SkeletalAnimator",
-                    "Active": true,
-                    "Animations": [
-                        {
-                            "Name": "Dash",
-                            "Path": "Resource/Animation/main_character_animation_dash.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "Fire",
-                            "Path": "Resource/Animation/main_character_animation_shooting.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "Idle",
-                            "Path": "Resource/Animation/main_character_animation_idle.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "WalkBackward",
-                            "Path": "Resource/Animation/main_character_animation_running.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "WalkForward",
-                            "Path": "Resource/Animation/main_character_animation_running.fbx",
-                            "Notifies": []
-                        }
-                    ],
-                    "Layers": [
-                        {
-                            "Name": "New Layer",
-                            "Weight": 1.0,
-                            "BlendMode": 0,
-                            "MaskBones": [
-                                "Player_Rig",
-                                "Hips",
-                                "DEF-Weapon",
-                                "Ctrl-Weapon",
-                                "Spine",
-                                "UpLeg.Left",
-                                "UpLeg.Right",
-                                "Spine1",
-                                "Leg.Left",
-                                "Leg.Right",
-                                "Spine2",
-                                "Foot.Left",
-                                "Foot.Right",
-                                "Neck",
-                                "Shoulder.Left",
-                                "Shoulder.Right",
-                                "ToeBase.Left",
-                                "ToeBase.Right",
-                                "Head",
-                                "Arm.Left",
-                                "Arm.Right",
-                                "Toe_End.Left",
-                                "Toe_End.Right",
-                                "HeadTop_End",
-                                "ForeArm.Left",
-                                "ForeArm.Right",
-                                "Hand.Left",
-                                "Hand.Right",
-                                "HandThumb1.Left",
-                                "HandIndex1.Left",
-                                "HandThumb1.Right",
-                                "HandIndex1.Right",
-                                "HandThumb2.Left",
-                                "HandIndex2.Left",
-                                "Snap-Hand.L",
-                                "HandThumb2.Right",
-                                "HandIndex2.Right",
-                                "HandThumb3.Left",
-                                "HandIndex3.Left",
-                                "HandThumb3.Right",
-                                "HandIndex3.Right",
-                                "HandThumb4.Left",
-                                "HandIndex4.Left",
-                                "HandThumb4.Right",
-                                "HandIndex4.Right"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Type": "AfterimageRenderer",
-                    "Active": true,
-                    "DrawSolidLayer": true,
-                    "SolidColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "SolidInitialAlpha": 0.6399999856948853,
-                    "SolidDecaySpeed": 7.599999904632568,
-                    "SolidDecayMode": 0,
-                    "SolidDecayCurve": 1,
-                    "SolidEmissiveIntensity": 11.300000190734863,
-                    "SolidTrailGradient": 0.4099999964237213,
-                    "SolidMaxSlices": 24,
-                    "SolidSampleInterval": 0.03500000014901161,
-                    "DrawAlphaLayer": false,
-                    "AlphaTint": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "AlphaEmissiveIntensity": 0.0,
-                    "AlphaInitialAlpha": 0.699999988079071,
-                    "AlphaDecaySpeed": 1.5,
-                    "AlphaDecayMode": 0,
-                    "AlphaDecayCurve": 1,
-                    "AlphaTrailGradient": 0.9200000166893005,
-                    "AlphaMaxSlices": 24,
-                    "AlphaSampleInterval": 0.0
-                }
-            ]
-        },
-        {
-            "ID": 3,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -9392,65 +9178,7 @@
             ]
         },
         {
-            "ID": 4,
-            "Name": "ExcutionIndicatorManager",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "ExecutionIndicatorManager",
-                    "Active": true,
-                    "IndicatorPrefabName": "ExcutionIndicator",
-                    "RaycastMaxDistance": 1000.0,
-                    "IndicatorOffset": {
-                        "x": 0.0,
-                        "y": 1.5,
-                        "z": -0.5
-                    },
-                    "LinePrefabName": "IndicatorLine",
-                    "LinePlayerOffset": 1.0,
-                    "LineMonsterOffset": 1.5,
-                    "LineBaseLength": 0.5,
-                    "LineHeight": 0.6000000238418579,
-                    "EffectPrefabName": "ExcutionEffectSprite",
-                    "EffectDuration": 0.800000011920929,
-                    "EffectScaleMultiplier": 1.5,
-                    "MonsterDeathDelay": 0.05000000074505806,
-                    "TriggerWaitFramesRequired": 1
-                },
-                {
-                    "Type": "ExecutionSlowScript",
-                    "Active": true,
-                    "SlowDuration": 1.5,
-                    "TargetTimeScale": 0.20000000298023224,
-                    "UseCrossfade": true,
-                    "FadeInRatio": 0.20000000298023224,
-                    "SustainRatio": 0.6000000238418579,
-                    "FadeOutRatio": 0.20000000298023224
-                }
-            ]
-        },
-        {
-            "ID": 5,
+            "ID": 3,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -9591,7 +9319,7 @@
             ]
         },
         {
-            "ID": 6,
+            "ID": 4,
             "Name": "Environment",
             "Active": true,
             "Components": [
@@ -9618,8 +9346,8 @@
             ]
         },
         {
-            "ID": 7,
-            "ParentID": 6,
+            "ID": 5,
+            "ParentID": 4,
             "Name": "DirectionalLight",
             "Active": true,
             "Components": [
@@ -9665,8 +9393,8 @@
             ]
         },
         {
-            "ID": 8,
-            "ParentID": 6,
+            "ID": 6,
+            "ParentID": 4,
             "Name": "SkyBox",
             "Active": true,
             "Components": [
@@ -9719,8 +9447,8 @@
             ]
         },
         {
-            "ID": 9,
-            "ParentID": 6,
+            "ID": 7,
+            "ParentID": 4,
             "Name": "PostProcessing",
             "Active": true,
             "Components": [
@@ -9761,7 +9489,7 @@
             ]
         },
         {
-            "ID": 10,
+            "ID": 8,
             "Name": "Map",
             "Active": true,
             "Components": [
@@ -9788,8 +9516,8 @@
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 10,
+            "ID": 9,
+            "ParentID": 8,
             "Name": "WallFront",
             "Active": true,
             "Components": [
@@ -9802,10 +9530,10 @@
                         "z": 25.200000762939453
                     },
                     "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
+                        "x": 0.0,
+                        "y": 1.0,
                         "z": -0.0,
-                        "w": 1.0
+                        "w": -4.371138828673793e-08
                     },
                     "Scale": {
                         "x": 1.2999999523162842,
@@ -9873,8 +9601,8 @@
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 10,
+            "ID": 10,
+            "ParentID": 8,
             "Name": "WallBack",
             "Active": true,
             "Components": [
@@ -9958,8 +9686,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 10,
+            "ID": 11,
+            "ParentID": 8,
             "Name": "WallLeft",
             "Active": true,
             "Components": [
@@ -10020,8 +9748,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 13,
+            "ID": 12,
+            "ParentID": 11,
             "Name": "WallLeft2",
             "Active": true,
             "Components": [
@@ -10105,8 +9833,8 @@
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 10,
+            "ID": 13,
+            "ParentID": 8,
             "Name": "WallRight",
             "Active": true,
             "Components": [
@@ -10167,8 +9895,8 @@
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 15,
+            "ID": 14,
+            "ParentID": 13,
             "Name": "WallRight2",
             "Active": true,
             "Components": [
@@ -10252,8 +9980,8 @@
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 10,
+            "ID": 15,
+            "ParentID": 8,
             "Name": "Ground",
             "Active": true,
             "Components": [
@@ -10314,8 +10042,8 @@
             ]
         },
         {
-            "ID": 18,
-            "ParentID": 10,
+            "ID": 16,
+            "ParentID": 8,
             "Name": "Door",
             "Active": true,
             "Components": [
@@ -10376,8 +10104,8 @@
             ]
         },
         {
-            "ID": 19,
-            "ParentID": 10,
+            "ID": 17,
+            "ParentID": 8,
             "Name": "DoorTorchLeft",
             "Active": true,
             "Components": [
@@ -10438,8 +10166,8 @@
             ]
         },
         {
-            "ID": 20,
-            "ParentID": 19,
+            "ID": 18,
+            "ParentID": 17,
             "Name": "TorchLight",
             "Active": true,
             "Components": [
@@ -10504,8 +10232,8 @@
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 10,
+            "ID": 19,
+            "ParentID": 8,
             "Name": "DoorTorchRight",
             "Active": true,
             "Components": [
@@ -10566,8 +10294,8 @@
             ]
         },
         {
-            "ID": 22,
-            "ParentID": 21,
+            "ID": 20,
+            "ParentID": 19,
             "Name": "TorchLight",
             "Active": true,
             "Components": [
@@ -10632,8 +10360,8 @@
             ]
         },
         {
-            "ID": 23,
-            "ParentID": 10,
+            "ID": 21,
+            "ParentID": 8,
             "Name": "RockStickingOut1",
             "Active": true,
             "Components": [
@@ -10717,8 +10445,8 @@
             ]
         },
         {
-            "ID": 24,
-            "ParentID": 10,
+            "ID": 22,
+            "ParentID": 8,
             "Name": "RockStickingOut2",
             "Active": true,
             "Components": [
@@ -10798,8 +10526,8 @@
             ]
         },
         {
-            "ID": 25,
-            "ParentID": 10,
+            "ID": 23,
+            "ParentID": 8,
             "Name": "RockStickingOut1",
             "Active": true,
             "Components": [
@@ -10883,8 +10611,8 @@
             ]
         },
         {
-            "ID": 26,
-            "ParentID": 10,
+            "ID": 24,
+            "ParentID": 8,
             "Name": "RockStickingOut2",
             "Active": true,
             "Components": [
@@ -10964,8 +10692,8 @@
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 10,
+            "ID": 25,
+            "ParentID": 8,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -11026,8 +10754,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 27,
+            "ID": 26,
+            "ParentID": 25,
             "Name": "LightWhite",
             "Active": true,
             "Components": [
@@ -11073,8 +10801,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 10,
+            "ID": 27,
+            "ParentID": 8,
             "Name": "CrystalBlue",
             "Active": true,
             "Components": [
@@ -11135,8 +10863,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 29,
+            "ID": 28,
+            "ParentID": 27,
             "Name": "LightBlue",
             "Active": true,
             "Components": [
@@ -11182,8 +10910,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 10,
+            "ID": 29,
+            "ParentID": 8,
             "Name": "CrystalGreen",
             "Active": true,
             "Components": [
@@ -11244,8 +10972,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 31,
+            "ID": 30,
+            "ParentID": 29,
             "Name": "LightGreen",
             "Active": true,
             "Components": [
@@ -11291,8 +11019,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 10,
+            "ID": 31,
+            "ParentID": 8,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -11353,8 +11081,8 @@
             ]
         },
         {
-            "ID": 34,
-            "ParentID": 33,
+            "ID": 32,
+            "ParentID": 31,
             "Name": "LightPurple",
             "Active": true,
             "Components": [
@@ -11400,8 +11128,8 @@
             ]
         },
         {
-            "ID": 35,
-            "ParentID": 10,
+            "ID": 33,
+            "ParentID": 8,
             "Name": "CrystalRed",
             "Active": true,
             "Components": [
@@ -11462,8 +11190,8 @@
             ]
         },
         {
-            "ID": 36,
-            "ParentID": 35,
+            "ID": 34,
+            "ParentID": 33,
             "Name": "LightRed",
             "Active": true,
             "Components": [
@@ -11509,8 +11237,8 @@
             ]
         },
         {
-            "ID": 37,
-            "ParentID": 10,
+            "ID": 35,
+            "ParentID": 8,
             "Name": "CrystalSharpSingle",
             "Active": true,
             "Components": [
@@ -11537,8 +11265,8 @@
             ]
         },
         {
-            "ID": 38,
-            "ParentID": 37,
+            "ID": 36,
+            "ParentID": 35,
             "Name": "CrystalSharpSingleWhite",
             "Active": true,
             "Components": [
@@ -11599,8 +11327,8 @@
             ]
         },
         {
-            "ID": 39,
-            "ParentID": 37,
+            "ID": 37,
+            "ParentID": 35,
             "Name": "CrystalSharpSingleBlue",
             "Active": true,
             "Components": [
@@ -11661,8 +11389,8 @@
             ]
         },
         {
-            "ID": 40,
-            "ParentID": 37,
+            "ID": 38,
+            "ParentID": 35,
             "Name": "CrystalSharpSingleGreen",
             "Active": true,
             "Components": [
@@ -11723,8 +11451,8 @@
             ]
         },
         {
-            "ID": 41,
-            "ParentID": 37,
+            "ID": 39,
+            "ParentID": 35,
             "Name": "CrystalSharpSinglePurple",
             "Active": true,
             "Components": [
@@ -11785,8 +11513,8 @@
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 37,
+            "ID": 40,
+            "ParentID": 35,
             "Name": "CrystalSharpSingleRed",
             "Active": true,
             "Components": [
@@ -11847,8 +11575,8 @@
             ]
         },
         {
-            "ID": 43,
-            "ParentID": 10,
+            "ID": 41,
+            "ParentID": 8,
             "Name": "CrystalSharp",
             "Active": true,
             "Components": [
@@ -11875,8 +11603,8 @@
             ]
         },
         {
-            "ID": 44,
-            "ParentID": 43,
+            "ID": 42,
+            "ParentID": 41,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -11937,8 +11665,8 @@
             ]
         },
         {
-            "ID": 45,
-            "ParentID": 43,
+            "ID": 43,
+            "ParentID": 41,
             "Name": "CrystalSharpBlue",
             "Active": true,
             "Components": [
@@ -11999,8 +11727,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 43,
+            "ID": 44,
+            "ParentID": 41,
             "Name": "CrystalSharpGreen",
             "Active": true,
             "Components": [
@@ -12061,8 +11789,8 @@
             ]
         },
         {
-            "ID": 47,
-            "ParentID": 43,
+            "ID": 45,
+            "ParentID": 41,
             "Name": "CrystalSharpPurple",
             "Active": true,
             "Components": [
@@ -12123,8 +11851,8 @@
             ]
         },
         {
-            "ID": 48,
-            "ParentID": 43,
+            "ID": 46,
+            "ParentID": 41,
             "Name": "CrystalSharpRed",
             "Active": true,
             "Components": [
@@ -12181,6 +11909,577 @@
                         1.0,
                         1.0
                     ]
+                }
+            ]
+        },
+        {
+            "ID": 47,
+            "Name": "PlayerAnimMesh",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "PlayerAimMeshController",
+                    "Active": true,
+                    "PlayerObjectName": "Player",
+                    "AimPointerMeshObjectName": "AimPointerMesh",
+                    "FixedY": 0.0,
+                    "LowerBodyAimThresholdDeg": 30.0,
+                    "LowerBodyTurnSpeed": 8.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_WalkForward": "WalkForward",
+                    "AnimName_WalkBackward": "WalkBackward",
+                    "AnimName_Fire": "Fire",
+                    "AnimName_Dash": "Dash",
+                    "FireAnimShootFrameTime": 0.36000001430511475,
+                    "UpperBodyAimOffsetDeg": 90.0,
+                    "UpperBodyYawScale": 2.0,
+                    "GunBoneName": "DEF-Weapon",
+                    "HandBoneName": "Snap-Hand.L",
+                    "BackwardThreshold": -0.10000000149011612,
+                    "ForwardThreshold": 0.10000000149011612,
+                    "ShootingDuration": 0.5
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "LogicFSMObjectName": "Player",
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": true,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 30.0,
+                    "SpineBoneName": "Spine",
+                    "AnimStates": []
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/main_character_final.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Dash",
+                            "Path": "Resource/Animation/main_character_animation_dash.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Execution",
+                            "Path": "Resource/Animation/main_character_animation_execution.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Fire",
+                            "Path": "Resource/Animation/main_character_animation_shooting.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/main_character_animation_idle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkBackward",
+                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkForward",
+                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Player_Rig",
+                                "Hips",
+                                "DEF-Weapon",
+                                "Ctrl-Weapon",
+                                "Spine",
+                                "UpLeg.Left",
+                                "UpLeg.Right",
+                                "Spine1",
+                                "Leg.Left",
+                                "Leg.Right",
+                                "Spine2",
+                                "Foot.Left",
+                                "Foot.Right",
+                                "Neck",
+                                "Shoulder.Left",
+                                "Shoulder.Right",
+                                "ToeBase.Left",
+                                "ToeBase.Right",
+                                "Head",
+                                "Arm.Left",
+                                "Arm.Right",
+                                "Toe_End.Left",
+                                "Toe_End.Right",
+                                "HeadTop_End",
+                                "ForeArm.Left",
+                                "ForeArm.Right",
+                                "Hand.Left",
+                                "Hand.Right",
+                                "HandThumb1.Left",
+                                "HandIndex1.Left",
+                                "HandThumb1.Right",
+                                "HandIndex1.Right",
+                                "HandThumb2.Left",
+                                "HandIndex2.Left",
+                                "Snap-Hand.L",
+                                "HandThumb2.Right",
+                                "HandIndex2.Right",
+                                "HandThumb3.Left",
+                                "HandIndex3.Left",
+                                "HandThumb3.Right",
+                                "HandIndex3.Right",
+                                "HandThumb4.Left",
+                                "HandIndex4.Left",
+                                "HandThumb4.Right",
+                                "HandIndex4.Right"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Type": "AfterimageRenderer",
+                    "Active": true,
+                    "DrawSolidLayer": true,
+                    "SolidColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "SolidInitialAlpha": 0.6399999856948853,
+                    "SolidDecaySpeed": 7.599999904632568,
+                    "SolidDecayMode": 0,
+                    "SolidDecayCurve": 1,
+                    "SolidEmissiveIntensity": 11.300000190734863,
+                    "SolidTrailGradient": 0.4099999964237213,
+                    "SolidMaxSlices": 24,
+                    "SolidSampleInterval": 0.03500000014901161,
+                    "DrawAlphaLayer": false,
+                    "AlphaTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "AlphaEmissiveIntensity": 0.0,
+                    "AlphaInitialAlpha": 0.699999988079071,
+                    "AlphaDecaySpeed": 1.5,
+                    "AlphaDecayMode": 0,
+                    "AlphaDecayCurve": 1,
+                    "AlphaTrailGradient": 0.9200000166893005,
+                    "AlphaMaxSlices": 24,
+                    "AlphaSampleInterval": 0.0
+                }
+            ]
+        },
+        {
+            "ID": 48,
+            "Name": "ExcutionIndicatorManager",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ExecutionIndicatorManager",
+                    "Active": true,
+                    "IndicatorPrefabName": "ExcutionIndicator",
+                    "RaycastMaxDistance": 1000.0,
+                    "IndicatorOffset": {
+                        "x": 0.0,
+                        "y": 1.5,
+                        "z": -0.5
+                    },
+                    "LinePrefabName": "IndicatorLine",
+                    "LinePlayerOffset": 1.0,
+                    "LineMonsterOffset": 1.5,
+                    "LineBaseLength": 0.5,
+                    "LineHeight": 0.6000000238418579,
+                    "EffectPrefabName": "ExcutionEffectSprite",
+                    "EffectDuration": 0.800000011920929,
+                    "EffectScaleMultiplier": 1.5,
+                    "MonsterDeathDelay": 0.05000000074505806,
+                    "TriggerWaitFramesRequired": 1
+                },
+                {
+                    "Type": "ExecutionSlowScript",
+                    "Active": true,
+                    "SlowDuration": 1.5,
+                    "TargetTimeScale": 0.20000000298023224,
+                    "UseCrossfade": true,
+                    "FadeInRatio": 0.20000000298023224,
+                    "SustainRatio": 0.6000000238418579,
+                    "FadeOutRatio": 0.20000000298023224
+                }
+            ]
+        },
+        {
+            "ID": 49,
+            "Name": "Monster_PointedType_Blue",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 1.1920928955078125e-06,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 5.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 30.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.350000023841858,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "radius": 1.2000000476837158,
+                    "height": 4.329999923706055
+                },
+                {
+                    "Type": "MonsterPointedType",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 2,
+                    "Hp": 100.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 12.100000381469727,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 300.0,
+                    "AttackRange": 8.399999618530273,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 11.899999618530273,
+                    "BulletLifetime": 3.0,
+                    "SpreadAngle": 0.9399999976158142,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
+                    "AttackAnimationDuration": 1.100000023841858,
+                    "FleeRange": 10.0,
+                    "SafeRange": 14.0,
+                    "FleeSpeedMultiplier": 1.7000000476837158,
+                    "FleeDistanceMin": 20.0,
+                    "FleeDistanceMax": 70.0,
+                    "RedemptionSpeedMultiplier": 1.5,
+                    "LaststandRetryInterval": 5.0,
+                    "MapBoundXMin": -29.5,
+                    "MapBoundXMax": 29.5,
+                    "MapBoundZMin": -18.5,
+                    "MapBoundZMax": 19.5
+                },
+                {
+                    "Type": "PathfindingAgent",
+                    "Active": true,
+                    "PathUpdateInterval": 1.0,
+                    "WaypointReachDistance": 0.5,
+                    "TargetMoveThreshold": 1.0
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Final/monster/blue_monster/crystal_monster_blue_final.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Fire",
+                            "Path": "Resource/Animation/main_character_animation_shooting.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/main_character_animation_idle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkForward",
+                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Player_Rig",
+                                "Hips",
+                                "DEF-Weapon",
+                                "Ctrl-Weapon",
+                                "Spine",
+                                "UpLeg.Left",
+                                "UpLeg.Right",
+                                "Spine1",
+                                "Leg.Left",
+                                "Leg.Right",
+                                "Spine2",
+                                "Foot.Left",
+                                "Foot.Right",
+                                "Neck",
+                                "Shoulder.Left",
+                                "Shoulder.Right",
+                                "ToeBase.Left",
+                                "ToeBase.Right",
+                                "Head",
+                                "Arm.Left",
+                                "Arm.Right",
+                                "Toe_End.Left",
+                                "Toe_End.Right",
+                                "HeadTop_End",
+                                "ForeArm.Left",
+                                "ForeArm.Right",
+                                "Hand.Left",
+                                "Hand.Right",
+                                "HandThumb1.Left",
+                                "HandIndex1.Left",
+                                "HandThumb1.Right",
+                                "HandIndex1.Right",
+                                "HandThumb2.Left",
+                                "HandIndex2.Left",
+                                "Snap-Hand.L",
+                                "HandThumb2.Right",
+                                "HandIndex2.Right",
+                                "HandThumb3.Left",
+                                "HandIndex3.Left",
+                                "HandThumb3.Right",
+                                "HandIndex3.Right",
+                                "HandThumb4.Left",
+                                "HandIndex4.Left",
+                                "HandThumb4.Right",
+                                "HandIndex4.Right"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "LogicFSMObjectName": "",
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 30.0,
+                    "SpineBoneName": "Spine",
+                    "AnimStates": []
+                }
+            ]
+        },
+        {
+            "ID": 50,
+            "ParentID": 49,
+            "Name": "PickingBoundaryCol",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.200000047683716,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 66.66667175292969,
+                        "y": 66.66667175292969,
+                        "z": 66.66667175292969
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 7,
+                    "materialType": 1,
+                    "radius": 2.299999952316284
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
                 }
             ]
         }

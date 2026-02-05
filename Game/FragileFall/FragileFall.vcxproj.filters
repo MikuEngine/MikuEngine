@@ -70,6 +70,7 @@
     <ClCompile Include="Script\CharacterScript\Common\ExplosionDamageTrigger.cpp" />
     <ClCompile Include="Script\MonsterUpdateActivationSwitch.cpp" />
     <ClCompile Include="Script\ParticleAttachment.cpp" />
+    <ClCompile Include="Script\LobbyInteraction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -145,5 +146,6 @@
     <ClInclude Include="Script\CharacterScript\Common\ExplosionDamageTrigger.h" />
     <ClInclude Include="Script\MonsterUpdateActivationSwitch.h" />
     <ClInclude Include="Script\ParticleAttachment.h" />
+    <ClInclude Include="Script\LobbyInteraction.h" />
   </ItemGroup>
 </Project>

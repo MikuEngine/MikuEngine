@@ -3,9 +3,12 @@
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
 
+#include <Engine/Core/System/MyTime.h>
 #include <Framework/Object/Component/AnimFSM.h>
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
 #include <Framework/Object/Component/Rigidbody.h>
+#include <Framework/Object/Component/Transform.h>
+#include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 
 namespace game
 {
@@ -30,7 +33,7 @@ namespace game
         if (m_pathfindingAgent)
         {
             m_pathfindingAgent->SetPathUpdateInterval(0.5f);        // 0.5초마다 경로 재계산
-            m_pathfindingAgent->SetWaypointReachDistance(1.0f);     // waypoint 도달 거리
+            m_pathfindingAgent->SetWaypointReachDistance(0.6f);    // 속도 높을 때 오버슈트 방지 (넉넉한 도달 거리)
             m_pathfindingAgent->SetTargetMoveThreshold(2.0f);       // 목표가 2.0f 이상 움직이면 재계산
         }
     }
@@ -223,6 +226,104 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // 회전 (MonsterPointedType 전용, BaseControllerScript 로직 무관)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterPointedType::RotateTowardsDirection(const engine::Vector3& targetDirection)
+    {
+        engine::Vector3 dir = targetDirection;
+        dir.y = 0.0f;
+        if (dir.LengthSquared() < 0.0001f) return;
+        dir.Normalize();
+
+        engine::Vector3 currentForward = GetForwardDirection();
+        float dot = currentForward.Dot(dir);
+        dot = std::clamp(dot, -1.0f, 1.0f);
+        float angleDiff = std::acos(dot);
+        const float threshold = 0.017f;
+        if (angleDiff < threshold) return;
+
+        const float kRotationSpeedMultiplier = 2.0f;
+        float fixedDt = engine::Time::FixedDeltaTime();
+        float step = m_rotationSpeed * kRotationSpeedMultiplier * fixedDt;
+        if (step > angleDiff) step = angleDiff;
+        engine::Vector3 cross = currentForward.Cross(dir);
+        float sign = (cross.y >= 0.0f) ? 1.0f : -1.0f;
+        float finalYaw = sign * step;
+
+        engine::Quaternion currentRot = GetTransform()->GetWorldRotation();
+        engine::Vector3 euler = currentRot.ToEuler();
+        euler.y += finalYaw;
+        engine::Quaternion newRot = engine::Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z);
+
+        if (m_rigidbody && m_rigidbody->IsDynamic())
+        {
+            engine::Vector3 pos = GetTransform()->GetWorldPosition();
+            m_rigidbody->ForceSetTransform(pos, newRot, false, true);
+        }
+        else
+        {
+            GetTransform()->SetLocalRotation(newRot);
+        }
+    }
+
+    void MonsterPointedType::MoveTowardsPlayer()
+    {
+        if (!m_pathfindingAgent || !m_rigidbody || !m_targetPlayer || m_moveSpeed <= 0.0f)
+            return;
+
+        engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+        float fixedDeltaTime = engine::Time::FixedDeltaTime();
+        m_pathfindingAgent->UpdatePathfindingFixed(fixedDeltaTime, playerPos);
+
+        engine::Vector3 nextWaypoint;
+        engine::Vector3 direction;
+        bool hasValidWaypoint = m_pathfindingAgent->HasPath() &&
+            m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
+
+        if (!hasValidWaypoint)
+            direction = CalculateDirectionToPlayer();
+        else
+        {
+            // 속도가 높을 때 웨이포인트를 지나쳐 반대 방향 힘이 가해지는 것 방지 (오버슈트 시 다음 웨이포인트로 전진)
+            engine::Vector3 nextInPath = m_pathfindingAgent->GetNextWaypoint();
+            if (nextInPath.LengthSquared() > 0.0001f)
+            {
+                engine::Vector3 toCur = nextWaypoint - currentPos;
+                toCur.y = 0.0f;
+                engine::Vector3 toNext = nextInPath - currentPos;
+                toNext.y = 0.0f;
+                if (toNext.LengthSquared() < toCur.LengthSquared())
+                {
+                    m_pathfindingAgent->AdvanceToNextWaypoint();
+                    hasValidWaypoint = m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
+                    if (!hasValidWaypoint)
+                        direction = CalculateDirectionToPlayer();
+                }
+            }
+            if (hasValidWaypoint)
+            {
+                engine::Vector3 toWaypoint = nextWaypoint - currentPos;
+                toWaypoint.y = 0.0f;
+                if (toWaypoint.LengthSquared() > 0.0001f)
+                {
+                    toWaypoint.Normalize();
+                    direction = toWaypoint;
+                }
+                else
+                    direction = CalculateDirectionToPlayer();
+            }
+        }
+
+        direction.y = 0.0f;
+        if (direction.LengthSquared() < 0.0001f) return;
+        direction.Normalize();
+
+        RotateTowardsDirection(direction);
+        ApplyMovementForce(direction, m_moveSpeed);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // 입력 처리 (FSM 파라미터 업데이트)
     // ═══════════════════════════════════════════════════════════════
     void MonsterPointedType::ProcessInput()
@@ -236,7 +337,9 @@ namespace game
         }
         
         float dist = GetDistanceToPlayer();
-        float rangeBuffer = (GetCurrentState() == "EngageStop") ? 1.2f : 1.0f;
+        // 사거리 경계 움찔 방지: 정지/공격 중일 때는 나갈 때만 1.2배로 히스테리시스 적용
+        std::string state = GetCurrentState();
+        float rangeBuffer = (state == "EngageStop" || state == "EngageAttack") ? 1.2f : 1.0f;
 
         // 플레이어와의 거리 체크
         m_isPlayerInDetectionRange = (dist <= m_detectionRange);
@@ -270,6 +373,21 @@ namespace game
         if (m_fireTimer > 0.0f)
         {
             m_fireTimer -= deltaTime;
+        }
+
+        // 달리기 애니메이션 재생 속도 = 몬스터 이동 속도에 비례 (이동 상태에서만)
+        const float kBaseMoveSpeed = 10.0f;  // 애니 기준 속도, 필요 시 튜닝
+        if (m_skeletalAnimator && m_animFSM)
+        {
+            int baseLayer = m_animFSM->GetBaseLayerIndex();
+            float animSpeed = 1.0f;
+            if (state == "EngageMove")
+                animSpeed = std::max(0.1f, m_moveSpeed / kBaseMoveSpeed);
+            else if (state == "Flee")
+                animSpeed = std::max(0.1f, (m_moveSpeed * m_fleeSpeedMultiplier) / kBaseMoveSpeed);
+            else if (state == "Redemption")
+                animSpeed = std::max(0.1f, (m_moveSpeed * m_redemptionSpeedMultiplier) / kBaseMoveSpeed);
+            m_skeletalAnimator->SetLayerSpeed(baseLayer, animSpeed);
         }
 
         if (state == "Flee")
@@ -476,14 +594,14 @@ namespace game
     {
         // 공격 사거리 안에 있지만 쿨타임 중 - 정지하고 회전만 (물리)
         StopAllMovement();
-        RotateTowardsPlayer();
+        RotateTowardsDirection(CalculateDirectionToPlayer());
     }
 
     void MonsterPointedType::ExecuteEngageAttackBehaviorPhysics()
     {
         // 공격 중에는 이동 불가, 회전만 가능 (물리)
         StopAllMovement();
-        RotateTowardsPlayer();
+        RotateTowardsDirection(CalculateDirectionToPlayer());
     }
 
     void MonsterPointedType::ExecuteIdleBehaviorPhysics()
@@ -504,7 +622,8 @@ namespace game
 
     void MonsterPointedType::ExecuteRedemptionBehaviorPhysics()
     {
-        // Redemption: 플레이어 반대 방향으로 1.5배속 이동
+        // 이동 방향으로 먼저 회전 후 이동
+        RotateTowardsDirection(m_redemptionMoveDir);
         if (m_rigidbody)
         {
             float speed = m_moveSpeed * m_redemptionSpeedMultiplier;
@@ -516,9 +635,7 @@ namespace game
     {
         // Laststand: 정지
         StopAllMovement();
-        
-        // 플레이어 바라보기
-        RotateTowardsPlayer();
+        RotateTowardsDirection(CalculateDirectionToPlayer());
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -855,7 +972,7 @@ namespace game
                 if (distToWaypoint > 0.1f)
                 {
                     dir.Normalize();
-                    
+                    RotateTowardsDirection(dir);
                     if (m_rigidbody)
                     {
                         float speed = m_moveSpeed * m_fleeSpeedMultiplier;
