@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PathfindingAgent.h"
 
 #include "Framework/System/SystemManager.h"
@@ -133,7 +133,7 @@ namespace engine
 				// waypoint 도달 - 다음 waypoint로 진행
 				AdvanceToNextWaypoint();
 
-				// 경로가 완료되었으면 즉시 재계산
+				// 경로가 완료되었으면 즉시 재계산 (목표 도달이므로 뒤로 가는지 검사 불필요)
 				if (IsPathComplete())
 				{
 					RequestPathImmediate(targetPosition);
@@ -147,11 +147,10 @@ namespace engine
 		{
 			m_pathUpdateTimer = 0.0f;
 
-			// 목표가 충분히 움직였거나 waypoint가 없을 때만 재계산
 			float targetMoved = Vector3::Distance(targetPosition, m_lastTargetPos);
 			if (targetMoved > m_targetMoveThreshold || !m_hasWaypoint)
 			{
-				RequestPathImmediate(targetPosition);  // 즉시 계산
+				RequestPathImmediate(targetPosition);
 				m_lastTargetPos = targetPosition;
 			}
 		}
@@ -203,6 +202,8 @@ namespace engine
 		}
 
 		outWaypoint = m_currentWaypoint;
+
+		//LOG_PRINT("{}, {}, {}", outWaypoint.x, outWaypoint.y, outWaypoint.z);
 		return true;
 	}
 
