@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -10,7 +10,7 @@ namespace engine
 
 namespace game
 {
-    class AimPointer;
+    class AimModeController;
     class PlayerControllerScript;
 
     // ═══════════════════════════════════════════════════════════════
@@ -36,7 +36,7 @@ namespace game
         engine::GameObject* m_aimPointerMeshObject = nullptr;
         engine::AnimFSM* m_animFSM = nullptr;
         engine::LogicFSM* m_logicFSM = nullptr;  // Player의 LogicFSM
-        AimPointer* m_aimPointer = nullptr;
+        AimModeController* m_aimPointer = nullptr;
         PlayerControllerScript* m_playerControllerScript = nullptr;
 
         // ─────────────────────────────────────────────

@@ -201,6 +201,14 @@ namespace game
         OnExecutionReflected(direction);
     }
 
+    void BossProjectile::TakeDamage(float damage)
+    {
+        if (IsCrystallized())
+        {
+            OnCrystallized();
+        }
+    }
+
     void BossProjectile::OnTriggerEnter(const engine::CollisionInfo& info)
     {
         if (m_isDestroyed) return;

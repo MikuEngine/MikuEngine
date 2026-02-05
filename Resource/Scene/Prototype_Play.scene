@@ -108,47 +108,6 @@
                     "DashRechargeTime": 1.0
                 },
                 {
-                    "Type": "AimPointer",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorSize": {
-                        "x": 32.0,
-                        "y": 32.0
-                    },
-                    "TargetPlaneY": 2.5,
-                    "AimYOffsetWhenMoving": 0.0,
-                    "CursorTexturesByState": [
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
-                },
-                {
                     "Type": "LogicFSM",
                     "Active": true,
                     "CurrentState": "",
@@ -187,6 +146,47 @@
                     "materialType": 0,
                     "radius": 0.5899999737739563,
                     "height": 4.75
+                },
+                {
+                    "Type": "AimModeController",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorSize": {
+                        "x": 30.0,
+                        "y": 30.0
+                    },
+                    "TargetPlaneY": 1.5,
+                    "AimYOffsetWhenMoving": 0.0,
+                    "CursorTexturesByState": [
+                        "Resource/Texture/UI/Image/Cursor_Default.png",
+                        "Resource/Texture/UI/Image/Cursor_Click.png",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "CursorPivotsByState": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    ],
+                    "CursorState": 0
                 }
             ]
         },
@@ -20052,48 +20052,7 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "SortingOrder": 0
-                },
-                {
-                    "Type": "AimPointer",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorSize": {
-                        "x": 30.0,
-                        "y": 30.0
-                    },
-                    "TargetPlaneY": 1.5,
-                    "AimYOffsetWhenMoving": 0.0,
-                    "CursorTexturesByState": [
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
+                    "SortingOrder": 10
                 }
             ]
         },
@@ -20130,8 +20089,8 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 30.0,
-                    "Height": 30.0,
+                    "Width": 100.0,
+                    "Height": 100.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
@@ -20143,62 +20102,6 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Cursor_Default.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 1,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
                     }
                 }
             ]

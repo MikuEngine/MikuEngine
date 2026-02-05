@@ -5364,7 +5364,7 @@
                     "SortingOrder": 10
                 },
                 {
-                    "Type": "AimPointer",
+                    "Type": "AimModeController",
                     "Active": true,
                     "CanvasObjectName": "AimPointerCanvas",
                     "CursorSize": {

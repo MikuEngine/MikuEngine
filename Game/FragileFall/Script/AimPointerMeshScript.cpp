@@ -1,7 +1,7 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "AimPointerMeshScript.h"
 
-#include "AimPointer.h"
+#include "AimModeController.h"
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
@@ -56,7 +56,7 @@ namespace game
 
         if (auto* aimGO = scene->FindGameObject(m_aimPointerObjectName))
         {
-            m_aimPointer = aimGO->GetComponent<AimPointer>();
+            m_aimPointer = aimGO->GetComponent<AimModeController>();
         }
     }
 

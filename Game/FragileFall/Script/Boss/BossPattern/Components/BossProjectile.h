@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include "Script/Interface/IDamageable.h"
 
 namespace engine
 {
@@ -13,7 +14,8 @@ namespace game
     class PlayerControllerScript;
 
     class BossProjectile :
-        public engine::Script<BossProjectile>
+        public engine::Script<BossProjectile>,
+        public IDamageable
     {
         REGISTER_SCRIPT(BossProjectile, Script)
 
@@ -52,6 +54,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 충돌 처리
         // ─────────────────────────────────────────────
+        void TakeDamage(float damage) override;
         void OnTriggerEnter(const engine::CollisionInfo& info) override;
 
         // ─────────────────────────────────────────────
