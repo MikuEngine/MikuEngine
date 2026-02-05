@@ -1,0 +1,1163 @@
+{
+    "Name": "Shin_Test",
+    "NumGameObjects": 22,
+    "GameObjects": [
+        {
+            "ID": 0,
+            "Name": "MainCamera",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 28.0,
+                        "z": -24.0
+                    },
+                    "Rotation": {
+                        "x": 0.39874908328056335,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9170600771903992
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Camera",
+                    "Active": true,
+                    "Near": 1.0,
+                    "Far": 5000.0,
+                    "FOV": 60.0
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "Name": "Plane",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 60.0,
+                        "y": 1.0,
+                        "z": 40.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "Wall_Left_1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -30.5,
+                        "y": 0.10000000149011612,
+                        "z": -9.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.7071067690849304,
+                        "z": 0.0,
+                        "w": 0.7071067094802856
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/wall_side/wall_side.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/wall_side.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.30588236451148987,
+                        "y": 0.30588236451148987,
+                        "z": 0.3137255012989044,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 2,
+            "Name": "Wall_Left_1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -19.600000381469727,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/wall_side/wall_side.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/wall_side.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.30588236451148987,
+                        "y": 0.30588236451148987,
+                        "z": 0.3137255012989044,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Wall_back",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": -1.399999976158142,
+                        "z": 25.200000762939453
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.2999999523162842,
+                        "y": 1.2000000476837158,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/wall/wall.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/wall.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.7216947078704834,
+                        "y": 0.7216947078704834,
+                        "z": 0.7567567825317383,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "Player",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.5,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": -1.0,
+                        "z": 0.0,
+                        "w": -4.371138828673793e-08
+                    },
+                    "Scale": {
+                        "x": 1.2000000476837158,
+                        "y": 1.2000000476837158,
+                        "z": 1.2000000476837158
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/main_character_texture_test.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/main_character_texture_test.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.9764705896377563,
+                        "y": 0.8705882430076599,
+                        "z": 0.4588235318660736,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                },
+                {
+                    "Type": "PlayerControllerScript",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "MoveSpeed": 5.0,
+                    "RotationSpeed": 10.0,
+                    "FireRate": 0.20000000298023224,
+                    "BulletSpeed": 1.0,
+                    "BulletLifetime": 3.0,
+                    "BulletStartOffsetY": 2.200000047683716,
+                    "BulletStartOffsetForward": 1.5,
+                    "AimPointerObjectName": "AimPointer",
+                    "FSMInitialized": false,
+                    "ExecutionRange": 10.0,
+                    "CollisionPushBackForce": 0.5,
+                    "SlidingSpeedMultiplier": 0.699999988079071,
+                    "DashDuration": 0.30000001192092896,
+                    "DashImpulseMultiplier": 15.0,
+                    "DashDecayRate": 4.0,
+                    "DashCooldown": 0.20000000298023224
+                },
+                {
+                    "Type": "AimPointer",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorTexturePrimary": "Resource/Texture/Earth.png",
+                    "CursorTextureAlternate": "Resource/Texture/Moon.png",
+                    "UseAlternateCursor": false,
+                    "CursorSize": {
+                        "x": 32.0,
+                        "y": 32.0
+                    },
+                    "CursorPivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "TargetPlaneY": 2.200000047683716
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 5,
+            "Name": "Player_Spot_Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -1.7484556025237907e-08,
+                        "y": 0.6669999957084656,
+                        "z": -0.20000001788139343
+                    },
+                    "Rotation": {
+                        "x": -0.05547899752855301,
+                        "y": 0.7049270868301392,
+                        "z": -0.7049269676208496,
+                        "w": -0.05547897517681122
+                    },
+                    "Scale": {
+                        "x": 0.6666666865348816,
+                        "y": 0.6666665077209473,
+                        "z": 0.666666567325592
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.3820298910140991,
+                        "y": 0.837837815284729,
+                        "z": 0.37848272919654846
+                    },
+                    "Intensity": 12.100000381469727,
+                    "Range": 6.199999809265137,
+                    "Angle": 48.75,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 5,
+            "Name": "Player_point_Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 3.9000000953674316,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": -4.371138473402425e-08
+                    },
+                    "Scale": {
+                        "x": 0.6666666865348816,
+                        "y": 0.6666666865348816,
+                        "z": 0.6666666865348816
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 10.0,
+                    "Range": 7.400000095367432,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "ParentID": 5,
+            "Name": "Player_face_light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 5.828184868050812e-08,
+                        "y": 1.8000000715255737,
+                        "z": 0.6666666865348816
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": -4.371138473402425e-08
+                    },
+                    "Scale": {
+                        "x": 0.6666666865348816,
+                        "y": 0.6666666865348816,
+                        "z": 0.6666666865348816
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 14.199999809265137,
+                    "Range": 2.5999999046325684,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "ParentID": 5,
+            "Name": "Player_back_light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -8.159458531054042e-08,
+                        "y": 2.0,
+                        "z": -0.9333333373069763
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": -4.371138473402425e-08
+                    },
+                    "Scale": {
+                        "x": 0.6666666865348816,
+                        "y": 0.6666666865348816,
+                        "z": 0.6666666865348816
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 14.199999809265137,
+                    "Range": 2.5999999046325684,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "ParentID": 5,
+            "Name": "Player_right_light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -1.0,
+                        "y": 1.8000000715255737,
+                        "z": 8.742277657347586e-08
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": -4.371138473402425e-08
+                    },
+                    "Scale": {
+                        "x": 0.6666666865348816,
+                        "y": 0.6666666865348816,
+                        "z": 0.6666666865348816
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 8.600000381469727,
+                    "Range": 2.4000000953674316,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "ParentID": 5,
+            "Name": "Player_left_light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.8000000715255737,
+                        "y": 1.8000000715255737,
+                        "z": -6.993822410095163e-08
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": -4.371138473402425e-08
+                    },
+                    "Scale": {
+                        "x": 0.6666666865348816,
+                        "y": 0.6666666865348816,
+                        "z": 0.6666666865348816
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 14.199999809265137,
+                    "Range": 2.5999999046325684,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "Name": "Wall_front",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 5.5,
+                        "z": -19.5
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 60.0,
+                        "y": 10.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.30588236451148987,
+                        "y": 0.30588236451148987,
+                        "z": 0.3137255012989044,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "torch_left",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 6.800000190734863,
+                        "y": 5.699999809265137,
+                        "z": 18.200000762939453
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": -0.0,
+                        "w": -4.371138828673793e-08
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/torch/torch.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/torch.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "ParentID": 13,
+            "Name": "Light_torch",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 13.100000381469727,
+                        "y": 1.6000003814697266,
+                        "z": 1.1000003814697266
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 4.371138828673793e-08
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.969111979007721,
+                        "y": 0.7958937287330627,
+                        "z": 0.5575200319290161
+                    },
+                    "Intensity": 3.0,
+                    "Range": 14.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 15,
+            "Name": "door",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.30000001192092896,
+                        "z": 17.399999618530273
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 4.371138828673793e-08
+                    },
+                    "Scale": {
+                        "x": 1.5,
+                        "y": 1.5,
+                        "z": 1.5
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/door/door.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/door.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.6679536700248718,
+                        "y": 0.42683473229408264,
+                        "z": 0.23726537823677063,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 16,
+            "Name": "torch_right",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -6.5,
+                        "y": 5.699999809265137,
+                        "z": 18.200000762939453
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": -0.0,
+                        "w": -4.371138828673793e-08
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/torch/torch.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/torch.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 17,
+            "Name": "skybox",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "EnvironmentSettings",
+                    "Active": true,
+                    "SkyboxTexturePath": "",
+                    "IBLIrradiancePath": "",
+                    "IBLSpecularPath": "",
+                    "IBLBrdfLutPath": "",
+                    "SkyboxColor": {
+                        "x": -1.0,
+                        "y": -1.0,
+                        "z": -1.0
+                    },
+                    "SkyboxHorizonColor": {
+                        "x": -1.0,
+                        "y": -1.0,
+                        "z": -1.0
+                    },
+                    "IBLAmbientColor": {
+                        "x": 0.5868725776672363,
+                        "y": 0.5687452554702759,
+                        "z": 0.5687452554702759
+                    },
+                    "UseSkyboxTexture": 0,
+                    "UseIBLTexture": 0,
+                    "UseIBL": 1
+                }
+            ]
+        },
+        {
+            "ID": 18,
+            "Name": "Wall_Right_1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 29.399999618530273,
+                        "y": 0.0,
+                        "z": -9.899999618530273
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": -0.7071067690849304,
+                        "z": 0.0,
+                        "w": 0.7071067094802856
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/wall_side/wall_side.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/wall_side.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.29324251413345337,
+                        "y": 0.29324251413345337,
+                        "z": 0.3050193190574646,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "ParentID": 18,
+            "Name": "Wall_Right_2",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 19.000001907348633,
+                        "y": 0.0,
+                        "z": 0.10000038146972656
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/wall_side/wall_side.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/wall_side.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.30588236451148987,
+                        "y": 0.30588236451148987,
+                        "z": 0.3137255012989044,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1
+                }
+            ]
+        },
+        {
+            "ID": 20,
+            "Name": "Directional_light",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 1.0,
+                    "Range": 10.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 21,
+            "Name": "Light_torch",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 6.800000190734863,
+                        "y": 7.400000095367432,
+                        "z": 17.299999237060547
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 4.371138828673793e-08
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.969111979007721,
+                        "y": 0.7958937287330627,
+                        "z": 0.5575200319290161
+                    },
+                    "Intensity": 3.0,
+                    "Range": 14.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        }
+    ]
+}

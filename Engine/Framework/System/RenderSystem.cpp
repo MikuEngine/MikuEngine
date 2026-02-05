@@ -307,6 +307,7 @@ namespace engine
         cbFrame.shadowMapSize = graphics.GetShadowMapSize();
         cbFrame.useShadowPCF = 1;
         cbFrame.pcfSize = 2;
+        cbFrame.mainLightShadowBias = (mainLight != nullptr) ? mainLight->GetShadowBias() : 0.005f;
         cbFrame.useIBL = GetUseIBL() ? 1 : 0;
         
         // 스카이박스/IBL 설정
@@ -1020,9 +1021,9 @@ namespace engine
             float range = light->GetRange();
             float angle = light->GetAngle(); // half-angle in degrees
 
-            // 콘 메쉬가 range*2 높이로 그려지므로 far는 그보다 약간 더 멀리 (잘림 방지 여유)
-            // 콘 끝(range*2) + 여유; DrawLocalLight의 spotShadowFar와 동일해야 함
-            const float spotShadowFar = range * 2.0f * 1.2f;
+            // 콘 메쉬가 range*2 높이로 그려지므로 far는 그보다 넉넉히 (잘림 방지)
+            // DrawLocalLight의 spotShadowFar와 동일해야 함
+            const float spotShadowFar = range * 2.0f * 1.5f;
             Matrix lightView = DirectX::XMMatrixLookAtLH(lightPos, lightPos + forward, up);
             Matrix lightProj = DirectX::XMMatrixPerspectiveFovLH(ToRadian(angle * 2.0f), 1.0f, 0.1f, spotShadowFar);
 
@@ -1121,6 +1122,8 @@ namespace engine
                 {
                     cbData.useLocalLightShadow = 0;
                 }
+                cbData.shadowBias = light->GetShadowBias();
+                cbData.spotShadowMapSize = 0.0f; // point는 스포트 PCF 미사용
 
                 // PS 설정
                 context->PSSetShader(m_pointLightPS->GetRawShader(), nullptr, 0);
@@ -1193,12 +1196,14 @@ namespace engine
 
                 cbData.lightAngle = angle;
 
-                // Spot shadow: view-projection for sampling (far = 콘 끝 + 여유)
-                const float spotShadowFar = range * 2.0f * 1.2f;
+                // Spot shadow: view-projection for sampling (far = 콘 끝 + 여유, DrawSpotLightShadow와 동일)
+                const float spotShadowFar = range * 2.0f * 1.5f;
                 Vector3 spotLightPos(lightWorld._41, lightWorld._42, lightWorld._43);
                 Matrix spotView = DirectX::XMMatrixLookAtLH(spotLightPos, spotLightPos + forward, up);
                 Matrix spotProj = DirectX::XMMatrixPerspectiveFovLH(ToRadian(angle * 2.0f), 1.0f, 0.1f, spotShadowFar);
                 cbData.spotLightViewProjection = (spotView * spotProj).Transpose();
+                cbData.shadowBias = light->GetShadowBias();
+                cbData.spotShadowMapSize = 1024.0f; // PCF texel size = 1/1024 (GraphicsDevice spot shadow 해상도와 동일)
                 int spotShadowIdx = light->GetShadowIndex();
                 cbData.useSpotShadow = (spotShadowIdx >= 0 && light->IsCastShadows()) ? 1 : 0;
                 cbData.spotShadowIndex = spotShadowIdx >= 0 ? spotShadowIdx : 0;
