@@ -103,5 +103,14 @@ namespace engine
 
 		Vector4 m_cachedClipPx = Vector4(-1, -1, -1, -1);
 		bool m_rendererCacheDirty = true;
+
+		// UIScrollView.h (멤버로 추가)
+		bool m_autoLayoutViewport = true;   // Viewport RT를 ScrollView가 강제 배치/고정할지
+		bool m_autoLayoutScrollbar = true;  // Scrollbar RT를 ScrollView가 강제 배치/고정할지
+
+		bool m_viewportCreated = false;     // Initialize에서 이번에 생성했는지
+		bool m_contentCreated = false;
+		bool m_scrollbarCreated = false;
+
 	};
 }

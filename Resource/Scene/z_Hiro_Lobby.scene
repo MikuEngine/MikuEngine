@@ -1895,7 +1895,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Panel/Base_01.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2302,9 +2302,9 @@
                     "Value": 1.0,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "",
-                    "FillSprite": "",
-                    "HandleSprite": "",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -2702,9 +2702,9 @@
                     "Value": 1.0,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "",
-                    "FillSprite": "",
-                    "HandleSprite": "",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3102,9 +3102,9 @@
                     "Value": 1.0,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "",
-                    "FillSprite": "",
-                    "HandleSprite": "",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3665,7 +3665,7 @@
             "ID": 51,
             "ParentID": 31,
             "Name": "UI_UpgradePopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -3841,7 +3841,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Panel/Base_02.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7127,7 +7127,7 @@
                     "ScrollbarWidth": 20.0,
                     "ScrollbarGap": 0.0,
                     "ScrollY": 0.0,
-                    "ContentHeight": 500.0,
+                    "ContentHeight": 717.68701171875,
                     "DragSpeed": 1.0
                 }
             ]
@@ -7186,7 +7186,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Panel/Base_03.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7210,9 +7210,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.6988416910171509,
-                        "y": 0.6421788334846497,
-                        "z": 0.6421788334846497,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -7272,7 +7272,7 @@
                         "y": -0.0
                     },
                     "Width": 0.0,
-                    "Height": 500.0,
+                    "Height": 717.68701171875,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
@@ -10966,11 +10966,11 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 1100.0,
-                        "y": 0.0
+                        "x": 1000.0,
+                        "y": 80.0
                     },
                     "Width": 20.0,
-                    "Height": 600.0,
+                    "Height": 450.0,
                     "Pivot": {
                         "x": 0.0,
                         "y": 0.0
@@ -10993,13 +10993,13 @@
                     "Value": 0.0,
                     "Direction": 2,
                     "FillMode": 0,
-                    "TrackSprite": "None",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_02.png",
                     "FillSprite": "",
-                    "HandleSprite": "None",
+                    "HandleSprite": "Resource/Texture/UI/Slider/SliderButton_01.png",
                     "TrackColor": {
-                        "x": 0.5366795063018799,
-                        "y": 0.5366795063018799,
-                        "z": 0.5366795063018799,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "FillColor": {
@@ -11072,7 +11072,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_02.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11096,9 +11096,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.5366795063018799,
-                        "y": 0.5366795063018799,
-                        "z": 0.5366795063018799,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -11157,19 +11157,19 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 18.0,
-                    "Height": 60.0,
+                    "Width": 30.0,
+                    "Height": 40.0,
                     "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.30000001192092896,
+                        "y": 1.0
                     },
                     "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.05000000074505806
+                        "x": 1.0,
+                        "y": 0.04444444552063942
                     },
                     "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.05000000074505806
+                        "x": 1.0,
+                        "y": 0.04444444552063942
                     }
                 },
                 {
@@ -11178,7 +11178,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Slider/SliderButton_01.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
