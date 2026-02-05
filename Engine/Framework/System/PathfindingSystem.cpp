@@ -92,15 +92,15 @@ namespace engine
 
         result.nodeCount = static_cast<int>(result.rawPath.size());
 
-        // String Pulling 적용
+        // String Pull 적용
         result.path = StringPull(result.rawPath);
-        result.optimizedNodeCount = result.nodeCount;
-
-        //result.path = SmoothPath(result.path, 2);  // 자꾸 파고들어서 일단 끔
+        result.optimizedNodeCount = static_cast<int>(result.path.size());
 
         // 스냅했을 경우 첫 웨이포인트를 실제 현재 위치로 (들락날락 방지)
         if (usedSnap && !result.path.empty())
+        {
             result.path[0] = originalStart;
+        }
 
         // end를 스냅했을 경우 마지막 웨이포인트를 스냅된 위치로 유지 (장애물을 파고들지 않도록)
         // (이미 FindPathAStar에서 스냅된 end로 경로를 찾았으므로 마지막 점은 자동으로 스냅된 위치)
@@ -386,8 +386,6 @@ namespace engine
 
     std::vector<Vector3> PathfindingSystem::StringPull(const std::vector<Vector3>& rawPath)
     {
-        const GridMap* gridMap = m_components[0];
-
         if (rawPath.size() <= 2)
         {
             return rawPath;
