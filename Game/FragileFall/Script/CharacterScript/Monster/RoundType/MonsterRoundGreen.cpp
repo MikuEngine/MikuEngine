@@ -227,6 +227,11 @@ namespace game
         m_bulletParams.speed = m_parabolicSpeed;      // 에디터 설정값
         m_bulletParams.launchAngle = 45.0f;           // 기본값 (Attack에서 자동 계산)
         m_bulletParams.ownGravity = m_ownGravity;     // 에디터 설정값
+        
+        // ─────────────────────────────────────────────
+        // 사거리 사전 계산 (45도, 70도)
+        // ─────────────────────────────────────────────
+        CalculateParabolicRanges();
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -296,7 +301,7 @@ namespace game
     {
         // 발사 오프셋 설정
         float bulletStartOffsetForward = 0.3f;
-        float bulletStartOffsetY = 1.5f;
+        float bulletStartOffsetY = 2.0f;
 
         // 발사 가능 상태 (쿨타임 완료)
         if (m_fireTimer <= 0.0f)
@@ -313,33 +318,36 @@ namespace game
                 
                 // ─────────────────────────────────────────────
                 // Parabolic 타입: 발사각 자동 계산
-                // - 착탄점: 플레이어 XZ, Y=0
+                // - 착탄점: 플레이어 XZ, Y=2.0
                 // - 에디터 설정: m_parabolicSpeed, m_ownGravity
                 // - 자동 계산: launchAngle (m_useHighArc로 높은/낮은 선택)
                 // ─────────────────────────────────────────────
                 if (m_bulletParams.type == BulletType::Parabolic)
                 {
-                    // 착탄점 설정 (플레이어 XZ, Y=0)
+                    // 착탄점 설정 (플레이어 XZ, Y=2.0)
                     engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-                    engine::Vector3 targetPos(playerPos.x, 0.0f, playerPos.z);
+                    engine::Vector3 targetPos(playerPos.x, 2.0f, playerPos.z);
                     
                     // 거리 계산 (디버그용)
                     float dx = targetPos.x - bulletStartPos.x;
                     float dz = targetPos.z - bulletStartPos.z;
                     float distance = std::sqrt(dx * dx + dz * dz);
                     
-                    // 발사각 자동 계산 (m_useHighArc에 따라 높은/낮은 선택)
+                    // 발사각 및 속도 자동 계산
                     float angleRad = 0.0f;
-                    CalculateParabolicLaunchAngle(bulletStartPos, targetPos, angleRad);
+                    float calculatedSpeed = 0.0f;
+                    CalculateParabolicLaunchAngle(bulletStartPos, targetPos, angleRad, calculatedSpeed);
                     
                     // BulletParams에 값 설정
-                    m_bulletParams.speed = m_parabolicSpeed;
+                    m_bulletParams.speed = calculatedSpeed;  // 계산된 속도 (구간별로 다름)
                     m_bulletParams.launchAngle = angleRad * 180.0f / 3.14159265f;  // 도(degree)로 변환
                     m_bulletParams.ownGravity = m_ownGravity;
+                    m_bulletParams.minLaunchAngle = m_minLaunchAngle;
+                    m_bulletParams.maxLaunchAngle = m_maxLaunchAngle;
                     
-                    // 디버그: 거리와 발사각 확인
-                    LOG_PRINT("[Attack] Distance to player: {:.2f}m, LaunchAngle: {:.1f}deg",
-                        distance, m_bulletParams.launchAngle);
+                    // 디버그: 거리, 발사각, 속도 확인
+                    LOG_PRINT("[Attack] Distance to player: {:.2f}m, LaunchAngle: {:.1f}deg, Speed: {:.1f}m/s",
+                        distance, m_bulletParams.launchAngle, m_bulletParams.speed);
                     LOG_PRINT("[Attack] BulletStart=({:.2f}, {:.2f}, {:.2f}), Target=({:.2f}, {:.2f}, {:.2f})",
                         bulletStartPos.x, bulletStartPos.y, bulletStartPos.z,
                         targetPos.x, targetPos.y, targetPos.z);
@@ -534,36 +542,8 @@ namespace game
         ImGui::Separator();
         ImGui::Text("=== Green Settings ===");
         ImGui::DragFloat("Damage Cooldown", &m_damageCooldown, 0.1f, 0.1f, 5.0f);
-
-        // ─────────────────────────────────────────────
-        // 포물선 설정 (Green은 항상 Parabolic)
-        // - 편집 가능: 속력, 자체 중력
-        // - 읽기 전용: 발사각 (플레이어 거리 기반 자동 계산)
-        // ─────────────────────────────────────────────
-        ImGui::Separator();
-        ImGui::Text("=== Parabolic Bullet Settings ===");
         
-        // 편집 가능한 설정
-        ImGui::DragFloat("Bullet Speed", &m_parabolicSpeed, 0.5f, 1.0f, 50.0f, "%.1f m/s");
-        ImGui::DragFloat("Own Gravity", &m_ownGravity, 0.1f, 1.0f, 30.0f, "%.1f m/s^2");
-        
-        // 최대 사거리 표시 (v² / g)
-        float maxRange = (m_parabolicSpeed * m_parabolicSpeed) / m_ownGravity;
-        ImGui::Text("Max Range (at 45 deg): %.1f m", maxRange);
-        
-        // 사거리 검증
-        if (maxRange < m_AttackRange)
-        {
-            ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), 
-                "WARNING: Max Range < Attack Range!");
-            ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), 
-                "Increase Speed or decrease Gravity/AttackRange");
-        }
-        else
-        {
-            ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), 
-                "OK: Max Range >= Attack Range");
-        }
+        // 포물선 설정은 부모(MonsterScript)에서 표시됨
         
         ImGui::Spacing();
         ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime values (read-only):");

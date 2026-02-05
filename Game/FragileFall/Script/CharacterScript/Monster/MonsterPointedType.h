@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"

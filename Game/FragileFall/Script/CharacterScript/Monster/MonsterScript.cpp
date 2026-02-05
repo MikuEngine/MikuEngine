@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -251,28 +251,47 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 포물선 발사각 자동 계산
+	// 포물선 사거리 사전 계산
+	// InitializeBullet()에서 호출됨
+	// ═══════════════════════════════════════════════════════════════
+	void MonsterScript::CalculateParabolicRanges()
+	{
+		float v = m_parabolicSpeed;
+		float g = m_ownGravity;
+		float v2 = v * v;
+		
+		// 45도 사거리 (속도 고정)
+		m_range45 = v2 / g;  // sin(90°) = 1.0
+		
+		// maxLaunchAngle 사거리 (속도 보정 포함)
+		constexpr float kDegToRad = 3.14159265f / 180.0f;
+		float maxAngleRad = m_maxLaunchAngle * kDegToRad;
+		float sin2MaxAngle = std::sin(2.0f * maxAngleRad);
+		m_range70 = (v2 * sin2MaxAngle) / g;
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 포물선 발사각 및 속도 자동 계산 (Parabolic 타입용)
 	// 
-	// 물리 기반 포물선 운동:
-	//   - 에디터 설정: m_parabolicSpeed (속력 v), m_ownGravity (중력 g)
-	//   - 자동 계산: 발사각 θ (플레이어 거리 기반)
-	//   - m_useHighArc로 높은/낮은 발사각 선택
+	// 구간별 로직:
+	//   1. R <= R_45: 20~45도, 물리 계산, 속도 고정
+	//   2. R_45 < R <= R_70: 45~70도, 선형 매핑, 속도 역산
+	//   3. R > R_70: 70도 고정, 최대 속도
 	// 
-	// 공식:
-	//   - 최대 사거리 (45도): R_max = v² / g
-	//   - 낮은 발사각: θ_low = 0.5 × arcsin(g × R / v²)
-	//   - 높은 발사각: θ_high = 90° - θ_low
-	// 
-	// 조건:
-	//   - v² >= g × R (해가 존재하려면)
+	// 출력:
+	//   - outAngleRad: 발사각 (라디안)
+	//   - outSpeed: 보정된 속도 (m/s)
+	//   - 반환값: true=정상, false=사거리 초과
 	// ═══════════════════════════════════════════════════════════════
 	bool MonsterScript::CalculateParabolicLaunchAngle(
 		const engine::Vector3& startPos,
 		const engine::Vector3& targetPos,
-		float& outAngleRad
+		float& outAngleRad,
+		float& outSpeed
 	) const
 	{
 		constexpr float kPi = 3.14159265f;
+		constexpr float kDegToRad = kPi / 180.0f;
 		constexpr float kMinDistance = 0.5f;
 		
 		// 수평 거리 계산 (XZ 평면)
@@ -280,47 +299,75 @@ namespace game
 		float dz = targetPos.z - startPos.z;
 		float R = std::sqrt(dx * dx + dz * dz);
 		
-		// 최소 거리 체크
-		if (R < kMinDistance)
-		{
-			// 너무 가까우면: High Arc는 수직, Low Arc는 낮은 각도
-			outAngleRad = m_useHighArc ? (85.0f * kPi / 180.0f) : (15.0f * kPi / 180.0f);
-			return true;
-		}
+		// 각도 범위를 라디안으로 변환
+		float minAngleRad = m_minLaunchAngle * kDegToRad;
+		float maxAngleRad = m_maxLaunchAngle * kDegToRad;
+		constexpr float kAngle45Rad = 45.0f * kDegToRad;
 		
 		float v = m_parabolicSpeed;
 		float g = m_ownGravity;
 		float v2 = v * v;
 		
-		// 발사 가능 조건: v² >= g × R
-		float maxRange = v2 / g;
-		if (R > maxRange)
+		// ─────────────────────────────────────────────
+		// 최소 거리 체크
+		// ─────────────────────────────────────────────
+		if (R < kMinDistance)
 		{
-			// 사거리 초과: 45도(최대 사거리 각도)로 발사
-			// 목표까지 도달하지 못하지만, 최대한 멀리 발사
-			outAngleRad = 45.0f * kPi / 180.0f;
-			return false;
+			outAngleRad = minAngleRad;
+			outSpeed = v;
+			return true;
 		}
 		
 		// ─────────────────────────────────────────────
-		// 발사각 계산
-		// sin(2θ) = g × R / v²
-		// θ_low = 0.5 × arcsin(g × R / v²)
-		// θ_high = 90° - θ_low
-		// m_useHighArc에 따라 선택
+		// 구간 1: R <= R_45 (20~45도, 속도 고정)
 		// ─────────────────────────────────────────────
-		float sinValue = (g * R) / v2;
+		if (R <= m_range45)
+		{
+			// 물리 계산: sin(2θ) = g × R / v²
+			float sinValue = (g * R) / v2;
+			sinValue = std::max(-1.0f, std::min(1.0f, sinValue));
+			
+			float theta2 = std::asin(sinValue);
+			float thetaLow = theta2 * 0.5f;
+			
+			// minAngle 클램프
+			outAngleRad = std::max(minAngleRad, thetaLow);
+			outSpeed = v;
+			return true;
+		}
 		
-		// 수치 안정성 (arcsin 범위: -1 ~ 1)
-		sinValue = std::max(-1.0f, std::min(1.0f, sinValue));
+		// ─────────────────────────────────────────────
+		// 구간 2: R_45 < R <= R_70 (45~70도, 선형 매핑 + 속도 역산)
+		// ─────────────────────────────────────────────
+		if (R <= m_range70)
+		{
+			// 거리 비율 (0~1)
+			float t = (R - m_range45) / (m_range70 - m_range45);
+			
+			// 각도 선형 보간: 45° + t × (maxAngle - 45°)
+			outAngleRad = kAngle45Rad + t * (maxAngleRad - kAngle45Rad);
+			
+			// 해당 각도로 거리 R에 도달하기 위한 속도 역산
+			// R = v² × sin(2θ) / g
+			// v = sqrt(R × g / sin(2θ))
+			float sin2Angle = std::sin(2.0f * outAngleRad);
+			if (sin2Angle < 0.0001f) sin2Angle = 0.0001f;  // 0으로 나누기 방지
+			
+			outSpeed = std::sqrt(R * g / sin2Angle);
+			return true;
+		}
 		
-		float theta2 = std::asin(sinValue);  // 2θ_low
-		float thetaLow = theta2 * 0.5f;
-		float thetaHigh = (kPi * 0.5f) - thetaLow;  // 90° - θ_low
+		// ─────────────────────────────────────────────
+		// 구간 3: R > R_70 (사거리 초과, 70도 최대)
+		// ─────────────────────────────────────────────
+		outAngleRad = maxAngleRad;
 		
-		// m_useHighArc에 따라 발사각 선택
-		outAngleRad = m_useHighArc ? thetaHigh : thetaLow;
-		return true;
+		// 70도 최대 속도
+		float sin2MaxAngle = std::sin(2.0f * maxAngleRad);
+		if (sin2MaxAngle < 0.0001f) sin2MaxAngle = 0.0001f;
+		outSpeed = std::sqrt(m_range70 * g / sin2MaxAngle);
+		
+		return false;  // 사거리 초과
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -916,6 +963,49 @@ namespace game
 		}
 		
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
+		
+		// ─────────────────────────────────────────────
+		// 포물선 전용 설정 (Parabolic 타입만)
+		// ─────────────────────────────────────────────
+		if (IsParabolicBullet())
+		{
+			ImGui::Separator();
+			ImGui::Text("=== Parabolic Settings ===");
+			ImGui::DragFloat("Parabolic Speed", &m_parabolicSpeed, 0.5f, 1.0f, 50.0f, "%.1f m/s");
+			ImGui::DragFloat("Own Gravity", &m_ownGravity, 0.1f, 1.0f, 30.0f, "%.1f m/s^2");
+			ImGui::Checkbox("Use High Arc", &m_useHighArc);
+			ImGui::DragFloat("Min Launch Angle", &m_minLaunchAngle, 1.0f, 0.0f, 89.0f, "%.1f deg");
+			ImGui::DragFloat("Max Launch Angle", &m_maxLaunchAngle, 1.0f, 0.0f, 89.0f, "%.1f deg");
+			
+			// 에디터용 실시간 사거리 계산
+			float v = m_parabolicSpeed;
+			float g = m_ownGravity;
+			float v2 = v * v;
+			
+			float range45 = v2 / g;
+			
+			constexpr float kDegToRad = 3.14159265f / 180.0f;
+			float maxAngleRad = m_maxLaunchAngle * kDegToRad;
+			float sin2MaxAngle = std::sin(2.0f * maxAngleRad);
+			float range70 = (v2 * sin2MaxAngle) / g;
+			
+			ImGui::Text("Range (45 deg): %.1f m", range45);
+			ImGui::Text("Range (%.1f deg): %.1f m", m_maxLaunchAngle, range70);
+			
+			// 사거리 검증
+			if (range70 < m_AttackRange)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), 
+					"WARNING: Max Range < Attack Range!");
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), 
+					"Increase Speed or decrease Gravity/AttackRange");
+			}
+			else
+			{
+				ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), 
+					"OK: Max Range >= Attack Range");
+			}
+		}
 
 		// ─────────────────────────────────────────────
 		// 런타임 정보
@@ -986,6 +1076,9 @@ namespace game
 		// 포물선 총알 설정 (Parabolic 타입에서만 사용)
 		j["ParabolicSpeed"] = m_parabolicSpeed;
 		j["OwnGravity"] = m_ownGravity;
+		j["UseHighArc"] = m_useHighArc;
+		j["MinLaunchAngle"] = m_minLaunchAngle;
+		j["MaxLaunchAngle"] = m_maxLaunchAngle;
 	}
 
 	void MonsterScript::Load(const engine::json& j)
@@ -1020,5 +1113,8 @@ namespace game
 		// 포물선 총알 설정 (Parabolic 타입에서만 사용)
 		m_parabolicSpeed = j.value("ParabolicSpeed", 15.0f);
 		m_ownGravity = j.value("OwnGravity", 9.8f);
+		m_useHighArc = j.value("UseHighArc", false);
+		m_minLaunchAngle = j.value("MinLaunchAngle", 20.0f);
+		m_maxLaunchAngle = j.value("MaxLaunchAngle", 70.0f);
 	}
 }

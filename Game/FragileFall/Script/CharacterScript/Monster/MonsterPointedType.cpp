@@ -190,6 +190,9 @@ namespace game
             m_bulletParams.ownGravity = m_ownGravity;     // 에디터 설정값
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 15;
+            
+            // 사거리 사전 계산 (45도, 70도)
+            CalculateParabolicRanges();
 			break;
 		case MonsterTier::Purple:
             m_bulletParams.type = BulletType::Linear;
@@ -641,14 +644,17 @@ namespace game
                     engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
                     engine::Vector3 targetPos(playerPos.x, 0.0f, playerPos.z);
                     
-                    // 발사각 자동 계산
+                    // 발사각 및 속도 자동 계산
                     float angleRad = 0.0f;
-                    CalculateParabolicLaunchAngle(bulletStartPos, targetPos, angleRad);
+                    float calculatedSpeed = 0.0f;
+                    CalculateParabolicLaunchAngle(bulletStartPos, targetPos, angleRad, calculatedSpeed);
                     
                     // BulletParams에 값 설정
-                    m_bulletParams.speed = m_parabolicSpeed;
+                    m_bulletParams.speed = calculatedSpeed;  // 계산된 속도 (구간별로 다름)
                     m_bulletParams.launchAngle = angleRad * 180.0f / 3.14159265f;  // 도(degree)로 변환
                     m_bulletParams.ownGravity = m_ownGravity;
+                    m_bulletParams.minLaunchAngle = m_minLaunchAngle;
+                    m_bulletParams.maxLaunchAngle = m_maxLaunchAngle;
                     
                     // 실제 발사
                     m_bulletFactory->ParabolicFireMonster(bulletStartPos, direction, m_bulletParams);
