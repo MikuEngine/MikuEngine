@@ -187,6 +187,7 @@
     <ClCompile Include="Script\CornerTrigger.cpp" />
     <ClCompile Include="Script\ExecutionEffectScript.cpp" />
     <ClCompile Include="Script\ExecutionSlowScript.cpp" />
+    <ClCompile Include="Script\LobbyInteraction.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterPartyGenerator.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="Script\ExecutionEffectScript.h" />
     <ClInclude Include="Script\ExecutionSlowScript.h" />
     <ClInclude Include="Script\ItemType.h" />
+    <ClInclude Include="Script\LobbyInteraction.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterData.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterGenerateTest.h" />
     <ClInclude Include="Script\MonsterGenerator\MonsterPartyGenerator.h" />

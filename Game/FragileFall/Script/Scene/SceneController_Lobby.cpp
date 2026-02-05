@@ -217,7 +217,7 @@ namespace game
             {
                 m_isPlayerMove = false;
                 game::LoadingScreenDrawer::OnSceneTransitionBegin();
-                engine::SceneManager::Get().ChangeScene("Prototype_Play");
+                engine::SceneManager::Get().ChangeScene("Stage1_Prototype");
             }
         }
     }
