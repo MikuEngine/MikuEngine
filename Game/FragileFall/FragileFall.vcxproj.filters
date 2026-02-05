@@ -71,6 +71,7 @@
     <ClCompile Include="Script\MonsterUpdateActivationSwitch.cpp" />
     <ClCompile Include="Script\ParticleAttachment.cpp" />
     <ClCompile Include="Script\LobbyInteraction.cpp" />
+    <ClCompile Include="Script\DoorTriggerScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -148,5 +149,6 @@
     <ClInclude Include="Script\ParticleAttachment.h" />
     <ClInclude Include="Script\LobbyInteraction.h" />
     <ClInclude Include="Script\Interface\IDamageable.h" />
+    <ClInclude Include="Script\DoorTriggerScript.h" />
   </ItemGroup>
 </Project>

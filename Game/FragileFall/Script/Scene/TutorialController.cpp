@@ -5,6 +5,7 @@
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Core/System/Input.h>
 
+#include "Script/DoorTriggerScript.h"
 
 namespace game
 {
@@ -18,14 +19,14 @@ namespace game
             {{"좌클릭을 눌러 사격하여\n몬스터를 쓰러트리세요."}},// 1
 
             {{
-           "특정 몬스터는 즉시 사망하지 않고\n프레자일 상태가 됩니다.",// 1
-           "프레자일 상태가 된 몬스터에게\n가까이 다가가여 조준점을 올리면\nUI가 출력됩니다.",// 2
-           "UI가 나온다면 우클릭을 통해\n순간이동하며 몬스터를 완전히\n죽일 수 있습니다.",// 3
-           }},
+            "특정 몬스터는 즉시 사망하지 않고\n프레자일 상태가 됩니다.",// 1
+            "프레자일 상태가 된 몬스터에게\n가까이 다가가여 조준점을 올리면\nUI가 출력됩니다.",// 2
+            "UI가 나온다면 우클릭을 통해\n순간이동하며 몬스터를 완전히\n죽일 수 있습니다.",// 3
+            }},
 
             {{
-           "스테이지의 모든 몬스터를 처치하면\n프레자일 게이지 상승이 멈추고\n보상과 함께 탈출구와 진입로가 개방됩니다. ", //1
-           "현재 프레자일 게이지가\n위험한 상태니 복귀를 합시다.",//2
+            "스테이지의 모든 몬스터를 처치하면\n프레자일 게이지 상승이 멈추고\n보상과 함께 탈출구와 진입로가 개방됩니다. ", //1
+            "현재 프레자일 게이지가\n위험한 상태니 복귀를 합시다.",//2
             }},
 
             {{"해당 장소는 로비창으로\n 게임을 시작하거나 캐릭터를 강화하여\n더 깊은 심연으로 갈 수 있습니다."}},// 1
@@ -44,6 +45,17 @@ namespace game
     {
         if (auto* go = engine::GameObject::Find("Canvas_Message"))
             m_queue = go->GetComponent<UIMessageQueue>();
+
+
+        // next door
+        if (!m_nextDoorObjectName.empty())
+        {
+            m_nextDoorObject = engine::GameObject::Find(m_nextDoorObjectName);
+            if (m_nextDoorObject)
+            {
+			    m_doorPosition = m_nextDoorObject->GetTransform()->GetWorldPosition();
+            }
+        }
     }
 
     void TutorialController::Start()
@@ -53,11 +65,12 @@ namespace game
 
     void TutorialController::Update()
     {
-        if (engine::Input::IsKeyPressed(engine::Keys::Space) || engine::Input::IsKeyPressed(engine::Keys::Right))
+        // 단축키
+        if ( engine::Input::IsKeyPressed(engine::Keys::Space))
         {
             Next();
         }
-        else if (engine::Input::IsKeyPressed(engine::Keys::Left))
+        else if (engine::Input::IsKeyPressed(engine::Keys::F9))
         {
             Prev();
         }
@@ -77,6 +90,14 @@ namespace game
     void TutorialController::Next()
     {
         if (!m_queue) return;
+
+        if (m_stepIndex == 0)
+        {
+            if (m_nextDoorObject)
+            {
+                m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
+            }
+        }
 
         const auto& step = g_steps[m_stepIndex];
 
@@ -102,6 +123,7 @@ namespace game
         const auto& nextStep = g_steps[m_stepIndex];
         m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.2f);
         m_queue->SetSingle(UIMessageChannel::Tutorial, nextStep.pages[0]);
+
     }
 
     void TutorialController::Prev()
@@ -128,16 +150,33 @@ namespace game
 
     void TutorialController::OnGui()
     {
+        char doorNameBuffer[256];
+        strcpy_s(doorNameBuffer, m_nextDoorObjectName.c_str());
 
+        if (ImGui::InputText("Door Object Name", doorNameBuffer, sizeof(doorNameBuffer)))
+        {
+            m_nextDoorObjectName = doorNameBuffer;
+        }
+
+        ImGui::SameLine();
+        ImGui::TextDisabled("(?)");
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("고유한 오브젝트 이름이어야합니다.");
+        }
     }
 
     void TutorialController::Save(engine::json& j) const
     {
         Object::Save(j);
+
+        j["NextDoorObjectName"] = m_nextDoorObjectName;
     }
 
     void TutorialController::Load(const engine::json& j)
     {
         Object::Load(j);
+
+        engine::JsonGet(j, "NextDoorObjectName", m_nextDoorObjectName);
     }
 }

@@ -16,6 +16,15 @@ namespace game
     {
         REGISTER_SCRIPT(TutorialController, Script)
 
+    private:
+        UIMessageQueue* m_queue = nullptr;
+        int m_stepIndex = 0;
+        int m_pageIndex = 0;
+
+        std::string m_nextDoorObjectName;
+        engine::Ptr<engine::GameObject> m_nextDoorObject = nullptr;
+        engine::Vector3 m_doorPosition = { 0, 0, 0 };
+
     public:
         void Awake() override;
         void Start() override;
@@ -26,10 +35,7 @@ namespace game
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
 
-    private:
-        UIMessageQueue* m_queue = nullptr;
-        int m_stepIndex = 0;
-        int m_pageIndex = 0;
+
 
         void ShowPage();
         void Next();

@@ -185,6 +185,7 @@
     <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundRed.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundType.cpp" />
     <ClCompile Include="Script\CornerTrigger.cpp" />
+    <ClCompile Include="Script\DoorTriggerScript.cpp" />
     <ClCompile Include="Script\ExecutionEffectScript.cpp" />
     <ClCompile Include="Script\ExecutionSlowScript.cpp" />
     <ClCompile Include="Script\LobbyInteraction.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundRed.h" />
     <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundType.h" />
     <ClInclude Include="Script\CornerTrigger.h" />
+    <ClInclude Include="Script\DoorTriggerScript.h" />
     <ClInclude Include="Script\ExecutionEffectScript.h" />
     <ClInclude Include="Script\ExecutionSlowScript.h" />
     <ClInclude Include="Script\Interface\IDamageable.h" />
