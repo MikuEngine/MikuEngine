@@ -266,10 +266,6 @@ namespace game
 	{
 		if (m_isDying || m_isFieldType) return;
 		if (!info.gameObject) return;
-
-		// ─────────────────────────────────────────────
-		// [미사용] 포물선 타입: 벽 또는 플레이어 충돌 시 착탄		
-		// ─────────────────────────────────────────────
 		
 		if (m_params.type == BulletType::Parabolic)
 		{
