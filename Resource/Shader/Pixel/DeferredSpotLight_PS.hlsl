@@ -67,7 +67,7 @@ float4 main(PS_INPUT input) : SV_Target
         discard;
     }
 
-    // Spot shadow: project world pos to light clip, sample shadow map
+    // Spot shadow: project world pos to light clip, PCF or single sample
     float spotShadowFactor = 1.0f;
     if (g_useSpotShadow)
     {
@@ -77,8 +77,27 @@ float4 main(PS_INPUT input) : SV_Target
         lightUV.y = 1.0f - lightUV.y; // D3D NDC to texture UV
         if (lightDepth >= 0.0f && lightDepth <= 1.0f && lightUV.x >= 0.0f && lightUV.x <= 1.0f && lightUV.y >= 0.0f && lightUV.y <= 1.0f)
         {
-            const float spotShadowBias = 0.005f;
-            spotShadowFactor = g_texSpotShadowMap.SampleCmp(g_samComparison, float3(lightUV, (float)g_spotShadowIndex), lightDepth + spotShadowBias);
+            float compareVal = lightDepth + g_shadowBias;
+            if (g_useShadowPCF && g_spotShadowMapSize >= 1.0f)
+            {
+                int maxPcf = g_pcfSize;
+                float texelSize = 1.0f / g_spotShadowMapSize;
+                float sum = 0.0f;
+                for (int py = -maxPcf; py <= maxPcf; ++py)
+                {
+                    for (int px = -maxPcf; px <= maxPcf; ++px)
+                    {
+                        float2 offset = float2(px, py) * texelSize;
+                        float2 sampleUV = lightUV + offset;
+                        sum += g_texSpotShadowMap.SampleCmpLevelZero(g_samComparison, float3(sampleUV, (float)g_spotShadowIndex), compareVal);
+                    }
+                }
+                spotShadowFactor = sum / ((maxPcf * 2 + 1) * (maxPcf * 2 + 1));
+            }
+            else
+            {
+                spotShadowFactor = g_texSpotShadowMap.SampleCmpLevelZero(g_samComparison, float3(lightUV, (float)g_spotShadowIndex), compareVal);
+            }
         }
     }
 

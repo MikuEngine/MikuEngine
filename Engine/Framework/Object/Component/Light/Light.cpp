@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Light.h"
 
 #include "Framework/System/SystemManager.h"
@@ -159,6 +159,8 @@ namespace engine
 		ImGui::ColorEdit3("Color", &m_color.x);
 		ImGui::DragFloat("Intensity", &m_intensity, 0.1f, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 		ImGui::Checkbox("Cast Shadows", &m_castShadows);
+		if (m_castShadows)
+			ImGui::DragFloat("Shadow Bias", &m_shadowBias, 0.0001f, 0.0f, 0.1f, "%.4f", ImGuiSliderFlags_AlwaysClamp);
 		// Type Specific Properties
 		if (m_lightType == LightType::Directional)
 		{

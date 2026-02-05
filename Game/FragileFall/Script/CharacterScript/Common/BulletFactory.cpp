@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
@@ -6,6 +6,7 @@
 #include "Script/CharacterScript/Monster/RoundType/MonsterRoundGreen.h"
 
 #include <Framework/Asset/Prefab.h>
+#include <Framework/System/SoundSystem.h>
 
 namespace game
 {
@@ -33,6 +34,8 @@ namespace game
 		// ─────────────────────────────────────────────
 		auto* bullet = go->GetComponent<BulletPlayer>();
 		bullet->Setup(std::move(movement), params.lifetime, params.damage, params.range);
+
+		engine::SoundSystem::Get().Play("Player_Shot_Random", "SFX/Player");
 	}
 
 	// ═══════════════════════════════════════════════════════════════

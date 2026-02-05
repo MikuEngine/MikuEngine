@@ -12,8 +12,8 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 5.005016326904297,
+                        "z": -4.75748348236084
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -31,7 +31,7 @@
                     "Type": "ParticleEffect",
                     "Active": true,
                     "IsPlaying": true,
-                    "AutoDestroy": false,
+                    "AutoDestroy": true,
                     "Duration": 0.0,
                     "Emitters": [
                         {
@@ -81,8 +81,6 @@
                             "StartEmissiveIntensity": 1.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
-                            "UseDistanceEmission": false,
-                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 1.0,
                             "SizeEnd": 1.0,
                             "SizeVariation": 0.10000000149011612,
@@ -164,8 +162,6 @@
                             "StartEmissiveIntensity": 1.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
-                            "UseDistanceEmission": false,
-                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 1.0,
                             "SizeEnd": 1.0,
                             "SizeVariation": 0.10000000149011612,
@@ -247,8 +243,6 @@
                             "StartEmissiveIntensity": 1.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
-                            "UseDistanceEmission": false,
-                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 1.0,
                             "SizeEnd": 1.0,
                             "SizeVariation": 0.10000000149011612,
@@ -330,8 +324,6 @@
                             "StartEmissiveIntensity": 1.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
-                            "UseDistanceEmission": false,
-                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 1.0,
                             "SizeEnd": 1.0,
                             "SizeVariation": 0.10000000149011612,
@@ -413,8 +405,6 @@
                             "StartEmissiveIntensity": 1.0,
                             "EndEmissiveIntensity": 1.0,
                             "Blend": 0,
-                            "UseDistanceEmission": false,
-                            "EmitSpacing": 0.019999999552965164,
                             "SizeBegin": 1.0,
                             "SizeEnd": 1.0,
                             "SizeVariation": 0.10000000149011612,
