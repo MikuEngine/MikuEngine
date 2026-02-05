@@ -139,6 +139,8 @@ namespace engine
 		{
 			bool created = false;
 			GameObject* vgo = EnsureChildUI(parent, m_viewportName.c_str(), created);
+			m_viewportCreated = created;
+
 			if (vgo)
 			{
 				m_viewportRT = vgo->GetComponent<RectTransform>();
@@ -157,6 +159,8 @@ namespace engine
 				: parent;
 
 			GameObject* cgo = EnsureChildUI(contentParent, m_contentName.c_str(), created);
+			m_contentCreated = created;
+
 			if (cgo)
 				m_contentRT = cgo->GetComponent<RectTransform>();
 		}
@@ -168,14 +172,19 @@ namespace engine
 		{
 			bool created = false;
 			GameObject* sgo = EnsureChildUI(parent, m_scrollbarName.c_str(), created);
+			m_scrollbarCreated = created;
+
 			if (sgo)
 			{
 				UISlider* slider = sgo->GetComponent<UISlider>();
 				if (!slider) slider = sgo->AddComponent<UISlider>();
 
-				slider->SetDirection(UISlider::Direction::BottomToTop);
-				slider->SetValue(0.0f);
-				slider->SetUseFill(false);
+				if (created)
+				{
+					slider->SetDirection(UISlider::Direction::BottomToTop);
+					slider->SetValue(0.0f);
+					slider->SetUseFill(false);
+				}
 			}
 		}
 
@@ -294,18 +303,25 @@ namespace engine
 	{
 		if (m_viewportRT)
 		{
-			m_viewportRT->SetAnchorMin({ 0.0f, 0.0f });
-			m_viewportRT->SetAnchorMax({ 0.0f, 0.0f });
-			m_viewportRT->SetPivot({ 0.0f, 0.0f });
-			m_viewportRT->SetAnchoredPosition({ 0.0f, 0.0f });
-			m_viewportRT->SetSize(m_viewportSize.x, m_viewportSize.y);
+			if (m_autoLayoutViewport && m_viewportCreated)
+			{
+				m_viewportRT->SetAnchorMin({ 0.0f, 0.0f });
+				m_viewportRT->SetAnchorMax({ 0.0f, 0.0f });
+				m_viewportRT->SetPivot({ 0.0f, 0.0f });
+				m_viewportRT->SetAnchoredPosition({ 0.0f, 0.0f });
+				m_viewportRT->SetSize(m_viewportSize.x, m_viewportSize.y);
+			}
 		}
 
 		if (m_contentRT)
 		{
-			m_contentRT->SetAnchorMin({ 0.0f, 0.0f });
-			m_contentRT->SetAnchorMax({ 1.0f, 1.0f });
-			m_contentRT->SetPivot({ 0.5f, 0.5f });
+			if (m_contentCreated)
+			{
+				m_contentRT->SetAnchorMin({ 0.0f, 0.0f });
+				m_contentRT->SetAnchorMax({ 1.0f, 1.0f });
+				m_contentRT->SetPivot({ 0.5f, 0.5f });
+			}
+
 			m_contentRT->SetSize(0.0f, m_contentHeight);
 		}
 
@@ -313,17 +329,25 @@ namespace engine
 		{
 			if (auto* sbRT = m_scrollbar->GetRectTransform())
 			{
-				sbRT->SetAnchorMin({ 0.0f, 0.0f });
-				sbRT->SetAnchorMax({ 0.0f, 0.0f });
-				sbRT->SetPivot({ 0.0f, 0.0f });
+				if (m_autoLayoutScrollbar && m_scrollbarCreated)
+				{
+					sbRT->SetAnchorMin({ 0.0f, 0.0f });
+					sbRT->SetAnchorMax({ 0.0f, 0.0f });
+					sbRT->SetPivot({ 0.0f, 0.0f });
 
-				const float x = m_viewportSize.x + m_scrollbarGap;
-				sbRT->SetAnchoredPosition({ x, 0.0f });
+					const float x = m_viewportSize.x + m_scrollbarGap;
+					sbRT->SetAnchoredPosition({ x, 0.0f });
+					// 크기(폭/높이)는 파라미터로 관리
+					sbRT->SetWidth(m_scrollbarWidth);
+					sbRT->SetHeight(m_viewportSize.y);
+				}
 
-				sbRT->SetWidth(m_scrollbarWidth);
-				sbRT->SetHeight(m_viewportSize.y);
 			}
 		}
+
+		m_viewportCreated = false;
+		m_contentCreated = false;
+		m_scrollbarCreated = false;
 	}
 
 	void UIScrollView::BindScrollbarCallBack()
