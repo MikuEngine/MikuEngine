@@ -545,6 +545,12 @@ namespace engine
 		ImGui::Text("Texture: %s", std::filesystem::path(m_textureFilePath).filename().string().c_str());
 		std::string selectedTex;
 
+		ImGui::SameLine();
+		if (ImGui::Button("None##MainTex"))
+		{
+			SetTexture("None"); // 또는 SetTexture(""); 엔진 내부 처리 방식에 따라 선택
+		}
+
 		if (DrawFileSelector("Select Texture", "Resource/Texture", texExtensions, selectedTex))
 		{
 			SetTexture(selectedTex);

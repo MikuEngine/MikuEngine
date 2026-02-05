@@ -51,16 +51,23 @@ namespace game
     void MonsterRoundType::Update()
     {
         // 업데이트 중지 체크
-        CheckAndApplyUpdateSwitch();
-        if (!m_isDoUpdate) return;
+        if (!m_isDoUpdate)
+        {
+            CheckAndApplyUpdateSwitch();
+            return;
+        }
 
         MonsterScript::Update();
     }
 
     void MonsterRoundType::FixedUpdate()
     {
-        // 물리 업데이트 중지 체크
-        if (!m_isDoUpdate) return;
+        // 업데이트 중지 체크
+        if (!m_isDoUpdate)
+        {
+            CheckAndApplyUpdateSwitch();
+            return;
+        }
 
         MonsterScript::FixedUpdate();
     }

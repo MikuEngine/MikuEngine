@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 21.75356101989746,
-                        "y": 1.5,
-                        "z": 9.446041107177734
+                        "x": -8.818670272827148,
+                        "y": 1.5000009536743164,
+                        "z": -0.6432645320892334
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -32,7 +32,7 @@
                     "Active": true,
                     "type": 0,
                     "mass": 1.0,
-                    "linearDamping": 1.0,
+                    "linearDamping": 10.0,
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 42
@@ -83,7 +83,7 @@
                     "MonsterTier": 0,
                     "Hp": 100.0,
                     "MaxHp": 100.0,
-                    "MoveSpeed": 12.0,
+                    "MoveSpeed": 14.0,
                     "AttackDamage": 10.0,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
@@ -96,8 +96,9 @@
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
-                    "ParabolicSpeed": 17.0,
-                    "OwnGravity": 17.0,
+                    "OwnGravity": 22.0,
+                    "MinLaunchAngle": 30.0,
+                    "MaxLaunchAngle": 70.0,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
