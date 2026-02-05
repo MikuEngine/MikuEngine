@@ -12,6 +12,7 @@
 
 #include "Manager/TimeScaler.h"
 #include <Manager/LoadingScreenDrawer.h>
+#include <Script/AimModeController.h>
 
 namespace game
 {
@@ -69,6 +70,9 @@ namespace game
 
     void SceneController_Play::Start()
     {
+        if (!TimeScaler::IsActive())
+            TimeScaler::PlayWorld();
+
         m_menuPopUp = engine::GameObject::Find("Panel_Menu");
         if (m_menuPopUp) m_menuPopUp->SetActive(false);
 
@@ -166,6 +170,10 @@ namespace game
     {
         m_isMenuOpen = open;
 
+        const bool shouldStop = (m_isOptionOpen || m_isMenuOpen || m_isGiveupOpen || m_isDead);
+        if (shouldStop) TimeScaler::StopWorld();
+        else            TimeScaler::PlayWorld();
+
         if (m_menuPopUp)
         {
             if (auto* anim = m_menuPopUp->GetComponent<game::UIPopUpAnimator>())
@@ -242,11 +250,24 @@ namespace game
     void SceneController_Play::UpdateBlocker()
     {
         if (!m_blocker) return;
-        const bool paused = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen);
+        const bool isAnyPopupOpen = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen || m_isDead);
 
-        m_blocker->SetActive(paused);
+        m_blocker->SetActive(isAnyPopupOpen);
 
-        paused ? TimeScaler::StopWorld(): TimeScaler::PlayWorld();
+        if (isAnyPopupOpen)
+            TimeScaler::StopWorld();
+        else
+            TimeScaler::PlayWorld();
+
+        auto* aimGO = engine::GameObject::Find("AimPointerCanvas");
+
+        if (aimGO)
+        {
+            if (auto* amc = aimGO->GetComponent<AimModeController>())
+            {
+                amc->SetPaused(isAnyPopupOpen);
+            }
+        }
     }
 
     void SceneController_Play::OnBGMChanged(float v)
@@ -282,6 +303,11 @@ namespace game
     void SceneController_Play::SetOptionOpen(bool open)
     {
         m_isOptionOpen = open;
+
+        const bool shouldStop = (m_isOptionOpen || m_isMenuOpen || m_isGiveupOpen || m_isDead);
+        if (shouldStop) TimeScaler::StopWorld();
+        else            TimeScaler::PlayWorld();
+
         if (m_optionPopUp)
         {
             if (auto* anim = m_optionPopUp->GetComponent<game::UIPopUpAnimator>())
