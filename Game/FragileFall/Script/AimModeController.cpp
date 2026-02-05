@@ -20,9 +20,9 @@ namespace game
         m_cursorTexByState[(int)AimCursorState::Default] = "Resource/Texture/UI/Image/Cursor_Default.png";
         m_cursorTexByState[(int)AimCursorState::Clicked] = "Resource/Texture/UI/Image/Cursor_Click.png";
 
-        //m_cursorTexByState[(int)AimCursorState::AimIdle] = "Resource/Texture/Aim_Idle.png";
-        //m_cursorTexByState[(int)AimCursorState::AimFiring] = "Resource/Texture/Aim_Firing.png";
-        //m_cursorTexByState[(int)AimCursorState::AimExecute] = "Resource/Texture/Aim_Execute.png";
+        m_cursorTexByState[(int)AimCursorState::AimIdle] = "Resource/Texture/UI/Image/Aim_Idle.png";
+        m_cursorTexByState[(int)AimCursorState::AimFiring] = "Resource/Texture/UI/Image/Aim_Firing.png";
+        m_cursorTexByState[(int)AimCursorState::AimExecute] = "Resource/Texture/UI/Image/Aim_Execute.png";
 
         ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -262,18 +262,13 @@ namespace game
 
         m_cursorRect->SetAnchoredPosition(mouseRefCenter);
 
-        const AimCursorState desired = ComputeDesiredCursorState(mode);
-        if (desired != m_cursor)
-            SetCursorTexture(desired);
-
         // Debug
         if (engine::Input::IsKeyPressed(engine::Keys::P))
         {
-            auto next = (m_cursor == AimCursorState::Default)
-                ? AimCursorState::Clicked
-                : AimCursorState::Default;
-            
-            SetCursorTexture(next);
+            m_debugIndex = m_debugIndex % (int)AimCursorState::Count;
+
+            SetCursorTexture((AimCursorState)m_debugIndex);
+            m_debugIndex++;
         }
     }
 
