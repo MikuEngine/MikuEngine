@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -15,6 +15,7 @@
 #include <Framework/Object/Component/Camera.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
+#include <Framework/Asset/Prefab.h>
 #include <Framework/System/SystemManager.h>
 #include <Engine/Core/System/Input.h>
 #include <Engine/Core/System/MyTime.h>
@@ -882,6 +883,12 @@ namespace game
 							if (inst.info.name == m_bulletFireSocketName)
 							{
 								bulletSocketRenderer = r;
+								auto effect = engine::Prefab::Instantiate("Effect_Bullet_Fire_V1.00");
+								if (effect && effect->GetTransform())
+								{
+									effect->GetTransform()->SetWorldMatrix(inst.worldMatrix);
+									effect->GetTransform()->SetLocalScale(engine::Vector3(1.0f, 1.0f, 1.0f));
+								}
 								break;
 							}
 						}

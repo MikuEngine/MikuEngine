@@ -31,7 +31,7 @@
                     "Type": "ParticleEffect",
                     "Active": true,
                     "IsPlaying": true,
-                    "AutoDestroy": false,
+                    "AutoDestroy": true,
                     "Duration": 0.0,
                     "Emitters": [
                         {
