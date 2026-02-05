@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -101,6 +101,7 @@ namespace game
         float m_rotationSpeed = 2.0f;        // 회전 속도 (rad/sec)
         float m_fireRate = 3.0f;             // 발사 간격 (초)
         float m_bulletSpeed = 1.0f;          // 총알 속도
+        float m_bulletSpeedOverrideMax = 1.0f;  //발사각 45도 이상에서, 설정된 총알속도를 대신할 보정(증가)값
         float m_bulletLifetime = 3.0f;       // 총알 수명 (초)
         float m_spreadAngle = 0.2f;          // 3방향 발사 퍼짐 각도 (라디안, Blue용)
 
@@ -115,23 +116,26 @@ namespace game
 
         // ─────────────────────────────────────────────
         // 포물선 총알 설정 (Parabolic 타입에서만 사용)
-        // - 에디터 설정: bulletSpeed, ownGravity
-        // - 자동 계산: launchAngle (발사 시점에 거리 기반 계산)
-        // - m_useHighArc: 높은/낮은 발사각 선택
-        // - 제한: v² / g >= AttackRange (최대 사거리가 어택레인지 이상)
-        // - 다른 타입에서는 이 값들을 무시함
+        // 
+        // 새로운 로직:
+        //   - 에디터 설정: m_ownGravity (5~20), m_minLaunchAngle, m_maxLaunchAngle
+        //   - 자동 계산: speed = CalculateParabolicSpeed() (AttackRange 기준)
+        //   - 중력 고정, 속도 자동 계산
+        //   - maxAngle에서 AttackRange에 도달
         // ─────────────────────────────────────────────
-        float m_parabolicSpeed = 15.0f;       // 포물선 총알 속력 (m/s)
-        float m_ownGravity = 9.8f;            // 자체 중력 가속도 (m/s²)
-        bool m_useHighArc = false;            // true: 높은 발사각 (곡선 화려), false: 낮은 발사각 (빠른 도달)
-        float m_minLaunchAngle = 20.0f;       // 최소 발사각 (도)
-        float m_maxLaunchAngle = 70.0f;       // 최대 발사각 (도) - 이 각도에서 최대 사거리 도달
+        float m_ownGravity = 9.8f;            // 중력 (m/s², 에디터 편집, 5~20)
+        float m_minLaunchAngle = 20.0f;       // 최소 발사각 (도, 0~44)
+        float m_maxLaunchAngle = 70.0f;       // 최대 발사각 (도, 45~89) - 이 각도에서 최대 사거리
+        
+        // 중력 범위 상수
+        static constexpr float kMinGravity = 5.0f;
+        static constexpr float kMaxGravity = 40.0f;
         
         // ─────────────────────────────────────────────
-        // 사전 계산된 사거리 값 (InitializeBullet에서 계산)
+        // 속도 자동 계산 (AttackRange, maxAngle, gravity 기준)
+        // v = sqrt(AttackRange × g / sin(2×maxAngle)) + 0.1
         // ─────────────────────────────────────────────
-        float m_range45 = 0.0f;               // 45도 사거리 (속도 고정)
-        float m_range70 = 0.0f;               // maxLaunchAngle 사거리 (속도 보정 포함)
+        float CalculateParabolicSpeed() const;
 
         // ─────────────────────────────────────────────
         // 런타임 상태
@@ -229,25 +233,20 @@ namespace game
         virtual void Attack(float deltaTime);
 
         // ─────────────────────────────────────────────
-        // 포물선 사거리 사전 계산 (InitializeBullet에서 호출)
-        // - 45도 사거리, maxLaunchAngle 사거리 계산
-        // ─────────────────────────────────────────────
-        void CalculateParabolicRanges();
-        
-        // ─────────────────────────────────────────────
-        // 포물선 발사각 및 속도 자동 계산 (Parabolic 타입용)
-        // - 입력: 발사 위치, 착탄점
-        // - 사용: m_parabolicSpeed, m_ownGravity, m_minLaunchAngle, m_maxLaunchAngle
-        // - 출력: launchAngle (라디안), speed (보정된 속도)
-        // - 구간 1 (R <= R_45): 20~45도, 물리 계산, 속도 고정
-        // - 구간 2 (R_45 < R <= R_70): 45~70도, 선형 매핑, 속도 역산
-        // - 구간 3 (R > R_70): 70도 고정, 최대 속도
+        // 포물선 발사 파라미터 자동 계산 (Parabolic 타입용)
+        // 
+        // 로직:
+        //   1. 거리에 따라 발사각 선형 매핑 (minAngle ~ maxAngle)
+        //   2. 중력 고정 (m_ownGravity)
+        //   3. 속도 역산: v = sqrt(R × g / sin(2θ))
+        // 
+        // 반환값: true = 범위 내, false = 범위 초과 (maxAngle 사용)
         // ─────────────────────────────────────────────
         bool CalculateParabolicLaunchAngle(
             const engine::Vector3& startPos,   // 발사 위치 (오프셋 적용된 실제 위치)
             const engine::Vector3& targetPos,  // 착탄점 (플레이어 XZ, Y=지정값)
-            float& outAngleRad,                // 출력: 발사각 (라디안)
-            float& outSpeed                    // 출력: 보정된 속도 (m/s)
+            float& outAngleDeg,                // 출력: 발사각 (도)
+            float& outSpeed                    // 출력: 계산된 발사 속도 (m/s)
         ) const;
         
         // ─────────────────────────────────────────────
