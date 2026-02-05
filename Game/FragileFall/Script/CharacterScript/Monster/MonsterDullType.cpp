@@ -39,11 +39,10 @@ namespace game
         if (!m_logicFSM) return;
 
         // ─────────────────────────────────────────────
-        // 상태 정의
+        // 상태 정의 (Dull 타입은 Fragile 없음)
         // ─────────────────────────────────────────────
         AddFSMState("Idle", true);    // 기본 상태
         AddFSMState("Engage", false);
-        AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
         // ─────────────────────────────────────────────
@@ -55,7 +54,6 @@ namespace game
         // 파라미터 정의
         // ─────────────────────────────────────────────
         m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
-        m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
 		m_logicFSM->SetParameter("HasMonsters", true);      // 둔탁 보라 전용
 
@@ -66,21 +64,9 @@ namespace game
         AddFSMTransition("Idle", "Engage", "PlayerInRange", BoolTrue());
         AddFSMTransition("Engage", "Idle", "PlayerInRange", BoolFalse());
 
-		// 둔탁 보라 전용 로직
-        if (m_monsterTier == MonsterTier::Purple)
-        {
-            AddFSMTransition("Idle", "Dead", "Die", Trigger());
-            AddFSMTransition("Engage", "Dead", "Die", Trigger());
-        }
-        else
-        {
-            // Any → Fragile (HP 0, Fragile 트리거)
-            AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
-            AddFSMTransition("Engage", "Fragile", "Fragile", Trigger());
-
-            // Fragile → Dead (Execution, Die 트리거)
-            AddFSMTransition("Fragile", "Dead", "Die", Trigger());
-        }
+        // Dull 타입은 Fragile 없이 바로 Dead로 전이 (모든 티어 공통)
+        AddFSMTransition("Idle", "Dead", "Die", Trigger());
+        AddFSMTransition("Engage", "Dead", "Die", Trigger());
 
         // ─────────────────────────────────────────────
         // 초기 상태 설정

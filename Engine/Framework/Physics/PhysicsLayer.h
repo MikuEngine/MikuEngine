@@ -235,11 +235,11 @@ namespace engine
             
             // ═══════════════════════════════════════
             // JumpingEnemy 충돌 규칙
-            // Environment 충돌 무시, Wall/Player는 충돌
+            // Environment 충돌 무시, Wall/Player/Projectile은 충돌
             // ═══════════════════════════════════════
             SetCollision(JumpingEnemy, Environment, false);  // 점프 중 Environment 무시
             SetCollision(JumpingEnemy, Trigger, false);      // 트리거 무시
-            SetCollision(JumpingEnemy, Projectile, false);   // 플레이어 총알 무시
+            // Projectile(플레이어 총알)은 기본값 All에 의해 충돌함
             // Wall, Player, Enemy 등은 기본값 All에 의해 충돌함
             
             // ═══════════════════════════════════════

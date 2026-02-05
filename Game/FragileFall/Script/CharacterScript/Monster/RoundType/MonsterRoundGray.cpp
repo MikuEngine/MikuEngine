@@ -272,13 +272,12 @@ namespace game
         if (!m_logicFSM) return;
 
         // ─────────────────────────────────────────────
-        // 상태 정의 (Gray 전용 - 공격 상태 없음)
+        // 상태 정의 (Gray 전용 - 공격 상태 없음, Fragile 없음)
         // ─────────────────────────────────────────────
         AddFSMState("Idle", true);           // 기본 상태 (대기)
         AddFSMState("IdleMove", false);      // 맵 배회
         AddFSMState("EngageMove", false);    // 추적 이동 (충돌까지 직진)
         AddFSMState("Repositioning", false); // 위치 보정
-        AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
         // EngageStop, EngageAttack 없음!
 
@@ -295,7 +294,6 @@ namespace game
         m_logicFSM->SetParameter("NeedRepositioning", false);     // 위치 보정 필요
         m_logicFSM->SetParameter("RepositioningComplete", false); // 위치 보정 완료
         m_logicFSM->SetParameter("ReturnToIdleMove", false);      // EngageMove 충돌 후 IdleMove 복귀
-        m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
         // PlayerInRange, CanFire, AttackComplete 없음!
 
@@ -321,17 +319,11 @@ namespace game
         // Repositioning → IdleMove (위치 보정 완료)
         AddFSMTransition("Repositioning", "IdleMove", "RepositioningComplete", BoolTrue());
 
-        // Any → Fragile (HP 0, Fragile 트리거)
-        AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("IdleMove", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageMove", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("Repositioning", "Fragile", "Fragile", Trigger());
-
-        // Fragile → Dead (Execution, Die 트리거)
-        AddFSMTransition("Fragile", "Dead", "Die", Trigger());
-        
-        // Fragile → Idle (부활, Revive 트리거)
-        AddFSMTransition("Fragile", "Idle", "Revive", Trigger());
+        // Any → Dead (Round 타입은 Fragile 없이 바로 Dead로 전이)
+        AddFSMTransition("Idle", "Dead", "Die", Trigger());
+        AddFSMTransition("IdleMove", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageMove", "Dead", "Die", Trigger());
+        AddFSMTransition("Repositioning", "Dead", "Die", Trigger());
 
         // ─────────────────────────────────────────────
         // 초기 상태 설정

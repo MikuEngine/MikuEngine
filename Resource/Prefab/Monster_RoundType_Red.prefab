@@ -66,8 +66,8 @@
                     "Active": true,
                     "type": 0,
                     "mass": 10.0,
-                    "linearDamping": 0.0,
-                    "angularDamping": 0.0,
+                    "linearDamping": 0.0010000000474974513,
+                    "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 40
                 },
@@ -114,11 +114,11 @@
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 15.0,
-                    "AttackRange": 7.0,
+                    "AttackRange": 12.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
-                    "BulletSpeed": 1.0,
-                    "BulletLifetime": 3.0,
+                    "BulletSpeed": 15.0,
+                    "BulletLifetime": 5.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
@@ -135,7 +135,7 @@
                     "AnimName_Repositioning": "Repositioning",
                     "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead",
-                    "MaxJumpStepDistance": 15.0,
+                    "MaxJumpStepDistance": 12.0,
                     "JumpPrepareTime": 0.5,
                     "LaunchAngle": 55.0,
                     "LandingCheckRadius": 0.30000001192092896,
@@ -143,64 +143,20 @@
                     "GroundYOffset": 1.5,
                     "JumpCheckDelay": 0.05000000074505806,
                     "LandingYThreshold": 1.7000000476837158,
-                    "LandingThreshold": 0.004999999888241291
-                }
-            ]
-        },
-        {
-            "ID": 1,
-            "ParentID": 0,
-            "Name": "PickingBoundaryCol",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -6.103515625e-05,
-                        "y": -1.5,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
+                    "LandingThreshold": 0.004999999888241291,
+                    "FallAtkPrepareTime": 0.30000001192092896,
+                    "FallAtkLaunchAngle": 75.0,
+                    "FallAtkJumpSpeed": 50.0,
+                    "FallAtkLandingThreshold": 0.10000000149011612,
+                    "FallAtkPredictOffset": 3.0,
+                    "FallAtkMoveThreshold": 0.5,
+                    "FallAtkInitialFallSpeed": 40.0,
+                    "FallAtkTerminalFallSpeed": 80.0,
+                    "FallAtkLandDelay": 1.0
                 },
                 {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 7,
-                    "materialType": 1,
-                    "radius": 2.299999952316284
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 1,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 58
+                    "Type": "BulletFactory",
+                    "Active": true
                 }
             ]
         }

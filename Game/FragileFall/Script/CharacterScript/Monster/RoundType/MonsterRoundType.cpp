@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -87,14 +87,13 @@ namespace game
         
         if (!m_logicFSM) return;
 
-        // 샘플 8상태 FSM (모든 상태 포함)
+        // 7상태 FSM (Round 타입은 Fragile 없음)
         AddFSMState("Idle", true);
         AddFSMState("IdleMove", false);
         AddFSMState("EngageMove", false);
         AddFSMState("EngageStop", false);
         AddFSMState("EngageAttack", false);
         AddFSMState("Repositioning", false);
-        AddFSMState("Fragile", false);
         AddFSMState("Dead", false);
 
         m_logicFSM->Initialize();
@@ -109,21 +108,18 @@ namespace game
         m_logicFSM->SetParameter("NeedRepositioning", false);
         m_logicFSM->SetParameter("RepositioningComplete", false);
         m_logicFSM->SetParameter("ReturnToIdleMove", false);
-        m_logicFSM->SetParameter("Fragile", m_isFragile);
         m_logicFSM->SetParameter("Die", m_isDead);
 
         // 샘플 전이 (Idle → IdleMove만 정의, 나머지는 자식에서)
         AddFSMTransition("Idle", "IdleMove", "IdleTimerComplete", BoolTrue());
         
-        // Fragile 전이
-        AddFSMTransition("Idle", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("IdleMove", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageMove", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageStop", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("EngageAttack", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("Repositioning", "Fragile", "Fragile", Trigger());
-        AddFSMTransition("Fragile", "Dead", "Die", Trigger());
-        AddFSMTransition("Fragile", "Idle", "Revive", Trigger());
+        // Round 타입은 Fragile 없이 바로 Dead로 전이 (모든 상태에서)
+        AddFSMTransition("Idle", "Dead", "Die", Trigger());
+        AddFSMTransition("IdleMove", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageMove", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageStop", "Dead", "Die", Trigger());
+        AddFSMTransition("EngageAttack", "Dead", "Die", Trigger());
+        AddFSMTransition("Repositioning", "Dead", "Die", Trigger());
 
         m_logicFSM->InitializeCurrentState();
     }
@@ -134,14 +130,13 @@ namespace game
 
         m_animFSM->ClearStates();
 
-        // LogicFSM 상태 → 애니메이션 매핑
+        // LogicFSM 상태 → 애니메이션 매핑 (Round 타입은 Fragile 없음)
         m_animFSM->AddSplitState("Idle",          m_animName_Idle, true,  "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("IdleMove",      m_animName_IdleMove, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("EngageMove",    m_animName_EngageMove, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("EngageStop",    m_animName_EngageStop, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("EngageAttack",  m_animName_EngageAttack, false, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("Repositioning", m_animName_Repositioning, true, "", false, 0.0f, 0.1f);
-        m_animFSM->AddSplitState("Fragile",       m_animName_Fragile, true, "", false, 0.0f, 0.1f);
         m_animFSM->AddSplitState("Dead",          m_animName_Dead, false, "", false, 0.0f, 0.1f);
     }
 
