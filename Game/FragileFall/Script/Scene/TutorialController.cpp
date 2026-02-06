@@ -5,7 +5,9 @@
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
+#include <Framework/Asset/Prefab.h>
 #include <Core/System/Input.h>
+
 
 #include "Script/DoorTriggerScript.h"
 
@@ -83,25 +85,71 @@ namespace game
             Prev();
         }
 
-        if (m_isWaitingForDoor)
+        if (m_isTimerActive)
         {
-            m_doorActivateTimer -= engine::Time::FixedDeltaTime();
+            m_stepTimer -= engine::Time::FixedDeltaTime();
 
-            if (m_doorActivateTimer <= 0.0f)
+            if (m_stepTimer <= 0.0f)
             {
-                if (m_nextDoorObject)
+                m_isTimerActive = false;
+
+                switch (m_stepIndex)
                 {
-                    m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
+
+                case 0:
+                    if (m_nextDoorObject)
+                    {
+                        m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
+                    }
+                    break;
+                // ─────────────────────────────────────────────
+                // step 1 :
+                // ─────────────────────────────────────────────
+                case 1:
+                    break;
+                // ─────────────────────────────────────────────
+                // step 2 : 일반 몬스터(회색 둔탁) 1종을 소환하여 사격하게 UI로 유도
+                // ─────────────────────────────────────────────
+                case 2:
+                    if (auto spawnObject = engine::GameObject::Find("MonsterSpawnPoint"))
+                    {
+                        m_spawnedMonster = engine::Prefab::Instantiate(m_monsterName);
+                        if (m_spawnedMonster && m_spawnedMonster->GetTransform())
+                        {
+                            m_spawnedMonster->GetTransform()->SetWorldMatrix(spawnObject->GetTransform()->GetWorld());
+                            m_isSpawnMonster = true;                      
+                        }
+                    }
+                    break;
                 }
-                m_isWaitingForDoor = false;
+            }
+        }
+
+        if (m_isSpawnMonster)
+        {
+            if (m_spawnedMonster == nullptr || m_spawnedMonster->IsPendingKill())
+            {
+                m_isSpawnMonster = false;
+                m_spawnedMonster = nullptr;
+
+                if (m_monsterName == "Monster_DullType_Gray")
+                {
+                    m_monsterName = "Monster_PointedType_Gray";
+                    m_isTimerActive = true;
+                    m_stepTimer = 15.0f;
+                }
+                else if (m_monsterName == "Monster_PointedType_Gray")
+                {
+                    Next();
+                }
             }
         }
     }
 
     void TutorialController::InitializeStep()
     {
-        m_doorActivateTimer = 0.0f;
-        m_isWaitingForDoor = false;
+        m_stepTimer = 0.0f;
+        m_isTimerActive = false;
         
         if (m_nextDoorObject)
         {
@@ -117,6 +165,9 @@ namespace game
 
         switch (index)
         {
+        // ─────────────────────────────────────────────
+        // step 0 : 다음 맵 진입
+        // ─────────────────────────────────────────────
         case 0:
             if (!m_nextDoorObjectName.empty())
             {
@@ -126,11 +177,20 @@ namespace game
                     m_doorPosition = m_nextDoorObject->GetTransform()->GetWorldPosition();
                 }
             }
-            m_isWaitingForDoor = true;
-            m_doorActivateTimer = 5.0f;
+            m_isTimerActive = true;
+            m_stepTimer = 5.0f;
             break;
+        // ─────────────────────────────────────────────
+        // step 1 :
+        // ─────────────────────────────────────────────
         case 1:
-
+            break;
+        // ─────────────────────────────────────────────
+        // step 2 : 일반 몬스터(회색 둔탁) 1종을 소환하여 사격하게 UI로 유도
+        // ─────────────────────────────────────────────
+        case 2:
+            m_isTimerActive = true;
+            m_stepTimer = 5.0f;
             break;
         }
     }

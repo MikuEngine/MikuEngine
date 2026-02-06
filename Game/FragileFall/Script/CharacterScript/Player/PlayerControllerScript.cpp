@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -302,29 +302,14 @@ namespace game
 		}
 
 		// ─────────────────────────────────────────────
-		// 1. 이동 입력 → FSM 파라미터 + 논리적 이동 벡터 갱신
+		// 1. 이동 입력 → 논리적 이동 벡터 갱신
+		// m_isMoving 판정은 UpdateGameLogic()에서 타이머 기반으로 처리
 		// ─────────────────────────────────────────────
 		m_inputMoveDir = GetMoveInputDirection();
 		engine::Vector3 inputDir = m_inputMoveDir;
 
 		// BaseControllerScript의 논리적 이동 벡터 갱신
-		UpdateLogicalMoveExistence(inputDir);
-
-		m_isMoving = m_currentLogicalMoveVector.LengthSquared() > 0.0001f ? true : false;
-
-		bool isMoving = m_isMoving;
-		engine::Vector3 fixedInputDir = m_currentLogicalMoveVector;
-
-		m_logicFSM->SetParameter("IsMoving", isMoving);
-
-		if (m_aimPointer)
-			m_aimPointer->SetMoving(isMoving);
-
-		if (isMoving)
-		{
-			m_logicFSM->SetParameter("MoveX", fixedInputDir.x);
-			m_logicFSM->SetParameter("MoveZ", fixedInputDir.z);
-		}	
+		UpdateLogicalMoveExistence(inputDir);	
 
 		// ─────────────────────────────────────────────
 		// 2. 공격 입력 → FSM 트리거
@@ -369,6 +354,8 @@ namespace game
 
 		bool isDashAble = m_logicFSM->GetCurrentState() != "Execution" && m_logicFSM->GetCurrentState() != "Dash" && m_logicFSM->GetCurrentState() != "Dead";
 
+		bool isMoving = m_isMoving;
+
 		if ((isShiftPressed || isSpaceBarPressed) && isMoving && m_dashCooldownTimer <= 0.0f && m_CurrentDashCount > 0)
 		{
 			// 대쉬 상태 전이
@@ -385,6 +372,51 @@ namespace game
 	void PlayerControllerScript::UpdateGameLogic()
 	{
 		float deltaTime = engine::Time::DeltaTime();
+		
+		// ─────────────────────────────────────────────
+		// Idle 전이 대기 타이머 (m_isMoving 판정)
+		// - 입력 있음: 즉시 isMoving = true, 타이머 리셋
+		// - 입력 없음: 타이머 감소 → 0 도달 시 isMoving = false
+		// ─────────────────────────────────────────────
+		bool hasInput = m_currentLogicalMoveVector.LengthSquared() > 0.0001f;
+		
+		if (hasInput)
+		{
+			// 입력이 있으면 즉시 이동 상태로, 타이머 리셋
+			m_isMoving = true;
+			m_IdleDransitionWaitTimer = 0.0f;
+		}
+		else
+		{
+			// 입력이 없으면 타이머 증가
+			if (m_isMoving)
+			{
+				m_IdleDransitionWaitTimer += deltaTime;
+				
+				// 타이머가 대기 시간을 초과하면 정지 상태로 전환
+				if (m_IdleDransitionWaitTimer >= m_IdleDransitionWaitTime)
+				{
+					m_isMoving = false;
+				}
+			}
+		}
+		
+		// FSM 파라미터 갱신
+		if (m_logicFSM)
+		{
+			m_logicFSM->SetParameter("IsMoving", m_isMoving);
+			
+			if (m_isMoving)
+			{
+				m_logicFSM->SetParameter("MoveX", m_currentLogicalMoveVector.x);
+				m_logicFSM->SetParameter("MoveZ", m_currentLogicalMoveVector.z);
+			}
+		}
+		
+		if (m_aimPointer)
+		{
+			m_aimPointer->SetMoving(m_isMoving);
+		}
 		
 		// 입력과 위치 갱신
 		UpdateLogicalPosition();

@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "SkeletalMeshRenderer.h"
 
 #include <filesystem>
@@ -102,6 +102,9 @@ namespace engine
         m_pickingPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Picking_PS.hlsl");
         m_pointShadowPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Point_PS.hlsl");
         m_pointShadowCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Point_Cutout_PS.hlsl");
+
+        m_isInitialized = true;
+        SystemManager::Get().GetRenderSystem().Register(this);
     }
 
     void SkeletalMeshRenderer::Awake()
@@ -111,7 +114,10 @@ namespace engine
 
     void SkeletalMeshRenderer::Refresh()
     {
-        SystemManager::Get().GetRenderSystem().Unregister(this);
+        if (m_isInitialized)
+        {
+            SystemManager::Get().GetRenderSystem().Unregister(this);
+        }
 
         m_meshData = AssetManager::Get().GetOrCreateSkeletalMeshData(m_meshFilePath);
         
@@ -162,7 +168,10 @@ namespace engine
             LoadSocketData();
         }
 
-        SystemManager::Get().GetRenderSystem().Register(this);
+        if (m_isInitialized)
+        {
+            SystemManager::Get().GetRenderSystem().Register(this);
+        }
     }
 
     void SkeletalMeshRenderer::SetMesh(const std::string& meshName)

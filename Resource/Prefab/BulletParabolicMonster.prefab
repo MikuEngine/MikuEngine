@@ -12,8 +12,8 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 5.599999904632568,
+                        "z": -1.5
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -22,9 +22,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.7000000476837158,
-                        "y": 1.7000000476837158,
-                        "z": 1.7000000476837158
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     }
                 },
                 {
@@ -37,6 +37,7 @@
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -57,7 +58,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "Rigidbody",
@@ -86,7 +93,7 @@
                     "syncWithTransform": false,
                     "layer": 10,
                     "materialType": 0,
-                    "radius": 0.9399999976158142
+                    "radius": 0.5
                 }
             ]
         }

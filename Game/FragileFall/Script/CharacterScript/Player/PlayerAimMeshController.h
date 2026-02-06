@@ -94,6 +94,8 @@ namespace game
         float m_fireAnimShootFrameTime = 0.2f;  // 기본값: 애니메이션의 20% 지점
         /** 이전 프레임 Fire 레이어 정규화 시간 (발사 프레임 "통과" 감지용, -1 = 미사용) */
         float m_prevFireNormalizedTime = -1.0f;
+        /** Shoot 상태 누적 시간 (AnimFSM 상태 전환과 무관하게 계속 증가) */
+        float m_accumulatedShootTime = 0.0f;
 
         // ─────────────────────────────────────────────
         // Procedural Yaw: 하체 회전 보정용 (이전 프레임 하체 Yaw)

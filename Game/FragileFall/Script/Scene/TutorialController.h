@@ -21,12 +21,24 @@ namespace game
         int m_stepIndex = 0;
         int m_pageIndex = 0;
 
+        bool m_isTimerActive = false;
+        float m_stepTimer = 0.0f;
+
+        // ─────────────────────────────────────────────
+        // step 0 : 다음 맵 진입
+        // ─────────────────────────────────────────────
         std::string m_nextDoorObjectName;
         engine::Ptr<engine::GameObject> m_nextDoorObject = nullptr;
         engine::Vector3 m_doorPosition = { 0, 0, 0 };
 
-        float m_doorActivateTimer = 0.0f;
-        bool m_isWaitingForDoor = false;
+
+        // ─────────────────────────────────────────────
+        // step 2 : 
+        // ─────────────────────────────────────────────
+        bool m_isSpawnMonster = false;
+        std::string m_monsterName = "Monster_DullType_Gray";
+        engine::Ptr<engine::GameObject> m_spawnedMonster = nullptr;
+
 
     public:
         void Awake() override;
