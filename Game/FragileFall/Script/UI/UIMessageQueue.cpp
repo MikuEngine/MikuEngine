@@ -31,12 +31,6 @@ namespace game
     void UIMessageQueue::Update()
     {
         // 메시지 흐름
-        // if문으로 제어
-        if (engine::Input::IsKeyPressed(engine::Keys::K))
-        {
-            PushMessage(UIMessageChannel::Kill, "asdf", "");
-        }
-
         UpdateChannel(m_itemsKill, m_kill);
         UpdateChannel(m_itemsTutorial, m_tutorial);
     }

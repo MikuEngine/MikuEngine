@@ -139,7 +139,7 @@ namespace game
             SetMenuOpen(true);
         }
 
-        if (engine::Input::IsKeyPressed(engine::Keys::F5))
+        if (engine::Input::IsKeyPressed(engine::Keys::F4))
         {
             Fail();
         }
