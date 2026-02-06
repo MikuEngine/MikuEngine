@@ -333,7 +333,7 @@ namespace game
     void SceneController_Lobby::BackToMain()
     {
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
+        engine::SceneManager::Get().ChangeScene("01_READY_Main");
     }
 
     void SceneController_Lobby::BackToHub()

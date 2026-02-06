@@ -41,7 +41,7 @@ namespace game
         std::string sceneName = engine::SceneManager::Get().GetScene()->GetName();
 
         // 로비가 아닐 때만 전투 에임 활성화
-        if (sceneName != "z_Hiro_Lobby" && sceneName != "z_Hiro_Main")
+        if (sceneName != "01_READY_Lobby" && sceneName != "01_READY_Main")
         {
             SetCombatAimEnabled(true);
         }

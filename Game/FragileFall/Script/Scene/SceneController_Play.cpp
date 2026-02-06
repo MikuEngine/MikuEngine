@@ -244,13 +244,13 @@ namespace game
     void SceneController_Play::BackToMain()
     {
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Main");
+        engine::SceneManager::Get().ChangeScene("01_READY_Main");
     }
 
     void SceneController_Play::BackToLobby()
     {
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Lobby");
+        engine::SceneManager::Get().ChangeScene("01_READY_Lobby");
     }
 
     void SceneController_Play::BackToRestart()
