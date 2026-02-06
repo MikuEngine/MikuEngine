@@ -103,7 +103,11 @@ namespace game
         m_doorActivateTimer = 0.0f;
         m_isWaitingForDoor = false;
         
-        m_nextDoorObject = nullptr;
+        if (m_nextDoorObject)
+        {
+            m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(false);
+            m_nextDoorObject = nullptr;
+        }
 
     }
 
@@ -140,7 +144,7 @@ namespace game
 
         std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
 
-        if (currentScene == "Prototype_Tutorial")
+        if (currentScene == "10_PROTO_Tutorial")
         {
             Next();
         }
