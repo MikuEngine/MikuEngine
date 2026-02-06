@@ -20,8 +20,8 @@ namespace game
         // SceneId -> 실제 씬 이름(파일명/키)
         static const std::unordered_map<SceneID, std::string, SceneIDHash> kSceneNameMap =
         {
-            { SceneID::Main,     "01_READY_Main" },
-            { SceneID::Lobby,    "01_READY_Lobby" },
+            { SceneID::Main,     "01_Ready_Main" },
+            { SceneID::Lobby,    "01_Ready_Lobby" },
             { SceneID::Play,     "Stage1_ProtoType" },
             { SceneID::Result,   "00_FIN_Result" },
             { SceneID::Tutorial, "10_PROTO_Tutorial" },
