@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Common/ExplosionDamageTrigger.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -27,7 +27,7 @@ namespace game
         {
             m_sphereCollider->SetLayer(engine::PhysicsLayer::ExplosionTrigger);
             m_sphereCollider->SetIsTrigger(true);
-            m_sphereCollider->SetRadius(m_explosionRadius);
+            m_sphereCollider->SetRadius(m_explosionRadius/2.0f);
         }
         
         // 스케일 설정 (explosionRadius에 맞춰 즉시 적용)

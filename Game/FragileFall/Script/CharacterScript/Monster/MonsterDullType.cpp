@@ -94,8 +94,8 @@ namespace game
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = m_attackDamage;  // Load()에서 로드된 값 사용
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
             m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         case MonsterTier::Green:
@@ -112,8 +112,8 @@ namespace game
             m_bulletParams.ownGravity = m_ownGravity;          // 에디터 설정값 (고정)
             m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = m_attackDamage;  // Load()에서 로드된 값 사용
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
             break;
         case MonsterTier::Red:
             m_bulletParams.type = BulletType::Curve;
@@ -121,8 +121,8 @@ namespace game
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.angularSpeed = m_curvedAngularSpeed;      // 에디터 설정값
             m_bulletParams.radiusGrowthRate = m_curvedRadiusGrowth;  // 에디터 설정값
-            m_bulletParams.damage = m_attackDamage;  // Load()에서 로드된 값 사용
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
             m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             // rotationSpeed는 Load()에서 로드되므로 덮어쓰지 않음
 			break;
@@ -130,8 +130,8 @@ namespace game
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = m_attackDamage;  // Load()에서 로드된 값 사용
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
             m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         

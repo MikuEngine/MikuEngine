@@ -22,9 +22,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.399999976158142,
-                        "y": 1.399999976158142,
-                        "z": 1.399999976158142
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     }
                 },
                 {
@@ -43,6 +43,7 @@
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -92,7 +93,7 @@
                     "syncWithTransform": false,
                     "layer": 11,
                     "materialType": 0,
-                    "radius": 2.640000104904175
+                    "radius": 1.0
                 }
             ]
         }
