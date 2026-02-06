@@ -71,37 +71,22 @@ namespace engine
 
         g_mouseState = g_mouse.GetState();
         g_mouseStateTracker.Update(g_mouseState);
-
-        float dx = 0.0f;
-        float dy = 0.0f;
-
         if (g_isLockMode)
         {
-            RECT rect;
-            GetClientRect(g_hWnd, &rect);
-            int centerX = (rect.right - rect.left) / 2;
-            int centerY = (rect.bottom - rect.top) / 2;
+            // Relative 모드에서는 x, y 자체가 델타값(이동량)입니다.
+            float dx = static_cast<float>(g_mouseState.x);
+            float dy = static_cast<float>(g_mouseState.y);
 
-            // 2. ABSOLUTE 모드에서도 이동량(Delta)을 계산
-            // 현재 커서 위치(g_mouseState.x)와 중앙 좌표의 차이를 구함
-            dx = static_cast<float>(g_mouseState.x - centerX);
-            dy = static_cast<float>(g_mouseState.y - centerY);
-            
             if (dx != 0 || dy != 0)
             {
-                // 가상 포인터에 감도를 적용해 누적 (실제 좌표)
+                // 감도 적용하여 가상 좌표 업데이트
                 g_virtualMousePos.x += dx * g_mouseSensitivity;
                 g_virtualMousePos.y += dy * g_mouseSensitivity;
-
-                // 4. 실제 커서가 벽에 닿지 않도록 즉시 중앙으로 소환
-                POINT pt = { centerX, centerY };
-                ClientToScreen(g_hWnd, &pt);
-                SetCursorPos(pt.x, pt.y);
             }
         }
         else
         {
-            // Edit 모드 등 일반적인 상태
+            // 2. Unlock(에디터/메뉴) 모드일 때 (Absolute 좌표 사용)
             g_virtualMousePos.x = static_cast<float>(g_mouseState.x);
             g_virtualMousePos.y = static_cast<float>(g_mouseState.y);
         }
@@ -220,6 +205,32 @@ namespace engine
 
     void Input::SetLockMode(bool lock)
     {
+        if (g_isLockMode == lock) return;
+
+        if (lock)
+        {
+            POINT pt;
+            GetCursorPos(&pt);
+            ScreenToClient(g_hWnd, &pt);
+
+            g_virtualMousePos.x = static_cast<float>(pt.x);
+            g_virtualMousePos.y = static_cast<float>(pt.y);
+
+            // 2. 윈도우가 다른 곳을 보고 있을 수 있으니 포커스를 다시 가져옴
+            SetFocus(g_hWnd);
+
+            // 3. 모드 변경 (이 순간 마우스는 중앙으로 숨음)
+            g_mouse.SetMode(DirectX::Mouse::MODE_RELATIVE);
+        }
+        else
+        {
+            g_mouse.SetMode(DirectX::Mouse::MODE_ABSOLUTE);
+
+            POINT pt = { (int)g_virtualMousePos.x, (int)g_virtualMousePos.y };
+            ClientToScreen(g_hWnd, &pt);
+            SetCursorPos(pt.x, pt.y);
+        }
+
         g_isLockMode = lock;
     }
 }

@@ -374,6 +374,44 @@ namespace engine
     {
         Profiling::UpdateFPS(false);
         Time::Update();
+        bool shouldLock = false;
+        bool shouldHideCursor = false;
+        
+#ifdef _DEBUG
+        // 에디터 내에서 'Play' 버튼을 눌러 게임이 돌아가는 중일 때만 Lock
+        if (EditorManager::Get().GetEditorState() == EditorState::Play)
+        {
+            // 추가로 현재 윈도우가 포커스를 가지고 있어야 함
+            if (GetActiveWindow() == m_hWnd)
+            {
+                shouldLock = true;
+                shouldHideCursor = true;
+            }
+        }
+#else
+        // 릴리즈 빌드에서는 항상 게임 플레이 중이므로 포커스만 체크
+        if (GetActiveWindow() == m_hWnd)
+        {
+            shouldLock = true;
+            shouldHideCursor = true;
+        }
+#endif
+        Input::SetLockMode(shouldLock);
+
+        CURSORINFO ci = { sizeof(CURSORINFO) };
+        ci.cbSize = sizeof(CURSORINFO);
+        if (GetCursorInfo(&ci))
+        {
+            bool isCurrentlyShowing = (ci.flags & CURSOR_SHOWING);
+
+            // 숨겨야 하는데 보이고 있다면 -> 숨김
+            if (shouldHideCursor && isCurrentlyShowing)
+                ::ShowCursor(false);
+            // 보여야 하는데 숨겨져 있다면 -> 보임
+            else if (!shouldHideCursor && !isCurrentlyShowing)
+                ::ShowCursor(true);
+        }
+
         Input::Update();
 
 #ifdef _DEBUG
