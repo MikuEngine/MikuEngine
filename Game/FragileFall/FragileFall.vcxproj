@@ -159,6 +159,7 @@
     </ClCompile>
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Manager\LoadingScreenDrawer.cpp" />
+    <ClCompile Include="Manager\StageManager.cpp" />
     <ClCompile Include="Manager\PlayerTemperManager.cpp" />
     <ClCompile Include="Manager\TimeScaler.cpp" />
     <ClCompile Include="Manager\MessageCatalog.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Manager\LoadingScreenDrawer.h" />
+    <ClInclude Include="Manager\StageManager.h" />
     <ClInclude Include="Manager\PlayerTemperManager.h" />
     <ClInclude Include="Manager\TimeScaler.h" />
     <ClInclude Include="Manager\MessageCatalog.h" />

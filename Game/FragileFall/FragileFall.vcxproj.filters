@@ -5,6 +5,7 @@
     <ClCompile Include="App\FragileFall.cpp" />
     <ClCompile Include="GamePCH.cpp" />
     <ClCompile Include="Manager\LoadingScreenDrawer.cpp" />
+    <ClCompile Include="Manager\StageManager.cpp" />
     <ClCompile Include="Manager\PlayerTemperManager.cpp" />
     <ClCompile Include="Manager\TimeScaler.cpp" />
     <ClCompile Include="Script\AimModeController.cpp" />
@@ -81,6 +82,7 @@
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="Manager\LoadingScreenDrawer.h" />
+    <ClInclude Include="Manager\StageManager.h" />
     <ClInclude Include="Manager\PlayerTemperManager.h" />
     <ClInclude Include="Manager\TimeScaler.h" />
     <ClInclude Include="Script\AimModeController.h" />

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -8,6 +8,7 @@
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Manager/PlayerTemperManager.h"
+#include "Manager/StageManager.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
@@ -439,6 +440,16 @@ namespace game
 					m_dashRechargeTimer = m_dashRechargeTime;
 				}
 			}
+		}
+
+		// ─────────────────────────────────────────────
+		// 프레자일 게이지 (몬스터가 있을 때만 상승)
+		// ─────────────────────────────────────────────
+		if (StageManager::Get().ShouldFragileGaugeRise())
+		{
+			m_fragileGaugeCurrent += m_fragileGaugeRisePerSecond * deltaTime;
+			if (m_fragileGaugeCurrent > m_fragileGaugeMax)
+				m_fragileGaugeCurrent = m_fragileGaugeMax;
 		}
 
 		// Execution 상태에서는 이후 로직 스킵
@@ -1273,6 +1284,19 @@ namespace game
 		ImGui::Text("References:");
 		ImGui::InputText("AimPointer Object", &m_aimPointerObjectName);
 
+		// 프레자일 게이지 (몬스터 있을 때 상승, 직렬화·GUI 조정)
+		ImGui::Separator();
+		ImGui::Text("Fragile Gauge:");
+		ImGui::DragFloat("Fragile Gauge Max", &m_fragileGaugeMax, 1.0f, 1.0f, 1000.0f);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("최대치. 몬스터가 있을 때 이 값까지 상승.");
+		ImGui::DragFloat("Fragile Gauge Rise/sec", &m_fragileGaugeRisePerSecond, 0.5f, 0.0f, 200.0f);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("몬스터가 있을 때 초당 상승량.");
+		float gaugeRatio = m_fragileGaugeMax > 0.0f ? (m_fragileGaugeCurrent / m_fragileGaugeMax) : 0.0f;
+		ImGui::Text("Current: %.1f / %.1f", m_fragileGaugeCurrent, m_fragileGaugeMax);
+		ImGui::ProgressBar(gaugeRatio, ImVec2(-1, 0), "");
+
 		ImGui::Separator();
 		ImGui::Text("Runtime Info:");
 		ImGui::Text("Is Moving Backward: %s", m_isBackward ? "Yes" : "No");
@@ -1328,6 +1352,11 @@ namespace game
 		j["DashCooldown"] = m_dashCooldown;
 		j["MaxDashCount"] = m_MaxDashCount;
 		j["DashRechargeTime"] = m_dashRechargeTime;
+
+		// 프레자일 게이지
+		j["FragileGaugeCurrent"] = m_fragileGaugeCurrent;
+		j["FragileGaugeMax"] = m_fragileGaugeMax;
+		j["FragileGaugeRisePerSecond"] = m_fragileGaugeRisePerSecond;
 	}
 
 	void PlayerControllerScript::Load(const engine::json& j)
@@ -1404,6 +1433,14 @@ namespace game
 			m_MaxDashCount = j["MaxDashCount"].get<int>();
 		if (j.contains("DashRechargeTime"))
 			m_dashRechargeTime = j["DashRechargeTime"].get<float>();
+
+		// 프레자일 게이지
+		if (j.contains("FragileGaugeCurrent"))
+			m_fragileGaugeCurrent = j["FragileGaugeCurrent"].get<float>();
+		if (j.contains("FragileGaugeMax"))
+			m_fragileGaugeMax = j["FragileGaugeMax"].get<float>();
+		if (j.contains("FragileGaugeRisePerSecond"))
+			m_fragileGaugeRisePerSecond = j["FragileGaugeRisePerSecond"].get<float>();
 		
 		// ═══════════════════════════════════════════════════════════════
 		// Base값 로드 완료 후 강화 적용하여 실제값 계산

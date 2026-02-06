@@ -11,6 +11,7 @@
 #include "Script/UI/UIPopUpAnimator.h"
 
 #include "Manager/TimeScaler.h"
+#include "Manager/StageManager.h"
 #include <Manager/LoadingScreenDrawer.h>
 #include <Script/AimModeController.h>
 #include <Manager/MessageCatalog.h>
@@ -53,6 +54,8 @@ namespace game
     {
         if (m_bound) return;
         m_bound = true;
+
+        //StageManager::Get().BeginStage();
 
         auto* go = engine::GameObject::Find("Player");
         m_aimMode = go->GetComponent<AimModeController>();
@@ -130,6 +133,8 @@ namespace game
 
     void SceneController_Play::Update()
     {
+        StageManager::Get().Update();
+
         if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
             engine::SoundSystem::Get().PlayUI("UI_Click_Random");

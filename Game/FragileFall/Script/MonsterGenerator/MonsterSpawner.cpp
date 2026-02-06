@@ -1,5 +1,6 @@
 #include "GamePCH.h"
 #include "MonsterSpawner.h"
+#include "Manager/StageManager.h"
 
 #include <Framework/Asset/Prefab.h>
 
@@ -71,20 +72,26 @@ namespace game
         }
 
         go->GetTransform()->SetLocalPosition(position);
+        m_spawnedMonsters.push_back(engine::Ptr<engine::GameObject>(go));
         return go;
     }
 
-    void MonsterSpawner::Start()
+    void MonsterSpawner::SetStageParams(int targetScore, int minCount, int maxCount, int anchorMonsterID)
+    {
+        m_targetScore = targetScore;
+        m_minCount = minCount;
+        m_maxCount = maxCount;
+        m_anchorMonsterID = anchorMonsterID;
+    }
+
+    void MonsterSpawner::SpawnNow()
     {
         if (!m_partyGenerator.IsDBLoaded() && !m_monsterCsvPath.empty())
-        {
             LoadMonsterDB();
-        }
         if (!m_partyGenerator.IsDBLoaded())
             return;
 
         m_nextZoneIndex = 0;
-
         m_partyGenerator.SetTargetScore(m_targetScore);
         m_partyGenerator.SetCountRange(m_minCount, m_maxCount);
         m_partyGenerator.SetAnchorMonsterID(m_anchorMonsterID);
@@ -93,12 +100,23 @@ namespace game
         SpawnParty(party);
     }
 
+    void MonsterSpawner::Start()
+    {
+        if (m_managedByStageManager)
+        {
+            StageManager::Get().OnSpawnerReady(this);
+            return;
+        }
+        SpawnNow();
+    }
+
     void MonsterSpawner::SpawnParty(const std::vector<int>& partyIDs)
     {
         engine::Transform* self = GetTransform();
         if (!self)
             return;
 
+        m_spawnedMonsters.clear();
         m_allPoints.clear();
         m_zoneStartIndex.clear();
         m_zoneStartIndex.push_back(0);
