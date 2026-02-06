@@ -1000,11 +1000,11 @@ namespace game
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
 		
 		// 총알 스케일 (슬라이더: 0.5~9.0, 최소값: 0.01)
-		ImGui::DragFloat("Bullet Scale", &m_bulletParams.scale, 0.1f, 0.5f, 9.0f);
+		ImGui::DragFloat("Bullet Scale", &m_bulletScale, 0.1f, 0.5f, 9.0f);
 		// 직접 입력 시 0.01 미만 클램프
-		if (m_bulletParams.scale < 0.01f)
+		if (m_bulletScale < 0.01f)
 		{
-			m_bulletParams.scale = 0.01f;
+			m_bulletScale = 0.01f;
 		}
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Min: 0.01)");
@@ -1084,7 +1084,7 @@ namespace game
 		j["FireRate"] = m_fireRate;
 		j["BulletSpeed"] = m_bulletSpeed;
 		j["BulletLifetime"] = m_bulletLifetime;
-		j["BulletScale"] = m_bulletParams.scale;
+		j["BulletScale"] = m_bulletScale;
 		j["SpreadAngle"] = m_spreadAngle;
 		j["CurvedAngularSpeed"] = m_curvedAngularSpeed;
 		j["CurvedRadiusGrowth"] = m_curvedRadiusGrowth;
@@ -1125,7 +1125,7 @@ namespace game
 		m_fireRate = j.value("FireRate", 3.0f);
 		m_bulletSpeed = j.value("BulletSpeed", 1.0f);
 		m_bulletLifetime = j.value("BulletLifetime", 3.0f);
-		m_bulletParams.scale = j.value("BulletScale", 1.0f);
+		m_bulletScale = j.value("BulletScale", 1.0f);
 		m_spreadAngle = j.value("SpreadAngle", 0.2f);
 		m_curvedAngularSpeed = j.value("CurvedAngularSpeed", 2.0f);
 		m_curvedRadiusGrowth = j.value("CurvedRadiusGrowth", 3.0f);

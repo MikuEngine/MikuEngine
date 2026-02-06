@@ -103,6 +103,7 @@ namespace game
         float m_bulletSpeed = 1.0f;          // 총알 속도
         float m_bulletSpeedOverrideMax = 1.0f;  //발사각 45도 이상에서, 설정된 총알속도를 대신할 보정(증가)값
         float m_bulletLifetime = 3.0f;       // 총알 수명 (초)
+        float m_bulletScale = 1.0f;          // 총알 크기 스케일
         float m_spreadAngle = 0.2f;          // 3방향 발사 퍼짐 각도 (라디안, Blue용)
 
         // ─────────────────────────────────────────────
