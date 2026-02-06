@@ -1,0 +1,56 @@
+{
+    "Name": "boxCollider_Crystal_Front_Left",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "boxCollider_Crystal_Front_Left",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -15.96967601776123,
+                        "y": -0.10880623757839203,
+                        "z": 17.67300033569336
+                    },
+                    "Rotation": {
+                        "x": -0.008140452206134796,
+                        "y": 0.9944171905517578,
+                        "z": -0.034351181238889694,
+                        "w": 0.09943883121013641
+                    },
+                    "Scale": {
+                        "x": 1.0000156164169312,
+                        "y": 0.9999868273735046,
+                        "z": 1.0000157356262207
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "size": [
+                        40.0,
+                        40.0,
+                        4.900000095367432
+                    ]
+                }
+            ]
+        }
+    ]
+}

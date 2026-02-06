@@ -1,0 +1,441 @@
+{
+    "Name": "Stage1Test_Shin_BoxCollier",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "Stage1Test_Shin_BoxCollier",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "boxCollider_Wall_Left",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -28.0,
+                        "y": 0.0,
+                        "z": -5.088167654321296e-06
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.7071067094802856,
+                        "z": -0.0,
+                        "w": 0.70710688829422
+                    },
+                    "Scale": {
+                        "x": 0.9999998211860657,
+                        "y": 1.0,
+                        "z": 0.9999998211860657
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "size": [
+                        40.0,
+                        40.0,
+                        4.900000095367432
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 0,
+            "Name": "boxCollider_Wall_Right",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 28.0,
+                        "y": 0.0,
+                        "z": -5.088167654321296e-06
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.7071067094802856,
+                        "z": -0.0,
+                        "w": 0.70710688829422
+                    },
+                    "Scale": {
+                        "x": 0.9999998211860657,
+                        "y": 1.0,
+                        "z": 0.9999998211860657
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "size": [
+                        40.0,
+                        40.0,
+                        4.900000095367432
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 0,
+            "Name": "boxCollider_Wall_back",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -0.08816152065992355,
+                        "y": 0.0,
+                        "z": -18.30862808227539
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.7071067094802856,
+                        "z": -0.0,
+                        "w": 0.70710688829422
+                    },
+                    "Scale": {
+                        "x": 0.9999998211860657,
+                        "y": 1.0,
+                        "z": 0.9999998211860657
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "size": [
+                        5.0,
+                        40.0,
+                        60.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 0,
+            "Name": "boxCollider_Wall_Front",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -3.57379462911922e-06,
+                        "y": 0.0,
+                        "z": 19.986160278320313
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.7071067094802856,
+                        "z": -0.0,
+                        "w": 0.70710688829422
+                    },
+                    "Scale": {
+                        "x": 0.9999998211860657,
+                        "y": 1.0,
+                        "z": 0.9999998211860657
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "size": [
+                        5.0,
+                        40.0099983215332,
+                        60.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "ParentID": 0,
+            "Name": "boxCollider_Crystal_Front_Left",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -15.96967601776123,
+                        "y": -0.10880623757839203,
+                        "z": 14.372770309448242
+                    },
+                    "Rotation": {
+                        "x": -0.0054200622253119946,
+                        "y": 0.9835492372512817,
+                        "z": -0.034884002059698105,
+                        "w": 0.17715710401535034
+                    },
+                    "Scale": {
+                        "x": 1.0000156164169312,
+                        "y": 0.9999868273735046,
+                        "z": 1.0000157356262207
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "size": [
+                        40.0,
+                        40.0,
+                        4.900000095367432
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 0,
+            "Name": "boxCollider_Crystal_Front_Right",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.02669906616211,
+                        "y": 0.0,
+                        "z": 9.430603981018066
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.2898666262626648,
+                        "z": -0.0,
+                        "w": 0.95706707239151
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "size": [
+                        40.0,
+                        40.0,
+                        4.900000095367432
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 0,
+            "Name": "boxCollider_Crystal_Back_Right",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.958559036254883,
+                        "y": 0.0,
+                        "z": -13.209121704101563
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.9109723567962646,
+                        "z": 0.0,
+                        "w": 0.41246747970581055
+                    },
+                    "Scale": {
+                        "x": 1.0000064373016357,
+                        "y": 1.0,
+                        "z": 1.0000064373016357
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "size": [
+                        28.170000076293945,
+                        40.0,
+                        4.75
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "ParentID": 0,
+            "Name": "boxCollider_Crystal_back_Left",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -25.90882682800293,
+                        "y": 0.0,
+                        "z": -13.285451889038086
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0000001192092896,
+                        "y": 1.0,
+                        "z": 1.0000001192092896
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "size": [
+                        13.239999771118164,
+                        40.0,
+                        14.880000114440918
+                    ]
+                }
+            ]
+        }
+    ]
+}
