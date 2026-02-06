@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -932,6 +932,7 @@ namespace game
 				params.speed = m_bulletSpeed;
 				params.range = m_bulletRange;
 				params.damage = m_playerAtkDmg;
+				params.scale = m_bulletSizeScale;
 
 				m_bulletFactory->Fire(bulletStartPos, direction, params);
 

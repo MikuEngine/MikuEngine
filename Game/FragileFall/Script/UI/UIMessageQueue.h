@@ -7,12 +7,13 @@
 namespace game
 {
     class UIToastAnimator;
+    class MessageCatalog;
 
     enum class UIMessageChannel
     {
-        Kill,
-        Tutorial,
-        System,
+        Kill = 0,
+        Tutorial = 1,
+        System = 2,
     };
 
     class UIMessageQueue :
@@ -42,6 +43,12 @@ namespace game
         void Load(const engine::json& j) override;
 
     public:
+        void SetCatalog(MessageCatalog* catalog) { m_catalog = catalog; }
+        void PushMessageKey(const std::string& key);
+
+
+
+
         void PushMessage(UIMessageChannel ch, const std::string& text, const std::string& iconKey = "");
         void Advance(UIMessageChannel ch, float fadeOutOverride = -1.0f);
         void SetSingle(UIMessageChannel ch, const std::string& text, bool playEnter = true);
@@ -62,6 +69,8 @@ namespace game
 
         ChannelConfig m_kill;
         ChannelConfig m_tutorial;
+
+        MessageCatalog* m_catalog = nullptr;
 
         void TryStartExitVisibleBatch(std::deque<Item>& q, const ChannelConfig& cfg);
         void CleanupFinishedVisible(std::deque<Item>& q, const ChannelConfig& cfg);

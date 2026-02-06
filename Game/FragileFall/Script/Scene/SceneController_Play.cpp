@@ -13,6 +13,8 @@
 #include "Manager/TimeScaler.h"
 #include <Manager/LoadingScreenDrawer.h>
 #include <Script/AimModeController.h>
+#include <Manager/MessageCatalog.h>
+#include <Script/UI/UIMessageQueue.h>
 
 namespace game
 {
@@ -41,6 +43,8 @@ namespace game
             sens = Clamp(sens, kSensMin, kSensMax);
             return (sens - kSensMin) / (kSensMax - kSensMin);
         }
+
+        static game::MessageCatalog g_msg;
     }
 
     void SceneController_Play::Awake()
@@ -50,6 +54,12 @@ namespace game
 
         auto* go = engine::GameObject::Find("Player");
         m_aimMode = go->GetComponent<AimModeController>();
+
+        g_msg.Load("Resource/Data/Message/MessageTable.csv");
+
+        if (auto* go = engine::GameObject::Find("UIMessageQueue"))
+            if (auto* q = go->GetComponent<game::UIMessageQueue>())
+                q->SetCatalog(&g_msg);
 
         // Buttons
         BindButton("UI_OpenMenu", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->OpenMenu(); });
@@ -132,6 +142,13 @@ namespace game
         if (engine::Input::IsKeyPressed(engine::Keys::F5))
         {
             Fail();
+        }
+
+        if (engine::Input::IsKeyPressed(engine::Keys::F6))
+        {
+            if (auto* go = engine::GameObject::Find("UIMessageQueue"))
+                if (auto* q = go->GetComponent<game::UIMessageQueue>())
+                    q->PushMessageKey("Kill_001");
         }
     }
 
@@ -239,7 +256,7 @@ namespace game
     void SceneController_Play::BackToRestart()
     {
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("Prototype_Play");
+        engine::SceneManager::Get().ChangeScene("Stage1_ProtoType");
     }
 
     void SceneController_Play::Back()

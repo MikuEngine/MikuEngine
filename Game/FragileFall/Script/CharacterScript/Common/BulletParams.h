@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace game
 {
@@ -40,6 +40,7 @@ namespace game
         float lifetime = 3.0f;      // 총알 수명 (초) - BulletPlayer는 range 사용, 다른 타입은 lifetime 사용
         float range = 50.0f;         // 총알 사거리 (BulletPlayer 전용, lifetime 대신 사용)
         float damage = 0.0f;
+        float scale = 1.0f;         //총알 크기 스케일. 기본 1.0배.
 
         // ─────────────────────────────────────────────
         // 포물선용 (Parabolic 타입에서만 사용)
@@ -49,6 +50,7 @@ namespace game
         float minLaunchAngle = 20.0f;   // 최소 발사각 (도)
         float maxLaunchAngle = 70.0f;   // 최대 발사각 (도) - 이 각도에서 최대 사거리 도달
         float ownGravity = 9.8f;        // 자체 중력 가속도 (PhysX 글로벌 중력과 별개)
+        float explosionRadious = 3.0f;  // 폭발 범위의 반경
 
         // ─────────────────────────────────────────────
         // 곡선/나선용 (Curve 타입에서 사용)
@@ -60,7 +62,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 범위형
         // ─────────────────────────────────────────────
-        float radius = 3.0f;        // 충돌 반경
+        //float radius = 3.0f;        // 충돌 반경
 
         // ─────────────────────────────────────────────
         // 나선용

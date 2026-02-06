@@ -3,6 +3,8 @@
 #include <Framework/Asset/Prefab.h>
 #include <Framework/Object/Component/RectTransform.h>
 
+#include "Manager/MessageCatalog.h"
+
 namespace game
 {
     void UIMessageQueue::Awake()
@@ -54,6 +56,25 @@ namespace game
     {
         Object::Load(j);
 
+    }
+
+    void UIMessageQueue::PushMessageKey(const std::string& key)
+    {
+        if (!m_catalog)
+            return;
+
+        UIMessageChannel ch{};
+        std::string text;
+        std::string iconKey;
+
+        if (!m_catalog->TryGet(key, ch, text, iconKey))
+        {
+            // 못찾았을 시 로그
+            LOG_PRINT("[UIMessageQueue] key not found: {}", key);
+            return;
+        }
+
+        PushMessage(ch, text, iconKey);
     }
 
     void UIMessageQueue::PushMessage(UIMessageChannel ch, const std::string& text, const std::string& iconKey)
