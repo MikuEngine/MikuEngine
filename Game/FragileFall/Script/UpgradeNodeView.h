@@ -62,7 +62,7 @@ namespace game
         {
             AtkDmg,
             AtkSpeed,
-            BulletLifetime,
+            BulletRange,
             BulletSizeScale,
             BulletSpeed,
             BulletDouble

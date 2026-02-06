@@ -100,8 +100,8 @@ namespace game
                     PlayerTemperManager::SetAddAtkDmg(PlayerTemperManager::GetAddAtkDmg() + e.value); break;
                 case TemperStat::AtkSpeed:
                     PlayerTemperManager::SetAddAtkSpeed(PlayerTemperManager::GetAddAtkSpeed() + e.value); break;
-                case TemperStat::BulletLifetime:
-                    PlayerTemperManager::SetAddBulletLifetime(PlayerTemperManager::GetAddBulletLifetime() + e.value); break;
+                case TemperStat::BulletRange:
+                    PlayerTemperManager::SetAddBulletRange(PlayerTemperManager::GetAddBulletRange() + e.value); break;
                 case TemperStat::BulletSizeScale:
                     PlayerTemperManager::SetAddBulletSizeScale(PlayerTemperManager::GetAddBulletSizeScale() + e.value); break;
                 case TemperStat::BulletSpeed:
@@ -117,8 +117,8 @@ namespace game
                     PlayerTemperManager::SetMulAtkDmg(PlayerTemperManager::GetMulAtkDmg() * e.value); break;
                 case TemperStat::AtkSpeed:
                     PlayerTemperManager::SetMulAtkSpeed(PlayerTemperManager::GetMulAtkSpeed() * e.value); break;
-                case TemperStat::BulletLifetime:
-                    PlayerTemperManager::SetMulBulletLifetime(PlayerTemperManager::GetMulBulletLifetime() * e.value); break;
+                case TemperStat::BulletRange:
+                    PlayerTemperManager::SetMulBulletRange(PlayerTemperManager::GetMulBulletRange() * e.value); break;
                 case TemperStat::BulletSizeScale:
                     PlayerTemperManager::SetMulBulletSizeScale(PlayerTemperManager::GetMulBulletSizeScale() * e.value); break;
                 case TemperStat::BulletSpeed:
