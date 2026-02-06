@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "ResourceManager.h"
 
 #include "Core/Graphics/Resource/IndexBuffer.h"
@@ -97,7 +97,10 @@ namespace engine
 
     std::shared_ptr<Texture> ResourceManager::GetOrCreateTexture(const std::string& filePath, LifeScope scope)
     {
-        if (auto find = m_textures.find(filePath); find != m_textures.end())
+        auto path = filePath;
+        std::replace(path.begin(), path.end(), '\\', '/');
+
+        if (auto find = m_textures.find(path); find != m_textures.end())
         {
             if (!find->second.expired())
             {
@@ -106,11 +109,11 @@ namespace engine
         }
 
         auto texture = std::make_shared<Texture>();
-        texture->Create(filePath);
+        texture->Create(path);
 
         CacheResource(texture, scope);
 
-        m_textures[filePath] = texture;
+        m_textures[path] = texture;
 
         return texture;
     }
