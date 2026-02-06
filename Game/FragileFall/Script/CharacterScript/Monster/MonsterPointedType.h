@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -89,7 +89,7 @@ namespace game
         void InitializeAnimFSM() override;
         void InitializeAnimations() override;
         void InitializeBullet() override;
-
+        
         void MoveTowardsPlayer() override;
 
         // 입력 처리 (FSM 파라미터 업데이트)
@@ -132,8 +132,11 @@ namespace game
         
         // 행동 제한
         bool CanMove() const override;
-        bool CanAttack() const override;
-        
+        bool CanAttack() const override;        
+ 
+        // Parabolic 타입 여부 (Green = true) 
+        bool IsParabolicBullet() const override { return m_monsterTier == MonsterTier::Green; }
+
         // 헬퍼 함수
         bool IsPlayerInDetectionRange() const;
 

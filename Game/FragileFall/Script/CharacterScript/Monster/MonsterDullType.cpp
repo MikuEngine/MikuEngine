@@ -474,51 +474,6 @@ namespace game
         }
 
         // ─────────────────────────────────────────────
-        // 포물선 설정 (Green일 때만 표시)
-        // 새 로직: 중력 편집, 속도 자동 계산, 거리→각도 선형 매핑
-        // ─────────────────────────────────────────────
-        if (m_monsterTier == MonsterTier::Green)
-        {
-            ImGui::Separator();
-            ImGui::Text("=== Parabolic Bullet Settings ===");
-            
-            // 중력 편집 가능 (5~20)
-            ImGui::DragFloat("Gravity", &m_ownGravity, 0.1f, kMinGravity, kMaxGravity, "%.1f m/s^2");
-            
-            // 폭발 범위 설정
-            ImGui::DragFloat("Explosion Radius", &m_explosionRadius, 0.1f, 0.5f, 20.0f);
-            ImGui::SameLine();
-            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Trigger size on impact)");
-            
-            // 속도 읽기 전용 (자동 계산)
-            float calculatedSpeed = CalculateParabolicSpeed();
-            ImGui::BeginDisabled(true);
-            ImGui::DragFloat("Bullet Speed", &calculatedSpeed, 0.5f, 1.0f, 100.0f, "%.1f m/s");
-            ImGui::EndDisabled();
-            ImGui::SameLine();
-            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(auto)");
-            
-            ImGui::DragFloat("Min Launch Angle", &m_minLaunchAngle, 1.0f, 0.0f, 44.0f, "%.1f deg");
-            ImGui::DragFloat("Max Launch Angle", &m_maxLaunchAngle, 1.0f, 45.0f, 89.0f, "%.1f deg");
-            
-            // 범위 정보
-            ImGui::Text("Attack Range: %.1f m", m_AttackRange);
-            ImGui::Text("Max Range (at %.0f deg): %.1f m", m_maxLaunchAngle, m_AttackRange);
-            ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
-                "(Speed auto-calculated to reach AttackRange at MaxAngle)");
-            
-            ImGui::Spacing();
-            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime values (read-only):");
-            
-            // 읽기 전용: 마지막으로 계산된 값 표시
-            ImGui::Text("  Launch Angle: %.1f deg", m_bulletParams.launchAngle);
-            ImGui::Text("  Speed: %.2f m/s", m_bulletParams.speed);
-            
-            ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
-                "(Angle calculated at fire time based on distance)");
-        }
-
-        // ─────────────────────────────────────────────
         // 3방향 발사 설정 (Blue일 때만 표시)
         // ─────────────────────────────────────────────
         if (m_monsterTier == MonsterTier::Blue)
