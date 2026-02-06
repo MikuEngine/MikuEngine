@@ -33,7 +33,7 @@ namespace game
             "현재 프레자일 게이지가\n위험한 상태니 복귀를 합시다.",//2
             }},
 
-            {{"해당 장소는 로비창으로\n 게임을 시작하거나 캐릭터를 강화하여\n더 깊은 심연으로 갈 수 있습니다."}},// 1
+            {{"해당 장소는 로비창으로\n게임을 시작하거나 캐릭터를 강화하여\n더 깊은 심연으로 갈 수 있습니다."}},// 1
 
             {{"상단의 강화 탭에서\n기술을 클릭해보세요."}},// 1
 
@@ -47,25 +47,7 @@ namespace game
 
     void TutorialController::Awake()
     {
-        // if (auto* go = engine::GameObject::Find("Canvas_Message"))
-        //    m_queue = go->GetComponent<UIMessageQueue>();
 
-        // DoorTriggerScript의 EventCallBack 호출 부분
-        auto onLoad = [this]()
-        {
-            m_queue = nullptr;
-            auto* go = engine::GameObject::Find("Canvas_Message");
-            if (go) m_queue = go->GetComponent<UIMessageQueue>();
-
-            std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
-
-            if (currentScene == "Prototype_Tutorial")
-            {
-                Next();
-            }
-        };
-
-        engine::SceneManager::Get().RegisterOnSceneLoaded(onLoad);
     }
 
     void TutorialController::Start()
@@ -78,6 +60,12 @@ namespace game
         }
         else
         {
+            auto* oldController = s_tutorialController->GetComponent<TutorialController>();
+            if (oldController)
+            {
+                oldController->OnSceneLoaded();
+            }
+
             GetGameObject()->Destroy();
         }
 
@@ -143,6 +131,21 @@ namespace game
         }
     }
 
+    void TutorialController::OnSceneLoaded()
+    {
+        m_queue = nullptr;
+
+        auto* go = engine::GameObject::Find("Canvas_Message");
+        if (go) m_queue = go->GetComponent<UIMessageQueue>();
+
+        std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
+
+        if (currentScene == "Prototype_Tutorial")
+        {
+            Next();
+        }
+    }
+
     void TutorialController::ShowPage()
     {
         if (!m_queue)
@@ -201,8 +204,6 @@ namespace game
         {
             m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.2f);
         }
-
-        ShowPage();
     }
 
     void TutorialController::Prev()
