@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
@@ -32,9 +32,10 @@ namespace game
 
 		// ─────────────────────────────────────────────
 		// 6. BulletPlayer 컴포넌트 추가 및 설정
+		// - scale 전달 (Start()에서 Transform + Collider 스케일 적용)
 		// ─────────────────────────────────────────────
 		auto* bullet = go->GetComponent<BulletPlayer>();
-		bullet->Setup(std::move(movement), params.lifetime, params.damage, params.range);
+		bullet->Setup(std::move(movement), params.lifetime, params.damage, params.range, params.scale);
 
 		// effect
 		auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
@@ -201,6 +202,65 @@ namespace game
 		}
 	}
 
+	// ═══════════════════════════════════════════════════════════════
+	// 연사 총알 발사 (랜덤 각도 + 속도/수명 변조)
+	// ═══════════════════════════════════════════════════════════════
+	void BulletFactory::BurstFireMonster(const engine::Vector3& position,
+	                                     const engine::Vector3& direction,
+	                                     int count,
+	                                     float spreadAngle,
+	                                     float lifetimeModMin,
+	                                     float lifetimeModMax,
+	                                     float speedModMin,
+	                                     float speedModMax,
+	                                     const BulletParams& params)
+	{
+		for (int i = 0; i < count; ++i)
+		{
+			auto go = engine::Prefab::Instantiate("BulletLinearMonster");
+			if (!go)
+			{
+				LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'BulletLinearMonster' prefab!");
+				continue;
+			}
+
+			go->GetTransform()->SetLocalPosition(position);
+
+			// 방향 랜덤 오프셋 (±spreadAngle)
+			float randomOffset = ((static_cast<float>(rand()) / RAND_MAX) * spreadAngle * 2.0f) - spreadAngle;
+			DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY(randomOffset);
+			engine::Vector3 fireDir = engine::Vector3::TransformNormal(direction, rot);
+			fireDir.Normalize();
+
+			// 개별 파라미터 (lifetime, speed 랜덤 변조)
+			BulletParams individualParams = params;
+
+			float lifetimeMod = lifetimeModMin + (static_cast<float>(rand()) / RAND_MAX) * (lifetimeModMax - lifetimeModMin);
+			individualParams.lifetime *= lifetimeMod;
+
+			float speedMod = speedModMin + (static_cast<float>(rand()) / RAND_MAX) * (speedModMax - speedModMin);
+			individualParams.speed *= speedMod;
+
+			// Movement 생성 및 초기화
+			auto movement = CreateMovement(individualParams);
+			movement->Initialize(go, fireDir, individualParams.speed);
+
+			// BulletMonster 컴포넌트 설정
+			auto* bullet = go->GetComponent<BulletMonster>();
+			if (bullet)
+			{
+				bullet->Setup(std::move(movement), individualParams, this);
+			}
+
+			// effect
+			auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
+			if (effect)
+			{
+				effect->GetComponent<ParticleAttachment>()->SetTarget(go);
+			}
+		}
+	}
+
 	// ExplosinTriggerScript로 기능 이전
 	//void BulletFactory::FieldFireMonster(const engine::Vector3& position, const BulletParams& params)
 	//{
@@ -263,19 +323,18 @@ namespace game
 			"Factory for creating bullets. Settings managed by MonsterScript.");
 		
 		// ─────────────────────────────────────────────
-		// 같은 GameObject의 MonsterRoundType에서 BulletParams 정보 표시
+		// 같은 GameObject의 MonsterScript에서 BulletParams 정보 표시
 		// ─────────────────────────────────────────────
-		auto* roundMonster = GetGameObject()->GetComponent<MonsterRoundType>();
-		if (roundMonster)
+		auto* monsterScript = GetGameObject()->GetComponent<MonsterScript>();
+		if (monsterScript)
 		{
-			const BulletParams& params = roundMonster->GetBulletParams();
+			const BulletParams& params = monsterScript->GetBulletParams();
 			
-			// Green 몬스터인지 확인 (에디터 모드에서도 올바른 타입 표시)
-			auto* greenMonster = GetGameObject()->GetComponent<MonsterRoundGreen>();
-			bool isGreenMonster = (greenMonster != nullptr);
+			// Parabolic 몬스터인지 확인 (에디터 모드에서도 올바른 타입 표시)
+			bool isParabolicMonster = monsterScript->IsParabolicBullet();
 			
-			// 실제 사용될 타입 결정 (Green = 항상 Parabolic)
-			BulletType displayType = isGreenMonster ? BulletType::Parabolic : params.type;
+			// 실제 사용될 타입 결정 (Parabolic 몬스터 = 항상 Parabolic)
+			BulletType displayType = isParabolicMonster ? BulletType::Parabolic : params.type;
 			
 			ImGui::Separator();
 			ImGui::Text("=== Current Bullet Settings ===");

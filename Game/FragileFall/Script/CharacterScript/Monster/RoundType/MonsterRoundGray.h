@@ -159,6 +159,19 @@ namespace game
         void OnStateEntered(const std::string& state) override;
 
     public:
+        // ─────────────────────────────────────────────
+        // 총알 발사 없음 (접촉 데미지만)
+        // ─────────────────────────────────────────────
+        bool HasBulletAttack() const override { return false; }
+        
+        // ─────────────────────────────────────────────
+        // 컴포넌트 검증 (StaticMesh 사용)
+        // ─────────────────────────────────────────────
+        bool RequiresSkeletalAnimator() const override { return false; }
+        bool RequiresBulletFactory() const override { return false; }
+        bool RequiresAnimFSM() const override { return false; }
+        bool RequiresPathfindingAgent() const override { return false; }
+        
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;

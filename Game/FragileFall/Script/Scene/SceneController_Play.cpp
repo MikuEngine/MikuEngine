@@ -17,6 +17,8 @@
 #include <Manager/MessageCatalog.h>
 #include <Script/UI/UIMessageQueue.h>
 
+#include "Scene/GameScene.h"
+
 namespace game
 {
     namespace
@@ -149,7 +151,7 @@ namespace game
             Fail();
         }
 
-        if (engine::Input::IsKeyPressed(engine::Keys::F6))
+        if (engine::Input::IsKeyPressed(engine::Keys::K))
         {
             if (auto* go = engine::GameObject::Find("UIMessageQueue"))
                 if (auto* q = go->GetComponent<game::UIMessageQueue>())
@@ -248,19 +250,17 @@ namespace game
 
     void SceneController_Play::BackToMain()
     {
-        game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("01_READY_Main");
+        GameScene::Change(SceneID::Main);
     }
 
     void SceneController_Play::BackToLobby()
     {
-        StageManager::Get().RequestGoToLobby();
+        GameScene::Change(SceneID::Lobby);
     }
 
     void SceneController_Play::BackToRestart()
     {
-        game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("Stage1_ProtoType");
+        GameScene::Change(SceneID::Play);
     }
 
     void SceneController_Play::Back()

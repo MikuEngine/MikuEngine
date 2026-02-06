@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -248,6 +248,27 @@ namespace game
 	{
 		// 기본 구현은 비어있음
 		// 자손 클래스에서 오버라이드하여 구현
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 발사 가능 여부 체크 (단발/연발/없음 모드)
+	// ═══════════════════════════════════════════════════════════════
+	bool MonsterScript::CanFireBullet() const
+	{
+		// 단발 모드: 타이머 무시, 항상 발사 가능
+		if (m_isDoSingleShot)
+		{
+			return true;
+		}
+
+		// 연발 모드: 타이머 체크 (fireRate > 0일 때만)
+		if (m_fireRate > 0.0f)
+		{
+			return (m_fireTimer <= 0.0f);
+		}
+
+		// fireRate == 0: 총알 발사 기능 없음
+		return false;
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -827,16 +848,16 @@ namespace game
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 컴포넌트 검증
+	// 컴포넌트 검증 (가상 함수 기반)
 	// ═══════════════════════════════════════════════════════════════
 	bool MonsterScript::ValidateComponents() const
 	{
 		bool isValid = true;
 
 		if (!m_rigidbody) isValid = false;
-		if (!m_skeletalAnimator) isValid = false;
-		if (!m_bulletFactory) isValid = false;
-		if (!m_animFSM) isValid = false;
+		if (RequiresSkeletalAnimator() && !m_skeletalAnimator) isValid = false;
+		if (RequiresBulletFactory() && !m_bulletFactory) isValid = false;
+		if (RequiresAnimFSM() && !m_animFSM) isValid = false;
 		if (!m_logicFSM) isValid = false;
 
 		return isValid;
@@ -865,8 +886,12 @@ namespace game
 		BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
 		engine::PathfindingAgent* pathfindingAgent = m_pathfindingAgent ? m_pathfindingAgent : (GetGameObject() ? GetGameObject()->GetComponent<engine::PathfindingAgent>() : nullptr);
 
-		// 전체 유효성 검사 (PathfindingAgent는 이동 몬스터만 필요하므로 선택)
-		bool allValid = rigidbody && skeletalAnimator && bulletFactory && animFSM && logicFSM;
+		// 전체 유효성 검사 (가상 함수 기반)
+		bool allValid = rigidbody && logicFSM;
+		if (RequiresSkeletalAnimator()) allValid = allValid && skeletalAnimator;
+		if (RequiresBulletFactory()) allValid = allValid && bulletFactory;
+		if (RequiresAnimFSM()) allValid = allValid && animFSM;
+		if (RequiresPathfindingAgent()) allValid = allValid && pathfindingAgent;
 
 		if (allValid)
 		{
@@ -877,25 +902,37 @@ namespace game
 			ImGui::TextColored(ImVec4(1, 0, 0, 1), "[ERROR] Some components are missing!");
 		}
 
-		// 개별 컴포넌트 상태 표시
+		// 개별 컴포넌트 상태 표시 (가상 함수 기반)
 		ImGui::Indent();
 		ImGui::Text("Rigidbody:         %s", rigidbody ? "[OK]" : "[MISSING]");
 		if (!rigidbody) ImGui::SameLine(); if (!rigidbody) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 
-		ImGui::Text("SkeletalAnimator:  %s", skeletalAnimator ? "[OK]" : "[MISSING]");
-		if (!skeletalAnimator) ImGui::SameLine(); if (!skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		if (RequiresSkeletalAnimator())
+		{
+			ImGui::Text("SkeletalAnimator:  %s", skeletalAnimator ? "[OK]" : "[MISSING]");
+			if (!skeletalAnimator) ImGui::SameLine(); if (!skeletalAnimator) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		}
 
-		ImGui::Text("BulletFactory:     %s", bulletFactory ? "[OK]" : "[MISSING]");
-		if (!bulletFactory) ImGui::SameLine(); if (!bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		if (RequiresBulletFactory())
+		{
+			ImGui::Text("BulletFactory:     %s", bulletFactory ? "[OK]" : "[MISSING]");
+			if (!bulletFactory) ImGui::SameLine(); if (!bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		}
 
-		ImGui::Text("AnimFSM:           %s", animFSM ? "[OK]" : "[MISSING]");
-		if (!animFSM) ImGui::SameLine(); if (!animFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		if (RequiresAnimFSM())
+		{
+			ImGui::Text("AnimFSM:           %s", animFSM ? "[OK]" : "[MISSING]");
+			if (!animFSM) ImGui::SameLine(); if (!animFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
+		}
 
 		ImGui::Text("LogicFSM:          %s", logicFSM ? "[OK]" : "[MISSING]");
 		if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
 
-		ImGui::Text("PathfindingAgent:  %s", pathfindingAgent ? "[OK]" : "[MISSING]");
-		if (m_moveSpeed > 0.0f && !pathfindingAgent) ImGui::SameLine(); if (m_moveSpeed > 0.0f && !pathfindingAgent) ImGui::TextColored(ImVec4(1, 1, 0, 1), "<-- Required for moving monsters!");
+		if (RequiresPathfindingAgent())
+		{
+			ImGui::Text("PathfindingAgent:  %s", pathfindingAgent ? "[OK]" : "[MISSING]");
+			if (!pathfindingAgent) ImGui::SameLine(); if (!pathfindingAgent) ImGui::TextColored(ImVec4(1, 1, 0, 1), "<-- Required!");
+		}
 		ImGui::Unindent();
 
 		// ─────────────────────────────────────────────
@@ -919,12 +956,31 @@ namespace game
 		ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.1f, 50.0f);
 
 		// ─────────────────────────────────────────────
-		// 발사 설정
+		// 발사 설정 (총알 발사가 없는 몬스터는 비활성화)
 		// ─────────────────────────────────────────────
 		ImGui::Separator();
 		ImGui::Text("=== Fire Settings ===");
+		
+		if (!HasBulletAttack())
+		{
+			ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "[No Bullet Attack - Settings Disabled]");
+			ImGui::BeginDisabled(true);
+		}
+		
 		ImGui::DragFloat("Rotation Speed", &m_rotationSpeed, 0.1f, 0.0f, 10.0f);
-		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.1f, 0.1f, 10.0f);
+		
+		// 단발 모드일 때 fireRate 비활성화
+		if (m_isDoSingleShot)
+		{
+			ImGui::BeginDisabled(true);
+		}
+		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.1f, 0.0f, 10.0f);
+		if (m_isDoSingleShot)
+		{
+			ImGui::EndDisabled();
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "(Single Shot Mode - Ignored)");
+		}
 		
 		// Parabolic 타입은 속도 자동 계산
 		if (IsParabolicBullet())
@@ -942,6 +998,29 @@ namespace game
 		}
 		
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
+		
+		// 총알 스케일 (슬라이더: 0.5~9.0, 최소값: 0.01)
+		ImGui::DragFloat("Bullet Scale", &m_bulletScale, 0.1f, 0.5f, 9.0f);
+		// 직접 입력 시 0.01 미만 클램프
+		if (m_bulletScale < 0.01f)
+		{
+			m_bulletScale = 0.01f;
+		}
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Min: 0.01)");
+		
+		// 단발 발사 모드 (읽기 전용)
+		ImGui::Separator();
+		ImGui::BeginDisabled(true);
+		ImGui::Checkbox("Single Shot Mode", &m_isDoSingleShot);
+		ImGui::EndDisabled();
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Read Only - Set in scene file)");
+		
+		if (!HasBulletAttack())
+		{
+			ImGui::EndDisabled();
+		}
 
 		// ─────────────────────────────────────────────
 		// 런타임 정보
@@ -1005,6 +1084,7 @@ namespace game
 		j["FireRate"] = m_fireRate;
 		j["BulletSpeed"] = m_bulletSpeed;
 		j["BulletLifetime"] = m_bulletLifetime;
+		j["BulletScale"] = m_bulletScale;
 		j["SpreadAngle"] = m_spreadAngle;
 		j["CurvedAngularSpeed"] = m_curvedAngularSpeed;
 		j["CurvedRadiusGrowth"] = m_curvedRadiusGrowth;
@@ -1014,6 +1094,10 @@ namespace game
 		j["OwnGravity"] = m_ownGravity;
 		j["MinLaunchAngle"] = m_minLaunchAngle;
 		j["MaxLaunchAngle"] = m_maxLaunchAngle;
+		j["ExplosionRadius"] = m_explosionRadius;
+		
+		// 단발 발사 모드
+		j["IsDoSingleShot"] = m_isDoSingleShot;
 	}
 
 	void MonsterScript::Load(const engine::json& j)
@@ -1041,6 +1125,7 @@ namespace game
 		m_fireRate = j.value("FireRate", 3.0f);
 		m_bulletSpeed = j.value("BulletSpeed", 1.0f);
 		m_bulletLifetime = j.value("BulletLifetime", 3.0f);
+		m_bulletScale = j.value("BulletScale", 1.0f);
 		m_spreadAngle = j.value("SpreadAngle", 0.2f);
 		m_curvedAngularSpeed = j.value("CurvedAngularSpeed", 2.0f);
 		m_curvedRadiusGrowth = j.value("CurvedRadiusGrowth", 3.0f);
@@ -1050,5 +1135,9 @@ namespace game
 		m_ownGravity = j.value("OwnGravity", 9.8f);
 		m_minLaunchAngle = j.value("MinLaunchAngle", 20.0f);
 		m_maxLaunchAngle = j.value("MaxLaunchAngle", 70.0f);
+		m_explosionRadius = j.value("ExplosionRadius", 3.0f);
+		
+		// 단발 발사 모드
+		m_isDoSingleShot = j.value("IsDoSingleShot", false);
 	}
 }

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -77,11 +77,6 @@ namespace game
         engine::StaticMeshRenderer* m_staticMeshRenderer = nullptr;
         
         // ─────────────────────────────────────────────
-        // 총알 설정
-        // ─────────────────────────────────────────────
-        BulletParams m_bulletParams;
-
-        // ─────────────────────────────────────────────
         // 애니메이션 이름 (자식에서 오버라이드 가능)
         // ─────────────────────────────────────────────
         std::string m_animName_Idle = "Idle";
@@ -114,10 +109,6 @@ namespace game
         void Update() override;
         void FixedUpdate() override;
 
-        // ─────────────────────────────────────────────
-        // 접근자
-        // ─────────────────────────────────────────────
-        const BulletParams& GetBulletParams() const { return m_bulletParams; }
 
     protected:
         // ═══════════════════════════════════════════════════════════════

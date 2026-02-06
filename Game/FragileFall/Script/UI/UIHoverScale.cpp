@@ -85,6 +85,8 @@ namespace game
         ImGui::SliderFloat("HoverScale", &m_hoverScale, 1.0f, 1.5f, "%.2f");
 
         ImGui::Checkbox("use Text Bold", &m_useBold);
+
+        ImGui::Checkbox("Always Bold", &m_alwaysBold);
     }
 
     void UIHoverScale::Save(engine::json& j) const
@@ -94,6 +96,7 @@ namespace game
         j["HoverScale"] = m_hoverScale;
         j["Speed"] = m_speed;
         j["Bold"] = m_useBold;
+        j["AlwaysBold"] = m_alwaysBold;
     }
 
     void UIHoverScale::Load(const engine::json& j)
@@ -103,6 +106,7 @@ namespace game
         engine::JsonGet(j, "HoverScale", m_hoverScale);
         engine::JsonGet(j, "Speed", m_speed);
         engine::JsonGet(j, "Bold", m_useBold);
+        engine::JsonGet(j, "AlwaysBold", m_alwaysBold);
     }
 
     void UIHoverScale::Apply()
@@ -124,7 +128,7 @@ namespace game
 
     void UIHoverScale::Reset()
     {
-        if (m_txt)
+        if (m_txt && !m_alwaysBold)
         {
             m_txt->SetBold(false);
         }

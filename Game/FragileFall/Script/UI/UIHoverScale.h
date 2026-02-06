@@ -45,5 +45,6 @@ namespace game
         bool m_hovered = false;
 
         bool m_useBold = false;
+        bool m_alwaysBold = false;
     };
 }

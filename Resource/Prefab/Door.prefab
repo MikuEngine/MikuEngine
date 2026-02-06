@@ -33,6 +33,7 @@
                     "MeshFilePath": "Resource/Model/door/door.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -65,25 +66,6 @@
                     "Type": "DoorTriggerScript",
                     "Active": true,
                     "NextSceneName": "Prototype_Tutorial"
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": false,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 4,
-                    "materialType": 0,
-                    "radius": 4.920000076293945
                 }
             ]
         }

@@ -13,6 +13,8 @@
 #include <Framework/Object/Component/UI/UIProgressBar.h>
 #include <Manager/LoadingScreenDrawer.h>
 
+#include "Scene/GameScene.h"
+
 namespace game
 {
     namespace
@@ -167,8 +169,7 @@ namespace game
 
     void SceneController_Main::StartGame()
     {
-        game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("01_READY_Lobby");
+        GameScene::Change(SceneID::Lobby);
     }
 
     void SceneController_Main::OpenOption()

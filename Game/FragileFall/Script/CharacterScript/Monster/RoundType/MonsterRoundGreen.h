@@ -62,6 +62,13 @@ namespace game
     public:
         void Awake() override;
         void Start() override;
+        
+        // ─────────────────────────────────────────────
+        // 컴포넌트 검증 (StaticMesh 사용)
+        // ─────────────────────────────────────────────
+        bool RequiresSkeletalAnimator() const override { return false; }
+        bool RequiresAnimFSM() const override { return false; }
+        bool RequiresPathfindingAgent() const override { return false; }
 
     protected:
         // ─────────────────────────────────────────────

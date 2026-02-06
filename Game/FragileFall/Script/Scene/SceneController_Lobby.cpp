@@ -22,6 +22,8 @@
 
 #include "Script/LobbyInteraction.h"
 
+#include "Scene/GameScene.h"
+
 namespace game
 {
     namespace
@@ -227,8 +229,7 @@ namespace game
             {
                 m_isPlayerMove = false;
                 game::StageManager::Get().ResetToStage1();
-                game::LoadingScreenDrawer::OnSceneTransitionBegin();
-                engine::SceneManager::Get().ChangeScene("Stage1_Prototype");
+                GameScene::Change(SceneID::Play);
             }
         }
     }
@@ -334,8 +335,7 @@ namespace game
 
     void SceneController_Lobby::BackToMain()
     {
-        game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("01_READY_Main");
+        GameScene::Change(SceneID::Main);
     }
 
     void SceneController_Lobby::BackToHub()

@@ -13,6 +13,8 @@
 
 #include <Core/Graphics/Resource/ResourceManager.h>
 
+#include <Scene/GameScene.h>
+
 namespace game
 {
     void AimModeController::Awake()
@@ -41,7 +43,7 @@ namespace game
         std::string sceneName = engine::SceneManager::Get().GetScene()->GetName();
 
         // 로비가 아닐 때만 전투 에임 활성화
-        if (sceneName != "01_READY_Lobby" && sceneName != "01_READY_Main")
+        if (sceneName != GameScene::Name(SceneID::Lobby) && sceneName != GameScene::Name(SceneID::Main))
         {
             SetCombatAimEnabled(true);
         }

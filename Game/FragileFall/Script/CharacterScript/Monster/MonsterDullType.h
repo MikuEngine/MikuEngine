@@ -17,11 +17,6 @@ namespace game
         REGISTER_SCRIPT(MonsterDullType, MonsterScript)
 
     private:
-        // ─────────────────────────────────────────────
-        // 총알 설정
-        // ─────────────────────────────────────────────
-        BulletParams m_bulletParams;
-
         // 둔탁 타입은 StaticMesh를 사용하므로 애니메이션 이름 변수 불필요
 
 

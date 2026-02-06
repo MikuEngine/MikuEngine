@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -54,14 +54,16 @@ namespace game
         float m_deathTimer = 0.0f;
 
         float m_damage = 10.0f;
+        float m_scale = 1.0f;       // 총알 크기 스케일 (Transform + Collider 자동 적용)
 
     public:
         // ─────────────────────────────────────────────
         // 초기화 (Factory에서 호출)
         // - damage: 플레이어 강화 반영된 데미지 (미전달 시 기본값 사용)
         // - range: 사거리 (BulletPlayer는 range 사용, lifetime 무시)
+        // - scale: 총알 크기 스케일 (syncWithTransform으로 Collider도 자동 스케일)
         // ─────────────────────────────────────────────
-        void Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg, float range = 50.0f);
+        void Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg, float range, float scale);
 
         // ─────────────────────────────────────────────
         // 생명주기

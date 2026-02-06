@@ -190,6 +190,13 @@ namespace game
         void FireFallAttackBullets();          // 4방향 총알 발사
 
     public:
+        // ─────────────────────────────────────────────
+        // 컴포넌트 검증 (StaticMesh 사용)
+        // ─────────────────────────────────────────────
+        bool RequiresSkeletalAnimator() const override { return false; }
+        bool RequiresAnimFSM() const override { return false; }
+        bool RequiresPathfindingAgent() const override { return false; }
+        
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
