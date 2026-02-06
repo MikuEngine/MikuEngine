@@ -331,8 +331,8 @@ namespace engine
         sound.SetMute(audio.mute);
 
         // 3) 컨트롤 설정 적용
-        //const auto& ctrl = m_userSettings.controls;
-        //Input::SetMouseSensitivity(ctrl.mouseSensitivity);
+        const auto& ctrl = m_userSettings.controls;
+        Input::SetMouseSensitivity(ctrl.mouseSensitivity);
         //Input::SetInvertY(ctrl.invertY);
     }
 
@@ -517,6 +517,23 @@ namespace engine
             break;
 
         case WM_ACTIVATEAPP:
+            if (wParam)
+            {
+                bool shouldConfine = true;
+#ifdef _DEBUG
+                // 에디터 모드가 Edit(편집) 상태라면 가두지 않음
+                if (EditorManager::Get().GetEditorState() == EditorState::Edit)
+                {
+                    shouldConfine = false;
+                }
+#endif
+                engine::Input::ConfineCursor(hWnd, shouldConfine);
+            }
+            else // 앱 비활성화 시
+            {
+                engine::Input::ConfineCursor(hWnd, false);
+            }
+
             DirectX::Keyboard::ProcessMessage(uMsg, wParam, lParam);
             DirectX::Mouse::ProcessMessage(uMsg, wParam, lParam);
             break;

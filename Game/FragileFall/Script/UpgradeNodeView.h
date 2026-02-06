@@ -60,12 +60,17 @@ namespace game
         enum class TemperOp { Add, Mul, Bool };
         enum class TemperStat
         {
+            // Attack
             AtkDmg,
             AtkSpeed,
             BulletRange,
             BulletSizeScale,
             BulletSpeed,
-            BulletDouble
+            BulletDouble,
+
+
+
+
         };
 
         struct TemperEffect

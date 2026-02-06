@@ -39,8 +39,7 @@ namespace engine
         static float GetMouseWheelDelta();
         static float GetMouseWheelNotch();
 
-    private:
-        static inline float m_mouseSensitivity = 1.0f;
-        static inline bool  m_invertY = false;
+        static void ConfineCursor(HWND hWnd, bool confine);
+        static void SetLockMode(bool lock);
     };
 }
