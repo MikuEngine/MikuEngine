@@ -71,13 +71,17 @@ namespace game
         
         // ─────────────────────────────────────────────
         // Fire 애니메이션 재생 속도 동기화 및 발사 프레임 확인
+        // 누적 타이머 방식: AnimFSM 상태 전환과 무관하게 발사 프레임 추적
         // ─────────────────────────────────────────────
         if (m_animFSM && m_playerControllerScript && m_logicFSM)
         {
-            std::string currentState = m_logicFSM->GetCurrentState();
-            bool isShooting = (currentState == "IdleShoot" || currentState == "WalkShoot");
+            // AnimFSM 상태 확인 (IdleShoot, WalkForwardShoot, WalkBackwardShoot)
+            std::string animState = m_animFSM->GetCurrentState();
+            bool isInShootState = (animState == "IdleShoot" || 
+                                   animState == "WalkForwardShoot" || 
+                                   animState == "WalkBackwardShoot");
             
-            if (isShooting)
+            if (isInShootState)
             {
                 // 발사 간격(fireRate)을 직접 사용하여 애니메이션 속도 계산
                 float fireRate = m_playerControllerScript->GetFireRate();
@@ -88,42 +92,50 @@ namespace game
                 auto* animator = GetGameObject()->GetComponent<engine::SkeletalAnimator>();
                 if (animator)
                 {
+                    // 레이어 결정 (IdleShoot: BaseLayer, WalkShoot: UpperBodyLayer)
                     int targetLayer = -1;
-                    if (currentState == "IdleShoot")
+                    if (animState == "IdleShoot")
                     {
                         targetLayer = m_animFSM->GetBaseLayerIndex();
                     }
-                    else if (currentState == "WalkShoot")
+                    else // WalkForwardShoot or WalkBackwardShoot
                     {
                         targetLayer = m_animFSM->GetUpperBodyLayerIndex();
                     }
                     
                     if (targetLayer >= 0)
                     {
-                        std::string currentAnim = animator->GetCurrentAnimationName(targetLayer);
-                        if (currentAnim == m_animName_Fire)
+                        // 애니메이션 속도 설정
+                        animator->SetLayerSpeed(targetLayer, animSpeed);
+                        
+                        // Fire 애니메이션 길이 가져오기
+                        float fireAnimDuration = animator->GetCurrentAnimationDuration(targetLayer);
+                        
+                        if (fireAnimDuration > 0.001f)
                         {
-                            // 애니메이션 속도 업데이트 (발사 속도에 맞춤)
-                            animator->SetLayerSpeed(targetLayer, animSpeed);
-                            // 발사 프레임 통과 시 한 번만 SetCanFireNow(true) (총알↔모션 동기화)
-                            float normalizedTime = animator->GetNormalizedTime(targetLayer);
-                            if (normalizedTime >= m_fireAnimShootFrameTime && m_prevFireNormalizedTime < m_fireAnimShootFrameTime)
+                            // 누적 타이머 증가 (애니메이션 속도 반영)
+                            m_accumulatedShootTime += engine::Time::DeltaTime() * animSpeed;
+                            
+                            // 현재 사이클 내 정규화된 시간 계산 (0.0~1.0, 루프)
+                            float timeInCycle = std::fmod(m_accumulatedShootTime, fireAnimDuration);
+                            float normalizedTime = timeInCycle / fireAnimDuration;
+                            
+                            // 발사 프레임 통과 체크
+                            if (normalizedTime >= m_fireAnimShootFrameTime && 
+                                m_prevFireNormalizedTime < m_fireAnimShootFrameTime)
+                            {
                                 m_playerControllerScript->SetCanFireNow(true);
+                            }
+                            
                             m_prevFireNormalizedTime = normalizedTime;
                         }
-                        else
-                        {
-                            m_prevFireNormalizedTime = -1.0f;
-                        }
-                    }
-                    else
-                    {
-                        m_prevFireNormalizedTime = -1.0f;
                     }
                 }
             }
             else
             {
+                // Shooting 상태가 아니면 타이머 리셋
+                m_accumulatedShootTime = 0.0f;
                 m_prevFireNormalizedTime = -1.0f;
                 m_playerControllerScript->SetCanFireNow(false);
             }

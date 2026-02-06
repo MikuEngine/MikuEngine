@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -179,6 +179,9 @@ namespace game
         bool m_fsmInitialized = false;
         bool m_canFireNow = true;       // 애니 발사 프레임 통과 시 AimMeshController가 true로 설정
         bool m_hasFiredThisSession = false;  // 이번 클릭/홀드에서 1발 이상 쐈는지 (첫 발은 즉시 허용용)
+
+        float m_IdleDransitionWaitTime = 0.1f;
+        float m_IdleDransitionWaitTimer = 0.0f;
         
         // 마지막 이동 방향 (캐릭터가 서있는 방향)
         // 초기값: -Z 방향 (아래쪽)
