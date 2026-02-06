@@ -819,23 +819,8 @@ namespace engine
         }
         ImGui::PopItemWidth();
 
-        ImGui::Text("Drop here for root ->");
-        ImGui::SameLine();
-        ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 15.0f));
-        if (ImGui::BeginDragDropTarget())
-        {
-            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAG"))
-            {
-                GameObject* dropped = *(GameObject**)payload->Data;
-                dropped->GetTransform()->SetParent(nullptr); // 부모 해제 (Root로 이동)
-            }
-
-            ImGui::EndDragDropTarget();
-        }
-
         // 스크롤 가능한 영역 시작 (게임오브젝트 목록만 스크롤)
         ImGui::BeginChild("HierarchyScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
-
 
 
         auto scene = SceneManager::Get().GetScene();
@@ -863,20 +848,6 @@ namespace engine
         }
 
         ImGui::EndChild(); // 스크롤 영역 끝나기 전 혹은 안쪽 마지막 부분
-
-        // 빈 공간 타겟 (리스트의 맨 마지막으로 이동)
-        ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 30.0f)); // 적당한 높이
-        if (ImGui::BeginDragDropTarget())
-        {
-            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAG"))
-            {
-                GameObject* dragged = *(GameObject**)payload->Data;
-                dragged->GetTransform()->SetParent(nullptr); // 루트로 이동
-                // 맨 마지막 인덱스로 이동시키는 로직 호출
-                // ex) scene->ReorderGameObjectEditor(dragged, scene->GetRootObjectsCount());
-            }
-            ImGui::EndDragDropTarget();
-        }
 
         // 마우스 클릭 처리 (고정 영역)
         if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
