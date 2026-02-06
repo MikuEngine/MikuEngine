@@ -13005,7 +13005,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/crystal_sphere_green.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sphere/green/crystal_sphere_green.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
