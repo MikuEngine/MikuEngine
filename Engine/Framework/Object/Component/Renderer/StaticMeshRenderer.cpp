@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "StaticMeshRenderer.h"
 
 #include <cstring>
@@ -1040,7 +1040,10 @@ namespace engine
 
     void StaticMeshRenderer::Refresh()
     {
-        SystemManager::Get().GetRenderSystem().Unregister(this);
+        if (m_isInitialized)
+        {
+            SystemManager::Get().GetRenderSystem().Unregister(this);
+        }
 
         m_staticMeshData = AssetManager::Get().GetOrCreateStaticMeshData(m_meshFilePath);
         m_materialData = AssetManager::Get().GetOrCreateMaterialData(m_meshFilePath);
@@ -1072,6 +1075,9 @@ namespace engine
             LoadSocketData();
         }
 
-        SystemManager::Get().GetRenderSystem().Register(this);
+        if (m_isInitialized)
+        {
+            SystemManager::Get().GetRenderSystem().Register(this);
+        }
     }
 }
