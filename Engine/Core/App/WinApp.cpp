@@ -601,6 +601,10 @@ namespace engine
             {
                 DirectX::Keyboard::ProcessMessage(uMsg, wParam, lParam);
             }
+            else
+            {
+                return DefWindowProcW(hWnd, uMsg, wParam, lParam);
+            }
             break;
 
         default:

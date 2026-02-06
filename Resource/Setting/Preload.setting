@@ -3,6 +3,7 @@
     { "Type": "StaticMesh", "Path": "Resource/Model/Cube.fbx" },
     { "Type": "StaticMesh", "Path": "Resource/Model/Sphere.fbx" },
     { "Type": "StaticMesh", "Path": "Resource/Model/Quad.fbx" },
+	{ "Type": "Texture", "Path": "Resource/Texture/DefaultParticle.png" },
 	{ 
 		"Type": "SoundQue",
 		"Name": "UI_Click_Random",
@@ -72,7 +73,24 @@
 		{ "Type": "SkeletalMesh", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_final.fbx" },
 		{ "Type": "Animation", "Path": "Resource/Animation/main_character_animation_zombie_shooting.fbx" },
 		{ "Type": "Animation", "Path": "Resource/Animation/main_character_animation_idle.fbx" },
-		{ "Type": "Animation", "Path": "Resource/Animation/main_character_animation_zombie_running.fbx" }
+		{ "Type": "Animation", "Path": "Resource/Animation/main_character_animation_zombie_running.fbx" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_white_MA_CrystalWhite_Roughness.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/revolver_low_Channel_4_BaseColor.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/revolver_low_Channel_4_Normal.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/revolver_low_Channel_4Metallic.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/revolver_low_Channel_4Occlusion.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/revolver_low_Channel_4Roughness.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_Channel_1_BaseColor.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_Channel_1_Normal.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_Channel_2_BaseColor.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_Channel_2_Normal.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_Channel_3_BaseColor.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_Channel_3_Normal.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_white_MA_CrystalWhite_BaseColor.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_white_MA_CrystalWhite_Emissive.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_white_MA_CrystalWhite_Metallic.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_white_MA_CrystalWhite_Normal.tga" },
+		{ "Type": "Texture", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_white_MA_CrystalWhite_Occlusion.tga" }
 	]
   }
 }
