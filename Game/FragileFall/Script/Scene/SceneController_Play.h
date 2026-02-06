@@ -6,6 +6,8 @@
 
 namespace game
 {
+    class AimModeController;
+
     class SceneController_Play :
         public engine::Script<SceneController_Play>
     {
@@ -64,5 +66,7 @@ namespace game
 
         engine::GameObject* m_realGiveupPopUp = nullptr;
         engine::GameObject* m_failPanel = nullptr;
+
+        AimModeController* m_aimMode;
     };
 }

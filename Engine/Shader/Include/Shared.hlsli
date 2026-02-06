@@ -230,6 +230,14 @@ cbuffer ShadowSpot : register(b12)
     matrix g_spotShadowDepthViewProj;  // view-proj for rendering spot shadow depth (VS only)
 };
 
+// 크리스탈 얼음 채우기 전용 (CrystalIceFill_PS, 스크립트에서 값 설정)
+cbuffer IceFill : register(b13)
+{
+    int   g_iceFillEnable;
+    float g_iceFillAmount;   // 0~1 채움 진행도 (면 단위로 아래→위)
+    float2 __pad_iceFill;
+};
+
 struct VS_INPUT_POSITION
 {
     float3 position : POSITION;
@@ -275,6 +283,17 @@ struct VS_INPUT_COMMON
 };
 
 struct PS_INPUT_GBUFFER
+{
+    float4 position : SV_Position;
+    float2 texCoord : TEXCOORD0;
+    float3 normal : TEXCOORD1;
+    float3 tangent : TEXCOORD2;
+    float3 binormal : TEXCOORD3;
+    float3 worldPosition : TEXCOORD4;
+};
+
+// 크리스탈 얼음 채우기 전용 (면 단위 채우기용 normal 등)
+struct PS_INPUT_ICEFILL
 {
     float4 position : SV_Position;
     float2 texCoord : TEXCOORD0;

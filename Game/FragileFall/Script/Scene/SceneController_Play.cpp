@@ -48,6 +48,9 @@ namespace game
         if (m_bound) return;
         m_bound = true;
 
+        auto* go = engine::GameObject::Find("Player");
+        m_aimMode = go->GetComponent<AimModeController>();
+
         // Buttons
         BindButton("UI_OpenMenu", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->OpenMenu(); });
         BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->OpenOption(); });
@@ -72,6 +75,9 @@ namespace game
     {
         if (!TimeScaler::IsActive())
             TimeScaler::PlayWorld();
+
+        auto* go = engine::GameObject::Find("Player");
+        m_aimMode = go->GetComponent<AimModeController>();
 
         m_menuPopUp = engine::GameObject::Find("Panel_Menu");
         if (m_menuPopUp) m_menuPopUp->SetActive(false);
@@ -173,6 +179,8 @@ namespace game
         const bool shouldStop = (m_isOptionOpen || m_isMenuOpen || m_isGiveupOpen || m_isDead);
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
+
+        m_aimMode->SetPaused(shouldStop);
 
         if (m_menuPopUp)
         {
@@ -307,6 +315,8 @@ namespace game
         const bool shouldStop = (m_isOptionOpen || m_isMenuOpen || m_isGiveupOpen || m_isDead);
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
+
+        m_aimMode->SetPaused(shouldStop);
 
         if (m_optionPopUp)
         {
