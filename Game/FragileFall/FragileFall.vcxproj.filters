@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="App\Main.cpp" />
@@ -63,6 +63,7 @@
     <ClCompile Include="Script\CheckRotateScript.cpp" />
     <ClCompile Include="Script\TemperTestScript.cpp" />
     <ClCompile Include="Manager\UpgradeProgressManager.cpp" />
+    <ClCompile Include="Script\CrystalIceFillControllerScript.cpp" />
     <ClCompile Include="Script\CornerTrigger.cpp" />
     <ClCompile Include="Script\TrailDashTest.cpp" />
     <ClCompile Include="Script\Scene\TutorialController.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="Script\CheckRotateScript.h" />
     <ClInclude Include="Script\TemperTestScript.h" />
     <ClInclude Include="Manager\UpgradeProgressManager.h" />
+    <ClInclude Include="Script\CrystalIceFillControllerScript.h" />
     <ClInclude Include="Script\CornerTrigger.h" />
     <ClInclude Include="Script\TrailDashTest.h" />
     <ClInclude Include="Script\Scene\TutorialController.h" />

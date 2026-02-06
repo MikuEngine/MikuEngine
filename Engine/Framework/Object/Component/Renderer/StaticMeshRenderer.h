@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
+#include <vector>
 #include "Framework/Object/Component/Renderer/Renderer.h"
 #include "Core/Graphics/Resource/Texture.h"
 
@@ -34,6 +37,7 @@ namespace engine
         std::shared_ptr<ConstantBuffer> m_objectConstantBuffer;
 
         std::shared_ptr<VertexShader> m_vs;
+        std::shared_ptr<VertexShader> m_transparentVS;  // null이면 투명 패스에 m_vs 사용
         std::shared_ptr<VertexShader> m_shadowVS;
         std::shared_ptr<VertexShader> m_spotShadowVS;
         std::shared_ptr<VertexShader> m_pointShadowVS;
@@ -54,9 +58,16 @@ namespace engine
 
         std::string m_meshFilePath;
         std::string m_vsFilePath;
+        std::string m_transparentVSFilePath;  // 비어 있으면 투명 패스에 m_vs 사용
         std::string m_opaquePSFilePath;
         std::string m_cutoutPSFilePath;
         std::string m_transparentPSFilePath;
+
+        // SetCustomBuffer로 설정한 데이터 (투명 패스에서 해당 슬롯에 바인딩)
+        int m_customBufferSlot = -1;
+        std::vector<std::uint8_t> m_customBufferData;
+        size_t m_customBufferAlignedSize = 0;
+        std::shared_ptr<ConstantBuffer> m_customConstantBuffer;
 
         Vector4 m_materialBaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         Vector3 m_materialEmissive = Vector3(1.0f, 1.0f, 1.0f);
@@ -87,9 +98,12 @@ namespace engine
 
         void SetMesh(const std::string& meshFilePath);
         void SetVertexShader(const std::string& shaderFilePath);
+        void SetTransparentVertexShader(const std::string& shaderFilePath);
+        void SetTransparentShader(const std::string& vsFilePath, const std::string& psFilePath);
         void SetOpaquePixelShader(const std::string& shaderFilePath);
         void SetCutoutPixelShader(const std::string& shaderFilePath);
         void SetTransparentPixelShader(const std::string& shaderFilePath);
+        void SetCustomBuffer(int slot, const void* data, size_t byteSize);
         void SetCastShadow(bool cast);;
         bool IsCastShadow() const override;
         void SetCullMode(CullMode cullMode);

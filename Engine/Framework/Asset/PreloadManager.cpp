@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PreloadManager.h"
 
 #include <fstream>
@@ -319,6 +319,10 @@ namespace engine
 
             std::string key = name.empty() ? path : name;
             AssetManager::Get().GetOrCreateSoundData(key, path, option, scope);
+        }
+        else if (type == "Prefab") // 프리팹은 경로, .prefab 뗀 프리팹 이름만 작성
+        {
+            AssetManager::Get().GetOrCreatePrefabData(path, scope);
         }
     }
 }

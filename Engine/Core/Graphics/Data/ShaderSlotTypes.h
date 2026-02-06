@@ -60,5 +60,6 @@ namespace engine
         UIElement = 10,
         ShadowPoint = 11,
         ShadowSpot = 12,
+        IceFill = 13,  // 크리스탈 얼음 채우기 등 커스텀 효과용 (HLSL register(b13))
     };
 }

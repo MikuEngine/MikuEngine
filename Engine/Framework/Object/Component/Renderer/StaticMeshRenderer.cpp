@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "StaticMeshRenderer.h"
 
+#include <cstring>
 #include <filesystem>
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -64,6 +65,10 @@ namespace engine
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
+        if (!m_transparentVSFilePath.empty())
+        {
+            m_transparentVS = ResourceManager::Get().GetOrCreateVertexShader(m_transparentVSFilePath);
+        }
         m_maskCutoutPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Mask_Cutout_PS.hlsl");
         m_pickingPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Picking_PS.hlsl");
         m_pointShadowPS = ResourceManager::Get().GetOrCreatePixelShader("Resource/Shader/Pixel/Shadow_Point_PS.hlsl");
@@ -174,10 +179,51 @@ namespace engine
         m_cutoutPS = ResourceManager::Get().GetOrCreatePixelShader(m_cutoutPSFilePath);
     }
 
+    void StaticMeshRenderer::SetTransparentVertexShader(const std::string& shaderFilePath)
+    {
+        m_transparentVSFilePath = shaderFilePath;
+        if (shaderFilePath.empty())
+        {
+            m_transparentVS.reset();
+        }
+        else
+        {
+            m_transparentVS = ResourceManager::Get().GetOrCreateVertexShader(m_transparentVSFilePath);
+        }
+    }
+
+    void StaticMeshRenderer::SetTransparentShader(const std::string& vsFilePath, const std::string& psFilePath)
+    {
+        SetTransparentVertexShader(vsFilePath);
+        SetTransparentPixelShader(psFilePath);
+    }
+
     void StaticMeshRenderer::SetTransparentPixelShader(const std::string& shaderFilePath)
     {
         m_transparentPSFilePath = shaderFilePath;
         m_transparentPS = ResourceManager::Get().GetOrCreatePixelShader(m_transparentPSFilePath);
+    }
+
+    void StaticMeshRenderer::SetCustomBuffer(int slot, const void* data, size_t byteSize)
+    {
+        if (slot < 0 || !data || byteSize == 0)
+        {
+            m_customBufferSlot = -1;
+            m_customBufferData.clear();
+            m_customBufferAlignedSize = 0;
+            m_customConstantBuffer.reset();
+            return;
+        }
+        m_customBufferSlot = slot;
+        m_customBufferData.resize(byteSize);
+        std::memcpy(m_customBufferData.data(), data, byteSize);
+        const size_t alignedSize = (byteSize + 15u) & ~15u;
+        if (m_customBufferAlignedSize != alignedSize)
+        {
+            m_customBufferAlignedSize = alignedSize;
+            m_customConstantBuffer = std::make_shared<ConstantBuffer>();
+            m_customConstantBuffer->Create(static_cast<UINT>(alignedSize));
+        }
     }
 
     void StaticMeshRenderer::SetCastShadow(bool cast)
@@ -401,6 +447,7 @@ namespace engine
         j["MeshFilePath"] = m_meshFilePath;
         j["SocketFilePath"] = m_socketFilePath;
         j["VSFilePath"] = m_vsFilePath;
+        j["TransparentVSFilePath"] = m_transparentVSFilePath;
         j["OpaquePSFilePath"] = m_opaquePSFilePath;
         j["CutoutPSFilePath"] = m_cutoutPSFilePath;
         j["TransparentPSFilePath"] = m_transparentPSFilePath;
@@ -424,6 +471,7 @@ namespace engine
         JsonGet(j,"MeshFilePath", m_meshFilePath);
         JsonGet(j, "SocketFilePath", m_socketFilePath);
         JsonGet(j,"VSFilePath", m_vsFilePath);
+        JsonGet(j, "TransparentVSFilePath", m_transparentVSFilePath);
         JsonGet(j,"OpaquePSFilePath", m_opaquePSFilePath);
         JsonGet(j,"CutoutPSFilePath", m_cutoutPSFilePath);
         JsonGet(j,"TransparentPSFilePath", m_transparentPSFilePath);
@@ -649,8 +697,16 @@ namespace engine
             deviceContext->OMSetBlendState(blendState->GetRawBlendState(), blendFactor, 0xFFFFFFFF);
             deviceContext->OMSetDepthStencilState(depthState->GetRawDepthStencilState(), 0);
 
-            deviceContext->VSSetShader(m_vs->GetRawShader(), nullptr, 0);
+            VertexShader* vsForTransparent = m_transparentVS ? m_transparentVS.get() : m_vs.get();
+            deviceContext->VSSetShader(vsForTransparent->GetRawShader(), nullptr, 0);
             deviceContext->PSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::Material), 1, m_materialConstantBuffer->GetBuffer().GetAddressOf());
+
+            if (!m_customBufferData.empty() && m_customConstantBuffer && m_customBufferSlot >= 0)
+            {
+                deviceContext->UpdateSubresource(m_customConstantBuffer->GetRawBuffer(), 0, nullptr,
+                    m_customBufferData.data(), static_cast<UINT>(m_customBufferData.size()), 0);
+                deviceContext->PSSetConstantBuffers(static_cast<UINT>(m_customBufferSlot), 1, m_customConstantBuffer->GetBuffer().GetAddressOf());
+            }
 
             const auto& meshSections = m_staticMeshData->GetMeshSections();
             const auto& materials = m_materialData->GetMaterials();
@@ -995,6 +1051,15 @@ namespace engine
         SetupTextures(m_materialData, m_textures);
 
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
+
+        if (!m_transparentVSFilePath.empty())
+        {
+            m_transparentVS = ResourceManager::Get().GetOrCreateVertexShader(m_transparentVSFilePath);
+        }
+        else
+        {
+            m_transparentVS.reset();
+        }
 
         m_opaquePS = ResourceManager::Get().GetOrCreatePixelShader(m_opaquePSFilePath);
 
