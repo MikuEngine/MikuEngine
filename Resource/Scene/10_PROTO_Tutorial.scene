@@ -10391,7 +10391,7 @@
                 {
                     "Type": "DoorTriggerScript",
                     "Active": true,
-                    "NextSceneName": "Prototype_Tutorial"
+                    "NextSceneName": "10_PROTO_Tutorial"
                 }
             ]
         },
@@ -12821,7 +12821,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -13042,7 +13043,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -13263,7 +13265,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -13675,7 +13678,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
