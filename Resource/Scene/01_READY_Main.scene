@@ -1,5 +1,5 @@
 {
-    "Name": "01_READY_Main",
+    "Name": "01_Ready_Main",
     "NumGameObjects": 61,
     "GameObjects": [
         {
@@ -582,7 +582,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": true
+                    "Bold": true,
+                    "AlwaysBold": true
                 }
             ]
         },
@@ -641,8 +642,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "게임 시작",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 60,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -650,7 +651,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -803,7 +804,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": true
+                    "Bold": true,
+                    "AlwaysBold": true
                 }
             ]
         },
@@ -862,8 +864,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "설정",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 60,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -871,7 +873,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1024,7 +1026,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": true
+                    "Bold": true,
+                    "AlwaysBold": true
                 }
             ]
         },
@@ -1083,8 +1086,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "크레딧",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 60,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -1092,7 +1095,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1245,7 +1248,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": true
+                    "Bold": true,
+                    "AlwaysBold": true
                 }
             ]
         },
@@ -1304,8 +1308,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "게임 종료",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 60,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -1313,7 +1317,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1671,7 +1675,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -1802,7 +1807,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "설정",
-                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -3099,7 +3104,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -250.0,
+                        "x": -200.0,
                         "y": -130.0
                     },
                     "Width": 100.0,
@@ -3124,8 +3129,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "사운드",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 40,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -3171,7 +3176,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -250.0,
+                        "x": -200.0,
                         "y": 0.0
                     },
                     "Width": 100.0,
@@ -3196,8 +3201,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "효과음",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 40,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -3243,7 +3248,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -250.0,
+                        "x": -200.0,
                         "y": 130.0
                     },
                     "Width": 100.0,
@@ -3268,8 +3273,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "마우스 감도",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 40,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -3549,7 +3554,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
