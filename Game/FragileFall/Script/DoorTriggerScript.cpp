@@ -5,6 +5,7 @@
 
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Object/Component/BoxCollider.h>
 
 #include <Framework/Object/Component/Renderer/DebugRenderer.h>
 
@@ -40,11 +41,26 @@ namespace game
     {
         m_isActive = active;
 
-        // collision active
-        auto* collider = GetGameObject()->GetComponent<engine::Collider>();
-        if (!collider) return;
-        collider->SetActive(m_isActive);
+        // 현재 Collision Active false가 안되서 로직을 넣음
+        if (m_isActive)
+        {
+            auto* collider = GetGameObject()->GetComponent<engine::Collider>();
+            if (!collider)
+            {
+                auto* newCollider = GetGameObject()->AddComponent<engine::BoxCollider>();
 
+                newCollider->SetCenter(engine::Vector3(0.0f, 3.0f, 0.0f));
+                newCollider->SetSize(engine::Vector3(7.0f, 8.0f, 2.0f));
+            }
+        }
+        else
+        {
+            auto* collider = GetGameObject()->GetComponent<engine::Collider>();
+            if (collider)
+            {
+                collider->Destroy();
+            }
+        }
     }
 
     void DoorTriggerScript::OnCollisionEnter(const engine::CollisionInfo& info)

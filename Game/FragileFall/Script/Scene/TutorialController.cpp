@@ -47,21 +47,21 @@ namespace game
 
     void TutorialController::Awake()
     {
-        if (auto* go = engine::GameObject::Find("Canvas_Message"))
-            m_queue = go->GetComponent<UIMessageQueue>();
-
+        // if (auto* go = engine::GameObject::Find("Canvas_Message"))
+        //    m_queue = go->GetComponent<UIMessageQueue>();
 
         // DoorTriggerScript의 EventCallBack 호출 부분
-        auto onLoad = [this]() {
+        auto onLoad = [this]()
+        {
+            m_queue = nullptr;
+            auto* go = engine::GameObject::Find("Canvas_Message");
+            if (go) m_queue = go->GetComponent<UIMessageQueue>();
+
             std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
 
             if (currentScene == "Prototype_Tutorial")
             {
-                m_stepIndex++;
-                m_pageIndex = 0;
-
-                RefreshStepContext(m_stepIndex);
-                
+                Next();
             }
         };
 
@@ -73,16 +73,14 @@ namespace game
         if (s_tutorialController == nullptr)
         {
             s_tutorialController = GetGameObject();
-
-            GetGameObject()->DontDestroyOnLoad();
+            GetGameObject()->DontDestroyOnLoad();    
+            ShowPage();
         }
         else
         {
             GetGameObject()->Destroy();
         }
 
-
-        ShowPage();
     }
 
     void TutorialController::Update()
@@ -119,17 +117,6 @@ namespace game
         
         m_nextDoorObject = nullptr;
 
-        /*/
-        if (auto* go = engine::GameObject::Find("Canvas_Message"))
-        {
-            m_queue = go->GetComponent<UIMessageQueue>();
-        }
-
-        if (m_queue)
-        {
-            m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.0f);
-        }
-        //*/
     }
 
     void TutorialController::RefreshStepContext(int index)
@@ -158,7 +145,13 @@ namespace game
 
     void TutorialController::ShowPage()
     {
+        if (!m_queue)
+        {
+            if (auto* go = engine::GameObject::Find("Canvas_Message"))
+                m_queue = go->GetComponent<UIMessageQueue>();
+        }
         if (!m_queue) return;
+
         if (m_stepIndex < 0 || m_stepIndex >= (int)g_steps.size()) return;
 
         const auto& step = g_steps[m_stepIndex];
@@ -171,11 +164,16 @@ namespace game
 
     void TutorialController::Next()
     {
+        if (!m_queue)
+        {
+            if (auto* go = engine::GameObject::Find("Canvas_Message"))
+                m_queue = go->GetComponent<UIMessageQueue>();
+        }
         if (!m_queue) return;
 
         const auto& step = g_steps[m_stepIndex];
 
-        // 1) 같은 스텝 내에서 페이지를 넘길 때 -> 아래에 누적(Push)
+        // 같은 스텝 내에서 페이지를 넘길 때 -> 아래에 누적(Push)
         if (m_pageIndex < (int)step.pages.size() - 1)
         {
             m_pageIndex++;
@@ -183,23 +181,28 @@ namespace game
             return;
         }
 
-        // 2) 다음 스텝으로 넘어갈 때 -> 초기화 후 새로 시작
-        if (m_stepIndex >= (int)g_steps.size() - 1)
+        // 다음 스텝으로 넘어갈 때 (초기화 후 SetSingle로 새로 시작)
+        if (m_stepIndex < (int)g_steps.size() - 1)
         {
-            // 전체 튜토리얼 종료 시점
-            m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.2f);
-            return;
+            m_stepIndex++;
+            m_pageIndex = 0;
+
+            // 컨텍스트 초기화
+            RefreshStepContext(m_stepIndex);
+
+            // 다음 스텝의 데이터를 가져옴
+            const auto& nextStep = g_steps[m_stepIndex];
+
+            // 기존 튜토리얼 채널 메시지를 즉시 지우고 새 스텝의 첫 페이지를 세팅
+            m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.0f);
+            m_queue->SetSingle(UIMessageChannel::Tutorial, nextStep.pages[0]);
         }
-        
-        m_stepIndex++;
-        m_pageIndex = 0;
+        else
+        {
+            m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.2f);
+        }
 
-        RefreshStepContext(m_stepIndex);
-
-        const auto& nextStep = g_steps[m_stepIndex];
-        m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.2f);
-        m_queue->SetSingle(UIMessageChannel::Tutorial, nextStep.pages[0]);
-
+        ShowPage();
     }
 
     void TutorialController::Prev()
