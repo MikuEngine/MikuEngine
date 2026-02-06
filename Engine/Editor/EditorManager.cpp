@@ -819,10 +819,9 @@ namespace engine
         }
         ImGui::PopItemWidth();
 
-        // 스크롤 가능한 영역 시작 (게임오브젝트 목록만 스크롤)
-        ImGui::BeginChild("HierarchyScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
-
-        ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 10.0f));
+        ImGui::Text("Drop here for root ->");
+        ImGui::SameLine();
+        ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 15.0f));
         if (ImGui::BeginDragDropTarget())
         {
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAG"))
@@ -833,6 +832,11 @@ namespace engine
 
             ImGui::EndDragDropTarget();
         }
+
+        // 스크롤 가능한 영역 시작 (게임오브젝트 목록만 스크롤)
+        ImGui::BeginChild("HierarchyScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+
+
 
         auto scene = SceneManager::Get().GetScene();
 
@@ -888,48 +892,89 @@ namespace engine
         // 루트 오브젝트인지 확인
         bool isRootObject = (gameObject->GetTransform()->GetParent() == nullptr);
 
-        // ---------------------------------------------------------
-        // 1. 순서 변경용 얇은 영역 (루트 오브젝트끼리 순서 변경)
-        // ---------------------------------------------------------
-        if (isRootObject && objectIndex >= 0)
+        if (objectIndex >= 0)
         {
             ImGui::PushID(("ReorderTarget_" + std::to_string(reinterpret_cast<uintptr_t>(gameObject))).c_str());
 
-            // 버튼 생성
-            ImGui::InvisibleButton("##ReorderTarget", ImVec2(-1, 4.0f));
+            ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 4.0f)); // 적당한 높이
 
             if (ImGui::BeginDragDropTarget())
             {
                 if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAG"))
                 {
                     GameObject* draggedObject = *(GameObject**)payload->Data;
-                    auto* scene = SceneManager::Get().GetScene();
 
-                    if (draggedObject && draggedObject != gameObject && scene)
+                    // 1. 유효성 검사 (자신이 아니어야 함)
+                    if (draggedObject && draggedObject != gameObject)
                     {
-                        // 1) 드래그된 객체의 현재 인덱스 찾기
-                        int draggedIndex = -1;
-                        const auto& allObjs = scene->GetGameObjects();
-                        for (int i = 0; i < allObjs.size(); ++i) {
-                            if (allObjs[i].get() == draggedObject) {
-                                draggedIndex = i;
-                                break;
+                        Transform* draggedTransform = draggedObject->GetTransform();
+
+                        // 내가 드롭한 위치(gameObject)의 '부모'가 나의 새로운 부모가 되어야 함
+                        Transform* targetParent = gameObject->GetTransform()->GetParent();
+                        Transform* currentParent = draggedTransform->GetParent();
+
+                        // [중요] 순환 참조 방지 (자신이 자신의 자식 밑으로 들어가는 것 방지)
+                        bool isLoop = false;
+                        if (targetParent)
+                        {
+                            if (draggedTransform->IsAncestorOf(targetParent)) isLoop = true;
+                            if (draggedTransform == targetParent) isLoop = true;
+                        }
+
+                        if (!isLoop)
+                        {
+                            // Case A: 같은 부모 내에서 순서만 변경 (단순 재정렬)
+                            if (currentParent == targetParent)
+                            {
+                                int draggedIndex = -1;
+
+                                // 현재 인덱스 찾기
+                                if (targetParent == nullptr) // 루트끼리 이동
+                                {
+                                    const auto& allObjs = SceneManager::Get().GetScene()->GetGameObjects();
+                                    for (int i = 0; i < allObjs.size(); ++i) {
+                                        if (allObjs[i].get() == draggedObject) { draggedIndex = i; break; }
+                                    }
+                                }
+                                else // 자식끼리 이동
+                                {
+                                    const auto& children = targetParent->GetChildren();
+                                    for (int i = 0; i < children.size(); ++i) {
+                                        if (children[i] == draggedTransform) { draggedIndex = i; break; }
+                                    }
+                                }
+
+                                // 인덱스 보정 후 이동
+                                if (draggedIndex != -1)
+                                {
+                                    int finalIndex = objectIndex;
+                                    // 위에서 아래로 내릴 때는 내 자신이 빠지면서 인덱스가 밀리므로 -1 보정
+                                    if (draggedIndex < finalIndex) finalIndex--;
+
+                                    if (targetParent == nullptr)
+                                        SceneManager::Get().GetScene()->ReorderGameObjectEditor(draggedObject, finalIndex);
+                                    else
+                                        targetParent->ReorderChild(draggedTransform, finalIndex);
+                                }
+                            }
+                            // Case B: 다른 부모(혹은 자식에서 루트)로 이동 (계층 변경 + 순서 지정)
+                            else
+                            {
+                                // 1. 일단 부모를 변경합니다. (이때 리스트의 '맨 뒤'에 추가됩니다)
+                                draggedTransform->SetParent(targetParent);
+
+                                // 2. 맨 뒤에 추가된 녀석을, 내가 드롭한 위치(objectIndex)로 끼워 넣습니다.
+                                // (다른 리스트에서 왔으므로 인덱스 보정이 필요 없습니다)
+                                if (targetParent == nullptr)
+                                {
+                                    SceneManager::Get().GetScene()->ReorderGameObjectEditor(draggedObject, objectIndex - 1);
+                                }
+                                else
+                                {
+                                    targetParent->ReorderChild(draggedTransform, objectIndex);
+                                }
                             }
                         }
-
-                        // 2) 목표 인덱스 설정
-                        int targetIndex = objectIndex;
-
-                        // 3) ★ 중요: 위에서 아래로 내릴 때는 인덱스 -1 보정
-                        // (자신이 빠지면 뒤에 있던 애들이 한 칸씩 당겨지므로)
-                        if (draggedIndex != -1 && draggedIndex < targetIndex)
-                        {
-                            targetIndex--;
-                        }
-
-                        // 4) 부모 해제 및 이동
-                        draggedObject->GetTransform()->SetParent(nullptr);
-                        scene->ReorderGameObjectEditor(draggedObject, targetIndex);
                     }
                 }
                 ImGui::EndDragDropTarget();
@@ -1016,12 +1061,8 @@ namespace engine
             ImGui::EndPopup();
         }
 
-        // ---------------------------------------------------------
-    // 3. 드래그 시작 (Payload 통일)
-    // ---------------------------------------------------------
         if (ImGui::BeginDragDropSource())
         {
-            // ★ 중요: 페이로드를 하나로 통일합니다.
             ImGui::SetDragDropPayload("HIERARCHY_DRAG", &gameObject, sizeof(GameObject*));
 
             ImGui::Text(gameObject->GetName().c_str());
@@ -1045,9 +1086,16 @@ namespace engine
         
         if (opened)
         {
-            for (auto child : gameObject->GetTransform()->GetChildren())
+            // const 참조로 자식 목록 가져오기
+            const auto& children = gameObject->GetTransform()->GetChildren();
+
+            // 인덱스(i)를 함께 넘겨주기 위해 일반 for문으로 변경
+            for (int i = 0; i < children.size(); ++i)
             {
-                DrawEntityNode(child->GetGameObject(), -1); // 자식은 인덱스 없음
+                if (!DrawEntityNode(children[i]->GetGameObject(), i))
+                {
+                    break;
+                }
             }
 
             ImGui::TreePop();

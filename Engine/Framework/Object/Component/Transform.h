@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -63,6 +63,9 @@ namespace engine
 
         void SetParent(Transform* parent, bool worldPositionStays = true);
         void SetWorldMatrix(const Matrix& worldMatrix);
+        
+        // 에디터 전용: 자식 순서 변경
+        void ReorderChild(Transform* child, int newIndex);
 
         void UnmarkDirtyThisFrame();
         bool IsAncestorOf(Transform* other) const;

@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "Transform.h"
 
 #include <imgui.h>
@@ -569,5 +569,67 @@ namespace engine
     void Transform::RemoveChild(Transform* child)
     {
         std::erase(m_children, child);
+    }
+
+    void Transform::ReorderChild(Transform* child, int newIndex)
+    {
+        if (!child)
+        {
+            return;
+        }
+
+        // 현재 인덱스 찾기
+        int currentIndex = -1;
+        for (size_t i = 0; i < m_children.size(); ++i)
+        {
+            if (m_children[i] == child)
+            {
+                currentIndex = static_cast<int>(i);
+                break;
+            }
+        }
+
+        if (currentIndex == -1)
+        {
+            return; // 자식을 찾을 수 없음
+        }
+
+        // 새 인덱스 범위 검사
+        if (newIndex < 0)
+        {
+            newIndex = 0;
+        }
+        else if (newIndex >= static_cast<int>(m_children.size()))
+        {
+            newIndex = static_cast<int>(m_children.size()) - 1;
+        }
+
+        // 같은 위치면 변경 불필요
+        if (currentIndex == newIndex)
+        {
+            return;
+        }
+
+        // 순서 변경: 현재 요소를 임시로 저장하고 제거한 후 새 위치에 삽입
+        Transform* temp = m_children[currentIndex];
+        
+        if (currentIndex < newIndex)
+        {
+            // 뒤로 이동: 현재 위치부터 새 위치까지 앞으로 shift
+            for (int i = currentIndex; i < newIndex; ++i)
+            {
+                m_children[i] = m_children[i + 1];
+            }
+        }
+        else
+        {
+            // 앞으로 이동: 새 위치부터 현재 위치까지 뒤로 shift
+            for (int i = currentIndex; i > newIndex; --i)
+            {
+                m_children[i] = m_children[i - 1];
+            }
+        }
+        
+        m_children[newIndex] = temp;
     }
 }
