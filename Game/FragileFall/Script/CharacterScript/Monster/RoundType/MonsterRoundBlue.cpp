@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundBlue.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -219,7 +219,7 @@ namespace game
         m_bulletParams.speed = m_bulletSpeed;
         m_bulletParams.lifetime = m_bulletLifetime;
         m_bulletParams.damage = m_attackDamage;
-        m_bulletParams.scale = 1.0f;
+        m_bulletParams.scale = m_bulletScale;
         m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용이지만 일관성 유지)
     }
 
@@ -908,8 +908,10 @@ namespace game
         // ─────────────────────────────────────────────
         // Blue 전용: 단발 발사 모드 (Dead 시 3방향 발사)
         // - 기본값 true (부모에서 false로 로드되므로 덮어쓰기)
+        // - m_isDoSingleShot이 true이므로 CanFireBullet()에서 m_fireTimer를 무시
+        // - m_fireRate는 실제로 사용되지 않지만 명시적으로 0으로 설정
         // ─────────────────────────────────────────────
         m_isDoSingleShot = j.value("IsDoSingleShot", true);
-        m_fireRate = 0.0f;  // 단발 모드이므로 fireRate는 사용 안함
+        m_fireRate = 0.0f;  // m_isDoSingleShot = true로 인해 실제 사용되지 않음 (명시적 설정)
     }
 }

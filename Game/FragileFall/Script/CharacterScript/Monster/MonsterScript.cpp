@@ -999,23 +999,75 @@ namespace game
 		
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
 		
-		// 총알 스케일 (슬라이더: 0.5~9.0, 최소값: 0.01)
-		ImGui::DragFloat("Bullet Scale", &m_bulletScale, 0.1f, 0.5f, 9.0f);
-		// 직접 입력 시 0.01 미만 클램프
-		if (m_bulletScale < 0.01f)
-		{
-			m_bulletScale = 0.01f;
-		}
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Min: 0.01)");
-		
-		// 단발 발사 모드 (읽기 전용)
+	// 총알 스케일 (슬라이더: 0.5~9.0, 최소값: 0.01)
+	ImGui::DragFloat("Bullet Scale", &m_bulletScale, 0.1f, 0.5f, 9.0f);
+	// 직접 입력 시 0.01 미만 클램프
+	if (m_bulletScale < 0.01f)
+	{
+		m_bulletScale = 0.01f;
+	}
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Min: 0.01)");
+	
+	// ─────────────────────────────────────────────
+	// 포물선 설정 (Parabolic 타입일 때만 표시)
+	// ─────────────────────────────────────────────
+	if (IsParabolicBullet())
+	{
 		ImGui::Separator();
+		ImGui::Text("=== Parabolic Bullet Settings ===");
+		
+		// 중력 편집 가능 (5~20)
+		ImGui::DragFloat("Gravity", &m_ownGravity, 0.1f, kMinGravity, kMaxGravity, "%.1f m/s^2");
+		
+		// 폭발 범위 설정
+		ImGui::DragFloat("Explosion Radius", &m_explosionRadius, 0.1f, 0.5f, 20.0f);
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Trigger size on impact)");
+		
+		// 속도 읽기 전용 (자동 계산)
+		float calculatedSpeed = CalculateParabolicSpeed();
 		ImGui::BeginDisabled(true);
-		ImGui::Checkbox("Single Shot Mode", &m_isDoSingleShot);
+		ImGui::DragFloat("Bullet Speed (Parabolic)", &calculatedSpeed, 0.5f, 1.0f, 100.0f, "%.1f m/s");
 		ImGui::EndDisabled();
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Read Only - Set in scene file)");
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(auto)");
+		
+		// 각도 범위 설정
+		ImGui::DragFloat("Min Launch Angle", &m_minLaunchAngle, 1.0f, 0.0f, 44.0f, "%.1f deg");
+		ImGui::DragFloat("Max Launch Angle", &m_maxLaunchAngle, 1.0f, 45.0f, 89.0f, "%.1f deg");
+		
+		// 각도 범위 검증
+		if (m_minLaunchAngle >= m_maxLaunchAngle)
+		{
+			ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), 
+				"WARNING: Min >= Max angle!");
+		}
+		
+		// 범위 정보
+		ImGui::Spacing();
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 1.0f, 1.0f), "Range Info:");
+		ImGui::Text("  Attack Range: %.1f m", m_AttackRange);
+		ImGui::Text("  Max Range (at %.0f deg): %.1f m", m_maxLaunchAngle, m_AttackRange);
+		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+			"  (Speed auto-calculated to reach AttackRange at MaxAngle)");
+		
+		// 런타임 정보 (상세)
+		ImGui::Spacing();
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime values (read-only):");
+		ImGui::Text("  Launch Angle: %.1f deg", m_bulletParams.launchAngle);
+		ImGui::Text("  Speed: %.2f m/s", m_bulletParams.speed);
+		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
+			"  (Angle calculated at fire time based on player distance)");
+	}
+	
+	// 단발 발사 모드 (읽기 전용)
+	ImGui::Separator();
+	ImGui::BeginDisabled(true);
+	ImGui::Checkbox("Single Shot Mode", &m_isDoSingleShot);
+	ImGui::EndDisabled();
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Read Only - Set in scene file)");
 		
 		if (!HasBulletAttack())
 		{

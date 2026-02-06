@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundGreen.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -221,7 +221,7 @@ namespace game
         m_bulletParams.speed = CalculateParabolicSpeed();  // 자동 계산
         m_bulletParams.launchAngle = m_minLaunchAngle;     // 기본값 (Attack에서 자동 계산)
         m_bulletParams.ownGravity = m_ownGravity;          // 에디터 설정값 (고정)
-        m_bulletParams.scale = 1.0f;
+        m_bulletParams.scale = m_bulletScale;
         m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
     }
 
@@ -336,6 +336,7 @@ namespace game
                     m_bulletParams.minLaunchAngle = m_minLaunchAngle;
                     m_bulletParams.maxLaunchAngle = m_maxLaunchAngle;
                     m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
+                    m_bulletParams.scale = m_bulletScale;               // 총알 크기
                     
                     // 디버그: 거리, 발사각, 속도 확인
                     LOG_PRINT("[Attack] Distance: {:.2f}m, Angle: {:.1f}deg, Speed: {:.2f}m/s",
@@ -539,56 +540,6 @@ namespace game
         ImGui::Separator();
         ImGui::Text("=== Green Settings ===");
         ImGui::DragFloat("Damage Cooldown", &m_damageCooldown, 0.1f, 0.1f, 5.0f);
-        
-        // ─────────────────────────────────────────────
-        // 포물선 설정 (Green은 항상 Parabolic)
-        // 새 로직: 중력 편집, 속도 자동 계산, 거리→각도 선형 매핑
-        // ─────────────────────────────────────────────
-        ImGui::Spacing();
-        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "[ Parabolic Bullet Settings ]");
-        
-        // 중력 편집 가능 (5~20)
-        ImGui::DragFloat("Gravity", &m_ownGravity, 0.1f, kMinGravity, kMaxGravity, "%.1f m/s^2");
-        
-        // 속도 읽기 전용 (자동 계산)
-        float calculatedSpeed = CalculateParabolicSpeed();
-        ImGui::BeginDisabled(true);
-        ImGui::DragFloat("Bullet Speed", &calculatedSpeed, 0.5f, 1.0f, 100.0f, "%.1f m/s");
-        ImGui::EndDisabled();
-        ImGui::SameLine();
-        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(auto)");
-        
-        // 각도 범위 설정
-        ImGui::DragFloat("Min Launch Angle", &m_minLaunchAngle, 1.0f, 0.0f, 44.0f, "%.1f deg");
-        ImGui::DragFloat("Max Launch Angle", &m_maxLaunchAngle, 1.0f, 45.0f, 89.0f, "%.1f deg");
-        
-        // 각도 범위 검증
-        if (m_minLaunchAngle >= m_maxLaunchAngle)
-        {
-            ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), 
-                "WARNING: Min >= Max angle!");
-        }
-        
-        // ─────────────────────────────────────────────
-        // 정보 표시
-        // 속도가 자동 계산되므로 maxAngle에서 AttackRange 도달이 보장됨
-        // ─────────────────────────────────────────────
-        ImGui::Spacing();
-        ImGui::TextColored(ImVec4(0.7f, 0.7f, 1.0f, 1.0f), "Range Info:");
-        ImGui::Text("  Attack Range: %.1f m", m_AttackRange);
-        ImGui::Text("  Max Range (at %.0f deg): %.1f m", m_maxLaunchAngle, m_AttackRange);
-        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
-            "  (Speed auto-calculated to reach AttackRange at MaxAngle)");
-        
-        ImGui::Spacing();
-        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime values (read-only):");
-        
-        // 읽기 전용: 마지막으로 계산된 값 표시
-        ImGui::Text("  Launch Angle: %.1f deg", m_bulletParams.launchAngle);
-        ImGui::Text("  Speed: %.2f m/s", m_bulletParams.speed);
-        
-        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
-            "(Angle calculated at fire time based on player distance)");
         
         // 런타임 정보
         ImGui::Separator();
