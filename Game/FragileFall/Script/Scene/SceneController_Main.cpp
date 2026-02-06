@@ -168,7 +168,7 @@ namespace game
     void SceneController_Main::StartGame()
     {
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("z_Hiro_Lobby");
+        engine::SceneManager::Get().ChangeScene("01_READY_Lobby");
     }
 
     void SceneController_Main::OpenOption()
