@@ -103,7 +103,8 @@ namespace engine
         void Save();
         void SaveToJson(json& outJson);
 
-        void Load();
+        /// progressCallback: 0.0~1.0 (GameObject 로드 개수 비율). 비동기 씬 전환 시 로딩 프로그레스용.
+        void Load(std::function<void(float)> progressCallback = nullptr);
         void LoadFromJson(const json& inJson);
 
         // ═══════════════════════════════════════

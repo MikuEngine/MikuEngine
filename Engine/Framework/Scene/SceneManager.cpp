@@ -65,7 +65,7 @@ namespace engine
                     }
                     else
                     {
-                        PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName, [this]() { m_scene->Load(); });
+                        PreloadManager::Get().LoadSceneResourceAsync(m_nextSceneName, [this]() { m_scene->Load([](float p) { PreloadManager::Get().SetSceneLoadProgress(p); }); });
                     }
                 }
                 else
@@ -94,14 +94,15 @@ namespace engine
                 if (!m_pendingSceneAfterGlobal.empty())
                 {
                     m_sceneLoadDoneByWorker = true;
-                    PreloadManager::Get().LoadSceneResourceAsync(m_pendingSceneAfterGlobal, [this]() { m_scene->Load(); });
+                    PreloadManager::Get().LoadSceneResourceAsync(m_pendingSceneAfterGlobal, [this]() { m_scene->Load([](float p) { PreloadManager::Get().SetSceneLoadProgress(p); }); });
                     m_pendingSceneAfterGlobal.clear();
                     return;
                 }
 
                 if (!m_sceneLoadDoneByWorker)
                 {
-                    m_scene->Load();
+                    m_scene->Load([](float p) { PreloadManager::Get().SetSceneLoadProgress(p); });
+                    PreloadManager::Get().SetSceneLoadComplete();
                 }
                 m_sceneLoadDoneByWorker = false;
 

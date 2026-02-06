@@ -38,6 +38,10 @@ namespace engine
 		void LoadSceneResourceSync(const std::string& sceneName);
 		bool IsLoading() const;
 		float GetProgress() const;
+		/// 씬 로드 구간(0.5~1.0) 진행률. zeroToOne은 0~1 (GameObject 로드 비율).
+		void SetSceneLoadProgress(float zeroToOne);
+		/// 동기 씬 로드 시, Scene::Load() 완료 후 호출하여 프로그레스를 1.0으로 만듦 (에셋 0~0.5, 씬 로드 0.5~1.0)
+		void SetSceneLoadComplete();
 
 		bool IsGlobalLoaded() const;
 		void LoadGlobalAsync();

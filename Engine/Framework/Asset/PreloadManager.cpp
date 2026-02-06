@@ -1,15 +1,25 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "PreloadManager.h"
 
+#include <algorithm>
+#include <chrono>
 #include <fstream>
+#include <thread>
 
 #include "Framework/Asset/AssetManager.h"
+
 #include "Core/Graphics/Resource/ResourceManager.h"
 #include "Core/System/VirtualFileSystem.h"
 #include "Framework/System/SoundSystem.h"
 
 namespace engine
 {
+    namespace
+    {
+        /// 비동기 씬 전환 시: 에셋 로드 0.0~0.5, 씬 데이터 로드(GameObject 단위) 0.5~1.0
+        constexpr float g_SceneLoadProgressAssetPhaseMax = 0.5f;
+    }
+
     void PreloadManager::Initialize()
     {
         if (m_isInitialized)
@@ -153,7 +163,7 @@ namespace engine
 
         if (!m_isInitialized || !m_preloadData.contains("Scenes"))
         {
-            m_progress = 1.0f;
+            m_progress = g_SceneLoadProgressAssetPhaseMax;
             m_isLoading = false;
             return;
         }
@@ -161,7 +171,7 @@ namespace engine
         const auto& scenes = m_preloadData["Scenes"];
         if (!scenes.contains(sceneName))
         {
-            m_progress = 1.0f;
+            m_progress = g_SceneLoadProgressAssetPhaseMax;
             m_isLoading = false;
             return;
         }
@@ -171,7 +181,7 @@ namespace engine
 
         if (m_totalAssetsToLoad == 0)
         {
-            m_progress = 1.0f;
+            m_progress = g_SceneLoadProgressAssetPhaseMax;
             m_isLoading = false;
             return;
         }
@@ -181,11 +191,21 @@ namespace engine
             LoadAsset(asset, false);
 
             ++m_loadedAssetsCount;
-            m_progress = m_loadedAssetsCount / static_cast<float>(m_totalAssetsToLoad);
+            m_progress = (m_loadedAssetsCount / static_cast<float>(m_totalAssetsToLoad)) * g_SceneLoadProgressAssetPhaseMax;
         }
 
-        m_progress = 1.0f;
+        m_progress = g_SceneLoadProgressAssetPhaseMax;
         m_isLoading = false;
+    }
+
+    void PreloadManager::SetSceneLoadProgress(float zeroToOne)
+    {
+        m_progress = 0.5f + 0.5f * std::clamp(zeroToOne, 0.f, 1.f);
+    }
+
+    void PreloadManager::SetSceneLoadComplete()
+    {
+        m_progress = 1.0f;
     }
 
     bool PreloadManager::IsLoading() const
@@ -202,12 +222,13 @@ namespace engine
     {
         if (!m_isInitialized || !m_preloadData.contains("Scenes"))
         {
-            m_progress = 1.0f;
+            m_progress = g_SceneLoadProgressAssetPhaseMax;
             if (m_onSceneResourcesLoadedCallback)
             {
                 m_onSceneResourcesLoadedCallback();
                 m_onSceneResourcesLoadedCallback = nullptr;
             }
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             m_isLoading = false;
             return;
         }
@@ -215,12 +236,13 @@ namespace engine
         const auto& scenes = m_preloadData["Scenes"];
         if (!scenes.contains(sceneName))
         {
-            m_progress = 1.0f;
+            m_progress = g_SceneLoadProgressAssetPhaseMax;
             if (m_onSceneResourcesLoadedCallback)
             {
                 m_onSceneResourcesLoadedCallback();
                 m_onSceneResourcesLoadedCallback = nullptr;
             }
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             m_isLoading = false;
             return;
         }
@@ -230,12 +252,13 @@ namespace engine
 
         if (m_totalAssetsToLoad == 0)
         {
-            m_progress = 1.0f;
+            m_progress = g_SceneLoadProgressAssetPhaseMax;
             if (m_onSceneResourcesLoadedCallback)
             {
                 m_onSceneResourcesLoadedCallback();
                 m_onSceneResourcesLoadedCallback = nullptr;
             }
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             m_isLoading = false;
             return;
         }
@@ -245,15 +268,16 @@ namespace engine
             LoadAsset(asset, false);
 
             ++m_loadedAssetsCount;
-            m_progress = m_loadedAssetsCount / static_cast<float>(m_totalAssetsToLoad);
+            m_progress = (m_loadedAssetsCount / static_cast<float>(m_totalAssetsToLoad)) * g_SceneLoadProgressAssetPhaseMax;
         }
 
-        m_progress = 1.0f;
+        m_progress = g_SceneLoadProgressAssetPhaseMax;
         if (m_onSceneResourcesLoadedCallback)
         {
             m_onSceneResourcesLoadedCallback();
             m_onSceneResourcesLoadedCallback = nullptr;
         }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         m_isLoading = false;
     }
 

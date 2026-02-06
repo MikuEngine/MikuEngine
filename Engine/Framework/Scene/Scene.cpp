@@ -487,7 +487,7 @@ namespace engine
         }
     }
 
-    void Scene::Load()
+    void Scene::Load(std::function<void(float)> progressCallback)
     {
         std::filesystem::path path{ "Resource/Scene" };
         path /= (m_name + ".scene");
@@ -533,6 +533,7 @@ namespace engine
 
         std::vector<GameObject*> idToPtr(numGameObjects + 1);
         std::vector<std::pair<int, int>> parentLinks;
+        size_t loadedCount = 0;
 
         JsonArrayForEach(root, "GameObjects", [&](const json& goJson)
             {
@@ -546,6 +547,12 @@ namespace engine
                 }
 
                 go->Load(goJson);
+
+                ++loadedCount;
+                if (progressCallback)
+                {
+                    progressCallback(numGameObjects > 0 ? static_cast<float>(loadedCount) / static_cast<float>(numGameObjects) : 1.f);
+                }
 
                 int parentId = -1;
                 JsonGet(goJson, "ParentID", parentId);
@@ -579,6 +586,11 @@ namespace engine
             {
                 go->UpdateActiveInHierarchy(go->IsActiveSelf());
             }
+        }
+
+        if (progressCallback)
+        {
+            progressCallback(1.0f);
         }
     }
 
