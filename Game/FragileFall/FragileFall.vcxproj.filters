@@ -74,6 +74,7 @@
     <ClCompile Include="Script\LobbyInteraction.cpp" />
     <ClCompile Include="Script\DoorTriggerScript.cpp" />
     <ClCompile Include="Manager\MessageCatalog.cpp" />
+    <ClCompile Include="Scene\GameScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -154,5 +155,7 @@
     <ClInclude Include="Script\Interface\IDamageable.h" />
     <ClInclude Include="Script\DoorTriggerScript.h" />
     <ClInclude Include="Manager\MessageCatalog.h" />
+    <ClInclude Include="Scene\GameScene.h" />
+    <ClInclude Include="Scene\SceneId.h" />
   </ItemGroup>
 </Project>

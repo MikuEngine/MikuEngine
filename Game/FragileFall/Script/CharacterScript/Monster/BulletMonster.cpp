@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -66,6 +66,12 @@ namespace game
 	void BulletMonster::Start()
 	{
 		m_elapsedTime = 0.0f;
+
+		// ─────────────────────────────────────────────
+		// 총알 스케일 적용 (균등 스케일)
+		// - BulletMonster Prefab들도 syncWithTransform=true이므로 Collider 자동 스케일
+		// ─────────────────────────────────────────────
+		GetTransform()->SetLocalScale(engine::Vector3(m_params.scale, m_params.scale, m_params.scale));
 
 		auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>();
 		if (!rb) return;
@@ -325,7 +331,8 @@ namespace game
 		// ExplosionDamageTrigger 스크립트 설정
 		if (auto* explosionScript = explosionGO->GetComponent<ExplosionDamageTrigger>())
 		{
-			explosionScript->Setup(m_params.damage, 3.0f);
+			// damage, explosionRadius, lifetime 전달
+			explosionScript->Setup(m_params.damage, m_params.explosionRadius, 1.5f);
 		}
 	}
 

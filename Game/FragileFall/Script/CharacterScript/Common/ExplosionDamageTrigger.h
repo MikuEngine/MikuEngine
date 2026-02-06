@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -36,20 +36,16 @@ namespace game
         bool m_hasDamaged = false;
         
         // ─────────────────────────────────────────────
-        // 확장 애니메이션 (0.3초간)
+        // 폭발 범위 (즉시 적용, 애니메이션 없음)
         // ─────────────────────────────────────────────
-        float m_expandDuration = 0.3f;
-        float m_startScale = 1.4f;
-        float m_endScale = 5.0f;
-        float m_startRadius = 2.66f;
-        float m_endRadius = 2.66f;
+        float m_explosionRadius = 3.0f;
         
         // 콜라이더 캐시
         engine::SphereCollider* m_sphereCollider = nullptr;
 
     public:
         // 초기화 (BulletMonster에서 호출)
-        void Setup(float damage, float lifetime = 1.5f);
+        void Setup(float damage, float explosionRadius, float lifetime = 1.5f);
 
         // 생명주기
         void Start() override;
@@ -57,8 +53,5 @@ namespace game
 
         // 충돌 콜백
         void OnTriggerEnter(const engine::CollisionInfo& info) override;
-        
-    private:
-        void UpdateExpansion();
     };
 }

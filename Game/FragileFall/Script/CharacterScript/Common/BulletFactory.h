@@ -63,6 +63,23 @@ namespace game
                                  float spreadAngle,
                                  const BulletParams& params);
 
+        // ─────────────────────────────────────────────
+        // 연사 총알 발사 (랜덤 각도 + 속도/수명 변조)
+        // count: 발사할 총알 개수
+        // spreadAngle: 좌우 퍼짐 각도 (라디안)
+        // lifetimeModMin/Max: 수명 변조 범위 (0.0~1.0 배율)
+        // speedModMin/Max: 속도 변조 범위 (0.0~1.0 배율)
+        // ─────────────────────────────────────────────
+        void BurstFireMonster(const engine::Vector3& position,
+                              const engine::Vector3& direction,
+                              int count,
+                              float spreadAngle,
+                              float lifetimeModMin,
+                              float lifetimeModMax,
+                              float speedModMin,
+                              float speedModMax,
+                              const BulletParams& params);
+
     private:
         // ─────────────────────────────────────────────
         // 내부 헬퍼: Movement 생성

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace game
 {
@@ -50,7 +50,7 @@ namespace game
         float minLaunchAngle = 20.0f;   // 최소 발사각 (도)
         float maxLaunchAngle = 70.0f;   // 최대 발사각 (도) - 이 각도에서 최대 사거리 도달
         float ownGravity = 9.8f;        // 자체 중력 가속도 (PhysX 글로벌 중력과 별개)
-        float explosionRadious = 3.0f;  // 폭발 범위의 반경
+        float explosionRadius = 3.0f;   // 폭발 범위의 반경
 
         // ─────────────────────────────────────────────
         // 곡선/나선용 (Curve 타입에서 사용)

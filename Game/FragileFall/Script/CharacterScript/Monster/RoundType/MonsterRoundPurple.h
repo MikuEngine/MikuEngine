@@ -139,6 +139,19 @@ namespace game
 
     public:
         // ─────────────────────────────────────────────
+        // 총알 발사 없음 (접촉 데미지 + 분열)
+        // ─────────────────────────────────────────────
+        bool HasBulletAttack() const override { return false; }
+        
+        // ─────────────────────────────────────────────
+        // 컴포넌트 검증 (StaticMesh 사용)
+        // ─────────────────────────────────────────────
+        bool RequiresSkeletalAnimator() const override { return false; }
+        bool RequiresBulletFactory() const override { return false; }
+        bool RequiresAnimFSM() const override { return false; }
+        bool RequiresPathfindingAgent() const override { return false; }
+        
+        // ─────────────────────────────────────────────
         // 분열 횟수 설정 (인스턴시에이트 후 외부에서 설정)
         // ─────────────────────────────────────────────
         void SetSplitCount(int count) { m_splitCount = count; }

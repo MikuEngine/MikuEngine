@@ -94,7 +94,9 @@ namespace game
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = 10;
+            m_bulletParams.damage = m_attackDamage;  // Load()에서 로드된 값 사용
+            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         case MonsterTier::Green:
             // ─────────────────────────────────────────────
@@ -102,13 +104,16 @@ namespace game
             // - launchAngle, ownGravity는 Attack() 시점에 자동 계산
             // - speed는 AttackRange 기준 자동 계산
             // - ownGravity는 에디터 설정값 (고정)
+            // - explosionRadius는 에디터 설정값
             // ─────────────────────────────────────────────
             m_bulletParams.type = BulletType::Parabolic;
             m_bulletParams.speed = CalculateParabolicSpeed();  // 자동 계산
             m_bulletParams.launchAngle = m_minLaunchAngle;     // 기본값 (Attack에서 자동 계산)
             m_bulletParams.ownGravity = m_ownGravity;          // 에디터 설정값 (고정)
+            m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = 15;
+            m_bulletParams.damage = m_attackDamage;  // Load()에서 로드된 값 사용
+            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
             break;
         case MonsterTier::Red:
             m_bulletParams.type = BulletType::Curve;
@@ -116,14 +121,18 @@ namespace game
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.angularSpeed = m_curvedAngularSpeed;      // 에디터 설정값
             m_bulletParams.radiusGrowthRate = m_curvedRadiusGrowth;  // 에디터 설정값
-            m_bulletParams.damage = 20;
-            m_rotationSpeed = 15.0f;
+            m_bulletParams.damage = m_attackDamage;  // Load()에서 로드된 값 사용
+            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
+            // rotationSpeed는 Load()에서 로드되므로 덮어쓰지 않음
 			break;
         default:
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = 10;
+            m_bulletParams.damage = m_attackDamage;  // Load()에서 로드된 값 사용
+            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         
         }
@@ -299,9 +308,16 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterDullType::Attack(float deltaTime)
     {
-        if (m_fireTimer > 0.0f)
+        // 연발 모드: 타이머 감소
+        if (!m_isDoSingleShot && m_fireRate > 0.0f && m_fireTimer > 0.0f)
         {
             m_fireTimer -= deltaTime;
+            return;
+        }
+
+        // 발사 가능 체크 (단발/연발 모두 지원)
+        if (!CanFireBullet())
+        {
             return;
         }
 
@@ -355,6 +371,7 @@ namespace game
             m_bulletParams.ownGravity = m_ownGravity;         // 에디터 설정값 (고정)
             m_bulletParams.minLaunchAngle = m_minLaunchAngle;
             m_bulletParams.maxLaunchAngle = m_maxLaunchAngle;
+            m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
             
             // 실제 발사
             m_bulletFactory->ParabolicFireMonster(bulletStartPos, direction, m_bulletParams);
@@ -405,7 +422,11 @@ namespace game
 
         // 둔탁 타입은 StaticMesh를 사용하므로 공격 애니메이션 재생 불필요
 
-        m_fireTimer = m_fireRate;
+        // 연발 모드일 때만 타이머 리셋 (단발 모드는 타이머 무시)
+        if (!m_isDoSingleShot && m_fireRate > 0.0f)
+        {
+            m_fireTimer = m_fireRate;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -415,42 +436,15 @@ namespace game
     {
         ImGui::Indent();
         
+        ImGui::Text("=== MonsterDullType ===");
+        ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), "Type: Dull (Static, No Movement)");
+        
+        // 부모 클래스 OnGui 호출 (공통 설정)
+        MonsterScript::OnGui();
+        
         // ─────────────────────────────────────────────
-        // 컴포넌트 검증 (에디터 화면에서도 체크)
-        // 둔탁 타입은 StaticMesh 사용 - SkeletalAnimator/AnimFSM 불필요
+        // Dull 전용 설정 - Monster Tier 선택
         // ─────────────────────────────────────────────
-        ImGui::Separator();
-        ImGui::Text("=== Component Validation ===");
-        
-        // 에디터 모드를 위한 실시간 컴포넌트 검색 (같은 GameObject 내에서만 검색)
-        engine::Rigidbody* rigidbody = m_rigidbody ? m_rigidbody : (GetGameObject() ? GetGameObject()->GetComponent<engine::Rigidbody>() : nullptr);
-        engine::LogicFSM* logicFSM = m_logicFSM ? m_logicFSM : (GetGameObject() ? GetGameObject()->GetComponent<engine::LogicFSM>() : nullptr);
-        BulletFactory* bulletFactory = m_bulletFactory ? m_bulletFactory : (GetGameObject() ? GetGameObject()->GetComponent<BulletFactory>() : nullptr);
-        
-        // 전체 유효성 검사 (둔탁: Rigidbody, LogicFSM, BulletFactory만 필수)
-        bool allValid = rigidbody && bulletFactory && logicFSM;
-        
-        if (allValid)
-        {
-            ImGui::TextColored(ImVec4(0, 1, 0, 1), "[OK] All components are valid!");
-        }
-        else
-        {
-            ImGui::TextColored(ImVec4(1, 0, 0, 1), "[ERROR] Some components are missing!");
-        }
-
-        // 개별 컴포넌트 상태 표시
-        ImGui::Indent();
-        ImGui::Text("Rigidbody:         %s", rigidbody ? "[OK]" : "[MISSING]");
-        if (!rigidbody) ImGui::SameLine(); if (!rigidbody) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-        
-        ImGui::Text("BulletFactory:     %s", bulletFactory ? "[OK]" : "[MISSING]");
-        if (!bulletFactory) ImGui::SameLine(); if (!bulletFactory) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-        
-        ImGui::Text("LogicFSM:          %s", logicFSM ? "[OK]" : "[MISSING]");
-        if (!logicFSM) ImGui::SameLine(); if (!logicFSM) ImGui::TextColored(ImVec4(1, 0, 0, 1), "<-- Required!");
-        ImGui::Unindent();
-
         // 공격 타입 (읽기 전용 - Dull 고정)
         ImGui::Separator();
         ImGui::Text("Type:");
@@ -479,25 +473,6 @@ namespace game
             ImGui::EndCombo();
         }
 
-        // 스탯
-        ImGui::Separator();
-        ImGui::Text("Stats:");
-        ImGui::DragFloat("HP", &m_Hp, 0.1f, 1.0f, 10000.0f);
-        ImGui::DragFloat("Attack Range", &m_AttackRange, 0.1f, 0.0f, 15.0f);
-
-        // 설정 (둔탁은 이동하지 않으므로 Move Speed 제외)
-        ImGui::Separator();
-        ImGui::Text("Settings:");
-        ImGui::DragFloat("Rotation Speed", &m_rotationSpeed, 0.1f, 0.0f, 10.0f);
-        ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.1f, 0.1f, 10.0f);
-        
-        // Green이 아닐 때만 일반 Bullet Speed 표시
-        if (m_monsterTier != MonsterTier::Green)
-        {
-            ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 0.1f, 0.1f, 100.0f);
-        }
-        ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
-
         // ─────────────────────────────────────────────
         // 포물선 설정 (Green일 때만 표시)
         // 새 로직: 중력 편집, 속도 자동 계산, 거리→각도 선형 매핑
@@ -509,6 +484,11 @@ namespace game
             
             // 중력 편집 가능 (5~20)
             ImGui::DragFloat("Gravity", &m_ownGravity, 0.1f, kMinGravity, kMaxGravity, "%.1f m/s^2");
+            
+            // 폭발 범위 설정
+            ImGui::DragFloat("Explosion Radius", &m_explosionRadius, 0.1f, 0.5f, 20.0f);
+            ImGui::SameLine();
+            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Trigger size on impact)");
             
             // 속도 읽기 전용 (자동 계산)
             float calculatedSpeed = CalculateParabolicSpeed();

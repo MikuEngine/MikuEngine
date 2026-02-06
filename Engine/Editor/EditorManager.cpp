@@ -815,7 +815,10 @@ namespace engine
             {
                 if (gameObject && gameObject->GetTransform()->GetParent() == nullptr)
                 {
-                    DrawEntityNode(gameObject.get());
+                    if (!DrawEntityNode(gameObject.get()))
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -828,7 +831,7 @@ namespace engine
         ImGui::End();
     }
 
-    void EditorManager::DrawEntityNode(GameObject* gameObject)
+    bool EditorManager::DrawEntityNode(GameObject* gameObject)
     {
         ImGuiTreeNodeFlags flags = ((m_selectedObject == gameObject) ? ImGuiTreeNodeFlags_Selected : 0);
         flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -886,7 +889,7 @@ namespace engine
                     ImGui::TreePop();
                 }
 
-                return;
+                return false;
             }
 
             if (ImGui::MenuItem("Create Prefab"))
@@ -940,6 +943,8 @@ namespace engine
 
             ImGui::TreePop();
         }
+
+        return true;
     }
 
     void EditorManager::DrawInspector()

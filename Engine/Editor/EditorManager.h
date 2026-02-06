@@ -77,7 +77,7 @@ namespace engine
         void DrawPlayController();
         void DrawEditorController();
         void DrawHierarchy();
-        void DrawEntityNode(GameObject* gameObject);
+        bool DrawEntityNode(GameObject* gameObject);
         void DrawInspector();
         void DrawDebugInfo();
         void DrawPrefabManager();

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
@@ -15,12 +15,13 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 초기화 (Factory에서 호출)
     // ═══════════════════════════════════════════════════════════════
-    void BulletPlayer::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg, float range)
+    void BulletPlayer::Setup(std::unique_ptr<IBulletMovement> movement, float lifetime, float dmg, float range, float scale)
     {
         m_movement = std::move(movement);
         m_lifetime = lifetime;  // 하위 호환성용 (사용 안 함)
         m_range = range;
         m_damage = dmg;
+        m_scale = scale;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -29,6 +30,12 @@ namespace game
     void BulletPlayer::Start()
     {
         m_elapsedTime = 0.0f;
+
+        // ─────────────────────────────────────────────
+        // 총알 스케일 적용 (균등 스케일)
+        // - syncWithTransform=true이므로 Collider도 자동 스케일됨
+        // ─────────────────────────────────────────────
+        GetTransform()->SetLocalScale(engine::Vector3(m_scale, m_scale, m_scale));
 
         // 발사 위치와 방향 저장 (사거리 계산용)
         m_startPosition = GetTransform()->GetWorldPosition();

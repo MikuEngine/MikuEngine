@@ -24,11 +24,6 @@ namespace game
         REGISTER_SCRIPT(MonsterPointedType, MonsterScript)
 
     private:
-        // ─────────────────────────────────────────────
-        // 총알 설정
-        // ─────────────────────────────────────────────
-        BulletParams m_bulletParams;
-
         // SkeletalMesh + AnimFSM: 클립 이름 Idle, WalkForward, Fire (프리팹 SkeletalAnimator에 등록)
 
         // ─────────────────────────────────────────────
