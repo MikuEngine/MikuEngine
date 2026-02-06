@@ -1,7 +1,7 @@
-key,channel,text,iconKey
-Kill_001,0,Åä°¡ 17¼¼ »çÀÎ: °áÁ¤È­,
-Kill_002,0,´õºí Å³!,
-Kill_003,0,,
+ï»¿key,channel,text,iconKey
+Kill_001,0,"""í† ê°€ 17,,,,ì„¸ ì‚¬ì¸: ê²°ì •í™”""",
+Kill_002,0,english,
+Kill_003,0,"""í‚¬ ë©”ì‹œì§€""",
 Tutorial_001,1,,
 Tutorial_002,1,,
 System_001,2,,
