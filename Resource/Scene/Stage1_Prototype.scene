@@ -14015,6 +14015,35 @@
             "Active": false,
             "Components": [
                 {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 141.5
+                    },
+                    "Width": 1200.0,
+                    "Height": 500.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 2,
@@ -14069,35 +14098,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 141.5
-                    },
-                    "Width": 1200.0,
-                    "Height": 500.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIPanel",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true
                 }
             ]
         },
@@ -14316,6 +14316,64 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -200.0,
+                        "y": 150.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 2,
@@ -14369,64 +14427,6 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
                     }
                 }
             ]
@@ -14490,6 +14490,64 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
+                    "TintNormal": {
+                        "x": 0.0,
+                        "y": 0.3082849383354187,
+                        "z": 0.9073358774185181,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 200.0,
+                        "y": 150.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 2,
@@ -14543,64 +14601,6 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 0.0,
-                        "y": 0.3082849383354187,
-                        "z": 0.9073358774185181,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
                     }
                 }
             ]
@@ -14664,6 +14664,35 @@
             "Active": false,
             "Components": [
                 {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 1920.0,
+                    "Height": 1080.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 1,
@@ -14718,16 +14747,60 @@
                         "z": 0.0,
                         "w": 0.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 83,
+            "ParentID": 82,
+            "Name": "ToLobby_Button",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "",
+                    "SpritePressed": "",
+                    "SpriteDisabled": "",
+                    "TintOnly": true,
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
+                        "x": -200.0,
+                        "y": 150.0
                     },
-                    "Width": 1920.0,
-                    "Height": 1080.0,
+                    "Width": 200.0,
+                    "Height": 100.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
@@ -14741,21 +14814,6 @@
                         "y": 0.5
                     }
                 },
-                {
-                    "Type": "UIPanel",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true
-                }
-            ]
-        },
-        {
-            "ID": 83,
-            "ParentID": 82,
-            "Name": "ToLobby_Button",
-            "Active": true,
-            "Components": [
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -14810,64 +14868,6 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "SpriteHover": "",
-                    "SpritePressed": "",
-                    "SpriteDisabled": "",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
                     }
                 }
             ]
@@ -14931,6 +14931,64 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "SpriteHover": "",
+                    "SpritePressed": "",
+                    "SpriteDisabled": "",
+                    "TintOnly": true,
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 200.0,
+                        "y": 150.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 1,
@@ -14984,64 +15042,6 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "SpriteHover": "",
-                    "SpritePressed": "",
-                    "SpriteDisabled": "",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
                     }
                 }
             ]
@@ -15105,6 +15105,35 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -100.0
+                    },
+                    "Width": 400.0,
+                    "Height": 150.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
@@ -15159,35 +15188,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -100.0
-                    },
-                    "Width": 400.0,
-                    "Height": 150.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIPanel",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true
                 }
             ]
         },
@@ -15465,6 +15465,35 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -800.0,
+                        "y": 400.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
@@ -15519,35 +15548,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -800.0,
-                        "y": 400.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIPanel",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true
                 }
             ]
         },
@@ -15639,41 +15639,6 @@
         },
         {
             "ID": 94,
-            "Name": "Canvas_KillPopUp",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 95,
             "Name": "Canvas_Message",
             "Active": true,
             "Components": [
@@ -15708,7 +15673,7 @@
             ]
         },
         {
-            "ID": 96,
+            "ID": 95,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -15743,8 +15708,8 @@
             ]
         },
         {
-            "ID": 97,
-            "ParentID": 96,
+            "ID": 96,
+            "ParentID": 95,
             "Name": "Panel_Menu",
             "Active": false,
             "Components": [
@@ -15783,8 +15748,8 @@
             ]
         },
         {
-            "ID": 98,
-            "ParentID": 97,
+            "ID": 97,
+            "ParentID": 96,
             "Name": "UI_OpenOption",
             "Active": true,
             "Components": [
@@ -15825,8 +15790,8 @@
             ]
         },
         {
-            "ID": 99,
-            "ParentID": 98,
+            "ID": 98,
+            "ParentID": 97,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -15877,8 +15842,8 @@
             ]
         },
         {
-            "ID": 100,
-            "ParentID": 97,
+            "ID": 99,
+            "ParentID": 96,
             "Name": "UI_BackToPlay",
             "Active": true,
             "Components": [
@@ -16006,8 +15971,8 @@
             ]
         },
         {
-            "ID": 101,
-            "ParentID": 100,
+            "ID": 100,
+            "ParentID": 99,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16058,8 +16023,8 @@
             ]
         },
         {
-            "ID": 102,
-            "ParentID": 97,
+            "ID": 101,
+            "ParentID": 96,
             "Name": "UI_BackToMain",
             "Active": true,
             "Components": [
@@ -16187,8 +16152,8 @@
             ]
         },
         {
-            "ID": 103,
-            "ParentID": 102,
+            "ID": 102,
+            "ParentID": 101,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16239,8 +16204,8 @@
             ]
         },
         {
-            "ID": 104,
-            "ParentID": 97,
+            "ID": 103,
+            "ParentID": 96,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -16291,7 +16256,7 @@
             ]
         },
         {
-            "ID": 105,
+            "ID": 104,
             "Name": "UI_OpenOption",
             "Active": true,
             "Components": [
@@ -16419,8 +16384,8 @@
             ]
         },
         {
-            "ID": 106,
-            "ParentID": 105,
+            "ID": 105,
+            "ParentID": 104,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16471,7 +16436,7 @@
             ]
         },
         {
-            "ID": 107,
+            "ID": 106,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16614,8 +16579,8 @@
             ]
         },
         {
-            "ID": 108,
-            "ParentID": 107,
+            "ID": 107,
+            "ParentID": 106,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16666,7 +16631,7 @@
             ]
         },
         {
-            "ID": 109,
+            "ID": 108,
             "Name": "Script_Controller",
             "Active": true,
             "Components": [
@@ -16693,22 +16658,11 @@
                 {
                     "Type": "SceneController_Play",
                     "Active": true
-                },
-                {
-                    "Type": "UIKillPopupQueue",
-                    "Active": false,
-                    "LifeTime": 3.0,
-                    "Spacing": 110.0,
-                    "SpawnPos": {
-                        "x": 660.0,
-                        "y": -400.0
-                    },
-                    "MaxQueue": 3
                 }
             ]
         },
         {
-            "ID": 110,
+            "ID": 109,
             "Name": "UIMessageQueue",
             "Active": true,
             "Components": [
@@ -16739,7 +16693,7 @@
             ]
         },
         {
-            "ID": 111,
+            "ID": 110,
             "Name": "CornerTriggerObject",
             "Active": true,
             "Components": [
@@ -16766,8 +16720,8 @@
             ]
         },
         {
-            "ID": 112,
-            "ParentID": 111,
+            "ID": 111,
+            "ParentID": 110,
             "Name": "CornerTriggerRightUp",
             "Active": true,
             "Components": [
@@ -16823,8 +16777,8 @@
             ]
         },
         {
-            "ID": 113,
-            "ParentID": 111,
+            "ID": 112,
+            "ParentID": 110,
             "Name": "CornerTriggerLeftUp",
             "Active": true,
             "Components": [
@@ -16880,8 +16834,8 @@
             ]
         },
         {
-            "ID": 114,
-            "ParentID": 111,
+            "ID": 113,
+            "ParentID": 110,
             "Name": "CornerTriggerLeftDown",
             "Active": true,
             "Components": [
@@ -16937,8 +16891,8 @@
             ]
         },
         {
-            "ID": 115,
-            "ParentID": 111,
+            "ID": 114,
+            "ParentID": 110,
             "Name": "CornerTriggerRightDown",
             "Active": true,
             "Components": [
@@ -16990,6 +16944,41 @@
                     "Active": true,
                     "blockedDir1": 1,
                     "blockedDir2": 4
+                }
+            ]
+        },
+        {
+            "ID": 115,
+            "Name": "Canvas_KillPopUp",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
                 }
             ]
         }

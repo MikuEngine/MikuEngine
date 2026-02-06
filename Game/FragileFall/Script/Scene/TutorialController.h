@@ -25,17 +25,21 @@ namespace game
         engine::Ptr<engine::GameObject> m_nextDoorObject = nullptr;
         engine::Vector3 m_doorPosition = { 0, 0, 0 };
 
+        float m_doorActivateTimer = 0.0f;
+        bool m_isWaitingForDoor = false;
+
     public:
         void Awake() override;
         void Start() override;
         void Update() override;
 
+        void InitializeStep();
+        void RefreshStepContext(int index);
+
     public:
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
-
-
 
         void ShowPage();
         void Next();

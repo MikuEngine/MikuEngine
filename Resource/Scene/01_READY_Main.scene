@@ -1,5 +1,5 @@
 {
-    "Name": "z_Hiro_Main",
+    "Name": "01_READY_Main",
     "NumGameObjects": 61,
     "GameObjects": [
         {
@@ -42,10 +42,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "Canvas",
+                    "Type": "Transform",
                     "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -68,6 +82,12 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
                 }
             ]
         },
@@ -77,6 +97,48 @@
             "Name": "TitleBackground",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 1920.0,
+                    "Height": 1080.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -132,28 +194,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 1920.0,
-                    "Height": 1080.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
                 }
             ]
         },
@@ -164,26 +204,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "Fragile\nFall",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 150,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": true,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -206,6 +244,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "Fragile\nFall",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 150,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -215,10 +275,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "Canvas",
+                    "Type": "Transform",
                     "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 1
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -241,6 +315,12 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 1
                 }
             ]
         },
@@ -250,6 +330,48 @@
             "Name": "UIGroop",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -80.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -307,28 +429,6 @@
                     }
                 },
                 {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -80.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
                     "Type": "UIPanel",
                     "Active": true,
                     "Layer": 0,
@@ -343,6 +443,48 @@
             "Name": "UI_StartButton",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -600.0,
+                        "y": 0.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIButton",
                     "Active": true,
@@ -377,28 +519,6 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -600.0,
-                        "y": 0.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
                     }
                 },
                 {
@@ -473,26 +593,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "게임 시작",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -515,6 +633,28 @@
                         "x": 1.0,
                         "y": 1.0
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "Text": "게임 시작",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 50,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -524,6 +664,48 @@
             "Name": "UI_OptionButton",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -600.0,
+                        "y": 130.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIButton",
                     "Active": true,
@@ -558,28 +740,6 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -600.0,
-                        "y": 130.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
                     }
                 },
                 {
@@ -654,26 +814,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -696,6 +854,28 @@
                         "x": 1.0,
                         "y": 1.0
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "Text": "설정",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 50,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -705,6 +885,48 @@
             "Name": "UI_CreditButton",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -600.0,
+                        "y": 260.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIButton",
                     "Active": true,
@@ -739,28 +961,6 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -600.0,
-                        "y": 260.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
                     }
                 },
                 {
@@ -835,26 +1035,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "크레딧",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -877,6 +1075,28 @@
                         "x": 1.0,
                         "y": 1.0
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "Text": "크레딧",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 50,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -886,6 +1106,48 @@
             "Name": "UI_QuitButton",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -600.0,
+                        "y": 390.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIButton",
                     "Active": true,
@@ -920,28 +1182,6 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -600.0,
-                        "y": 390.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
                     }
                 },
                 {
@@ -1016,26 +1256,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "게임 종료",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 50,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -1058,6 +1296,28 @@
                         "x": 1.0,
                         "y": 1.0
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "Text": "게임 종료",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 50,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -1098,10 +1358,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "Canvas",
+                    "Type": "Transform",
                     "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 2
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -1124,6 +1398,12 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 2
                 }
             ]
         },
@@ -1134,11 +1414,24 @@
             "Active": false,
             "Components": [
                 {
-                    "Type": "UIPanel",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -1161,6 +1454,13 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
                 },
                 {
                     "Type": "UIImage",
@@ -1233,6 +1533,48 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 250.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIButton",
                     "Active": true,
                     "Layer": 0,
@@ -1266,28 +1608,6 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 250.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
                     }
                 },
                 {
@@ -1362,26 +1682,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": false,
-                    "Text": "뒤로",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -1404,6 +1722,28 @@
                         "x": 1.0,
                         "y": 1.0
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "Text": "뒤로",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -1414,26 +1754,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 70,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": true,
-                    "AlignH": 1,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -1456,6 +1794,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "설정",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 70,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -1465,6 +1825,26 @@
             "Name": "UIObject",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
                 {
                     "Type": "RectTransform",
                     "Active": true,
@@ -1496,6 +1876,48 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": -160.0
+                    },
+                    "Width": 300.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UISlider",
                     "Active": true,
                     "Layer": 2,
@@ -1526,28 +1948,6 @@
                         "w": 1.0
                     },
                     "UseFill": true
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 150.0,
-                        "y": -160.0
-                    },
-                    "Width": 300.0,
-                    "Height": 50.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
                 }
             ]
         },
@@ -1557,6 +1957,48 @@
             "Name": "Background",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -1612,6 +2054,34 @@
                         "z": 0.0,
                         "w": 0.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 23,
+            "ParentID": 21,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -1634,15 +2104,7 @@
                         "x": 1.0,
                         "y": 1.0
                     }
-                }
-            ]
-        },
-        {
-            "ID": 23,
-            "ParentID": 21,
-            "Name": "Fill",
-            "Active": true,
-            "Components": [
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -1698,28 +2160,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
                 }
             ]
         },
@@ -1729,6 +2169,48 @@
             "Name": "Handle",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.8333333134651184,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.8333333134651184,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -1784,28 +2266,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    }
                 }
             ]
         },
@@ -1815,6 +2275,48 @@
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": -30.0
+                    },
+                    "Width": 300.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UISlider",
                     "Active": true,
@@ -1846,28 +2348,6 @@
                         "w": 1.0
                     },
                     "UseFill": true
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 150.0,
-                        "y": -30.0
-                    },
-                    "Width": 300.0,
-                    "Height": 50.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
                 }
             ]
         },
@@ -1877,6 +2357,48 @@
             "Name": "Background",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -1932,6 +2454,34 @@
                         "z": 0.0,
                         "w": 0.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 27,
+            "ParentID": 25,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -1954,15 +2504,7 @@
                         "x": 1.0,
                         "y": 1.0
                     }
-                }
-            ]
-        },
-        {
-            "ID": 27,
-            "ParentID": 25,
-            "Name": "Fill",
-            "Active": true,
-            "Components": [
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -2018,28 +2560,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
                 }
             ]
         },
@@ -2049,6 +2569,48 @@
             "Name": "Handle",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.8333333134651184,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.8333333134651184,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -2104,28 +2666,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    }
                 }
             ]
         },
@@ -2135,6 +2675,48 @@
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 100.0
+                    },
+                    "Width": 300.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UISlider",
                     "Active": true,
@@ -2166,28 +2748,6 @@
                         "w": 1.0
                     },
                     "UseFill": true
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 150.0,
-                        "y": 100.0
-                    },
-                    "Width": 300.0,
-                    "Height": 50.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
                 }
             ]
         },
@@ -2197,6 +2757,48 @@
             "Name": "Background",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -2252,6 +2854,34 @@
                         "z": 0.0,
                         "w": 0.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 31,
+            "ParentID": 29,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -2274,15 +2904,7 @@
                         "x": 1.0,
                         "y": 1.0
                     }
-                }
-            ]
-        },
-        {
-            "ID": 31,
-            "ParentID": 29,
-            "Name": "Fill",
-            "Active": true,
-            "Components": [
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -2338,28 +2960,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
                 }
             ]
         },
@@ -2369,6 +2969,48 @@
             "Name": "Handle",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.8333333134651184,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.8333333134651184,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -2424,28 +3066,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    }
                 }
             ]
         },
@@ -2456,26 +3076,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "사운드",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -2498,22 +3116,14 @@
                         "x": 0.5,
                         "y": 0.5
                     }
-                }
-            ]
-        },
-        {
-            "ID": 34,
-            "ParentID": 20,
-            "Name": "Text_Effect",
-            "Active": true,
-            "Components": [
+                },
                 {
                     "Type": "UIText",
                     "Active": true,
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "효과음",
+                    "Text": "사운드",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 32,
                     "Color": {
@@ -2528,6 +3138,34 @@
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 34,
+            "ParentID": 20,
+            "Name": "Text_Effect",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -2550,22 +3188,14 @@
                         "x": 0.5,
                         "y": 0.5
                     }
-                }
-            ]
-        },
-        {
-            "ID": 35,
-            "ParentID": 20,
-            "Name": "Text_Sound",
-            "Active": true,
-            "Components": [
+                },
                 {
                     "Type": "UIText",
                     "Active": true,
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "마우스 감도",
+                    "Text": "효과음",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 32,
                     "Color": {
@@ -2580,6 +3210,34 @@
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 35,
+            "ParentID": 20,
+            "Name": "Text_Sound",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -2602,6 +3260,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "마우스 감도",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -2612,11 +3292,24 @@
             "Active": false,
             "Components": [
                 {
-                    "Type": "UIPanel",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -2639,6 +3332,13 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIPanel",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true
                 },
                 {
                     "Type": "UIImage",
@@ -2711,6 +3411,48 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 250.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "UIButton",
                     "Active": true,
                     "Layer": 0,
@@ -2744,28 +3486,6 @@
                         "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 250.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
                     }
                 },
                 {
@@ -2840,26 +3560,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": false,
-                    "Text": "뒤로",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -2882,6 +3600,28 @@
                         "x": 1.0,
                         "y": 1.0
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "Text": "뒤로",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -2892,26 +3632,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "크레딧\n",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 70,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": true,
-                    "AlignH": 1,
-                    "AlignV": 2,
-                    "LetterSpacingPx": -0.057999998331069946,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -2934,6 +3672,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "크레딧\n",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 70,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": -0.057999998331069946,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -2943,6 +3703,48 @@
             "Name": "NameTag",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -250.0,
+                        "y": -110.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -3000,28 +3802,6 @@
                     }
                 },
                 {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -250.0,
-                        "y": -110.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
                     "Type": "UIPanel",
                     "Active": true,
                     "Layer": 0,
@@ -3037,26 +3817,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": true,
-                    "Text": "기획",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3079,22 +3857,14 @@
                         "x": 0.5,
                         "y": 0.5
                     }
-                }
-            ]
-        },
-        {
-            "ID": 42,
-            "ParentID": 40,
-            "Name": "Text_Name",
-            "Active": true,
-            "Components": [
+                },
                 {
                     "Type": "UIText",
                     "Active": true,
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Text": "신윤석    이주연",
+                    "Text": "기획",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 32,
                     "Color": {
@@ -3105,10 +3875,38 @@
                     },
                     "AlphaBlend": true,
                     "Bold": false,
-                    "AlignH": 0,
+                    "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 42,
+            "ParentID": 40,
+            "Name": "Text_Name",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3131,6 +3929,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Text": "신윤석    이주연",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -3140,6 +3960,48 @@
             "Name": "NameTag",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -250.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -3197,28 +4059,6 @@
                     }
                 },
                 {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -250.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
                     "Type": "UIPanel",
                     "Active": true,
                     "Layer": 0,
@@ -3234,26 +4074,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": true,
-                    "Text": "아트\n",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3276,22 +4114,14 @@
                         "x": 0.5,
                         "y": 0.5
                     }
-                }
-            ]
-        },
-        {
-            "ID": 45,
-            "ParentID": 43,
-            "Name": "Text_Name",
-            "Active": true,
-            "Components": [
+                },
                 {
                     "Type": "UIText",
                     "Active": true,
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Text": "오세훈    주영성",
+                    "Text": "아트\n",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 32,
                     "Color": {
@@ -3302,10 +4132,38 @@
                     },
                     "AlphaBlend": true,
                     "Bold": false,
-                    "AlignH": 0,
+                    "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 45,
+            "ParentID": 43,
+            "Name": "Text_Name",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3328,6 +4186,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Text": "오세훈    주영성",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -3337,6 +4217,48 @@
             "Name": "NameTag",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -250.0,
+                        "y": 110.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -3394,28 +4316,6 @@
                     }
                 },
                 {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -250.0,
-                        "y": 110.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
                     "Type": "UIPanel",
                     "Active": true,
                     "Layer": 0,
@@ -3431,26 +4331,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": true,
-                    "Text": "프로그래밍",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3473,22 +4371,14 @@
                         "x": 0.5,
                         "y": 0.5
                     }
-                }
-            ]
-        },
-        {
-            "ID": 48,
-            "ParentID": 46,
-            "Name": "Text_Name",
-            "Active": true,
-            "Components": [
+                },
                 {
                     "Type": "UIText",
                     "Active": true,
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Text": "강신익    도옥현    정철    황태현",
+                    "Text": "프로그래밍",
                     "FontPath": "Resource/Font/malgun.ttf",
                     "FontPx": 32,
                     "Color": {
@@ -3499,10 +4389,38 @@
                     },
                     "AlphaBlend": true,
                     "Bold": false,
-                    "AlignH": 0,
+                    "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 48,
+            "ParentID": 46,
+            "Name": "Text_Name",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3525,6 +4443,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Text": "강신익    도옥현    정철    황태현",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -3534,6 +4474,48 @@
             "Name": "UI_RealQuitPopUp",
             "Active": false,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 141.5
+                    },
+                    "Width": 1200.0,
+                    "Height": 500.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -3591,28 +4573,6 @@
                     }
                 },
                 {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 141.5
-                    },
-                    "Width": 1200.0,
-                    "Height": 500.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
                     "Type": "UIPanel",
                     "Active": true,
                     "Layer": 0,
@@ -3628,26 +4588,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "게임 종료",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 70,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": true,
-                    "AlignH": 1,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3670,6 +4628,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "게임 종료",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 70,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -3680,26 +4660,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "게임을 종료하시겠습니까?",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3722,6 +4700,28 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "게임을 종료하시겠습니까?",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -3731,6 +4731,48 @@
             "Name": "OK_Button",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -200.0,
+                        "y": 150.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -3788,28 +4830,6 @@
                     }
                 },
                 {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
                     "Type": "UIButton",
                     "Active": true,
                     "Layer": 2,
@@ -3854,26 +4874,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "종료",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 40,
-                    "Color": {
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -3896,6 +4914,28 @@
                         "x": 1.0,
                         "y": 1.0
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "Text": "종료",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 40,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -3905,6 +4945,48 @@
             "Name": "Cancel_Button",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 200.0,
+                        "y": 150.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -3962,28 +5044,6 @@
                     }
                 },
                 {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
                     "Type": "UIButton",
                     "Active": true,
                     "Layer": 0,
@@ -4028,26 +5088,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "UIText",
+                    "Type": "Transform",
                     "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": false,
-                    "Text": "취소",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 40,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
-                    "AlphaBlend": true,
-                    "Bold": true,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -4070,6 +5128,28 @@
                         "x": 1.0,
                         "y": 1.0
                     }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": false,
+                    "Text": "취소",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 40,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         },
@@ -4079,10 +5159,24 @@
             "Active": true,
             "Components": [
                 {
-                    "Type": "Canvas",
+                    "Type": "Transform",
                     "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 1
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
                     "Type": "RectTransform",
@@ -4105,6 +5199,12 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 1
                 }
             ]
         },
@@ -4114,6 +5214,48 @@
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 1920.0,
+                    "Height": 1080.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
                 {
                     "Type": "UIImage",
                     "Active": true,
@@ -4168,28 +5310,6 @@
                         "y": 0.0,
                         "z": 0.0,
                         "w": 0.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 1920.0,
-                    "Height": 1080.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
                     }
                 },
                 {
@@ -4248,6 +5368,48 @@
             "Active": true,
             "Components": [
                 {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
                     "Type": "AimModeController",
                     "Active": true,
                     "CanvasObjectName": "AimPointerCanvas",
@@ -4289,28 +5451,6 @@
                     "CursorState": 0
                 },
                 {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
@@ -4324,6 +5464,26 @@
             "Name": "AimCursor",
             "Active": true,
             "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
                 {
                     "Type": "RectTransform",
                     "Active": true,

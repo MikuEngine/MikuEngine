@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "EditorManager.h"
 
 #include <fstream>
@@ -245,7 +245,7 @@ namespace engine
 
         if (m_editorState == EditorState::Edit)
         {
-            if (ImGui::Button("Play"))
+            if (ImGui::Button("Play") || ImGui::IsKeyPressed(ImGuiKey_F5))
             {
                 auto scene = SceneManager::Get().GetScene();
                 g_tempScene.clear();
@@ -265,7 +265,7 @@ namespace engine
         }
         else
         {
-            if (ImGui::Button("Stop"))
+            if (ImGui::Button("Stop") || ImGui::IsKeyPressed(ImGuiKey_F5))
             {
                 auto scene = SceneManager::Get().GetScene();
                 
@@ -288,14 +288,14 @@ namespace engine
 
         if (m_editorState == EditorState::Pause)
         {
-            if (ImGui::Button("Resume"))
+            if (ImGui::Button("Resume") || ImGui::IsKeyPressed(ImGuiKey_F6))
             {
                 m_editorState = EditorState::Play;
             }
         }
         else if (m_editorState == EditorState::Play)
         {
-            if (ImGui::Button("Pause"))
+            if (ImGui::Button("Pause") || ImGui::IsKeyPressed(ImGuiKey_F6))
             {
                 m_editorState = EditorState::Pause;
             }

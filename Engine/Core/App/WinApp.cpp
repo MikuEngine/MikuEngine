@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <thread>
@@ -393,7 +393,6 @@ namespace engine
                 }
             }
             SceneManager::Get().ProcessPendingAdds(false);
-            SceneManager::Get().ProcessPendingKills();
             break;
 
         case EditorState::Play:
@@ -541,6 +540,12 @@ namespace engine
         case WM_KEYUP:
         case WM_SYSKEYUP:
             DirectX::Keyboard::ProcessMessage(uMsg, wParam, lParam);
+            break;
+        case WM_SYSKEYDOWN:
+            if (wParam == VK_F10)
+            {
+                DirectX::Keyboard::ProcessMessage(uMsg, wParam, lParam);
+            }
             break;
 
         default:
