@@ -55,7 +55,7 @@ namespace game
         if (m_bound) return;
         m_bound = true;
 
-        StageManager::Get().BeginStage();
+        //StageManager::Get().BeginStage();
 
         auto* go = engine::GameObject::Find("Player");
         m_aimMode = go->GetComponent<AimModeController>();
