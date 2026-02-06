@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <functional>
 
@@ -98,6 +98,9 @@ namespace engine
         void ProcessPendingKills();
 
         void RemoveGameObjectEditor(GameObject* gameObject);
+        
+        // 에디터 전용: 게임오브젝트 순서 변경
+        void ReorderGameObjectEditor(GameObject* gameObject, int newIndex);
 
     public:
         void Save();

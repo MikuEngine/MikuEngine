@@ -357,6 +357,74 @@ namespace engine
         }
     }
 
+    void Scene::ReorderGameObjectEditor(GameObject* gameObject, int newIndex)
+    {
+        if (!gameObject)
+        {
+            return;
+        }
+
+        // 현재 인덱스 찾기
+        int currentIndex = -1;
+        for (size_t i = 0; i < m_gameObjects.size(); ++i)
+        {
+            if (m_gameObjects[i].get() == gameObject)
+            {
+                currentIndex = static_cast<int>(i);
+                break;
+            }
+        }
+
+        if (currentIndex == -1)
+        {
+            return; // 게임오브젝트를 찾을 수 없음
+        }
+
+        // 새 인덱스 범위 검사
+        if (newIndex < 0)
+        {
+            newIndex = 0;
+        }
+        else if (newIndex >= static_cast<int>(m_gameObjects.size()))
+        {
+            newIndex = static_cast<int>(m_gameObjects.size()) - 1;
+        }
+
+        // 같은 위치면 변경 불필요
+        if (currentIndex == newIndex)
+        {
+            return;
+        }
+
+        // 순서 변경: 현재 요소를 임시로 저장하고 제거한 후 새 위치에 삽입
+        std::unique_ptr<GameObject> temp = std::move(m_gameObjects[currentIndex]);
+        
+        if (currentIndex < newIndex)
+        {
+            // 뒤로 이동: 현재 위치부터 새 위치까지 앞으로 shift
+            for (int i = currentIndex; i < newIndex; ++i)
+            {
+                m_gameObjects[i] = std::move(m_gameObjects[i + 1]);
+            }
+        }
+        else
+        {
+            // 앞으로 이동: 새 위치부터 현재 위치까지 뒤로 shift
+            for (int i = currentIndex; i > newIndex; --i)
+            {
+                m_gameObjects[i] = std::move(m_gameObjects[i - 1]);
+            }
+        }
+        
+        m_gameObjects[newIndex] = std::move(temp);
+
+        // 인덱스 전체 재정비
+        for (std::int32_t i = 0; i < static_cast<std::int32_t>(m_gameObjects.size()); ++i)
+        {
+            m_gameObjects[i]->m_sceneIndex = i;
+        }
+    }
+
     void Scene::Save()
     {
         json root;

@@ -2,6 +2,8 @@
 #include "EditorManager.h"
 
 #include <fstream>
+#include <algorithm>
+#include <map>
 
 #include <imgui_internal.h>
 
@@ -786,6 +788,40 @@ namespace engine
             ImGui::EndPopup();
         }
 
+        // Search filter
+        ImGui::Spacing();
+        
+        // InputText와 버튼을 같은 줄에 배치하기 위해 너비 조정
+        float buttonWidth = 0.0f;
+        if (m_hierarchySearchFilter[0] != '\0')
+        {
+            buttonWidth = ImGui::GetFrameHeight(); // 버튼 너비 (정사각형)
+        }
+        
+        ImGui::PushItemWidth(-(buttonWidth + ImGui::GetStyle().ItemSpacing.x));
+        ImGui::InputTextWithHint("##HierarchySearch", "Search...", m_hierarchySearchFilter, sizeof(m_hierarchySearchFilter));
+        
+        // ESC 키로 검색어 지우기 (입력 필드가 포커스되어 있을 때)
+        if (ImGui::IsItemFocused() && ImGui::IsKeyPressed(ImGuiKey_Escape))
+        {
+            m_hierarchySearchFilter[0] = '\0';
+            ImGui::ClearActiveID(); // 포커스 해제
+        }
+        
+        // X 버튼 (검색어가 있을 때만 표시)
+        if (m_hierarchySearchFilter[0] != '\0')
+        {
+            ImGui::SameLine();
+            if (ImGui::Button("X##ClearSearch", ImVec2(buttonWidth, buttonWidth)))
+            {
+                m_hierarchySearchFilter[0] = '\0';
+            }
+        }
+        ImGui::PopItemWidth();
+
+        // 스크롤 가능한 영역 시작 (게임오브젝트 목록만 스크롤)
+        ImGui::BeginChild("HierarchyScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+
         ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 10.0f));
         if (ImGui::BeginDragDropTarget())
         {
@@ -802,18 +838,43 @@ namespace engine
 
         if (scene != nullptr)
         {
-            for (const auto& gameObject : scene->GetGameObjects())
+            const auto& gameObjects = scene->GetGameObjects();
+
+            for (int i = 0; i < gameObjects.size(); ++i)
             {
+                GameObject* gameObject = gameObjects[i].get();
+
                 if (gameObject && gameObject->GetTransform()->GetParent() == nullptr)
                 {
-                    if (!DrawEntityNode(gameObject.get()))
+                    if (MatchesSearchFilter(gameObject))
                     {
-                        break;
+                        // rootIndex 대신 실제 인덱스 'i'를 전달
+                        if (!DrawEntityNode(gameObject, i))
+                        {
+                            break;
+                        }
                     }
                 }
             }
         }
 
+        ImGui::EndChild(); // 스크롤 영역 끝나기 전 혹은 안쪽 마지막 부분
+
+        // 빈 공간 타겟 (리스트의 맨 마지막으로 이동)
+        ImGui::Dummy(ImVec2(ImGui::GetContentRegionAvail().x, 30.0f)); // 적당한 높이
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAG"))
+            {
+                GameObject* dragged = *(GameObject**)payload->Data;
+                dragged->GetTransform()->SetParent(nullptr); // 루트로 이동
+                // 맨 마지막 인덱스로 이동시키는 로직 호출
+                // ex) scene->ReorderGameObjectEditor(dragged, scene->GetRootObjectsCount());
+            }
+            ImGui::EndDragDropTarget();
+        }
+
+        // 마우스 클릭 처리 (고정 영역)
         if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
         {
             m_selectedObject = nullptr;
@@ -822,8 +883,60 @@ namespace engine
         ImGui::End();
     }
 
-    bool EditorManager::DrawEntityNode(GameObject* gameObject)
+    bool EditorManager::DrawEntityNode(GameObject* gameObject, int objectIndex)
     {
+        // 루트 오브젝트인지 확인
+        bool isRootObject = (gameObject->GetTransform()->GetParent() == nullptr);
+
+        // ---------------------------------------------------------
+        // 1. 순서 변경용 얇은 영역 (루트 오브젝트끼리 순서 변경)
+        // ---------------------------------------------------------
+        if (isRootObject && objectIndex >= 0)
+        {
+            ImGui::PushID(("ReorderTarget_" + std::to_string(reinterpret_cast<uintptr_t>(gameObject))).c_str());
+
+            // 버튼 생성
+            ImGui::InvisibleButton("##ReorderTarget", ImVec2(-1, 4.0f));
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAG"))
+                {
+                    GameObject* draggedObject = *(GameObject**)payload->Data;
+                    auto* scene = SceneManager::Get().GetScene();
+
+                    if (draggedObject && draggedObject != gameObject && scene)
+                    {
+                        // 1) 드래그된 객체의 현재 인덱스 찾기
+                        int draggedIndex = -1;
+                        const auto& allObjs = scene->GetGameObjects();
+                        for (int i = 0; i < allObjs.size(); ++i) {
+                            if (allObjs[i].get() == draggedObject) {
+                                draggedIndex = i;
+                                break;
+                            }
+                        }
+
+                        // 2) 목표 인덱스 설정
+                        int targetIndex = objectIndex;
+
+                        // 3) ★ 중요: 위에서 아래로 내릴 때는 인덱스 -1 보정
+                        // (자신이 빠지면 뒤에 있던 애들이 한 칸씩 당겨지므로)
+                        if (draggedIndex != -1 && draggedIndex < targetIndex)
+                        {
+                            targetIndex--;
+                        }
+
+                        // 4) 부모 해제 및 이동
+                        draggedObject->GetTransform()->SetParent(nullptr);
+                        scene->ReorderGameObjectEditor(draggedObject, targetIndex);
+                    }
+                }
+                ImGui::EndDragDropTarget();
+            }
+            ImGui::PopID();
+        }
+        
         ImGuiTreeNodeFlags flags = ((m_selectedObject == gameObject) ? ImGuiTreeNodeFlags_Selected : 0);
         flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
@@ -903,9 +1016,14 @@ namespace engine
             ImGui::EndPopup();
         }
 
+        // ---------------------------------------------------------
+    // 3. 드래그 시작 (Payload 통일)
+    // ---------------------------------------------------------
         if (ImGui::BeginDragDropSource())
         {
+            // ★ 중요: 페이로드를 하나로 통일합니다.
             ImGui::SetDragDropPayload("HIERARCHY_DRAG", &gameObject, sizeof(GameObject*));
+
             ImGui::Text(gameObject->GetName().c_str());
             ImGui::EndDragDropSource();
         }
@@ -916,12 +1034,12 @@ namespace engine
             {
                 GameObject* draggedObject = *(GameObject**)payload->Data;
 
+                // 자신이 아니고, 자신의 조상이 아닌 경우에만 자식으로 영입
                 if (draggedObject != gameObject && !draggedObject->GetTransform()->IsAncestorOf(gameObject->GetTransform()))
                 {
                     draggedObject->GetTransform()->SetParent(gameObject->GetTransform());
                 }
             }
-
             ImGui::EndDragDropTarget();
         }
         
@@ -929,13 +1047,45 @@ namespace engine
         {
             for (auto child : gameObject->GetTransform()->GetChildren())
             {
-                DrawEntityNode(child->GetGameObject());
+                DrawEntityNode(child->GetGameObject(), -1); // 자식은 인덱스 없음
             }
 
             ImGui::TreePop();
         }
 
         return true;
+    }
+
+    bool EditorManager::MatchesSearchFilter(GameObject* gameObject) const
+    {
+        if (m_hierarchySearchFilter[0] == '\0')
+        {
+            return true; // 검색어가 없으면 모두 표시
+        }
+
+        std::string searchLower = m_hierarchySearchFilter;
+        std::string nameLower = gameObject->GetName();
+        
+        // 대소문자 구분 없이 검색
+        std::transform(searchLower.begin(), searchLower.end(), searchLower.begin(), ::tolower);
+        std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::tolower);
+
+        // 현재 오브젝트 이름에 검색어가 포함되어 있는지 확인
+        if (nameLower.find(searchLower) != std::string::npos)
+        {
+            return true;
+        }
+
+        // 자식들 중 하나라도 필터에 맞는지 확인
+        for (auto child : gameObject->GetTransform()->GetChildren())
+        {
+            if (MatchesSearchFilter(child->GetGameObject()))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void EditorManager::DrawInspector()
@@ -968,6 +1118,12 @@ namespace engine
         }
         
         ImGui::Separator();
+
+        // 스크롤 가능한 영역 시작 (Transform과 컴포넌트 목록만 스크롤)
+        // Add Component 버튼 공간을 남기기 위해 높이 계산
+        float addComponentButtonHeight = ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y * 2 + ImGui::GetStyle().WindowPadding.y;
+        ImVec2 scrollAreaSize = ImVec2(0, -addComponentButtonHeight);
+        ImGui::BeginChild("InspectorScrollArea", scrollAreaSize, false, ImGuiWindowFlags_HorizontalScrollbar);
 
         Transform* tr = m_selectedObject->GetTransform();
 
@@ -1064,6 +1220,8 @@ namespace engine
         {
             m_selectedObject->RemoveComponent(static_cast<size_t>(removeIndex));
         }
+
+        ImGui::EndChild();
 
         ImGui::Separator();
 

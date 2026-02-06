@@ -55,6 +55,9 @@ namespace engine
         bool m_shouldOpenUnsavedPopup = false;
         bool m_showEditorUI = true;
 
+        // hierarchy search
+        char m_hierarchySearchFilter[256] = "";
+
     private:
         EditorManager();
         ~EditorManager();
@@ -77,7 +80,8 @@ namespace engine
         void DrawPlayController();
         void DrawEditorController();
         void DrawHierarchy();
-        bool DrawEntityNode(GameObject* gameObject);
+        bool DrawEntityNode(GameObject* gameObject, int objectIndex);
+        bool MatchesSearchFilter(GameObject* gameObject) const;
         void DrawInspector();
         void DrawDebugInfo();
         void DrawPrefabManager();
