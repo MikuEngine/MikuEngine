@@ -81,7 +81,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/crystal_sphere_white.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sphere/white/crystal_sphere_white.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
