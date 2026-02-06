@@ -15,6 +15,11 @@ namespace game
         m_doorPosition = GetTransform()->GetWorldPosition();
     }
 
+    void DoorTriggerScript::Start()
+    {
+        SetActivateDoor(m_isActive);
+    }
+
     void DoorTriggerScript::Update()
     {
 #ifdef _DEBUG
@@ -31,7 +36,6 @@ namespace game
 #endif
     }
 
-
     void DoorTriggerScript::SetActivateDoor(bool active)
     {
         m_isActive = active;
@@ -45,9 +49,18 @@ namespace game
 
     void DoorTriggerScript::OnCollisionEnter(const engine::CollisionInfo& info)
     {
-        if (info.gameObject->GetName() == "Player" && !m_nextSceneName.empty())
+        if (info.gameObject->GetName() == "Player")
         {
-            engine::SceneManager::Get().ChangeScene(m_nextSceneName);
+            // 이벤트 콜백이 있다면 실행
+            if (m_onTriggered)
+            {
+                m_onTriggered();
+            }
+
+            if (!m_nextSceneName.empty())
+            {
+                engine::SceneManager::Get().ChangeScene(m_nextSceneName);
+            }
         }
     }
 

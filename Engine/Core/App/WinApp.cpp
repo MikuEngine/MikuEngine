@@ -765,6 +765,12 @@ namespace engine
 
     bool WinApp::HandleImGuiInput(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
+        if (uMsg == WM_SYSKEYDOWN && wParam == VK_F10)
+        {
+            DirectX::Keyboard::ProcessMessage(uMsg, wParam, lParam);
+            return true;
+        }
+
 #ifdef _DEBUG
         // 마우스 좌표가 포함된 메시지인지 확인 (휠 제외)
         bool isMouseCoordMsg = false;
