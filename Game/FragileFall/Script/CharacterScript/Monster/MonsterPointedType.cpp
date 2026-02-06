@@ -186,16 +186,16 @@ namespace game
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = 10;
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
             m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         case MonsterTier::Blue:
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = 10;
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
             m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         case MonsterTier::Green:
@@ -211,25 +211,23 @@ namespace game
             m_bulletParams.ownGravity = m_ownGravity;          // 에디터 설정값 (고정)
             m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = 15;
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
 			break;
 		case MonsterTier::Purple:
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = 10;
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
             m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
-            m_AttackRange = 18.0f;
-            m_detectionRange = 30.0f;
             break;
         default:
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
-            m_bulletParams.damage = 10;
-            // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
             m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         }
