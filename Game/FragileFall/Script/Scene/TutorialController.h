@@ -36,6 +36,8 @@ namespace game
         void InitializeStep();
         void RefreshStepContext(int index);
 
+        void OnSceneLoaded();
+
     public:
         void OnGui() override;
         void Save(engine::json& j) const override;
