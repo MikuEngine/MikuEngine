@@ -95,6 +95,7 @@ namespace game
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 10;
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         case MonsterTier::Green:
             // ─────────────────────────────────────────────
@@ -102,11 +103,13 @@ namespace game
             // - launchAngle, ownGravity는 Attack() 시점에 자동 계산
             // - speed는 AttackRange 기준 자동 계산
             // - ownGravity는 에디터 설정값 (고정)
+            // - explosionRadius는 에디터 설정값
             // ─────────────────────────────────────────────
             m_bulletParams.type = BulletType::Parabolic;
             m_bulletParams.speed = CalculateParabolicSpeed();  // 자동 계산
             m_bulletParams.launchAngle = m_minLaunchAngle;     // 기본값 (Attack에서 자동 계산)
             m_bulletParams.ownGravity = m_ownGravity;          // 에디터 설정값 (고정)
+            m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 15;
             break;
@@ -117,6 +120,7 @@ namespace game
             m_bulletParams.angularSpeed = m_curvedAngularSpeed;      // 에디터 설정값
             m_bulletParams.radiusGrowthRate = m_curvedRadiusGrowth;  // 에디터 설정값
             m_bulletParams.damage = 20;
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             m_rotationSpeed = 15.0f;
 			break;
         default:
@@ -124,6 +128,7 @@ namespace game
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 10;
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         
         }
@@ -299,9 +304,16 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterDullType::Attack(float deltaTime)
     {
-        if (m_fireTimer > 0.0f)
+        // 연발 모드: 타이머 감소
+        if (!m_isDoSingleShot && m_fireRate > 0.0f && m_fireTimer > 0.0f)
         {
             m_fireTimer -= deltaTime;
+            return;
+        }
+
+        // 발사 가능 체크 (단발/연발 모두 지원)
+        if (!CanFireBullet())
+        {
             return;
         }
 
@@ -355,6 +367,7 @@ namespace game
             m_bulletParams.ownGravity = m_ownGravity;         // 에디터 설정값 (고정)
             m_bulletParams.minLaunchAngle = m_minLaunchAngle;
             m_bulletParams.maxLaunchAngle = m_maxLaunchAngle;
+            m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
             
             // 실제 발사
             m_bulletFactory->ParabolicFireMonster(bulletStartPos, direction, m_bulletParams);
@@ -405,7 +418,11 @@ namespace game
 
         // 둔탁 타입은 StaticMesh를 사용하므로 공격 애니메이션 재생 불필요
 
-        m_fireTimer = m_fireRate;
+        // 연발 모드일 때만 타이머 리셋 (단발 모드는 타이머 무시)
+        if (!m_isDoSingleShot && m_fireRate > 0.0f)
+        {
+            m_fireTimer = m_fireRate;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════

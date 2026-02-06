@@ -216,10 +216,12 @@ namespace game
         // - launchAngle은 Attack() 시점에 자동 계산
         // - speed는 AttackRange 기준 자동 계산
         // - ownGravity는 에디터 설정값 (고정)
+        // - explosionRadius는 MonsterScript에서 복사
         // ─────────────────────────────────────────────
         m_bulletParams.speed = CalculateParabolicSpeed();  // 자동 계산
         m_bulletParams.launchAngle = m_minLaunchAngle;     // 기본값 (Attack에서 자동 계산)
         m_bulletParams.ownGravity = m_ownGravity;          // 에디터 설정값 (고정)
+        m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -291,8 +293,8 @@ namespace game
         float bulletStartOffsetForward = 0.3f;
         float bulletStartOffsetY = 2.0f;
 
-        // 발사 가능 상태 (쿨타임 완료)
-        if (m_fireTimer <= 0.0f)
+        // 발사 가능 체크 (단발/연사 모두 지원)
+        if (CanFireBullet())
         {
             if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
             {
@@ -332,6 +334,7 @@ namespace game
                     m_bulletParams.ownGravity = m_ownGravity;         // 에디터 설정값 (고정)
                     m_bulletParams.minLaunchAngle = m_minLaunchAngle;
                     m_bulletParams.maxLaunchAngle = m_maxLaunchAngle;
+                    m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
                     
                     // 디버그: 거리, 발사각, 속도 확인
                     LOG_PRINT("[Attack] Distance: {:.2f}m, Angle: {:.1f}deg, Speed: {:.2f}m/s",
@@ -347,9 +350,17 @@ namespace game
                     m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
                 }
 
-                // 발사 쿨타임 리셋
-                m_fireTimer = m_fireRate;
+                // 연발 모드일 때만 타이머 리셋 (단발 모드는 타이머 무시)
+                if (!m_isDoSingleShot && m_fireRate > 0.0f)
+                {
+                    m_fireTimer = m_fireRate;
+                }
             }
+        }
+        else if (!m_isDoSingleShot && m_fireRate > 0.0f)
+        {
+            // 연발 모드: 타이머 감소
+            m_fireTimer -= deltaTime;
         }
 
         // 공격 완료 → 다음 프레임에 EngageMove로 복귀

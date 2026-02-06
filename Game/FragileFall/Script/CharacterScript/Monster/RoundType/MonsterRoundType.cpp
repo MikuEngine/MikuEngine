@@ -158,6 +158,7 @@ namespace game
         m_bulletParams.speed = m_bulletSpeed;
         m_bulletParams.lifetime = m_bulletLifetime;
         m_bulletParams.damage = m_attackDamage;
+        m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -469,8 +470,8 @@ namespace game
         // 공격 애니메이션 타이머 업데이트
         m_attackAnimationTimer += deltaTime;
 
-        // 발사 (쿨타임 완료 시)
-        if (m_fireTimer <= 0.0f)
+        // 발사 가능 체크 (단발/연사 모두 지원)
+        if (CanFireBullet())
         {
             if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
             {
@@ -484,8 +485,17 @@ namespace game
                     m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
                 }
 
-                m_fireTimer = m_fireRate;
+                // 연발 모드일 때만 타이머 리셋 (단발 모드는 타이머 무시)
+                if (!m_isDoSingleShot && m_fireRate > 0.0f)
+                {
+                    m_fireTimer = m_fireRate;
+                }
             }
+        }
+        else if (!m_isDoSingleShot && m_fireRate > 0.0f)
+        {
+            // 연발 모드: 타이머 감소
+            m_fireTimer -= deltaTime;
         }
 
         // 공격 완료 (애니메이션 타이머 기반)

@@ -670,6 +670,7 @@ namespace game
     {
         ImGui::Text("=== MonsterRoundGray ===");
         ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Tier: Gray");
+        ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "[No Bullet Attack - Contact Damage Only]");
         
         // 부모 클래스 OnGui 호출
         MonsterRoundType::OnGui();

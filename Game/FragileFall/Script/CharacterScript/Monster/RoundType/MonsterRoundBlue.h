@@ -118,8 +118,9 @@ namespace game
         // ─────────────────────────────────────────────────
         // 오버라이드 (Blue 전용 로직)
         // ─────────────────────────────────────────────────
-        void InitializeFSM() override;    // Blue 전용 FSM
-        void ProcessInput() override;     // 플레이어 감지 + 무시 타이머
+        void InitializeFSM() override;      // Blue 전용 FSM
+        void InitializeBullet() override;   // 총알 초기화 (Dead 시 발사용)
+        void ProcessInput() override;       // 플레이어 감지 + 무시 타이머
         
         // ─────────────────────────────────────────────────
         // 상태별 행동 오버라이드
@@ -175,6 +176,18 @@ namespace game
         void OnStateEntered(const std::string& state) override;
 
     public:
+        // ─────────────────────────────────────────────
+        // 총알 발사 없음 (돌진 공격만, 사망 시 3방향 발사)
+        // ─────────────────────────────────────────────
+        bool HasBulletAttack() const override { return false; }
+        
+        // ─────────────────────────────────────────────
+        // 컴포넌트 검증 (StaticMesh 사용, PathfindingAgent 필요)
+        // ─────────────────────────────────────────────
+        bool RequiresSkeletalAnimator() const override { return false; }
+        bool RequiresAnimFSM() const override { return false; }
+        bool RequiresPathfindingAgent() const override { return true; }
+        
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;

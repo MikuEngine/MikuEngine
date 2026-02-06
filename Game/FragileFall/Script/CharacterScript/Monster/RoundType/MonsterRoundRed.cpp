@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundRed.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -662,13 +662,14 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundRed::InitializeBullet()
     {
-        // Red: 기본 Linear 총알 (추후 특수 패턴으로 변경 가능)
+        // Red: 착지 시 4방향 Curved 발사 (angularSpeed=0, 직선)
         m_bulletParams.type = BulletType::Curve;
         m_bulletParams.speed = m_bulletSpeed;
         m_bulletParams.lifetime = m_bulletLifetime;
         m_bulletParams.damage = m_attackDamage;
-        m_bulletParams.angularSpeed = 0.0;      // 회전 속도 (rad/s)
-        m_bulletParams.radiusGrowthRate = m_bulletSpeed;  // 반지름 증가율 (m/s)
+        m_bulletParams.angularSpeed = 0.0f;                  // 회전 없음 (직선)
+        m_bulletParams.radiusGrowthRate = m_bulletSpeed;     // 반지름 증가율 (m/s)
+        m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용이지만 일관성 유지)
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1060,12 +1061,17 @@ namespace game
         // CurvedFireMonster 호출
         // - angularSpeed = 0: 나선 회전 없음 (직선)
         // - radiusGrowthRate = bulletSpeed: 4방향 직선 발사
+        // - m_bulletParams에 설정된 모든 값 전달 (speed, lifetime, damage 등)
         // ─────────────────────────────────────────────
+        
+        // InitializeBullet()에서 설정된 값 확인
+        // - angularSpeed = 0.0 (회전 없음)
+        // - radiusGrowthRate = m_bulletSpeed (직선 속도)
         m_bulletFactory->CurvedFireMonster(
             firePos,
-            m_bulletParams.angularSpeed,          
-            m_bulletParams.radiusGrowthRate,    // radiusGrowthRate = 총알 속도
-            m_bulletParams
+            m_bulletParams.angularSpeed,          // 0.0 (회전 없음)
+            m_bulletParams.radiusGrowthRate,      // m_bulletSpeed (직선 발사)
+            m_bulletParams                        // 모든 파라미터 전달
         );
     }
 
@@ -1259,5 +1265,12 @@ namespace game
         m_fallAtkTerminalFallSpeed = j.value("FallAtkTerminalFallSpeed", 50.0f);
         m_fallAtkLandDelay = j.value("FallAtkLandDelay", 1.0f);
         // AttackRange는 부모 클래스에서 로드됨 (공격점프 사거리로 사용)
+        
+        // ─────────────────────────────────────────────
+        // Red 전용: 단발 발사 모드 (착지 시 4방향 발사)
+        // - 기본값 true (부모에서 false로 로드되므로 덮어쓰기)
+        // ─────────────────────────────────────────────
+        m_isDoSingleShot = j.value("IsDoSingleShot", true);
+        m_fireRate = 0.0f;  // 단발 모드이므로 fireRate는 사용 안함
     }
 }

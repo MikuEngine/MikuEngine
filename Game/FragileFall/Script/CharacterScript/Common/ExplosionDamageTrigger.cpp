@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Common/ExplosionDamageTrigger.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -9,9 +9,10 @@
 
 namespace game
 {
-    void ExplosionDamageTrigger::Setup(float damage, float lifetime)
+    void ExplosionDamageTrigger::Setup(float damage, float explosionRadius, float lifetime)
     {
         m_damage = damage;
+        m_explosionRadius = explosionRadius;
         m_lifetime = lifetime;
     }
 
@@ -26,19 +27,16 @@ namespace game
         {
             m_sphereCollider->SetLayer(engine::PhysicsLayer::ExplosionTrigger);
             m_sphereCollider->SetIsTrigger(true);
-            m_sphereCollider->SetRadius(m_startRadius);
+            m_sphereCollider->SetRadius(m_explosionRadius);
         }
         
-        // 초기 스케일 설정
-        GetTransform()->SetLocalScale(engine::Vector3(m_startScale, m_startScale, m_startScale));
+        // 스케일 설정 (explosionRadius에 맞춰 즉시 적용)
+        GetTransform()->SetLocalScale(engine::Vector3(m_explosionRadius, m_explosionRadius, m_explosionRadius));
     }
 
     void ExplosionDamageTrigger::Update()
     {
         m_elapsedTime += engine::Time::DeltaTime();
-        
-        // 확장 애니메이션
-        UpdateExpansion();
         
         // 생존 시간 초과 시 파괴
         if (m_elapsedTime >= m_lifetime)
@@ -55,23 +53,9 @@ namespace game
         // 플레이어와 충돌 시 데미지 적용
         if (auto* playerScript = info.gameObject->GetComponent<PlayerControllerScript>())
         {
-            // TODO: 플레이어 OnHit() 구현 시 활성화
             playerScript->TakeDamage(m_damage);
             
             m_hasDamaged = true;
         }
-    }
-
-    void ExplosionDamageTrigger::UpdateExpansion()
-    {
-        if (m_elapsedTime >= m_expandDuration) return;
-        
-        // 0 ~ 1 보간 비율
-        float t = m_elapsedTime / m_expandDuration;
-        
-        // 스케일 보간
-        float currentScale = m_startScale + (m_endScale - m_startScale) * t;
-        GetTransform()->SetLocalScale(engine::Vector3(currentScale, currentScale, currentScale));
-              
     }
 }

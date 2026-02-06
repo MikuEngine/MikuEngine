@@ -2,12 +2,14 @@
 #include "MonsterRoundBlue.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include "Script/CharacterScript/Common/BulletFactory.h"
 
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Physics/PhysicsLayer.h>
 #include <Engine/Core/System/MyTime.h>
+
 
 namespace game
 {
@@ -205,6 +207,19 @@ namespace game
         AddFSMTransition("EngageArrival", "Dead", "Die", Trigger());
 
         m_logicFSM->InitializeCurrentState();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 총알 초기화 (Dead 시 ThreewayFire용)
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundBlue::InitializeBullet()
+    {
+        // Blue는 평소에 총알 발사 없음, Dead 시에만 ThreewayFire
+        m_bulletParams.type = BulletType::Linear;
+        m_bulletParams.speed = m_bulletSpeed;
+        m_bulletParams.lifetime = m_bulletLifetime;
+        m_bulletParams.damage = m_attackDamage;
+        m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용이지만 일관성 유지)
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -731,6 +746,18 @@ namespace game
                 m_logicFSM->SetParameter("TransitionComplete", false);
             }
         }
+        else if (state == "Dead")
+        {
+            // Dead 진입 시 3방향 총알 발사 (단발)
+            if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
+            {
+                engine::Vector3 direction = CalculateDirectionToPlayer();
+                engine::Vector3 firePosition = GetTransform()->GetWorldPosition();
+                
+                // 3방향 발사 (spreadAngle은 부모의 m_spreadAngle 사용)
+                m_bulletFactory->ThreewayFireMonster(firePosition, direction, m_spreadAngle, m_bulletParams);
+            }
+        }
         else if (state == "IdleMove")
         {
             // EngageCollision/Arrival에서 온 경우: m_currentAngle 유지 (이미 설정됨)
@@ -785,6 +812,8 @@ namespace game
     {
         ImGui::Text("=== MonsterRoundBlue ===");
         ImGui::TextColored(ImVec4(0.0f, 0.5f, 1.0f, 1.0f), "Tier: Blue (Curved + Dash)");
+        ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "[No Bullet Attack - Contact Damage Only]");
+        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Fires 3-way bullets on death)");
         
         MonsterRoundType::OnGui();
         
@@ -874,5 +903,12 @@ namespace game
         m_damageCooldown = j.value("DamageCooldown", 1.0f);
         m_engageMoveSpeed = j.value("EngageMoveSpeed", 10.0f);
         m_playerIgnoreDuration = j.value("PlayerIgnoreDuration", 1.0f);
+        
+        // ─────────────────────────────────────────────
+        // Blue 전용: 단발 발사 모드 (Dead 시 3방향 발사)
+        // - 기본값 true (부모에서 false로 로드되므로 덮어쓰기)
+        // ─────────────────────────────────────────────
+        m_isDoSingleShot = j.value("IsDoSingleShot", true);
+        m_fireRate = 0.0f;  // 단발 모드이므로 fireRate는 사용 안함
     }
 }

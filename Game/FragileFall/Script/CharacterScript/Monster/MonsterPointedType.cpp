@@ -187,12 +187,14 @@ namespace game
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 10;
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         case MonsterTier::Blue:
             m_bulletParams.type = BulletType::Linear;
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 10;
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
         case MonsterTier::Green:
             // ─────────────────────────────────────────────
@@ -205,6 +207,7 @@ namespace game
             m_bulletParams.speed = CalculateParabolicSpeed();  // 자동 계산
             m_bulletParams.launchAngle = m_minLaunchAngle;     // 기본값 (Attack에서 자동 계산)
             m_bulletParams.ownGravity = m_ownGravity;          // 에디터 설정값 (고정)
+            m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 15;
 			break;
@@ -213,6 +216,7 @@ namespace game
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 10;
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             m_AttackRange = 18.0f;
             m_detectionRange = 30.0f;
             break;
@@ -221,7 +225,8 @@ namespace game
             m_bulletParams.speed = m_bulletSpeed;
             m_bulletParams.lifetime = m_bulletLifetime;
             m_bulletParams.damage = 10;
-			break;
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
+            break;
         }
     }
 
@@ -733,7 +738,8 @@ namespace game
         // 공격 애니메이션 타이머 업데이트
         m_attackAnimationTimer += deltaTime;
 
-        if (m_fireTimer <= 0.0f)
+        // 발사 가능 체크 (단발/연사 모두 지원)
+        if (CanFireBullet())
         {
             if (m_bulletFactory && m_targetPlayer && m_targetPlayer->GetGameObject())
             {
@@ -783,6 +789,7 @@ namespace game
                     m_bulletParams.ownGravity = m_ownGravity;         // 에디터 설정값 (고정)
                     m_bulletParams.minLaunchAngle = m_minLaunchAngle;
                     m_bulletParams.maxLaunchAngle = m_maxLaunchAngle;
+                    m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
                     
                     // 실제 발사
                     m_bulletFactory->ParabolicFireMonster(bulletStartPos, direction, m_bulletParams);
@@ -802,30 +809,24 @@ namespace game
                 // ─────────────────────────────────────────────
                 // 뾰족 빨강
                 // 
-				// 공격 볌위에 들어오면 플레이어 주변에게 투사체를 난사 (8 ~ 15발)
+				// 공격 범위에 들어오면 플레이어 주변에게 투사체를 난사 (8 ~ 15발)
                 // ─────────────────────────────────────────────
                 case MonsterTier::Red:
                 {
-                    int projectileCount = 8 + (rand() % 8);
-                    constexpr float spreadAngle = DirectX::XMConvertToRadians(60.0f);
-
-                    for (int i = 0; i < projectileCount; ++i)
-                    {
-                        float randomOffset = ((static_cast<float>(rand()) / RAND_MAX) * spreadAngle) - (spreadAngle * 0.5f);
-                        DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY(randomOffset);
-                        engine::Vector3 fireDir = engine::Vector3::TransformNormal(direction, rot);
-                        fireDir.Normalize();
-
-                        BulletParams individualParams = m_bulletParams;
-
-                        float randomLifeMod = 0.1f + (static_cast<float>(rand()) / RAND_MAX) * 0.7f;
-                        individualParams.lifetime *= randomLifeMod;
-
-                        float randomSpeedMod = 0.6f + (static_cast<float>(rand()) / RAND_MAX) * 0.4f;
-                        individualParams.speed *= randomSpeedMod;
-
-                        m_bulletFactory->LinearFireMonster(firePosition, fireDir, individualParams);
-                    }
+                    int projectileCount = 8 + (rand() % 8);  // 8~15발 랜덤
+                    constexpr float spreadAngle = DirectX::XMConvertToRadians(60.0f);  // ±30도
+                    
+                    m_bulletFactory->BurstFireMonster(
+                        firePosition,
+                        direction,
+                        projectileCount,
+                        spreadAngle * 0.5f,  // 함수는 ±범위를 받으므로 절반 전달
+                        0.1f,                // lifetimeModMin
+                        0.8f,                // lifetimeModMax (0.1 + 0.7)
+                        0.6f,                // speedModMin
+                        1.0f,                // speedModMax (0.6 + 0.4)
+                        m_bulletParams
+                    );
                     break;
 				}
                 // ─────────────────────────────────────────────
@@ -845,12 +846,16 @@ namespace game
 
                 // 뾰족 타입은 StaticMesh를 사용하므로 공격 애니메이션 재생 불필요
 
-                // 발사 쿨타임 리셋
-                m_fireTimer = m_fireRate;
+                // 연발 모드일 때만 타이머 리셋 (단발 모드는 타이머 무시)
+                if (!m_isDoSingleShot && m_fireRate > 0.0f)
+                {
+                    m_fireTimer = m_fireRate;
+                }
             }
         }
-        else
+        else if (!m_isDoSingleShot && m_fireRate > 0.0f)
         {
+            // 연발 모드: 타이머 감소
             m_fireTimer -= deltaTime;
         }
           

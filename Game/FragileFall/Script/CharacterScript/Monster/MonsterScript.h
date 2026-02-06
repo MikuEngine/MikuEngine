@@ -99,7 +99,7 @@ namespace game
         // 이동/회전/발사 설정
         // ─────────────────────────────────────────────
         float m_rotationSpeed = 2.0f;        // 회전 속도 (rad/sec)
-        float m_fireRate = 3.0f;             // 발사 간격 (초)
+        float m_fireRate = 3.0f;             // 발사 간격 (초, -1.0 = 단발 모드)
         float m_bulletSpeed = 1.0f;          // 총알 속도
         float m_bulletSpeedOverrideMax = 1.0f;  //발사각 45도 이상에서, 설정된 총알속도를 대신할 보정(증가)값
         float m_bulletLifetime = 3.0f;       // 총알 수명 (초)
@@ -115,6 +115,18 @@ namespace game
         engine::Vector3 m_fireOffset{ 0.0f, 1.5f, 0.0f };  // 발사 위치 오프셋
 
         // ─────────────────────────────────────────────
+        // 통합된 총알 파라미터
+        // ─────────────────────────────────────────────
+        BulletParams m_bulletParams;         // 자식 클래스에서 InitializeBullet()로 초기화
+
+        // ─────────────────────────────────────────────
+        // 단발 발사 모드
+        // - true: 단발 (타이머 무시, 호출 시 즉시 발사)
+        // - false: 연발 또는 발사 없음 (타이머 기반)
+        // ─────────────────────────────────────────────
+        bool m_isDoSingleShot = false;       // 기본: 연발/발사없음 모드
+
+        // ─────────────────────────────────────────────
         // 포물선 총알 설정 (Parabolic 타입에서만 사용)
         // 
         // 새로운 로직:
@@ -126,6 +138,7 @@ namespace game
         float m_ownGravity = 9.8f;            // 중력 (m/s², 에디터 편집, 5~20)
         float m_minLaunchAngle = 20.0f;       // 최소 발사각 (도, 0~44)
         float m_maxLaunchAngle = 70.0f;       // 최대 발사각 (도, 45~89) - 이 각도에서 최대 사거리
+        float m_explosionRadius = 3.0f;       // 폭발 반경 (Parabolic 전용, 에디터 편집)
         
         // 중력 범위 상수
         static constexpr float kMinGravity = 5.0f;
@@ -231,6 +244,13 @@ namespace game
         // 공격 (자손 클래스에서 오버라이드)
         // ─────────────────────────────────────────────
         virtual void Attack(float deltaTime);
+        
+        // ─────────────────────────────────────────────
+        // 발사 가능 여부 체크 (단발/연사 모드 모두 지원)
+        // - m_fireRate < 0: 단발 모드 (항상 true 반환, 타이머 무시)
+        // - m_fireRate >= 0: 연사 모드 (타이머 체크)
+        // ─────────────────────────────────────────────
+        bool CanFireBullet() const;
 
         // ─────────────────────────────────────────────
         // 포물선 발사 파라미터 자동 계산 (Parabolic 타입용)
@@ -328,6 +348,23 @@ namespace game
         virtual bool IsParabolicBullet() const { return false; }
         
         // ─────────────────────────────────────────────
+        // 총알 발사 여부 (UI 분기용)
+        // - 자식 클래스에서 오버라이드하여 총알 발사 여부 반환
+        // - false 반환 시 OnGui()에서 총알 관련 UI 비활성화
+        // ─────────────────────────────────────────────
+        virtual bool HasBulletAttack() const { return true; }
+        
+        // ─────────────────────────────────────────────
+        // 컴포넌트 검증용 가상 함수 (자식 클래스에서 오버라이드)
+        // - 각 몬스터 타입별로 필요한 컴포넌트가 다름
+        // - RoundType은 StaticMesh를 사용하므로 SkeletalAnimator/AnimFSM 불필요
+        // ─────────────────────────────────────────────
+        virtual bool RequiresSkeletalAnimator() const { return true; }
+        virtual bool RequiresBulletFactory() const { return true; }
+        virtual bool RequiresAnimFSM() const { return true; }
+        virtual bool RequiresPathfindingAgent() const { return false; }  // 이동 몬스터만 필요
+        
+        // ─────────────────────────────────────────────
         // 업데이트 중지 시스템 (MonsterUpdateSwitch 연동)
         // - 팀원과 조율 후 Start()에서 호출 필요
         // ─────────────────────────────────────────────
@@ -339,6 +376,9 @@ namespace game
         AttackType GetAttackType() const { return m_attackType; }
         MonsterTier GetMonsterTier() const { return m_monsterTier; }
         const MonsterData& GetMonsterData() const { return m_monsterData; }
+        
+        // 총알 파라미터 접근자 (BulletFactory OnGui용)
+        const BulletParams& GetBulletParams() const { return m_bulletParams; }
         
         // 공통 스탯 접근자
         float GetHp() const { return m_Hp; }
