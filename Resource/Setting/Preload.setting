@@ -66,6 +66,13 @@
         { "Type": "StaticMesh", "Path": "Resource/Model/HighPolySphere.fbx" },
         { "Type": "StaticMesh", "Path": "Resource/Model/Floor.fbx" },
         { "Type": "StaticMesh", "Path": "Resource/Model/char.fbx" }
-    ]
+    ],
+		"10_PROTO_Tutorial": [
+		{ "Type": "StaticMesh", "Path": "Resource/Model/crystal/white/crystal_white.fbx" },
+		{ "Type": "SkeletalMesh", "Path": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_final.fbx" },
+		{ "Type": "Animation", "Path": "Resource/Animation/main_character_animation_zombie_shooting.fbx" },
+		{ "Type": "Animation", "Path": "Resource/Animation/main_character_animation_idle.fbx" },
+		{ "Type": "Animation", "Path": "Resource/Animation/main_character_animation_zombie_running.fbx" }
+	]
   }
 }
