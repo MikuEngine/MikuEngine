@@ -112,11 +112,28 @@ namespace engine
 
     void EditorManager::Update()
     {
+        // 단축키 'h' : 에디터 숨김 
         if (!ImGui::GetIO().WantCaptureKeyboard && Input::IsKeyReleased(Keys::H))
         {
             m_showEditorUI = !m_showEditorUI;
 
             m_selectedObject = nullptr;
+        }
+
+        // 단축키 'F5', 'F6' : Play, Pause
+        if (!ImGui::GetIO().WantCaptureKeyboard)
+        {
+            // F5: Play / Stop
+            if (Input::IsKeyReleased(Keys::F5))
+            {
+                TogglePlayStop();
+            }
+
+            // F6: Pause / Resume
+            if (Input::IsKeyReleased(Keys::F6))
+            {
+                TogglePauseResume();
+            }
         }
 
         if (m_editorState != EditorState::Play)
@@ -245,42 +262,16 @@ namespace engine
 
         if (m_editorState == EditorState::Edit)
         {
-            if (ImGui::Button("Play") || ImGui::IsKeyPressed(ImGuiKey_F5))
+            if (ImGui::Button("Play"))
             {
-                auto scene = SceneManager::Get().GetScene();
-                g_tempScene.clear();
-                scene->SaveToJson(g_tempScene);
-
-                scene->Clear(false);
-
-                scene->LoadFromJson(g_tempScene);
-
-                // 물리 씬 생성
-                scene->StartPhysics();
-
-                m_editorState = EditorState::Play;
-
-                m_selectedObject = nullptr;
+                TogglePlayStop();
             }
         }
         else
         {
-            if (ImGui::Button("Stop") || ImGui::IsKeyPressed(ImGuiKey_F5))
+            if (ImGui::Button("Stop"))
             {
-                auto scene = SceneManager::Get().GetScene();
-                
-                // 물리 씬 정리
-                scene->StopPhysics();
-                
-                if (scene && !g_tempScene.empty())
-                {
-                    scene->Clear(false);
-
-                    scene->LoadFromJson(g_tempScene);
-                }
-                m_editorState = EditorState::Edit;
-
-                m_selectedObject = nullptr;
+                TogglePlayStop();
             }
         }
 
@@ -288,16 +279,16 @@ namespace engine
 
         if (m_editorState == EditorState::Pause)
         {
-            if (ImGui::Button("Resume") || ImGui::IsKeyPressed(ImGuiKey_F6))
+            if (ImGui::Button("Resume"))
             {
-                m_editorState = EditorState::Play;
+                TogglePauseResume();
             }
         }
         else if (m_editorState == EditorState::Play)
         {
-            if (ImGui::Button("Pause") || ImGui::IsKeyPressed(ImGuiKey_F6))
+            if (ImGui::Button("Pause"))
             {
-                m_editorState = EditorState::Pause;
+                TogglePauseResume();
             }
         }
 
@@ -1356,6 +1347,49 @@ namespace engine
         }
 
         ImGui::End();
+    }
+
+    void EditorManager::TogglePlayStop()
+    {
+        auto scene = SceneManager::Get().GetScene();
+        if (!scene) return;
+
+        if (m_editorState == EditorState::Edit)
+        {
+            // Play
+            g_tempScene.clear();
+            scene->SaveToJson(g_tempScene);
+            scene->Clear(false);
+            scene->LoadFromJson(g_tempScene);
+            // 물리 씬 생성
+            scene->StartPhysics();
+            m_editorState = EditorState::Play;
+        }
+        else
+        {
+            // Stop
+            // 물리 씬 정리
+            scene->StopPhysics();
+            if (!g_tempScene.empty())
+            {
+                scene->Clear(false);
+                scene->LoadFromJson(g_tempScene);
+            }
+            m_editorState = EditorState::Edit;
+        }
+        m_selectedObject = nullptr;
+    }
+
+    void EditorManager::TogglePauseResume()
+    {
+        if (m_editorState == EditorState::Play)
+        {
+            m_editorState = EditorState::Pause;
+        }   
+        else if (m_editorState == EditorState::Pause)
+        {
+            m_editorState = EditorState::Play;
+        }
     }
 
     void EditorManager::DrawEditorGrid()
