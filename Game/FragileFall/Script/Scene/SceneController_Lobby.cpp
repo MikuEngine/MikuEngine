@@ -21,6 +21,8 @@
 
 #include "Script/LobbyInteraction.h"
 
+#include "Scene/GameScene.h"
+
 namespace game
 {
     namespace
@@ -225,8 +227,7 @@ namespace game
             if (t >= 1.0f)
             {
                 m_isPlayerMove = false;
-                game::LoadingScreenDrawer::OnSceneTransitionBegin();
-                engine::SceneManager::Get().ChangeScene("Stage1_Prototype");
+                GameScene::Change(SceneID::Play);
             }
         }
     }
@@ -332,8 +333,7 @@ namespace game
 
     void SceneController_Lobby::BackToMain()
     {
-        game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("01_READY_Main");
+        GameScene::Change(SceneID::Main);
     }
 
     void SceneController_Lobby::BackToHub()
