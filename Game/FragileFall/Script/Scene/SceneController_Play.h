@@ -59,6 +59,9 @@ namespace game
         bool m_isDead = false;
 
     private:
+        std::string msgPath = "Resource/Data/Message/MessageTable.csv";
+
+    private:
         // GameObject
         engine::GameObject* m_menuPopUp = nullptr;
         engine::GameObject* m_optionPopUp = nullptr;

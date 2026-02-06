@@ -72,6 +72,7 @@
     <ClCompile Include="Script\ParticleAttachment.cpp" />
     <ClCompile Include="Script\LobbyInteraction.cpp" />
     <ClCompile Include="Script\DoorTriggerScript.cpp" />
+    <ClCompile Include="Manager\MessageCatalog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -150,5 +151,6 @@
     <ClInclude Include="Script\LobbyInteraction.h" />
     <ClInclude Include="Script\Interface\IDamageable.h" />
     <ClInclude Include="Script\DoorTriggerScript.h" />
+    <ClInclude Include="Manager\MessageCatalog.h" />
   </ItemGroup>
 </Project>

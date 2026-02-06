@@ -160,6 +160,7 @@
     <ClCompile Include="Manager\LoadingScreenDrawer.cpp" />
     <ClCompile Include="Manager\PlayerTemperManager.cpp" />
     <ClCompile Include="Manager\TimeScaler.cpp" />
+    <ClCompile Include="Manager\MessageCatalog.cpp" />
     <ClCompile Include="Script\AimModeController.cpp" />
     <ClCompile Include="Script\AimPointerMeshScript.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\BossPatternBase.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="Manager\LoadingScreenDrawer.h" />
     <ClInclude Include="Manager\PlayerTemperManager.h" />
     <ClInclude Include="Manager\TimeScaler.h" />
+    <ClInclude Include="Manager\MessageCatalog.h" />
     <ClInclude Include="Script\AimModeController.h" />
     <ClInclude Include="Script\AimPointerMeshScript.h" />
     <ClInclude Include="Script\Boss\BossPattern\BossPatternBase.h" />
