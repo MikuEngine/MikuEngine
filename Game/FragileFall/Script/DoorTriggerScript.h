@@ -17,9 +17,11 @@ namespace game
         engine::Ptr<engine::GameObject> m_doorNextObject = nullptr;
         engine::Vector3 m_doorPosition = { 0, 0, 0 };
 
+        engine::EventCallBack m_onTriggered = nullptr;
+
     public:
         void Awake() override;
-        //void Start() override;
+        void Start() override;
         void Update() override;
 
 
@@ -27,8 +29,10 @@ namespace game
 		void SetDoorObjectName(const std::string& doorName) { m_doorObjectName = doorName; }
 		void SetNextSceneName(const std::string& sceneName) { m_nextSceneName = sceneName; }
 
+        void SetEventCallBack(engine::EventCallBack callback) { m_onTriggered = callback; }
 
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
+        //void OnLevelLoaded() override;
 
     public:
         void OnGui() override;

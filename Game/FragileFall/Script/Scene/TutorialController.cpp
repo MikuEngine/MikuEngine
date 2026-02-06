@@ -3,12 +3,16 @@
 #include "Script/UI/UIMessageQueue.h"
 
 #include <Framework/Object/GameObject/GameObject.h>
+#include <Framework/Scene/SceneManager.h>
+#include <Framework/Scene/Scene.h>
 #include <Core/System/Input.h>
 
 #include "Script/DoorTriggerScript.h"
 
 namespace game
 {
+    static engine::Ptr<engine::GameObject> s_tutorialController = nullptr;
+
     namespace
     {
         const std::vector<TutorialStep> g_steps = {
@@ -47,32 +51,108 @@ namespace game
             m_queue = go->GetComponent<UIMessageQueue>();
 
 
-        // next door
-        if (!m_nextDoorObjectName.empty())
-        {
-            m_nextDoorObject = engine::GameObject::Find(m_nextDoorObjectName);
-            if (m_nextDoorObject)
+        // DoorTriggerScript의 EventCallBack 호출 부분
+        auto onLoad = [this]() {
+            std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
+
+            if (currentScene == "Prototype_Tutorial")
             {
-			    m_doorPosition = m_nextDoorObject->GetTransform()->GetWorldPosition();
+                m_stepIndex++;
+                m_pageIndex = 0;
+
+                RefreshStepContext(m_stepIndex);
+                
             }
-        }
+        };
+
+        engine::SceneManager::Get().RegisterOnSceneLoaded(onLoad);
     }
 
     void TutorialController::Start()
     {
+        if (s_tutorialController == nullptr)
+        {
+            s_tutorialController = GetGameObject();
+
+            GetGameObject()->DontDestroyOnLoad();
+        }
+        else
+        {
+            GetGameObject()->Destroy();
+        }
+
+
         ShowPage();
     }
 
     void TutorialController::Update()
     {
         // 단축키
-        if ( engine::Input::IsKeyPressed(engine::Keys::Space))
+        if ( engine::Input::IsKeyPressed(engine::Keys::F10))
         {
             Next();
         }
         else if (engine::Input::IsKeyPressed(engine::Keys::F9))
         {
             Prev();
+        }
+
+        if (m_isWaitingForDoor)
+        {
+            m_doorActivateTimer -= engine::Time::FixedDeltaTime();
+
+            if (m_doorActivateTimer <= 0.0f)
+            {
+                if (m_nextDoorObject)
+                {
+                    m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
+                }
+                m_isWaitingForDoor = false;
+            }
+        }
+    }
+
+    void TutorialController::InitializeStep()
+    {
+        m_doorActivateTimer = 0.0f;
+        m_isWaitingForDoor = false;
+        
+        m_nextDoorObject = nullptr;
+
+        /*/
+        if (auto* go = engine::GameObject::Find("Canvas_Message"))
+        {
+            m_queue = go->GetComponent<UIMessageQueue>();
+        }
+
+        if (m_queue)
+        {
+            m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.0f);
+        }
+        //*/
+    }
+
+    void TutorialController::RefreshStepContext(int index)
+    {
+        InitializeStep();
+
+        switch (index)
+        {
+        case 0:
+            if (!m_nextDoorObjectName.empty())
+            {
+                m_nextDoorObject = engine::GameObject::Find(m_nextDoorObjectName);
+                if (m_nextDoorObject)
+                {
+                    m_doorPosition = m_nextDoorObject->GetTransform()->GetWorldPosition();
+                }
+            }
+            m_isWaitingForDoor = true;
+            m_doorActivateTimer = 5.0f;
+            break;
+        case 1:
+
+            break;
         }
     }
 
@@ -85,19 +165,13 @@ namespace game
         if (m_pageIndex < 0 || m_pageIndex >= (int)step.pages.size()) return;
 
         m_queue->PushMessage(UIMessageChannel::Tutorial, step.pages[m_pageIndex]);
+
+        RefreshStepContext(m_stepIndex);
     }
 
     void TutorialController::Next()
     {
         if (!m_queue) return;
-
-        if (m_stepIndex == 0)
-        {
-            if (m_nextDoorObject)
-            {
-                m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
-            }
-        }
 
         const auto& step = g_steps[m_stepIndex];
 
@@ -119,6 +193,8 @@ namespace game
         
         m_stepIndex++;
         m_pageIndex = 0;
+
+        RefreshStepContext(m_stepIndex);
 
         const auto& nextStep = g_steps[m_stepIndex];
         m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.2f);

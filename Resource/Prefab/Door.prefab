@@ -64,8 +64,7 @@
                 {
                     "Type": "DoorTriggerScript",
                     "Active": true,
-                    "DoorObjectName": "Door",
-                    "NextSceneName": "z_TutorialLobby"
+                    "NextSceneName": "Prototype_Tutorial"
                 },
                 {
                     "Type": "SphereCollider",
