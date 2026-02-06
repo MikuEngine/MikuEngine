@@ -67,6 +67,12 @@ namespace game
 	{
 		m_elapsedTime = 0.0f;
 
+		// ─────────────────────────────────────────────
+		// 총알 스케일 적용 (균등 스케일)
+		// - BulletMonster Prefab들도 syncWithTransform=true이므로 Collider 자동 스케일
+		// ─────────────────────────────────────────────
+		GetTransform()->SetLocalScale(engine::Vector3(m_params.scale, m_params.scale, m_params.scale));
+
 		auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>();
 		if (!rb) return;
 

@@ -67,7 +67,7 @@ namespace game
         float m_baseAtkSpeed = 1.0f;            // 기본 공격속도 스케일 (1.0 = 초당 1.4발)
         float m_baseBulletLifetime = 3.0f;      // 기본 총알 수명 (초)
         float m_baseBulletRange = 50.0f;        // 기본 총알 사거리 (BulletPlayer 전용)
-        float m_baseBulletSizeScale = 1.0f;     // 기본 총알 스케일
+        float m_baseBulletSizeScale = 0.7f;     // 기본 총알 스케일 (Prefab 기본 1.0 × 0.7 = 0.7)
         float m_baseBulletSpeed = 1.0f;         // 기본 총알 속도
 
         // ═══════════════════════════════════════════════════════════════
@@ -79,7 +79,7 @@ namespace game
         float m_fireRate = 0.7f;                // 발사 간격 (초). m_AtkSpeed로부터 계산됨. 0.7 / m_AtkSpeed
         float m_bulletLifetime = 3.0f;          // 실제 총알 수명 (초) - BulletPlayer는 사용 안 함
         float m_bulletRange = 50.0f;            // 실제 총알 사거리 (BulletPlayer 전용)
-        float m_bulletSizeScale = 1.0f;         // 실제 총알 스케일
+        float m_bulletSizeScale = 0.7f;         // 실제 총알 스케일
         float m_bulletSpeed = 1.0f;             // 실제 총알 속도
         bool m_isBulletDouble = false;          // 더블샷 (PlayerTemperManager가 설정)
 

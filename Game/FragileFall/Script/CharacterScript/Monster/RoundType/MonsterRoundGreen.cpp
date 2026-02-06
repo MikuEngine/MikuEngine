@@ -221,6 +221,7 @@ namespace game
         m_bulletParams.speed = CalculateParabolicSpeed();  // 자동 계산
         m_bulletParams.launchAngle = m_minLaunchAngle;     // 기본값 (Attack에서 자동 계산)
         m_bulletParams.ownGravity = m_ownGravity;          // 에디터 설정값 (고정)
+        m_bulletParams.scale = 1.0f;
         m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
     }
 

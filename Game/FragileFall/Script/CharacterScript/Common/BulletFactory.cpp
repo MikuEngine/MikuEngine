@@ -32,9 +32,10 @@ namespace game
 
 		// ─────────────────────────────────────────────
 		// 6. BulletPlayer 컴포넌트 추가 및 설정
+		// - scale 전달 (Start()에서 Transform + Collider 스케일 적용)
 		// ─────────────────────────────────────────────
 		auto* bullet = go->GetComponent<BulletPlayer>();
-		bullet->Setup(std::move(movement), params.lifetime, params.damage, params.range);
+		bullet->Setup(std::move(movement), params.lifetime, params.damage, params.range, params.scale);
 
 		// effect
 		auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");

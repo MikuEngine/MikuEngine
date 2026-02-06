@@ -158,6 +158,7 @@ namespace game
         m_bulletParams.speed = m_bulletSpeed;
         m_bulletParams.lifetime = m_bulletLifetime;
         m_bulletParams.damage = m_attackDamage;
+        // scale은 Load()에서 로드된 값 유지 (기본값 1.0)
         m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사
     }
 

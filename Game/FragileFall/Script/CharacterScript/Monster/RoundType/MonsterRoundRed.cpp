@@ -669,6 +669,7 @@ namespace game
         m_bulletParams.damage = m_attackDamage;
         m_bulletParams.angularSpeed = 0.0f;                  // 회전 없음 (직선)
         m_bulletParams.radiusGrowthRate = m_bulletSpeed;     // 반지름 증가율 (m/s)
+        m_bulletParams.scale = 1.0f;
         m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용이지만 일관성 유지)
     }
 
