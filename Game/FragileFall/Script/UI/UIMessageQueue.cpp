@@ -68,8 +68,6 @@ namespace game
             return;
         }
 
-        LOG_PRINT("[Msg] text={}", text);
-
         PushMessage(ch, text, iconKey);
     }
 

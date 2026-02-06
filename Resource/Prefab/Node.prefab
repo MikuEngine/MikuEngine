@@ -65,9 +65,10 @@
                     "Parent": [],
                     "Name": "",
                     "Desc": "",
-                    "Ruby": 100,
-                    "Sapphire": 100,
-                    "Emerald": 100
+                    "Effects": [],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
                 },
                 {
                     "Type": "UIImage",
@@ -76,6 +77,25 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
                     "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",

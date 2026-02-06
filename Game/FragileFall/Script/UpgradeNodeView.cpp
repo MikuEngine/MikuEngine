@@ -161,7 +161,7 @@ namespace game
 
         static const char* opNames[] = { "Add", "Mul", "Bool" };
         static const char* statNames[] = {
-            "AtkDmg", "AtkSpeed", "BulletLifetime", "BulletSizeScale", "BulletSpeed", "BulletDouble"
+            "AtkDmg", "AtkSpeed", "BulletRange", "BulletSizeScale", "BulletSpeed", "BulletDouble"
         };
 
         // (선택) 효과 하나 추가

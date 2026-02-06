@@ -28,7 +28,7 @@ namespace game
         {
             engine::DebugRenderer::Get().AddDebugCircle(
                 m_doorPosition,
-                10.0f,
+                6.0f,
                 engine::Vector3::UnitY,
                 DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.2f),
                 32
