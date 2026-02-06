@@ -83,6 +83,9 @@ namespace engine
         void DrawPrefabManager();
         void DrawGizmoToolbar();
 
+        void TogglePlayStop();
+        void TogglePauseResume();
+
         void ValidateSettingsList();
         void RefreshSceneFileCache();
         bool IsSceneDirty();
