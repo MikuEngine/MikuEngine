@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "WinApp.h"
 
 #include <thread>
@@ -393,7 +393,6 @@ namespace engine
                 }
             }
             SceneManager::Get().ProcessPendingAdds(false);
-            SceneManager::Get().ProcessPendingKills();
             break;
 
         case EditorState::Play:
