@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include <Framework/Object/Ptr.h>
 #include "MonsterPartyGenerator.h"
 #include <string>
 #include <vector>
@@ -28,6 +29,12 @@ namespace game
         std::vector<size_t> m_zoneStartIndex;          // [0, 3, 7, 10] — 구역 k = [m_zoneStartIndex[k], m_zoneStartIndex[k+1])
         size_t m_nextZoneIndex = 0;                   // 다음에 시도할 구역 (순환)
 
+        /// StageManager 생존 체크용. SpawnParty() 시작 시 clear, SpawnOne() 성공 시 push.
+        std::vector<engine::Ptr<engine::GameObject>> m_spawnedMonsters;
+
+        /// true면 Start()에서 스폰하지 않음. StageManager가 SetStageParams() 후 SpawnNow() 호출.
+        bool m_managedByStageManager = false;
+
     public:
         void Start() override;
 
@@ -41,6 +48,16 @@ namespace game
 
         // ─── 3단계: 진입점 ───
         void SpawnParty(const std::vector<int>& partyIDs);
+
+        /// StageManager 생존 체크용. SpawnParty()/SpawnNow() 직후 호출해 Ptr 목록 복사.
+        const std::vector<engine::Ptr<engine::GameObject>>& GetSpawnedMonsters() const { return m_spawnedMonsters; }
+
+        void SetManagedByStageManager(bool managed) { m_managedByStageManager = managed; }
+
+        void SetStageParams(int targetScore, int minCount, int maxCount, int anchorMonsterID);
+
+        /// StageManager가 SetStageParams() 후 호출. Start()와 동일 스폰 로직(DB 로드, Generator 설정, GenerateParty, SpawnParty).
+        void SpawnNow();
 
     public:
         void OnGui() override;

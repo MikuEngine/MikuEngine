@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "SceneController_Lobby.h"
 
 #include <Core/App/AppContext.h>
@@ -15,6 +15,7 @@
 #include "Manager/UpgradeProgressManager.h"
 #include "Script/UpgradeController.h"
 #include <Manager/LoadingScreenDrawer.h>
+#include "Manager/StageManager.h"
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 
 #include "Manager/TimeScaler.h"
@@ -225,6 +226,7 @@ namespace game
             if (t >= 1.0f)
             {
                 m_isPlayerMove = false;
+                game::StageManager::Get().ResetToStage1();
                 game::LoadingScreenDrawer::OnSceneTransitionBegin();
                 engine::SceneManager::Get().ChangeScene("Stage1_Prototype");
             }

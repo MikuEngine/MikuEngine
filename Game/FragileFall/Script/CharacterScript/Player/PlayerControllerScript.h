@@ -96,6 +96,13 @@ namespace game
         float m_PlayerCurrentHP = 100.0f;
 
         // ─────────────────────────────────────────────
+        // 프레자일 게이지 (몬스터가 있을 때만 상승, StageManager 연동)
+        // ─────────────────────────────────────────────
+        float m_fragileGaugeCurrent = 0.0f;
+        float m_fragileGaugeMax = 100.0f;           // GUI·직렬화로 조정
+        float m_fragileGaugeRisePerSecond = 15.0f;  // 몬스터 있을 때 초당 상승량
+
+        // ─────────────────────────────────────────────
         // 이동 설정
         // ─────────────────────────────────────────────
         float m_moveSpeed = 13.0f;
@@ -302,6 +309,10 @@ namespace game
         
         // 데미지 처리
         void TakeDamage(float damage);
+
+        // 프레자일 게이지 (몬스터 있을 때 상승, UI/직렬화용)
+        float GetFragileGaugeCurrent() const { return m_fragileGaugeCurrent; }
+        float GetFragileGaugeMax() const { return m_fragileGaugeMax; }
 
         // ─────────────────────────────────────────────
         // 발사 시스템 접근자

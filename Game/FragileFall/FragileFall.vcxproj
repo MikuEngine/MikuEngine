@@ -158,6 +158,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Manager\LoadingScreenDrawer.cpp" />
+    <ClCompile Include="Manager\StageManager.cpp" />
     <ClCompile Include="Manager\PlayerTemperManager.cpp" />
     <ClCompile Include="Manager\TimeScaler.cpp" />
     <ClCompile Include="Manager\MessageCatalog.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
     <ClInclude Include="Manager\LoadingScreenDrawer.h" />
+    <ClInclude Include="Manager\StageManager.h" />
     <ClInclude Include="Manager\PlayerTemperManager.h" />
     <ClInclude Include="Manager\TimeScaler.h" />
     <ClInclude Include="Manager\MessageCatalog.h" />

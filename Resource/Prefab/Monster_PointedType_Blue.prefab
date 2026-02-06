@@ -92,8 +92,9 @@
                     "SpreadAngle": 0.9399999976158142,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
-                    "ParabolicSpeed": 15.0,
                     "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
                     "AttackAnimationDuration": 1.100000023841858,
                     "FleeRange": 10.0,
                     "SafeRange": 14.0,
@@ -154,7 +155,7 @@
                     "Animations": [
                         {
                             "Name": "Fire",
-                            "Path": "Resource/Animation/main_character_animation_shooting.fbx",
+                            "Path": "Resource/Animation/main_character_animation_zombie_shooting.fbx",
                             "Notifies": []
                         },
                         {
@@ -164,7 +165,7 @@
                         },
                         {
                             "Name": "WalkForward",
-                            "Path": "Resource/Animation/main_character_animation_running.fbx",
+                            "Path": "Resource/Animation/main_character_animation_zombie_running.fbx",
                             "Notifies": []
                         }
                     ],
