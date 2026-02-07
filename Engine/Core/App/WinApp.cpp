@@ -374,32 +374,39 @@ namespace engine
     {
         Profiling::UpdateFPS(false);
         Time::Update();
+        Input::Update();
 
         // 에디터 업데이트
 #ifdef _DEBUG
         EditorManager::Get().Update();
+        EditorState currentState = EditorManager::Get().GetEditorState();
+#else
+        EditorState currentState = EditorState::Play;
 #endif
 
         bool shouldLock = false;
         bool shouldHideCursor = false;
-
-#ifdef _DEBUG
-        // 이제 위에서 Update를 했으므로 현재 프레임의 변경된 상태가 바로 반영됨
-        if (EditorManager::Get().GetEditorState() == EditorState::Play)
+        if (GetActiveWindow() == m_hWnd)
         {
-            if (GetActiveWindow() == m_hWnd)
+            if (currentState == EditorState::Play)
             {
+                // 게임 플레이 중에는 무조건 락
                 shouldLock = true;
                 shouldHideCursor = true;
             }
-        }
-#else
-        if (GetActiveWindow() == m_hWnd)
-        {
-            shouldLock = true;
-            shouldHideCursor = true;
-        }
+#ifdef _DEBUG
+            else if (currentState == EditorState::Edit || currentState == EditorState::Pause)
+            {
+                // 에디터 모드, 일시정지일 때: 우클릭 중이면 카메라 회전을 위해 마우스를 가두고 숨김
+                if (Input::IsMouseHeld(Buttons::RIGHT))
+                {
+                    shouldLock = true;
+                    shouldHideCursor = true;
+                }
+                // 그 외(ImGui 조작 등)에는 마우스를 풀어줌
+            }
 #endif
+        }
 
         // 확정된 상태로 LockMode와 Input 업데이트를 수행
         Input::SetLockMode(shouldLock);
@@ -417,8 +424,6 @@ namespace engine
             else if (!shouldHideCursor && !isCurrentlyShowing)
                 ::ShowCursor(true);
         }
-        
-        Input::Update();
 
 #ifdef _DEBUG
         switch (EditorManager::Get().GetEditorState())
