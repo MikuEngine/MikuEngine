@@ -65,6 +65,7 @@ imgui.ini
 *.cso
 IBLBaker.zip
 .cursor
+/desktop.ini
 
 # CustomSetting
 /Resource/Setting/ProjectSettings.json
