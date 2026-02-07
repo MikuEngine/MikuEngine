@@ -54,6 +54,7 @@ namespace engine
 
         bool m_shouldOpenUnsavedPopup = false;
         bool m_showEditorUI = true;
+        bool m_pendingMouseSync = false;
 
         // hierarchy search
         char m_hierarchySearchFilter[256] = "";

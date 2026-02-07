@@ -374,14 +374,19 @@ namespace engine
     {
         Profiling::UpdateFPS(false);
         Time::Update();
+
+        // 에디터 업데이트
+#ifdef _DEBUG
+        EditorManager::Get().Update();
+#endif
+
         bool shouldLock = false;
         bool shouldHideCursor = false;
-        
+
 #ifdef _DEBUG
-        // 에디터 내에서 'Play' 버튼을 눌러 게임이 돌아가는 중일 때만 Lock
+        // 이제 위에서 Update를 했으므로 현재 프레임의 변경된 상태가 바로 반영됨
         if (EditorManager::Get().GetEditorState() == EditorState::Play)
         {
-            // 추가로 현재 윈도우가 포커스를 가지고 있어야 함
             if (GetActiveWindow() == m_hWnd)
             {
                 shouldLock = true;
@@ -389,13 +394,14 @@ namespace engine
             }
         }
 #else
-        // 릴리즈 빌드에서는 항상 게임 플레이 중이므로 포커스만 체크
         if (GetActiveWindow() == m_hWnd)
         {
             shouldLock = true;
             shouldHideCursor = true;
         }
 #endif
+
+        // 2. 확정된 상태로 LockMode와 Input 업데이트를 수행합니다.
         Input::SetLockMode(shouldLock);
 
         CURSORINFO ci = { sizeof(CURSORINFO) };
@@ -415,7 +421,7 @@ namespace engine
         Input::Update();
 
 #ifdef _DEBUG
-        EditorManager::Get().Update();
+        //EditorManager::Get().Update();
 
         switch (EditorManager::Get().GetEditorState())
         {

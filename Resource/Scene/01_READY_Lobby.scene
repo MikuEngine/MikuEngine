@@ -7682,7 +7682,7 @@
             "ID": 93,
             "ParentID": 92,
             "Name": "AttackNodes",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -9861,7 +9861,7 @@
             "ID": 109,
             "ParentID": 92,
             "Name": "SkillNodes",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -10761,7 +10761,7 @@
             "ID": 116,
             "ParentID": 92,
             "Name": "SurviveNodes",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
