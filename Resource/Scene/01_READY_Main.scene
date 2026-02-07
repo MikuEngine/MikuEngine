@@ -3662,7 +3662,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -220.0
+                        "y": -230.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -3686,7 +3686,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "크레딧\n",
-                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,

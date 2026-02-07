@@ -58,7 +58,7 @@ namespace game
         //StageManager::Get().BeginStage();
 
         auto* go = engine::GameObject::Find("Player");
-        m_aimMode = go->GetComponent<AimModeController>();
+        if (go) m_aimMode = go->GetComponent<AimModeController>();
 
         g_msg.Load("Resource/Data/Message/MessageTable.csv");
 
@@ -92,7 +92,7 @@ namespace game
             TimeScaler::PlayWorld();
 
         auto* go = engine::GameObject::Find("Player");
-        m_aimMode = go->GetComponent<AimModeController>();
+        if (go) m_aimMode = go->GetComponent<AimModeController>();
 
         m_menuPopUp = engine::GameObject::Find("Panel_Menu");
         if (m_menuPopUp) m_menuPopUp->SetActive(false);
@@ -204,7 +204,7 @@ namespace game
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
 
-        m_aimMode->SetPaused(shouldStop);
+        if (m_aimMode) m_aimMode->SetPaused(shouldStop);
 
         if (m_menuPopUp)
         {
@@ -337,7 +337,7 @@ namespace game
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
 
-        m_aimMode->SetPaused(shouldStop);
+        if (m_aimMode) m_aimMode->SetPaused(shouldStop);
 
         if (m_optionPopUp)
         {
