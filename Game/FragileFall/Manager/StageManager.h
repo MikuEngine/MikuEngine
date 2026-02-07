@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace engine
 {
@@ -20,6 +20,9 @@ namespace game
         // 런타임 상태
         int m_currentStage = 1;
         std::vector<engine::Ptr<engine::GameObject>> m_spawnedMonsters;
+        int m_runRuby = 0;
+        int m_runSapphire = 0;
+        int m_runEmerald = 0;
         bool m_cleared = false;
         engine::Ptr<engine::GameObject> m_currentMapEnvRoot;
         engine::Ptr<engine::GameObject> m_currentSpawnerRoot;
@@ -31,7 +34,11 @@ namespace game
     public:
 
         /// 로비에서 플레이 진입 시 호출. m_currentStage = 1 후 씬 전환은 호출 측에서.
-        void ResetToStage1() { m_currentStage = 1; }
+        void ResetToStage1()
+        {
+            m_currentStage = 1;
+            m_runRuby = m_runSapphire = m_runEmerald = 0;
+        }
 
         /// 플레이 씬에서 스테이지 시작 시 호출 (예: SceneController_Play::Awake).
         /// CSV에서 맵 환경 프리팹 조회, 난이도 세팅, 스포너+장애물 1종 랜덤 → Instantiate → 스포너 설정.
@@ -49,6 +56,9 @@ namespace game
 
         /// 현재 스테이지 번호 (1부터, 10·20·30… = 보스).
         int GetCurrentStage() const { return m_currentStage; }
+
+        /// 이번 플레이 런에서 번 재화 추가. (몬스터 드롭·클리어 보상 등에서 호출)
+        void AddRunCurrency(int ruby, int sapphire, int emerald);
 
         /// 탈출구 접촉 시. m_currentStage=1 리셋 후 로비 씬으로 전환.
         void RequestGoToLobby();

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "UpgradeProgressManager.h"
 #include <Script/UpgradeController.h>
 
@@ -49,5 +49,13 @@ namespace game
 	bool UpgradeProgressManager::HasProgress()
 	{
 		return s_has;
+	}
+
+	void UpgradeProgressManager::AddCurrency(int ruby, int sapphire, int emerald)
+	{
+		if (ruby > 0) s_ruby += ruby;
+		if (sapphire > 0) s_sapphire += sapphire;
+		if (emerald > 0) s_emerald += emerald;
+		s_has = true;
 	}
 }

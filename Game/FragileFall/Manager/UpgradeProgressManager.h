@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <unordered_set>
 #include <cstdint>
 
@@ -15,6 +15,9 @@ namespace game
 		static bool LoadProgress(UpgradeController& uc);
 
 		static bool HasProgress();
+
+		/// 플레이 런에서 번 재화를 정적 저장소에 더함. (복귀 시 StageManager에서 호출)
+		static void AddCurrency(int ruby, int sapphire, int emerald);
 
 	private:
 		static bool s_has;

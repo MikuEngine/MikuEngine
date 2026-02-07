@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -10,6 +10,7 @@
 #include <Engine/Common/Utility/CSVReader.h>
 
 #include "LoadingScreenDrawer.h"
+#include "UpgradeProgressManager.h"
 #include "Script/MonsterGenerator/MonsterSpawner.h"
 #include "Script/DoorTriggerScript.h"
 
@@ -92,6 +93,13 @@ namespace game
     {
         m_spawnedMonsters.clear();
         m_cleared = false;
+    }
+
+    void StageManager::AddRunCurrency(int ruby, int sapphire, int emerald)
+    {
+        if (ruby > 0) m_runRuby += ruby;
+        if (sapphire > 0) m_runSapphire += sapphire;
+        if (emerald > 0) m_runEmerald += emerald;
     }
 
     bool StageManager::GetMapEnvPrefabNameForStage(int stageIndex, std::string& outName) const
@@ -212,6 +220,8 @@ namespace game
 
     void StageManager::RequestGoToLobby()
     {
+        UpgradeProgressManager::AddCurrency(m_runRuby, m_runSapphire, m_runEmerald);
+        m_runRuby = m_runSapphire = m_runEmerald = 0;
         m_currentStage = 1;
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
         engine::SceneManager::Get().ChangeScene("01_READY_Lobby");
