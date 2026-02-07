@@ -114,6 +114,18 @@ namespace engine
 
     void EditorManager::Update()
     {
+        if (m_pendingMouseSync)
+        {
+            m_pendingMouseSync = false;
+
+            // 여기서 “현재 OS 커서 위치 -> g_virtualMousePos” 1회 동기화
+            Input::SyncVirtualMouseFromOS();
+
+            // 만약 Play 진입에서 상대모드(락)로 쓸 거면,
+            // Sync 이후에 LockMode 켜는 순서가 가장 안전합니다.
+            // if (m_editorState == EditorState::Play) Input::SetLockMode(true);
+        }
+
         // 단축키 'h' : 에디터 숨김 
         if (!ImGui::GetIO().WantCaptureKeyboard && Input::IsKeyReleased(Keys::H))
         {
@@ -1541,6 +1553,8 @@ namespace engine
             // 물리 씬 생성
             scene->StartPhysics();
             m_editorState = EditorState::Play;
+
+            m_pendingMouseSync = true;
         }
         else
         {
@@ -1553,6 +1567,8 @@ namespace engine
                 scene->LoadFromJson(g_tempScene);
             }
             m_editorState = EditorState::Edit;
+
+            m_pendingMouseSync = true;
         }
         m_selectedObject = nullptr;
     }

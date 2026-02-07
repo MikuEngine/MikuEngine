@@ -41,5 +41,7 @@ namespace engine
 
         static void ConfineCursor(HWND hWnd, bool confine);
         static void SetLockMode(bool lock);
+
+        static void SyncVirtualMouseFromOS();
     };
 }

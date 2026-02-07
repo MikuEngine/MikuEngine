@@ -34,6 +34,7 @@ namespace engine
         HWND g_hWnd = nullptr;
 
         bool g_isLockMode = false;
+        bool g_isFirstFrameAfterLock = false;
     }
 
     void Input::Initialize(HWND hWnd)
@@ -71,8 +72,17 @@ namespace engine
 
         g_mouseState = g_mouse.GetState();
         g_mouseStateTracker.Update(g_mouseState);
+
         if (g_isLockMode)
         {
+            if (g_isFirstFrameAfterLock)
+            {
+                g_isFirstFrameAfterLock = false;
+                // 현재 휠 값만 동기화하고 좌표 계산은 스킵
+                g_prevWheel = g_mouseState.scrollWheelValue;
+                return;
+            }
+
             // Relative 모드에서는 x, y 자체가 델타값(이동량)입니다.
             float dx = static_cast<float>(g_mouseState.x);
             float dy = static_cast<float>(g_mouseState.y);
@@ -216,11 +226,14 @@ namespace engine
             g_virtualMousePos.x = static_cast<float>(pt.x);
             g_virtualMousePos.y = static_cast<float>(pt.y);
 
-            // 2. 윈도우가 다른 곳을 보고 있을 수 있으니 포커스를 다시 가져옴
+            // 윈도우가 다른 곳을 보고 있을 수 있으니 포커스를 다시 가져옴
             SetFocus(g_hWnd);
 
-            // 3. 모드 변경 (이 순간 마우스는 중앙으로 숨음)
+            // 모드 변경 (이 순간 마우스는 중앙으로 숨음)
             g_mouse.SetMode(DirectX::Mouse::MODE_RELATIVE);
+
+            // 다음 Update에서 델타값을 무시하도록 설정
+            g_isFirstFrameAfterLock = true;
         }
         else
         {
@@ -232,5 +245,22 @@ namespace engine
         }
 
         g_isLockMode = lock;
+    }
+
+    void Input::SyncVirtualMouseFromOS()
+    {
+        SetFocus(g_hWnd);
+
+        POINT pt;
+        GetCursorPos(&pt);
+        ScreenToClient(g_hWnd, &pt);
+
+        g_virtualMousePos.x = (float)pt.x;
+        g_virtualMousePos.y = (float)pt.y;
+
+        // 휠도 첫 프레임 튐 방지용 동기화
+        g_mouseState = g_mouse.GetState();
+        g_prevWheel = g_mouseState.scrollWheelValue;
+        g_wheelDelta = 0.0f;
     }
 }
