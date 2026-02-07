@@ -21,19 +21,21 @@ namespace game
         int m_stepIndex = 0;
         int m_pageIndex = 0;
 
+        bool m_isStateCheck = false;
         bool m_isTimerActive = false;
         float m_stepTimer = 0.0f;
+        
 
         // ─────────────────────────────────────────────
-        // step 0 : 다음 맵 진입
+        // step 0
         // ─────────────────────────────────────────────
-        std::string m_nextDoorObjectName;
+        std::string m_nextDoorObjectName = "StageDoor_Next";
         engine::Ptr<engine::GameObject> m_nextDoorObject = nullptr;
-        engine::Vector3 m_doorPosition = { 0, 0, 0 };
+        // engine::Vector3 m_doorPosition = { 0, 0, 0 };
 
 
         // ─────────────────────────────────────────────
-        // step 2 : 
+        // step 2
         // ─────────────────────────────────────────────
         bool m_isSpawnMonster = false;
         std::string m_monsterName = "Monster_DullType_Gray";
@@ -44,6 +46,8 @@ namespace game
         void Awake() override;
         void Start() override;
         void Update() override;
+
+        void TryInitNextDoorRecursive();
 
         void InitializeStep();
         void RefreshStepContext(int index);

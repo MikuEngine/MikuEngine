@@ -8,6 +8,7 @@
 #include <Framework/Asset/Prefab.h>
 #include <Core/System/Input.h>
 
+#include "Script/CharacterScript/Monster/MonsterScript.h"
 
 #include "Script/DoorTriggerScript.h"
 
@@ -49,7 +50,10 @@ namespace game
 
     void TutorialController::Awake()
     {
-
+        if (auto tutorialPlayer = engine::GameObject::Find("Player"))
+        {
+            tutorialPlayer->GetComponent<PlayerControllerScript>()->SetBaseAtkDmg(30.0f);          
+        }
     }
 
     void TutorialController::Start()
@@ -70,6 +74,8 @@ namespace game
 
             GetGameObject()->Destroy();
         }
+
+        TryInitNextDoorRecursive();
 
     }
 
@@ -92,6 +98,12 @@ namespace game
             if (m_stepTimer <= 0.0f)
             {
                 m_isTimerActive = false;
+
+                if (m_nextDoorObject == nullptr)
+                {
+                    TryInitNextDoorRecursive();
+                    return;
+                }
 
                 switch (m_stepIndex)
                 {
@@ -127,6 +139,16 @@ namespace game
 
         if (m_isSpawnMonster)
         {
+            if (m_spawnedMonster && m_monsterName == "Monster_PointedType_Gray" && !m_isStateCheck)
+            {
+                auto isfrag = m_spawnedMonster->GetComponent<MonsterScript>()->IsFragile();
+                if (m_spawnedMonster->GetComponent<MonsterScript>()->IsFragile())
+                {
+                    m_isStateCheck = true;
+                    Next();
+                }
+            }
+
             if (m_spawnedMonster == nullptr || m_spawnedMonster->IsPendingKill())
             {
                 m_isSpawnMonster = false;
@@ -136,7 +158,7 @@ namespace game
                 {
                     m_monsterName = "Monster_PointedType_Gray";
                     m_isTimerActive = true;
-                    m_stepTimer = 15.0f;
+                    m_stepTimer = 8.0f;
                 }
                 else if (m_monsterName == "Monster_PointedType_Gray")
                 {
@@ -146,10 +168,34 @@ namespace game
         }
     }
 
+    void TutorialController::TryInitNextDoorRecursive()
+    {
+        LOG_PRINT("TryInitNextDoorRecursive()@@");
+
+        m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
+
+        if (m_nextDoorObject)
+        {
+            auto* doorScript = m_nextDoorObject->GetComponent<DoorTriggerScript>();
+            if (doorScript)
+            {
+                doorScript->SetActivateDoor(false);
+                doorScript->SetDoorObjectName("10_PROTO_Tutorial");
+            }
+        }
+        else
+        {
+            m_isTimerActive = true;
+            m_stepTimer = 0.2f;
+        }
+
+    }
+
     void TutorialController::InitializeStep()
     {
         m_stepTimer = 0.0f;
         m_isTimerActive = false;
+        m_isStateCheck = false;
         
         if (m_nextDoorObject)
         {
@@ -157,6 +203,7 @@ namespace game
             m_nextDoorObject = nullptr;
         }
 
+        // 몬스터 초기화
     }
 
     void TutorialController::RefreshStepContext(int index)
@@ -169,14 +216,6 @@ namespace game
         // step 0 : 다음 맵 진입
         // ─────────────────────────────────────────────
         case 0:
-            if (!m_nextDoorObjectName.empty())
-            {
-                m_nextDoorObject = engine::GameObject::Find(m_nextDoorObjectName);
-                if (m_nextDoorObject)
-                {
-                    m_doorPosition = m_nextDoorObject->GetTransform()->GetWorldPosition();
-                }
-            }
             m_isTimerActive = true;
             m_stepTimer = 5.0f;
             break;

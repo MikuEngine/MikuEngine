@@ -340,10 +340,12 @@ namespace game
         float GetBaseBulletSizeScale() const { return m_baseBulletSizeScale; }
         float GetBaseBulletSpeed() const { return m_baseBulletSpeed; }
 
+
         // ─────────────────────────────────────────────
         // 공격 변수 - 실제값 Setter (PlayerTemperManager용)
         // ─────────────────────────────────────────────
         void SetPlayerAtkDmg(float value) { m_playerAtkDmg = value; }
+        void SetBaseAtkDmg(float value) { m_baseAtkDmg = value; }
         void SetAtkSpeed(float value) { m_AtkSpeed = value; }
         void SetFireRate(float value) { m_fireRate = value; }
         void SetBulletLifetime(float value) { m_bulletLifetime = value; }

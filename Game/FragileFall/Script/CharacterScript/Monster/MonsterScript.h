@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -390,6 +390,7 @@ namespace game
         int GetDifficulty() const { return m_difficulty; }
         float GetDetectionRange() const { return m_detectionRange; }
         float GetAttackRange() const { return m_AttackRange; }
+        bool IsFragile() const { return m_fragileTimerStarted; }
         
         // ─────────────────────────────────────────────
         // 상태 플래그
