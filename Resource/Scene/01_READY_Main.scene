@@ -252,7 +252,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "Fragile\nFall",
-                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPath": "Resource/Font/omyu pretty_Font.ttf",
                     "FontPx": 150,
                     "Color": {
                         "x": 1.0,
