@@ -29,25 +29,25 @@ namespace game
         // ─────────────────────────────────────────────
         // step 0
         // ─────────────────────────────────────────────
-        std::string m_nextDoorObjectName = "StageDoor_Next";
         engine::Ptr<engine::GameObject> m_nextDoorObject = nullptr;
-        // engine::Vector3 m_doorPosition = { 0, 0, 0 };
-
 
         // ─────────────────────────────────────────────
         // step 2
         // ─────────────────────────────────────────────
         bool m_isSpawnMonster = false;
+        bool m_keepMonsterOnNext = false;
         std::string m_monsterName = "Monster_DullType_Gray";
         engine::Ptr<engine::GameObject> m_spawnedMonster = nullptr;
 
+        // ─────────────────────────────────────────────
+        // step 0
+        // ─────────────────────────────────────────────
+        engine::Ptr<engine::GameObject> m_exitDoorObject = nullptr;
 
     public:
         void Awake() override;
         void Start() override;
         void Update() override;
-
-        void TryInitNextDoorRecursive();
 
         void InitializeStep();
         void RefreshStepContext(int index);
@@ -55,7 +55,7 @@ namespace game
         void OnSceneLoaded();
 
     public:
-        void OnGui() override;
+        // void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
 
