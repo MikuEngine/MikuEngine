@@ -13048,7 +13048,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/crystal_sphere_white.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sphere/white/crystal_sphere_white.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
@@ -13192,7 +13192,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/crystal_sphere_red.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sphere/red/crystal_sphere_red.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",

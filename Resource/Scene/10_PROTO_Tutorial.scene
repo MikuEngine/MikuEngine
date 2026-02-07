@@ -10179,6 +10179,7 @@
                 {
                     "Type": "DoorTriggerScript",
                     "Active": true,
+                    "isDoorActive": false,
                     "NextSceneName": "10_PROTO_Tutorial"
                 }
             ]
@@ -12055,8 +12056,7 @@
                 },
                 {
                     "Type": "TutorialController",
-                    "Active": true,
-                    "NextDoorObjectName": "Door"
+                    "Active": true
                 }
             ]
         },
@@ -17404,10 +17404,10 @@
                         "z": 8.908409118652344
                     },
                     "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
+                        "x": 0.0,
+                        "y": 1.0,
                         "z": -0.0,
-                        "w": 1.0
+                        "w": -4.371138828673793e-08
                     },
                     "Scale": {
                         "x": 1.0,

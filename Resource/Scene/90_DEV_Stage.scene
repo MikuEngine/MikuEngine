@@ -545,6 +545,12 @@
                         1.0,
                         1.0
                     ]
+                },
+                {
+                    "Type": "DoorTriggerScript",
+                    "Active": true,
+                    "isDoorActive": true,
+                    "NextSceneName": ""
                 }
             ]
         },

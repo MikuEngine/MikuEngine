@@ -12,7 +12,7 @@ namespace game
     private:
         std::string m_doorObjectName;
         std::string m_nextSceneName;
-        bool m_isActive = false;
+        bool m_isActive = true;
 
         engine::Ptr<engine::GameObject> m_doorNextObject = nullptr;
         engine::Vector3 m_doorPosition = { 0, 0, 0 };

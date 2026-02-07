@@ -82,6 +82,8 @@ namespace game
 
     void DoorTriggerScript::OnGui()
     {
+        ImGui::Checkbox("isDoorActive", &m_isActive);
+
         char sceneNameBuffer[256];
         strcpy_s(sceneNameBuffer, m_nextSceneName.c_str());
 
@@ -95,6 +97,7 @@ namespace game
     {
         Object::Save(j);
 
+        j["isDoorActive"] = m_isActive;
         j["NextSceneName"] = m_nextSceneName;
     }
 
@@ -102,6 +105,7 @@ namespace game
     {
         Object::Load(j);
 
+        engine::JsonGet(j, "isDoorActive", m_isActive);
         engine::JsonGet(j, "NextSceneName", m_nextSceneName);
     }
 }

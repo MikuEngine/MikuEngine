@@ -9234,7 +9234,10 @@
                     "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224,
                     "MaxDashCount": 3,
-                    "DashRechargeTime": 1.0
+                    "DashRechargeTime": 1.0,
+                    "FragileGaugeCurrent": 0.0,
+                    "FragileGaugeMax": 100.0,
+                    "FragileGaugeRisePerSecond": 15.0
                 },
                 {
                     "Type": "LogicFSM",
@@ -10109,6 +10112,12 @@
                         1.0,
                         1.0
                     ]
+                },
+                {
+                    "Type": "DoorTriggerScript",
+                    "Active": true,
+                    "isDoorActive": true,
+                    "NextSceneName": ""
                 }
             ]
         },
@@ -12312,12 +12321,15 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 11.899999618530273,
                     "BulletLifetime": 3.0,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.9399999976158142,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "OwnGravity": 9.800000190734863,
                     "MinLaunchAngle": 20.0,
                     "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false,
                     "AttackAnimationDuration": 1.100000023841858,
                     "FleeRange": 10.0,
                     "SafeRange": 14.0,
@@ -13282,7 +13294,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -13503,7 +13516,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -13724,7 +13738,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -14136,7 +14151,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },

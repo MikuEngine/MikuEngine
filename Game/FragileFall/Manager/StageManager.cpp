@@ -65,20 +65,17 @@ namespace game
             return nullptr;
         }
 
-        void CreateDoor(engine::Scene* scene, const engine::Vector3& position, const char* name,
-            bool isNextStage)
+        void SetActiveDoor(const char* name, bool isNextStage)
         {
-            auto go = engine::Prefab::Instantiate("Door");
+            auto go = engine::GameObject::Find(name);
             if (!go) return;
-            
-            go->SetName(name);
-            go->GetTransform()->SetLocalPosition(position);
 
             if (game::DoorTriggerScript* door = go->GetComponent<game::DoorTriggerScript>())
             {
                 door->SetEventCallBack(isNextStage
                     ? []() { game::StageManager::Get().RequestNextStage(); }
                 : []() { game::StageManager::Get().RequestGoToLobby(); });
+
                 door->SetActivateDoor(true);
             }
         }
@@ -199,9 +196,9 @@ namespace game
             if (scene)
             {
                 if (m_doorNextPosition != g_zero)
-                    CreateDoor(scene, m_doorNextPosition, "StageDoor_Next", true);
+                    SetActiveDoor("StageDoor_Next", true);
                 if (m_doorExitPosition != g_zero)
-                    CreateDoor(scene, m_doorExitPosition, "StageDoor_Exit", false);
+                    SetActiveDoor("StageDoor_Exit", false);   
             }
             // TODO: 보상 콜백 호출
         }
