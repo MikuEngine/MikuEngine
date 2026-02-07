@@ -440,7 +440,7 @@ namespace game
         void  SetMoveSpeed(float value) { m_moveSpeed = value; }
 
         // 대시 거리 (m_dashImpulseMultiplier가 대시 거리를 결정하는 물리 힘입니다)
-        float GetBaseDashDistance() const { return 15.0f; } // 기본 임펄스 배율 15.0
+        float GetBaseDashDistance() const { return m_dashImpulseMultiplier; } // 기본 임펄스 배율 15.0
         void  SetDashDistance(float value) { m_dashImpulseMultiplier = value; }
 
         // 대시 쿨다운 (기본값 0.2초)
