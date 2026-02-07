@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -68,18 +68,13 @@ namespace game
         void CreateDoor(engine::Scene* scene, const engine::Vector3& position, const char* name,
             bool isNextStage)
         {
-            if (!scene) return;
-            engine::GameObject* go = scene->CreateGameObject(name);
+            auto go = engine::Prefab::Instantiate("Door");
             if (!go) return;
+            
+            go->SetName(name);
             go->GetTransform()->SetLocalPosition(position);
-            engine::BoxCollider* col = go->AddComponent<engine::BoxCollider>();
-            if (col)
-            {
-                col->SetIsTrigger(true);
-                col->SetSize(g_doorBoxSize);
-            }
-            game::DoorTriggerScript* door = go->AddComponent<game::DoorTriggerScript>();
-            if (door)
+
+            if (game::DoorTriggerScript* door = go->GetComponent<game::DoorTriggerScript>())
             {
                 door->SetEventCallBack(isNextStage
                     ? []() { game::StageManager::Get().RequestNextStage(); }
