@@ -61,16 +61,17 @@ namespace game
         enum class TemperStat
         {
             // Attack
-            AtkDmg,
-            AtkSpeed,
-            BulletRange,
-            BulletSizeScale,
-            BulletSpeed,
-            BulletDouble,
-
-
-
-
+            AtkDmg, AtkSpeed, BulletRange, BulletSize, BulletSpeed,
+            // Execution
+            Exe_FragileRegen, Exe_Range, Exe_SplashDmg, Exe_SplashRange, Exe_DashRegen, Exe_HpRegen,
+            // Vital
+            Hp_Max, Hp_RegenOnClear, Fragile_Max, Fragile_RegenOnClear, Fragile_GainRate, InvincibleTime,
+            // Move
+            MoveSpeed, Dash_Distance, Dash_Cooldown, Dash_Invincible,
+            // Buff
+            Buff_MoveSpeedAfterDash, Buff_AtkDmgAfterDash, Buff_DurationAfterDash,
+            // Special
+            BulletDouble
         };
 
         struct TemperEffect

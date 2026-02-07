@@ -401,7 +401,7 @@ namespace engine
         }
 #endif
 
-        // 2. 확정된 상태로 LockMode와 Input 업데이트를 수행합니다.
+        // 확정된 상태로 LockMode와 Input 업데이트를 수행
         Input::SetLockMode(shouldLock);
 
         CURSORINFO ci = { sizeof(CURSORINFO) };
@@ -417,12 +417,10 @@ namespace engine
             else if (!shouldHideCursor && !isCurrentlyShowing)
                 ::ShowCursor(true);
         }
-
+        
         Input::Update();
 
 #ifdef _DEBUG
-        //EditorManager::Get().Update();
-
         switch (EditorManager::Get().GetEditorState())
         {
         case EditorState::Edit:

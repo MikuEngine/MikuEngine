@@ -4,6 +4,7 @@
 
 #include "../Manager/PlayerTemperManager.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include "Script/CharacterScript/Player/StatId.h"
 
 #include <Framework/System/SoundSystem.h>
 
@@ -92,45 +93,65 @@ namespace game
             using TemperOp = UpgradeNodeView::TemperOp;
             using TemperStat = UpgradeNodeView::TemperStat;
 
-            if (e.op == TemperOp::Add)
+            // 1. 불린(특수) 강화 처리
+            if (e.op == UpgradeNodeView::TemperOp::Bool)
             {
-                switch (e.stat)
-                {
-                case TemperStat::AtkDmg:
-                    PlayerTemperManager::SetAddAtkDmg(PlayerTemperManager::GetAddAtkDmg() + e.value); break;
-                case TemperStat::AtkSpeed:
-                    PlayerTemperManager::SetAddAtkSpeed(PlayerTemperManager::GetAddAtkSpeed() + e.value); break;
-                case TemperStat::BulletRange:
-                    PlayerTemperManager::SetAddBulletRange(PlayerTemperManager::GetAddBulletRange() + e.value); break;
-                case TemperStat::BulletSizeScale:
-                    PlayerTemperManager::SetAddBulletSizeScale(PlayerTemperManager::GetAddBulletSizeScale() + e.value); break;
-                case TemperStat::BulletSpeed:
-                    PlayerTemperManager::SetAddBulletSpeed(PlayerTemperManager::GetAddBulletSpeed() + e.value); break;
-                default: break;
-                }
-            }
-            else if (e.op == TemperOp::Mul)
-            {
-                switch (e.stat)
-                {
-                case TemperStat::AtkDmg:
-                    PlayerTemperManager::SetMulAtkDmg(PlayerTemperManager::GetMulAtkDmg() * e.value); break;
-                case TemperStat::AtkSpeed:
-                    PlayerTemperManager::SetMulAtkSpeed(PlayerTemperManager::GetMulAtkSpeed() * e.value); break;
-                case TemperStat::BulletRange:
-                    PlayerTemperManager::SetMulBulletRange(PlayerTemperManager::GetMulBulletRange() * e.value); break;
-                case TemperStat::BulletSizeScale:
-                    PlayerTemperManager::SetMulBulletSizeScale(PlayerTemperManager::GetMulBulletSizeScale() * e.value); break;
-                case TemperStat::BulletSpeed:
-                    PlayerTemperManager::SetMulBulletSpeed(PlayerTemperManager::GetMulBulletSpeed() * e.value); break;
-                default: break;
-                }
-            }
-            else // Bool
-            {
-                if (e.stat == TemperStat::BulletDouble)
+                if (e.stat == UpgradeNodeView::TemperStat::BulletDouble)
                     PlayerTemperManager::SetIsBulletDouble(e.b);
+                return;
             }
+
+            // 2. 수치 강화 처리 (Add/Mul)
+            // TemperStat과 StatType이 같은 순서라면 static_cast 가능
+            // 아니라면 별도의 Convert 함수를 거칩니다.
+            StatType targetStat = static_cast<StatType>(e.stat);
+            CalcType targetCalc = (e.op == UpgradeNodeView::TemperOp::Add) ? CalcType::Add : CalcType::Mul;
+
+            // 현재 수치 가져오기 -> 계산 -> 설정 (단 한 줄!)
+            float currentVal = PlayerTemperManager::GetStat(targetStat, targetCalc);
+            float nextVal = (targetCalc == CalcType::Add) ? (currentVal + e.value) : (currentVal * e.value);
+
+            PlayerTemperManager::SetStat(targetStat, targetCalc, nextVal);
+
+            //if (e.op == TemperOp::Add)
+            //{
+            //    switch (e.stat)
+            //    {
+            //    case TemperStat::AtkDmg:
+            //        PlayerTemperManager::SetAddAtkDmg(PlayerTemperManager::GetAddAtkDmg() + e.value); break;
+            //    case TemperStat::AtkSpeed:
+            //        PlayerTemperManager::SetAddAtkSpeed(PlayerTemperManager::GetAddAtkSpeed() + e.value); break;
+            //    case TemperStat::BulletRange:
+            //        PlayerTemperManager::SetAddBulletRange(PlayerTemperManager::GetAddBulletRange() + e.value); break;
+            //    case TemperStat::BulletSizeScale:
+            //        PlayerTemperManager::SetAddBulletSizeScale(PlayerTemperManager::GetAddBulletSizeScale() + e.value); break;
+            //    case TemperStat::BulletSpeed:
+            //        PlayerTemperManager::SetAddBulletSpeed(PlayerTemperManager::GetAddBulletSpeed() + e.value); break;
+            //    default: break;
+            //    }
+            //}
+            //else if (e.op == TemperOp::Mul)
+            //{
+            //    switch (e.stat)
+            //    {
+            //    case TemperStat::AtkDmg:
+            //        PlayerTemperManager::SetMulAtkDmg(PlayerTemperManager::GetMulAtkDmg() * e.value); break;
+            //    case TemperStat::AtkSpeed:
+            //        PlayerTemperManager::SetMulAtkSpeed(PlayerTemperManager::GetMulAtkSpeed() * e.value); break;
+            //    case TemperStat::BulletRange:
+            //        PlayerTemperManager::SetMulBulletRange(PlayerTemperManager::GetMulBulletRange() * e.value); break;
+            //    case TemperStat::BulletSizeScale:
+            //        PlayerTemperManager::SetMulBulletSizeScale(PlayerTemperManager::GetMulBulletSizeScale() * e.value); break;
+            //    case TemperStat::BulletSpeed:
+            //        PlayerTemperManager::SetMulBulletSpeed(PlayerTemperManager::GetMulBulletSpeed() * e.value); break;
+            //    default: break;
+            //    }
+            //}
+            //else // Bool
+            //{
+            //    if (e.stat == TemperStat::BulletDouble)
+            //        PlayerTemperManager::SetIsBulletDouble(e.b);
+            //}
         }
 
         static void ApplyTemperFromView(const UpgradeNodeView& view)
@@ -138,7 +159,6 @@ namespace game
             for (const auto& e : view.m_effects)
                 ApplyOneEffect(e);
         }
-
     }
 
     void UpgradeController::Awake()

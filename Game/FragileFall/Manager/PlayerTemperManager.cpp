@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerTemperManager.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -36,6 +36,9 @@ namespace game
 		constexpr float BASE_FIRE_PER_SEC = 1.0f / 0.7f;
 	}
 
+	std::unordered_map<StatType, StatValue> PlayerTemperManager::m_stats;
+	bool PlayerTemperManager::m_isBulletDouble = false;
+
 	void PlayerTemperManager::Initialize()
 	{
 		ResetAllTemper();
@@ -45,48 +48,127 @@ namespace game
 	{
 		if (!player) return;
 
+		// 공식 : 실제값 = (Base + 합연산) * 곱연산
+		// 헬퍼 람다
+		auto Apply = [&](StatType type, float baseValue, auto setterFunc) {
+			const auto& stat = m_stats[type];
+			float finalValue = (baseValue + stat.add) * stat.mul;
+			(player->*setterFunc)(finalValue); // 플레이어의 세터 함수 호출
+			return finalValue; // 계산된 최종값 반환 (추가 계산용)
+			};
+
+		// --- 공격 (Attack) ---
+		Apply(StatType::AtkDmg, player->GetBaseAtkDmg(), &PlayerControllerScript::SetPlayerAtkDmg);
+		Apply(StatType::BulletRange, player->GetBaseBulletRange(), &PlayerControllerScript::SetBulletRange);
+		Apply(StatType::BulletSize, player->GetBaseBulletSizeScale(), &PlayerControllerScript::SetBulletSizeScale);
+		Apply(StatType::BulletSpeed, player->GetBaseBulletSpeed(), &PlayerControllerScript::SetBulletSpeed);
+
+		// --- 기술/처형 (Execution) ---
+		Apply(StatType::Exe_FragileRegen,    player->GetBaseExeFragileRegen(),    &PlayerControllerScript::SetExeFragileRegen);
+		Apply(StatType::Exe_Range,           player->GetBaseExeRange(),           &PlayerControllerScript::SetExeRange);
+		Apply(StatType::Exe_SplashDmg,       player->GetBaseExeSplashDmg(),       &PlayerControllerScript::SetExeSplashDmg);
+		Apply(StatType::Exe_SplashRange,     player->GetBaseExeSplashRange(),     &PlayerControllerScript::SetExeSplashRange);
+		Apply(StatType::Exe_DashChargeRegen, player->GetBaseExeDashChargeRegen(), &PlayerControllerScript::SetExeDashChargeRegen);
+		Apply(StatType::Exe_HpRegen,         player->GetBaseExeHpRegen(),         &PlayerControllerScript::SetExeHpRegen);
+
+		// --- 체력/생존 (Vitality) ---
+		Apply(StatType::Hp_Max, player->GetBaseMaxHp(), &PlayerControllerScript::SetMaxHp);
+		Apply(StatType::InvincibleTime, player->GetBaseInvincibleTime(), &PlayerControllerScript::SetInvincibleTime);
+
+		// --- 이동 (Movement) ---
+		Apply(StatType::MoveSpeed, player->GetBaseMoveSpeed(), &PlayerControllerScript::SetMoveSpeed);
+		Apply(StatType::Dash_Distance, player->GetBaseDashDistance(), &PlayerControllerScript::SetDashDistance);
+
+		// --- 버프 관련 데이터 전송 ---
+		// (버프는 수치만 넘겨주고 실제 로직은 플레이어가 대시할 때 사용)
+		// 대시 후 공격력 증가량 (SetBuffAtkDmgAfterDash 사용)
+		Apply(StatType::Buff_AtkDmgAfterDash, 0.0f, &PlayerControllerScript::SetBuffAtkDmgAfterDash);
+
+		// 대시 후 이동속도 증가량 (SetBuffMoveSpeedAfterDash 사용)
+		Apply(StatType::Buff_MoveSpeedAfterDash, 0.0f, &PlayerControllerScript::SetBuffMoveSpeedAfterDash);
+
+		// 버프 유지 시간 (SetBuffDurationAfterDash 사용)
+		Apply(StatType::Buff_DurationAfterDash, 0.0f, &PlayerControllerScript::SetBuffDurationAfterDash);
+
+		// --- 특별 처리 로직 ---
+		float finalAtkSpeed = Apply(StatType::AtkSpeed, player->GetBaseAtkSpeed(), &PlayerControllerScript::SetAtkSpeed);
+		float fireRate = (finalAtkSpeed > 0.001f) ? (0.7f / finalAtkSpeed) : 0.7f;
+		player->SetFireRate(fireRate);
+
+		player->SetIsBulletDouble(m_isBulletDouble);
+
+		// TODO : 아래 로직은 판단 후 정리
+
 		// ═══════════════════════════════════════════════════════════════
 		// Base값 읽기 → 강화 계산 → 실제값 설정
 		// 공식: 실제값 = (Base + 합연산) × 곱연산
 		// ═══════════════════════════════════════════════════════════════
 
 		// 공격력
-		float baseAtkDmg = player->GetBaseAtkDmg();
-		float finalAtkDmg = (baseAtkDmg + g_addAtkDmg) * g_mulAtkDmg;
-		player->SetPlayerAtkDmg(finalAtkDmg);
+		//float baseAtkDmg = player->GetBaseAtkDmg();
+		//float finalAtkDmg = (baseAtkDmg + g_addAtkDmg) * g_mulAtkDmg;
+		//player->SetPlayerAtkDmg(finalAtkDmg);
 
-		// 공격속도
-		float baseAtkSpeed = player->GetBaseAtkSpeed();
-		float finalAtkSpeed = (baseAtkSpeed + g_addAtkSpeed) * g_mulAtkSpeed;
-		player->SetAtkSpeed(finalAtkSpeed);
+		//// 공격속도
+		//float baseAtkSpeed = player->GetBaseAtkSpeed();
+		//float finalAtkSpeed = (baseAtkSpeed + g_addAtkSpeed) * g_mulAtkSpeed;
+		//player->SetAtkSpeed(finalAtkSpeed);
 
 		// 발사 간격 계산: m_fireRate = 1 / (BASE_FIRE_PER_SEC * m_AtkSpeed)
 		// 간략화: m_fireRate = 0.7 / m_AtkSpeed
-		float fireRate = (finalAtkSpeed > 0.001f) ? (0.7f / finalAtkSpeed) : 0.7f;
-		player->SetFireRate(fireRate);
+		//float fireRate = (finalAtkSpeed > 0.001f) ? (0.7f / finalAtkSpeed) : 0.7f;
+		//player->SetFireRate(fireRate);
 
 		// 총알 수명
-		float baseBulletLifetime = player->GetBaseBulletLifetime();
-		float finalBulletLifetime = (baseBulletLifetime + g_addBulletLifetime) * g_mulBulletLifetime;
-		player->SetBulletLifetime(finalBulletLifetime);
+		//float baseBulletLifetime = player->GetBaseBulletLifetime();
+		//float finalBulletLifetime = (baseBulletLifetime + g_addBulletLifetime) * g_mulBulletLifetime;
+		//player->SetBulletLifetime(finalBulletLifetime);
 
 		// 총알 사거리
-		float baseBulletRange = player->GetBaseBulletRange();
-		float finalBulletRange = (baseBulletRange + g_addBulletRange) * g_mulBulletRange;
-		player->SetBulletRange(finalBulletRange);
+		//float baseBulletRange = player->GetBaseBulletRange();
+		//float finalBulletRange = (baseBulletRange + g_addBulletRange) * g_mulBulletRange;
+		//player->SetBulletRange(finalBulletRange);
 
 		// 총알 크기
-		float baseBulletSizeScale = player->GetBaseBulletSizeScale();
-		float finalBulletSizeScale = (baseBulletSizeScale + g_addBulletSizeScale) * g_mulBulletSizeScale;
-		player->SetBulletSizeScale(finalBulletSizeScale);
+		//float baseBulletSizeScale = player->GetBaseBulletSizeScale();
+		//float finalBulletSizeScale = (baseBulletSizeScale + g_addBulletSizeScale) * g_mulBulletSizeScale;
+		//player->SetBulletSizeScale(finalBulletSizeScale);
 
 		// 총알 속도
-		float baseBulletSpeed = player->GetBaseBulletSpeed();
-		float finalBulletSpeed = (baseBulletSpeed + g_addBulletSpeed) * g_mulBulletSpeed;
-		player->SetBulletSpeed(finalBulletSpeed);
+		//float baseBulletSpeed = player->GetBaseBulletSpeed();
+		//float finalBulletSpeed = (baseBulletSpeed + g_addBulletSpeed) * g_mulBulletSpeed;
+		//player->SetBulletSpeed(finalBulletSpeed);
 
 		// 더블샷
-		player->SetIsBulletDouble(g_isBulletDouble);
+		//player->SetIsBulletDouble(g_isBulletDouble);
+	}
+
+	void PlayerTemperManager::SetStat(StatType type, CalcType calc, float value)
+	{
+		if (calc == CalcType::Add)
+			m_stats[type].add = value;
+		else
+			m_stats[type].mul = value;
+	}
+
+	float PlayerTemperManager::GetStat(StatType type, CalcType calc)
+	{
+		auto it = m_stats.find(type);
+		if (it == m_stats.end())
+		{
+			// 데이터가 없다면 기본값 반환 (합연산은 0, 곱연산은 1)
+			return (calc == CalcType::Add) ? 0.0f : 1.0f;
+		}
+
+		// 2. 요청한 연산 타입에 따라 값 반환
+		if (calc == CalcType::Add)
+		{
+			return it->second.add;
+		}
+		else // CalcType::Mul
+		{
+			return it->second.mul;
+		}
 	}
 
 	void PlayerTemperManager::ResetAllTemper()
@@ -156,6 +238,6 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	// 불린 Setter/Getter
 	// ═══════════════════════════════════════════════════════════════
-	void PlayerTemperManager::SetIsBulletDouble(bool value) { g_isBulletDouble = value; }
-	bool PlayerTemperManager::GetIsBulletDouble() { return g_isBulletDouble; }
+	//void PlayerTemperManager::SetIsBulletDouble(bool value) { g_isBulletDouble = value; }
+	//bool PlayerTemperManager::GetIsBulletDouble() { return g_isBulletDouble; }
 }

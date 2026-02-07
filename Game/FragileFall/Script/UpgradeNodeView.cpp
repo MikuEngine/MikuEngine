@@ -159,9 +159,25 @@ namespace game
         ImGui::Separator();
         ImGui::Text("Temper Effects");
 
-        static const char* opNames[] = { "Add", "Mul", "Bool" };
+        static const char* opNames[] = { "Add (합)", "Mul (곱)", "Bool (참/거짓)" };
         static const char* statNames[] = {
-            "AtkDmg", "AtkSpeed", "BulletRange", "BulletSizeScale", "BulletSpeed", "BulletDouble"
+            // Attack
+            "Atk_Dmg", "Atk_Speed", "Bullet_Range", "Bullet_Size", "Bullet_Speed",
+
+            // Execution (기술/처형)
+            "Exe_FragileRegen", "Exe_Range", "Exe_SplashDmg", "Exe_SplashRange", "Exe_DashRegen", "Exe_HpRegen",
+
+            // Vital (체력/생존)
+            "Hp_Max", "Hp_RegenOnClear", "Fragile_Max", "Fragile_RegenOnClear", "Fragile_GainRate", "InvincibleTime",
+
+            // Move (이동)
+            "Move_Speed", "Dash_Distance", "Dash_Cooldown", "Dash_Invincible",
+
+            // Buff (버프)
+            "Buff_MoveSpeedAfterDash", "Buff_AtkDmgAfterDash", "Buff_DurationAfterDash",
+
+            // Special
+            "Bullet_Double"
         };
 
         // (선택) 효과 하나 추가
@@ -185,30 +201,39 @@ namespace game
         for (int i = 0; i < (int)m_effects.size(); ++i)
         {
             auto& e = m_effects[i];
-
             ImGui::PushID(i);
             ImGui::Separator();
-
             ImGui::Text("Effect #%d", i);
 
+            // 연산 방식 선택
             int op = (int)e.op;
-            if (ImGui::Combo("Op", &op, opNames, IM_ARRAYSIZE(opNames)))
+            if (ImGui::Combo("Operation", &op, opNames, IM_ARRAYSIZE(opNames)))
                 e.op = (TemperOp)op;
 
+            // 스탯 종류 선택 (확장된 목록 사용)
             int st = (int)e.stat;
-            if (ImGui::Combo("Stat", &st, statNames, IM_ARRAYSIZE(statNames)))
+            if (ImGui::Combo("Target Stat", &st, statNames, IM_ARRAYSIZE(statNames)))
                 e.stat = (TemperStat)st;
 
+            // 값 입력창
             if (e.op == TemperOp::Bool)
             {
-                ImGui::Checkbox("Bool", &e.b);
+                ImGui::Checkbox("Enabled", &e.b);
             }
             else
             {
-                ImGui::InputFloat("Value", &e.value);
-
-                // (선택) Mul 입력 편의: %로 넣고 싶으면 이런 보정 UI도 가능
-                // 예: 30% 증가를 1.30으로 자동 변환 등
+                // Mul일 경우 사용자가 1.3 같은 수치보다 30(%)으로 입력하는게 편할 수 있습니다.
+                if (e.op == TemperOp::Mul)
+                {
+                    // 필요하다면 여기서 % 단위 UI 노출 로직 추가 가능
+                    ImGui::InputFloat("Value (Multiplier)", &e.value);
+                    ImGui::SameLine();
+                    ImGui::TextDisabled("(ex: 1.1 = +10%%)");
+                }
+                else
+                {
+                    ImGui::InputFloat("Value (Amount)", &e.value);
+                }
             }
 
             // 순서 변경(선택)
