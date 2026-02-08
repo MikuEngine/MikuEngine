@@ -39,7 +39,7 @@
                     },
                     "LinePrefabName": "ExecutionLine",
                     "LinePlayerOffset": 0.5,
-                    "LineMonsterOffset": 0.5,
+                    "LineMonsterOffset": 1.5,
                     "LineBaseLength": 30.0,
                     "LineHeight": 1.5,
                     "LinePixelsPerMeter": 105.0,
