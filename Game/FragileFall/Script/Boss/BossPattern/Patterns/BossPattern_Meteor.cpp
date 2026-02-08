@@ -87,13 +87,18 @@ namespace game
         finalFallPos.z += offsetZ;
 
         // ─────────────────────────────────────────────
-        // 3. XZ 유효 범위 클램핑
+        // 3. XZ 유효 범위 클램핑 (중점 + 범위/2)
         // ─────────────────────────────────────────────
+        float centerX = boss->GetMeteorSpawnCenterX();
+        float centerZ = boss->GetMeteorSpawnCenterZ();
         float rangeX = boss->GetMeteorValidRangeX();
         float rangeZ = boss->GetMeteorValidRangeZ();
 
-        finalFallPos.x = std::clamp(finalFallPos.x, -rangeX, rangeX);
-        finalFallPos.z = std::clamp(finalFallPos.z, -rangeZ, rangeZ);
+        float halfRangeX = rangeX * 0.5f;
+        float halfRangeZ = rangeZ * 0.5f;
+
+        finalFallPos.x = std::clamp(finalFallPos.x, centerX - halfRangeX, centerX + halfRangeX);
+        finalFallPos.z = std::clamp(finalFallPos.z, centerZ - halfRangeZ, centerZ + halfRangeZ);
         finalFallPos.y = 0.0f;  // 착지 목표 Y는 항상 0
 
         // ─────────────────────────────────────────────

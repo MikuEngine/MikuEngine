@@ -2708,7 +2708,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.4530102014541626,
+                        "y": 1.4530116319656372,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -13089,8 +13089,10 @@
                     "Meteor_OwnGravity": 10.0,
                     "Meteor_LandingY": 0.0,
                     "Meteor_LandingThreshold": 0.05000000074505806,
-                    "Meteor_ValidRangeX": 20.0,
-                    "Meteor_ValidRangeZ": 15.0,
+                    "Meteor_SpawnCenterX": 0.0,
+                    "Meteor_SpawnCenterZ": -4.5,
+                    "Meteor_ValidRangeX": 34.0,
+                    "Meteor_ValidRangeZ": 19.0,
                     "Meteor_PredictionStrength": 0.15000000596046448,
                     "Meteor_PredictionAccuracy": 3.0,
                     "Meteor_BulletSpeed": 9.0,
@@ -13100,7 +13102,25 @@
                     "Meteor_ExplosionDamage": 10.0,
                     "Meteor_ExplosionRadius": 5.0,
                     "Meteor_ExplosionLifetime": 1.0,
-                    "Meteor_Scale": 3.0
+                    "Meteor_Scale": 3.0,
+                    "Pillar_UseBasicPattern": false,
+                    "Pillar_UseFixedRespawnDelay": true,
+                    "Pillar_FixedRespawnDelay": 5.0,
+                    "Pillar_MinRespawnDelay": 3.0,
+                    "Pillar_MaxRespawnDelay": 10.0,
+                    "Pillar_UseFixedCount": false,
+                    "Pillar_FixedCount": 5,
+                    "Pillar_MinCount": 2,
+                    "Pillar_MaxCount": 3,
+                    "Pillar_SpawnCenterX": 0.0,
+                    "Pillar_SpawnCenterZ": -4.5,
+                    "Pillar_SpawnRangeX": 34.0,
+                    "Pillar_SpawnRangeZ": 19.0,
+                    "Pillar_SpawnY": 0.0,
+                    "Pillar_ClusteringStrength": 0.4000000059604645,
+                    "Pillar_OverlapRadius": 1.5,
+                    "Pillar_MaxSpawnAttempts": 20,
+                    "Pillar_HP": 20.0
                 },
                 {
                     "Type": "BulletFactory",

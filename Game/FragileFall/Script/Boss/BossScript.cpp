@@ -272,6 +272,36 @@ namespace game
         }
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // PillarShield 설정 Getter
+    // ═══════════════════════════════════════════════════════════════
+    float BossScript::GetPillarRespawnDelay() const
+    {
+        if (m_pillarUseFixedRespawnDelay)
+        {
+            return m_pillarFixedRespawnDelay;
+        }
+        else
+        {
+            // 랜덤 delay (최소 ~ 최대)
+            float t = engine::Random::Float(0.0f, 1.0f);
+            return m_pillarMinRespawnDelay + t * (m_pillarMaxRespawnDelay - m_pillarMinRespawnDelay);
+        }
+    }
+
+    int BossScript::GetPillarSpawnCount() const
+    {
+        if (m_pillarUseFixedCount)
+        {
+            return m_pillarFixedCount;
+        }
+        else
+        {
+            // 랜덤 count (최소 ~ 최대)
+            return engine::Random::Int(m_pillarMinCount, m_pillarMaxCount);
+        }
+    }
+
     void BossScript::OnGui()
     {
         ImGui::SeparatorText("=== Boss BulletFire Settings ===");
@@ -434,9 +464,11 @@ namespace game
         // ─────────────────────────────────────────────
         // XZ 유효 범위
         // ─────────────────────────────────────────────
-        ImGui::Text("--- Valid Spawn Range (XZ) ---");
-        ImGui::DragFloat("Valid Range X (±)", &m_meteorValidRangeX, 0.5f, 1.0f, 100.0f, "%.1f");
-        ImGui::DragFloat("Valid Range Z (±)", &m_meteorValidRangeZ, 0.5f, 1.0f, 100.0f, "%.1f");
+        ImGui::Text("--- Valid Spawn Area (XZ Rectangle) ---");
+        ImGui::DragFloat("Center X", &m_meteorSpawnCenterX, 0.5f, -100.0f, 100.0f, "%.1f");
+        ImGui::DragFloat("Center Z", &m_meteorSpawnCenterZ, 0.5f, -100.0f, 100.0f, "%.1f");
+        ImGui::DragFloat("Width (X)", &m_meteorValidRangeX, 0.5f, 1.0f, 200.0f, "%.1f");
+        ImGui::DragFloat("Height (Z)", &m_meteorValidRangeZ, 0.5f, 1.0f, 200.0f, "%.1f");
 
         ImGui::Spacing();
 
@@ -484,6 +516,129 @@ namespace game
         ImGui::DragFloat("Explosion Lifetime (sec)", &m_meteorExplosionLifetime, 0.05f, 0.05f, 5.0f, "%.2f");
 
         ImGui::Separator();
+
+        // ═══════════════════════════════════════════════════════════════
+        // PillarShield 패턴 설정
+        // ═══════════════════════════════════════════════════════════════
+        ImGui::SeparatorText("=== Boss PillarShield Settings ===");
+
+        // ─────────────────────────────────────────────
+        // 패턴 모드
+        // ─────────────────────────────────────────────
+        ImGui::Text("--- Pattern Mode ---");
+        ImGui::Checkbox("Use Basic Pattern (Left/Right 2 pillars)", &m_pillarUseBasicPattern);
+
+        ImGui::Spacing();
+
+        // ─────────────────────────────────────────────
+        // 재생성 대기 시간
+        // ─────────────────────────────────────────────
+        ImGui::Text("--- Respawn Delay (After All Destroyed) ---");
+        ImGui::Checkbox("Use Fixed Respawn Delay", &m_pillarUseFixedRespawnDelay);
+
+        if (m_pillarUseFixedRespawnDelay)
+        {
+            if (ImGui::DragFloat("Fixed Delay (sec)", &m_pillarFixedRespawnDelay, 0.1f, 1.0f, 20.0f, "%.2f"))
+            {
+                m_pillarFixedRespawnDelay = std::clamp(m_pillarFixedRespawnDelay, 1.0f, 20.0f);
+            }
+        }
+        else
+        {
+            if (ImGui::DragFloat("Min Delay (sec)", &m_pillarMinRespawnDelay, 0.1f, 1.0f, 20.0f, "%.2f"))
+            {
+                m_pillarMinRespawnDelay = std::clamp(m_pillarMinRespawnDelay, 1.0f, 20.0f);
+            }
+            if (ImGui::DragFloat("Max Delay (sec)", &m_pillarMaxRespawnDelay, 0.1f, 1.0f, 20.0f, "%.2f"))
+            {
+                m_pillarMaxRespawnDelay = std::clamp(m_pillarMaxRespawnDelay, 1.0f, 20.0f);
+            }
+
+            if (m_pillarMinRespawnDelay > m_pillarMaxRespawnDelay)
+            {
+                m_pillarMaxRespawnDelay = m_pillarMinRespawnDelay;
+            }
+        }
+
+        ImGui::Spacing();
+
+        // ─────────────────────────────────────────────
+        // 생성 개수 (Use Basic = false일 때만 의미)
+        // ─────────────────────────────────────────────
+        if (!m_pillarUseBasicPattern)
+        {
+            ImGui::Text("--- Pillar Spawn Count ---");
+            ImGui::Checkbox("Use Fixed Count", &m_pillarUseFixedCount);
+
+            if (m_pillarUseFixedCount)
+            {
+                if (ImGui::DragInt("Fixed Count", &m_pillarFixedCount, 1, 1, 10))
+                {
+                    m_pillarFixedCount = std::clamp(m_pillarFixedCount, 1, 10);
+                }
+            }
+            else
+            {
+                if (ImGui::DragInt("Min Count", &m_pillarMinCount, 1, 1, 10))
+                {
+                    m_pillarMinCount = std::clamp(m_pillarMinCount, 1, 10);
+                }
+                if (ImGui::DragInt("Max Count", &m_pillarMaxCount, 1, 1, 10))
+                {
+                    m_pillarMaxCount = std::clamp(m_pillarMaxCount, 1, 10);
+                }
+
+                if (m_pillarMinCount > m_pillarMaxCount)
+                {
+                    m_pillarMaxCount = m_pillarMinCount;
+                }
+            }
+
+            ImGui::Spacing();
+        }
+
+        // ─────────────────────────────────────────────
+        // 생성 영역 (0,0,0 중심 직사각형)
+        // ─────────────────────────────────────────────
+        if (!m_pillarUseBasicPattern)
+        {
+            ImGui::Text("--- Spawn Area (XZ Rectangle) ---");
+            ImGui::DragFloat("Center X", &m_pillarSpawnCenterX, 0.5f, -100.0f, 100.0f, "%.1f");
+            ImGui::DragFloat("Center Z", &m_pillarSpawnCenterZ, 0.5f, -100.0f, 100.0f, "%.1f");
+            ImGui::DragFloat("Width (X)", &m_pillarSpawnRangeX, 0.5f, 1.0f, 200.0f, "%.1f");
+            ImGui::DragFloat("Height (Z)", &m_pillarSpawnRangeZ, 0.5f, 1.0f, 200.0f, "%.1f");
+            ImGui::DragFloat("Spawn Y", &m_pillarSpawnY, 0.1f, -10.0f, 10.0f, "%.1f");
+
+            ImGui::Spacing();
+
+            // ─────────────────────────────────────────────
+            // 밀집도
+            // ─────────────────────────────────────────────
+            ImGui::Text("--- Clustering ---");
+            if (ImGui::SliderFloat("Clustering (0=spread, 1=tight)", &m_pillarClusteringStrength, 0.0f, 1.0f, "%.2f"))
+            {
+                m_pillarClusteringStrength = std::clamp(m_pillarClusteringStrength, 0.0f, 1.0f);
+            }
+
+            ImGui::Spacing();
+        }
+
+        // ─────────────────────────────────────────────
+        // 겹침 방지
+        // ─────────────────────────────────────────────
+        ImGui::Text("--- Overlap Prevention ---");
+        ImGui::DragFloat("Overlap Radius (m)", &m_pillarOverlapRadius, 0.1f, 0.5f, 5.0f, "%.1f");
+        ImGui::DragInt("Max Spawn Attempts", &m_pillarMaxSpawnAttempts, 1, 5, 100);
+
+        ImGui::Spacing();
+
+        // ─────────────────────────────────────────────
+        // 기둥 HP
+        // ─────────────────────────────────────────────
+        ImGui::Text("--- Pillar Settings ---");
+        ImGui::DragFloat("Pillar HP", &m_pillarHP, 1.0f, 1.0f, 500.0f, "%.1f");
+
+        ImGui::Separator();
     }
 
     void BossScript::Save(engine::json& j) const
@@ -519,6 +674,8 @@ namespace game
         j["Meteor_OwnGravity"] = m_meteorOwnGravity;
         j["Meteor_LandingY"] = m_meteorLandingY;
         j["Meteor_LandingThreshold"] = m_meteorLandingThreshold;
+        j["Meteor_SpawnCenterX"] = m_meteorSpawnCenterX;
+        j["Meteor_SpawnCenterZ"] = m_meteorSpawnCenterZ;
         j["Meteor_ValidRangeX"] = m_meteorValidRangeX;
         j["Meteor_ValidRangeZ"] = m_meteorValidRangeZ;
         j["Meteor_PredictionStrength"] = m_meteorPredictionStrength;
@@ -534,6 +691,26 @@ namespace game
         j["Meteor_ExplosionLifetime"] = m_meteorExplosionLifetime;
 
         j["Meteor_Scale"] = m_meteorScale;
+
+        // PillarShield 설정 저장
+        j["Pillar_UseBasicPattern"] = m_pillarUseBasicPattern;
+        j["Pillar_UseFixedRespawnDelay"] = m_pillarUseFixedRespawnDelay;
+        j["Pillar_FixedRespawnDelay"] = m_pillarFixedRespawnDelay;
+        j["Pillar_MinRespawnDelay"] = m_pillarMinRespawnDelay;
+        j["Pillar_MaxRespawnDelay"] = m_pillarMaxRespawnDelay;
+        j["Pillar_UseFixedCount"] = m_pillarUseFixedCount;
+        j["Pillar_FixedCount"] = m_pillarFixedCount;
+        j["Pillar_MinCount"] = m_pillarMinCount;
+        j["Pillar_MaxCount"] = m_pillarMaxCount;
+        j["Pillar_SpawnCenterX"] = m_pillarSpawnCenterX;
+        j["Pillar_SpawnCenterZ"] = m_pillarSpawnCenterZ;
+        j["Pillar_SpawnRangeX"] = m_pillarSpawnRangeX;
+        j["Pillar_SpawnRangeZ"] = m_pillarSpawnRangeZ;
+        j["Pillar_SpawnY"] = m_pillarSpawnY;
+        j["Pillar_ClusteringStrength"] = m_pillarClusteringStrength;
+        j["Pillar_OverlapRadius"] = m_pillarOverlapRadius;
+        j["Pillar_MaxSpawnAttempts"] = m_pillarMaxSpawnAttempts;
+        j["Pillar_HP"] = m_pillarHP;
     }
 
     void BossScript::Load(const engine::json& j)
@@ -598,6 +775,10 @@ namespace game
             m_meteorLandingY = j["Meteor_LandingY"].get<float>();
         if (j.contains("Meteor_LandingThreshold"))
             m_meteorLandingThreshold = j["Meteor_LandingThreshold"].get<float>();
+        if (j.contains("Meteor_SpawnCenterX"))
+            m_meteorSpawnCenterX = j["Meteor_SpawnCenterX"].get<float>();
+        if (j.contains("Meteor_SpawnCenterZ"))
+            m_meteorSpawnCenterZ = j["Meteor_SpawnCenterZ"].get<float>();
         if (j.contains("Meteor_ValidRangeX"))
             m_meteorValidRangeX = j["Meteor_ValidRangeX"].get<float>();
         if (j.contains("Meteor_ValidRangeZ"))
@@ -629,5 +810,49 @@ namespace game
         // 최소 <= 최대 보장 (Meteor)
         if (m_meteorMinInterval > m_meteorMaxInterval)
             m_meteorMaxInterval = m_meteorMinInterval;
+
+        // PillarShield 설정 로드
+        if (j.contains("Pillar_UseBasicPattern"))
+            m_pillarUseBasicPattern = j["Pillar_UseBasicPattern"].get<bool>();
+        if (j.contains("Pillar_UseFixedRespawnDelay"))
+            m_pillarUseFixedRespawnDelay = j["Pillar_UseFixedRespawnDelay"].get<bool>();
+        if (j.contains("Pillar_FixedRespawnDelay"))
+            m_pillarFixedRespawnDelay = std::clamp(j["Pillar_FixedRespawnDelay"].get<float>(), 1.0f, 20.0f);
+        if (j.contains("Pillar_MinRespawnDelay"))
+            m_pillarMinRespawnDelay = std::clamp(j["Pillar_MinRespawnDelay"].get<float>(), 1.0f, 20.0f);
+        if (j.contains("Pillar_MaxRespawnDelay"))
+            m_pillarMaxRespawnDelay = std::clamp(j["Pillar_MaxRespawnDelay"].get<float>(), 1.0f, 20.0f);
+        if (j.contains("Pillar_UseFixedCount"))
+            m_pillarUseFixedCount = j["Pillar_UseFixedCount"].get<bool>();
+        if (j.contains("Pillar_FixedCount"))
+            m_pillarFixedCount = std::clamp(j["Pillar_FixedCount"].get<int>(), 1, 10);
+        if (j.contains("Pillar_MinCount"))
+            m_pillarMinCount = std::clamp(j["Pillar_MinCount"].get<int>(), 1, 10);
+        if (j.contains("Pillar_MaxCount"))
+            m_pillarMaxCount = std::clamp(j["Pillar_MaxCount"].get<int>(), 1, 10);
+        if (j.contains("Pillar_SpawnCenterX"))
+            m_pillarSpawnCenterX = j["Pillar_SpawnCenterX"].get<float>();
+        if (j.contains("Pillar_SpawnCenterZ"))
+            m_pillarSpawnCenterZ = j["Pillar_SpawnCenterZ"].get<float>();
+        if (j.contains("Pillar_SpawnRangeX"))
+            m_pillarSpawnRangeX = j["Pillar_SpawnRangeX"].get<float>();
+        if (j.contains("Pillar_SpawnRangeZ"))
+            m_pillarSpawnRangeZ = j["Pillar_SpawnRangeZ"].get<float>();
+        if (j.contains("Pillar_SpawnY"))
+            m_pillarSpawnY = j["Pillar_SpawnY"].get<float>();
+        if (j.contains("Pillar_ClusteringStrength"))
+            m_pillarClusteringStrength = std::clamp(j["Pillar_ClusteringStrength"].get<float>(), 0.0f, 1.0f);
+        if (j.contains("Pillar_OverlapRadius"))
+            m_pillarOverlapRadius = j["Pillar_OverlapRadius"].get<float>();
+        if (j.contains("Pillar_MaxSpawnAttempts"))
+            m_pillarMaxSpawnAttempts = j["Pillar_MaxSpawnAttempts"].get<int>();
+        if (j.contains("Pillar_HP"))
+            m_pillarHP = j["Pillar_HP"].get<float>();
+
+        // 최소 <= 최대 보장 (Pillar)
+        if (m_pillarMinRespawnDelay > m_pillarMaxRespawnDelay)
+            m_pillarMaxRespawnDelay = m_pillarMinRespawnDelay;
+        if (m_pillarMinCount > m_pillarMaxCount)
+            m_pillarMaxCount = m_pillarMinCount;
     }
 }

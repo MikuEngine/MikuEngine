@@ -78,9 +78,11 @@ namespace game
         float m_meteorLandingY = 0.0f;                // 착지 기준 Y 좌표
         float m_meteorLandingThreshold = 0.0f;        // 착지 임계값 (+방향만 적용)
 
-        // XZ 유효 범위 (직사각형, 중앙 0,0 기준)
-        float m_meteorValidRangeX = 20.0f;            // X축 유효 범위 (±)
-        float m_meteorValidRangeZ = 20.0f;            // Z축 유효 범위 (±)
+        // XZ 유효 범위 (직사각형)
+        float m_meteorSpawnCenterX = 0.0f;            // 스폰 중점 X 좌표
+        float m_meteorSpawnCenterZ = 0.0f;            // 스폰 중점 Z 좌표
+        float m_meteorValidRangeX = 20.0f;            // 직사각형 가로 길이 (전체)
+        float m_meteorValidRangeZ = 20.0f;            // 직사각형 세로 길이 (전체)
 
         // 예측 설정
         float m_meteorPredictionStrength = 1.0f;      // 예측 강도 (0.0=현재 위치, 1.0=풀 예측)
@@ -105,6 +107,41 @@ namespace game
 
         // 메테오 크기
         float m_meteorScale = 1.0f;                   // 메테오 크기 배율
+
+        // ─────────────────────────────────────────────
+        // PillarShield 패턴 설정 (직렬화)
+        // ─────────────────────────────────────────────
+        // 패턴 모드
+        bool m_pillarUseBasicPattern = true;          // true: 좌우 2개 고정
+
+        // 재생성 대기 시간 (모든 기둥 파괴 후)
+        bool m_pillarUseFixedRespawnDelay = false;    // 고정 대기 시간 사용 여부
+        float m_pillarFixedRespawnDelay = 5.0f;       // 고정 대기 시간 (초)
+        float m_pillarMinRespawnDelay = 3.0f;         // 최소 대기 시간 (초)
+        float m_pillarMaxRespawnDelay = 10.0f;        // 최대 대기 시간 (초)
+
+        // 생성 개수 (Use Basic = false일 때)
+        bool m_pillarUseFixedCount = false;           // 고정 개수 사용 여부
+        int m_pillarFixedCount = 5;                   // 고정 개수
+        int m_pillarMinCount = 1;                     // 최소 개수
+        int m_pillarMaxCount = 10;                    // 최대 개수
+
+        // 생성 영역 (직사각형)
+        float m_pillarSpawnCenterX = 0.0f;            // 스폰 중점 X 좌표
+        float m_pillarSpawnCenterZ = 0.0f;            // 스폰 중점 Z 좌표
+        float m_pillarSpawnRangeX = 20.0f;            // 직사각형 가로 길이 (전체)
+        float m_pillarSpawnRangeZ = 20.0f;            // 직사각형 세로 길이 (전체)
+        float m_pillarSpawnY = 0.0f;                  // Y 좌표
+
+        // 밀집도 (0.0=분산, 1.0=밀집)
+        float m_pillarClusteringStrength = 0.0f;      // 0~1
+
+        // 겹침 방지
+        float m_pillarOverlapRadius = 1.5f;           // 겹침 체크 반지름
+        int m_pillarMaxSpawnAttempts = 20;            // 최대 재시도 횟수
+
+        // 기둥 HP
+        float m_pillarHP = 30.0f;                     // 기둥 HP
 
         // shield
         bool m_isShieldActive = false;
@@ -187,6 +224,8 @@ namespace game
         float GetMeteorOwnGravity() const { return m_meteorOwnGravity; }
         float GetMeteorLandingY() const { return m_meteorLandingY; }
         float GetMeteorLandingThreshold() const { return m_meteorLandingThreshold; }
+        float GetMeteorSpawnCenterX() const { return m_meteorSpawnCenterX; }
+        float GetMeteorSpawnCenterZ() const { return m_meteorSpawnCenterZ; }
         float GetMeteorValidRangeX() const { return m_meteorValidRangeX; }
         float GetMeteorValidRangeZ() const { return m_meteorValidRangeZ; }
         float GetMeteorPredictionStrength() const { return m_meteorPredictionStrength; }
@@ -199,6 +238,22 @@ namespace game
         float GetMeteorExplosionRadius() const { return m_meteorExplosionRadius; }
         float GetMeteorExplosionLifetime() const { return m_meteorExplosionLifetime; }
         float GetMeteorScale() const { return m_meteorScale; }
+
+        // ─────────────────────────────────────────────
+        // PillarShield 설정 Getter
+        // ─────────────────────────────────────────────
+        bool GetPillarUseBasicPattern() const { return m_pillarUseBasicPattern; }
+        float GetPillarRespawnDelay() const;   // 랜덤 or 고정 delay 반환
+        int GetPillarSpawnCount() const;       // 랜덤 or 고정 count 반환
+        float GetPillarSpawnCenterX() const { return m_pillarSpawnCenterX; }
+        float GetPillarSpawnCenterZ() const { return m_pillarSpawnCenterZ; }
+        float GetPillarSpawnRangeX() const { return m_pillarSpawnRangeX; }
+        float GetPillarSpawnRangeZ() const { return m_pillarSpawnRangeZ; }
+        float GetPillarSpawnY() const { return m_pillarSpawnY; }
+        float GetPillarClusteringStrength() const { return m_pillarClusteringStrength; }
+        float GetPillarOverlapRadius() const { return m_pillarOverlapRadius; }
+        int GetPillarMaxSpawnAttempts() const { return m_pillarMaxSpawnAttempts; }
+        float GetPillarHP() const { return m_pillarHP; }
         
         engine::Ptr<BulletFactory> GetBulletFactory() const { return m_bulletFactory; }
 
