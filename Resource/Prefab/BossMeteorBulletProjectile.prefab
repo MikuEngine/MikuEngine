@@ -1,10 +1,10 @@
 {
-    "Name": "BossMeteorProjectile",
+    "Name": "BossMeteorBulletProjectile",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "BossMeteorProjectile",
+            "Name": "BossMeteorBulletProjectile",
             "Active": true,
             "Components": [
                 {
@@ -12,7 +12,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": 1.5,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -38,9 +38,9 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.6795363426208496,
-                        "y": 0.0,
-                        "z": 1.0,
+                        "x": 0.9884169697761536,
+                        "y": 0.610177755355835,
+                        "z": 0.3396490812301636,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
@@ -63,20 +63,6 @@
                     ]
                 },
                 {
-                    "Type": "BossMeteor",
-                    "Active": true
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 61
-                },
-                {
                     "Type": "SphereCollider",
                     "Active": true,
                     "center": [
@@ -92,8 +78,22 @@
                     "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 15,
-                    "materialType": 0,
+                    "materialType": 1,
                     "radius": 0.5
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 0.10000000149011612,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BossBulletEightway",
+                    "Active": true
                 }
             ]
         }

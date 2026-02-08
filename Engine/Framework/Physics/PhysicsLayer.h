@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdint>
 #include <string>
@@ -31,6 +31,7 @@ namespace engine
             JumpingEnemy = 12,              // 점프 중인 적 (Environment 충돌 무시, Wall/Player는 충돌)
             RadiusChecker = 13,             // 반경 체크용 디버그 오브젝트 (모든 충돌 무시)
             SplittingEnemy = 14,            // 분열 몬스터 (Enemy와 동일, 자기 자신끼리는 충돌 안 함)
+            BossBulletProjectile = 15,      // 보스 총알 투사체 (Player, Environment, Wall만 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -55,6 +56,7 @@ namespace engine
             JumpingEnemyMask = (1u << JumpingEnemy),
             RadiusCheckerMask = (1u << RadiusChecker),
             SplittingEnemyMask = (1u << SplittingEnemy),
+            BossBulletProjectileMask = (1u << BossBulletProjectile),
 
             All = 0xFFFFFFFF
         };
@@ -84,7 +86,8 @@ namespace engine
                 "JumpingEnemy", // 12
                 "RadiusChecker", // 13
                 "SplittingEnemy", // 14
-                "Layer15",
+                "BossBulletProjectile", // 15
+                
                 "Layer16", "Layer17", "Layer18", "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
@@ -271,6 +274,27 @@ namespace engine
             SetCollision(SplittingEnemy, SplittingEnemy, false);  // 분열 몬스터끼리 충돌 안 함
             // 나머지는 기본값 All에 의해 Enemy와 동일하게 충돌함
             SetCollision(RadiusChecker, RadiusChecker, false);
+            
+            // ═══════════════════════════════════════
+            // BossBulletProjectile 충돌 규칙
+            // Player만 충돌 (트리거)
+            // ═══════════════════════════════════════
+            SetCollision(BossBulletProjectile, Default, false);
+            SetCollision(BossBulletProjectile, Enemy, false);
+            SetCollision(BossBulletProjectile, Projectile, false);
+            SetCollision(BossBulletProjectile, Environment, false);
+            SetCollision(BossBulletProjectile, Trigger, false);
+            SetCollision(BossBulletProjectile, EnemyProjectile, false);
+            SetCollision(BossBulletProjectile, Picking, false);
+            SetCollision(BossBulletProjectile, Field, false);
+            SetCollision(BossBulletProjectile, Wall, false);
+            SetCollision(BossBulletProjectile, EnemyParabolicProjectile, false);
+            SetCollision(BossBulletProjectile, ExplosionTrigger, false);
+            SetCollision(BossBulletProjectile, JumpingEnemy, false);
+            SetCollision(BossBulletProjectile, RadiusChecker, false);
+            SetCollision(BossBulletProjectile, SplittingEnemy, false);
+            SetCollision(BossBulletProjectile, BossBulletProjectile, false);
+            // Player만 충돌 (기본값 All에서 위 항목들 제외)
   
         }
 

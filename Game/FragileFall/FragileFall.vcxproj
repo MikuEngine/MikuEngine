@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -168,6 +168,9 @@
     <ClCompile Include="Script\Boss\BossPattern\BossPatternBase.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\BossPatternManager.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossBullet.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossBulletEightway.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossBulletThreeway.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossMeteor.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossPillar.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossPillarCrystalizedPiece.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossProjectile.cpp" />
@@ -246,6 +249,9 @@
     <ClInclude Include="Script\Boss\BossPattern\BossPatternBase.h" />
     <ClInclude Include="Script\Boss\BossPattern\BossPatternManager.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossBullet.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossBulletEightway.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossBulletThreeway.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossMeteor.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossPillar.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossPillarCrystalizedPiece.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossProjectile.h" />

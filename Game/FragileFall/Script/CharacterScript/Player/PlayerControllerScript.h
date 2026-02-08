@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -437,6 +437,7 @@ namespace game
 
 
         float GetBaseMoveSpeed() const { return 13.0f; }
+        float GetMoveSpeed() const { return m_moveSpeed; }
         void  SetMoveSpeed(float value) { m_moveSpeed = value; }
 
         // 대시 거리 (m_dashImpulseMultiplier가 대시 거리를 결정하는 물리 힘입니다)

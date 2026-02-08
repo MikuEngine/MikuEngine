@@ -1,9 +1,11 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Monster/RoundType/MonsterRoundType.h"
 #include "Script/CharacterScript/Monster/RoundType/MonsterRoundGreen.h"
+#include "Script/Boss/BossPattern/Components/BossBulletThreeway.h"
+#include "Script/Boss/BossPattern/Components/BossBulletEightway.h"
 #include "Script/ParticleAttachment.h"
 
 #include <Framework/Asset/Prefab.h>
@@ -188,6 +190,104 @@ namespace game
 
 			// BulletMonster 컴포넌트 설정
 			auto* bullet = go->GetComponent<BulletMonster>();
+			if (bullet)
+			{
+				bullet->Setup(std::move(movement), params, this);
+			}
+
+			// effect
+			auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
+			if (effect)
+			{
+				effect->GetComponent<ParticleAttachment>()->SetTarget(go);
+			}
+		}
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 보스 3방향 총알 발사 (중앙 + 좌우 퍼짐)
+	// ═══════════════════════════════════════════════════════════════
+	void BulletFactory::ThreewayFireBoss(const engine::Vector3& position,
+	                                     const engine::Vector3& direction,
+	                                     float spreadAngle,
+	                                     const BulletParams& params)
+	{
+		// 생성 위치: 보스 xz 좌표 + y=1.5 (오프셋)
+		engine::Vector3 spawnPosition = position;
+		spawnPosition.y = 1.5f;
+
+		// direction의 Y 성분 제거 (XZ 평면 방향만 사용)
+		engine::Vector3 directionXZ = direction;
+		directionXZ.y = 0.0f;
+		directionXZ.Normalize();
+
+		// 3방향: 좌(-spreadAngle), 중앙(0), 우(+spreadAngle)
+		const float angles[3] = { -spreadAngle, 0.0f, spreadAngle };
+
+		for (int i = 0; i < 3; ++i)
+		{
+			auto go = engine::Prefab::Instantiate("BossBulletProjectile");
+			if (!go) continue;
+
+			go->GetTransform()->SetLocalPosition(spawnPosition);
+
+			// 방향 회전 (Y축 기준)
+			DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY(angles[i]);
+			engine::Vector3 fireDir = engine::Vector3::TransformNormal(directionXZ, rot);
+			fireDir.Normalize();
+
+			// Movement 생성 및 초기화 (Linear만 사용)
+			auto movement = CreateMovement(params);
+			movement->Initialize(go, fireDir, params.speed);
+
+			// BossBulletThreeway 컴포넌트 설정
+			auto* bullet = go->GetComponent<BossBulletThreeway>();
+			if (bullet)
+			{
+				bullet->Setup(std::move(movement), params, this);
+			}
+
+			// effect
+			auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
+			if (effect)
+			{
+				effect->GetComponent<ParticleAttachment>()->SetTarget(go);
+			}
+		}
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 보스 메테오 8방향 총알 발사
+	// ═══════════════════════════════════════════════════════════════
+	void BulletFactory::EightwayFireBossMeteor(const engine::Vector3& position,
+	                                           const BulletParams& params)
+	{
+		// 생성 위치: 메테오 XZ 좌표 + y=1.5
+		engine::Vector3 spawnPosition = position;
+		spawnPosition.y = 1.5f;
+
+		// 8방향: 0도부터 45도씩 증가
+		const int bulletCount = 8;
+		const float angleStep = DirectX::XM_2PI / bulletCount;
+
+		for (int i = 0; i < bulletCount; ++i)
+		{
+			auto go = engine::Prefab::Instantiate("BossMeteorBulletProjectile");
+			if (!go) continue;
+
+			go->GetTransform()->SetLocalPosition(spawnPosition);
+
+			// 방향 계산 (Y축 기준 회전)
+			float angle = angleStep * i;
+			engine::Vector3 fireDir(std::sin(angle), 0.0f, std::cos(angle));
+			fireDir.Normalize();
+
+			// Movement 생성 및 초기화 (Linear만 사용)
+			auto movement = CreateMovement(params);
+			movement->Initialize(go, fireDir, params.speed);
+
+			// BossBulletEightway 컴포넌트 설정
+			auto* bullet = go->GetComponent<BossBulletEightway>();
 			if (bullet)
 			{
 				bullet->Setup(std::move(movement), params, this);

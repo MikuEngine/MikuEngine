@@ -11,12 +11,7 @@ namespace game
         public BossPatternBase
     {
     private:
-        float m_interval = 3.0f;  // 3초마다 실행
-        int m_bulletCount = 3;  // 한 번에 발사할 탄환 수
-        float m_bulletSpeed = 10.0f;  // 탄환 속도
-        float m_bulletDamage = 20.0f;  // 탄환 데미지
-        float m_spreadAngle = 30.0f;  // 탄환 분산 각도 (도)
-        float m_bulletLifetime = 5.0f;  // 탄환 수명
+        float m_currentInterval = 3.0f;  // 현재 interval (랜덤 or 고정)
 
     public:
         void Start(BossScript* boss) override;
@@ -24,7 +19,7 @@ namespace game
         void End(BossScript* boss) override;
 
         bool IsFinished() const override { return true; }  // 즉시 완료
-        float GetInterval() const override { return m_interval; }
+        float GetInterval() const override { return m_currentInterval; }
         float GetCooldown() const override { return 0.0f; }
 
         std::string GetPatternName() const override { return "BulletFire"; }

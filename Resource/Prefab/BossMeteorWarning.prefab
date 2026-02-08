@@ -22,15 +22,15 @@
                         "w": 0.7071067094802856
                     },
                     "Scale": {
-                        "x": 2.5,
-                        "y": 2.5,
+                        "x": 1.0,
+                        "y": 1.0,
                         "z": 1.0
                     }
                 },
                 {
                     "Type": "SpriteRenderer",
                     "Active": true,
-                    "TextureFilePath": "Resource/Texture/Sun.png",
+                    "TextureFilePath": "Resource/Texture/temp_Strite_WarningMeteor.png",
                     "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
