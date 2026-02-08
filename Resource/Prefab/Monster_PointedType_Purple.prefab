@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": 1.16809906103299e-06,
-                        "z": 0.0
+                        "x": 1.5522593259811401,
+                        "y": 1.1233778423047625e-06,
+                        "z": -4.8757829666137695
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -64,7 +64,7 @@
                     "syncWithTransform": false,
                     "layer": 2,
                     "materialType": 1,
-                    "radius": 1.2000000476837158,
+                    "radius": 1.0299999713897705,
                     "height": 4.329999923706055
                 },
                 {
@@ -84,7 +84,7 @@
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 300.0,
-                    "AttackRange": 8.399999618530273,
+                    "AttackRange": 15.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 11.899999618530273,
@@ -102,21 +102,22 @@
                     "FleeRange": 10.0,
                     "SafeRange": 14.0,
                     "FleeSpeedMultiplier": 1.7000000476837158,
-                    "FleeDistanceMin": 5.0,
-                    "FleeDistanceMax": 12.0,
+                    "FleeDistanceMin": 4.0,
+                    "FleeDistanceMax": 8.0,
+                    "FleeSafetyMargin": 2,
+                    "WallCollisionInfoTimeout": 3.0,
+                    "FleeStuckCheckInterval": 1.0,
+                    "FleeStuckDistanceThreshold": 0.5,
                     "RedemptionSpeedMultiplier": 1.5,
-                    "LaststandRetryInterval": 5.0,
-                    "MapBoundXMin": -29.5,
-                    "MapBoundXMax": 29.5,
-                    "MapBoundZMin": -18.5,
-                    "MapBoundZMax": 19.5
+                    "RedemptionDuration": 1.0,
+                    "LaststandRetryInterval": 5.0
                 },
                 {
                     "Type": "PathfindingAgent",
                     "Active": true,
-                    "PathUpdateInterval": 1.0,
-                    "WaypointReachDistance": 0.5,
-                    "TargetMoveThreshold": 1.0
+                    "PathUpdateInterval": 0.5,
+                    "WaypointReachDistance": 1.0,
+                    "TargetMoveThreshold": 0.30000001192092896
                 },
                 {
                     "Type": "SkeletalMeshRenderer",

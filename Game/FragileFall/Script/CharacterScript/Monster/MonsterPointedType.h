@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -6,6 +6,7 @@
 namespace engine
 {
     struct CollisionInfo;
+    class GridMap;
 }
 
 namespace game
@@ -47,10 +48,23 @@ namespace game
         // 패스파인딩 기반 도망 (인스펙터에서 설정 가능)
         float m_fleeDistanceMin = 20.0f;        // 도망 위치 최소 거리
         float m_fleeDistanceMax = 70.0f;        // 도망 위치 최대 거리
+        int m_fleeSafetyMargin = 1;             // 도망 위치 안전 마진 (0=없음, 1=3x3, 2=5x5)
         
         // 런타임 상태 (직렬화 불필요)
         engine::Vector3 m_fleeTargetPos = engine::Vector3::Zero;  // 현재 도망 목표 위치
         bool m_hasFleeTarget = false;           // 유효한 도망 목표가 있는지
+        
+        // Wall 충돌 정보 (도망 방향 우선순위 결정용)
+        engine::Vector3 m_lastWallCollisionNormal = engine::Vector3::Zero;  // 마지막 벽 충돌 노말
+        engine::TimePoint m_lastWallCollisionTime;                          // 마지막 벽 충돌 시간
+        bool m_hasWallCollisionInfo = false;                                // 유효한 벽 충돌 정보 여부
+        float m_wallCollisionInfoTimeout = 3.0f;                            // 벽 충돌 정보 유효 시간
+        
+        // Flee 끼임 감지용
+        engine::Vector3 m_lastFleePosition = engine::Vector3::Zero;         // 마지막 Flee 위치
+        engine::TimePoint m_lastFleePositionCheckTime;                      // 마지막 위치 체크 시간
+        float m_fleeStuckCheckInterval = 2.0f;                              // 끼임 체크 주기 (인스펙터 조절 가능)
+        float m_fleeStuckDistanceThreshold = 0.5f;                          // 끼임 판정 거리 (인스펙터 조절 가능)
 
         // ─────────────────────────────────────────────
         // Flee 실패 → Redemption → Laststand 시스템
@@ -61,21 +75,20 @@ namespace game
 
         // Redemption 상태 변수
         engine::Vector3 m_redemptionMoveDir = engine::Vector3::Zero;  // 이동 방향
-        int m_redemptionReflectCount = 0;       // 반사 횟수 (2회 후 패스찾기)
-        static constexpr int kRedemptionMaxReflects = 2;
-        static constexpr int kRedemptionPathAttempts = 60;  // 2회 반사 후 패스찾기 시도 횟수
+        int m_redemptionReflectCount = 0;       // 반사 횟수 (1회 후 타이머 시작)
+        static constexpr int kRedemptionMaxReflects = 1;
+        static constexpr int kRedemptionPathAttempts = 60;  // 1회 반사 + 타이머 후 패스찾기 시도 횟수
         float m_redemptionSpeedMultiplier = 1.5f;  // Redemption 이동 속도 배율
+        float m_redemptionDuration = 1.0f;      // Redemption 최소 지속 시간 (1회 반사 후)
+        float m_redemptionTimer = 0.0f;         // Redemption 타이머 (런타임)
 
         // Laststand 상태 변수
         float m_laststandTimer = 0.0f;          // 패스찾기 재시도 타이머
         float m_laststandRetryInterval = 5.0f;  // 5초마다 재시도
         static constexpr int kLaststandPathAttempts = 20;  // 한번에 20회 시도
-
-        // 맵 경계 (도망 위치 선정용, 인스펙터에서 설정 가능)
-        float m_mapBoundXMin = -29.5f;
-        float m_mapBoundXMax = 29.5f;
-        float m_mapBoundZMin = -18.5f;
-        float m_mapBoundZMax = 19.5f;
+        
+        // GridMap 캐시 (도망 위치 유효성 체크용)
+        engine::GridMap* m_gridMap = nullptr;
 
     public:
         void Awake() override;
@@ -146,6 +159,7 @@ namespace game
         // 뾰족 보라 - 패스파인딩 기반 도망
         bool TrySelectFleeTarget();             // 도망 위치 선정 시도 (최대 10회)
         void MoveToFleeTarget();                // 도망 위치로 패스파인딩 이동
+        bool IsPositionSafeForFlee(const engine::Vector3& position) const;  // 도망 위치 안전 체크 (마진 포함)
 
         // Redemption 반사 헬퍼
         engine::Vector3 SnapNormalToAxis(const engine::Vector3& normal) const;

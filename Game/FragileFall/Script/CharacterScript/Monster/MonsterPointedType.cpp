@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterPointedType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -6,9 +6,13 @@
 #include <Engine/Core/System/MyTime.h>
 #include <Framework/Object/Component/AnimFSM.h>
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
+#include <Framework/Object/Component/Pathfinding/GridMap.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
+#include <Framework/System/SystemManager.h>
+#include <Framework/System/PathfindingSystem.h>
+#include <Framework/Object/Component/Collider.h>
 
 namespace game
 {
@@ -36,6 +40,10 @@ namespace game
             m_pathfindingAgent->SetWaypointReachDistance(0.6f);    // 속도 높을 때 오버슈트 방지 (넉넉한 도달 거리)
             m_pathfindingAgent->SetTargetMoveThreshold(2.0f);       // 목표가 2.0f 이상 움직이면 재계산
         }
+        
+        // GridMap 캐싱 (도망 위치 유효성 체크용)
+        auto& pathfindingSystem = engine::SystemManager::Get().GetPathfindingSystem();
+        m_gridMap = pathfindingSystem.GetGridMap();
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -125,8 +133,11 @@ namespace game
             AddFSMTransition("Flee", "EngageMove", "PlayerInFleeRange", BoolFalse(), "PlayerInRange", BoolFalse());
             AddFSMTransition("Flee", "EngageStop", "PlayerInFleeRange", BoolFalse(), "PlayerInRange", BoolTrue());
 
-            // Flee → Redemption (패스찾기 120회 실패)
+            // Flee → Redemption (패스찾기 120회 실패 또는 끼임 감지)
             AddFSMTransition("Flee", "Redemption", "NoWayOut", BoolTrue());
+            
+            // Redemption → Flee (2회 반사 후 패스찾기 성공)
+            AddFSMTransition("Redemption", "Flee", "NoWayOut", BoolFalse(), "PlayerInFleeRange", BoolTrue());
             
             // Redemption → Laststand (2회 반사 후 패스찾기 실패)
             AddFSMTransition("Redemption", "Laststand", "RedemptionFailed", BoolTrue());
@@ -438,7 +449,29 @@ namespace game
 
     void MonsterPointedType::ExecuteFleeBehaviorNonPhysics(float deltaTime)
     {
-        // 도망 중에도 플레이어를 바라보거나, 쿨타임 계산 등
+        // ─────────────────────────────────────────────
+        // 끼임 감지 (주기적으로 위치 변화 체크)
+        // ─────────────────────────────────────────────
+        float elapsedSinceCheck = engine::Time::GetElapsedSeconds(m_lastFleePositionCheckTime);
+        if (elapsedSinceCheck >= m_fleeStuckCheckInterval)
+        {
+            engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+            float distanceMoved = engine::Vector3::Distance(m_lastFleePosition, currentPos);
+            
+            // 이동 거리가 임계값 이하면 끼임으로 판정
+            if (distanceMoved < m_fleeStuckDistanceThreshold)
+            {
+                // 끼임 감지! → Redemption 전이
+                if (m_logicFSM)
+                {
+                    m_logicFSM->SetParameter("NoWayOut", true);
+                }
+            }
+            
+            // 위치 및 시간 갱신
+            m_lastFleePosition = currentPos;
+            m_lastFleePositionCheckTime = engine::Time::GetTimestamp();
+        }
     }
 
     void MonsterPointedType::ExecuteEngageMoveBehaviorNonPhysics(float deltaTime)
@@ -476,8 +509,30 @@ namespace game
     void MonsterPointedType::ExecuteRedemptionBehaviorNonPhysics(float deltaTime)
     {
         // Redemption: 충돌 반사로 이동 중
-        // 반사 횟수는 OnCollisionEnter에서 관리
-        // 비물리에서는 특별히 할 일 없음
+        // 타이머 업데이트
+        m_redemptionTimer += deltaTime;
+        
+        // 1회 반사 후 + 1초 경과 시 패스찾기
+        if (m_redemptionReflectCount >= kRedemptionMaxReflects && 
+            m_redemptionTimer >= m_redemptionDuration)
+        {
+            if (TryFindPathAfterRedemption())
+            {
+                // 패스 찾음 → Flee로 복귀
+                if (m_logicFSM)
+                {
+                    m_logicFSM->SetParameter("NoWayOut", false);
+                }
+            }
+            else
+            {
+                // 패스 못 찾음 → Laststand로 전이
+                if (m_logicFSM)
+                {
+                    m_logicFSM->SetParameter("RedemptionFailed", true);
+                }
+            }
+        }
     }
 
     void MonsterPointedType::ExecuteLaststandBehaviorNonPhysics(float deltaTime)
@@ -510,11 +565,17 @@ namespace game
                 float randomDistance = m_fleeDistanceMin + 
                     (static_cast<float>(rand()) / RAND_MAX) * (m_fleeDistanceMax - m_fleeDistanceMin);
 
-                // 도망 목표 위치 계산 + 맵 경계로 클램핑
+                // 도망 목표 위치 계산
                 engine::Vector3 targetPos;
-                targetPos.x = std::clamp(myPos.x + randomDistance * std::cos(finalAngle), m_mapBoundXMin, m_mapBoundXMax);
+                targetPos.x = myPos.x + randomDistance * std::cos(finalAngle);
                 targetPos.y = myPos.y;
-                targetPos.z = std::clamp(myPos.z + randomDistance * std::sin(finalAngle), m_mapBoundZMin, m_mapBoundZMax);
+                targetPos.z = myPos.z + randomDistance * std::sin(finalAngle);
+                
+                // 안전 마진 체크 (대각선 경계 + 주변 여유 공간)
+                if (!IsPositionSafeForFlee(targetPos))
+                {
+                    continue;  // 안전하지 않으면 다음 시도
+                }
 
                 m_pathfindingAgent->RequestPathImmediate(targetPos);
                 
@@ -658,6 +719,10 @@ namespace game
             m_fleeAttemptCount = 0;  // 실패 카운트 리셋
             m_isNoWayOut = false;
             
+            // 끼임 감지 초기화
+            m_lastFleePosition = GetTransform()->GetWorldPosition();
+            m_lastFleePositionCheckTime = engine::Time::GetTimestamp();
+            
             if (m_logicFSM)
             {
                 m_logicFSM->SetParameter("NoWayOut", false);
@@ -674,8 +739,13 @@ namespace game
         }
         else if (state == "EngageMove")
         {
-            // EngageMove 상태 진입 시: 이동은 MoveTowardsPlayer()에서 AddForce로 처리됨
-            // 물리 상태 초기화 불필요 (충돌 응답 보존을 위해)
+            // EngageMove 상태 진입 시: 패스 재계산 (공격 후 또는 Idle에서 전이 시)
+            if (m_pathfindingAgent && m_targetPlayer)
+            {
+                engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+                m_pathfindingAgent->RequestPathImmediate(playerPos);
+            }
+            
             m_logicFSM->SetParameter("AttackComplete", false);
         }
         else if (state == "EngageStop")
@@ -697,11 +767,13 @@ namespace game
                 m_redemptionMoveDir.Normalize();
             }
             m_redemptionReflectCount = 0;
+            m_redemptionTimer = 0.0f;  // 타이머 초기화
             
             // FSM 파라미터 초기화
             if (m_logicFSM)
             {
                 m_logicFSM->SetParameter("RedemptionFailed", false);
+                m_logicFSM->SetParameter("NoWayOut", true);  // Redemption 진입 시 NoWayOut 유지
             }
         }
         else if (state == "Laststand")
@@ -896,6 +968,44 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 뾰족 보라 - 패스파인딩 기반 도망
     // ═══════════════════════════════════════════════════════════════
+    bool MonsterPointedType::IsPositionSafeForFlee(const engine::Vector3& position) const
+    {
+        if (!m_gridMap) return true;  // GridMap 없으면 체크 안함
+        
+        int centerX, centerZ;
+        m_gridMap->WorldToGrid(position, centerX, centerZ);
+        
+        // 중심 셀이 유효하지 않거나 이동 불가능하면 즉시 false
+        if (!m_gridMap->IsValid(centerX, centerZ) || !m_gridMap->IsWalkable(centerX, centerZ))
+        {
+            return false;
+        }
+        
+        // 안전 마진이 0이면 중심만 체크
+        if (m_fleeSafetyMargin <= 0)
+        {
+            return true;
+        }
+        
+        // 주변 셀 체크 (NxN 범위)
+        for (int dz = -m_fleeSafetyMargin; dz <= m_fleeSafetyMargin; ++dz)
+        {
+            for (int dx = -m_fleeSafetyMargin; dx <= m_fleeSafetyMargin; ++dx)
+            {
+                int checkX = centerX + dx;
+                int checkZ = centerZ + dz;
+                
+                // 범위를 벗어나거나 이동 불가능한 셀이 있으면 안전하지 않음
+                if (!m_gridMap->IsValid(checkX, checkZ) || !m_gridMap->IsWalkable(checkX, checkZ))
+                {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
     bool MonsterPointedType::TrySelectFleeTarget()
     {
         if (!m_targetPlayer || !m_pathfindingAgent) return false;
@@ -910,26 +1020,72 @@ namespace game
 
         // 기본 방향의 각도 계산 (XZ 평면)
         float baseAngle = std::atan2(awayFromPlayer.z, awayFromPlayer.x);
+        
+        // ─────────────────────────────────────────────
+        // Wall 충돌 정보 유효성 체크 (3초 이내)
+        // ─────────────────────────────────────────────
+        bool useWallInfo = false;
+        float wallAwayAngle = 0.0f;
+        
+        if (m_hasWallCollisionInfo)
+        {
+            float elapsedTime = engine::Time::GetElapsedSeconds(m_lastWallCollisionTime);
+            if (elapsedTime < m_wallCollisionInfoTimeout)
+            {
+                // 벽 반대 방향 (벽 노말 방향) 계산
+                wallAwayAngle = std::atan2(m_lastWallCollisionNormal.z, m_lastWallCollisionNormal.x);
+                useWallInfo = true;
+            }
+            else
+            {
+                // 타임아웃 - 정보 무효화
+                m_hasWallCollisionInfo = false;
+            }
+        }
 
-        // 최대 10회 시도
+        // ─────────────────────────────────────────────
+        // 도망 위치 탐색 (Wall 정보 우선)
+        // ─────────────────────────────────────────────
+        constexpr int kWallPriorityAttempts = 5;  // 벽 반대 방향 우선 시도
+        constexpr int kNormalAttempts = 5;        // 일반 시도
         constexpr int kMaxAttempts = 10;
+        
         for (int attempt = 0; attempt < kMaxAttempts; ++attempt)
         {
-            // 랜덤 각도: 기본 방향(180도) 기준 ±90도 범위
-            // 즉, -90도 ~ +90도 오프셋 (플레이어 반대쪽 반구)
-            float randomOffsetDeg = (static_cast<float>(rand()) / RAND_MAX) * 180.0f - 90.0f;
-            float randomOffsetRad = DirectX::XMConvertToRadians(randomOffsetDeg);
-            float finalAngle = baseAngle + randomOffsetRad;
+            float finalAngle;
+            
+            // 전반부 5회: 벽 반대 방향 우선 (±45도)
+            if (useWallInfo && attempt < kWallPriorityAttempts)
+            {
+                // 벽 반대 방향 기준 ±45도
+                float randomOffsetDeg = (static_cast<float>(rand()) / RAND_MAX) * 90.0f - 45.0f;
+                float randomOffsetRad = DirectX::XMConvertToRadians(randomOffsetDeg);
+                finalAngle = wallAwayAngle + randomOffsetRad;
+            }
+            // 후반부 5회: 플레이어 반대 방향 (±90도)
+            else
+            {
+                // 플레이어 반대 방향 기준 ±90도
+                float randomOffsetDeg = (static_cast<float>(rand()) / RAND_MAX) * 180.0f - 90.0f;
+                float randomOffsetRad = DirectX::XMConvertToRadians(randomOffsetDeg);
+                finalAngle = baseAngle + randomOffsetRad;
+            }
 
             // 랜덤 거리: min ~ max 범위
             float randomDistance = m_fleeDistanceMin + 
                 (static_cast<float>(rand()) / RAND_MAX) * (m_fleeDistanceMax - m_fleeDistanceMin);
 
-            // 도망 목표 위치 계산 + 맵 경계로 클램핑
+            // 도망 목표 위치 계산
             engine::Vector3 targetPos;
-            targetPos.x = std::clamp(myPos.x + randomDistance * std::cos(finalAngle), m_mapBoundXMin, m_mapBoundXMax);
+            targetPos.x = myPos.x + randomDistance * std::cos(finalAngle);
             targetPos.y = myPos.y;
-            targetPos.z = std::clamp(myPos.z + randomDistance * std::sin(finalAngle), m_mapBoundZMin, m_mapBoundZMax);
+            targetPos.z = myPos.z + randomDistance * std::sin(finalAngle);
+            
+            // 안전 마진 체크 (대각선 경계 + 주변 여유 공간)
+            if (!IsPositionSafeForFlee(targetPos))
+            {
+                continue;  // 안전하지 않으면 다음 시도
+            }
 
             // 즉시 패스파인딩 시도 (지연 없이 바로 계산)
             m_pathfindingAgent->RequestPathImmediate(targetPos);
@@ -1049,11 +1205,17 @@ namespace game
             float randomDistance = m_fleeDistanceMin + 
                 (static_cast<float>(rand()) / RAND_MAX) * (m_fleeDistanceMax - m_fleeDistanceMin);
 
-            // 도망 목표 위치 계산 + 맵 경계로 클램핑
+            // 도망 목표 위치 계산
             engine::Vector3 targetPos;
-            targetPos.x = std::clamp(myPos.x + randomDistance * std::cos(finalAngle), m_mapBoundXMin, m_mapBoundXMax);
+            targetPos.x = myPos.x + randomDistance * std::cos(finalAngle);
             targetPos.y = myPos.y;
-            targetPos.z = std::clamp(myPos.z + randomDistance * std::sin(finalAngle), m_mapBoundZMin, m_mapBoundZMax);
+            targetPos.z = myPos.z + randomDistance * std::sin(finalAngle);
+            
+            // 안전 마진 체크 (대각선 경계 + 주변 여유 공간)
+            if (!IsPositionSafeForFlee(targetPos))
+            {
+                continue;  // 안전하지 않으면 다음 시도
+            }
 
             m_pathfindingAgent->RequestPathImmediate(targetPos);
             
@@ -1075,11 +1237,39 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterPointedType::OnCollisionEnter(const engine::CollisionInfo& info)
     {
+        if (!info.gameObject) return;
+        
+        // ─────────────────────────────────────────────
+        // Wall 충돌 정보 저장 (모든 상태에서, 도망 방향 우선순위용)
+        // ─────────────────────────────────────────────
+        auto* collider = info.gameObject->GetComponent<engine::Collider>();
+        if (collider)
+        {
+            uint32_t layer = collider->GetLayer();
+            if (layer == engine::PhysicsLayer::Index::Wall)
+            {
+                // 충돌 노말 추출
+                for (const auto& contact : info.contacts)
+                {
+                    engine::Vector3 normal = -contact.normal;
+                    normal.y = 0.0f;
+                    if (normal.LengthSquared() > 0.0001f)
+                    {
+                        normal.Normalize();
+                        m_lastWallCollisionNormal = normal;
+                        m_lastWallCollisionTime = engine::Time::GetTimestamp();
+                        m_hasWallCollisionInfo = true;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // ─────────────────────────────────────────────
         // Redemption 상태에서만 반사 처리
+        // ─────────────────────────────────────────────
         std::string currentState = GetCurrentState();
         if (currentState != "Redemption") return;
-
-        if (!info.gameObject) return;
 
         // ─────────────────────────────────────────────
         // 충돌 노말 추출
@@ -1125,29 +1315,8 @@ namespace game
         m_redemptionMoveDir = ReflectDirection(m_redemptionMoveDir, snappedNormal);
         m_redemptionMoveDir.Normalize();
         
-        // 반사 횟수 증가
+        // 반사 횟수 증가 (1회 반사 후 타이머가 종료 조건 체크)
         m_redemptionReflectCount++;
-        
-        // 2회 반사 후 패스찾기 시도
-        if (m_redemptionReflectCount >= kRedemptionMaxReflects)
-        {
-            if (TryFindPathAfterRedemption())
-            {
-                // 패스 찾음 → Flee로 복귀
-                if (m_logicFSM)
-                {
-                    m_logicFSM->SetParameter("NoWayOut", false);
-                }
-            }
-            else
-            {
-                // 패스 못 찾음 → Laststand로 전이
-                if (m_logicFSM)
-                {
-                    m_logicFSM->SetParameter("RedemptionFailed", true);
-                }
-            }
-        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1252,17 +1421,38 @@ namespace game
             ImGui::Text("Pathfinding Flee:");
             ImGui::DragFloat("Flee Dist Min", &m_fleeDistanceMin, 1.0f, 5.0f, 100.0f, "%.0f m");
             ImGui::DragFloat("Flee Dist Max", &m_fleeDistanceMax, 1.0f, 10.0f, 150.0f, "%.0f m");
+            ImGui::DragInt("Safety Margin", &m_fleeSafetyMargin, 0.1f, 0, 5);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("0 = No margin\n1 = 3x3 cells (recommended)\n2 = 5x5 cells\nHigher = safer but fewer positions");
+            }
+            ImGui::DragFloat("Wall Info Timeout", &m_wallCollisionInfoTimeout, 0.1f, 0.5f, 10.0f, "%.1f sec");
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("How long wall collision info is used for flee direction priority");
+            }
             
             ImGui::Spacing();
-            ImGui::Text("Map Bounds (Flee Target):");
-            ImGui::DragFloat("X Min", &m_mapBoundXMin, 0.5f, -100.0f, 0.0f, "%.1f");
-            ImGui::DragFloat("X Max", &m_mapBoundXMax, 0.5f, 0.0f, 100.0f, "%.1f");
-            ImGui::DragFloat("Z Min", &m_mapBoundZMin, 0.5f, -100.0f, 0.0f, "%.1f");
-            ImGui::DragFloat("Z Max", &m_mapBoundZMax, 0.5f, 0.0f, 100.0f, "%.1f");
+            ImGui::Text("Flee Stuck Detection:");
+            ImGui::DragFloat("Stuck Check Interval", &m_fleeStuckCheckInterval, 0.1f, 0.5f, 10.0f, "%.1f sec");
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("How often to check if monster is stuck during Flee");
+            }
+            ImGui::DragFloat("Stuck Distance Threshold", &m_fleeStuckDistanceThreshold, 0.1f, 0.1f, 5.0f, "%.1f m");
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("If moved less than this distance, consider stuck");
+            }
             
             ImGui::Spacing();
             ImGui::Text("Redemption/Laststand:");
             ImGui::DragFloat("Redemption Speed Mult", &m_redemptionSpeedMultiplier, 0.1f, 0.5f, 3.0f, "%.1fx");
+            ImGui::DragFloat("Redemption Duration", &m_redemptionDuration, 0.1f, 0.5f, 5.0f, "%.1f sec");
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Time to move after first wall bounce before pathfinding retry");
+            }
             ImGui::DragFloat("Laststand Retry Interval", &m_laststandRetryInterval, 0.5f, 1.0f, 10.0f, "%.1f sec");
             
             // 런타임 상태 표시
@@ -1282,7 +1472,29 @@ namespace game
             ImGui::Text("  Flee Attempt Count: %d / %d", m_fleeAttemptCount, kMaxFleeAttempts);
             ImGui::Text("  Is No Way Out: %s", m_isNoWayOut ? "Yes" : "No");
             ImGui::Text("  Redemption Reflects: %d / %d", m_redemptionReflectCount, kRedemptionMaxReflects);
+            ImGui::Text("  Redemption Timer: %.2f / %.2f sec", m_redemptionTimer, m_redemptionDuration);
             ImGui::Text("  Laststand Timer: %.1f / %.1f", m_laststandTimer, m_laststandRetryInterval);
+            
+            ImGui::Spacing();
+            ImGui::Text("  Wall Collision Info:");
+            ImGui::Text("    Has Info: %s", m_hasWallCollisionInfo ? "Yes" : "No");
+            if (m_hasWallCollisionInfo)
+            {
+                float elapsedTime = engine::Time::GetElapsedSeconds(m_lastWallCollisionTime);
+                ImGui::Text("    Elapsed: %.2f / %.2f sec", elapsedTime, m_wallCollisionInfoTimeout);
+                ImGui::Text("    Normal: (%.2f, %.2f)", m_lastWallCollisionNormal.x, m_lastWallCollisionNormal.z);
+            }
+            
+            ImGui::Spacing();
+            ImGui::Text("  Flee Stuck Detection:");
+            float elapsedSinceCheck = engine::Time::GetElapsedSeconds(m_lastFleePositionCheckTime);
+            ImGui::Text("    Check Timer: %.2f / %.2f sec", elapsedSinceCheck, m_fleeStuckCheckInterval);
+            engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+            float currentDistance = engine::Vector3::Distance(m_lastFleePosition, currentPos);
+            ImGui::Text("    Distance Moved: %.2f / %.2f m", currentDistance, m_fleeStuckDistanceThreshold);
+            ImGui::TextColored(
+                currentDistance < m_fleeStuckDistanceThreshold ? ImVec4(1.0f, 0.3f, 0.3f, 1.0f) : ImVec4(0.3f, 1.0f, 0.3f, 1.0f),
+                "    Status: %s", currentDistance < m_fleeStuckDistanceThreshold ? "STUCK!" : "Moving");
         }
 
         // 런타임 정보
@@ -1344,16 +1556,15 @@ namespace game
         j["FleeSpeedMultiplier"] = m_fleeSpeedMultiplier;
         j["FleeDistanceMin"] = m_fleeDistanceMin;
         j["FleeDistanceMax"] = m_fleeDistanceMax;
+        j["FleeSafetyMargin"] = m_fleeSafetyMargin;
+        j["WallCollisionInfoTimeout"] = m_wallCollisionInfoTimeout;
+        j["FleeStuckCheckInterval"] = m_fleeStuckCheckInterval;
+        j["FleeStuckDistanceThreshold"] = m_fleeStuckDistanceThreshold;
         
         // Redemption/Laststand 설정 (Purple용)
         j["RedemptionSpeedMultiplier"] = m_redemptionSpeedMultiplier;
+        j["RedemptionDuration"] = m_redemptionDuration;
         j["LaststandRetryInterval"] = m_laststandRetryInterval;
-        
-        // 맵 경계 (Purple용)
-        j["MapBoundXMin"] = m_mapBoundXMin;
-        j["MapBoundXMax"] = m_mapBoundXMax;
-        j["MapBoundZMin"] = m_mapBoundZMin;
-        j["MapBoundZMax"] = m_mapBoundZMax;
     }
 
     void MonsterPointedType::Load(const engine::json& j)
@@ -1369,15 +1580,14 @@ namespace game
         m_fleeSpeedMultiplier = j.value("FleeSpeedMultiplier", 1.7f);
         m_fleeDistanceMin = j.value("FleeDistanceMin", 20.0f);
         m_fleeDistanceMax = j.value("FleeDistanceMax", 70.0f);
+        m_fleeSafetyMargin = j.value("FleeSafetyMargin", 1);
+        m_wallCollisionInfoTimeout = j.value("WallCollisionInfoTimeout", 3.0f);
+        m_fleeStuckCheckInterval = j.value("FleeStuckCheckInterval", 2.0f);
+        m_fleeStuckDistanceThreshold = j.value("FleeStuckDistanceThreshold", 0.5f);
         
         // Redemption/Laststand 설정 (Purple용)
         m_redemptionSpeedMultiplier = j.value("RedemptionSpeedMultiplier", 1.5f);
+        m_redemptionDuration = j.value("RedemptionDuration", 1.0f);
         m_laststandRetryInterval = j.value("LaststandRetryInterval", 5.0f);
-        
-        // 맵 경계 (Purple용)
-        m_mapBoundXMin = j.value("MapBoundXMin", -29.5f);
-        m_mapBoundXMax = j.value("MapBoundXMax", 29.5f);
-        m_mapBoundZMin = j.value("MapBoundZMin", -18.5f);
-        m_mapBoundZMax = j.value("MapBoundZMax", 19.5f);
     }
 }
