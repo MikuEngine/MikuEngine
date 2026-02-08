@@ -29,6 +29,7 @@
 #include <Framework/Object/Component/LogicFSM.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Engine/Framework/Object/Component/Renderer/AfterimageRenderer.h>
+#include <Engine/Framework/Object/Component/Renderer/SpriteRenderer.h>
 
 namespace game
 {
@@ -303,32 +304,78 @@ namespace game
         float adjustedPlayerOffset = m_linePlayerOffset * offsetMultiplier;
         float adjustedMonsterOffset = m_lineMonsterOffset * offsetMultiplier;
 
-        // 라인 위치: 플레이어와 몬스터의 중간점 (피벗이 중앙이므로)
-        engine::Vector3 midPoint = (playerPos + targetPos) * 0.5f;
+        // 오프셋을 적용한 실제 라인 시작/끝점 계산
+        engine::Vector3 lineStart = playerPos + direction * adjustedPlayerOffset;
+        engine::Vector3 lineEnd = targetPos - direction * adjustedMonsterOffset;
+
+        // 라인 위치: 오프셋 적용된 시작점과 끝점의 중간점
+        engine::Vector3 midPoint = (lineStart + lineEnd) * 0.5f;
         m_lineTransform->SetLocalPosition(midPoint);
 
-        // 라인 회전 (로컬 Y축이 direction을 향하도록)
-        // 스프라이트가 X축 90도로 눕혀져 있어서 로컬 Y축이 Forward
+        // 라인 회전 (로컬 X축이 direction을 향하도록)
+        // 스프라이트가 X축 90도로 눕혀져 있고, 스프라이트 길이가 로컬 X축 방향
         // XZ 평면에서 방향 각도 계산 (Y축 회전만)
         float yAngle = std::atan2(direction.x, direction.z);
 
-        // X축 90도 눕힘 + Y축 방향 회전
+        // X축 90도 눕힘 + Y축 방향 회전 + Z축 90도 회전 (스프라이트 길이를 X축으로)
         // CreateFromYawPitchRoll(yaw, pitch, roll) = (Y축, X축, Z축)
         engine::Quaternion rotation = engine::Quaternion::CreateFromYawPitchRoll(
             yAngle,                     // Y축 회전 (방향)
             DirectX::XM_PIDIV2,         // X축 90도 (눕힘)
-            0.0f                        // Z축 회전 없음
+            DirectX::XM_PIDIV2          // Z축 90도 (스프라이트 길이를 X축으로)
         );
         m_lineTransform->SetLocalRotation(rotation);
 
-        // 라인 스케일 (Y축만 조정 - 양방향으로 늘어나므로)
-        // 실제 라인 길이 = 거리 - 보정된 양쪽 오프셋
-        float lineLength = distance - adjustedPlayerOffset - adjustedMonsterOffset;
+        // ─────────────────────────────────────────────
+        // UV 방식: Width 자동 설정 + Transform Scale 역계산
+        // ─────────────────────────────────────────────
+        
+        // 실제 라인 길이 = 오프셋 적용된 두 점 사이의 거리
+        float lineLength = (lineEnd - lineStart).Length();
         if (lineLength < 0.0f) lineLength = 0.0f;
 
-        float yScale = lineLength / m_lineBaseLength;
+        // 상수 정의
+        const float TEXTURE_WIDTH = 3000.0f;          // 텍스처 전체 너비 (픽셀)
+        const float SPRITE_WIDTH = 3000.0f;           // SpriteRenderer Width (텍스처 로드 시 자동 설정됨)
+        const float ENGINE_PPU = 100.0f;              // 엔진 정책: 100 픽셀 = 1 유닛
+
+        // 렌더링할 픽셀 크기 계산 (계단식 증가)
+        // 1단계: 거리 기반 픽셀 계산
+        float pixelsToRender = lineLength * m_linePixelsPerMeter;
+        
+        // 2단계: 단위 픽셀로 내림 (계단식 증가)
+        if (m_linePixelStep > 0.001f)
+        {
+            pixelsToRender = std::floor(pixelsToRender / m_linePixelStep) * m_linePixelStep;
+        }
+        
+        // 3단계: 최소값 보장
+        pixelsToRender = std::max(m_lineMinPixels, pixelsToRender);
+
+        // UV Scale: 텍스처 샘플링 범위 (점선 간격 일정 유지)
+        float uvScaleX = pixelsToRender / TEXTURE_WIDTH;  // 예: 700 / 3000 = 0.233
+
+        // UV Offset: 화살표가 오른쪽 끝에 있으므로, 오른쪽부터 샘플링
+        float uvOffsetX = 1.0f - uvScaleX;  // 예: 1.0 - 0.233 = 0.767
+
+        // 엔진 렌더링 공식: finalSize = (SPRITE_WIDTH / ENGINE_PPU) × uvScale × transformScale
+        // 목표: finalSize = lineLength
+        // 역계산: transformScale = lineLength / ((SPRITE_WIDTH / ENGINE_PPU) × uvScale)
+        float baseSize = (SPRITE_WIDTH / ENGINE_PPU) * uvScaleX;  // 예: (3000/100) × 0.233 = 6.99
+        float xScale = (baseSize > 0.001f) ? (lineLength / baseSize) : 1.0f;  // 예: 10 / 6.99 = 1.43
+
         engine::Vector3 currentScale = m_lineTransform->GetLocalScale();
-        m_lineTransform->SetLocalScale(engine::Vector3(currentScale.x, yScale, currentScale.z));
+        m_lineTransform->SetLocalScale(engine::Vector3(xScale, currentScale.y, currentScale.z));
+
+        // SpriteRenderer에 UV 설정 적용
+        if (auto* renderer = m_lineInstance->GetComponent<engine::SpriteRenderer>())
+        {
+            renderer->SetSpriteInfo(
+                engine::Vector2(uvOffsetX, 0.0f),      // UV Offset (오른쪽부터 샘플링)
+                engine::Vector2(uvScaleX, 1.0f),       // UV Scale (X만 조절, Y는 1.0)
+                engine::Vector2(0.5f, 0.5f)            // Pivot (Center 유지)
+            );
+        }
     }
 
     void ExecutionIndicatorManager::ShowLine()
@@ -805,6 +852,33 @@ namespace game
         ImGui::DragFloat("Line Monster Offset", &m_lineMonsterOffset, 0.1f, 0.0f, 10.0f);
         ImGui::DragFloat("Line Base Length", &m_lineBaseLength, 0.1f, 0.01f, 10.0f);
         ImGui::DragFloat("Line Height", &m_lineHeight, 0.1f, 0.0f, 10.0f);
+        
+        if (ImGui::DragFloat("Line Pixels Per Meter", &m_linePixelsPerMeter, 1.0f, 10.0f, 200.0f, "%.1f"))
+        {
+            m_linePixelsPerMeter = std::clamp(m_linePixelsPerMeter, 10.0f, 200.0f);
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("1m당 텍스처 픽셀 수 (점선 밀도 조절). 값이 클수록 점선이 빽빽함");
+        }
+        
+        if (ImGui::DragFloat("Line Min Pixels", &m_lineMinPixels, 1.0f, 1.0f, 500.0f, "%.1f"))
+        {
+            m_lineMinPixels = std::clamp(m_lineMinPixels, 1.0f, 500.0f);
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("최소 드로우 픽셀 크기 (최소 라인 길이)");
+        }
+        
+        if (ImGui::DragFloat("Line Pixel Step", &m_linePixelStep, 1.0f, 1.0f, 200.0f, "%.1f"))
+        {
+            m_linePixelStep = std::clamp(m_linePixelStep, 1.0f, 200.0f);
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("증가 단위 픽셀 (계단식 증가). 예: 50이면 50px 단위로만 증가");
+        }
 
         ImGui::Separator();
         ImGui::Text("Execution Effect Settings:");
@@ -895,6 +969,9 @@ namespace game
         j["LineMonsterOffset"] = m_lineMonsterOffset;
         j["LineBaseLength"] = m_lineBaseLength;
         j["LineHeight"] = m_lineHeight;
+        j["LinePixelsPerMeter"] = m_linePixelsPerMeter;
+        j["LineMinPixels"] = m_lineMinPixels;
+        j["LinePixelStep"] = m_linePixelStep;
 
         // 처형 이펙트 설정
         j["EffectPrefabName"] = m_effectPrefabName;
@@ -922,6 +999,13 @@ namespace game
         engine::JsonGet(j, "LineMonsterOffset", m_lineMonsterOffset);
         engine::JsonGet(j, "LineBaseLength", m_lineBaseLength);
         engine::JsonGet(j, "LineHeight", m_lineHeight);
+        
+        if (j.contains("LinePixelsPerMeter"))
+            m_linePixelsPerMeter = std::clamp(j["LinePixelsPerMeter"].get<float>(), 10.0f, 200.0f);
+        if (j.contains("LineMinPixels"))
+            m_lineMinPixels = j["LineMinPixels"].get<float>();
+        if (j.contains("LinePixelStep"))
+            m_linePixelStep = j["LinePixelStep"].get<float>();
 
         // 처형 이펙트 설정
         engine::JsonGet(j, "EffectPrefabName", m_effectPrefabName);

@@ -51,6 +51,9 @@ namespace game
         float m_lineMonsterOffset = 0.5f;   // 라인-몬스터 간 오프셋 거리
         float m_lineBaseLength = 1.0f;      // 스케일 1일 때 라인의 월드 길이
         float m_lineHeight = 0.5f;          // 라인의 Y 높이
+        float m_linePixelsPerMeter = 70.0f; // 1m당 픽셀 수 (점선 밀도 조절)
+        float m_lineMinPixels = 103.0f;     // 최소 드로우 픽셀 크기
+        float m_linePixelStep = 50.0f;      // 증가 단위 픽셀 (계단식 증가)
 
         // ─────────────────────────────────────────────
         // 런타임 상태
