@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerTemperManager.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
@@ -78,17 +78,6 @@ namespace game
 		// --- 이동 (Movement) ---
 		Apply(StatType::MoveSpeed, player->GetBaseMoveSpeed(), &PlayerControllerScript::SetMoveSpeed);
 		Apply(StatType::Dash_Distance, player->GetBaseDashDistance(), &PlayerControllerScript::SetDashDistance);
-
-		// --- 버프 관련 데이터 전송 ---
-		// (버프는 수치만 넘겨주고 실제 로직은 플레이어가 대시할 때 사용)
-		// 대시 후 공격력 증가량 (SetBuffAtkDmgAfterDash 사용)
-		Apply(StatType::Buff_AtkDmgAfterDash, 0.0f, &PlayerControllerScript::SetBuffAtkDmgAfterDash);
-
-		// 대시 후 이동속도 증가량 (SetBuffMoveSpeedAfterDash 사용)
-		Apply(StatType::Buff_MoveSpeedAfterDash, 0.0f, &PlayerControllerScript::SetBuffMoveSpeedAfterDash);
-
-		// 버프 유지 시간 (SetBuffDurationAfterDash 사용)
-		Apply(StatType::Buff_DurationAfterDash, 0.0f, &PlayerControllerScript::SetBuffDurationAfterDash);
 
 		// --- 특별 처리 로직 ---
 		float finalAtkSpeed = Apply(StatType::AtkSpeed, player->GetBaseAtkSpeed(), &PlayerControllerScript::SetAtkSpeed);

@@ -157,6 +157,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Manager\BuffManager.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Manager\LoadingScreenDrawer.cpp" />
     <ClCompile Include="Manager\StageManager.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="App\ComponentRegistry.h" />
     <ClInclude Include="App\FragileFall.h" />
     <ClInclude Include="GamePCH.h" />
+    <ClInclude Include="Manager\BuffManager.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Manager\LoadingScreenDrawer.h" />
     <ClInclude Include="Manager\StageManager.h" />

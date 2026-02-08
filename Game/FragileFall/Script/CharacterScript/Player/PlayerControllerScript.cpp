@@ -9,6 +9,7 @@
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Manager/PlayerTemperManager.h"
 #include "Manager/StageManager.h"
+#include "Manager/BuffManager.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Transform.h>
@@ -374,6 +375,11 @@ namespace game
 		float deltaTime = engine::Time::DeltaTime();
 		
 		// ─────────────────────────────────────────────
+		// 버프 타이머 업데이트 (BuffManager가 관리, 타임스케일 영향 받음)
+		// ─────────────────────────────────────────────
+		BuffManager::Update(deltaTime);
+		
+		// ─────────────────────────────────────────────
 		// Idle 전이 대기 타이머 (m_isMoving 판정)
 		// - 입력 있음: 즉시 isMoving = true, 타이머 리셋
 		// - 입력 없음: 타이머 감소 → 0 도달 시 isMoving = false
@@ -582,10 +588,12 @@ namespace game
 		// 이동 처리 (BaseControllerScript::HandleMovement)
 		// - Dynamic: AddForce 기반, PhysX가 충돌 자동 처리
 		// - 슬라이딩 시 감속된 속도로 이동
+		// - 버프 배율 적용 (BuffManager에서 가져옴)
 		// ═══════════════════════════════════════════════════════════════
 		if (CanMove())
 		{
-			float effectiveSpeed = m_moveSpeed;
+			float buffMultiplier = BuffManager::GetMoveSpeedMultiplier();
+			float effectiveSpeed = m_moveSpeed * buffMultiplier;
 			if (isSliding)
 			{
 				effectiveSpeed *= m_slidingSpeedMultiplier;
@@ -631,6 +639,20 @@ namespace game
 				m_isDashing = false;
 				m_dashElapsedTime = 0.0f;
 			}
+		}
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 상태 이탈 콜백
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::OnStateExited(const std::string& state)
+	{
+		if (state == "Execution")
+		{
+			// ═══════════════════════════════════════════════════════════════
+			// 처형 완료 트리거 전달 (BuffManager가 버프 처리)
+			// ═══════════════════════════════════════════════════════════════
+			BuffManager::OnExecutionCompleted();
 		}
 	}
 
@@ -807,6 +829,11 @@ namespace game
 		{
 			m_logicFSM->SetTrigger("DashComplete");
 		}
+
+		// ═══════════════════════════════════════════════════════════════
+		// 대시 종료 트리거 전달 (BuffManager가 버프 처리)
+		// ═══════════════════════════════════════════════════════════════
+		BuffManager::OnDashEnded();
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -888,6 +915,7 @@ namespace game
 		// 발사 조건: 쿨다운 + 애니 발사 프레임 도달(총 내미는 포즈)
 		// - 꾹 누르면: 마우스 홀드 시 발사
 		// - 한 번 클릭: 손 떼도 IdleShoot 유지 → 애니 발사 프레임 도달 시 1발만 발사
+		// - 버프 적용: m_AtkSpeed * m_buffAtkSpeedMultiplier로 실제 공격속도 계산
 		// ─────────────────────────────────────────────
 		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
 		std::string shootState = m_logicFSM->GetCurrentState();
@@ -981,13 +1009,20 @@ namespace game
 
 				// ─────────────────────────────────────────────
 				// 발사 후 상태 관리
+				// - 버프 배율 적용: effectiveAtkSpeed = m_AtkSpeed * BuffManager::GetAtkSpeedMultiplier()
+				// - 실제 발사 간격: 0.7 / effectiveAtkSpeed
 				// ─────────────────────────────────────────────
 				for (auto& entry : m_fireCallbacks)
 				{
 					if (entry.owner && entry.callback) entry.callback();
 				}
 
-				m_fireTimer = m_fireRate;
+				// BuffManager에서 버프 배율 가져오기
+				float buffMultiplier = BuffManager::GetAtkSpeedMultiplier();
+				float effectiveAtkSpeed = m_AtkSpeed * buffMultiplier;
+				float effectiveFireRate = 0.7f / effectiveAtkSpeed;
+				
+				m_fireTimer = effectiveFireRate;
 				m_canFireNow = false;
 				m_hasFiredThisSession = true;
 			}
@@ -1037,6 +1072,117 @@ namespace game
 		ImGui::Indent();
 
 		ImGui::Text("PlayerControllerScript (Dynamic Rigidbody):");
+
+		// ═══════════════════════════════════════════════════════════════
+		// 버프 시스템 상태 표시 (BuffManager 연동) - 최상단 배치
+		// ═══════════════════════════════════════════════════════════════
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "=== BUFF SYSTEM (BuffManager) ===");
+		
+		// ─────────────────────────────────────────────
+		// 버프 적용 후 최종 스탯 (읽기 전용)
+		// ─────────────────────────────────────────────
+		ImGui::Spacing();
+		ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.5f, 1.0f), "Final Stats (with Buffs):");
+		ImGui::Indent();
+		
+		float moveSpeedMultiplier = BuffManager::GetMoveSpeedMultiplier();
+		float finalMoveSpeed = m_moveSpeed * moveSpeedMultiplier;
+		ImGui::BeginDisabled();
+		ImGui::DragFloat("Final Move Speed", &finalMoveSpeed, 0.0f);
+		ImGui::EndDisabled();
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Base: %.2f x Buff: %.2fx = %.2f", m_moveSpeed, moveSpeedMultiplier, finalMoveSpeed);
+		
+		float atkSpeedMultiplier = BuffManager::GetAtkSpeedMultiplier();
+		float finalAtkSpeed = m_AtkSpeed * atkSpeedMultiplier;
+		float finalFireRate = (finalAtkSpeed > 0.001f) ? (0.7f / finalAtkSpeed) : 0.7f;
+		ImGui::BeginDisabled();
+		ImGui::DragFloat("Final Atk Speed", &finalAtkSpeed, 0.0f);
+		ImGui::DragFloat("Final Fire Rate (sec)", &finalFireRate, 0.0f);
+		ImGui::EndDisabled();
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Base: %.2f x Buff: %.2fx = %.2f\nFire Rate: 0.7 / %.2f = %.3f sec", 
+				m_AtkSpeed, atkSpeedMultiplier, finalAtkSpeed, finalAtkSpeed, finalFireRate);
+		
+		ImGui::Unindent();
+		ImGui::Spacing();
+		
+		// ─────────────────────────────────────────────
+		// 대시 버프
+		// ─────────────────────────────────────────────
+		ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f), "Dash Buff:");
+		ImGui::Indent();
+		
+		// 설정값 표시 및 수정
+		float dashDuration = BuffManager::GetDashBuffDuration();
+		if (ImGui::DragFloat("Duration (sec)", &dashDuration, 0.1f, 0.1f, 30.0f))
+			BuffManager::SetDashBuffDuration(dashDuration);
+			
+		float dashBonus = BuffManager::GetDashBuffMoveSpeedBonus();
+		if (ImGui::DragFloat("Move Speed Bonus", &dashBonus, 0.01f, 0.0f, 2.0f))
+			BuffManager::SetDashBuffMoveSpeedBonus(dashBonus);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("0.1 = 10%% increase, 1.0 = 100%% increase");
+		
+		// 런타임 상태 표시
+		if (BuffManager::IsDashBuffActive())
+		{
+			float timer = BuffManager::GetDashBuffTimer();
+			float multiplier = BuffManager::GetMoveSpeedMultiplier();
+			ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[ACTIVE] Time Left: %.1f sec", timer);
+			ImGui::Text("Move Speed Multiplier: %.2fx (%.0f%% increase)", 
+				multiplier, (multiplier - 1.0f) * 100.0f);
+			float ratio = timer / dashDuration;
+			ImGui::ProgressBar(ratio, ImVec2(-1, 0), "");
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "[INACTIVE]");
+		}
+		ImGui::Unindent();
+		
+		ImGui::Spacing();
+		
+		// ─────────────────────────────────────────────
+		// 처형 버프
+		// ─────────────────────────────────────────────
+		ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "Execution Buff:");
+		ImGui::Indent();
+		
+		// 설정값 표시 및 수정
+		float execDuration = BuffManager::GetExecutionBuffDuration();
+		if (ImGui::DragFloat("Buff Duration (sec)", &execDuration, 0.1f, 0.1f, 60.0f))
+			BuffManager::SetExecutionBuffDuration(execDuration);
+			
+		float execBonus = BuffManager::GetExecutionBuffAtkSpeedBonus();
+		if (ImGui::DragFloat("Atk Speed Bonus (per stack)", &execBonus, 0.01f, 0.0f, 2.0f))
+			BuffManager::SetExecutionBuffAtkSpeedBonus(execBonus);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("0.1 = 10%% increase per stack");
+			
+		int maxStacks = BuffManager::GetExecutionBuffMaxStacks();
+		if (ImGui::DragInt("Max Stacks", &maxStacks, 1, 1, 10))
+			BuffManager::SetExecutionBuffMaxStacks(maxStacks);
+		
+		// 런타임 상태 표시
+		if (BuffManager::IsExecutionBuffActive())
+		{
+			float timer = BuffManager::GetExecutionBuffTimer();
+			int stacks = BuffManager::GetExecutionBuffStacks();
+			float multiplier = BuffManager::GetAtkSpeedMultiplier();
+			ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[ACTIVE] Time Left: %.1f sec", timer);
+			ImGui::Text("Stacks: %d / %d", stacks, maxStacks);
+			ImGui::Text("Atk Speed Multiplier: %.2fx (%.0f%% increase)", 
+				multiplier, (multiplier - 1.0f) * 100.0f);
+			float ratio = timer / execDuration;
+			ImGui::ProgressBar(ratio, ImVec2(-1, 0), "");
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "[INACTIVE]");
+		}
+		ImGui::Unindent();
 
 		// ─────────────────────────────────────────────
 		// 컴포넌트 검증 (에디터에서 상태 확인용)

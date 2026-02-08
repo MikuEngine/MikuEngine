@@ -159,15 +159,6 @@ namespace game
         // 대시 관련
         float m_dashInvincibleTime = 0.1f;
 
-        // 대시 후 버프 관련 (런타임 저장용)
-        float m_buffMoveSpeedAfterDash = 0.0f;
-        float m_buffAtkDmgAfterDash = 0.0f;
-        float m_buffDurationAfterDash = 0.0f;
-
-
-
-
-
         // ─────────────────────────────────────────────
         // 총알 발사 위치 (소켓 사용 시 오프셋 무시)
         // ─────────────────────────────────────────────
@@ -247,6 +238,7 @@ namespace game
         void UpdateGameLogic() override;         // 비물리 로직 (타이머, 애니메이션 등)
         void UpdatePhysicsLogic() override;      // 물리 로직 (이동, 회전)
         void OnStateEntered(const std::string& state) override;
+        void OnStateExited(const std::string& state) override;
         
         // ─────────────────────────────────────────────
         // 충돌 콜백 (PhysX → CollisionSystem → Script)
@@ -422,11 +414,6 @@ namespace game
         // 이동/대시 (Movement)
         float GetBaseDashInvincibleTime() const { return 0.1f; }
         void  SetDashInvincibleTime(float v) { m_dashInvincibleTime = v; }
-
-        // 버프 (Buff) - 베이스값은 항상 0
-        void  SetBuffMoveSpeedAfterDash(float v) { m_buffMoveSpeedAfterDash = v; }
-        void  SetBuffAtkDmgAfterDash(float v) { m_buffAtkDmgAfterDash = v; }
-        void  SetBuffDurationAfterDash(float v) { m_buffDurationAfterDash = v; }
 
         float GetBaseMaxHp() const { return 100.0f; } // 기본 체력 100
         void  SetMaxHp(float value) { m_PlayerMaxHP = value; }

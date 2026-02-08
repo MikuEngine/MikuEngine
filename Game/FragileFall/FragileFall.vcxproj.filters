@@ -79,6 +79,7 @@
     <ClCompile Include="Script\Boss\BossPattern\Components\BossBulletEightway.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossMeteor.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossBigProjectile.cpp" />
+    <ClCompile Include="Manager\BuffManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -166,5 +167,6 @@
     <ClInclude Include="Script\Boss\BossPattern\Components\BossBulletEightway.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossMeteor.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossBigProjectile.h" />
+    <ClInclude Include="Manager\BuffManager.h" />
   </ItemGroup>
 </Project>
