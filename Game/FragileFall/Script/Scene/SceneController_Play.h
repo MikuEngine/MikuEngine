@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/UI/UIButton.h>
@@ -7,6 +7,7 @@
 namespace game
 {
     class AimModeController;
+    class PlayerControllerScript;
 
     class SceneController_Play :
         public engine::Script<SceneController_Play>
@@ -70,6 +71,7 @@ namespace game
         engine::GameObject* m_realGiveupPopUp = nullptr;
         engine::GameObject* m_failPanel = nullptr;
 
-        AimModeController* m_aimMode;
+        AimModeController* m_aimMode = nullptr;
+        PlayerControllerScript* m_playerScript = nullptr;
     };
 }

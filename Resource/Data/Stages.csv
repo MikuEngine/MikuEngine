@@ -1,0 +1,4 @@
+StageID,MapPrefabName,LightIntensity,MinMonsterCount,MaxMonsterCount,AnchorMonsterID
+1,Stage1_ProtoType,1.0,3,6,0
+2,Stage1_ProtoType,0.9,4,7,0
+3,Stage1_ProtoType,0.8,5,8,1

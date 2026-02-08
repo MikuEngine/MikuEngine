@@ -14,6 +14,7 @@
 #include "Manager/StageManager.h"
 #include <Manager/LoadingScreenDrawer.h>
 #include <Script/AimModeController.h>
+#include <Script/CharacterScript/Player/PlayerControllerScript.h>
 #include <Manager/MessageCatalog.h>
 #include <Script/UI/UIMessageQueue.h>
 
@@ -55,10 +56,7 @@ namespace game
         if (m_bound) return;
         m_bound = true;
 
-        //StageManager::Get().BeginStage();
-
-        auto* go = engine::GameObject::Find("Player");
-        if (go) m_aimMode = go->GetComponent<AimModeController>();
+        //StageManager::Get().BeginStage(); // 아직 맵 프리팹이 없어서 스테이지 세팅 불가
 
         g_msg.Load("Resource/Data/Message/MessageTable.csv");
 
@@ -92,7 +90,11 @@ namespace game
             TimeScaler::PlayWorld();
 
         auto* go = engine::GameObject::Find("Player");
-        if (go) m_aimMode = go->GetComponent<AimModeController>();
+        if (go)
+        {
+            m_aimMode = go->GetComponent<AimModeController>();
+            m_playerScript = go->GetComponent<PlayerControllerScript>();
+        }
 
         m_menuPopUp = engine::GameObject::Find("Panel_Menu");
         if (m_menuPopUp) m_menuPopUp->SetActive(false);
@@ -134,6 +136,13 @@ namespace game
     void SceneController_Play::Update()
     {
         StageManager::Get().Update();
+
+        // 프레자일 게이지 100% 시 실패
+        if (!m_isDead && m_playerScript)
+        {
+            if (m_playerScript->GetFragileGaugeCurrent() >= m_playerScript->GetFragileGaugeMax())
+                Fail();
+        }
 
         if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
@@ -272,7 +281,8 @@ namespace game
     void SceneController_Play::Fail()
     {
         m_isDead = true;
-        m_failPanel->SetActive(true);
+        if (m_failPanel)
+            m_failPanel->SetActive(true);
         TimeScaler::StopWorld();
     }
 

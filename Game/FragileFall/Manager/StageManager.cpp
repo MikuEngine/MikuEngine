@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -7,6 +7,7 @@
 #include <Engine/Framework/Object/GameObject/GameObject.h>
 #include <Engine/Framework/Object/Component/Transform.h>
 #include <Engine/Framework/Object/Component/BoxCollider.h>
+#include <Engine/Framework/Object/Component/Light/Light.h>
 #include <Engine/Common/Utility/CSVReader.h>
 
 #include "LoadingScreenDrawer.h"
@@ -29,21 +30,61 @@ namespace game
         {
             int stageIndex = 0;
             std::string mapEnvPrefab;
+            float lightIntensity = 1.0f;
+            int minMonsterCount = 3;
+            int maxMonsterCount = 6;
+            int anchorMonsterID = 0;
         };
 
         bool ParseStageRow(const std::vector<std::string>& fields, StageRow& out)
         {
-            if (fields.size() < 2)
+            if (fields.size() < 6)
                 return false;
             try
             {
                 out.stageIndex = std::stoi(fields[0]);
                 out.mapEnvPrefab = fields[1];
+                out.lightIntensity = std::stof(fields[2]);
+                out.minMonsterCount = std::stoi(fields[3]);
+                out.maxMonsterCount = std::stoi(fields[4]);
+                out.anchorMonsterID = std::stoi(fields[5]);
+                if (out.minMonsterCount > out.maxMonsterCount)
+                    out.minMonsterCount = out.maxMonsterCount;
                 return true;
             }
             catch (...)
             {
                 return false;
+            }
+        }
+
+        bool GetStageDataFromCsv(int stageIndex, StageRow& out)
+        {
+            std::vector<StageRow> rows;
+            auto parser = [](const std::vector<std::string>& fields, StageRow& row) -> bool
+            {
+                return ParseStageRow(fields, row);
+            };
+            if (!engine::CSVReader::Load<StageRow>(g_stageCsvPath, rows, parser))
+                return false;
+            for (const auto& r : rows)
+            {
+                if (r.stageIndex == stageIndex)
+                {
+                    out = r;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void ApplyStageLightIntensity(float intensity)
+        {
+            engine::GameObject* mainLight = engine::GameObject::Find("MainLight");
+            if (mainLight)
+            {
+                if (engine::Light* light = mainLight->GetComponent<engine::Light>())
+                    light->SetIntensity(intensity);
             }
         }
 
@@ -96,31 +137,14 @@ namespace game
 
     bool StageManager::GetMapEnvPrefabNameForStage(int stageIndex, std::string& outName) const
     {
-        if (!g_stageCsvPath || g_stageCsvPath[0] == '\0')
+        StageRow row;
+        if (!GetStageDataFromCsv(stageIndex, row))
         {
             outName = g_defaultMapEnvPrefab ? g_defaultMapEnvPrefab : "";
             return outName[0] != '\0';
         }
-        std::vector<StageRow> rows;
-        auto parser = [](const std::vector<std::string>& fields, StageRow& out) -> bool
-        {
-            return ParseStageRow(fields, out);
-        };
-        if (!engine::CSVReader::Load<StageRow>(g_stageCsvPath, rows, parser))
-        {
-            outName = g_defaultMapEnvPrefab ? g_defaultMapEnvPrefab : "";
-            return outName[0] != '\0';
-        }
-        for (const auto& r : rows)
-        {
-            if (r.stageIndex == stageIndex)
-            {
-                outName = r.mapEnvPrefab;
-                return true;
-            }
-        }
-        outName = g_defaultMapEnvPrefab ? g_defaultMapEnvPrefab : "";
-        return outName[0] != '\0';
+        outName = row.mapEnvPrefab;
+        return !outName.empty();
     }
 
     void StageManager::ComputeDifficulty(int stageIndex, int& targetScore, int& minCount, int& maxCount) const
@@ -145,15 +169,20 @@ namespace game
         m_currentMapEnvRoot = engine::Ptr<engine::GameObject>();
         m_currentSpawnerRoot = engine::Ptr<engine::GameObject>();
 
-        std::string mapPrefabName;
-        if (GetMapEnvPrefabNameForStage(m_currentStage, mapPrefabName) && !mapPrefabName.empty())
+        StageRow stageRow;
+        const bool hasStageData = GetStageDataFromCsv(m_currentStage, stageRow);
+
+        std::string mapPrefabName = hasStageData ? stageRow.mapEnvPrefab : "";
+        if (!mapPrefabName.empty())
         {
             engine::GameObject* mapRoot = engine::Prefab::Instantiate(mapPrefabName);
             if (mapRoot)
                 m_currentMapEnvRoot = engine::Ptr<engine::GameObject>(mapRoot);
         }
 
-        
+        if (hasStageData)
+            ApplyStageLightIntensity(stageRow.lightIntensity);
+
         size_t idx = engine::Random::Int<size_t>(0, g_spawnerRootNames.size() - 1);
         const char* spawnerPrefabName = g_spawnerRootNames[idx];
 
@@ -167,11 +196,19 @@ namespace game
         if (!spawner)
             return;
 
-        int targetScore = 100, minCount = 3, maxCount = 5;
+        int targetScore = 100, minCount = 3, maxCount = 6;
         ComputeDifficulty(m_currentStage, targetScore, minCount, maxCount);
+        if (hasStageData)
+        {
+            minCount = stageRow.minMonsterCount;
+            maxCount = stageRow.maxMonsterCount;
+            if (minCount > maxCount)
+                minCount = maxCount;
+        }
 
+        const int anchorMonsterID = hasStageData ? stageRow.anchorMonsterID : 0;
         spawner->SetManagedByStageManager(true);
-        spawner->SetStageParams(targetScore, minCount, maxCount, 0);
+        spawner->SetStageParams(targetScore, minCount, maxCount, anchorMonsterID);
         // SpawnNow() will be called from OnSpawnerReady when spawner's Start() runs this frame.
     }
 
