@@ -1,6 +1,6 @@
 {
-    "Name": "90_Test_MonLogicOnStage1",
-    "NumGameObjects": 66,
+    "Name": "90_Dev_Boss_2ND",
+    "NumGameObjects": 69,
     "GameObjects": [
         {
             "ID": 0,
@@ -2708,7 +2708,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.4530103206634521,
+                        "y": 1.4530116319656372,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -2826,7 +2826,7 @@
                     "MaxSpeedBrakeFactor": 15.0,
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 5.5,
+                    "MoveSpeed": 13.0,
                     "RotationSpeed": 20.0,
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
@@ -2840,7 +2840,7 @@
                     "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
-                    "ExecutionRange": 20.0,
+                    "ExecutionRange": 10.0,
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.30000001192092896,
@@ -12977,6 +12977,281 @@
                         "x": 0.5,
                         "y": 0.5
                     }
+                }
+            ]
+        },
+        {
+            "ID": 66,
+            "Name": "z_Dev_Boss",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 3.5295801162719727,
+                        "z": 14.02025032043457
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 22.200000762939453,
+                        "y": 7.699999809265137,
+                        "z": 8.899999618530273
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 0.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "size": [
+                        22.34000015258789,
+                        9.09000015258789,
+                        8.449999809265137
+                    ]
+                },
+                {
+                    "Type": "BossScript",
+                    "Active": true,
+                    "BulletFire_UseFixedInterval": true,
+                    "BulletFire_FixedInterval": 2.0,
+                    "BulletFire_MinInterval": 2.0,
+                    "BulletFire_MaxInterval": 5.0,
+                    "BulletFire_UseFixedSpread": true,
+                    "BulletFire_FixedSpread": 30.0,
+                    "BulletFire_MinSpread": 15.0,
+                    "BulletFire_MaxSpread": 45.0,
+                    "BulletFire_Speed": 22.0,
+                    "BulletFire_Scale": 1.0,
+                    "BulletFire_Damage": 10.0,
+                    "BulletFire_Lifetime": 5.0,
+                    "BulletFire_SpawnOffsetX": 0.0,
+                    "BulletFire_SpawnOffsetZ": -6.0,
+                    "Meteor_UseFixedInterval": true,
+                    "Meteor_FixedInterval": 4.0,
+                    "Meteor_MinInterval": 3.0,
+                    "Meteor_MaxInterval": 7.0,
+                    "Meteor_SpawnHeight": 15.0,
+                    "Meteor_InitialSpeed": 10.0,
+                    "Meteor_OwnGravity": 10.0,
+                    "Meteor_LandingY": 0.0,
+                    "Meteor_LandingThreshold": 0.05000000074505806,
+                    "Meteor_SpawnCenterX": 0.0,
+                    "Meteor_SpawnCenterZ": -4.5,
+                    "Meteor_ValidRangeX": 34.0,
+                    "Meteor_ValidRangeZ": 19.0,
+                    "Meteor_PredictionStrength": 0.15000000596046448,
+                    "Meteor_PredictionAccuracy": 3.0,
+                    "Meteor_BulletSpeed": 9.0,
+                    "Meteor_BulletDamage": 10.0,
+                    "Meteor_BulletLifetime": 5.0,
+                    "Meteor_BulletScale": 0.6000000238418579,
+                    "Meteor_ExplosionDamage": 10.0,
+                    "Meteor_ExplosionRadius": 5.0,
+                    "Meteor_ExplosionLifetime": 1.0,
+                    "Meteor_Scale": 3.0,
+                    "Pillar_UseBasicPattern": false,
+                    "Pillar_UseFixedRespawnDelay": true,
+                    "Pillar_FixedRespawnDelay": 5.0,
+                    "Pillar_MinRespawnDelay": 3.0,
+                    "Pillar_MaxRespawnDelay": 10.0,
+                    "Pillar_UseFixedCount": false,
+                    "Pillar_FixedCount": 5,
+                    "Pillar_MinCount": 2,
+                    "Pillar_MaxCount": 3,
+                    "Pillar_SpawnCenterX": 0.0,
+                    "Pillar_SpawnCenterZ": -4.5,
+                    "Pillar_SpawnRangeX": 34.0,
+                    "Pillar_SpawnRangeZ": 19.0,
+                    "Pillar_SpawnY": 0.0,
+                    "Pillar_ClusteringStrength": 0.4000000059604645,
+                    "Pillar_OverlapRadius": 1.5,
+                    "Pillar_MaxSpawnAttempts": 20,
+                    "Pillar_HP": 20.0
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 67,
+            "Name": "z_Dev_Boss_HP_Text",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 68,
+            "ParentID": 67,
+            "Name": "UI_BossHP",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -141.8000030517578
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "Dev_Boss_HP_Text",
+                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 0,
+                    "AlignV": 0,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         }

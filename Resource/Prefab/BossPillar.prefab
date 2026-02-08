@@ -17,9 +17,9 @@
                     },
                     "Rotation": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": 0.3826834559440613,
                         "z": 0.0,
-                        "w": 1.0
+                        "w": 0.9238795042037964
                     },
                     "Scale": {
                         "x": 2.0,
@@ -31,7 +31,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -52,7 +54,13 @@
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "BoxCollider",
@@ -69,12 +77,12 @@
                     ],
                     "isTrigger": false,
                     "syncWithTransform": false,
-                    "layer": 0,
+                    "layer": 2,
                     "materialType": 1,
                     "size": [
-                        2.0,
-                        2.0,
-                        2.0
+                        1.5,
+                        5.75,
+                        1.5
                     ]
                 },
                 {
@@ -122,7 +130,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 7,
                     "materialType": 1,
@@ -130,6 +138,69 @@
                         2.0,
                         2.0,
                         2.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 0,
+            "Name": "BossPillar_StaticMesh",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.6403433084487915,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.75,
+                        "y": 2.8499999046325684,
+                        "z": 0.75
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.8750315308570862,
+                        "y": 0.6100386381149292,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 0.14573414623737335,
+                        "y": 0.0,
+                        "z": 0.3629343509674072
+                    },
+                    "MaterialRoughness": 0.13199999928474426,
+                    "MaterialMetalness": 1.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 7.409999847412109,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
                     ]
                 }
             ]

@@ -1,14 +1,10 @@
 ﻿#include "GamePCH.h"
 #include "BossPattern_BulletFire.h"
 
-#include <Framework/Object/Component/Collider.h>
-#include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
-#include <Framework/Asset/Prefab.h>
-#include <Common/Math/MathUtility.h>
-
-#include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossScript.h"
-#include "Script/Boss/BossPattern/Components/BossBullet.h"
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include "Script/CharacterScript/Common/BulletFactory.h"
+#include "Script/CharacterScript/Common/BulletParams.h"
 
 namespace game
 {
@@ -22,6 +18,9 @@ namespace game
         m_isActive = true;
         m_intervalTimer = 0.0f;
 
+        // 다음 interval 설정 (랜덤 or 고정)
+        m_currentInterval = boss->GetBulletFireInterval();
+
         // 시작 시 즉시 발사
         FireBullets(boss);
     }
@@ -34,10 +33,13 @@ namespace game
         m_intervalTimer += deltaTime;
 
         // interval이 지나면 발사
-        if (m_intervalTimer >= m_interval)
+        if (m_intervalTimer >= m_currentInterval)
         {
             FireBullets(boss);
             m_intervalTimer = 0.0f;
+
+            // 다음 interval 설정 (랜덤 or 고정)
+            m_currentInterval = boss->GetBulletFireInterval();
         }
     }
 
@@ -49,23 +51,32 @@ namespace game
 
     void BossPattern_BulletFire::FireBullets(BossScript* boss)
     {
-        auto bossTransform = boss->GetGameObject()->GetTransform();
+        if (!boss) return;
 
+        // BulletFactory 가져오기
+        auto bulletFactory = boss->GetBulletFactory();
+        if (!bulletFactory) return;
+
+        // 보스 위치
+        auto* bossTransform = boss->GetGameObject()->GetTransform();
+        if (!bossTransform) return;
         engine::Vector3 bossPos = bossTransform->GetWorldPosition();
 
-        // 플레이어 위치 찾기
-        engine::Vector3 playerPos = bossPos;
-        auto player = boss->GetTargetPlayer();
-        
-        // 플레이어 방향 계산 (보스가 플레이어를 향하도록)
+        // 플레이어 방향 계산 (XZ 평면만 사용)
         engine::Vector3 directionToPlayer = engine::Vector3(0.0f, 0.0f, 1.0f);  // 기본 방향
+        auto player = boss->GetTargetPlayer();
         if (player)
         {
-            auto playerTr = player->GetTransform();
+            auto* playerTr = player->GetTransform();
             if (playerTr)
             {
                 engine::Vector3 playerWorldPos = playerTr->GetWorldPosition();
                 directionToPlayer = playerWorldPos - bossPos;
+                
+                // Y 성분 제거 (XZ 평면 방향만 사용)
+                directionToPlayer.y = 0.0f;
+                
+                // 정규화
                 float length = directionToPlayer.Length();
                 if (length > 0.001f)
                 {
@@ -74,53 +85,22 @@ namespace game
             }
         }
 
-        // 탄환 발사
-        for (int i = 0; i < m_bulletCount; ++i)
-        {
-            // 분산 각도 계산
-            float angleOffset = 0.0f;
-            if (m_bulletCount > 1)
-            {
-                float angleStep = m_spreadAngle / static_cast<float>(m_bulletCount - 1);
-                angleOffset = -m_spreadAngle * 0.5f + angleStep * static_cast<float>(i);
-            }
+        // BulletParams 설정
+        BulletParams params;
+        params.type = BulletType::Linear;
+        params.speed = boss->GetBulletFireSpeed();
+        params.lifetime = boss->GetBulletFireLifetime();
+        params.damage = boss->GetBulletFireDamage();
+        params.scale = boss->GetBulletFireScale();
 
-            // 방향 회전 (Y축 기준)
-            engine::Vector3 fireDirection = directionToPlayer;
-            if (std::abs(angleOffset) > 0.001f)
-            {
-                float angleRad = engine::ToRadian(angleOffset);
-                float cosAngle = std::cosf(angleRad);
-                float sinAngle = std::sinf(angleRad);
+        // 퍼짐 각도 (랜덤 or 고정, Radian)
+        float spreadAngleRad = boss->GetBulletFireSpread();
 
-                // Y축 기준 회전 (수평면에서 회전)
-                float x = fireDirection.x * cosAngle - fireDirection.z * sinAngle;
-                float z = fireDirection.x * sinAngle + fireDirection.z * cosAngle;
-                fireDirection = engine::Vector3(x, fireDirection.y, z);
-                
-                // 정규화
-                float dirLength = fireDirection.Length();
-                if (dirLength > 0.001f)
-                {
-                    fireDirection = fireDirection / dirLength;
-                }
-            }
+        // 발사 위치 오프셋 적용
+        engine::Vector3 spawnOffset = boss->GetBulletFireSpawnOffset();
+        engine::Vector3 finalSpawnPos = bossPos + spawnOffset;
 
-            // 탄환 GameObject 생성
-            std::string bulletName = "BossBullet_" + std::to_string(i);
-
-            auto bulletGO = engine::Prefab::Instantiate("BossBulletProjectile");
-            bulletGO->SetName(bulletName);
-
-            // Transform 설정
-            bulletGO->GetTransform()->SetLocalPosition(bossPos);
-
-            // BossBullet 스크립트 추가
-            auto bulletScript = bulletGO->GetComponent<BossBullet>();
-            if (bulletScript)
-            {
-                bulletScript->Setup(fireDirection, m_bulletSpeed, m_bulletDamage, m_bulletLifetime);
-            }
-        }
+        // BulletFactory를 통해 3방향 발사
+        bulletFactory->ThreewayFireBoss(finalSpawnPos, directionToPlayer, spreadAngleRad, params);
     }
 }

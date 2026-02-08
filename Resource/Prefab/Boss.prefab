@@ -1,10 +1,10 @@
 {
-    "Name": "BossMeteorProjectile",
+    "Name": "Boss",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "BossMeteorProjectile",
+            "Name": "Boss",
             "Active": true,
             "Components": [
                 {
@@ -12,8 +12,8 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 1.100000023841858,
+                        "z": 5.400000095367432
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -22,25 +22,25 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
+                        "x": 5.300000190734863,
+                        "y": 1.899999976158142,
                         "z": 1.0
                     }
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Sphere.fbx",
-                    "SocketFilePath": "",
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.6795363426208496,
+                        "x": 1.0,
                         "y": 0.0,
-                        "z": 1.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
@@ -48,12 +48,12 @@
                         "y": 1.0,
                         "z": 1.0
                     },
-                    "MaterialRoughness": 0.0,
+                    "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
+                    "MaterialEmissiveIntensity": 0.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false,
+                    "CastShadow": true,
                     "CullMode": 1,
                     "SubsurfaceStrength": 0.0,
                     "SubsurfaceColor": [
@@ -63,21 +63,7 @@
                     ]
                 },
                 {
-                    "Type": "BossMeteor",
-                    "Active": true
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 61
-                },
-                {
-                    "Type": "SphereCollider",
+                    "Type": "BoxCollider",
                     "Active": true,
                     "center": [
                         0.0,
@@ -91,9 +77,17 @@
                     ],
                     "isTrigger": true,
                     "syncWithTransform": false,
-                    "layer": 15,
-                    "materialType": 0,
-                    "radius": 0.5
+                    "layer": 0,
+                    "materialType": 1,
+                    "size": [
+                        5.46999979019165,
+                        1.9299999475479126,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "BossScript",
+                    "Active": true
                 }
             ]
         }

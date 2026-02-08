@@ -12,7 +12,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": 1.5,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -22,23 +22,18 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.30000001192092896,
-                        "y": 0.30000001192092896,
-                        "z": 0.30000001192092896
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     }
-                },
-                {
-                    "Type": "BossBullet",
-                    "Active": true,
-                    "Speed": 1.0,
-                    "Damage": 20.0,
-                    "Lifetime": 5.0
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -56,9 +51,16 @@
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "SphereCollider",
@@ -75,9 +77,23 @@
                     ],
                     "isTrigger": true,
                     "syncWithTransform": false,
-                    "layer": 0,
+                    "layer": 15,
                     "materialType": 1,
-                    "radius": 0.14000000059604645
+                    "radius": 0.5
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 0.10000000149011612,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BossBulletThreeway",
+                    "Active": true
                 }
             ]
         }

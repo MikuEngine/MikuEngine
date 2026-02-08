@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "BulletParams.h"
@@ -62,6 +62,26 @@ namespace game
                                  const engine::Vector3& direction,
                                  float spreadAngle,
                                  const BulletParams& params);
+
+        // ─────────────────────────────────────────────
+        // 보스 3방향 총알 발사 (중앙 + 좌우 퍼짐)
+        // spreadAngle: 좌우 퍼짐 각도 (라디안)
+        // 프리팹: "BossBulletProjectile"
+        // 레이어: BossBulletProjectile
+        // ─────────────────────────────────────────────
+        void ThreewayFireBoss(const engine::Vector3& position,
+                              const engine::Vector3& direction,
+                              float spreadAngle,
+                              const BulletParams& params);
+
+        // ─────────────────────────────────────────────
+        // 보스 메테오 8방향 총알 발사 (고정 8방향)
+        // 프리팹: "BossBulletProjectile"
+        // 레이어: BossBulletProjectile
+        // position: 메테오 XZ 좌표 (Y는 자동으로 1.5 적용)
+        // ─────────────────────────────────────────────
+        void EightwayFireBossMeteor(const engine::Vector3& position,
+                                    const BulletParams& params);
 
         // ─────────────────────────────────────────────
         // 연사 총알 발사 (랜덤 각도 + 속도/수명 변조)

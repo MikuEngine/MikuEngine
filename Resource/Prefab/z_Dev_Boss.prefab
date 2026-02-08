@@ -1,0 +1,154 @@
+{
+    "Name": "z_Dev_Boss",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "z_Dev_Boss",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 3.5295801162719727,
+                        "z": 14.02025032043457
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 22.200000762939453,
+                        "y": 7.699999809265137,
+                        "z": 8.899999618530273
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 0.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "size": [
+                        22.34000015258789,
+                        9.09000015258789,
+                        8.449999809265137
+                    ]
+                },
+                {
+                    "Type": "BossScript",
+                    "Active": true,
+                    "BulletFire_UseFixedInterval": true,
+                    "BulletFire_FixedInterval": 2.0,
+                    "BulletFire_MinInterval": 2.0,
+                    "BulletFire_MaxInterval": 5.0,
+                    "BulletFire_UseFixedSpread": true,
+                    "BulletFire_FixedSpread": 30.0,
+                    "BulletFire_MinSpread": 15.0,
+                    "BulletFire_MaxSpread": 45.0,
+                    "BulletFire_Speed": 22.0,
+                    "BulletFire_Scale": 1.0,
+                    "BulletFire_Damage": 10.0,
+                    "BulletFire_Lifetime": 5.0,
+                    "BulletFire_SpawnOffsetX": 0.0,
+                    "BulletFire_SpawnOffsetZ": -6.0,
+                    "Meteor_UseFixedInterval": true,
+                    "Meteor_FixedInterval": 4.0,
+                    "Meteor_MinInterval": 3.0,
+                    "Meteor_MaxInterval": 7.0,
+                    "Meteor_SpawnHeight": 15.0,
+                    "Meteor_InitialSpeed": 10.0,
+                    "Meteor_OwnGravity": 10.0,
+                    "Meteor_LandingY": 0.0,
+                    "Meteor_LandingThreshold": 0.05000000074505806,
+                    "Meteor_SpawnCenterX": 0.0,
+                    "Meteor_SpawnCenterZ": -4.5,
+                    "Meteor_ValidRangeX": 34.0,
+                    "Meteor_ValidRangeZ": 19.0,
+                    "Meteor_PredictionStrength": 0.15000000596046448,
+                    "Meteor_PredictionAccuracy": 3.0,
+                    "Meteor_BulletSpeed": 9.0,
+                    "Meteor_BulletDamage": 10.0,
+                    "Meteor_BulletLifetime": 5.0,
+                    "Meteor_BulletScale": 0.6000000238418579,
+                    "Meteor_ExplosionDamage": 10.0,
+                    "Meteor_ExplosionRadius": 5.0,
+                    "Meteor_ExplosionLifetime": 1.0,
+                    "Meteor_Scale": 3.0,
+                    "Pillar_UseBasicPattern": false,
+                    "Pillar_UseFixedRespawnDelay": true,
+                    "Pillar_FixedRespawnDelay": 5.0,
+                    "Pillar_MinRespawnDelay": 3.0,
+                    "Pillar_MaxRespawnDelay": 10.0,
+                    "Pillar_UseFixedCount": false,
+                    "Pillar_FixedCount": 5,
+                    "Pillar_MinCount": 2,
+                    "Pillar_MaxCount": 3,
+                    "Pillar_SpawnCenterX": 0.0,
+                    "Pillar_SpawnCenterZ": -4.5,
+                    "Pillar_SpawnRangeX": 34.0,
+                    "Pillar_SpawnRangeZ": 19.0,
+                    "Pillar_SpawnY": 0.0,
+                    "Pillar_ClusteringStrength": 0.4000000059604645,
+                    "Pillar_OverlapRadius": 1.5,
+                    "Pillar_MaxSpawnAttempts": 20,
+                    "Pillar_HP": 20.0
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                }
+            ]
+        }
+    ]
+}
