@@ -249,6 +249,10 @@ namespace game
 				{
 					impactPoint = info.contacts[0].point;
 				}
+				
+				// Player 충돌 시 y좌표를 0으로 설정 (바닥 높이에서 폭발)
+				impactPoint.y = 0.0f;
+				
 				DieWithExplosion(impactPoint);
 			}
 			return;
@@ -307,6 +311,13 @@ namespace game
 				{
 					impactPoint = info.contacts[0].point;
 				}
+				
+				// Player 충돌 시 y좌표를 0으로 설정 (바닥 높이)
+				if (layer == engine::PhysicsLayer::Player)
+				{
+					impactPoint.y = 0.0f;
+				}
+				
 				DieWithExplosion(impactPoint);
 			}
 		}

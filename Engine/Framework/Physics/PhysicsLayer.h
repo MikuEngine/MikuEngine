@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdint>
 #include <string>
@@ -393,13 +393,14 @@ namespace engine
             SetCollision(SubWall, ExplosionTrigger, false);
             SetCollision(SubWall, JumpingEnemy, false);
             SetCollision(SubWall, RadiusChecker, false);
-            SetCollision(SubWall, SplittingEnemy, false);
+            // SetCollision(SubWall, SplittingEnemy, false);  // 제거: SplittingEnemy도 Enemy처럼 SubWall과 충돌
             SetCollision(SubWall, BossBulletProjectile, false);
             SetCollision(SubWall, BossBigProjectile, false);
             SetCollision(SubWall, Boss, false);
             SetCollision(SubWall, BBP_Reflected, false);
             SetCollision(SubWall, SubWall, false);
             // SubWall ↔ Enemy: 충돌함 (기본값)
+            // SubWall ↔ SplittingEnemy: 충돌함 (기본값)
   
         }
 

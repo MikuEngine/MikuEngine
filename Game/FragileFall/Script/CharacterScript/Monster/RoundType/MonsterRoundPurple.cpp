@@ -105,63 +105,111 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundPurple::OnCollisionEnter(const engine::CollisionInfo& info)
     {
-        if (!info.collider) return;
-        
-        uint32_t otherLayer = info.collider->GetLayer();
+        if (!info.gameObject) return;
         
         // ─────────────────────────────────────────────
-        // 플레이어와 충돌 → 데미지
+        // 방향 전환이 필요한 레이어에만 반응
         // ─────────────────────────────────────────────
-        if (otherLayer == engine::PhysicsLayer::Index::Player)
+        auto* collider = info.collider.Get();
+        if (!collider) return;
+        
+        uint32_t layer = collider->GetLayer();
+        if (layer != engine::PhysicsLayer::Index::Wall &&
+            layer != engine::PhysicsLayer::Index::SubWall &&
+            layer != engine::PhysicsLayer::Index::Environment &&
+            layer != engine::PhysicsLayer::Index::Enemy &&
+            layer != engine::PhysicsLayer::Index::Player)
         {
-            // 쿨다운 체크
+            return;  // 방향 전환 불필요한 레이어는 무시
+        }
+        
+        // ─────────────────────────────────────────────
+        // SubWall과 겹치는 Wall은 방향전환 무시
+        // ─────────────────────────────────────────────
+        if (layer == engine::PhysicsLayer::Index::Wall)
+        {
+            std::string wallName = info.gameObject->GetName();
+            if (wallName.find("Collier_Crystal_Right_Front") != std::string::npos ||
+                wallName.find("Collier_Crystal_Left_Front")  != std::string::npos ||
+                wallName.find("Collier_Crystal_Left_Back")   != std::string::npos ||
+                wallName.find("Collier_Crystal_Right_Back")  != std::string::npos)
+            {
+                return;  // SubWall과 겹친 Wall → 방향전환 안 함
+            }
+        }
+        
+        // ─────────────────────────────────────────────
+        // 플레이어 충돌 시 데미지 처리
+        // ─────────────────────────────────────────────
+        auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
+        if (player)
+        {
             float elapsedSinceLastDamage = engine::Time::GetElapsedSeconds(m_lastDamageTime);
             if (elapsedSinceLastDamage >= m_damageCooldown)
             {
-                // 플레이어에게 데미지
-                if (info.gameObject)
-                {
-                    if (auto* playerScript = info.gameObject->GetComponent<PlayerControllerScript>())
-                    {
-                        playerScript->TakeDamage(m_attackDamage);
-                        m_lastDamageTime = engine::Time::GetTimestamp();
-                    }
-                }
+                player->TakeDamage(m_attackDamage);
+                m_lastDamageTime = engine::Time::GetTimestamp();
             }
         }
         
         // ─────────────────────────────────────────────
-        // 벽/환경과 충돌 → 반사
+        // 현재 상태가 EngageMove가 아니면 반사 처리 안함
         // ─────────────────────────────────────────────
-        if (otherLayer == engine::PhysicsLayer::Index::Environment ||
-            otherLayer == engine::PhysicsLayer::Index::Wall ||
-            otherLayer == engine::PhysicsLayer::Index::Enemy)
+        std::string currentState = GetCurrentState();
+        if (currentState != "EngageMove")
         {
-            // 현재 상태 확인
-            std::string currentState = GetCurrentState();
-            if (currentState != "EngageMove")
-            {
-                return;  // 이동 중이 아니면 반사 안 함
-            }
-            
-            // 접촉점에서 노말 가져오기
-            if (info.contacts.empty()) return;
-            
-            engine::Vector3 contactNormal = info.contacts[0].normal;
-            
-            // 충돌 노말 스냅 (X축 또는 Z축)
-            engine::Vector3 snappedNormal = SnapNormalToAxis(contactNormal);
-            
-            // 정반사
-            engine::Vector3 reflectedDir = ReflectDirection(m_moveDirectionVector, snappedNormal);
-            
-            // 방향 업데이트
-            m_moveDirectionVector = reflectedDir;
-            m_moveDirectionVector.Normalize();
-            
-            // 열거형 동기화
-            UpdateDiagonalDirectionFromVector();
+            return;
         }
+        
+        // ─────────────────────────────────────────────
+        // SubWall/Wall/Environment/Enemy/Player: 노말 추출
+        // ─────────────────────────────────────────────
+        engine::Vector3 collisionNormal = engine::Vector3::Zero;
+        for (const auto& contact : info.contacts)
+        {
+            // 노말 반전: A→B 방향이므로, 몬스터 입장에서는 반대 방향
+            engine::Vector3 normal = -contact.normal;
+            normal.y = 0.0f;  // 수평 성분만
+            if (normal.LengthSquared() > 0.0001f)
+            {
+                collisionNormal = normal;
+                collisionNormal.Normalize();
+                break;
+            }
+        }
+        
+        // 노말이 없으면 위치 기반으로 계산
+        if (collisionNormal.LengthSquared() < 0.0001f)
+        {
+            engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+            engine::Vector3 otherPos = info.gameObject->GetTransform()->GetWorldPosition();
+            collisionNormal = otherPos - myPos;
+            collisionNormal.y = 0.0f;
+            if (collisionNormal.LengthSquared() > 0.0001f)
+            {
+                collisionNormal.Normalize();
+            }
+            else
+            {
+                return;  // 유효한 노말 없음
+            }
+        }
+        
+        // ─────────────────────────────────────────────
+        // 노말을 X축 또는 Z축으로 스냅
+        // ─────────────────────────────────────────────
+        engine::Vector3 snappedNormal = SnapNormalToAxis(collisionNormal);
+        
+        // ─────────────────────────────────────────────
+        // 정반사 계산: R = V - 2(V·N)N
+        // ─────────────────────────────────────────────
+        m_moveDirectionVector = ReflectDirection(m_moveDirectionVector, snappedNormal);
+        m_moveDirectionVector.Normalize();
+        
+        // ─────────────────────────────────────────────
+        // 열거형 동기화
+        // ─────────────────────────────────────────────
+        UpdateDiagonalDirectionFromVector();
     }
     
     // ═══════════════════════════════════════════════════════════════
@@ -342,12 +390,9 @@ namespace game
     void MonsterRoundPurple::ExecuteDiagonalMovement()
     {
         if (!m_rigidbody) return;
-        
-        // 대각선 등속 이동
-        engine::Vector3 velocity = m_moveDirectionVector * m_moveSpeed;
-        velocity.y = 0.0f;  // Y축 이동 없음
-        
-        m_rigidbody->SetLinearVelocity(velocity);
+
+        // 대각선 방향으로 등속 이동
+        MoveInDirection(m_moveDirectionVector, m_moveSpeed);
     }
     
     // ═══════════════════════════════════════════════════════════════

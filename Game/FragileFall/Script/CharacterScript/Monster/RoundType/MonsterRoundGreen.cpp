@@ -351,10 +351,6 @@ namespace game
                     m_bulletParams.maxLaunchAngle = m_maxLaunchAngle;
                     m_bulletParams.explosionRadius = m_explosionRadius; // 폭발 반경
                     m_bulletParams.scale = m_bulletScale;               // 총알 크기
-                    
-                    // 디버그: 거리, 발사각, 속도 확인
-                    LOG_PRINT("[Attack] Distance: {:.2f}m, Angle: {:.1f}deg, Speed: {:.2f}m/s",
-                        distance, angleDeg, calculatedSpeed);
                 }
                 
                 // 실제 발사 위치로 총알 발사
