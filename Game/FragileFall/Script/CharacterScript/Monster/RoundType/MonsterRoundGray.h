@@ -69,6 +69,13 @@ namespace game
         bool m_collisionOccurred = false;         // 충돌 발생 플래그
         
         // ─────────────────────────────────────────────
+        // Wall/SubWall 충돌 쿨다운
+        // ─────────────────────────────────────────────
+        float m_wallCollisionCooldown = 0.1f;              // Wall 계열 충돌 쿨다운 시간 (직렬화)
+        engine::TimePoint m_lastWallCollisionTime;         // 마지막 Wall 계열 충돌 시간
+        std::string m_lastCollisionWallName;               // 마지막으로 방향전환한 Wall/SubWall 오브젝트 이름
+        
+        // ─────────────────────────────────────────────
         // EngageMove용 - 감지된 방향 저장
         // ─────────────────────────────────────────────
         engine::Vector3 m_engageDirection = engine::Vector3(1.0f, 0.0f, 0.0f);  // 레이캐스트로 감지된 방향
@@ -138,6 +145,11 @@ namespace game
         // ─────────────────────────────────────────────
         void StartPlayerIgnore();                               // 무시 시작
         void OnDirectionChanged();                              // 방향 변경 시 호출 (무시 횟수 감소)
+        
+        // ─────────────────────────────────────────────
+        // SubWall 방향 결정
+        // ─────────────────────────────────────────────
+        MoveDirection DetermineDirectionFromSubWall(const std::string& subWallName);
         
         // ─────────────────────────────────────────────
         // 맵 경계 및 장애물 체크 시스템

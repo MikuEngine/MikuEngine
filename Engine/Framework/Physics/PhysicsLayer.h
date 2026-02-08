@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -35,6 +35,7 @@ namespace engine
             BossBigProjectile = 16,         // 보스 구체 발사체 (Player, Projectile과 충돌)
             Boss = 17,                      // 보스 본체 (적 총알에 맞으면 총알만 사라짐)
             BBP_Reflected = 18,             // 반사된 빅탄 (Boss와만 충돌)
+            SubWall = 19,                   // 보조 벽 (몬스터 방향 전환용, Enemy와만 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -63,6 +64,7 @@ namespace engine
             BossBigProjectileMask = (1u << BossBigProjectile),
             BossMask = (1u << Boss),
             BBP_ReflectedMask = (1u << BBP_Reflected),
+            SubWallMask = (1u << SubWall),
 
             All = 0xFFFFFFFF
         };
@@ -96,8 +98,8 @@ namespace engine
                 "BossBigProjectile", // 16
                 "Boss", // 17
                 "BBP_Reflected", // 18
+                "SubWall", // 19
                 
-                "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
             };
@@ -374,6 +376,30 @@ namespace engine
             SetCollision(BBP_Reflected, BossBigProjectile, false);
             SetCollision(BBP_Reflected, BBP_Reflected, false);
             // BBP_Reflected ↔ Boss: 충돌함 (기본값)
+
+            // ═══════════════════════════════════════
+            // SubWall 충돌 규칙 (Enemy와만 충돌)
+            // ═══════════════════════════════════════
+            SetCollision(SubWall, Default, false);
+            SetCollision(SubWall, Player, false);
+            SetCollision(SubWall, Projectile, false);
+            SetCollision(SubWall, Environment, false);
+            SetCollision(SubWall, Trigger, false);
+            SetCollision(SubWall, EnemyProjectile, false);
+            SetCollision(SubWall, Picking, false);
+            SetCollision(SubWall, Field, false);
+            SetCollision(SubWall, Wall, false);
+            SetCollision(SubWall, EnemyParabolicProjectile, false);
+            SetCollision(SubWall, ExplosionTrigger, false);
+            SetCollision(SubWall, JumpingEnemy, false);
+            SetCollision(SubWall, RadiusChecker, false);
+            SetCollision(SubWall, SplittingEnemy, false);
+            SetCollision(SubWall, BossBulletProjectile, false);
+            SetCollision(SubWall, BossBigProjectile, false);
+            SetCollision(SubWall, Boss, false);
+            SetCollision(SubWall, BBP_Reflected, false);
+            SetCollision(SubWall, SubWall, false);
+            // SubWall ↔ Enemy: 충돌함 (기본값)
   
         }
 

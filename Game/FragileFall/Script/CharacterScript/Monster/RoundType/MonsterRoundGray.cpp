@@ -48,113 +48,212 @@ namespace game
         if (!info.gameObject) return;
         
         // ─────────────────────────────────────────────
-        // 방향 전환이 필요한 레이어에만 반응 (Wall, Environment, Enemy)
-        // 총알은 트리거 타입이므로 OnTriggerEnter로 처리됨
+        // 레이어 확인
         // ─────────────────────────────────────────────
         auto* collider = info.collider.Get();
-        if (collider)
+        if (!collider) return;
+        
+        uint32_t layer = collider->GetLayer();
+        if (layer != engine::PhysicsLayer::Index::Wall &&
+            layer != engine::PhysicsLayer::Index::SubWall &&
+            layer != engine::PhysicsLayer::Index::Environment &&
+            layer != engine::PhysicsLayer::Index::Enemy &&
+            layer != engine::PhysicsLayer::Index::Player)
         {
-            uint32_t layer = collider->GetLayer();
-            if (layer != engine::PhysicsLayer::Index::Wall &&
-                layer != engine::PhysicsLayer::Index::Environment &&
-                layer != engine::PhysicsLayer::Index::Enemy &&
-                layer != engine::PhysicsLayer::Index::Player)
+            return;  // 방향 전환 불필요한 레이어는 무시
+        }
+        
+        // ─────────────────────────────────────────────
+        // 플레이어 충돌 시 데미지 처리 (즉시, 쿨다운 무관)
+        // ─────────────────────────────────────────────
+        if (layer == engine::PhysicsLayer::Index::Player)
+        {
+            auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
+            if (player)
             {
-                return;  // 방향 전환 불필요한 레이어는 무시
+                float elapsedSinceLastDamage = engine::Time::GetElapsedSeconds(m_lastDamageTime);
+                if (elapsedSinceLastDamage >= m_damageCooldown)
+                {
+                    player->TakeDamage(m_attackDamage);
+                    m_lastDamageTime = engine::Time::GetTimestamp();
+                }
             }
         }
         
         // ─────────────────────────────────────────────
-        // 플레이어 충돌 시 데미지 처리
+        // Wall/SubWall 중복 오브젝트 체크 (쿨다운보다 먼저, 안전장치)
         // ─────────────────────────────────────────────
-        auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
-        if (player)
+        if (layer == engine::PhysicsLayer::Index::Wall || layer == engine::PhysicsLayer::Index::SubWall)
         {
-            float elapsedSinceLastDamage = engine::Time::GetElapsedSeconds(m_lastDamageTime);
-            if (elapsedSinceLastDamage >= m_damageCooldown)
+            std::string objectName = info.gameObject->GetName();
+            if (!m_lastCollisionWallName.empty() && objectName == m_lastCollisionWallName)
             {
-                player->TakeDamage(m_attackDamage);
-                m_lastDamageTime = engine::Time::GetTimestamp();
+                return;  // 같은 Wall/SubWall 오브젝트 연속 충돌 → 방향전환 무시
             }
         }
         
         // ─────────────────────────────────────────────
-        // 충돌 방향 계산 (노말 벡터 사용)
+        // Wall/SubWall 쿨다운 체크 (SubWall은 쿨다운 무시)
         // ─────────────────────────────────────────────
-        engine::Vector3 collisionDir = engine::Vector3::Zero;
-        for (const auto& contact : info.contacts)
+        if (layer == engine::PhysicsLayer::Index::Wall || layer == engine::PhysicsLayer::Index::SubWall)
         {
-            // 노말 반전: A→B 방향이므로, 몬스터 입장에서는 반대 방향
-            engine::Vector3 normal = -contact.normal;
-            normal.y = 0.0f;  // 수평 성분만
-            if (normal.LengthSquared() > 0.0001f)
+            float elapsed = engine::Time::GetElapsedSeconds(m_lastWallCollisionTime);
+            bool isInCooldown = (elapsed < m_wallCollisionCooldown);
+            
+            if (isInCooldown && layer != engine::PhysicsLayer::Index::SubWall)
             {
-                collisionDir = normal;
-                collisionDir.Normalize();
-                break;
-            }
-        }
-        
-        // 노말이 없으면 위치 기반으로 계산
-        if (collisionDir.LengthSquared() < 0.0001f)
-        {
-            engine::Vector3 myPos = GetTransform()->GetWorldPosition();
-            engine::Vector3 otherPos = info.gameObject->GetTransform()->GetWorldPosition();
-            collisionDir = otherPos - myPos;
-            collisionDir.y = 0.0f;
-            if (collisionDir.LengthSquared() > 0.0001f)
-            {
-                collisionDir.Normalize();
+                return;  // Wall은 쿨다운 중 무시, SubWall은 통과
             }
         }
         
         // ─────────────────────────────────────────────
-        // 충돌 방향이 진행방향 앞인지 판단
-        // - 내적 > 0: 앞쪽 충돌 (기존 로직)
-        // - 내적 <= 0: 뒤/옆 충돌 (충돌 방향 기준 회전)
+        // 상태별 처리
         // ─────────────────────────────────────────────
-        engine::Vector3 moveDir = GetDirectionVector();
-        float dotProduct = moveDir.Dot(collisionDir);
-        
-        // 충돌 기준 방향 결정 (회전의 기준이 되는 방향)
-        MoveDirection collisionBaseDir;
-        if (dotProduct > 0.3f)
-        {
-            // 앞쪽 충돌 → 현재 진행방향 기준으로 90도 회전
-            collisionBaseDir = m_currentDirection;
-        }
-        else
-        {
-            // 뒤/옆 충돌 → 충돌 방향 기준으로 90도 회전
-            // 대각선인 경우 성분이 큰 쪽 선택
-            if (std::abs(collisionDir.x) >= std::abs(collisionDir.z))
-            {
-                collisionBaseDir = (collisionDir.x > 0) ? MoveDirection::PlusX : MoveDirection::MinusX;
-            }
-            else
-            {
-                collisionBaseDir = (collisionDir.z > 0) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
-            }
-        }
-
         std::string currentState = GetCurrentState();
         
         if (currentState == "IdleMove")
         {
-            // IdleMove 상태에서 충돌 → 충돌 방향 기준 90도 방향 전환
-            // 충돌 기준 방향을 현재 방향으로 설정 후 ChangeDirectionOnCollision 호출
-            m_currentDirection = collisionBaseDir;
-            m_collisionOccurred = true;
+            // ── SubWall: 오브젝트 이름 기반 방향 결정 ──
+            if (layer == engine::PhysicsLayer::Index::SubWall)
+            {
+                std::string subWallName = info.gameObject->GetName();
+                MoveDirection determinedDir = DetermineDirectionFromSubWall(subWallName);
+                
+                if (determinedDir != m_currentDirection)
+                {
+                    // 방향을 직접 설정 (ChangeDirectionOnCollision 거치지 않음)
+                    m_currentDirection = determinedDir;
+                }
+                // SubWall은 collisionOccurred를 설정하지 않음 (이미 방향 직접 설정)
+                m_lastCollisionWallName = subWallName;
+                m_lastWallCollisionTime = engine::Time::GetTimestamp();
+            }
+            // ── Wall: 이동방향 기준 ±90도 회전 ──
+            else if (layer == engine::PhysicsLayer::Index::Wall)
+            {
+                // SubWall과 겹쳐진 Wall은 방향전환 무시
+                std::string wallName = info.gameObject->GetName();
+                if (wallName.find("Collier_Crystal_Right_Front") != std::string::npos ||
+                    wallName.find("Collier_Crystal_Left_Front")  != std::string::npos ||
+                    wallName.find("Collier_Crystal_Left_Back")   != std::string::npos ||
+                    wallName.find("Collier_Crystal_Right_Back")  != std::string::npos)
+                {
+                    return;  // SubWall과 겹쳐진 Wall → 방향전환 안 함
+                }
+                
+                // m_currentDirection 변경 없음 → ChangeDirectionOnCollision에서 현재 방향 기준 90도 회전
+                m_collisionOccurred = true;
+                m_lastCollisionWallName = wallName;
+                m_lastWallCollisionTime = engine::Time::GetTimestamp();
+            }
+            // ── Environment, Enemy, Player: 노말 스냅핑 기반 ──
+            else
+            {
+                // 충돌 노말 벡터 가져오기
+                engine::Vector3 normal = engine::Vector3::Zero;
+                for (const auto& contact : info.contacts)
+                {
+                    normal = contact.normal;
+                    normal.y = 0.0f;
+                    if (normal.LengthSquared() > 0.0001f)
+                    {
+                        normal.Normalize();
+                        break;
+                    }
+                }
+                
+                // 노말이 없으면 위치 기반 계산
+                if (normal.LengthSquared() < 0.0001f)
+                {
+                    engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+                    engine::Vector3 otherPos = info.gameObject->GetTransform()->GetWorldPosition();
+                    normal = myPos - otherPos;  // 상대에서 나를 향하는 방향
+                    normal.y = 0.0f;
+                    if (normal.LengthSquared() > 0.0001f)
+                        normal.Normalize();
+                    else
+                        normal = GetDirectionVector();
+                }
+                
+                // Player: 반사 계산 → 4방향 스냅핑
+                if (layer == engine::PhysicsLayer::Index::Player)
+                {
+                    engine::Vector3 moveDir = GetDirectionVector();
+                    float dotDN = moveDir.Dot(normal);
+                    
+                    if (std::abs(dotDN) < 0.01f)
+                    {
+                        // 완전 측면 충돌 → 방향 유지 (방향전환 안 함)
+                        return;
+                    }
+                    
+                    // 정면 충돌 체크 (노말과 이동방향이 거의 반대)
+                    if (dotDN < -0.7f)
+                    {
+                        // 정면 충돌 → 이동방향 기준 ±90도 랜덤 (Wall과 동일)
+                        m_collisionOccurred = true;
+                        return;
+                    }
+                    
+                    // 대각선 충돌 → 반사 계산
+                    engine::Vector3 reflected = moveDir - normal * (2.0f * dotDN);
+                    reflected.y = 0.0f;
+                    
+                    // 반사 벡터를 4방향 스냅핑
+                    float absX = std::abs(reflected.x);
+                    float absZ = std::abs(reflected.z);
+                    
+                    MoveDirection reflectedDir;
+                    if (absX >= absZ)
+                        reflectedDir = (reflected.x > 0) ? MoveDirection::PlusX : MoveDirection::MinusX;
+                    else
+                        reflectedDir = (reflected.z > 0) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
+                    
+                    // 반사 방향을 직접 설정
+                    m_currentDirection = reflectedDir;
+                    // collisionOccurred 불필요 (이미 방향 직접 설정)
+                    return;
+                }
+                
+                // Environment, Enemy: 노말 4방향 스냅핑 기반 90도 회전
+                float absX = std::abs(normal.x);
+                float absZ = std::abs(normal.z);
+                
+                MoveDirection collisionBaseDir;
+                if (absX >= absZ)
+                    collisionBaseDir = (normal.x > 0) ? MoveDirection::PlusX : MoveDirection::MinusX;
+                else
+                    collisionBaseDir = (normal.z > 0) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
+                
+                m_currentDirection = collisionBaseDir;
+                m_collisionOccurred = true;
+            }
         }
         else if (currentState == "EngageMove")
         {
             // EngageMove 상태에서 충돌 → IdleMove로 복귀 + 플레이어 무시
             StartPlayerIgnore();
             
-            // 충돌 기준 방향으로 설정
-            m_currentDirection = collisionBaseDir;
+            // SubWall이면 방향 직접 설정
+            if (layer == engine::PhysicsLayer::Index::SubWall)
+            {
+                std::string subWallName = info.gameObject->GetName();
+                MoveDirection determinedDir = DetermineDirectionFromSubWall(subWallName);
+                if (determinedDir != m_currentDirection)
+                {
+                    m_currentDirection = determinedDir;
+                }
+                m_lastCollisionWallName = subWallName;
+                m_lastWallCollisionTime = engine::Time::GetTimestamp();
+            }
+            else if (layer == engine::PhysicsLayer::Index::Wall)
+            {
+                // Wall: 이동방향 유지 (IdleMove 진입 시 90도 회전)
+                m_lastCollisionWallName = info.gameObject->GetName();
+                m_lastWallCollisionTime = engine::Time::GetTimestamp();
+            }
             
-            m_fromEngageCollision = true;  // IdleMove 진입 시 90도 회전 적용
+            m_fromEngageCollision = true;
             
             if (m_logicFSM)
             {
@@ -164,102 +263,11 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 트리거 콜백 - 코너 트리거 감지
+    // 트리거 콜백 - 코너 트리거 감지 (비활성화 - SubWall로 대체)
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGray::OnTriggerEnter(const engine::CollisionInfo& info)
     {
-        if (!info.gameObject) return;
-        
-        // 이미 코너 방향이 결정되어 있으면 무시 (중복 진입 방지)
-        if (m_hasCornerDirection) return;
-        
-        // 충돌한 오브젝트에서 CornerTrigger 스크립트가 있는지 확인
-        auto* cornerTrigger = info.gameObject->GetComponent<CornerTrigger>();
-        if (!cornerTrigger) return;
-        
-        // 현재 이동 방향을 CornerTrigger의 BlockedDirection으로 변환
-        CornerTrigger::BlockedDirection currentDir = CornerTrigger::BlockedDirection::None;
-        switch (m_currentDirection)
-        {
-        case MoveDirection::PlusX:  currentDir = CornerTrigger::BlockedDirection::PlusX;  break;
-        case MoveDirection::MinusX: currentDir = CornerTrigger::BlockedDirection::MinusX; break;
-        case MoveDirection::PlusZ:  currentDir = CornerTrigger::BlockedDirection::PlusZ;  break;
-        case MoveDirection::MinusZ: currentDir = CornerTrigger::BlockedDirection::MinusZ; break;
-        }
-        
-        // 막힌 방향 2개 가져오기
-        auto blocked1 = cornerTrigger->GetBlockedDir1();
-        auto blocked2 = cornerTrigger->GetBlockedDir2();
-        
-        // 이동 가능한 방향 계산 (4방향 - 막힌 방향 2개 = 가능한 방향 2개)
-        // 그 중 현재 방향의 90도 회전인 방향 선택
-        // 
-        // 예: TopRight 코너 (막힌: +X, +Z)
-        //     현재 +X로 이동 중 → 가능한 방향: -X, -Z → 90도 회전은 -Z
-        //     현재 +Z로 이동 중 → 가능한 방향: -X, -Z → 90도 회전은 -X
-        
-        // 현재 방향의 90도 좌/우 방향 계산
-        MoveDirection left90 = MoveDirection::PlusX;
-        MoveDirection right90 = MoveDirection::MinusX;
-        switch (m_currentDirection)
-        {
-        case MoveDirection::PlusX:
-            left90 = MoveDirection::PlusZ;
-            right90 = MoveDirection::MinusZ;
-            break;
-        case MoveDirection::MinusX:
-            left90 = MoveDirection::MinusZ;
-            right90 = MoveDirection::PlusZ;
-            break;
-        case MoveDirection::PlusZ:
-            left90 = MoveDirection::MinusX;
-            right90 = MoveDirection::PlusX;
-            break;
-        case MoveDirection::MinusZ:
-            left90 = MoveDirection::PlusX;
-            right90 = MoveDirection::MinusX;
-            break;
-        default:
-            break;
-        }
-        
-        // 좌/우 중 막히지 않은 방향 선택
-        auto ToBlockedDir = [](MoveDirection dir) -> CornerTrigger::BlockedDirection {
-            switch (dir)
-            {
-            case MoveDirection::PlusX:  return CornerTrigger::BlockedDirection::PlusX;
-            case MoveDirection::MinusX: return CornerTrigger::BlockedDirection::MinusX;
-            case MoveDirection::PlusZ:  return CornerTrigger::BlockedDirection::PlusZ;
-            case MoveDirection::MinusZ: return CornerTrigger::BlockedDirection::MinusZ;
-            default: return CornerTrigger::BlockedDirection::None;
-            }
-        };
-        
-        bool left90Blocked = cornerTrigger->IsDirectionBlocked(ToBlockedDir(left90));
-        bool right90Blocked = cornerTrigger->IsDirectionBlocked(ToBlockedDir(right90));
-        
-        if (!left90Blocked && right90Blocked)
-        {
-            // 좌측만 가능
-            m_cornerDirection = left90;
-            m_hasCornerDirection = true;
-        }
-        else if (left90Blocked && !right90Blocked)
-        {
-            // 우측만 가능
-            m_cornerDirection = right90;
-            m_hasCornerDirection = true;
-        }
-        else if (!left90Blocked && !right90Blocked)
-        {
-            // 둘 다 가능 (코너가 아닌 경우?) → 코너 방향 사용 안함
-            m_hasCornerDirection = false;
-        }
-        else
-        {
-            // 둘 다 막힘 (잘못된 설정) → 무시
-            m_hasCornerDirection = false;
-        }
+        // CornerTrigger 로직 비활성화 - SubWall 시스템으로 대체됨
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -438,6 +446,7 @@ namespace game
         std::uniform_int_distribution<int> dist(0, 3);
         
         m_currentDirection = static_cast<MoveDirection>(dist(gen));
+        m_lastCollisionWallName.clear();  // 방향 바뀌면 중복 충돌 체크 리셋
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -447,15 +456,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGray::ChangeDirectionOnCollision()
     {
-        // 코너트리거에서 안전한 방향이 결정되어 있으면 사용
-        if (m_hasCornerDirection)
-        {
-            m_currentDirection = m_cornerDirection;
-            m_hasCornerDirection = false;  // 사용 후 리셋
-            return;
-        }
-        
-        // 코너 방향 없음 → 랜덤 좌/우 90도 회전
+        // 랜덤 좌/우 90도 회전
         static std::random_device rd;
         static std::mt19937 gen(rd());
         std::uniform_int_distribution<int> dist(0, 1);
@@ -629,6 +630,53 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // SubWall 오브젝트 이름으로 방향 결정
+    // 
+    // 명명규칙:
+    //   Col_Left_Front~  : 맵 좌상단 벽 (−X 진행 → −Z, +Z 진행 → +X)
+    //   Col_Right_Front~ : 맵 우상단 벽 (+X 진행 → −Z, +Z 진행 → −X)
+    //   Col_Left_Back~   : 맵 좌하단 벽 (−X 진행 → +Z, −Z 진행 → +X)
+    //   Col_Right_Back~  : 맵 우하단 벽 (+X 진행 → +Z, −Z 진행 → −X)
+    //
+    // 해당하지 않는 진행방향에서의 충돌은 현재 방향 유지 (무시)
+    // ═══════════════════════════════════════════════════════════════
+    MonsterRoundGray::MoveDirection MonsterRoundGray::DetermineDirectionFromSubWall(const std::string& subWallName)
+    {
+        bool isLeftFront  = (subWallName.find("Left_Front")  != std::string::npos);
+        bool isRightFront = (subWallName.find("Right_Front") != std::string::npos);
+        bool isLeftBack   = (subWallName.find("Left_Back")   != std::string::npos);
+        bool isRightBack  = (subWallName.find("Right_Back")  != std::string::npos);
+        
+        if (isLeftFront)
+        {
+            // 좌상단: -X → -Z, +Z → +X
+            if (m_currentDirection == MoveDirection::MinusX) return MoveDirection::MinusZ;
+            if (m_currentDirection == MoveDirection::PlusZ)  return MoveDirection::PlusX;
+        }
+        else if (isRightFront)
+        {
+            // 우상단: +X → -Z, +Z → -X
+            if (m_currentDirection == MoveDirection::PlusX)  return MoveDirection::MinusZ;
+            if (m_currentDirection == MoveDirection::PlusZ)  return MoveDirection::MinusX;
+        }
+        else if (isLeftBack)
+        {
+            // 좌하단: -X → +Z, -Z → +X
+            if (m_currentDirection == MoveDirection::MinusX) return MoveDirection::PlusZ;
+            if (m_currentDirection == MoveDirection::MinusZ) return MoveDirection::PlusX;
+        }
+        else if (isRightBack)
+        {
+            // 우하단: +X → +Z, -Z → -X
+            if (m_currentDirection == MoveDirection::PlusX)  return MoveDirection::PlusZ;
+            if (m_currentDirection == MoveDirection::MinusZ) return MoveDirection::MinusX;
+        }
+        
+        // 해당하지 않는 진행방향 → 현재 방향 유지
+        return m_currentDirection;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // 상태 진입 콜백 오버라이드
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGray::OnStateEntered(const std::string& state)
@@ -688,6 +736,18 @@ namespace game
         ImGui::DragInt("Ignore Count Max", &m_playerIgnoreCountMax, 1, 1, 10);
         
         ImGui::Separator();
+        ImGui::Text("=== Wall/SubWall Collision ===");
+        ImGui::DragFloat("Wall Cooldown", &m_wallCollisionCooldown, 0.01f, 0.0f, 0.5f);
+        {
+            float elapsed = engine::Time::GetElapsedSeconds(m_lastWallCollisionTime);
+            bool inCooldown = (elapsed < m_wallCollisionCooldown);
+            if (inCooldown)
+                ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.0f, 1.0f), "Cooldown: %.3fs", m_wallCollisionCooldown - elapsed);
+            else
+                ImGui::Text("Cooldown: Ready");
+        }
+        
+        ImGui::Separator();
         ImGui::Text("=== Boundary & Repositioning ===");
         ImGui::DragFloat("Boundary Min X", &m_boundaryMinX, 1.0f, -500.0f, 500.0f);
         ImGui::DragFloat("Boundary Max X", &m_boundaryMaxX, 1.0f, -500.0f, 500.0f);
@@ -720,6 +780,7 @@ namespace game
         j["RaycastDetectionRange"] = m_raycastDetectionRange;
         j["PlayerIgnoreCountMin"] = m_playerIgnoreCountMin;
         j["PlayerIgnoreCountMax"] = m_playerIgnoreCountMax;
+        j["WallCollisionCooldown"] = m_wallCollisionCooldown;
         
         // 맵 경계 및 복원 시스템
         j["BoundaryMinX"] = m_boundaryMinX;
@@ -741,6 +802,7 @@ namespace game
         m_raycastDetectionRange = j.value("RaycastDetectionRange", 20.0f);
         m_playerIgnoreCountMin = j.value("PlayerIgnoreCountMin", 1);
         m_playerIgnoreCountMax = j.value("PlayerIgnoreCountMax", 4);
+        m_wallCollisionCooldown = j.value("WallCollisionCooldown", 0.1f);
         
         // 맵 경계 및 복원 시스템
         m_boundaryMinX = j.value("BoundaryMinX", -50.0f);

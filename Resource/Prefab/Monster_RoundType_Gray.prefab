@@ -49,12 +49,15 @@
                     "FireRate": 0.009999999776482582,
                     "BulletSpeed": 0.0,
                     "BulletLifetime": 0.0,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "OwnGravity": 9.800000190734863,
                     "MinLaunchAngle": 20.0,
                     "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -76,7 +79,9 @@
                     "BoundaryMaxZ": 20.200000762939453,
                     "ObstacleCheckDistance": 1.7000000476837158,
                     "RepositioningSpeed": 10.0,
-                    "RepositioningDuration": 1.0
+                    "RepositioningDuration": 1.0,
+                    "SubWallCollisionCooldown": 0.20000000298023224,
+                    "WallCollisionCooldown": 0.20000000298023224
                 },
                 {
                     "Type": "StaticMeshRenderer",
@@ -84,6 +89,7 @@
                     "MeshFilePath": "Resource/Model/crystal_sphere/white/crystal_sphere_white.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -143,7 +149,7 @@
                     ],
                     "isTrigger": false,
                     "syncWithTransform": false,
-                    "layer": 0,
+                    "layer": 2,
                     "materialType": 0,
                     "radius": 1.2000000476837158,
                     "height": 8.199999809265137

@@ -1,6 +1,6 @@
 {
     "Name": "90_Test_MonLogicOnStage1",
-    "NumGameObjects": 66,
+    "NumGameObjects": 79,
     "GameObjects": [
         {
             "ID": 0,
@@ -2826,7 +2826,7 @@
                     "MaxSpeedBrakeFactor": 15.0,
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 5.5,
+                    "MoveSpeed": 13.0,
                     "RotationSpeed": 20.0,
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
@@ -2840,7 +2840,7 @@
                     "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
-                    "ExecutionRange": 20.0,
+                    "ExecutionRange": 10.0,
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.30000001192092896,
@@ -3197,6 +3197,14 @@
                     "LineMonsterOffset": 1.5,
                     "LineBaseLength": 0.5,
                     "LineHeight": 0.6000000238418579,
+                    "LinePixelsPerMeter": 70.0,
+                    "LineMinPixels": 103.0,
+                    "LinePixelStep": 50.0,
+                    "ReflectIndicatorPrefabName": "Execution_Reflect_Indicator",
+                    "ReflectIndicatorHeight": 1.5,
+                    "ReflectIndicatorOffset": 1.5,
+                    "OffsetScaleZ": 1.0,
+                    "OffsetScaleX": 1.0,
                     "EffectPrefabName": "ExcutionEffectSprite",
                     "EffectDuration": 0.800000011920929,
                     "EffectScaleMultiplier": 1.5,
@@ -3290,6 +3298,111 @@
         },
         {
             "ID": 52,
+            "Name": "AimPointerCanvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 10
+                }
+            ]
+        },
+        {
+            "ID": 53,
+            "ParentID": 52,
+            "Name": "AimCursor",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 54,
             "Name": "Scene_spawn_system_data_Test",
             "Active": true,
             "Components": [
@@ -3316,8 +3429,8 @@
             ]
         },
         {
-            "ID": 53,
-            "ParentID": 52,
+            "ID": 55,
+            "ParentID": 54,
             "Name": "Collier_Wall_Front",
             "Active": true,
             "Components": [
@@ -3367,8 +3480,8 @@
             ]
         },
         {
-            "ID": 54,
-            "ParentID": 52,
+            "ID": 56,
+            "ParentID": 54,
             "Name": "Collier_Wall_Back",
             "Active": true,
             "Components": [
@@ -3418,8 +3531,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 52,
+            "ID": 57,
+            "ParentID": 54,
             "Name": "Collier_Wall_Left",
             "Active": true,
             "Components": [
@@ -3469,8 +3582,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 52,
+            "ID": 58,
+            "ParentID": 54,
             "Name": "Collier_Wall_Right",
             "Active": true,
             "Components": [
@@ -3520,8 +3633,8 @@
             ]
         },
         {
-            "ID": 57,
-            "ParentID": 52,
+            "ID": 59,
+            "ParentID": 54,
             "Name": "Collier_Crystal_Right_Front_1",
             "Active": true,
             "Components": [
@@ -3567,8 +3680,8 @@
             ]
         },
         {
-            "ID": 58,
-            "ParentID": 52,
+            "ID": 60,
+            "ParentID": 54,
             "Name": "Collier_Crystal_Right_Front_2",
             "Active": true,
             "Components": [
@@ -3614,8 +3727,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 52,
+            "ID": 61,
+            "ParentID": 54,
             "Name": "Collier_Crystal_Right_Front_3",
             "Active": true,
             "Components": [
@@ -3661,8 +3774,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 52,
+            "ID": 62,
+            "ParentID": 54,
             "Name": "Collier_Crystal_Left_Front",
             "Active": true,
             "Components": [
@@ -3712,8 +3825,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 52,
+            "ID": 63,
+            "ParentID": 54,
             "Name": "Collier_Crystal_Left_Back",
             "Active": true,
             "Components": [
@@ -3763,8 +3876,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 52,
+            "ID": 64,
+            "ParentID": 54,
             "Name": "Collier_Crystal_Right_Back",
             "Active": true,
             "Components": [
@@ -3814,8 +3927,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 52,
+            "ID": 65,
+            "ParentID": 54,
             "Name": "Stage1Test_Shin_GridMap",
             "Active": true,
             "Components": [
@@ -12876,8 +12989,8 @@
             ]
         },
         {
-            "ID": 64,
-            "Name": "AimPointerCanvas",
+            "ID": 66,
+            "Name": "SubWall",
             "Active": true,
             "Components": [
                 {
@@ -12899,55 +13012,180 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 10
                 }
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 64,
-            "Name": "AimCursor",
+            "ID": 67,
+            "ParentID": 66,
+            "Name": "Col_Left_Back_SubWall",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -23.002986907958984,
+                        "y": -1.402430772781372,
+                        "z": -7.627548694610596
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.0,
+                        "y": 0.3794826567173004,
+                        "z": -0.0,
+                        "w": 0.9251988530158997
+                    },
+                    "Scale": {
+                        "x": 1.0000067949295044,
+                        "y": 0.9999999403953552,
+                        "z": 1.0000075101852417
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        30.0,
+                        20.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 68,
+            "ParentID": 66,
+            "Name": "Col_Right_Back_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 21.62158966064453,
+                        "y": -1.3979750871658325,
+                        "z": -10.2558012008667
+                    },
+                    "Rotation": {
+                        "x": 0.0013658686075359583,
+                        "y": -0.44594606757164,
+                        "z": 0.000604693777859211,
+                        "w": 0.8950585722923279
+                    },
+                    "Scale": {
+                        "x": 1.0000001192092896,
+                        "y": 1.0,
+                        "z": 0.9999603629112244
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        30.0,
+                        20.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 69,
+            "ParentID": 66,
+            "Name": "Col_Left_Front_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -14.834155082702637,
+                        "y": -0.06593792885541916,
+                        "z": 12.662989616394043
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": -0.13815678656101227,
+                        "z": -0.0,
+                        "w": 0.9904103875160217
+                    },
+                    "Scale": {
+                        "x": 0.9999991655349731,
+                        "y": 0.9999998807907104,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        27.649999618530273,
+                        20.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 70,
+            "ParentID": 66,
+            "Name": "Col_Right_Front_1_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 14.715471267700195,
                         "y": 0.0,
-                        "z": 0.0,
+                        "z": 14.6329927444458
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
                         "w": 1.0
                     },
                     "Scale": {
@@ -12957,26 +13195,626 @@
                     }
                 },
                 {
-                    "Type": "RectTransform",
+                    "Type": "SphereCollider",
                     "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "radius": 5.0
+                }
+            ]
+        },
+        {
+            "ID": 71,
+            "ParentID": 66,
+            "Name": "Col_Right_Front_2_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 21.100271224975586,
+                        "y": 4.7277333692363754e-07,
+                        "z": 12.49677848815918
                     },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
                     },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "radius": 5.0
+                }
+            ]
+        },
+        {
+            "ID": 72,
+            "ParentID": 66,
+            "Name": "Col_Right_Front_3_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 10.427852630615234,
+                        "y": 0.0,
+                        "z": 19.19285774230957
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "radius": 5.0
+                }
+            ]
+        },
+        {
+            "ID": 73,
+            "ParentID": 66,
+            "Name": "Col_Right_Front_4_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.4804744720459,
+                        "y": 4.6661608621434425e-07,
+                        "z": 7.502570629119873
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        4.130000114440918,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 74,
+            "ParentID": 66,
+            "Name": "Col_Right_Front_5_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 17.5001220703125,
+                        "y": -1.0677632644728874e-07,
+                        "z": 9.661670684814453
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.26555612683296204,
+                        "z": -0.0,
+                        "w": 0.964095413684845
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        6.619999885559082,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 75,
+            "ParentID": 66,
+            "Name": "Col_Right_Front_6_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 17.723297119140625,
+                        "y": 8.247737355304707e-07,
+                        "z": 10.24860668182373
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        6.619999885559082,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 76,
+            "ParentID": 66,
+            "Name": "Col_Right_Front_7_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 10.106505393981934,
+                        "y": 8.592065796619863e-07,
+                        "z": 14.624590873718262
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.41310444474220276,
+                        "z": -0.0,
+                        "w": 0.9106836318969727
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        6.619999885559082,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 77,
+            "Name": "Monster_RoundType_Gray",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -20.41259765625,
+                        "y": 1.5000033378601074,
+                        "z": -5.7162275314331055
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MonsterRoundGray",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 100.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 17.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 0.0,
+                    "AttackRange": 0.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 0.009999999776482582,
+                    "BulletSpeed": 0.0,
+                    "BulletLifetime": 0.0,
+                    "BulletScale": 1.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false,
+                    "IdleWaitTime": 1.0,
+                    "AttackAnimationDuration": 1.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_IdleMove": "IdleMove",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Repositioning": "Repositioning",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead",
+                    "MoveDurationMin": 1.0,
+                    "MoveDurationMax": 1.2000000476837158,
+                    "RaycastDetectionRange": 100.0,
+                    "PlayerIgnoreCountMin": 1,
+                    "PlayerIgnoreCountMax": 3,
+                    "WallCollisionCooldown": 0.20000000298023224,
+                    "BoundaryMinX": -29.700000762939453,
+                    "BoundaryMaxX": 30.0,
+                    "BoundaryMinZ": -19.350000381469727,
+                    "BoundaryMaxZ": 20.200000762939453,
+                    "ObstacleCheckDistance": 1.7000000476837158,
+                    "RepositioningSpeed": 10.0,
+                    "RepositioningDuration": 1.0
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sphere/white/crystal_sphere_white.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 0,
+                    "radius": 1.2000000476837158,
+                    "height": 8.199999809265137
+                }
+            ]
+        },
+        {
+            "ID": 78,
+            "Name": "Monster_Round_Gray",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -9.480030059814453,
+                        "y": 0.8743999004364014,
+                        "z": -10.82974624633789
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MonsterRoundGray",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 20.0,
+                    "MaxHp": 20.0,
+                    "MoveSpeed": 10.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 0.0,
+                    "AttackRange": 0.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 0.009999999776482582,
+                    "BulletSpeed": 0.0,
+                    "BulletLifetime": 0.0,
+                    "BulletScale": 1.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false,
+                    "IdleWaitTime": 1.0,
+                    "AttackAnimationDuration": 1.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_IdleMove": "IdleMove",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Repositioning": "Repositioning",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead",
+                    "MoveDurationMin": 1.0,
+                    "MoveDurationMax": 4.0,
+                    "RaycastDetectionRange": 100.0,
+                    "PlayerIgnoreCountMin": 1,
+                    "PlayerIgnoreCountMax": 3,
+                    "WallCollisionCooldown": 0.20000000298023224,
+                    "BoundaryMinX": -50.0,
+                    "BoundaryMaxX": 50.0,
+                    "BoundaryMinZ": -50.0,
+                    "BoundaryMaxZ": 50.0,
+                    "ObstacleCheckDistance": 2.0,
+                    "RepositioningSpeed": 5.0,
+                    "RepositioningDuration": 2.0
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sphere/white/crystal_sphere_white.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 10.0,
+                    "linearDamping": 10.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 0,
+                    "radius": 1.090000033378601
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
                 }
             ]
         }

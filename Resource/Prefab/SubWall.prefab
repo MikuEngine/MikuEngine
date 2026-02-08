@@ -1,0 +1,531 @@
+{
+    "Name": "SubWall",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "Col_Left_Back_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -23.125946044921875,
+                        "y": -1.402430772781372,
+                        "z": -7.752228736877441
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.3794826567173004,
+                        "z": -0.0,
+                        "w": 0.9251988530158997
+                    },
+                    "Scale": {
+                        "x": 1.0000067949295044,
+                        "y": 0.9999999403953552,
+                        "z": 1.0000075101852417
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        30.0,
+                        20.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 0,
+            "Name": "Col_Right_Back_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 21.719013214111328,
+                        "y": -1.397611141204834,
+                        "z": -10.329300880432129
+                    },
+                    "Rotation": {
+                        "x": 0.0013658686075359583,
+                        "y": -0.44594606757164,
+                        "z": 0.000604693777859211,
+                        "w": 0.8950585722923279
+                    },
+                    "Scale": {
+                        "x": 1.0000001192092896,
+                        "y": 1.0,
+                        "z": 0.9999737739562988
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        30.0,
+                        20.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 0,
+            "Name": "Col_Left_Front_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -15.013476371765137,
+                        "y": -0.06593792885541916,
+                        "z": 13.293261528015137
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": -0.13815678656101227,
+                        "z": -0.0,
+                        "w": 0.9904103875160217
+                    },
+                    "Scale": {
+                        "x": 0.9999991655349731,
+                        "y": 0.9999998807907104,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        30.0,
+                        20.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 0,
+            "Name": "Col_Right_Front_1_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 14.891889572143555,
+                        "y": 0.0,
+                        "z": 14.716492652893066
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "radius": 5.0
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "ParentID": 0,
+            "Name": "Col_Right_Front_2_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 21.477821350097656,
+                        "y": 0.0,
+                        "z": 12.686002731323242
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "radius": 5.0
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 0,
+            "Name": "Col_Right_Front_3_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 10.810826301574707,
+                        "y": 0.0,
+                        "z": 19.51462173461914
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "radius": 5.0
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 0,
+            "Name": "Col_Right_Front_4_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.37811279296875,
+                        "y": 0.0,
+                        "z": 7.918118476867676
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        4.130000114440918,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "ParentID": 0,
+            "Name": "Col_Right_Front_5_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 18.066015243530273,
+                        "y": 8.278836389763455e-07,
+                        "z": 9.923589706420898
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.3387379050254822,
+                        "z": -0.0,
+                        "w": 0.9408807754516602
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        6.619999885559082,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "ParentID": 0,
+            "Name": "Col_Right_Front_6_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 17.998336791992188,
+                        "y": 8.230799721786752e-07,
+                        "z": 10.352903366088867
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        6.619999885559082,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "ParentID": 0,
+            "Name": "Col_Right_Front_7_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 10.275219917297363,
+                        "y": 8.580481107856031e-07,
+                        "z": 14.34421157836914
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.41310444474220276,
+                        "z": -0.0,
+                        "w": 0.9106836318969727
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "size": [
+                        6.619999885559082,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        }
+    ]
+}
