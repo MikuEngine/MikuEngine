@@ -1,10 +1,10 @@
 {
-    "Name": "ExcutionIndicator",
+    "Name": "Execution_Reflect_Indicator",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "ExcutionIndicator",
+            "Name": "Execution_Reflect_Indicator",
             "Active": true,
             "Components": [
                 {
@@ -22,15 +22,15 @@
                         "w": 0.7071067094802856
                     },
                     "Scale": {
-                        "x": 1.899999976158142,
-                        "y": 1.7999999523162842,
-                        "z": 1.7999999523162842
+                        "x": 1.600000023841858,
+                        "y": 1.5,
+                        "z": 1.0
                     }
                 },
                 {
                     "Type": "SpriteRenderer",
                     "Active": true,
-                    "TextureFilePath": "Resource/Texture/ExcutionTargetTemp.png",
+                    "TextureFilePath": "Resource/Texture/temp_Reflect_Indicator.png",
                     "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",

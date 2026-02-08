@@ -54,6 +54,19 @@ namespace game
         float m_linePixelsPerMeter = 70.0f; // 1m당 픽셀 수 (점선 밀도 조절)
         float m_lineMinPixels = 103.0f;     // 최소 드로우 픽셀 크기
         float m_linePixelStep = 50.0f;      // 증가 단위 픽셀 (계단식 증가)
+        
+        // ─────────────────────────────────────────────
+        // 반사 화살표 설정 (빅탄 처형 시에만 표시)
+        // ─────────────────────────────────────────────
+        std::string m_reflectIndicatorPrefabName = "Execution_Reflect_Indicator";
+        float m_reflectIndicatorHeight = 1.5f;   // 화살표 Y 높이
+        float m_reflectIndicatorOffset = 1.5f;   // 빅탄 중점에서 방향 연장선상 오프셋
+        
+        // ─────────────────────────────────────────────
+        // 방향 기반 오프셋 스케일링
+        // ─────────────────────────────────────────────
+        float m_offsetScaleZ = 1.0f;  // Z축 평행 방향일 때 오프셋 배율 (0~2)
+        float m_offsetScaleX = 1.0f;  // X축 평행 방향일 때 오프셋 배율 (0~2)
 
         // ─────────────────────────────────────────────
         // 런타임 상태
@@ -69,6 +82,10 @@ namespace game
         // 라인 인스턴스
         engine::Ptr<engine::GameObject> m_lineInstance;
         engine::Ptr<engine::Transform> m_lineTransform;
+        
+        // 반사 화살표 인스턴스 (빅탄 처형 시에만 표시)
+        engine::Ptr<engine::GameObject> m_reflectIndicatorInstance;
+        engine::Ptr<engine::Transform> m_reflectIndicatorTransform;
         
         // ─────────────────────────────────────────────
         // 처형 이펙트 설정
@@ -146,6 +163,16 @@ namespace game
         void UpdateLine(const engine::Vector3& targetPos);
         void ShowLine();
         void HideLine();
+        
+        // 반사 화살표 관련 (빅탄 처형 전용)
+        void CreateReflectIndicatorInstance();
+        void DestroyReflectIndicatorInstance();
+        void UpdateReflectIndicator(engine::GameObject* projectile);
+        void ShowReflectIndicator();
+        void HideReflectIndicator();
+        
+        // 방향 기반 오프셋 스케일 계산
+        float GetDirectionalOffsetScale(const engine::Vector3& direction) const;
         
         // 마우스 호버 처리
         engine::GameObject* GetFragileMonsterUnderMouse();

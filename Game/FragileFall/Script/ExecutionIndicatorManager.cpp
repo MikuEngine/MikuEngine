@@ -152,6 +152,18 @@ namespace game
                 HideLine();
             }
             
+            // 반사 화살표: 빅탄이고, 사거리 내이고, 처형 중이 아닐 때만 표시
+            auto* bbp = fragileMonster->GetComponent<BossBigProjectile>();
+            if (bbp && bbp->IsCrystallized() && !isCurrentlyExecuting && isInRange)
+            {
+                UpdateReflectIndicator(fragileMonster);
+                ShowReflectIndicator();
+            }
+            else
+            {
+                HideReflectIndicator();
+            }
+            
             // 인디케이터는 처형 사거리 내에서만 표시 (현재 처형 중인 몬스터 제외)
             if (isInRange && !isCurrentlyExecuting)
             {
@@ -180,6 +192,7 @@ namespace game
                 m_hoveredGameObject = nullptr;
                 HideIndicator();
                 HideLine();
+                HideReflectIndicator();
             }
         }
     }
@@ -205,12 +218,18 @@ namespace game
 
         // 라인도 생성
         CreateLineInstance();
+        
+        // 반사 화살표도 생성
+        CreateReflectIndicatorInstance();
     }
 
     void ExecutionIndicatorManager::DestroyIndicatorInstance()
     {
         // 라인 먼저 제거
         DestroyLineInstance();
+        
+        // 반사 화살표 제거
+        DestroyReflectIndicatorInstance();
 
         if (m_indicatorInstance)
         {
@@ -298,9 +317,8 @@ namespace game
 
         direction.Normalize();
 
-        // 45도 탑뷰 시점 보정: X축 방향일 때 오프셋 100%, Z축 방향일 때 90%
-        // 배율 = 0.9 + 0.1 * |direction.x|
-        float offsetMultiplier = 0.9f + 0.1f * std::abs(direction.x);
+        // 방향 기반 오프셋 스케일링 (Z축 → X축 선형 보간)
+        float offsetMultiplier = GetDirectionalOffsetScale(direction);
         float adjustedPlayerOffset = m_linePlayerOffset * offsetMultiplier;
         float adjustedMonsterOffset = m_lineMonsterOffset * offsetMultiplier;
 
@@ -392,6 +410,122 @@ namespace game
         {
             m_lineInstance->SetActive(false);
         }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 반사 화살표 관련 (빅탄 처형 전용)
+    // ═══════════════════════════════════════════════════════════════
+
+    void ExecutionIndicatorManager::CreateReflectIndicatorInstance()
+    {
+        // 기존 인스턴스가 있으면 제거
+        DestroyReflectIndicatorInstance();
+
+        // 프리팹 인스턴스화
+        engine::GameObject* indicator = engine::Prefab::Instantiate(m_reflectIndicatorPrefabName);
+        if (!indicator)
+        {
+            LOG_PRINT("[ExecutionIndicatorManager] WARNING: Failed to instantiate reflect indicator prefab '{}'", m_reflectIndicatorPrefabName);
+            return;
+        }
+
+        m_reflectIndicatorInstance = indicator;
+        m_reflectIndicatorTransform = indicator->GetTransform();
+
+        // 초기에는 숨김
+        indicator->SetActive(false);
+    }
+
+    void ExecutionIndicatorManager::DestroyReflectIndicatorInstance()
+    {
+        if (m_reflectIndicatorInstance)
+        {
+            m_reflectIndicatorInstance->Destroy();
+            m_reflectIndicatorInstance = nullptr;
+            m_reflectIndicatorTransform = nullptr;
+        }
+    }
+
+    void ExecutionIndicatorManager::UpdateReflectIndicator(engine::GameObject* projectile)
+    {
+        if (!m_reflectIndicatorTransform || !m_player || !projectile) return;
+
+        engine::Transform* playerTransform = m_player->GetTransform();
+        engine::Transform* projectileTransform = projectile->GetTransform();
+        if (!playerTransform || !projectileTransform) return;
+
+        // 플레이어 위치
+        engine::Vector3 playerPos = playerTransform->GetWorldPosition();
+
+        // 빅탄 위치
+        engine::Vector3 projectilePos = projectileTransform->GetWorldPosition();
+
+        // 플레이어 → 빅탄 방향 계산 (Y 제거)
+        engine::Vector3 direction = projectilePos - playerPos;
+        direction.y = 0.0f;  // XZ 평면만
+        float length = direction.Length();
+
+        if (length < 0.001f) return;  // 너무 가까우면 무시
+
+        direction.Normalize();
+
+        // 방향 기반 오프셋 스케일링 적용
+        float offsetScale = GetDirectionalOffsetScale(direction);
+        float scaledOffset = m_reflectIndicatorOffset * offsetScale;
+
+        // 화살표 위치: 빅탄 + (플레이어→빅탄 방향) × 스케일링된 오프셋
+        engine::Vector3 arrowPos = projectilePos + direction * scaledOffset;
+        arrowPos.y = m_reflectIndicatorHeight;  // Y 높이 고정
+        m_reflectIndicatorTransform->SetLocalPosition(arrowPos);
+
+        // 화살표 회전 (플레이어 → 빅탄 방향을 가리킴)
+        // XZ 평면에서 방향 각도 계산 (Y축 회전)
+        float yAngle = std::atan2(direction.x, direction.z);
+
+        // X축 90도 눕힘 + Y축 방향 회전 + Z축 90도 회전 (라인과 동일)
+        engine::Quaternion rotation = engine::Quaternion::CreateFromYawPitchRoll(
+            yAngle,                     // Y축 회전 (방향)
+            DirectX::XM_PIDIV2,         // X축 90도 (눕힘)
+            DirectX::XM_PIDIV2          // Z축 90도 (스프라이트 길이를 X축으로)
+        );
+        m_reflectIndicatorTransform->SetLocalRotation(rotation);
+    }
+
+    void ExecutionIndicatorManager::ShowReflectIndicator()
+    {
+        if (m_reflectIndicatorInstance)
+        {
+            m_reflectIndicatorInstance->SetActive(true);
+        }
+    }
+
+    void ExecutionIndicatorManager::HideReflectIndicator()
+    {
+        if (m_reflectIndicatorInstance)
+        {
+            m_reflectIndicatorInstance->SetActive(false);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 방향 기반 오프셋 스케일 계산
+    // ═══════════════════════════════════════════════════════════════
+
+    float ExecutionIndicatorManager::GetDirectionalOffsetScale(const engine::Vector3& direction) const
+    {
+        // XZ 평면에서 X/Z 비율 계산 (선형 보간)
+        float absX = std::abs(direction.x);
+        float absZ = std::abs(direction.z);
+        float totalXZ = absX + absZ;
+        
+        if (totalXZ < 0.001f) return 1.0f;  // 0으로 나누기 방지
+        
+        float xRatio = absX / totalXZ;  // 0 (Z축 평행) ~ 1 (X축 평행)
+        
+        // 선형 보간: Z 스케일 → X 스케일
+        // xRatio = 0 → m_offsetScaleZ
+        // xRatio = 1 → m_offsetScaleX
+        return m_offsetScaleZ + (m_offsetScaleX - m_offsetScaleZ) * xRatio;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -881,6 +1015,48 @@ namespace game
         }
 
         ImGui::Separator();
+        ImGui::Text("Reflect Indicator Settings (Big Projectile only):");
+        ImGui::InputText("Reflect Indicator Prefab", &m_reflectIndicatorPrefabName);
+        
+        if (ImGui::DragFloat("Reflect Indicator Height", &m_reflectIndicatorHeight, 0.1f, 0.0f, 10.0f, "%.2f"))
+        {
+            m_reflectIndicatorHeight = std::clamp(m_reflectIndicatorHeight, 0.0f, 10.0f);
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("화살표의 Y 높이 (고정값)");
+        }
+        
+        if (ImGui::DragFloat("Reflect Indicator Offset", &m_reflectIndicatorOffset, 0.1f, -10.0f, 20.0f, "%.2f"))
+        {
+            m_reflectIndicatorOffset = std::clamp(m_reflectIndicatorOffset, -10.0f, 20.0f);
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("빅탄 중점에서 반사 방향으로의 오프셋 거리 (m). 음수: 플레이어 쪽");
+        }
+
+        ImGui::Separator();
+        ImGui::Text("Directional Offset Scaling:");
+        if (ImGui::DragFloat("Offset Scale Z-axis", &m_offsetScaleZ, 0.01f, 0.0f, 2.0f, "%.2f"))
+        {
+            m_offsetScaleZ = std::clamp(m_offsetScaleZ, 0.0f, 2.0f);
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Z축 평행 방향일 때 오프셋 배율 (0~2). 라인과 반사 화살표에 모두 적용");
+        }
+        
+        if (ImGui::DragFloat("Offset Scale X-axis", &m_offsetScaleX, 0.01f, 0.0f, 2.0f, "%.2f"))
+        {
+            m_offsetScaleX = std::clamp(m_offsetScaleX, 0.0f, 2.0f);
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("X축 평행 방향일 때 오프셋 배율 (0~2). 라인과 반사 화살표에 모두 적용");
+        }
+
+        ImGui::Separator();
         ImGui::Text("Execution Effect Settings:");
         ImGui::InputText("Effect Prefab", &m_effectPrefabName);
         ImGui::DragFloat("Effect Duration", &m_effectDuration, 0.05f, 0.05f, 2.0f);
@@ -972,6 +1148,15 @@ namespace game
         j["LinePixelsPerMeter"] = m_linePixelsPerMeter;
         j["LineMinPixels"] = m_lineMinPixels;
         j["LinePixelStep"] = m_linePixelStep;
+        
+        // 반사 화살표 설정
+        j["ReflectIndicatorPrefabName"] = m_reflectIndicatorPrefabName;
+        j["ReflectIndicatorHeight"] = m_reflectIndicatorHeight;
+        j["ReflectIndicatorOffset"] = m_reflectIndicatorOffset;
+        
+        // 방향 기반 오프셋 스케일링
+        j["OffsetScaleZ"] = m_offsetScaleZ;
+        j["OffsetScaleX"] = m_offsetScaleX;
 
         // 처형 이펙트 설정
         j["EffectPrefabName"] = m_effectPrefabName;
@@ -1006,6 +1191,15 @@ namespace game
             m_lineMinPixels = j["LineMinPixels"].get<float>();
         if (j.contains("LinePixelStep"))
             m_linePixelStep = j["LinePixelStep"].get<float>();
+        
+        // 반사 화살표 설정
+        engine::JsonGet(j, "ReflectIndicatorPrefabName", m_reflectIndicatorPrefabName);
+        engine::JsonGet(j, "ReflectIndicatorHeight", m_reflectIndicatorHeight);
+        engine::JsonGet(j, "ReflectIndicatorOffset", m_reflectIndicatorOffset);
+        
+        // 방향 기반 오프셋 스케일링
+        engine::JsonGet(j, "OffsetScaleZ", m_offsetScaleZ);
+        engine::JsonGet(j, "OffsetScaleX", m_offsetScaleX);
 
         // 처형 이펙트 설정
         engine::JsonGet(j, "EffectPrefabName", m_effectPrefabName);
