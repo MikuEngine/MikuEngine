@@ -213,7 +213,7 @@ namespace game
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
 
-        m_aimMode->SetPaused(shouldStop);
+        if (m_aimMode) m_aimMode->SetPaused(shouldStop);
 
         if (m_menuPopUp)
         {
@@ -347,7 +347,7 @@ namespace game
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
 
-        m_aimMode->SetPaused(shouldStop);
+        if (m_aimMode) m_aimMode->SetPaused(shouldStop);
 
         if (m_optionPopUp)
         {

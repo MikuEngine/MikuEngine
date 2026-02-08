@@ -159,5 +159,6 @@
     <ClInclude Include="Manager\MessageCatalog.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\SceneId.h" />
+    <ClInclude Include="Script\CharacterScript\Player\StatId.h" />
   </ItemGroup>
 </Project>

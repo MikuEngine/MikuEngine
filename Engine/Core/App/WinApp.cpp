@@ -374,28 +374,41 @@ namespace engine
     {
         Profiling::UpdateFPS(false);
         Time::Update();
+        Input::Update();
+
+        // 에디터 업데이트
+#ifdef _DEBUG
+        EditorManager::Get().Update();
+        EditorState currentState = EditorManager::Get().GetEditorState();
+#else
+        EditorState currentState = EditorState::Play;
+#endif
+
         bool shouldLock = false;
         bool shouldHideCursor = false;
-        
-#ifdef _DEBUG
-        // 에디터 내에서 'Play' 버튼을 눌러 게임이 돌아가는 중일 때만 Lock
-        if (EditorManager::Get().GetEditorState() == EditorState::Play)
+        if (GetActiveWindow() == m_hWnd)
         {
-            // 추가로 현재 윈도우가 포커스를 가지고 있어야 함
-            if (GetActiveWindow() == m_hWnd)
+            if (currentState == EditorState::Play)
             {
+                // 게임 플레이 중에는 무조건 락
                 shouldLock = true;
                 shouldHideCursor = true;
             }
-        }
-#else
-        // 릴리즈 빌드에서는 항상 게임 플레이 중이므로 포커스만 체크
-        if (GetActiveWindow() == m_hWnd)
-        {
-            shouldLock = true;
-            shouldHideCursor = true;
-        }
+#ifdef _DEBUG
+            else if (currentState == EditorState::Edit || currentState == EditorState::Pause)
+            {
+                // 에디터 모드, 일시정지일 때: 우클릭 중이면 카메라 회전을 위해 마우스를 가두고 숨김
+                if (Input::IsMouseHeld(Buttons::RIGHT))
+                {
+                    shouldLock = true;
+                    shouldHideCursor = true;
+                }
+                // 그 외(ImGui 조작 등)에는 마우스를 풀어줌
+            }
 #endif
+        }
+
+        // 확정된 상태로 LockMode와 Input 업데이트를 수행
         Input::SetLockMode(shouldLock);
 
         CURSORINFO ci = { sizeof(CURSORINFO) };
@@ -412,11 +425,7 @@ namespace engine
                 ::ShowCursor(true);
         }
 
-        Input::Update();
-
 #ifdef _DEBUG
-        EditorManager::Get().Update();
-
         switch (EditorManager::Get().GetEditorState())
         {
         case EditorState::Edit:

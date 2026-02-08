@@ -139,6 +139,35 @@ namespace game
         engine::Vector3 m_dashDirection = engine::Vector3::Zero;  // 대쉬 방향 (시작 시 고정)
              
         
+
+
+
+        // 처형 관련
+        float m_exeFragileRegen = 20.0f;
+        float m_exeSplashDmg = 10.0f;
+        float m_exeSplashRange = 5.0f;
+        int   m_exeDashChargeRegen = 1;
+        float m_exeHpRegen = 5.0f;
+
+        // 체력/생존 관련
+        float m_hpRegenOnClear = 10.0f;
+        float m_fragileMax = 100.0f;
+        float m_fragileRegenOnClear = 20.0f;
+        float m_fragileGainRate = 1.0f; // 배율
+        float m_invincibleTime = 0.5f;
+
+        // 대시 관련
+        float m_dashInvincibleTime = 0.1f;
+
+        // 대시 후 버프 관련 (런타임 저장용)
+        float m_buffMoveSpeedAfterDash = 0.0f;
+        float m_buffAtkDmgAfterDash = 0.0f;
+        float m_buffDurationAfterDash = 0.0f;
+
+
+
+
+
         // ─────────────────────────────────────────────
         // 총알 발사 위치 (소켓 사용 시 오프셋 무시)
         // ─────────────────────────────────────────────
@@ -355,6 +384,68 @@ namespace game
         void SetIsBulletDouble(bool value) { m_isBulletDouble = value; }
         void SetAfterImage(engine::AfterimageRenderer* comp) { m_afterimage = comp; }
         engine::AfterimageRenderer* GetAfterImage() const { return m_afterimage; }
+
+
+
+        // 처형 (Execution)
+        float GetBaseExeFragileRegen() const { return 20.0f; }
+        void  SetExeFragileRegen(float v) { m_exeFragileRegen = v; }
+
+        float GetBaseExeSplashDmg() const { return 10.0f; }
+        void  SetExeSplashDmg(float v) { m_exeSplashDmg = v; }
+
+        float GetBaseExeSplashRange() const { return 5.0f; }
+        void  SetExeSplashRange(float v) { m_exeSplashRange = v; }
+
+        float GetBaseExeDashChargeRegen() const { return 1.0f; }
+        void  SetExeDashChargeRegen(float v) { m_exeDashChargeRegen = static_cast<int>(v); }
+
+        float GetBaseExeHpRegen() const { return 5.0f; }
+        void  SetExeHpRegen(float v) { m_exeHpRegen = v; }
+
+        // 체력/생존 (Vitality)
+        float GetBaseHpRegenOnClear() const { return 10.0f; }
+        void  SetHpRegenOnClear(float v) { m_hpRegenOnClear = v; }
+
+        float GetBaseExeRange() const { return 10.0f; }
+        void SetExeRange(float v) { m_executionRange = v; }
+
+        float GetBaseFragileMax() const { return 100.0f; }
+        void  SetFragileMax(float v) { m_fragileMax = v; }
+
+        float GetBaseFragileRegenOnClear() const { return 20.0f; }
+        void  SetFragileRegenOnClear(float v) { m_fragileRegenOnClear = v; }
+
+        float GetBaseFragileGainRate() const { return 1.0f; }
+        void  SetFragileGainRate(float v) { m_fragileGainRate = v; }
+
+        // 이동/대시 (Movement)
+        float GetBaseDashInvincibleTime() const { return 0.1f; }
+        void  SetDashInvincibleTime(float v) { m_dashInvincibleTime = v; }
+
+        // 버프 (Buff) - 베이스값은 항상 0
+        void  SetBuffMoveSpeedAfterDash(float v) { m_buffMoveSpeedAfterDash = v; }
+        void  SetBuffAtkDmgAfterDash(float v) { m_buffAtkDmgAfterDash = v; }
+        void  SetBuffDurationAfterDash(float v) { m_buffDurationAfterDash = v; }
+
+        float GetBaseMaxHp() const { return 100.0f; } // 기본 체력 100
+        void  SetMaxHp(float value) { m_PlayerMaxHP = value; }
+
+        // 무적 시간 (기본값 0.5초)
+        float GetBaseInvincibleTime() const { return 0.5f; }
+        void  SetInvincibleTime(float value) { m_invincibleTime = value; }
+
+
+        float GetBaseMoveSpeed() const { return 13.0f; }
+        void  SetMoveSpeed(float value) { m_moveSpeed = value; }
+
+        // 대시 거리 (m_dashImpulseMultiplier가 대시 거리를 결정하는 물리 힘입니다)
+        float GetBaseDashDistance() const { return m_dashImpulseMultiplier; } // 기본 임펄스 배율 15.0
+        void  SetDashDistance(float value) { m_dashImpulseMultiplier = value; }
+
+        // 대시 쿨다운 (기본값 0.2초)
+        float GetBaseDashCooldown() const { return 0.2f; }
+        void  SetDashCooldown(float value) { m_dashCooldown = value; }
 
         // 처형: Execution 상태일 때 재생 중인 처형 애니메이션의 정규화 시간 (0~1). 아니면 -1
         float GetExecutionAnimNormalizedTime() const;

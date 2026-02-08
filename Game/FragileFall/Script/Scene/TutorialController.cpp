@@ -54,6 +54,10 @@ namespace game
         {
             tutorialPlayer->GetComponent<PlayerControllerScript>()->SetBaseAtkDmg(30.0f);          
         }
+
+        m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
+        m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
+
     }
 
     void TutorialController::Start()
@@ -74,8 +78,6 @@ namespace game
 
             GetGameObject()->Destroy();
         }
-
-        TryInitNextDoorRecursive();
 
     }
 
@@ -99,12 +101,6 @@ namespace game
             {
                 m_isTimerActive = false;
 
-                if (m_nextDoorObject == nullptr)
-                {
-                    TryInitNextDoorRecursive();
-                    return;
-                }
-
                 switch (m_stepIndex)
                 {
 
@@ -115,12 +111,12 @@ namespace game
                     }
                     break;
                 // ─────────────────────────────────────────────
-                // step 1 :
+                // step 1
                 // ─────────────────────────────────────────────
                 case 1:
                     break;
                 // ─────────────────────────────────────────────
-                // step 2 : 일반 몬스터(회색 둔탁) 1종을 소환하여 사격하게 UI로 유도
+                // step 2
                 // ─────────────────────────────────────────────
                 case 2:
                     if (auto spawnObject = engine::GameObject::Find("MonsterSpawnPoint"))
@@ -133,6 +129,33 @@ namespace game
                         }
                     }
                     break;
+                // ─────────────────────────────────────────────
+                // step 3
+                // ─────────────────────────────────────────────
+                case 3:
+                    if (m_pageIndex >= 2)
+                    {
+                        m_keepMonsterOnNext = false;
+                    }
+                    if (m_pageIndex < (int)g_steps[m_stepIndex].pages.size() - 1)
+                    {
+                        Next();
+                        m_isTimerActive = true;
+                        m_stepTimer = 3.0f;
+                    }
+                    break;
+                // ─────────────────────────────────────────────
+                // step 4
+                // ─────────────────────────────────────────────
+                case 4:
+                    if (m_pageIndex < (int)g_steps[m_stepIndex].pages.size() - 1)
+                    {
+                        m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
+                        m_exitDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
+                        m_isTimerActive = true;
+                        m_stepTimer = 3.0f;
+                    }
+                    break;
                 }
             }
         }
@@ -141,17 +164,20 @@ namespace game
         {
             if (m_spawnedMonster && m_monsterName == "Monster_PointedType_Gray" && !m_isStateCheck)
             {
-                auto isfrag = m_spawnedMonster->GetComponent<MonsterScript>()->IsFragile();
                 if (m_spawnedMonster->GetComponent<MonsterScript>()->IsFragile())
                 {
                     m_isStateCheck = true;
+                    m_keepMonsterOnNext = true;
                     Next();
+                    m_isTimerActive = true;
+                    m_stepTimer = 3.0f;
                 }
             }
 
             if (m_spawnedMonster == nullptr || m_spawnedMonster->IsPendingKill())
             {
                 m_isSpawnMonster = false;
+                m_keepMonsterOnNext = false;
                 m_spawnedMonster = nullptr;
 
                 if (m_monsterName == "Monster_DullType_Gray")
@@ -168,31 +194,10 @@ namespace game
         }
     }
 
-    void TutorialController::TryInitNextDoorRecursive()
-    {
-        LOG_PRINT("TryInitNextDoorRecursive()@@");
-
-        m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
-
-        if (m_nextDoorObject)
-        {
-            auto* doorScript = m_nextDoorObject->GetComponent<DoorTriggerScript>();
-            if (doorScript)
-            {
-                doorScript->SetActivateDoor(false);
-                doorScript->SetDoorObjectName("10_PROTO_Tutorial");
-            }
-        }
-        else
-        {
-            m_isTimerActive = true;
-            m_stepTimer = 0.2f;
-        }
-
-    }
-
     void TutorialController::InitializeStep()
     {
+        if (m_keepMonsterOnNext) return;
+
         m_stepTimer = 0.0f;
         m_isTimerActive = false;
         m_isStateCheck = false;
@@ -200,10 +205,24 @@ namespace game
         if (m_nextDoorObject)
         {
             m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(false);
-            m_nextDoorObject = nullptr;
+            m_exitDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(false);
+        }
+ 
+        // 몬스터 초기화
+        if (m_spawnedMonster)
+        {
+            if (m_keepMonsterOnNext)
+            {
+                m_keepMonsterOnNext = false;
+                return;
+            }
+
+            m_spawnedMonster->Destroy();
+            m_spawnedMonster = nullptr;
+            m_isSpawnMonster = false;
+            m_monsterName = "Monster_DullType_Gray";
         }
 
-        // 몬스터 초기화
     }
 
     void TutorialController::RefreshStepContext(int index)
@@ -217,7 +236,7 @@ namespace game
         // ─────────────────────────────────────────────
         case 0:
             m_isTimerActive = true;
-            m_stepTimer = 5.0f;
+            m_stepTimer = 8.0f;
             break;
         // ─────────────────────────────────────────────
         // step 1 :
@@ -226,10 +245,29 @@ namespace game
             break;
         // ─────────────────────────────────────────────
         // step 2 : 일반 몬스터(회색 둔탁) 1종을 소환하여 사격하게 UI로 유도
+        //          뾰족 몬스터를 사격 프레자일 상태로 만들도록 유도
         // ─────────────────────────────────────────────
         case 2:
             m_isTimerActive = true;
             m_stepTimer = 5.0f;
+            break;
+        // ─────────────────────────────────────────────
+        // step 3 : 몬스터가 프레자일 상태가 될 경우 UI 변경후 N초후 순차대로 출력
+        // ─────────────────────────────────────────────
+        case 3:
+            break;
+        // ─────────────────────────────────────────────
+        // step 4 : 처형시 다음맵으로 가는문 개방
+        //          처형시 설명 UI를 먼저 띄워주고 N초 뒤로비로 가는 문 2종 개방 후 복귀를 유도
+        // ─────────────────────────────────────────────
+        case 4:
+            m_isTimerActive = true;
+            m_stepTimer = 0.3f;
+            break;
+        // ─────────────────────────────────────────────
+        // step 5 : 
+        // ─────────────────────────────────────────────
+        case 5:
             break;
         }
     }
@@ -244,6 +282,10 @@ namespace game
         std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
 
         if (currentScene == "10_PROTO_Tutorial")
+        {
+            Next();
+        }
+        else if (currentScene == "10_PROTO_TutorialLobby")
         {
             Next();
         }
@@ -331,35 +373,13 @@ namespace game
         ShowPage();
     }
 
-    void TutorialController::OnGui()
-    {
-        char doorNameBuffer[256];
-        strcpy_s(doorNameBuffer, m_nextDoorObjectName.c_str());
-
-        if (ImGui::InputText("Door Object Name", doorNameBuffer, sizeof(doorNameBuffer)))
-        {
-            m_nextDoorObjectName = doorNameBuffer;
-        }
-
-        ImGui::SameLine();
-        ImGui::TextDisabled("(?)");
-        if (ImGui::IsItemHovered())
-        {
-            ImGui::SetTooltip("고유한 오브젝트 이름이어야합니다.");
-        }
-    }
-
     void TutorialController::Save(engine::json& j) const
     {
         Object::Save(j);
-
-        j["NextDoorObjectName"] = m_nextDoorObjectName;
     }
 
     void TutorialController::Load(const engine::json& j)
     {
         Object::Load(j);
-
-        engine::JsonGet(j, "NextDoorObjectName", m_nextDoorObjectName);
     }
 }

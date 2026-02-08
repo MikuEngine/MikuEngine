@@ -1,4 +1,5 @@
-#pragma once
+﻿#pragma once
+#include "Script/CharacterScript/Player/StatId.h"
 
 namespace game
 {
@@ -27,7 +28,7 @@ namespace game
 		// ─────────────────────────────────────────────
 		// 초기화
 		// ─────────────────────────────────────────────
-		static void Initialize();
+		//static void Initialize();
 
 		// ─────────────────────────────────────────────
 		// 핵심 기능: 플레이어에게 강화 적용
@@ -35,12 +36,12 @@ namespace game
 		// - (Base + 합연산) × 곱연산 계산
 		// - player의 실제값 변수에 설정
 		// ─────────────────────────────────────────────
-		static void ApplyTemper(PlayerControllerScript* player);
+		//static void ApplyTemper(PlayerControllerScript* player);
 
 		// ─────────────────────────────────────────────
 		// 전체 강화수치 초기화 (합=0, 곱=1, 불린=false)
 		// ─────────────────────────────────────────────
-		static void ResetAllTemper();
+		//static void ResetAllTemper();
 
 		// ─────────────────────────────────────────────
 		// 합연산 강화수치 Setter/Getter
@@ -87,7 +88,24 @@ namespace game
 		// ─────────────────────────────────────────────
 		// 불린 강화 Setter/Getter
 		// ─────────────────────────────────────────────
-		static void SetIsBulletDouble(bool value);
-		static bool GetIsBulletDouble();
+		//static void SetIsBulletDouble(bool value);
+		//static bool GetIsBulletDouble();
+
+		// Refactor
+		// 이제부터 함수들은 다음과 같이 선언합니다.
+		static void Initialize();
+		static void ResetAllTemper();
+		static void ApplyTemper(PlayerControllerScript* player);
+
+		// Setter / Getter 함수는 하나씩
+		static void SetStat(StatType type, CalcType calc, float value);
+		static float GetStat(StatType type, CalcType calc);
+
+		static void SetIsBulletDouble(bool value) { m_isBulletDouble = value; }
+		static bool GetIsBulletDouble() { return m_isBulletDouble; }
+
+	private:
+		static std::unordered_map<StatType, StatValue> m_stats;
+		static bool m_isBulletDouble;
 	};
 }
