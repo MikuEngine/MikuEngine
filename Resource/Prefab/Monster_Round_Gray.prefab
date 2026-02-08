@@ -73,15 +73,14 @@
                     "RaycastDetectionRange": 100.0,
                     "PlayerIgnoreCountMin": 1,
                     "PlayerIgnoreCountMax": 3,
+                    "WallCollisionCooldown": 0.019999999552965164,
                     "BoundaryMinX": -50.0,
                     "BoundaryMaxX": 50.0,
                     "BoundaryMinZ": -50.0,
                     "BoundaryMaxZ": 50.0,
                     "ObstacleCheckDistance": 2.0,
                     "RepositioningSpeed": 5.0,
-                    "RepositioningDuration": 2.0,
-                    "SubWallCollisionCooldown": 0.20000000298023224,
-                    "WallCollisionCooldown": 0.20000000298023224
+                    "RepositioningDuration": 2.0
                 },
                 {
                     "Type": "StaticMeshRenderer",

@@ -128,7 +128,7 @@ namespace game
                 m_lastCollisionWallName = subWallName;
                 m_lastWallCollisionTime = engine::Time::GetTimestamp();
             }
-            // ── Wall: 이동방향 기준 ±90도 회전 ──
+            // ── Wall: 이동방향 기준 ±90도 회전 (즉시) ──
             else if (layer == engine::PhysicsLayer::Index::Wall)
             {
                 // SubWall과 겹쳐진 Wall은 방향전환 무시
@@ -141,8 +141,10 @@ namespace game
                     return;  // SubWall과 겹쳐진 Wall → 방향전환 안 함
                 }
                 
-                // m_currentDirection 변경 없음 → ChangeDirectionOnCollision에서 현재 방향 기준 90도 회전
-                m_collisionOccurred = true;
+                // FixedUpdate에서 즉시 방향 변경
+                ChangeDirectionOnCollision();
+                ResetMoveDuration();
+                OnDirectionChanged();
                 m_lastCollisionWallName = wallName;
                 m_lastWallCollisionTime = engine::Time::GetTimestamp();
             }
@@ -190,8 +192,10 @@ namespace game
                     // 정면 충돌 체크 (노말과 이동방향이 거의 반대)
                     if (dotDN < -0.7f)
                     {
-                        // 정면 충돌 → 이동방향 기준 ±90도 랜덤 (Wall과 동일)
-                        m_collisionOccurred = true;
+                        // 정면 충돌 → 이동방향 기준 ±90도 랜덤 (即시)
+                        ChangeDirectionOnCollision();
+                        ResetMoveDuration();
+                        OnDirectionChanged();
                         return;
                     }
                     
@@ -226,7 +230,9 @@ namespace game
                     collisionBaseDir = (normal.z > 0) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
                 
                 m_currentDirection = collisionBaseDir;
-                m_collisionOccurred = true;
+                ChangeDirectionOnCollision();
+                ResetMoveDuration();
+                OnDirectionChanged();
             }
         }
         else if (currentState == "EngageMove")
@@ -359,15 +365,6 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGray::ExecuteIdleMoveBehaviorNonPhysics(float deltaTime)
     {
-        // 충돌 발생 처리 (Update에서 처리하여 FixedUpdate 전에 방향 변경)
-        if (m_collisionOccurred)
-        {
-            ChangeDirectionOnCollision();
-            ResetMoveDuration();
-            OnDirectionChanged();  // 플레이어 무시 카운트 감소
-            m_collisionOccurred = false;
-        }
-        
         // 이동 시간 업데이트
         m_moveDurationTimer += deltaTime;
         
