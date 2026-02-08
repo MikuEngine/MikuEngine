@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/Interface/IDamageable.h"
@@ -24,7 +24,7 @@ namespace game
     public:
         void Update() override;
 
-        void TakeDamage(float damage) override;
+        void TakeDamage(float damage, bool isShieldPierce = false) override;
         void Execute();
 
         bool IsCrystalized();

@@ -15,7 +15,6 @@
     <ClCompile Include="Script\Boss\BossPattern\Components\BossBullet.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossPillar.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossPillarCrystalizedPiece.cpp" />
-    <ClCompile Include="Script\Boss\BossPattern\Components\BossProjectile.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossShieldEffect.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_BulletFire.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Meteor.cpp" />
@@ -79,6 +78,7 @@
     <ClCompile Include="Script\Boss\BossPattern\Components\BossBulletThreeway.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossBulletEightway.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Components\BossMeteor.cpp" />
+    <ClCompile Include="Script\Boss\BossPattern\Components\BossBigProjectile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -95,7 +95,6 @@
     <ClInclude Include="Script\Boss\BossPattern\Components\BossBullet.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossPillar.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossPillarCrystalizedPiece.h" />
-    <ClInclude Include="Script\Boss\BossPattern\Components\BossProjectile.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossShieldEffect.h" />
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_BulletFire.h" />
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Meteor.h" />
@@ -166,5 +165,6 @@
     <ClInclude Include="Script\Boss\BossPattern\Components\BossBulletThreeway.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossBulletEightway.h" />
     <ClInclude Include="Script\Boss\BossPattern\Components\BossMeteor.h" />
+    <ClInclude Include="Script\Boss\BossPattern\Components\BossBigProjectile.h" />
   </ItemGroup>
 </Project>

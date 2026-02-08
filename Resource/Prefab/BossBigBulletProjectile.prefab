@@ -31,32 +31,36 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.8648648262023926,
-                        "y": 0.0,
+                        "x": 0.6662988662719727,
+                        "y": 0.5328185558319092,
                         "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
+                        "x": 0.7560262680053711,
+                        "y": 0.6216216087341309,
                         "z": 1.0
                     },
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 0.0,
+                    "MaterialEmissiveIntensity": 3.8299999237060547,
                     "OverrideMaterial": true,
                     "CastShadow": false,
-                    "CullMode": 1
-                },
-                {
-                    "Type": "BossProjectile",
-                    "Active": true
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
                 {
                     "Type": "SphereCollider",
@@ -73,9 +77,13 @@
                     ],
                     "isTrigger": true,
                     "syncWithTransform": false,
-                    "layer": 0,
+                    "layer": 16,
                     "materialType": 1,
                     "radius": 0.5
+                },
+                {
+                    "Type": "BossBigProjectile",
+                    "Active": true
                 }
             ]
         },

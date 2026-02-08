@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -826,7 +826,7 @@ namespace game
 		m_skeletalMeshRenderer->SetBaseColor(m_originalColor);
 	}
 
-	void MonsterScript::TakeDamage(float damage)
+	void MonsterScript::TakeDamage(float damage, bool isShieldPierce)
 	{
 		// 이미 Fragile 또는 Dead 상태이면 무시
 		std::string currentState = GetCurrentState();

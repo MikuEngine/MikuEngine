@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace game
 {
@@ -7,6 +7,6 @@ namespace game
     public:
         virtual ~IDamageable() = default;
 
-        virtual void TakeDamage(float damage) = 0;
+        virtual void TakeDamage(float damage, bool isShieldPierce = false) = 0;
     };
 }

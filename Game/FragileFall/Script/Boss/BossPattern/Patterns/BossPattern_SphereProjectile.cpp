@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BossPattern_SphereProjectile.h"
 
 #include <Framework/Object/Component/Collider.h>
@@ -7,7 +7,7 @@
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossScript.h"
-#include "Script/Boss/BossPattern/Components/BossProjectile.h"
+#include "Script/Boss/BossPattern/Components/BossBigProjectile.h"
 
 namespace game
 {
@@ -53,7 +53,9 @@ namespace game
         auto* bossTransform = boss->GetGameObject()->GetTransform();
         if (!bossTransform) return;
 
-        engine::Vector3 bossPos = bossTransform->GetWorldPosition();
+        // 보스 XZ 좌표만 가져오기 (Y=0 기준)
+        engine::Vector3 bossWorldPos = bossTransform->GetWorldPosition();
+        engine::Vector3 bossPos = engine::Vector3(bossWorldPos.x, 0.0f, bossWorldPos.z);
 
         // 플레이어 위치 찾기
         engine::Vector3 playerPos = bossPos;
@@ -63,11 +65,19 @@ namespace game
             playerPos = player->GetTransform()->GetWorldPosition();
         }
 
-        // 플레이어 방향 계산
+        // 보스 좌표(Y=0) + 오프셋 적용
+        engine::Vector3 spawnOffset = boss->GetBigProjectileSpawnOffset();
+        engine::Vector3 spawnPos = bossPos + spawnOffset;
+
+        // 플레이어 방향 계산 (오프셋 적용된 위치에서, XZ 평면만)
         engine::Vector3 directionToPlayer = engine::Vector3(0.0f, 0.0f, 1.0f);  // 기본 방향
         if (player)
         {
-            directionToPlayer = playerPos - bossPos;
+            directionToPlayer = playerPos - spawnPos;
+            
+            // Y 성분 제거 (XZ 평면 방향만 사용)
+            directionToPlayer.y = 0.0f;
+            
             float length = directionToPlayer.Length();
             if (length > 0.001f)
             {
@@ -76,26 +86,17 @@ namespace game
         }
 
         // 투사체 GameObject 생성
-        std::string projectileName = "BossProjectile_" + std::to_string(rand());
         auto projectileGO = engine::Prefab::Instantiate("BossBigBulletProjectile");
+        if (!projectileGO) return;
 
-        // Transform 설정
-        projectileGO->GetTransform()->SetLocalPosition(bossPos);
+        // Transform 설정 (오프셋 적용된 위치)
+        projectileGO->GetTransform()->SetLocalPosition(spawnPos);
         
-        // BossProjectile 스크립트 추가
-        auto* projectileScript = projectileGO->GetComponent<BossProjectile>();
+        // BossBigProjectile 스크립트 Setup (boss에서 모든 설정 가져오기)
+        auto* projectileScript = projectileGO->GetComponent<BossBigProjectile>();
         if (projectileScript)
         {
-            projectileScript->Setup(
-                directionToPlayer,
-                m_projectileSpeed,
-                m_projectileDamage,
-                m_projectileLifetime,
-                boss
-            );
+            projectileScript->Setup(directionToPlayer, boss);
         }
-
-        // TODO: StaticMeshRenderer 추가 (구체 모델)
-        // TODO: Collider 추가 (충돌 감지용, 결정화 감지용)
     }
 }

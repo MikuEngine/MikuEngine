@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/Interface/IDamageable.h"
@@ -34,6 +34,9 @@ namespace game
         };
 
     private:
+        // ─────────────────────────────────────────────
+        // 보스 기본 설정
+        // ─────────────────────────────────────────────
         float m_maxHp = 300.0f;
         float m_currentHp = 300.0f;
 
@@ -143,6 +146,24 @@ namespace game
         // 기둥 HP
         float m_pillarHP = 30.0f;                     // 기둥 HP
 
+        // ─────────────────────────────────────────────
+        // BigProjectile 패턴 설정 (직렬화)
+        // ─────────────────────────────────────────────
+        float m_bigProjectileHP = 1.0f;                        // 체력
+        float m_bigProjectileSpeed = 12.0f;                    // 이동 속도
+        float m_bigProjectileScale = 2.0f;                     // 크기 배율
+        float m_bigProjectileLifetime = 10.0f;                 // 수명 (초)
+        float m_bigProjectileDamage = 10.0f;                   // 플레이어 데미지
+        float m_bigProjectileReflectDamage = 200.0f;           // 반사 데미지
+        float m_bigProjectileReflectLifetimeExtension = 10.0f; // 반사 시 수명 연장 (초)
+        float m_bigProjectileShieldReduction = 100.0f;         // 실드 감쇄율 (0~100%)
+        bool m_isShieldPierce = true;                          // 실드 관통 가능 여부
+        
+        // 발사 위치 오프셋 (보스 좌표 기준)
+        float m_bigProjectileSpawnOffsetX = 0.0f;              // X축 오프셋
+        float m_bigProjectileSpawnOffsetY = 0.0f;              // Y축 오프셋
+        float m_bigProjectileSpawnOffsetZ = 0.0f;              // Z축 오프셋
+
         // shield
         bool m_isShieldActive = false;
         std::vector<engine::Ptr<BossPillar>> m_activePillars;
@@ -180,7 +201,7 @@ namespace game
         void OnPatternStarted(const std::string& patternName);
         void OnPatternFinished(const std::string& patternName);
 
-        void TakeDamage(float damage) override;
+        void TakeDamage(float damage, bool isShieldPierce = false) override;
         void CheckHealth();
         void OnDeath();
 
@@ -200,7 +221,8 @@ namespace game
         engine::Ptr<PlayerControllerScript> GetTargetPlayer() const;
 
         void OnCrystallized();  // 결정화 상태 진입
-        void OnExecutionReflected(engine::Vector3 direction);  // 처형 반사 시 호출
+        void OnExecutionReflected(engine::Vector3 direction);  // 처형 반사 시 호출 (기존 하위 호환)
+        void OnReflectedProjectileHit(const engine::Vector3& direction, float damage);  // 반사된 빅탄 충돌 (실드 감쇄 적용)
 
         void UpdateCrystalMovement(float deltaTime);  // 수정 메쉬들 회전 업데이트
 
@@ -254,6 +276,23 @@ namespace game
         float GetPillarOverlapRadius() const { return m_pillarOverlapRadius; }
         int GetPillarMaxSpawnAttempts() const { return m_pillarMaxSpawnAttempts; }
         float GetPillarHP() const { return m_pillarHP; }
+
+        // ─────────────────────────────────────────────
+        // BigProjectile 설정 Getter
+        // ─────────────────────────────────────────────
+        float GetBigProjectileHP() const { return m_bigProjectileHP; }
+        float GetBigProjectileSpeed() const { return m_bigProjectileSpeed; }
+        float GetBigProjectileScale() const { return m_bigProjectileScale; }
+        float GetBigProjectileLifetime() const { return m_bigProjectileLifetime; }
+        float GetBigProjectileDamage() const { return m_bigProjectileDamage; }
+        float GetBigProjectileReflectDamage() const { return m_bigProjectileReflectDamage; }
+        float GetBigProjectileReflectLifetimeExtension() const { return m_bigProjectileReflectLifetimeExtension; }
+        float GetBigProjectileShieldReduction() const { return m_bigProjectileShieldReduction; }
+        bool GetIsShieldPierce() const { return m_isShieldPierce; }
+        engine::Vector3 GetBigProjectileSpawnOffset() const 
+        { 
+            return engine::Vector3(m_bigProjectileSpawnOffsetX, m_bigProjectileSpawnOffsetY, m_bigProjectileSpawnOffsetZ); 
+        }
         
         engine::Ptr<BulletFactory> GetBulletFactory() const { return m_bulletFactory; }
 

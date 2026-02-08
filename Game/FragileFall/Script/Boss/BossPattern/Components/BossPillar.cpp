@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BossPillar.h"
 
 #include <Framework/Asset/Prefab.h>
@@ -17,7 +17,7 @@ namespace game
         }
     }
 
-    void BossPillar::TakeDamage(float damage)
+    void BossPillar::TakeDamage(float damage, bool isShieldPierce)
     {
         m_hp -= damage;
         if (m_hp < 0)

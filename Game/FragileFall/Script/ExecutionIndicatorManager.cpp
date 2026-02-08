@@ -4,7 +4,7 @@
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
-#include "Script/Boss/BossPattern/Components/BossProjectile.h"
+#include "Script/Boss/BossPattern/Components/BossBigProjectile.h"
 #include "Script/ExecutionSlowScript.h"
 #include "Script/ExecutionEffectScript.h"
 #include "Script/CameraEffectScript.h"
@@ -426,7 +426,7 @@ namespace game
                 engine::GameObject* go = transform->GetGameObject();
                 if (go)
                 {
-                    BossProjectile* projectile = go->GetComponent<BossProjectile>();
+                    BossBigProjectile* projectile = go->GetComponent<BossBigProjectile>();
                     if (projectile)
                     {
                         // 결정화된 상태인지 확인
@@ -729,7 +729,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 보스 투사체 특수 처리
         // ─────────────────────────────────────────────
-        if (auto comp = m_executingGameObject->GetComponent<BossProjectile>())
+        if (auto comp = m_executingGameObject->GetComponent<BossBigProjectile>())
         {
             comp->Execute();
         }
@@ -757,15 +757,18 @@ namespace game
                 }
             }
             
-            // 플레이어 순간이동
+            // 플레이어 순간이동 (Y=0 강제)
+            engine::Vector3 teleportPos = monsterPos;
+            teleportPos.y = 0.0f;
+            
             engine::Rigidbody* rigidbody = m_player->GetGameObject()->GetComponent<engine::Rigidbody>();
             if (rigidbody && rigidbody->IsDynamic())
             {
-                rigidbody->ForceSetPosition(monsterPos, true);
+                rigidbody->ForceSetPosition(teleportPos, true);
             }
             else if (m_player->GetTransform())
             {
-                m_player->GetTransform()->SetLocalPosition(monsterPos);
+                m_player->GetTransform()->SetLocalPosition(teleportPos);
             }
             
             // 카메라 이펙트 시작 (텔레포트 직후)

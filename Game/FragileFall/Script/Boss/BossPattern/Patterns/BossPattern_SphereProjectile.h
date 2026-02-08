@@ -5,17 +5,13 @@
 namespace game
 {
     class BossScript;
-    class BossProjectile;
+    class BossBigProjectile;
 
     class BossPattern_SphereProjectile :
         public BossPatternBase
     {
     private:
         float m_interval = 6.0f;  // 6초마다 실행
-        float m_projectileSpeed = 2.0f;  // 투사체 속도
-        float m_projectileDamage = 30.0f;  // 투사체 데미지
-        float m_projectileLifetime = 10.0f;  // 투사체 수명
-        bool m_canBeCrystallized = true;  // 결정화 가능 여부
 
     public:
         void Start(BossScript* boss) override;

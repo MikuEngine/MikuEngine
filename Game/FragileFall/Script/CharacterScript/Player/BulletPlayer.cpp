@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
@@ -6,7 +6,7 @@
 #include <Framework/Asset/Prefab.h>
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
-#include "Script/Boss/BossPattern/Components/BossProjectile.h"
+#include "Script/Boss/BossPattern/Components/BossBigProjectile.h"
 #include "Script/Boss/BossScript.h"
 #include "Script/Interface/IDamageable.h"
 
@@ -136,7 +136,7 @@ namespace game
 		// IDamageable 상속
         // MonsterScript
         // BossPillar
-        // BossProjectile
+        // BossBigProjectile
         // BossScript
         if (auto* target = info.gameObject->GetInterface<IDamageable>())
         {

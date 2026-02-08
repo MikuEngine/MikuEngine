@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BossScript.h"
 
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
@@ -102,12 +102,17 @@ namespace game
         // TODO: 패턴 종료 시 처리
     }
 
-    void BossScript::TakeDamage(float damage)
+    void BossScript::TakeDamage(float damage, bool isShieldPierce)
     {
         if (m_isShieldActive)
         {
-            // 쉴드가 활성화되어 있으면 데미지 차단
-            return;
+            // 실드 관통 불가: 데미지 차단
+            if (!isShieldPierce)
+            {
+                return;
+            }
+            // 실드 관통 가능: 감쇄율은 호출부(OnReflectedProjectileHit)에서 이미 적용됨
+            // 감쇄율 100%면 damage는 이미 0.0f
         }
 
         m_currentHp -= damage;
@@ -196,8 +201,21 @@ namespace game
 
     void BossScript::OnExecutionReflected(engine::Vector3 direction)
     {
-        // TODO: 처형 반사 시 큰 데미지 처리
+        // 기존 하위 호환 로직 (하드코딩)
         TakeDamage(200);
+    }
+
+    void BossScript::OnReflectedProjectileHit(const engine::Vector3& direction, float damage)
+    {
+        // 실드 감쇄 적용
+        if (m_isShieldActive)
+        {
+            float reduction = m_bigProjectileShieldReduction;  // 0~100%
+            damage *= (1.0f - reduction / 100.0f);
+        }
+        
+        // 실드 관통 플래그와 함께 데미지 전달
+        TakeDamage(damage, m_isShieldPierce);
     }
 
     void BossScript::UpdateCrystalMovement(float deltaTime)
@@ -304,6 +322,28 @@ namespace game
 
     void BossScript::OnGui()
     {
+        // ═════════════════════════════════════════════
+        // 보스 기본 설정
+        // ═════════════════════════════════════════════
+        ImGui::SeparatorText("=== Boss Core Settings ===");
+        
+        if (ImGui::DragFloat("Max HP", &m_maxHp, 10.0f, 1.0f, 100000.0f, "%.1f"))
+        {
+            m_maxHp = std::clamp(m_maxHp, 1.0f, 100000.0f);
+            
+            // 현재 HP가 최대 HP를 초과하지 않도록
+            if (m_currentHp > m_maxHp)
+            {
+                m_currentHp = m_maxHp;
+            }
+        }
+        
+        ImGui::Text("Current HP: %.1f", m_currentHp);
+        ImGui::Spacing();
+
+        // ═════════════════════════════════════════════
+        // BulletFire 패턴 설정
+        // ═════════════════════════════════════════════
         ImGui::SeparatorText("=== Boss BulletFire Settings ===");
 
         // ─────────────────────────────────────────────
@@ -639,13 +679,75 @@ namespace game
         ImGui::DragFloat("Pillar HP", &m_pillarHP, 1.0f, 1.0f, 500.0f, "%.1f");
 
         ImGui::Separator();
+
+        // ═══════════════════════════════════════════════════════════════
+        // BigProjectile 패턴 설정
+        // ═══════════════════════════════════════════════════════════════
+        ImGui::SeparatorText("=== Boss Big Projectile Settings ===");
+
+        // ─────────────────────────────────────────────
+        // 기본 설정
+        // ─────────────────────────────────────────────
+        ImGui::Text("--- Basic Settings ---");
+        
+        if (ImGui::DragFloat("BBP_HP", &m_bigProjectileHP, 0.1f, 0.1f, 10000.0f, "%.1f"))
+        {
+            if (m_bigProjectileHP <= 0.0f)
+            {
+                m_bigProjectileHP = 0.1f;
+            }
+        }
+        
+        ImGui::DragFloat("BBP_Speed", &m_bigProjectileSpeed, 0.1f, 0.1f, 50.0f, "%.1f");
+        ImGui::DragFloat("BBP_Scale", &m_bigProjectileScale, 0.1f, 0.1f, 10.0f, "%.1f");
+        ImGui::DragFloat("BBP_Lifetime (sec)", &m_bigProjectileLifetime, 0.1f, 1.0f, 30.0f, "%.1f");
+        ImGui::DragFloat("BBP_Damage", &m_bigProjectileDamage, 1.0f, 1.0f, 500.0f, "%.1f");
+
+        ImGui::Spacing();
+
+        // ─────────────────────────────────────────────
+        // 발사 위치 오프셋
+        // ─────────────────────────────────────────────
+        ImGui::Text("--- Spawn Offset ---");
+        float spawnOffset[3] = { m_bigProjectileSpawnOffsetX, m_bigProjectileSpawnOffsetY, m_bigProjectileSpawnOffsetZ };
+        if (ImGui::DragFloat3("BBP_Spawn Offset (XYZ)", spawnOffset, 0.1f, -50.0f, 50.0f, "%.2f"))
+        {
+            m_bigProjectileSpawnOffsetX = spawnOffset[0];
+            m_bigProjectileSpawnOffsetY = spawnOffset[1];
+            m_bigProjectileSpawnOffsetZ = spawnOffset[2];
+        }
+
+        ImGui::Spacing();
+
+        // ─────────────────────────────────────────────
+        // 반사 설정
+        // ─────────────────────────────────────────────
+        ImGui::Text("--- Reflect Settings ---");
+        ImGui::DragFloat("BBP_Reflect Damage", &m_bigProjectileReflectDamage, 1.0f, 1.0f, 1000.0f, "%.1f");
+        ImGui::DragFloat("BBP_Reflect Lifetime Extension (sec)", &m_bigProjectileReflectLifetimeExtension, 0.1f, 1.0f, 30.0f, "%.1f");
+        
+        ImGui::Checkbox("BBP_Shield Pierce", &m_isShieldPierce);
+        
+        if (ImGui::SliderFloat("BBP_Shield Reduction (%)", &m_bigProjectileShieldReduction, 0.0f, 100.0f, "%.1f%%"))
+        {
+            m_bigProjectileShieldReduction = std::clamp(m_bigProjectileShieldReduction, 0.0f, 100.0f);
+        }
+
+        ImGui::Separator();
     }
 
     void BossScript::Save(engine::json& j) const
     {
         Object::Save(j);
 
+        // ─────────────────────────────────────────────
+        // 보스 기본 설정 저장
+        // ─────────────────────────────────────────────
+        j["MaxHP"] = m_maxHp;
+
+        // ─────────────────────────────────────────────
         // BulletFire 설정 저장
+        // ─────────────────────────────────────────────
         j["BulletFire_UseFixedInterval"] = m_bulletFireUseFixedInterval;
         j["BulletFire_FixedInterval"] = m_bulletFireFixedInterval;
         j["BulletFire_MinInterval"] = m_bulletFireMinInterval;
@@ -711,13 +813,43 @@ namespace game
         j["Pillar_OverlapRadius"] = m_pillarOverlapRadius;
         j["Pillar_MaxSpawnAttempts"] = m_pillarMaxSpawnAttempts;
         j["Pillar_HP"] = m_pillarHP;
+
+        // BigProjectile 패턴 설정
+        j["BBP_HP"] = m_bigProjectileHP;
+        j["BBP_Speed"] = m_bigProjectileSpeed;
+        j["BBP_Scale"] = m_bigProjectileScale;
+        j["BBP_Lifetime"] = m_bigProjectileLifetime;
+        j["BBP_Damage"] = m_bigProjectileDamage;
+        j["BBP_SpawnOffsetX"] = m_bigProjectileSpawnOffsetX;
+        j["BBP_SpawnOffsetY"] = m_bigProjectileSpawnOffsetY;
+        j["BBP_SpawnOffsetZ"] = m_bigProjectileSpawnOffsetZ;
+        j["BBP_ReflectDamage"] = m_bigProjectileReflectDamage;
+        j["BBP_ReflectLifetimeExtension"] = m_bigProjectileReflectLifetimeExtension;
+        j["BBP_ShieldReduction"] = m_bigProjectileShieldReduction;
+        j["BBP_ShieldPierce"] = m_isShieldPierce;
     }
 
     void BossScript::Load(const engine::json& j)
     {
         Object::Load(j);
 
+        // ─────────────────────────────────────────────
+        // 보스 기본 설정 로드
+        // ─────────────────────────────────────────────
+        if (j.contains("MaxHP"))
+        {
+            m_maxHp = std::clamp(j["MaxHP"].get<float>(), 1.0f, 100000.0f);
+            
+            // 현재 HP가 최대 HP를 초과하지 않도록
+            if (m_currentHp > m_maxHp)
+            {
+                m_currentHp = m_maxHp;
+            }
+        }
+
+        // ─────────────────────────────────────────────
         // BulletFire 설정 로드 (클램핑 적용)
+        // ─────────────────────────────────────────────
         if (j.contains("BulletFire_UseFixedInterval"))
             m_bulletFireUseFixedInterval = j["BulletFire_UseFixedInterval"].get<bool>();
         if (j.contains("BulletFire_FixedInterval"))
@@ -848,6 +980,38 @@ namespace game
             m_pillarMaxSpawnAttempts = j["Pillar_MaxSpawnAttempts"].get<int>();
         if (j.contains("Pillar_HP"))
             m_pillarHP = j["Pillar_HP"].get<float>();
+
+        // BigProjectile 패턴 설정
+        if (j.contains("BBP_HP"))
+        {
+            m_bigProjectileHP = j["BBP_HP"].get<float>();
+            if (m_bigProjectileHP <= 0.0f)
+            {
+                m_bigProjectileHP = 0.1f;
+            }
+        }
+        if (j.contains("BBP_Speed"))
+            m_bigProjectileSpeed = j["BBP_Speed"].get<float>();
+        if (j.contains("BBP_Scale"))
+            m_bigProjectileScale = j["BBP_Scale"].get<float>();
+        if (j.contains("BBP_Lifetime"))
+            m_bigProjectileLifetime = j["BBP_Lifetime"].get<float>();
+        if (j.contains("BBP_Damage"))
+            m_bigProjectileDamage = j["BBP_Damage"].get<float>();
+        if (j.contains("BBP_SpawnOffsetX"))
+            m_bigProjectileSpawnOffsetX = j["BBP_SpawnOffsetX"].get<float>();
+        if (j.contains("BBP_SpawnOffsetY"))
+            m_bigProjectileSpawnOffsetY = j["BBP_SpawnOffsetY"].get<float>();
+        if (j.contains("BBP_SpawnOffsetZ"))
+            m_bigProjectileSpawnOffsetZ = j["BBP_SpawnOffsetZ"].get<float>();
+        if (j.contains("BBP_ReflectDamage"))
+            m_bigProjectileReflectDamage = j["BBP_ReflectDamage"].get<float>();
+        if (j.contains("BBP_ReflectLifetimeExtension"))
+            m_bigProjectileReflectLifetimeExtension = j["BBP_ReflectLifetimeExtension"].get<float>();
+        if (j.contains("BBP_ShieldReduction"))
+            m_bigProjectileShieldReduction = std::clamp(j["BBP_ShieldReduction"].get<float>(), 0.0f, 100.0f);
+        if (j.contains("BBP_ShieldPierce"))
+            m_isShieldPierce = j["BBP_ShieldPierce"].get<bool>();
 
         // 최소 <= 최대 보장 (Pillar)
         if (m_pillarMinRespawnDelay > m_pillarMaxRespawnDelay)

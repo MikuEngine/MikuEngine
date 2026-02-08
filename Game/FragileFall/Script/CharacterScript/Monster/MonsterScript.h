@@ -340,7 +340,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 외부 데미지 처리 (총알 등에서 호출)
         // ─────────────────────────────────────────────
-        virtual void TakeDamage(float damage) override;
+        virtual void TakeDamage(float damage, bool isShieldPierce = false) override;
         
         // ─────────────────────────────────────────────
         // 총알 타입 확인 (UI 분기용)

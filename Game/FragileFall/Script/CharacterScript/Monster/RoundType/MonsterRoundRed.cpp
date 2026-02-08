@@ -452,10 +452,10 @@ namespace game
             position,
             m_landingCheckRadius,
             overlaps,
-            (1u << engine::PhysicsLayer::Index::Environment)  // Environment만 체크
+            (1u << engine::PhysicsLayer::Index::Environment) | (1u << engine::PhysicsLayer::Index::Boss)  // Environment, Boss 체크
         );
         
-        // Environment와 겹치지 않으면 착지 가능
+        // Environment/Boss와 겹치지 않으면 착지 가능
         return !hasOverlap;
     }
     

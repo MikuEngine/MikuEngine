@@ -62,7 +62,7 @@ namespace game
         void OnStateEntered(const std::string& state) override;
 
         // 외부 데미지 처리 (총알 등에서 호출)
-        void TakeDamage(float damage) override;
+        void TakeDamage(float damage, bool isShieldPierce = false) override;
         
         // 공격 (3초마다 리니어 총알 발사)
         void Attack(float deltaTime) override;

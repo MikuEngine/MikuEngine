@@ -31,7 +31,10 @@ namespace engine
             JumpingEnemy = 12,              // 점프 중인 적 (Environment 충돌 무시, Wall/Player는 충돌)
             RadiusChecker = 13,             // 반경 체크용 디버그 오브젝트 (모든 충돌 무시)
             SplittingEnemy = 14,            // 분열 몬스터 (Enemy와 동일, 자기 자신끼리는 충돌 안 함)
-            BossBulletProjectile = 15,      // 보스 총알 투사체 (Player, Environment, Wall만 충돌)
+            BossBulletProjectile = 15,      // 보스 3방향 작은 총알 (Player만 충돌)
+            BossBigProjectile = 16,         // 보스 구체 발사체 (Player, Projectile과 충돌)
+            Boss = 17,                      // 보스 본체 (적 총알에 맞으면 총알만 사라짐)
+            BBP_Reflected = 18,             // 반사된 빅탄 (Boss와만 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -57,6 +60,9 @@ namespace engine
             RadiusCheckerMask = (1u << RadiusChecker),
             SplittingEnemyMask = (1u << SplittingEnemy),
             BossBulletProjectileMask = (1u << BossBulletProjectile),
+            BossBigProjectileMask = (1u << BossBigProjectile),
+            BossMask = (1u << Boss),
+            BBP_ReflectedMask = (1u << BBP_Reflected),
 
             All = 0xFFFFFFFF
         };
@@ -87,8 +93,11 @@ namespace engine
                 "RadiusChecker", // 13
                 "SplittingEnemy", // 14
                 "BossBulletProjectile", // 15
+                "BossBigProjectile", // 16
+                "Boss", // 17
+                "BBP_Reflected", // 18
                 
-                "Layer16", "Layer17", "Layer18", "Layer19",
+                "Layer19",
                 "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
             };
@@ -295,6 +304,76 @@ namespace engine
             SetCollision(BossBulletProjectile, SplittingEnemy, false);
             SetCollision(BossBulletProjectile, BossBulletProjectile, false);
             // Player만 충돌 (기본값 All에서 위 항목들 제외)
+
+            // ═══════════════════════════════════════
+            // BossBigProjectile 충돌 규칙
+            // Player, Projectile과 충돌 (트리거)
+            // ═══════════════════════════════════════
+            SetCollision(BossBigProjectile, Default, false);
+            SetCollision(BossBigProjectile, Enemy, false);
+            SetCollision(BossBigProjectile, Environment, false);
+            SetCollision(BossBigProjectile, Trigger, false);
+            SetCollision(BossBigProjectile, EnemyProjectile, false);
+            SetCollision(BossBigProjectile, Picking, false);
+            SetCollision(BossBigProjectile, Field, false);
+            SetCollision(BossBigProjectile, Wall, false);
+            SetCollision(BossBigProjectile, EnemyParabolicProjectile, false);
+            SetCollision(BossBigProjectile, ExplosionTrigger, false);
+            SetCollision(BossBigProjectile, JumpingEnemy, false);
+            SetCollision(BossBigProjectile, RadiusChecker, false);
+            SetCollision(BossBigProjectile, SplittingEnemy, false);
+            SetCollision(BossBigProjectile, BossBulletProjectile, false);
+            SetCollision(BossBigProjectile, BossBigProjectile, false);
+            // BossBigProjectile ↔ Player: 충돌함 (기본값)
+            // BossBigProjectile ↔ Projectile: 충돌함 (기본값)
+
+            // ═══════════════════════════════════════
+            // Boss 충돌 규칙
+            // Player, Enemy, Projectile, SplittingEnemy, BBP_Reflected,
+            // EnemyProjectile, EnemyParabolicProjectile과 충돌
+            // ═══════════════════════════════════════
+            SetCollision(Boss, Default, false);
+            SetCollision(Boss, Environment, false);
+            SetCollision(Boss, Trigger, false);
+            SetCollision(Boss, Picking, false);
+            SetCollision(Boss, Field, false);
+            SetCollision(Boss, Wall, false);
+            SetCollision(Boss, ExplosionTrigger, false);
+            SetCollision(Boss, JumpingEnemy, false);
+            SetCollision(Boss, RadiusChecker, false);
+            SetCollision(Boss, BossBulletProjectile, false);
+            SetCollision(Boss, BossBigProjectile, false);
+            SetCollision(Boss, Boss, false);
+            // Boss ↔ Player: 충돌함 (기본값)
+            // Boss ↔ Enemy: 충돌함 (기본값)
+            // Boss ↔ Projectile: 충돌함 (기본값)
+            // Boss ↔ SplittingEnemy: 충돌함 (기본값)
+            // Boss ↔ BBP_Reflected: 충돌함 (기본값)
+            // Boss ↔ EnemyProjectile: 충돌함 (기본값)
+            // Boss ↔ EnemyParabolicProjectile: 충돌함 (기본값)
+
+            // ═══════════════════════════════════════
+            // BBP_Reflected 충돌 규칙 (Boss와만 충돌)
+            // ═══════════════════════════════════════
+            SetCollision(BBP_Reflected, Default, false);
+            SetCollision(BBP_Reflected, Player, false);
+            SetCollision(BBP_Reflected, Enemy, false);
+            SetCollision(BBP_Reflected, Projectile, false);
+            SetCollision(BBP_Reflected, Environment, false);
+            SetCollision(BBP_Reflected, Trigger, false);
+            SetCollision(BBP_Reflected, EnemyProjectile, false);
+            SetCollision(BBP_Reflected, Picking, false);
+            SetCollision(BBP_Reflected, Field, false);
+            SetCollision(BBP_Reflected, Wall, false);
+            SetCollision(BBP_Reflected, EnemyParabolicProjectile, false);
+            SetCollision(BBP_Reflected, ExplosionTrigger, false);
+            SetCollision(BBP_Reflected, JumpingEnemy, false);
+            SetCollision(BBP_Reflected, RadiusChecker, false);
+            SetCollision(BBP_Reflected, SplittingEnemy, false);
+            SetCollision(BBP_Reflected, BossBulletProjectile, false);
+            SetCollision(BBP_Reflected, BossBigProjectile, false);
+            SetCollision(BBP_Reflected, BBP_Reflected, false);
+            // BBP_Reflected ↔ Boss: 충돌함 (기본값)
   
         }
 

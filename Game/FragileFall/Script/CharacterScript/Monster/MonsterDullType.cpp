@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterDullType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -292,7 +292,7 @@ namespace game
         }
     }
 
-    void MonsterDullType::TakeDamage(float damage)
+    void MonsterDullType::TakeDamage(float damage, bool isShieldPierce)
     {
         if (m_isDead)
             return;
