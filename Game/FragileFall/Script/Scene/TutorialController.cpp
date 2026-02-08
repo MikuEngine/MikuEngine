@@ -148,12 +148,19 @@ namespace game
                 // step 4
                 // ─────────────────────────────────────────────
                 case 4:
-                    if (m_pageIndex < (int)g_steps[m_stepIndex].pages.size() - 1)
+                    if (m_pageIndex == 0 && !m_isStateCheck)
                     {
                         m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
                         m_exitDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
+
+                        m_isStateCheck = true;
+
                         m_isTimerActive = true;
-                        m_stepTimer = 3.0f;
+                        m_stepTimer = 5.0f;
+                    }
+                    else if (m_pageIndex == 0 && m_isStateCheck)
+                    {
+                        Next();
                     }
                     break;
                 }

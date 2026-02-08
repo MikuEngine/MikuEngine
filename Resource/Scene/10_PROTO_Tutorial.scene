@@ -9274,7 +9274,7 @@
                     "MaxSpeedBrakeFactor": 15.0,
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 5.5,
+                    "MoveSpeed": 13.0,
                     "RotationSpeed": 20.0,
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
@@ -9288,7 +9288,7 @@
                     "BulletFireSocketName": "BulletFireSocket",
                     "AimPointerObjectName": "AimPointer",
                     "FSMInitialized": false,
-                    "ExecutionRange": 20.0,
+                    "ExecutionRange": 10.0,
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.30000001192092896,
@@ -10249,7 +10249,7 @@
                     "Type": "DoorTriggerScript",
                     "Active": true,
                     "isDoorActive": false,
-                    "NextSceneName": "10_PROTO_Tutorial_Lobby"
+                    "NextSceneName": "10_PROTO_TutorialLobby"
                 }
             ]
         },
