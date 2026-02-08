@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundGreen.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -55,19 +55,33 @@ namespace game
         if (!info.gameObject) return;
         
         // ─────────────────────────────────────────────
-        // 방향 전환이 필요한 레이어에만 반응 (Wall, Environment, Enemy)
-        // 총알은 트리거 타입이므로 OnTriggerEnter로 처리됨
+        // 방향 전환이 필요한 레이어에만 반응
         // ─────────────────────────────────────────────
         auto* collider = info.collider.Get();
-        if (collider)
+        if (!collider) return;
+        
+        uint32_t layer = collider->GetLayer();
+        if (layer != engine::PhysicsLayer::Index::Wall &&
+            layer != engine::PhysicsLayer::Index::SubWall &&
+            layer != engine::PhysicsLayer::Index::Environment &&
+            layer != engine::PhysicsLayer::Index::Enemy &&
+            layer != engine::PhysicsLayer::Index::Player)
         {
-            uint32_t layer = collider->GetLayer();
-            if (layer != engine::PhysicsLayer::Index::Wall &&
-                layer != engine::PhysicsLayer::Index::Environment &&
-                layer != engine::PhysicsLayer::Index::Enemy &&
-                layer != engine::PhysicsLayer::Index::Player)
+            return;  // 방향 전환 불필요한 레이어는 무시
+        }
+        
+        // ─────────────────────────────────────────────
+        // SubWall과 겹치는 Wall은 방향전환 무시
+        // ─────────────────────────────────────────────
+        if (layer == engine::PhysicsLayer::Index::Wall)
+        {
+            std::string wallName = info.gameObject->GetName();
+            if (wallName.find("Collier_Crystal_Right_Front") != std::string::npos ||
+                wallName.find("Collier_Crystal_Left_Front")  != std::string::npos ||
+                wallName.find("Collier_Crystal_Left_Back")   != std::string::npos ||
+                wallName.find("Collier_Crystal_Right_Back")  != std::string::npos)
             {
-                return;  // 방향 전환 불필요한 레이어는 무시
+                return;  // SubWall과 겹친 Wall → 방향전환 안 함
             }
         }
         
@@ -96,7 +110,7 @@ namespace game
         }
         
         // ─────────────────────────────────────────────
-        // 충돌 노말 추출
+        // SubWall/Wall/Environment/Enemy/Player: 노말 추출
         // ─────────────────────────────────────────────
         engine::Vector3 collisionNormal = engine::Vector3::Zero;
         for (const auto& contact : info.contacts)
