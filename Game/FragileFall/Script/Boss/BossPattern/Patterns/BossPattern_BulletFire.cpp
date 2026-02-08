@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BossPattern_BulletFire.h"
 
 #include "Script/Boss/BossScript.h"
@@ -57,10 +57,11 @@ namespace game
         auto bulletFactory = boss->GetBulletFactory();
         if (!bulletFactory) return;
 
-        // 보스 위치
+        // 보스 XZ 좌표만 가져오기 (Y=0 기준)
         auto* bossTransform = boss->GetGameObject()->GetTransform();
         if (!bossTransform) return;
-        engine::Vector3 bossPos = bossTransform->GetWorldPosition();
+        engine::Vector3 bossWorldPos = bossTransform->GetWorldPosition();
+        engine::Vector3 bossPos = engine::Vector3(bossWorldPos.x, 0.0f, bossWorldPos.z);
 
         // 플레이어 방향 계산 (XZ 평면만 사용)
         engine::Vector3 directionToPlayer = engine::Vector3(0.0f, 0.0f, 1.0f);  // 기본 방향
