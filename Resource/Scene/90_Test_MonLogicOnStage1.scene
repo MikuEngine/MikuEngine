@@ -1,6 +1,6 @@
 {
     "Name": "90_Test_MonLogicOnStage1",
-    "NumGameObjects": 84,
+    "NumGameObjects": 85,
     "GameObjects": [
         {
             "ID": 0,
@@ -2788,7 +2788,7 @@
                 {
                     "Type": "MonsterUpdateActivationSwitch",
                     "Active": true,
-                    "ActivationDelay": 0.10000000149011612,
+                    "ActivationDelay": 3.0,
                     "IsUpdateAllowed": false
                 }
             ]
@@ -12990,6 +12990,53 @@
         },
         {
             "ID": 66,
+            "ParentID": 54,
+            "Name": "Collier_Crystal_Right_Front_4",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 27.140625,
+                        "y": 0.0,
+                        "z": 12.686002731323242
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "radius": 5.0
+                }
+            ]
+        },
+        {
+            "ID": 67,
             "Name": "SubWall",
             "Active": true,
             "Components": [
@@ -13016,8 +13063,8 @@
             ]
         },
         {
-            "ID": 67,
-            "ParentID": 66,
+            "ID": 68,
+            "ParentID": 67,
             "Name": "Col_Left_Back_SubWall",
             "Active": true,
             "Components": [
@@ -13025,9 +13072,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -23.002986907958984,
+                        "x": -23.12519645690918,
                         "y": -1.402430772781372,
-                        "z": -7.627548694610596
+                        "z": -7.751460552215576
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -13067,8 +13114,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 66,
+            "ID": 69,
+            "ParentID": 67,
             "Name": "Col_Right_Back_SubWall",
             "Active": true,
             "Components": [
@@ -13076,9 +13123,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 21.62158966064453,
-                        "y": -1.3979750871658325,
-                        "z": -10.2558012008667
+                        "x": 21.70157814025879,
+                        "y": -1.3976762294769287,
+                        "z": -10.316143035888672
                     },
                     "Rotation": {
                         "x": 0.0013658686075359583,
@@ -13089,7 +13136,7 @@
                     "Scale": {
                         "x": 1.0000001192092896,
                         "y": 1.0,
-                        "z": 0.9999603629112244
+                        "z": 0.999957263469696
                     }
                 },
                 {
@@ -13118,8 +13165,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 66,
+            "ID": 70,
+            "ParentID": 67,
             "Name": "Col_Left_Front_SubWall",
             "Active": true,
             "Components": [
@@ -13127,9 +13174,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -14.834155082702637,
+                        "x": -15.01379108428955,
                         "y": -0.06593792885541916,
-                        "z": 12.662989616394043
+                        "z": 13.29434585571289
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -13161,7 +13208,7 @@
                     "layer": 19,
                     "materialType": 0,
                     "size": [
-                        27.649999618530273,
+                        30.06999969482422,
                         20.0,
                         1.0
                     ]
@@ -13169,8 +13216,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 66,
+            "ID": 71,
+            "ParentID": 67,
             "Name": "Col_Right_Front_1_SubWall",
             "Active": true,
             "Components": [
@@ -13178,56 +13225,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 14.715471267700195,
+                        "x": 14.810345649719238,
                         "y": 0.0,
-                        "z": 14.6329927444458
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "radius": 5.0
-                }
-            ]
-        },
-        {
-            "ID": 71,
-            "ParentID": 66,
-            "Name": "Col_Right_Front_2_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 21.100271224975586,
-                        "y": 4.7277333692363754e-07,
-                        "z": 12.49677848815918
+                        "z": 14.700905799865723
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -13264,17 +13264,17 @@
         },
         {
             "ID": 72,
-            "ParentID": 66,
-            "Name": "Col_Right_Front_3_SubWall",
+            "ParentID": 67,
+            "Name": "Col_Right_Front_2_SubWall",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 10.427852630615234,
-                        "y": 0.0,
-                        "z": 19.19285774230957
+                        "x": 21.4897403717041,
+                        "y": 9.496571919953567e-07,
+                        "z": 12.677790641784668
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -13311,7 +13311,54 @@
         },
         {
             "ID": 73,
-            "ParentID": 66,
+            "ParentID": 67,
+            "Name": "Col_Right_Front_3_SubWall",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 10.74668025970459,
+                        "y": 0.0,
+                        "z": 19.522314071655273
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 19,
+                    "materialType": 0,
+                    "radius": 5.0
+                }
+            ]
+        },
+        {
+            "ID": 74,
+            "ParentID": 67,
             "Name": "Col_Right_Front_4_SubWall",
             "Active": true,
             "Components": [
@@ -13319,9 +13366,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 22.4804744720459,
+                        "x": 24.352067947387695,
                         "y": 4.6661608621434425e-07,
-                        "z": 7.502570629119873
+                        "z": 8.395136833190918
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -13353,7 +13400,7 @@
                     "layer": 19,
                     "materialType": 0,
                     "size": [
-                        4.130000114440918,
+                        6.440000057220459,
                         1.0,
                         1.0
                     ]
@@ -13361,8 +13408,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 66,
+            "ID": 75,
+            "ParentID": 67,
             "Name": "Col_Right_Front_5_SubWall",
             "Active": true,
             "Components": [
@@ -13370,9 +13417,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 17.5001220703125,
-                        "y": -1.0677632644728874e-07,
-                        "z": 9.661670684814453
+                        "x": 17.8011531829834,
+                        "y": 0.0,
+                        "z": 10.166634559631348
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -13412,8 +13459,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 66,
+            "ID": 76,
+            "ParentID": 67,
             "Name": "Col_Right_Front_6_SubWall",
             "Active": true,
             "Components": [
@@ -13463,8 +13510,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 66,
+            "ID": 77,
+            "ParentID": 67,
             "Name": "Col_Right_Front_7_SubWall",
             "Active": true,
             "Components": [
@@ -13514,7 +13561,7 @@
             ]
         },
         {
-            "ID": 77,
+            "ID": 78,
             "Name": "Monster_Round_Gray",
             "Active": true,
             "Components": [
@@ -13666,9 +13713,9 @@
             ]
         },
         {
-            "ID": 78,
+            "ID": 79,
             "Name": "Monster_RoundType_Green",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -13811,9 +13858,9 @@
             ]
         },
         {
-            "ID": 79,
+            "ID": 80,
             "Name": "Monster_RoundType_Purple",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -13954,7 +14001,7 @@
             ]
         },
         {
-            "ID": 80,
+            "ID": 81,
             "Name": "Monster_PointedType_Purple",
             "Active": true,
             "Components": [
@@ -14059,9 +14106,8 @@
                     "WallCollisionInfoTimeout": 3.0,
                     "FleeStuckCheckInterval": 1.0,
                     "FleeStuckDistanceThreshold": 0.5,
-                    "RedemptionSpeedMultiplier": 1.5,
-                    "RedemptionDuration": 1.0,
-                    "LaststandRetryInterval": 5.0
+                    "RedemptionSpeedMultiplier": 1.7000000476837158,
+                    "RedemptionTargetDistance": 7.0
                 },
                 {
                     "Type": "PathfindingAgent",
@@ -14195,8 +14241,8 @@
             ]
         },
         {
-            "ID": 81,
-            "ParentID": 80,
+            "ID": 82,
+            "ParentID": 81,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
@@ -14252,9 +14298,9 @@
             ]
         },
         {
-            "ID": 82,
+            "ID": 83,
             "Name": "Monster_RoundType_Blue",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -14411,7 +14457,7 @@
             ]
         },
         {
-            "ID": 83,
+            "ID": 84,
             "Name": "StateTextRendererCanvas",
             "Active": true,
             "Components": [

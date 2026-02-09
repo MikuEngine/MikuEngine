@@ -83,9 +83,10 @@ namespace game
         m_logicFSM->SetParameter("Die", m_isDead);
         
         // Redemption/Laststand 전이용 파라미터
-        m_logicFSM->SetParameter("NoWayOut", false);           // Flee → Redemption
-        m_logicFSM->SetParameter("RedemptionFailed", false);   // Redemption → Laststand
-        m_logicFSM->SetParameter("PathFound", false);          // Laststand → Flee/EngageMove
+        m_logicFSM->SetParameter("NoWayOut", false);           // Flee → Redemption, Idle → Redemption
+        m_logicFSM->SetParameter("RedemptionRetry", false);    // Redemption → Idle (재시도)
+        m_logicFSM->SetParameter("RedemptionFailed", false);   // Redemption → Laststand (4회 실패)
+        m_logicFSM->SetParameter("PathFound", false);          // Redemption → Flee, Laststand → Flee
 
         // ─────────────────────────────────────────────
         // 전이 정의 (StateMap이 업데이트된 후에 추가)
@@ -133,18 +134,26 @@ namespace game
             AddFSMTransition("Flee", "EngageMove", "PlayerInFleeRange", BoolFalse(), "PlayerInRange", BoolFalse());
             AddFSMTransition("Flee", "EngageStop", "PlayerInFleeRange", BoolFalse(), "PlayerInRange", BoolTrue());
 
-            // Flee → Redemption (패스찾기 120회 실패 또는 끼임 감지)
+            // Flee → Redemption (패스찾기 10회 실패 또는 끼임 감지)
             AddFSMTransition("Flee", "Redemption", "NoWayOut", BoolTrue());
             
-            // Redemption → Flee (2회 반사 후 패스찾기 성공)
-            AddFSMTransition("Redemption", "Flee", "NoWayOut", BoolFalse(), "PlayerInFleeRange", BoolTrue());
+            // Redemption → Idle (5m 완주, 재시도 필요)
+            AddFSMTransition("Redemption", "Idle", "RedemptionRetry", BoolTrue());
             
-            // Redemption → Laststand (2회 반사 후 패스찾기 실패)
+            // Redemption → Flee (5m 완주, 패스 찾음)
+            AddFSMTransition("Redemption", "Flee", "PathFound", BoolTrue());
+            
+            // Redemption → Laststand (4회 재시도 실패)
             AddFSMTransition("Redemption", "Laststand", "RedemptionFailed", BoolTrue());
             
-            // Laststand → Flee/EngageMove (5초마다 패스찾기 성공 시)
-            AddFSMTransition("Laststand", "Flee", "PathFound", BoolTrue(), "PlayerInFleeRange", BoolTrue());
-            AddFSMTransition("Laststand", "EngageMove", "PathFound", BoolTrue(), "PlayerInFleeRange", BoolFalse());
+            // Idle → Redemption (0.1초 대기 후 자동 전이)
+            AddFSMTransition("Idle", "Redemption", "NoWayOut", BoolTrue());
+            
+            // Laststand → Flee (패스 찾음)
+            AddFSMTransition("Laststand", "Flee", "PathFound", BoolTrue());
+            
+            // Laststand → EngageMove (플레이어 사거리 밖)
+            AddFSMTransition("Laststand", "EngageMove", "PlayerInFleeRange", BoolFalse());
             
             // Redemption/Laststand → Fragile
             AddFSMTransition("Flee", "Fragile", "Fragile", Trigger());
@@ -427,7 +436,7 @@ namespace game
         }
         else if (state == "Idle")
         {
-            ExecuteIdleBehaviorNonPhysics();
+            ExecuteIdleBehaviorNonPhysics(deltaTime);
         }
         else if (state == "Redemption")
         {
@@ -488,11 +497,32 @@ namespace game
     {
         // 공격 타이머 및 발사 (비물리)
         Attack(deltaTime);
+        
+        // 공격 후 거리/패스 체크 (LastStand → EngageMove → EngageAttack 경로)
+        if (m_needsPostAttackCheck)
+        {
+            CheckPostAttackTransition();
+        }
     }
 
-    void MonsterPointedType::ExecuteIdleBehaviorNonPhysics()
+    void MonsterPointedType::ExecuteIdleBehaviorNonPhysics(float deltaTime)
     {
-        // 비물리 Idle 처리
+        // Redemption 재시도를 위한 Idle 대기
+        if (m_isNoWayOut)
+        {
+            m_idleTimer += deltaTime;
+            
+            // 0.1초 후 Redemption 재전이
+            if (m_idleTimer >= 0.1f)
+            {
+                m_idleTimer = 0.0f;
+                
+                if (m_logicFSM)
+                {
+                    m_logicFSM->SetParameter("NoWayOut", true);
+                }
+            }
+        }
     }
 
     void MonsterPointedType::ExecuteFragileBehaviorNonPhysics()
@@ -508,28 +538,52 @@ namespace game
 
     void MonsterPointedType::ExecuteRedemptionBehaviorNonPhysics(float deltaTime)
     {
-        // Redemption: 충돌 반사로 이동 중
-        // 타이머 업데이트
-        m_redemptionTimer += deltaTime;
+        // Redemption: 플레이어 방향으로 5m 돌진 (정반사)
         
-        // 1회 반사 후 + 1초 경과 시 패스찾기
-        if (m_redemptionReflectCount >= kRedemptionMaxReflects && 
-            m_redemptionTimer >= m_redemptionDuration)
+        // ─────────────────────────────────────────────
+        // 5m 도달 체크
+        // ─────────────────────────────────────────────
+        if (m_redemptionTraveledDistance >= m_redemptionTargetDistance)
         {
-            if (TryFindPathAfterRedemption())
+            // 5m 완주! → 패스 체크
+            if (TrySelectFleeTarget())
             {
-                // 패스 찾음 → Flee로 복귀
-                if (m_logicFSM)
+                // 패스 찾음
+                if (m_redemptionRetryCount >= kMaxRedemptionRetries)
                 {
-                    m_logicFSM->SetParameter("NoWayOut", false);
+                    // 4회 도달 → LastStand 전이
+                    if (m_logicFSM)
+                    {
+                        m_logicFSM->SetParameter("RedemptionFailed", true);
+                    }
+                }
+                else
+                {
+                    // 4회 미만 → Flee 전이
+                    if (m_logicFSM)
+                    {
+                        m_logicFSM->SetParameter("PathFound", true);
+                    }
                 }
             }
             else
             {
-                // 패스 못 찾음 → Laststand로 전이
-                if (m_logicFSM)
+                // 패스 못 찾음
+                if (m_redemptionRetryCount >= kMaxRedemptionRetries)
                 {
-                    m_logicFSM->SetParameter("RedemptionFailed", true);
+                    // 4회 도달 → LastStand 전이
+                    if (m_logicFSM)
+                    {
+                        m_logicFSM->SetParameter("RedemptionFailed", true);
+                    }
+                }
+                else
+                {
+                    // 4회 미만 → Idle 전이 (0.1초 후 재시도)
+                    if (m_logicFSM)
+                    {
+                        m_logicFSM->SetParameter("RedemptionRetry", true);
+                    }
                 }
             }
         }
@@ -537,70 +591,46 @@ namespace game
 
     void MonsterPointedType::ExecuteLaststandBehaviorNonPhysics(float deltaTime)
     {
-        // 5초마다 패스찾기 재시도
-        m_laststandTimer += deltaTime;
+        // LastStand: 결사항전
         
-        if (m_laststandTimer >= m_laststandRetryInterval)
+        // ─────────────────────────────────────────────
+        // 1. Flee 패스 체크 (항상 최우선)
+        // ─────────────────────────────────────────────
+        if (TrySelectFleeTarget())
         {
-            m_laststandTimer = 0.0f;
-            
-            // 20회 패스찾기 시도
-            if (!m_targetPlayer || !m_pathfindingAgent) return;
-
-            engine::Vector3 myPos = GetTransform()->GetWorldPosition();
-            engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-
-            engine::Vector3 awayFromPlayer = myPos - playerPos;
-            awayFromPlayer.y = 0.0f;
-            awayFromPlayer.Normalize();
-
-            float baseAngle = std::atan2(awayFromPlayer.z, awayFromPlayer.x);
-
-            for (int attempt = 0; attempt < kLaststandPathAttempts; ++attempt)
+            // 패스 찾음 → Flee 전이
+            if (m_logicFSM)
             {
-                float randomOffsetDeg = (static_cast<float>(rand()) / RAND_MAX) * 180.0f - 90.0f;
-                float randomOffsetRad = DirectX::XMConvertToRadians(randomOffsetDeg);
-                float finalAngle = baseAngle + randomOffsetRad;
-
-                float randomDistance = m_fleeDistanceMin + 
-                    (static_cast<float>(rand()) / RAND_MAX) * (m_fleeDistanceMax - m_fleeDistanceMin);
-
-                // 도망 목표 위치 계산
-                engine::Vector3 targetPos;
-                targetPos.x = myPos.x + randomDistance * std::cos(finalAngle);
-                targetPos.y = myPos.y;
-                targetPos.z = myPos.z + randomDistance * std::sin(finalAngle);
-                
-                // 안전 마진 체크 (대각선 경계 + 주변 여유 공간)
-                if (!IsPositionSafeForFlee(targetPos))
-                {
-                    continue;  // 안전하지 않으면 다음 시도
-                }
-
-                m_pathfindingAgent->RequestPathImmediate(targetPos);
-                
-                if (m_pathfindingAgent->HasPath())
-                {
-                    m_fleeTargetPos = targetPos;
-                    m_hasFleeTarget = true;
-                    m_fleeAttemptCount = 0;
-                    m_isNoWayOut = false;
-                    
-                    // 패스 찾음 → 거리에 따라 Flee 또는 EngageMove로 전이
-                    if (m_logicFSM)
-                    {
-                        m_logicFSM->SetParameter("PathFound", true);
-                        m_logicFSM->SetParameter("RedemptionFailed", false);
-                    }
-                    return;
-                }
+                m_logicFSM->SetParameter("PathFound", true);
             }
+            return;
         }
         
-        // 사거리 내 플레이어 있으면 공격
-        if (m_isPlayerInRange && m_canFire)
+        // ─────────────────────────────────────────────
+        // 2. 플레이어 거리 체크
+        // ─────────────────────────────────────────────
+        if (!m_targetPlayer) return;
+        
+        float distanceToPlayer = GetDistanceToPlayer();
+        
+        if (distanceToPlayer <= m_AttackRange)
         {
-            Attack(deltaTime);
+            // 사거리 안: 제자리에서 공격
+            if (m_canFire)
+            {
+                Attack(deltaTime);
+            }
+        }
+        else
+        {
+            // 사거리 밖: EngageMove 전이
+            m_fromLastStand = true;
+            
+            if (m_logicFSM)
+            {
+                // PlayerInFleeRange를 false로 설정해서 EngageMove 전이
+                m_logicFSM->SetParameter("PlayerInFleeRange", false);
+            }
         }
     }
 
@@ -691,13 +721,21 @@ namespace game
 
     void MonsterPointedType::ExecuteRedemptionBehaviorPhysics()
     {
-        // 이동 방향으로 먼저 회전 후 이동
+        if (!m_rigidbody) return;
+        
+        // ─────────────────────────────────────────────
+        // 이동 방향으로 회전 후 이동
+        // ─────────────────────────────────────────────
         RotateTowardsDirection(m_redemptionMoveDir);
-        if (m_rigidbody)
-        {
-            float speed = m_moveSpeed * m_redemptionSpeedMultiplier;
-            m_rigidbody->SetLinearVelocity(m_redemptionMoveDir * speed);
-        }
+        
+        float speed = m_moveSpeed * m_redemptionSpeedMultiplier;
+        m_rigidbody->SetLinearVelocity(m_redemptionMoveDir * speed);
+        
+        // ─────────────────────────────────────────────
+        // 이동 거리 누적 (속도 * 시간)
+        // ─────────────────────────────────────────────
+        float fixedDeltaTime = engine::Time::FixedDeltaTime();
+        m_redemptionTraveledDistance += speed * fixedDeltaTime;
     }
 
     void MonsterPointedType::ExecuteLaststandBehaviorPhysics()
@@ -714,10 +752,17 @@ namespace game
     {
         if (state == "Flee")
         {
+            // PA 재활성화 체크
+            if (m_pathfindingAgent && !m_pathfindingAgent->IsActive())
+            {
+                m_pathfindingAgent->SetActive(true);
+            }
+            
             // Flee 상태 진입 시: 초기화 및 도망 위치 선정
             m_hasFleeTarget = false;
-            m_fleeAttemptCount = 0;  // 실패 카운트 리셋
+            m_fleeAttemptCount = 0;          // 실패 카운트 리셋
             m_isNoWayOut = false;
+            m_redemptionRetryCount = 0;      // Redemption 재시도 카운트 리셋
             
             // 끼임 감지 초기화
             m_lastFleePosition = GetTransform()->GetWorldPosition();
@@ -726,6 +771,7 @@ namespace game
             if (m_logicFSM)
             {
                 m_logicFSM->SetParameter("NoWayOut", false);
+                m_logicFSM->SetParameter("PathFound", false);
             }
             
             TrySelectFleeTarget();
@@ -739,11 +785,24 @@ namespace game
         }
         else if (state == "EngageMove")
         {
-            // EngageMove 상태 진입 시: 패스 재계산 (공격 후 또는 Idle에서 전이 시)
+            // PA 재활성화 체크
+            if (m_pathfindingAgent && !m_pathfindingAgent->IsActive())
+            {
+                m_pathfindingAgent->SetActive(true);
+            }
+            
+            // EngageMove 상태 진입 시: 패스 재계산
             if (m_pathfindingAgent && m_targetPlayer)
             {
                 engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
                 m_pathfindingAgent->RequestPathImmediate(playerPos);
+            }
+            
+            // LastStand에서 온 경우 플래그 설정
+            if (m_fromLastStand)
+            {
+                m_needsPostAttackCheck = true;
+                m_fromLastStand = false;
             }
             
             m_logicFSM->SetParameter("AttackComplete", false);
@@ -756,36 +815,56 @@ namespace game
         }
         else if (state == "Redemption")
         {
-            // Redemption 상태 진입: 플레이어 반대 방향으로 초기 이동 방향 설정
+            // PA 비활성화
+            if (m_pathfindingAgent && m_pathfindingAgent->IsActive())
+            {
+                m_pathfindingAgent->SetActive(false);
+                m_pathfindingAgent->ClearPath();
+            }
+            
+            // Redemption 상태 진입: 플레이어 방향으로 5m 돌진
+            m_redemptionRetryCount++;  // 재시도 카운트 증가
+            
             if (m_targetPlayer)
             {
                 engine::Vector3 myPos = GetTransform()->GetWorldPosition();
                 engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
                 
-                m_redemptionMoveDir = myPos - playerPos;
+                // 플레이어 방향 (진입 시 고정)
+                m_redemptionMoveDir = playerPos - myPos;
                 m_redemptionMoveDir.y = 0.0f;
-                m_redemptionMoveDir.Normalize();
+                if (m_redemptionMoveDir.LengthSquared() > 0.001f)
+                {
+                    m_redemptionMoveDir.Normalize();
+                }
+                else
+                {
+                    // 플레이어와 같은 위치면 임의 방향
+                    m_redemptionMoveDir = engine::Vector3(1.0f, 0.0f, 0.0f);
+                }
             }
-            m_redemptionReflectCount = 0;
-            m_redemptionTimer = 0.0f;  // 타이머 초기화
+            
+            m_redemptionTraveledDistance = 0.0f;  // 거리 리셋
             
             // FSM 파라미터 초기화
             if (m_logicFSM)
             {
+                m_logicFSM->SetParameter("RedemptionRetry", false);
                 m_logicFSM->SetParameter("RedemptionFailed", false);
-                m_logicFSM->SetParameter("NoWayOut", true);  // Redemption 진입 시 NoWayOut 유지
+                m_logicFSM->SetParameter("PathFound", false);
             }
         }
         else if (state == "Laststand")
         {
-            // Laststand 상태 진입: 정지 및 타이머 초기화
+            // Laststand 상태 진입: 결사항전
             StopAllMovement();
-            m_laststandTimer = 0.0f;
+            m_redemptionRetryCount = 0;  // 재시도 카운트 리셋
             
             // FSM 파라미터 초기화
             if (m_logicFSM)
             {
                 m_logicFSM->SetParameter("PathFound", false);
+                m_logicFSM->SetParameter("RedemptionFailed", false);
             }
         }
         else if (state == "Fragile")
@@ -802,6 +881,13 @@ namespace game
         {
             StopAllMovement();
             StopRotation();
+            
+            // Redemption 재시도를 위한 Idle인 경우 0.1초 후 자동 전이
+            // (NoWayOut이 true면 Redemption 재시도용 Idle)
+            if (m_isNoWayOut)
+            {
+                m_idleTimer = 0.0f;  // Idle 타이머 초기화 (0.1초 후 전이)
+            }
         }
     }
 
@@ -920,6 +1006,14 @@ namespace game
                 }
 
                 // 뾰족 타입은 StaticMesh를 사용하므로 공격 애니메이션 재생 불필요
+                
+                // ─────────────────────────────────────────────
+                // BulletFactory 발사 직후 체크 (LastStand → EngageMove 경로)
+                // ─────────────────────────────────────────────
+                if (m_needsPostAttackCheck)
+                {
+                    CheckPostAttackTransition();
+                }
 
                 // 연발 모드일 때만 타이머 리셋 (단발 모드는 타이머 무시)
                 if (!m_isDoSingleShot && m_fireRate > 0.0f)
@@ -1104,7 +1198,7 @@ namespace game
         m_fleeAttemptCount += kMaxAttempts;
         m_hasFleeTarget = false;
         
-        // 120회 누적 실패 시 NoWayOut → Redemption 전이
+        // 10회 누적 실패 시 NoWayOut → Redemption 전이
         if (m_fleeAttemptCount >= kMaxFleeAttempts)
         {
             m_isNoWayOut = true;
@@ -1180,56 +1274,33 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // Redemption 후 패스찾기 (60회 시도)
+    // 공격 후 전이 체크 (LastStand → EngageMove 경로용)
     // ═══════════════════════════════════════════════════════════════
-    bool MonsterPointedType::TryFindPathAfterRedemption()
+    void MonsterPointedType::CheckPostAttackTransition()
     {
-        if (!m_targetPlayer || !m_pathfindingAgent) return false;
-
-        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
-        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
-
-        engine::Vector3 awayFromPlayer = myPos - playerPos;
-        awayFromPlayer.y = 0.0f;
-        awayFromPlayer.Normalize();
-
-        float baseAngle = std::atan2(awayFromPlayer.z, awayFromPlayer.x);
-
-        // 60회 시도 (6프레임 분량)
-        for (int attempt = 0; attempt < kRedemptionPathAttempts; ++attempt)
+        m_needsPostAttackCheck = false;  // 플래그 해제
+        
+        if (!m_targetPlayer) return;
+        
+        // ─────────────────────────────────────────────
+        // 거리 체크
+        // ─────────────────────────────────────────────
+        float distanceToPlayer = GetDistanceToPlayer();
+        
+        if (distanceToPlayer > m_fleeRange)
         {
-            float randomOffsetDeg = (static_cast<float>(rand()) / RAND_MAX) * 180.0f - 90.0f;
-            float randomOffsetRad = DirectX::XMConvertToRadians(randomOffsetDeg);
-            float finalAngle = baseAngle + randomOffsetRad;
-
-            float randomDistance = m_fleeDistanceMin + 
-                (static_cast<float>(rand()) / RAND_MAX) * (m_fleeDistanceMax - m_fleeDistanceMin);
-
-            // 도망 목표 위치 계산
-            engine::Vector3 targetPos;
-            targetPos.x = myPos.x + randomDistance * std::cos(finalAngle);
-            targetPos.y = myPos.y;
-            targetPos.z = myPos.z + randomDistance * std::sin(finalAngle);
-            
-            // 안전 마진 체크 (대각선 경계 + 주변 여유 공간)
-            if (!IsPositionSafeForFlee(targetPos))
+            // Flee 거리: Flee 패스 체크
+            if (TrySelectFleeTarget())
             {
-                continue;  // 안전하지 않으면 다음 시도
+                // 패스 있음 → Flee 전이
+                if (m_logicFSM)
+                {
+                    m_logicFSM->SetParameter("PlayerInFleeRange", true);
+                }
             }
-
-            m_pathfindingAgent->RequestPathImmediate(targetPos);
-            
-            if (m_pathfindingAgent->HasPath())
-            {
-                m_fleeTargetPos = targetPos;
-                m_hasFleeTarget = true;
-                m_fleeAttemptCount = 0;  // 카운트 리셋
-                m_isNoWayOut = false;
-                return true;
-            }
+            // 패스 없음 → EngageMove 유지 (계속 추격)
         }
-
-        return false;
+        // Engage 거리 → EngageMove 유지 (계속 추격)
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1270,6 +1341,19 @@ namespace game
         // ─────────────────────────────────────────────
         std::string currentState = GetCurrentState();
         if (currentState != "Redemption") return;
+        
+        // ─────────────────────────────────────────────
+        // 레이어 체크: Wall/Environment만 반사
+        // ─────────────────────────────────────────────
+        auto* otherCollider = info.collider.Get();
+        if (!otherCollider) return;
+        
+        uint32_t layer = otherCollider->GetLayer();
+        if (layer != engine::PhysicsLayer::Index::Wall &&
+            layer != engine::PhysicsLayer::Index::Environment)
+        {
+            return;  // Player/Enemy는 무시 (통과)
+        }
 
         // ─────────────────────────────────────────────
         // 충돌 노말 추출
@@ -1314,9 +1398,6 @@ namespace game
         // ─────────────────────────────────────────────
         m_redemptionMoveDir = ReflectDirection(m_redemptionMoveDir, snappedNormal);
         m_redemptionMoveDir.Normalize();
-        
-        // 반사 횟수 증가 (1회 반사 후 타이머가 종료 조건 체크)
-        m_redemptionReflectCount++;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1447,13 +1528,16 @@ namespace game
             
             ImGui::Spacing();
             ImGui::Text("Redemption/Laststand:");
-            ImGui::DragFloat("Redemption Speed Mult", &m_redemptionSpeedMultiplier, 0.1f, 0.5f, 3.0f, "%.1fx");
-            ImGui::DragFloat("Redemption Duration", &m_redemptionDuration, 0.1f, 0.5f, 5.0f, "%.1f sec");
+            ImGui::DragFloat("Redemption Speed Mult", &m_redemptionSpeedMultiplier, 0.1f, 0.5f, 5.0f, "%.1fx");
             if (ImGui::IsItemHovered())
             {
-                ImGui::SetTooltip("Time to move after first wall bounce before pathfinding retry");
+                ImGui::SetTooltip("Speed multiplier during Redemption dash (default 2.0x)");
             }
-            ImGui::DragFloat("Laststand Retry Interval", &m_laststandRetryInterval, 0.5f, 1.0f, 10.0f, "%.1f sec");
+            ImGui::DragFloat("Redemption Distance", &m_redemptionTargetDistance, 0.5f, 1.0f, 10.0f, "%.1f m");
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Target distance for Redemption dash (default 5.0m)");
+            }
             
             // 런타임 상태 표시
             ImGui::Spacing();
@@ -1471,9 +1555,10 @@ namespace game
             
             ImGui::Text("  Flee Attempt Count: %d / %d", m_fleeAttemptCount, kMaxFleeAttempts);
             ImGui::Text("  Is No Way Out: %s", m_isNoWayOut ? "Yes" : "No");
-            ImGui::Text("  Redemption Reflects: %d / %d", m_redemptionReflectCount, kRedemptionMaxReflects);
-            ImGui::Text("  Redemption Timer: %.2f / %.2f sec", m_redemptionTimer, m_redemptionDuration);
-            ImGui::Text("  Laststand Timer: %.1f / %.1f", m_laststandTimer, m_laststandRetryInterval);
+            ImGui::Text("  Redemption Retry Count: %d / %d", m_redemptionRetryCount, kMaxRedemptionRetries);
+            ImGui::Text("  Redemption Distance: %.2f / %.2f m", m_redemptionTraveledDistance, m_redemptionTargetDistance);
+            ImGui::Text("  From LastStand: %s", m_fromLastStand ? "Yes" : "No");
+            ImGui::Text("  Needs Post Attack Check: %s", m_needsPostAttackCheck ? "Yes" : "No");
             
             ImGui::Spacing();
             ImGui::Text("  Wall Collision Info:");
@@ -1563,8 +1648,7 @@ namespace game
         
         // Redemption/Laststand 설정 (Purple용)
         j["RedemptionSpeedMultiplier"] = m_redemptionSpeedMultiplier;
-        j["RedemptionDuration"] = m_redemptionDuration;
-        j["LaststandRetryInterval"] = m_laststandRetryInterval;
+        j["RedemptionTargetDistance"] = m_redemptionTargetDistance;
     }
 
     void MonsterPointedType::Load(const engine::json& j)
@@ -1586,8 +1670,7 @@ namespace game
         m_fleeStuckDistanceThreshold = j.value("FleeStuckDistanceThreshold", 0.5f);
         
         // Redemption/Laststand 설정 (Purple용)
-        m_redemptionSpeedMultiplier = j.value("RedemptionSpeedMultiplier", 1.5f);
-        m_redemptionDuration = j.value("RedemptionDuration", 1.0f);
-        m_laststandRetryInterval = j.value("LaststandRetryInterval", 5.0f);
+        m_redemptionSpeedMultiplier = j.value("RedemptionSpeedMultiplier", 2.0f);
+        m_redemptionTargetDistance = j.value("RedemptionTargetDistance", 5.0f);
     }
 }

@@ -108,9 +108,8 @@
                     "WallCollisionInfoTimeout": 3.0,
                     "FleeStuckCheckInterval": 1.0,
                     "FleeStuckDistanceThreshold": 0.5,
-                    "RedemptionSpeedMultiplier": 1.5,
-                    "RedemptionDuration": 1.0,
-                    "LaststandRetryInterval": 5.0
+                    "RedemptionSpeedMultiplier": 1.7000000476837158,
+                    "RedemptionTargetDistance": 7.0
                 },
                 {
                     "Type": "PathfindingAgent",
