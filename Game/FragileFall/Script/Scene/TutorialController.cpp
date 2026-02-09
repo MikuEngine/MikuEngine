@@ -3,7 +3,7 @@
 #include "Script/UI/UIMessageQueue.h"
 
 #include <Framework/Object/GameObject/GameObject.h>
-#include "Script/CharacterScript/Player/PlayerControllerScript.h"
+//#include "Script/CharacterScript/Player/PlayerControllerScript.h"
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
@@ -11,6 +11,9 @@
 #include <Core/System/Input.h>
 
 #include <Framework/Object/Component/UI/UIImage.h>
+#include <Framework/Object/Component/UI/UIButton.h>
+#include <Framework/Object/Component/UI/UIClickArea.h>
+#include <Framework/Object/Component/RectTransform.h>
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 
@@ -54,7 +57,15 @@ namespace game
 
     void TutorialController::Awake()
     {
-
+        /*/ 강화 튜토리얼 디버깅용
+        std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
+        if (currentScene == "10_PROTO_TutorialLobby")
+        {
+            m_stepIndex = 4;
+            m_pageIndex = 1;
+            OnSceneLoaded();
+        }
+        //*/
     }
 
     void TutorialController::Start()
@@ -245,43 +256,91 @@ namespace game
 
         switch (index)
         {
-        // ─────────────────────────────────────────────
-        // step 0 : 다음 맵 진입
-        // ─────────────────────────────────────────────
+            // ─────────────────────────────────────────────
+            // step 0 : 다음 맵 진입
+            // ─────────────────────────────────────────────
         case 0:
             m_isTimerActive = true;
             m_stepTimer = 8.0f;
             break;
-        // ─────────────────────────────────────────────
-        // step 1 :
-        // ─────────────────────────────────────────────
+            // ─────────────────────────────────────────────
+            // step 1 :
+            // ─────────────────────────────────────────────
         case 1:
             break;
-        // ─────────────────────────────────────────────
-        // step 2 : 일반 몬스터(회색 둔탁) 1종을 소환하여 사격하게 UI로 유도
-        //          뾰족 몬스터를 사격 프레자일 상태로 만들도록 유도
-        // ─────────────────────────────────────────────
+            // ─────────────────────────────────────────────
+            // step 2 : 일반 몬스터(회색 둔탁) 1종을 소환하여 사격하게 UI로 유도
+            //          뾰족 몬스터를 사격 프레자일 상태로 만들도록 유도
+            // ─────────────────────────────────────────────
         case 2:
             m_isTimerActive = true;
             m_stepTimer = 5.0f;
             break;
-        // ─────────────────────────────────────────────
-        // step 3 : 몬스터가 프레자일 상태가 될 경우 UI 변경후 N초후 순차대로 출력
-        // ─────────────────────────────────────────────
+            // ─────────────────────────────────────────────
+            // step 3 : 몬스터가 프레자일 상태가 될 경우 UI 변경후 N초후 순차대로 출력
+            // ─────────────────────────────────────────────
         case 3:
             break;
-        // ─────────────────────────────────────────────
-        // step 4 : 처형시 다음맵으로 가는문 개방
-        //          처형시 설명 UI를 먼저 띄워주고 N초 뒤로비로 가는 문 2종 개방 후 복귀를 유도
-        // ─────────────────────────────────────────────
+            // ─────────────────────────────────────────────
+            // step 4 : 처형시 다음맵으로 가는문 개방
+            //          처형시 설명 UI를 먼저 띄워주고 N초 뒤로비로 가는 문 2종 개방 후 복귀를 유도
+            // ─────────────────────────────────────────────
         case 4:
             m_isTimerActive = true;
             m_stepTimer = 0.3f;
             break;
-        // ─────────────────────────────────────────────
-        // step 5 : 
-        // ─────────────────────────────────────────────
+            // ─────────────────────────────────────────────
+            // step 5 : 로비 UI 진입시 설명창을 띄워주며 강화 버튼을 누르라는 UI 표시
+            // ─────────────────────────────────────────────
         case 5:
+            BindButton("UI_OpenUpgrade", [this]() {
+                SetActiveButton("UI_OpenUpgrade", false, false);
+                Next();
+            });
+            break;
+            // ─────────────────────────────────────────────
+            // step 6 : 기술 부분 클릭 유도
+            // ─────────────────────────────────────────────
+        case 6:
+            BindButton("Btn_Skill", [this]() {
+                SetActiveButton("Btn_Skill", false, false);
+                Next();
+            });
+            break;
+            // ─────────────────────────────────────────────
+            // step 7 : 기술에 첫 번째 스킬 처형(브레이크) 시 프레자일 게이지 회복
+            // ─────────────────────────────────────────────
+        case 7:
+            SetupSkillNodesUI();
+            break;
+            // ─────────────────────────────────────────────
+            // step 8 : 재화가 들어간다는 설명과 함께 강화 유도
+            // ─────────────────────────────────────────────
+        case 8:
+            {
+            auto upgradeUI = engine::GameObject::Find("Desc_Panel");
+            if (upgradeUI)
+            {
+                upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+            }
+            BindButton("Btn_Upgrade", [this, upgradeUI] () {
+                this->SetActiveButton("Btn_Upgrade", false, false);
+                if (upgradeUI)
+                {
+                    upgradeUI->GetComponent<engine::UIImage>()->SetOutline(false, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+                }
+                this->Next();
+            });
+            break;
+            }
+            // ─────────────────────────────────────────────
+            // step 9 : 강화를 성공하면 x버튼을 눌러서 다시 로비로 가서 본 게임 시작
+            // ─────────────────────────────────────────────
+        case 9:
+            BindButton("UI_CloseButton_Upgrade", [this]() {
+                SetActiveButton("UI_CloseButton_Upgrade", false, false);
+				SetActiveButton("UI_EnterPlay", true, true);
+            });
             break;
         }
     }
@@ -310,18 +369,81 @@ namespace game
 
             m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
             m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
-
+             
             Next();
         }
         else if (currentScene == "10_PROTO_TutorialLobby")
         {
-			auto upgradeUI = engine::GameObject::Find("UI_OpenUpgrade");
-            if (upgradeUI)
-            {
-				upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, 2.0f, { 1.0f, 0.0f, 0.0f, 1.0f });
-            }
-
             Next();
+        }
+    }
+
+    void TutorialController::BindButton(const std::string& goName, std::function<void()> callback)
+    {
+        if (auto* go = engine::GameObject::Find(goName))
+        {
+            if (auto* btn = go->GetComponent<engine::UIButton>())
+            {
+				btn->SetActive(true);
+                btn->AddOnClick(std::move(callback));
+            }
+        }
+
+        auto upgradeUI = engine::GameObject::Find(goName);
+        if (upgradeUI)
+        {
+            upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+        }
+    }
+
+    void TutorialController::SetActiveButton(const std::string& goName, bool active, bool outline)
+    {
+        if (auto* go = engine::GameObject::Find(goName))
+        {
+            if (auto* btn = go->GetComponent<engine::UIButton>())
+            {
+                btn->SetActive(active);
+            }
+        }
+
+        auto upgradeUI = engine::GameObject::Find(goName);
+        if (upgradeUI)
+        {
+            upgradeUI->GetComponent<engine::UIImage>()->SetOutline(outline, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+        }
+    }
+
+    void TutorialController::SetupSkillNodesUI()
+    {
+        engine::GameObject* parentGo = engine::GameObject::Find("SkillNodes");
+        if (!parentGo) return;
+
+        engine::RectTransform* parentRT = parentGo->GetComponent<engine::RectTransform>();
+        if (!parentRT) return;
+
+        const std::vector<engine::Transform*>& children = parentRT->GetChildren();
+
+        if (!children.empty())
+        {
+            engine::GameObject* firstNode = children[0]->GetGameObject();
+            if (firstNode)
+            {
+				LOG_PRINT("Activate Skill Node UI");
+
+                auto button = firstNode->GetComponent<engine::UIClickArea>();
+                
+                button->SetActive(true);
+                button->AddOnClick([this, button](int buttonIndex){
+                    button->SetActive(false);
+                    this->Next();
+                });
+
+                firstNode->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+            }
+            else
+            {
+                LOG_PRINT("not found not found Activate Skill Node UI");
+            }
         }
     }
 
