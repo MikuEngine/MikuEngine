@@ -70,22 +70,23 @@ namespace game
         // Flee 실패 → Redemption → Laststand 시스템
         // ─────────────────────────────────────────────
         int m_fleeAttemptCount = 0;             // 패스찾기 실패 누적 (프레임당 10회씩)
-        static constexpr int kMaxFleeAttempts = 120;  // 120회 실패 시 Redemption 전이
+        static constexpr int kMaxFleeAttempts = 10;  // 10회 실패 시 Redemption 전이
         bool m_isNoWayOut = false;              // 탈출구 없음 플래그
 
-        // Redemption 상태 변수
-        engine::Vector3 m_redemptionMoveDir = engine::Vector3::Zero;  // 이동 방향
-        int m_redemptionReflectCount = 0;       // 반사 횟수 (1회 후 타이머 시작)
-        static constexpr int kRedemptionMaxReflects = 1;
-        static constexpr int kRedemptionPathAttempts = 60;  // 1회 반사 + 타이머 후 패스찾기 시도 횟수
-        float m_redemptionSpeedMultiplier = 1.5f;  // Redemption 이동 속도 배율
-        float m_redemptionDuration = 1.0f;      // Redemption 최소 지속 시간 (1회 반사 후)
-        float m_redemptionTimer = 0.0f;         // Redemption 타이머 (런타임)
+        // Redemption 상태 변수 (플레이어 방향 5m 돌진)
+        engine::Vector3 m_redemptionMoveDir = engine::Vector3::Zero;  // 이동 방향 (진입 시 고정)
+        float m_redemptionTraveledDistance = 0.0f;   // 누적 이동 거리
+        float m_redemptionTargetDistance = 5.0f;     // 목표 거리
+        int m_redemptionRetryCount = 0;              // 재시도 횟수 (4회 도달 시 LastStand)
+        static constexpr int kMaxRedemptionRetries = 4;  // 최대 재시도 횟수
+        float m_redemptionSpeedMultiplier = 2.0f;    // Redemption 이동 속도 배율 (기본 2배)
 
-        // Laststand 상태 변수
-        float m_laststandTimer = 0.0f;          // 패스찾기 재시도 타이머
-        float m_laststandRetryInterval = 5.0f;  // 5초마다 재시도
-        static constexpr int kLaststandPathAttempts = 20;  // 한번에 20회 시도
+        // Laststand 상태 변수 (결사항전)
+        bool m_fromLastStand = false;                // LastStand에서 EngageMove로 전이했는지
+        bool m_needsPostAttackCheck = false;         // 공격 후 거리/패스 체크 필요
+        
+        // Idle 상태 변수 (Redemption 재시도용)
+        float m_idleTimer = 0.0f;                    // Idle 대기 타이머
         
         // GridMap 캐시 (도망 위치 유효성 체크용)
         engine::GridMap* m_gridMap = nullptr;
@@ -114,7 +115,7 @@ namespace game
         void ExecuteEngageMoveBehaviorNonPhysics(float deltaTime);
         void ExecuteEngageStopBehaviorNonPhysics(float deltaTime);
         void ExecuteEngageAttackBehaviorNonPhysics(float deltaTime);
-        void ExecuteIdleBehaviorNonPhysics() override;
+        void ExecuteIdleBehaviorNonPhysics(float deltaTime);
         void ExecuteFragileBehaviorNonPhysics() override;
         void ExecuteDeadBehaviorNonPhysics() override;
         
@@ -164,7 +165,9 @@ namespace game
         // Redemption 반사 헬퍼
         engine::Vector3 SnapNormalToAxis(const engine::Vector3& normal) const;
         engine::Vector3 ReflectDirection(const engine::Vector3& direction, const engine::Vector3& normal) const;
-        bool TryFindPathAfterRedemption();      // Redemption 후 패스찾기 (60회)
+        
+        // 상태 전이 체크
+        void CheckPostAttackTransition();       // 공격 후 거리/패스 체크 (LastStand → EngageMove용)
 
     public:
         void OnGui() override;

@@ -41,7 +41,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 10.0,
-                        "z": 19.0
+                        "z": 19.670717239379883
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -141,7 +141,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -26.0,
+                        "x": -26.799999237060547,
                         "y": 10.0,
                         "z": 0.0
                     },
@@ -192,7 +192,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 26.0,
+                        "x": 29.6439208984375,
                         "y": 10.0,
                         "z": 0.0
                     },
@@ -9586,6 +9586,53 @@
                             "Cost": 1.0
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "ParentID": 0,
+            "Name": "Collier_Crystal_Right_Front_4",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 27.140625,
+                        "y": 0.0,
+                        "z": 12.686002731323242
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 9,
+                    "materialType": 0,
+                    "radius": 5.0
                 }
             ]
         }
