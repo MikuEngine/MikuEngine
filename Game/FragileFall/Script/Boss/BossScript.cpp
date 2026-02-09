@@ -31,7 +31,6 @@ namespace game
     {
         m_hpText->SetText(std::format("HP: {}", m_currentHp));
 
-        InitializeCrystalMeshes();
         InitializePatterns();
 
         auto playerGo = engine::GameObject::Find("Player");
@@ -52,7 +51,6 @@ namespace game
     {
         float deltaTime = engine::Time::DeltaTime();
 
-        UpdateCrystalMovement(deltaTime);
         UpdateShieldStatus();
         UpdatePatternSystem(deltaTime);
         CheckHealth();
@@ -73,15 +71,6 @@ namespace game
         m_patternManager->RegisterPattern(std::make_unique<BossPattern_Meteor>());
         m_patternManager->RegisterPattern(std::make_unique<BossPattern_Summon>());
         m_patternManager->RegisterPattern(std::make_unique<BossPattern_SphereProjectile>());
-    }
-
-    void BossScript::InitializeCrystalMeshes()
-    {
-        const auto& children = GetTransform()->GetChildren();
-        for (auto* childTransform : children)
-        {
-            m_crystalMeshGameObjects.push_back(childTransform->GetGameObject());
-        }
     }
 
     void BossScript::UpdatePatternSystem(float deltaTime)
@@ -216,28 +205,6 @@ namespace game
         
         // 실드 관통 플래그와 함께 데미지 전달
         TakeDamage(damage, m_isShieldPierce);
-    }
-
-    void BossScript::UpdateCrystalMovement(float deltaTime)
-    {
-        // 메인 수정 주변을 도는 작은 수정들
-        for (size_t i = 0; i < m_crystalMeshGameObjects.size(); ++i)
-        {
-            if (m_crystalMeshGameObjects[i])
-            {
-                float angle = static_cast<float>(i) * (360.0f / m_crystalMeshGameObjects.size()) + deltaTime * 30.0f;  // 초당 30도 회전
-                float radius = 2.0f;
-
-                float angleRad = engine::ToRadian(angle);
-                engine::Vector3 offset(std::cosf(angleRad) * radius, 0.0f, std::sinf(angleRad) * radius);
-
-                auto* meshTransform = m_crystalMeshGameObjects[i]->GetTransform();
-                if (meshTransform)
-                {
-                    meshTransform->SetLocalPosition(GetTransform()->GetWorldPosition() + offset);
-                }
-            }
-        }
     }
 
     float BossScript::GetBulletFireInterval() const

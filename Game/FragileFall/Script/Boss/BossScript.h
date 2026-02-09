@@ -171,9 +171,6 @@ namespace game
         // pattern
         std::unique_ptr<BossPatternManager> m_patternManager = nullptr;
 
-        // 간단한 움직임용 수정 게임오브젝트
-        std::vector<engine::Ptr<engine::GameObject>> m_crystalMeshGameObjects;  // 보스 수정 메쉬들
-
         // player
         engine::Ptr<PlayerControllerScript> m_targetPlayer = nullptr;
 
@@ -194,7 +191,6 @@ namespace game
         void Update() override;
 
         void InitializePatterns();
-        void InitializeCrystalMeshes();  // 수정 메쉬들 초기화 및 회전 설정
 
         // pattern
         void UpdatePatternSystem(float deltaTime);
@@ -223,8 +219,6 @@ namespace game
         void OnCrystallized();  // 결정화 상태 진입
         void OnExecutionReflected(engine::Vector3 direction);  // 처형 반사 시 호출 (기존 하위 호환)
         void OnReflectedProjectileHit(const engine::Vector3& direction, float damage);  // 반사된 빅탄 충돌 (실드 감쇄 적용)
-
-        void UpdateCrystalMovement(float deltaTime);  // 수정 메쉬들 회전 업데이트
 
         // ─────────────────────────────────────────────
         // BulletFire 설정 Getter

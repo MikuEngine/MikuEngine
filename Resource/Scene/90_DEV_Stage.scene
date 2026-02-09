@@ -698,7 +698,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -754,7 +755,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -810,7 +812,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -929,7 +932,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -1079,7 +1083,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1151,7 +1156,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -1301,7 +1307,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1373,7 +1380,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -1523,7 +1531,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1595,7 +1604,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1667,7 +1677,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -1780,7 +1791,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1852,7 +1864,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1924,7 +1937,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1996,7 +2010,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -2068,7 +2083,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -2210,7 +2226,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -2282,7 +2299,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -2424,7 +2442,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -2496,7 +2515,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -2609,7 +2629,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -2751,7 +2772,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -2823,7 +2845,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -2965,7 +2988,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -3037,7 +3061,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -3150,7 +3175,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -3222,7 +3248,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -3341,7 +3368,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -3491,7 +3519,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -3563,7 +3592,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -3635,7 +3665,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
@@ -3685,7 +3716,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -3767,7 +3799,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -3873,7 +3906,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -3979,7 +4013,8 @@
                     "AnchorMax": {
                         "x": 0.8333333134651184,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -4085,7 +4120,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -4167,7 +4203,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -4273,7 +4310,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -4379,7 +4417,8 @@
                     "AnchorMax": {
                         "x": 0.8333333134651184,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -4485,7 +4524,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -4567,7 +4607,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -4673,7 +4714,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -4779,7 +4821,8 @@
                     "AnchorMax": {
                         "x": 0.8333333134651184,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -4885,7 +4928,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -4957,7 +5001,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5029,7 +5074,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5101,7 +5147,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -5157,7 +5204,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -5270,7 +5318,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -5376,7 +5425,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -5432,7 +5482,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5504,7 +5555,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5576,7 +5628,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5648,7 +5701,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5720,7 +5774,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5792,7 +5847,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5864,7 +5920,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -5920,7 +5977,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIProgressBar",
@@ -5998,7 +6056,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -6104,7 +6163,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -6210,7 +6270,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -6282,7 +6343,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -6338,7 +6400,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -6451,7 +6514,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -6550,7 +6614,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "AimModeController",
@@ -6647,7 +6712,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -17552,10 +17618,12 @@
                     "DashDuration": 0.30000001192092896,
                     "BaseDashDistance": 6.0,
                     "DashDecayRate": 2.0,
+                    "DashDecayDuration": 0.5,
                     "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224,
                     "MaxDashCount": 3,
                     "DashRechargeTime": 1.0,
+                    "PostDashQuickFireDuration": 0.30000001192092896,
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
                     "FragileGaugeRisePerSecond": 1.0
