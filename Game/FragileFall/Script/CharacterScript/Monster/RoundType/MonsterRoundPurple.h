@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterRoundType.h"
 
@@ -53,6 +53,12 @@ namespace game
         engine::Vector3 m_moveDirectionVector = engine::Vector3(1.0f, 0.0f, 1.0f);
         
         // ─────────────────────────────────────────────
+        // SubWall 트리거 (방향 정보 제공)
+        // ─────────────────────────────────────────────
+        std::string m_currentTriggeredSubWall;      // 현재 트리거된 SubWall 이름
+        bool m_hasTriggeredSubWall = false;         // SubWall 트리거 활성화 여부
+        
+        // ─────────────────────────────────────────────
         // 플레이어 데미지 쿨다운
         // ─────────────────────────────────────────────
         float m_damageCooldown = 1.0f;              // 데미지 쿨다운 시간 (초)
@@ -76,9 +82,11 @@ namespace game
 
     protected:
         // ─────────────────────────────────────────────
-        // 충돌 콜백 (Script.h의 가상 함수 오버라이드)
+        // 충돌/트리거 콜백 (Script.h의 가상 함수 오버라이드)
         // ─────────────────────────────────────────────
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
+        void OnTriggerEnter(const engine::CollisionInfo& info) override;
+        void OnTriggerExit(const engine::CollisionInfo& info) override;
         
         // ─────────────────────────────────────────────
         // 오버라이드 (Purple 전용 로직)

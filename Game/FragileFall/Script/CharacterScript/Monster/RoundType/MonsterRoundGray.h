@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterRoundType.h"
 
@@ -69,23 +69,23 @@ namespace game
         bool m_collisionOccurred = false;         // 충돌 발생 플래그
         
         // ─────────────────────────────────────────────
-        // Wall/SubWall 충돌 쿨다운
+        // Wall 충돌 쿨다운
         // ─────────────────────────────────────────────
-        float m_wallCollisionCooldown = 0.1f;              // Wall 계열 충돌 쿨다운 시간 (직렬화)
-        engine::TimePoint m_lastWallCollisionTime;         // 마지막 Wall 계열 충돌 시간
-        std::string m_lastCollisionWallName;               // 마지막으로 방향전환한 Wall/SubWall 오브젝트 이름
+        float m_wallCollisionCooldown = 0.1f;              // Wall 충돌 쿨다운 시간 (직렬화)
+        engine::TimePoint m_lastWallCollisionTime;         // 마지막 Wall 충돌 시간
+        std::string m_lastCollisionWallName;               // 마지막으로 충돌한 Wall 오브젝트 이름
+        
+        // ─────────────────────────────────────────────
+        // SubWall 트리거 (방향 정보 제공)
+        // ─────────────────────────────────────────────
+        std::string m_currentTriggeredSubWall;              // 현재 트리거된 SubWall 이름
+        bool m_hasTriggeredSubWall = false;                 // SubWall 트리거 활성화 여부
         
         // ─────────────────────────────────────────────
         // EngageMove용 - 감지된 방향 저장
         // ─────────────────────────────────────────────
         engine::Vector3 m_engageDirection = engine::Vector3(1.0f, 0.0f, 0.0f);  // 레이캐스트로 감지된 방향
         bool m_fromEngageCollision = false;  // EngageMove에서 충돌로 IdleMove 진입 시 true
-        
-        // ─────────────────────────────────────────────
-        // 코너 트리거 - 맵 모서리 회전 방향 결정
-        // ─────────────────────────────────────────────
-        bool m_hasCornerDirection = false;          // 코너에서 확정된 방향이 있는지
-        MoveDirection m_cornerDirection = MoveDirection::PlusX;  // 코너에서 확정된 이동 방향
         
         // ─────────────────────────────────────────────
         // 플레이어 데미지 쿨다운
@@ -116,6 +116,7 @@ namespace game
         // ─────────────────────────────────────────────
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
         void OnTriggerEnter(const engine::CollisionInfo& info) override;
+        void OnTriggerExit(const engine::CollisionInfo& info) override;
         
         // ─────────────────────────────────────────────
         // 오버라이드 (Gray 전용 로직)

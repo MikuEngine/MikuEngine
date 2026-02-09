@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -23.080244064331055,
+                        "x": -11.286678314208984,
                         "y": 1.4999995231628418,
-                        "z": 12.92592716217041
+                        "z": 6.069833755493164
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -33,6 +33,7 @@
                     "MeshFilePath": "Resource/Model/crystal_sphere/blue/crystal_sphere_blue.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -65,7 +66,7 @@
                     "Type": "Rigidbody",
                     "Active": true,
                     "type": 0,
-                    "mass": 1.0,
+                    "mass": 0.5,
                     "linearDamping": 1.0,
                     "angularDamping": 1.0,
                     "useGravity": false,
@@ -89,22 +90,25 @@
                     "MonsterTier": 0,
                     "Hp": 100.0,
                     "MaxHp": 100.0,
-                    "MoveSpeed": 8.0,
+                    "MoveSpeed": 6.0,
                     "AttackDamage": 10.0,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
-                    "DetectionRange": 15.0,
+                    "DetectionRange": 12.0,
                     "AttackRange": 5.0,
                     "RotationSpeed": 2.0,
-                    "FireRate": 100.0,
+                    "FireRate": 0.0,
                     "BulletSpeed": 15.0,
                     "BulletLifetime": 10.0,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "OwnGravity": 9.800000190734863,
                     "MinLaunchAngle": 20.0,
                     "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": true,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -115,13 +119,18 @@
                     "AnimName_Repositioning": "Repositioning",
                     "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead",
-                    "RoamingDurationMin": 1.0,
-                    "RoamingDurationMax": 3.0,
-                    "TurnScaleMin": 30.0,
-                    "MaxTurnScale": 70.0,
+                    "IdleMoveTimeLimit": 7.0,
+                    "TargetReachDistance": 2.0,
+                    "TargetDistanceMin": 4.0,
+                    "TargetDistanceMax": 8.0,
+                    "TargetSafetyMargin": 1,
+                    "OscillationAmplitudeMin": 0.5,
+                    "OscillationAmplitudeMax": 2.0,
+                    "OscillationSpeedMultiplier": 5.0,
+                    "CollisionReflectDistance": 2.0,
                     "DamageCooldown": 1.0,
-                    "EngageMoveSpeed": 19.0,
-                    "PlayerIgnoreDuration": 3.0
+                    "EngageMoveSpeed": 16.0,
+                    "PlayerIgnoreDuration": 1.0
                 },
                 {
                     "Type": "CapsuleCollider",
@@ -142,6 +151,13 @@
                     "materialType": 0,
                     "radius": 1.5,
                     "height": 8.199999809265137
+                },
+                {
+                    "Type": "PathfindingAgent",
+                    "Active": true,
+                    "PathUpdateInterval": 1.0,
+                    "WaypointReachDistance": 0.5,
+                    "TargetMoveThreshold": 1.0
                 }
             ]
         }

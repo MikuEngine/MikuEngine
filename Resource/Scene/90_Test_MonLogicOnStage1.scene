@@ -1,6 +1,6 @@
 {
     "Name": "90_Test_MonLogicOnStage1",
-    "NumGameObjects": 82,
+    "NumGameObjects": 84,
     "GameObjects": [
         {
             "ID": 0,
@@ -13054,7 +13054,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13105,7 +13105,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13156,7 +13156,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13207,7 +13207,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13254,7 +13254,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13301,7 +13301,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13348,7 +13348,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13399,7 +13399,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13450,7 +13450,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -13501,7 +13501,7 @@
                         0.0,
                         0.0
                     ],
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "syncWithTransform": false,
                     "layer": 19,
                     "materialType": 0,
@@ -14248,6 +14248,238 @@
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 82,
+            "Name": "Monster_RoundType_Blue",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -11.286678314208984,
+                        "y": 1.4999995231628418,
+                        "z": 6.069833755493164
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sphere/blue/crystal_sphere_blue.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.0,
+                        "y": 0.24710440635681152,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 0.0,
+                        "y": 0.13127398490905762,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 5.949999809265137,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 0.5,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "MonsterRoundBlue",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 100.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 6.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 12.0,
+                    "AttackRange": 5.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 0.0,
+                    "BulletSpeed": 15.0,
+                    "BulletLifetime": 10.0,
+                    "BulletScale": 1.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": true,
+                    "IdleWaitTime": 1.0,
+                    "AttackAnimationDuration": 1.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_IdleMove": "IdleMove",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Repositioning": "Repositioning",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead",
+                    "IdleMoveTimeLimit": 7.0,
+                    "TargetReachDistance": 2.0,
+                    "TargetDistanceMin": 4.0,
+                    "TargetDistanceMax": 8.0,
+                    "TargetSafetyMargin": 1,
+                    "OscillationAmplitudeMin": 0.5,
+                    "OscillationAmplitudeMax": 2.0,
+                    "OscillationSpeedMultiplier": 5.0,
+                    "CollisionReflectDistance": 2.0,
+                    "DamageCooldown": 1.0,
+                    "EngageMoveSpeed": 16.0,
+                    "PlayerIgnoreDuration": 1.0
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 0,
+                    "radius": 1.5,
+                    "height": 8.199999809265137
+                },
+                {
+                    "Type": "PathfindingAgent",
+                    "Active": true,
+                    "PathUpdateInterval": 1.0,
+                    "WaypointReachDistance": 0.5,
+                    "TargetMoveThreshold": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 83,
+            "Name": "StateTextRendererCanvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                },
+                {
+                    "Type": "StateTextRenderer",
+                    "Active": true,
+                    "PrefabName": "StateText",
+                    "WorldOffset": {
+                        "x": 0.0,
+                        "y": 2.0,
+                        "z": 0.0
+                    },
+                    "HideWhenOffscreen": true,
+                    "ShowHpText": true,
+                    "HpFontSize": 12,
+                    "StateFontSize": 15,
+                    "HpTextYOffset": 20.0,
+                    "ShowDashText": true,
+                    "DashFontSize": 15,
+                    "DashTextYOffset": 35.0
                 }
             ]
         }

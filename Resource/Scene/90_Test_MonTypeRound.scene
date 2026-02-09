@@ -1,6 +1,6 @@
 {
     "Name": "90_Test_MonTypeRound",
-    "NumGameObjects": 87,
+    "NumGameObjects": 89,
     "GameObjects": [
         {
             "ID": 0,
@@ -11413,6 +11413,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -11475,6 +11476,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -11570,6 +11572,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -11665,6 +11668,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -11760,6 +11764,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -11855,6 +11860,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -11950,6 +11956,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -12045,6 +12052,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -12140,6 +12148,7 @@
                     "MeshFilePath": "Resource/Model/Cube.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -12642,10 +12651,23 @@
                     "LineMonsterOffset": 1.5,
                     "LineBaseLength": 0.5,
                     "LineHeight": 0.6000000238418579,
+                    "LinePixelsPerMeter": 70.0,
+                    "LineMinPixels": 103.0,
+                    "LinePixelStep": 50.0,
+                    "ReflectIndicatorPrefabName": "Execution_Reflect_Indicator",
+                    "ReflectIndicatorHeight": 1.5,
+                    "ReflectIndicatorOffset": 1.5,
+                    "OffsetScaleZ": 1.0,
+                    "OffsetScaleX": 1.0,
                     "EffectPrefabName": "ExcutionEffectSprite",
                     "EffectDuration": 0.800000011920929,
                     "EffectScaleMultiplier": 1.5,
                     "MonsterDeathDelay": 0.05000000074505806,
+                    "ExecutionTeleportAtNormalizedTime": 0.5,
+                    "ExecutionMinDuration": 0.4000000059604645,
+                    "TeleportAfterimageNumSlices": 32,
+                    "TeleportAfterimageUseDefaultGradient": false,
+                    "TeleportAfterimageTrailGradient": 0.9700000286102295,
                     "TriggerWaitFramesRequired": 1
                 },
                 {
@@ -13189,7 +13211,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -13410,7 +13433,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -13631,7 +13655,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -14043,7 +14068,8 @@
                     "Active": true,
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
-                    "Bold": false
+                    "Bold": false,
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -17493,78 +17519,6 @@
         },
         {
             "ID": 71,
-            "Name": "TestRotator",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 2.5,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 0.12999999523162842,
-                        "y": 0.20000000298023224,
-                        "z": 1.2999999523162842
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.7480000257492065,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.309999942779541,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "OrbitScript",
-                    "Active": true,
-                    "PlayerObjectName": "Player",
-                    "AimPointerMeshObjectName": "AimPointerMesh",
-                    "FixedY": 2.5,
-                    "OrbitRadius": 1.399999976158142,
-                    "RecoilOffsetZ": -0.3700000047683716,
-                    "RecoilOffsetY": 0.4000000059604645,
-                    "RecoilRotationX": 30.0
-                }
-            ]
-        },
-        {
-            "ID": 72,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -17594,6 +17548,7 @@
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -17631,7 +17586,7 @@
             ]
         },
         {
-            "ID": 73,
+            "ID": 72,
             "Name": "Canvas_Message",
             "Active": true,
             "Components": [
@@ -17686,7 +17641,7 @@
             ]
         },
         {
-            "ID": 74,
+            "ID": 73,
             "Name": "UIToastPopUp",
             "Active": true,
             "Components": [
@@ -17807,7 +17762,7 @@
             ]
         },
         {
-            "ID": 75,
+            "ID": 74,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -17912,7 +17867,7 @@
             ]
         },
         {
-            "ID": 76,
+            "ID": 75,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -17983,7 +17938,7 @@
             ]
         },
         {
-            "ID": 77,
+            "ID": 76,
             "Name": "TemperManagerTestScript",
             "Active": true,
             "Components": [
@@ -18010,7 +17965,7 @@
             ]
         },
         {
-            "ID": 78,
+            "ID": 77,
             "Name": "Monster_RoundType_Gray",
             "Active": false,
             "Components": [
@@ -18056,12 +18011,15 @@
                     "FireRate": 0.009999999776482582,
                     "BulletSpeed": 0.0,
                     "BulletLifetime": 0.0,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "OwnGravity": 9.800000190734863,
                     "MinLaunchAngle": 20.0,
                     "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18077,6 +18035,7 @@
                     "RaycastDetectionRange": 100.0,
                     "PlayerIgnoreCountMin": 1,
                     "PlayerIgnoreCountMax": 3,
+                    "WallCollisionCooldown": 0.10000000149011612,
                     "BoundaryMinX": -29.700000762939453,
                     "BoundaryMaxX": 30.0,
                     "BoundaryMinZ": -19.350000381469727,
@@ -18091,6 +18050,7 @@
                     "MeshFilePath": "Resource/Model/crystal_sphere/white/crystal_sphere_white.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -18158,7 +18118,7 @@
             ]
         },
         {
-            "ID": 79,
+            "ID": 78,
             "Name": "Monster_RoundType_Green",
             "Active": false,
             "Components": [
@@ -18198,6 +18158,7 @@
                     "MeshFilePath": "Resource/Model/crystal_sphere/green/crystal_sphere_green.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -18248,12 +18209,15 @@
                     "FireRate": 5.0,
                     "BulletSpeed": 10.0,
                     "BulletLifetime": 4.0,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "OwnGravity": 22.0,
                     "MinLaunchAngle": 30.0,
                     "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18299,7 +18263,7 @@
             ]
         },
         {
-            "ID": 80,
+            "ID": 79,
             "Name": "Monster_RoundType_Blue",
             "Active": false,
             "Components": [
@@ -18329,6 +18293,7 @@
                     "MeshFilePath": "Resource/Model/crystal_sphere/white/crystal_sphere_white.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -18392,15 +18357,18 @@
                     "DetectionRange": 15.0,
                     "AttackRange": 5.0,
                     "RotationSpeed": 2.0,
-                    "FireRate": 100.0,
+                    "FireRate": 0.0,
                     "BulletSpeed": 15.0,
                     "BulletLifetime": 10.0,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "OwnGravity": 9.800000190734863,
                     "MinLaunchAngle": 20.0,
                     "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": true,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18411,10 +18379,15 @@
                     "AnimName_Repositioning": "Repositioning",
                     "AnimName_Fragile": "Fragile",
                     "AnimName_Dead": "Dead",
-                    "RoamingDurationMin": 1.0,
-                    "RoamingDurationMax": 3.0,
-                    "TurnScaleMin": 30.0,
-                    "MaxTurnScale": 70.0,
+                    "IdleMoveTimeLimit": 7.0,
+                    "TargetReachDistance": 2.0,
+                    "TargetDistanceMin": 6.0,
+                    "TargetDistanceMax": 12.0,
+                    "TargetSafetyMargin": 1,
+                    "OscillationAmplitudeMin": 0.5,
+                    "OscillationAmplitudeMax": 3.0,
+                    "OscillationSpeedMultiplier": 5.0,
+                    "CollisionReflectDistance": 2.0,
                     "DamageCooldown": 1.0,
                     "EngageMoveSpeed": 19.0,
                     "PlayerIgnoreDuration": 3.0
@@ -18442,7 +18415,7 @@
             ]
         },
         {
-            "ID": 81,
+            "ID": 80,
             "Name": "Monster_RoundType_Red",
             "Active": false,
             "Components": [
@@ -18472,6 +18445,7 @@
                     "MeshFilePath": "Resource/Model/crystal_sphere/red/crystal_sphere_red.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -18555,15 +18529,18 @@
                     "DetectionRange": 15.0,
                     "AttackRange": 12.0,
                     "RotationSpeed": 2.0,
-                    "FireRate": 3.0,
+                    "FireRate": 0.0,
                     "BulletSpeed": 15.0,
                     "BulletLifetime": 5.0,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "OwnGravity": 25.0,
                     "MinLaunchAngle": 20.0,
                     "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": true,
                     "IdleWaitTime": 1.0,
                     "AttackAnimationDuration": 1.0,
                     "AnimName_Idle": "Idle",
@@ -18600,7 +18577,7 @@
             ]
         },
         {
-            "ID": 82,
+            "ID": 81,
             "Name": "LandingPointCheckDebugTrg",
             "Active": true,
             "Components": [
@@ -18649,6 +18626,7 @@
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -18680,7 +18658,7 @@
             ]
         },
         {
-            "ID": 83,
+            "ID": 82,
             "Name": "MonsterUpdateSwitch",
             "Active": true,
             "Components": [
@@ -18713,148 +18691,7 @@
             ]
         },
         {
-            "ID": 84,
-            "Name": "Player",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 0.019999999552965164,
-                        "y": 0.019999999552965164,
-                        "z": 0.019999999552965164
-                    }
-                },
-                {
-                    "Type": "PlayerControllerScript",
-                    "Active": true,
-                    "MovementAcceleration": 50.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 5.5,
-                    "RotationSpeed": 20.0,
-                    "BaseAtkDmg": 10.0,
-                    "BaseAtkSpeed": 1.399999976158142,
-                    "BaseBulletLifetime": 3.0,
-                    "BaseBulletRange": 10.0,
-                    "BaseBulletSizeScale": 1.0,
-                    "BaseBulletSpeed": 15.0,
-                    "BulletStartOffsetY": 1.7000000476837158,
-                    "BulletStartOffsetForward": -0.5,
-                    "PlayerAnimMeshObjectName": "PlayerAnimMesh",
-                    "BulletFireSocketName": "BulletFireSocket",
-                    "AimPointerObjectName": "AimPointer",
-                    "FSMInitialized": false,
-                    "ExecutionRange": 20.0,
-                    "CollisionPushBackForce": 0.5,
-                    "SlidingSpeedMultiplier": 0.699999988079071,
-                    "DashDuration": 0.30000001192092896,
-                    "DashImpulseMultiplier": 6.0,
-                    "DashDecayRate": 2.0,
-                    "DashAfterimageCutoffRatio": 0.4000000059604645,
-                    "DashCooldown": 0.20000000298023224,
-                    "MaxDashCount": 3,
-                    "DashRechargeTime": 1.0
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 5.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 58
-                },
-                {
-                    "Type": "BulletFactory",
-                    "Active": true
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        1.8600000143051147,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 1,
-                    "materialType": 0,
-                    "radius": 0.5899999737739563,
-                    "height": 4.75
-                },
-                {
-                    "Type": "AimModeController",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorSize": {
-                        "x": 30.0,
-                        "y": 30.0
-                    },
-                    "TargetPlaneY": 1.5,
-                    "AimYOffsetWhenMoving": 0.0,
-                    "CursorTexturesByState": [
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
-                }
-            ]
-        },
-        {
-            "ID": 85,
+            "ID": 83,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -18891,6 +18728,7 @@
                     "AnimName_WalkBackward": "WalkBackward",
                     "AnimName_Fire": "Fire",
                     "AnimName_Dash": "Dash",
+                    "AnimName_Execution": "Execution",
                     "FireAnimShootFrameTime": 0.36000001430511475,
                     "UpperBodyAimOffsetDeg": 90.0,
                     "UpperBodyYawScale": 2.0,
@@ -19068,17 +18906,17 @@
             ]
         },
         {
-            "ID": 86,
-            "Name": "Monster_RoundType_Purple",
+            "ID": 84,
+            "Name": "Monster_RoundType_Blue",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -8.818670272827148,
-                        "y": 1.5000009536743164,
-                        "z": -0.6432645320892334
+                        "x": -20.9456787109375,
+                        "y": 1.4999995231628418,
+                        "z": 13.271384239196777
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -19093,39 +18931,30 @@
                     }
                 },
                 {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 10.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 42
-                },
-                {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/green/crystal_sphere_green.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sphere/blue/crystal_sphere_blue.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.5868721008300781,
-                        "y": 0.0,
+                        "x": 0.0,
+                        "y": 0.24710440635681152,
                         "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
-                        "x": 0.8648648262023926,
-                        "y": 0.0,
+                        "x": 0.0,
+                        "y": 0.13127398490905762,
                         "z": 1.0
                     },
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
+                    "MaterialEmissiveIntensity": 5.949999809265137,
                     "OverrideMaterial": true,
                     "CastShadow": false,
                     "CullMode": 1,
@@ -19137,10 +18966,74 @@
                     ]
                 },
                 {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
                     "Type": "LogicFSM",
                     "Active": true,
                     "CurrentState": "",
                     "States": []
+                },
+                {
+                    "Type": "MonsterRoundBlue",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 100.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 6.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 12.0,
+                    "AttackRange": 5.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 0.0,
+                    "BulletSpeed": 15.0,
+                    "BulletLifetime": 10.0,
+                    "BulletScale": 1.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": true,
+                    "IdleWaitTime": 1.0,
+                    "AttackAnimationDuration": 1.0,
+                    "AnimName_Idle": "Idle",
+                    "AnimName_IdleMove": "IdleMove",
+                    "AnimName_EngageMove": "EngageMove",
+                    "AnimName_EngageStop": "EngageStop",
+                    "AnimName_EngageAttack": "EngageAttack",
+                    "AnimName_Repositioning": "Repositioning",
+                    "AnimName_Fragile": "Fragile",
+                    "AnimName_Dead": "Dead",
+                    "IdleMoveTimeLimit": 7.0,
+                    "TargetReachDistance": 2.0,
+                    "TargetDistanceMin": 4.0,
+                    "TargetDistanceMax": 8.0,
+                    "TargetSafetyMargin": 1,
+                    "OscillationAmplitudeMin": 0.5,
+                    "OscillationAmplitudeMax": 2.0,
+                    "OscillationSpeedMultiplier": 5.0,
+                    "CollisionReflectDistance": 2.0,
+                    "DamageCooldown": 1.0,
+                    "EngageMoveSpeed": 19.0,
+                    "PlayerIgnoreDuration": 3.0
                 },
                 {
                     "Type": "CapsuleCollider",
@@ -19163,46 +19056,369 @@
                     "height": 8.199999809265137
                 },
                 {
-                    "Type": "MonsterRoundPurple",
+                    "Type": "PathfindingAgent",
                     "Active": true,
-                    "MovementAcceleration": 80.0,
+                    "PathUpdateInterval": 1.0,
+                    "WaypointReachDistance": 0.5,
+                    "TargetMoveThreshold": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 85,
+            "Name": "Player",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "PlayerControllerScript",
+                    "Active": true,
+                    "MovementAcceleration": 50.0,
                     "MovementDeceleration": 100.0,
                     "MaxSpeedBrakeFactor": 15.0,
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 0,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 14.0,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 15.0,
-                    "AttackRange": 10.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 0.0,
-                    "BulletSpeed": 0.0,
-                    "BulletLifetime": 0.0,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 9.800000190734863,
-                    "MinLaunchAngle": 20.0,
-                    "MaxLaunchAngle": 70.0,
-                    "IdleWaitTime": 0.0010000000474974513,
-                    "AttackAnimationDuration": 1.0,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_IdleMove": "IdleMove",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Repositioning": "Repositioning",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead",
-                    "SplitCount": 0,
-                    "DamageCooldown": 1.0,
-                    "PrefabName": "Monster_RoundType_Purple"
+                    "MoveSpeed": 13.0,
+                    "RotationSpeed": 20.0,
+                    "BaseAtkDmg": 10.0,
+                    "BaseAtkSpeed": 1.399999976158142,
+                    "BaseBulletLifetime": 3.0,
+                    "BaseBulletRange": 10.0,
+                    "BaseBulletSizeScale": 1.0,
+                    "BaseBulletSpeed": 15.0,
+                    "BulletStartOffsetY": 1.7000000476837158,
+                    "BulletStartOffsetForward": -0.5,
+                    "PlayerAnimMeshObjectName": "PlayerAnimMesh",
+                    "BulletFireSocketName": "BulletFireSocket",
+                    "AimPointerObjectName": "AimPointer",
+                    "FSMInitialized": false,
+                    "ExecutionRange": 10.0,
+                    "CollisionPushBackForce": 0.5,
+                    "SlidingSpeedMultiplier": 0.699999988079071,
+                    "DashDuration": 0.30000001192092896,
+                    "DashImpulseMultiplier": 6.0,
+                    "DashDecayRate": 2.0,
+                    "DashAfterimageCutoffRatio": 0.4000000059604645,
+                    "DashCooldown": 0.20000000298023224,
+                    "MaxDashCount": 3,
+                    "DashRechargeTime": 1.0,
+                    "FragileGaugeCurrent": 0.0,
+                    "FragileGaugeMax": 100.0,
+                    "FragileGaugeRisePerSecond": 15.0
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 5.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.8600000143051147,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 1,
+                    "materialType": 0,
+                    "radius": 0.5899999737739563,
+                    "height": 4.75
+                },
+                {
+                    "Type": "AimModeController",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorSize": {
+                        "x": 30.0,
+                        "y": 30.0
+                    },
+                    "TargetPlaneY": 1.5,
+                    "AimYOffsetWhenMoving": 0.0,
+                    "CursorTexturesByState": [
+                        "Resource/Texture/UI/Image/Cursor_Default.png",
+                        "Resource/Texture/UI/Image/Cursor_Click.png",
+                        "Resource/Texture/UI/Image/Aim_Idle.png",
+                        "Resource/Texture/UI/Image/Aim_Firing.png",
+                        "Resource/Texture/UI/Image/Aim_Execute.png"
+                    ],
+                    "CursorPivotsByState": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    ],
+                    "CursorState": 0
+                }
+            ]
+        },
+        {
+            "ID": 86,
+            "Name": "AimPointerMesh",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": false,
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "AimPointerMeshScript",
+                    "Active": true,
+                    "AimPointerObjectName": "Player",
+                    "FixedY": 2.200000047683716
+                }
+            ]
+        },
+        {
+            "ID": 87,
+            "Name": "AimPointerCanvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "AimModeController",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorSize": {
+                        "x": 30.0,
+                        "y": 30.0
+                    },
+                    "TargetPlaneY": 1.5,
+                    "AimYOffsetWhenMoving": 0.0,
+                    "CursorTexturesByState": [
+                        "Resource/Texture/UI/Image/Cursor_Default.png",
+                        "Resource/Texture/UI/Image/Cursor_Click.png",
+                        "Resource/Texture/UI/Image/Aim_Idle.png",
+                        "Resource/Texture/UI/Image/Aim_Execute.png",
+                        "Resource/Texture/UI/Image/Aim_Execute.png"
+                    ],
+                    "CursorPivotsByState": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    ],
+                    "CursorState": 0
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 10
+                }
+            ]
+        },
+        {
+            "ID": 88,
+            "ParentID": 87,
+            "Name": "AimCursor",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
                 }
             ]
         }
