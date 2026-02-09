@@ -37,6 +37,11 @@ namespace game
 		{
 			m_lifetime = params.lifetime;
 		}
+		
+		// ─────────────────────────────────────────────
+		// 스케일 즉시 적용 (Start() 호출 전에 Prefab Scale 덮어쓰기)
+		// ─────────────────────────────────────────────
+		GetTransform()->SetLocalScale(engine::Vector3(m_params.scale, m_params.scale, m_params.scale));
 	}
 
 	//void BulletMonster::SetupField(float radius, const BulletParams& params)
