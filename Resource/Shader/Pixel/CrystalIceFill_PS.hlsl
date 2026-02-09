@@ -81,29 +81,53 @@ float4 main(PS_INPUT_ICEFILL input, bool isFrontFace : SV_IsFrontFace) : SV_Targ
         float3 f = FresnelSchlick(f0, hDotV);
         float3 kd = lerp(1.0f - f, 0.0f, metalness);
         float3 diffuseBRDF = kd * baseColor.rgb / PI;
-        // 표준 Cook-Torrance BRDF: 분모에 충분한 epsilon 사용, nDotV가 너무 작을 때 specular 클램핑
-        float specularDenom = max(0.001f, 4.0f * nDotL * nDotV);
-        float3 specularBRDF = (f * d * g) / specularDenom;
-        // roughness가 높고 테두리(nDotV 작음)일 때 specular 억제
-        specularBRDF *= saturate(nDotV + roughness);
+        float3 specularBRDF = (f * d * g) / max(EPSILON, 4.0f * nDotL * nDotV);
         directLighting = (diffuseBRDF + specularBRDF) * g_mainLightColor * g_mainLightIntensity * nDotL * shadowFactor;
     }
 
     float3 ambientLighting = 0.0f;
     if (g_useIBL)
     {
-        float3 f = FresnelSchlick(f0, nDotV);
+        float3 f = FresnelSchlickRoughness(f0, nDotV, roughness);
+        
         float3 kd = lerp(1.0f - f, 0.0f, metalness);
-        float3 irradiance = g_texIBLIrradiance.Sample(g_samLinear, n).rgb;
+        
+        float3 irradiance;
+        float3 prefilteredColor;
+        
+        float3 viewReflect = reflect(-v, n);
+        
+        if (g_useIBLTexture > 0.5f)
+        {
+            // 텍스처 사용
+            irradiance = g_texIBLIrradiance.Sample(g_samLinear, n).rgb;
+            
+            uint specularTextureLevels, width, height;
+            g_texIBLSpecular.GetDimensions(0, width, height, specularTextureLevels);
+            
+            
+            prefilteredColor = g_texIBLSpecular.SampleLevel(g_samLinear, viewReflect, roughness * (specularTextureLevels - 1)).rgb;
+        }
+        else
+        {
+            // 색상 사용
+            irradiance = g_iblAmbientColor;
+            prefilteredColor = g_iblAmbientColor;
+        }
+    
         float3 diffuseIBL = kd * baseColor.rgb / PI * irradiance;
-        uint specularTextureLevels, width, height;
-        g_texIBLSpecular.GetDimensions(0, width, height, specularTextureLevels);
-        float3 viewReflect = -(v - 2.0f * nDotV * n);
-        float3 prefilteredColor = g_texIBLSpecular.SampleLevel(g_samLinear, viewReflect, roughness * specularTextureLevels).rgb;
+    
         float2 specularBRDF = g_texIBLSpecularBRDFLUT.Sample(g_samClamp, float2(nDotV, roughness)).rg;
-        // roughness가 높을 때 IBL specular를 억제 (roughness=1일 때 거의 0)
-        float specularIBLScale = saturate(1.0f - roughness * roughness);
+    
+        float specularSuppressor = saturate(1.0f - roughness * roughness);
+        float specularIBLScale = lerp(specularSuppressor, 1.0f, metalness);
+
         float3 specularIBL = prefilteredColor * (f0 * specularBRDF.x + specularBRDF.y) * specularIBLScale;
+
+        float horizonOcclusion = saturate(1.0f + dot(viewReflect, n));
+        horizonOcclusion *= horizonOcclusion;
+        specularIBL *= horizonOcclusion;
+
         ambientLighting = (diffuseIBL + specularIBL) * ao;
     }
 

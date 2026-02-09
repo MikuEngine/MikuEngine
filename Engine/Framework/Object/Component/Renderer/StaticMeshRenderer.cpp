@@ -51,10 +51,25 @@ namespace engine
 
     void StaticMeshRenderer::Initialize()
     {
-        m_vsFilePath = "Resource/Shader/Vertex/Static_VS.hlsl";
-        m_opaquePSFilePath = "Resource/Shader/Pixel/GBuffer_PS.hlsl";
-        m_cutoutPSFilePath = "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl";
-        m_transparentPSFilePath = "Resource/Shader/Pixel/LightTransparent_PS.hlsl";
+        if (m_vsFilePath.empty())
+        {
+            m_vsFilePath = "Resource/Shader/Vertex/Static_VS.hlsl";
+        }
+
+        if (m_opaquePSFilePath.empty())
+        {
+            m_opaquePSFilePath = "Resource/Shader/Pixel/GBuffer_PS.hlsl";
+        }
+
+        if (m_cutoutPSFilePath.empty())
+        {
+            m_cutoutPSFilePath = "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl";
+        }
+
+        if (m_transparentPSFilePath.empty())
+        {
+            m_transparentPSFilePath = "Resource/Shader/Pixel/LightTransparent_PS.hlsl";
+        }
 
         m_vs = ResourceManager::Get().GetOrCreateVertexShader(m_vsFilePath);
         m_shadowVS = ResourceManager::Get().GetOrCreateVertexShader("Resource/Shader/Vertex/Shadow_Static_VS.hlsl");

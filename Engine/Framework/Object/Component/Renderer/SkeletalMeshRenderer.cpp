@@ -53,12 +53,25 @@ namespace engine
 
     void SkeletalMeshRenderer::Initialize()
     {
-        // 셰이더 경로 기본값 설정
-        // Skinned VS / GBuffer PS
-        m_vsFilePath = "Resource/Shader/Vertex/Skinned_VS.hlsl"; 
-        m_opaquePSFilePath = "Resource/Shader/Pixel/GBuffer_PS.hlsl";
-        m_cutoutPSFilePath = "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl";
-        m_transparentPSFilePath = "Resource/Shader/Pixel/LightTransparent_PS.hlsl";
+        if (m_vsFilePath.empty())
+        {
+            m_vsFilePath = "Resource/Shader/Vertex/Skinned_VS.hlsl";
+        }
+
+        if (m_opaquePSFilePath.empty())
+        {
+            m_opaquePSFilePath = "Resource/Shader/Pixel/GBuffer_PS.hlsl";
+        }
+
+        if (m_cutoutPSFilePath.empty())
+        {
+            m_cutoutPSFilePath = "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl";
+        }
+
+        if (m_transparentPSFilePath.empty())
+        {
+            m_transparentPSFilePath = "Resource/Shader/Pixel/LightTransparent_PS.hlsl";
+        }
 
         m_objectConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Object", sizeof(CbObject));
         m_boneConstantBuffer = ResourceManager::Get().GetOrCreateConstantBuffer("Bone", sizeof(CbBone));

@@ -1,6 +1,6 @@
 {
     "Name": "MaterialTest",
-    "NumGameObjects": 39,
+    "NumGameObjects": 44,
     "GameObjects": [
         {
             "ID": 0,
@@ -45,15 +45,61 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -7.300000190734863,
-                        "y": 6.0,
-                        "z": -8.800000190734863
+                        "x": -18.968385696411133,
+                        "y": 11.408896446228027,
+                        "z": 10.951393127441406
                     },
                     "Rotation": {
-                        "x": -0.6231755614280701,
-                        "y": 0.33414381742477417,
-                        "z": 0.33414384722709656,
-                        "w": 0.6231756806373596
+                        "x": 0.5566703677177429,
+                        "y": -0.383022278547287,
+                        "z": 0.32139381766319275,
+                        "w": 0.663413941860199
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 0.9999997019767761,
+                        "z": 0.9999995231628418
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 1.0,
+                    "Range": 58.599998474121094,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.004999999888241291,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "Name": "PointLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 1.3926000595092773,
+                        "y": 3.940192461013794,
+                        "z": -11.623032569885254
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
                     },
                     "Scale": {
                         "x": 1.0,
@@ -70,21 +116,67 @@
                         "y": 1.0,
                         "z": 1.0
                     },
-                    "Intensity": 4.5,
-                    "Range": 58.599998474121094,
+                    "Intensity": 23.200000762939453,
+                    "Range": 18.600000381469727,
                     "Angle": 45.0,
                     "Near": 90000.0,
                     "Far": 100000.0,
                     "ForwardDistance": 1000.0,
                     "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 0.004999999888241291,
-                    "CastShadows": false
+                    "ShadowBias": 0.019999999552965164,
+                    "CastShadows": true
                 }
             ]
         },
         {
-            "ID": 2,
-            "Name": "Roughness 0.0, Metalness 0.0",
+            "ID": 3,
+            "Name": "SpotLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 4.575122833251953,
+                        "z": 3.062042713165283
+                    },
+                    "Rotation": {
+                        "x": 0.8813034296035767,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.4725508391857147
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 47.099998474121094,
+                    "Range": 11.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": true
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "Name": "Skybox",
             "Active": true,
             "Components": [
                 {
@@ -93,7 +185,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 5.0
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -108,11 +200,230 @@
                     }
                 },
                 {
+                    "Type": "EnvironmentSettings",
+                    "Active": true,
+                    "SkyboxTexturePath": "",
+                    "IBLIrradiancePath": "",
+                    "IBLSpecularPath": "",
+                    "IBLBrdfLutPath": "",
+                    "SkyboxColor": {
+                        "x": -1.0,
+                        "y": -1.0,
+                        "z": -1.0
+                    },
+                    "SkyboxHorizonColor": {
+                        "x": -1.0,
+                        "y": -1.0,
+                        "z": -1.0
+                    },
+                    "IBLAmbientColor": {
+                        "x": -1.0,
+                        "y": -1.0,
+                        "z": -1.0
+                    },
+                    "UseSkyboxTexture": 1,
+                    "UseIBLTexture": 1,
+                    "UseIBL": 1
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "Name": "PostProcess",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "PostProcessingSettings",
+                    "Active": true,
+                    "BloomStrength": 0.20000000298023224,
+                    "BloomThreshold": 3.0,
+                    "BloomSoftKnee": 1.600000023841858,
+                    "EnableBloom": 1,
+                    "Exposure": -2.0,
+                    "EnableToneMapping": -1,
+                    "FXAAQualitySubpix": -1.0,
+                    "FXAAQualityEdgeThreshold": -1.0,
+                    "FXAAQualityEdgeThresholdMin": -1.0,
+                    "EnableFXAA": -1
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "Name": "Zelda",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.05000000074505806,
+                        "y": 0.05000000074505806,
+                        "z": 0.05000000074505806
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/zeldaPosed001.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true,
+                    "CullMode": 0,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "Name": "Girl",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -10.28337574005127
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 3.0,
+                        "y": 3.0,
+                        "z": 3.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Girl.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": true,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "Name": "Roughness 0.0, Metalness 0.0",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -1.4901161193847656e-08,
+                        "y": 0.0,
+                        "z": 5.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -131,15 +442,21 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 3,
-            "ParentID": 2,
+            "ID": 9,
+            "ParentID": 8,
             "Name": "Roughness 0.2, Metalness 0.0",
             "Active": true,
             "Components": [
@@ -167,8 +484,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -187,15 +505,21 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 4,
-            "ParentID": 2,
+            "ID": 10,
+            "ParentID": 8,
             "Name": "Roughness 0.4, Metalness 0.0",
             "Active": true,
             "Components": [
@@ -223,8 +547,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -243,15 +568,21 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 5,
-            "ParentID": 2,
+            "ID": 11,
+            "ParentID": 8,
             "Name": "Roughness 0.6, Metalness 0.0",
             "Active": true,
             "Components": [
@@ -279,8 +610,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -299,15 +631,21 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 6,
-            "ParentID": 2,
+            "ID": 12,
+            "ParentID": 8,
             "Name": "Roughness 0.8, Metalness 0.0",
             "Active": true,
             "Components": [
@@ -335,8 +673,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -355,15 +694,21 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 7,
-            "ParentID": 2,
+            "ID": 13,
+            "ParentID": 8,
             "Name": "Roughness 1.0, Metalness 0.0",
             "Active": true,
             "Components": [
@@ -391,8 +736,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -411,14 +757,20 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 8,
+            "ID": 14,
             "Name": "Roughness 0.0, Metalness 0.2",
             "Active": true,
             "Components": [
@@ -446,8 +798,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -466,15 +819,21 @@
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 9,
-            "ParentID": 8,
+            "ID": 15,
+            "ParentID": 14,
             "Name": "Roughness 0.2, Metalness 0.2",
             "Active": true,
             "Components": [
@@ -502,8 +861,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -522,15 +882,21 @@
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 10,
-            "ParentID": 8,
+            "ID": 16,
+            "ParentID": 14,
             "Name": "Roughness 0.4, Metalness 0.2",
             "Active": true,
             "Components": [
@@ -558,8 +924,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -578,15 +945,21 @@
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 8,
+            "ID": 17,
+            "ParentID": 14,
             "Name": "Roughness 0.6, Metalness 0.2",
             "Active": true,
             "Components": [
@@ -614,8 +987,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -634,15 +1008,21 @@
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 8,
+            "ID": 18,
+            "ParentID": 14,
             "Name": "Roughness 0.8, Metalness 0.2",
             "Active": true,
             "Components": [
@@ -670,8 +1050,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -690,15 +1071,21 @@
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 8,
+            "ID": 19,
+            "ParentID": 14,
             "Name": "Roughness 1.0, Metalness 0.2",
             "Active": true,
             "Components": [
@@ -726,8 +1113,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -746,14 +1134,20 @@
                     "MaterialMetalness": 0.20000000298023224,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 14,
+            "ID": 20,
             "Name": "Roughness 0.0, Metalness 0.4",
             "Active": true,
             "Components": [
@@ -781,8 +1175,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -801,15 +1196,21 @@
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 14,
+            "ID": 21,
+            "ParentID": 20,
             "Name": "Roughness 0.2, Metalness 0.4",
             "Active": true,
             "Components": [
@@ -837,8 +1238,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -857,15 +1259,21 @@
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 14,
+            "ID": 22,
+            "ParentID": 20,
             "Name": "Roughness 0.4, Metalness 0.4",
             "Active": true,
             "Components": [
@@ -893,8 +1301,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -913,15 +1322,21 @@
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 14,
+            "ID": 23,
+            "ParentID": 20,
             "Name": "Roughness 0.6, Metalness 0.4",
             "Active": true,
             "Components": [
@@ -949,8 +1364,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -969,15 +1385,21 @@
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 18,
-            "ParentID": 14,
+            "ID": 24,
+            "ParentID": 20,
             "Name": "Roughness 0.8, Metalness 0.4",
             "Active": true,
             "Components": [
@@ -1005,8 +1427,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1025,15 +1448,21 @@
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 19,
-            "ParentID": 14,
+            "ID": 25,
+            "ParentID": 20,
             "Name": "Roughness 1.0, Metalness 0.4",
             "Active": true,
             "Components": [
@@ -1061,8 +1490,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1081,14 +1511,20 @@
                     "MaterialMetalness": 0.4000000059604645,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 20,
+            "ID": 26,
             "Name": "Roughness 0.0, Metalness 0.6",
             "Active": true,
             "Components": [
@@ -1116,8 +1552,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1136,15 +1573,21 @@
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 20,
+            "ID": 27,
+            "ParentID": 26,
             "Name": "Roughness 0.2, Metalness 0.6",
             "Active": true,
             "Components": [
@@ -1172,8 +1615,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1192,15 +1636,21 @@
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 22,
-            "ParentID": 20,
+            "ID": 28,
+            "ParentID": 26,
             "Name": "Roughness 0.4, Metalness 0.6",
             "Active": true,
             "Components": [
@@ -1228,8 +1678,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1248,15 +1699,21 @@
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 23,
-            "ParentID": 20,
+            "ID": 29,
+            "ParentID": 26,
             "Name": "Roughness 0.6, Metalness 0.6",
             "Active": true,
             "Components": [
@@ -1284,8 +1741,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1304,15 +1762,21 @@
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 24,
-            "ParentID": 20,
+            "ID": 30,
+            "ParentID": 26,
             "Name": "Roughness 0.8, Metalness 0.6",
             "Active": true,
             "Components": [
@@ -1340,8 +1804,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1360,15 +1825,21 @@
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 25,
-            "ParentID": 20,
+            "ID": 31,
+            "ParentID": 26,
             "Name": "Roughness 1.0, Metalness 0.6",
             "Active": true,
             "Components": [
@@ -1396,8 +1867,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1416,14 +1888,20 @@
                     "MaterialMetalness": 0.6000000238418579,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 26,
+            "ID": 32,
             "Name": "Roughness 0.0, Metalness 0.8",
             "Active": true,
             "Components": [
@@ -1451,8 +1929,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1471,15 +1950,21 @@
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 26,
+            "ID": 33,
+            "ParentID": 32,
             "Name": "Roughness 0.2, Metalness 0.8",
             "Active": true,
             "Components": [
@@ -1507,8 +1992,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1527,15 +2013,21 @@
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 26,
+            "ID": 34,
+            "ParentID": 32,
             "Name": "Roughness 0.4, Metalness 0.8",
             "Active": true,
             "Components": [
@@ -1563,8 +2055,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1583,15 +2076,21 @@
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 26,
+            "ID": 35,
+            "ParentID": 32,
             "Name": "Roughness 0.6, Metalness 0.8",
             "Active": true,
             "Components": [
@@ -1619,8 +2118,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1639,15 +2139,21 @@
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 26,
+            "ID": 36,
+            "ParentID": 32,
             "Name": "Roughness 0.8, Metalness 0.8",
             "Active": true,
             "Components": [
@@ -1675,8 +2181,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1695,15 +2202,21 @@
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 26,
+            "ID": 37,
+            "ParentID": 32,
             "Name": "Roughness 1.0, Metalness 0.8",
             "Active": true,
             "Components": [
@@ -1731,8 +2244,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1751,14 +2265,20 @@
                     "MaterialMetalness": 0.800000011920929,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 32,
+            "ID": 38,
             "Name": "Roughness 0.0, Metalness 1.0",
             "Active": true,
             "Components": [
@@ -1771,9 +2291,9 @@
                         "z": 5.0
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.0,
                         "y": 0.0,
-                        "z": 0.0,
+                        "z": -0.0,
                         "w": 1.0
                     },
                     "Scale": {
@@ -1786,8 +2306,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1806,15 +2327,21 @@
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 32,
+            "ID": 39,
+            "ParentID": 38,
             "Name": "Roughness 0.2, Metalness 1.0",
             "Active": true,
             "Components": [
@@ -1842,8 +2369,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1862,15 +2390,21 @@
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 34,
-            "ParentID": 32,
+            "ID": 40,
+            "ParentID": 38,
             "Name": "Roughness 0.4, Metalness 1.0",
             "Active": true,
             "Components": [
@@ -1898,8 +2432,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1918,15 +2453,21 @@
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 35,
-            "ParentID": 32,
+            "ID": 41,
+            "ParentID": 38,
             "Name": "Roughness 0.6, Metalness 1.0",
             "Active": true,
             "Components": [
@@ -1954,8 +2495,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -1974,15 +2516,21 @@
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 36,
-            "ParentID": 32,
+            "ID": 42,
+            "ParentID": 38,
             "Name": "Roughness 0.8, Metalness 1.0",
             "Active": true,
             "Components": [
@@ -2010,8 +2558,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -2030,15 +2579,21 @@
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         },
         {
-            "ID": 37,
-            "ParentID": 32,
+            "ID": 43,
+            "ParentID": 38,
             "Name": "Roughness 1.0, Metalness 1.0",
             "Active": true,
             "Components": [
@@ -2066,8 +2621,9 @@
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/HighPolySphere.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/HighPolySphere.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -2086,64 +2642,15 @@
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1
-                }
-            ]
-        },
-        {
-            "ID": 38,
-            "Name": "GameObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 0.05000000074505806,
-                        "y": 0.05000000074505806,
-                        "z": 0.05000000074505806
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/zeldaPosed001.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/zeldaPosed001.fbx.socketdata",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
-                    "CullMode": 1
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }

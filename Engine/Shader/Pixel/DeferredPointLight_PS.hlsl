@@ -89,11 +89,7 @@ float4 main(PS_INPUT input) : SV_Target
     float3 kd = lerp(1.0f - f, 0.0f, metalness);
         
     float3 diffuseBRDF = kd * baseColor.rgb / PI;
-    // 표준 Cook-Torrance BRDF: 분모에 충분한 epsilon 사용, nDotV가 너무 작을 때 specular 클램핑
-    float specularDenom = max(0.001f, 4.0f * nDotL * nDotV);
-    float3 specularBRDF = (f * d * g) / specularDenom;
-    // roughness가 높고 테두리(nDotV 작음)일 때 specular 억제
-    specularBRDF *= saturate(nDotV + roughness);
+    float3 specularBRDF = (f * d * g) / max(EPSILON, 4.0f * nDotL * nDotV);
         
     float3 final = (diffuseBRDF + specularBRDF) * g_lightColor * g_lightIntensity * nDotL * pointShadowFactor * attenuation;
 
