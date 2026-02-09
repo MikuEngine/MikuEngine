@@ -42,8 +42,12 @@ namespace game
 
         std::string sceneName = engine::SceneManager::Get().GetScene()->GetName();
 
-        // 로비가 아닐 때만 전투 에임 활성화
-        if (sceneName != GameScene::Name(SceneID::Lobby) && sceneName != GameScene::Name(SceneID::Main))
+        // 타이틀, 튜토리얼, 로비가 아닐 때만 전투 에임 활성화
+        std::string tutorial = GameScene::Name(SceneID::TutorialLobby);
+        std::string main = GameScene::Name(SceneID::Main);
+        std::string lobby = GameScene::Name(SceneID::Lobby);
+
+        if (sceneName != lobby && sceneName != main && sceneName != tutorial)
         {
             SetCombatAimEnabled(true);
         }
