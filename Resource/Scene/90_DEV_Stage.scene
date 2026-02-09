@@ -1,6 +1,6 @@
 {
     "Name": "90_DEV_Stage",
-    "NumGameObjects": 85,
+    "NumGameObjects": 88,
     "GameObjects": [
         {
             "ID": 0,
@@ -3319,6 +3319,10 @@
                     "Active": true,
                     "Duration": 0.15000000596046448,
                     "ClosedOffsetY": -700.0
+                },
+                {
+                    "Type": "UISliderValueTextBinder",
+                    "Active": true
                 }
             ]
         },
@@ -3504,7 +3508,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -10.0
+                        "y": 0.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -3529,8 +3533,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "Text": "뒤로",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 50,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -3725,12 +3729,12 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Value": 1.0,
+                    "Value": 0.5789999961853027,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
-                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -3741,7 +3745,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "HandleColor": {
                         "x": 1.0,
@@ -3808,7 +3812,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3942,13 +3946,13 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
                         "y": 585.0,
-                        "z": 1260.0,
+                        "z": 1133.699951171875,
                         "w": 635.0
                     },
                     "MaskMode": 1,
@@ -4000,18 +4004,18 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 100.0,
-                    "Height": 100.0,
+                    "Width": 30.0,
+                    "Height": 30.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5710999965667725,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5710999965667725,
                         "y": 0.5
                     },
                     "RotationZDeg": 0.0
@@ -4022,7 +4026,7 @@
                     "Layer": 2,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4076,6 +4080,79 @@
         },
         {
             "ID": 48,
+            "ParentID": 47,
+            "Name": "Text_VolumeVal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 10.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 35,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 49,
             "ParentID": 43,
             "Name": "UI_SFXSlider",
             "Active": true,
@@ -4129,12 +4206,12 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Value": 1.0,
+                    "Value": 0.5059999823570251,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
-                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -4145,7 +4222,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "HandleColor": {
                         "x": 1.0,
@@ -4158,8 +4235,8 @@
             ]
         },
         {
-            "ID": 49,
-            "ParentID": 48,
+            "ID": 50,
+            "ParentID": 49,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -4212,7 +4289,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4265,8 +4342,8 @@
             ]
         },
         {
-            "ID": 50,
-            "ParentID": 48,
+            "ID": 51,
+            "ParentID": 49,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -4346,13 +4423,13 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
                         "y": 715.0,
-                        "z": 1260.0,
+                        "z": 1111.800048828125,
                         "w": 765.0
                     },
                     "MaskMode": 1,
@@ -4372,8 +4449,8 @@
             ]
         },
         {
-            "ID": 51,
-            "ParentID": 48,
+            "ID": 52,
+            "ParentID": 49,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -4404,18 +4481,18 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 100.0,
-                    "Height": 100.0,
+                    "Width": 30.0,
+                    "Height": 30.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5053999423980713,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5053999423980713,
                         "y": 0.5
                     },
                     "RotationZDeg": 0.0
@@ -4426,7 +4503,7 @@
                     "Layer": 2,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4479,7 +4556,80 @@
             ]
         },
         {
-            "ID": 52,
+            "ID": 53,
+            "ParentID": 52,
+            "Name": "Text_SFXVal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 10.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 35,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 54,
             "ParentID": 43,
             "Name": "UI_SensitivitySlider",
             "Active": true,
@@ -4536,9 +4686,9 @@
                     "Value": 1.0,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
-                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -4549,7 +4699,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "HandleColor": {
                         "x": 1.0,
@@ -4562,8 +4712,8 @@
             ]
         },
         {
-            "ID": 53,
-            "ParentID": 52,
+            "ID": 55,
+            "ParentID": 54,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -4616,7 +4766,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4669,8 +4819,8 @@
             ]
         },
         {
-            "ID": 54,
-            "ParentID": 52,
+            "ID": 56,
+            "ParentID": 54,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -4750,7 +4900,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
@@ -4776,8 +4926,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 52,
+            "ID": 57,
+            "ParentID": 54,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -4808,18 +4958,18 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 100.0,
-                    "Height": 100.0,
+                    "Width": 30.0,
+                    "Height": 30.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.8333333134651184,
+                        "x": 0.949999988079071,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.8333333134651184,
+                        "x": 0.949999988079071,
                         "y": 0.5
                     },
                     "RotationZDeg": 0.0
@@ -4830,7 +4980,7 @@
                     "Layer": 2,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -4883,7 +5033,80 @@
             ]
         },
         {
-            "ID": 56,
+            "ID": 58,
+            "ParentID": 57,
+            "Name": "Text_SensiVal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 10.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 35,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 59,
             "ParentID": 43,
             "Name": "Text_Sound",
             "Active": true,
@@ -4956,7 +5179,7 @@
             ]
         },
         {
-            "ID": 57,
+            "ID": 60,
             "ParentID": 43,
             "Name": "Text_Effect",
             "Active": true,
@@ -5029,7 +5252,7 @@
             ]
         },
         {
-            "ID": 58,
+            "ID": 61,
             "ParentID": 43,
             "Name": "Text_Sound",
             "Active": true,
@@ -5102,7 +5325,7 @@
             ]
         },
         {
-            "ID": 59,
+            "ID": 62,
             "ParentID": 12,
             "Name": "Canvas_HUD",
             "Active": true,
@@ -5159,8 +5382,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 59,
+            "ID": 63,
+            "ParentID": 62,
             "Name": "HUD",
             "Active": true,
             "Components": [
@@ -5273,8 +5496,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 60,
+            "ID": 64,
+            "ParentID": 63,
             "Name": "Profile",
             "Active": true,
             "Components": [
@@ -5380,8 +5603,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 59,
+            "ID": 65,
+            "ParentID": 62,
             "Name": "Currency",
             "Active": true,
             "Components": [
@@ -5437,8 +5660,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 62,
+            "ID": 66,
+            "ParentID": 65,
             "Name": "Ruby",
             "Active": true,
             "Components": [
@@ -5510,8 +5733,8 @@
             ]
         },
         {
-            "ID": 64,
-            "ParentID": 63,
+            "ID": 67,
+            "ParentID": 66,
             "Name": "Ruby Count",
             "Active": true,
             "Components": [
@@ -5583,8 +5806,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 62,
+            "ID": 68,
+            "ParentID": 65,
             "Name": "Sapphire",
             "Active": true,
             "Components": [
@@ -5656,8 +5879,8 @@
             ]
         },
         {
-            "ID": 66,
-            "ParentID": 65,
+            "ID": 69,
+            "ParentID": 68,
             "Name": "Sapphire Count",
             "Active": true,
             "Components": [
@@ -5729,8 +5952,8 @@
             ]
         },
         {
-            "ID": 67,
-            "ParentID": 62,
+            "ID": 70,
+            "ParentID": 65,
             "Name": "Emerald",
             "Active": true,
             "Components": [
@@ -5802,8 +6025,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 67,
+            "ID": 71,
+            "ParentID": 70,
             "Name": "Emerald Count",
             "Active": true,
             "Components": [
@@ -5875,8 +6098,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 59,
+            "ID": 72,
+            "ParentID": 62,
             "Name": "Fragile Gauge",
             "Active": true,
             "Components": [
@@ -5932,8 +6155,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 69,
+            "ID": 73,
+            "ParentID": 72,
             "Name": "Fragile Gauge Progress",
             "Active": true,
             "Components": [
@@ -6011,8 +6234,8 @@
             ]
         },
         {
-            "ID": 71,
-            "ParentID": 70,
+            "ID": 74,
+            "ParentID": 73,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -6118,8 +6341,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 70,
+            "ID": 75,
+            "ParentID": 73,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -6225,8 +6448,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 69,
+            "ID": 76,
+            "ParentID": 72,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -6298,7 +6521,7 @@
             ]
         },
         {
-            "ID": 74,
+            "ID": 77,
             "ParentID": 12,
             "Name": "Canvas",
             "Active": true,
@@ -6355,8 +6578,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 74,
+            "ID": 78,
+            "ParentID": 77,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -6469,7 +6692,7 @@
             ]
         },
         {
-            "ID": 76,
+            "ID": 79,
             "ParentID": 12,
             "Name": "Canvas_KillPopUp",
             "Active": true,
@@ -6526,7 +6749,7 @@
             ]
         },
         {
-            "ID": 77,
+            "ID": 80,
             "ParentID": 12,
             "Name": "Script_Controller",
             "Active": true,
@@ -6569,7 +6792,7 @@
             ]
         },
         {
-            "ID": 78,
+            "ID": 81,
             "ParentID": 12,
             "Name": "AimPointerCanvas",
             "Active": true,
@@ -6618,47 +6841,6 @@
                     "RotationZDeg": 0.0
                 },
                 {
-                    "Type": "AimModeController",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorSize": {
-                        "x": 30.0,
-                        "y": 30.0
-                    },
-                    "TargetPlaneY": 1.5,
-                    "AimYOffsetWhenMoving": 0.0,
-                    "CursorTexturesByState": [
-                        "Resource/Texture/UI/Image/Cursor_Default.png",
-                        "Resource/Texture/UI/Image/Cursor_Click.png",
-                        "Resource/Texture/UI/Image/Aim_Idle.png",
-                        "Resource/Texture/UI/Image/Aim_Execute.png",
-                        "Resource/Texture/UI/Image/Aim_Execute.png"
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
-                },
-                {
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
@@ -6667,8 +6849,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 78,
+            "ID": 82,
+            "ParentID": 81,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -6721,7 +6903,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Image/Cursor_Default.png",
+                    "TexturePath": "Resource/Texture/UI/Cursor/Cursor_Default.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6774,7 +6956,7 @@
             ]
         },
         {
-            "ID": 80,
+            "ID": 83,
             "Name": "TempGridMap",
             "Active": true,
             "Components": [
@@ -17567,7 +17749,7 @@
             ]
         },
         {
-            "ID": 81,
+            "ID": 84,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -17679,7 +17861,7 @@
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
                     "CursorTexturesByState": [
-                        "Resource/Texture/UI/Image/Cursor_Default.png",
+                        "Resource/Texture/UI/Cursor/Cursor_Default.png",
                         "Resource/Texture/UI/Image/Cursor_Click.png",
                         "Resource/Texture/UI/Image/Aim_Idle.png",
                         "Resource/Texture/UI/Image/Aim_Firing.png",
@@ -17712,7 +17894,7 @@
             ]
         },
         {
-            "ID": 82,
+            "ID": 85,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -17932,7 +18114,7 @@
             ]
         },
         {
-            "ID": 83,
+            "ID": 86,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -18000,7 +18182,7 @@
             ]
         },
         {
-            "ID": 84,
+            "ID": 87,
             "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [

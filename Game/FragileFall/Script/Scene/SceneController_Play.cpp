@@ -191,6 +191,7 @@ namespace game
             SetMenuOpen(true);
         }
 
+        // Debug
         if (engine::Input::IsKeyPressed(engine::Keys::F4))
         {
             Fail();
@@ -319,7 +320,23 @@ namespace game
         m_isDead = true;
         if (m_failPanel)
             m_failPanel->SetActive(true);
-        TimeScaler::StopWorld();
+
+        const bool isAnyPopupOpen = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen || m_isDead);
+
+        if (isAnyPopupOpen)
+            TimeScaler::StopWorld();
+        else
+            TimeScaler::PlayWorld();
+
+        auto* aimGO = engine::GameObject::Find("Player");
+
+        if (aimGO)
+        {
+            if (auto* amc = aimGO->GetComponent<AimModeController>())
+            {
+                amc->SetPaused(isAnyPopupOpen);
+            }
+        }
     }
 
     void SceneController_Play::UpdateBlocker()
@@ -334,7 +351,7 @@ namespace game
         else
             TimeScaler::PlayWorld();
 
-        auto* aimGO = engine::GameObject::Find("AimPointerCanvas");
+        auto* aimGO = engine::GameObject::Find("Player");
 
         if (aimGO)
         {
