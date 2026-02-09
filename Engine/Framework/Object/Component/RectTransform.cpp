@@ -184,15 +184,12 @@ namespace engine
             MarkUIDirty();
         }
 
-        if (ImGui::DragFloat("Width", &m_width, 0.1f, 0.0f))
-        {
-            m_width = std::max(0.0f, m_width);
-            MarkUIDirty();
-        }
+        Vector2 size = {m_width, m_height};
 
-        if (ImGui::DragFloat("Height", &m_height, 0.1f, 0.0f))
+        if (ImGui::DragFloat2("Size", &size.x, 0.1f, 0.0f))
         {
-            m_height = std::max(0.0f, m_height);
+            m_width = std::max(0.0f, size.x);
+            m_height = std::max(0.0f, size.y);
             MarkUIDirty();
         }
 
