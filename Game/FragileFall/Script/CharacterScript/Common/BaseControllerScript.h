@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/LogicFSM.h>
@@ -192,12 +192,14 @@ namespace game
             AddAdditionalConditions(transition, std::forward<Args>(args)...);
         }
 
+    public:
+        std::string GetCurrentState() const;
+
     protected:
 
         // ─────────────────────────────────────────────
         // 현재 상태 확인 유틸리티
         // ─────────────────────────────────────────────
-        std::string GetCurrentState() const;
         bool IsInState(const std::string& stateName) const;
         bool IsInAnyState(const std::initializer_list<std::string>& states) const;
 

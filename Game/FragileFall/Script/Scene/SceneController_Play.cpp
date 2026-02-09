@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "SceneController_Play.h"
 
 #include <Core/App/AppContext.h>
@@ -137,10 +137,13 @@ namespace game
     {
         StageManager::Get().Update();
 
-        // 프레자일 게이지 100% 시 실패
+        // 플레이어 사망 시 실패 (HP 0, 프레자일 100%, 또는 Dead 상태)
         if (!m_isDead && m_playerScript)
         {
-            if (m_playerScript->GetFragileGaugeCurrent() >= m_playerScript->GetFragileGaugeMax())
+            bool fragileFull = m_playerScript->GetFragileGaugeCurrent() >= m_playerScript->GetFragileGaugeMax();
+            bool hpZero = m_playerScript->GetCurrentHp() <= 0.0f;
+            bool playerDeadState = (m_playerScript->GetCurrentState() == "Dead");
+            if (fragileFull || hpZero || playerDeadState)
                 Fail();
         }
 

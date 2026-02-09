@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -315,6 +315,10 @@ namespace game
 		// ─────────────────────────────────────────────
 		// 2. 공격 입력 → FSM 트리거
 		// ─────────────────────────────────────────────
+		// Dead 상태에서는 입력 무시
+		if (IsInState("Dead"))
+			return;
+
 		bool isMousePressed = engine::Input::IsMousePressed(engine::Input::Buttons::LEFT);
 		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
 
@@ -407,6 +411,15 @@ namespace game
 			}
 		}
 		
+		// ─────────────────────────────────────────────
+		// 사망 조건: HP 0 또는 프레자일 게이지 만땅 시 Dead 전이
+		// ─────────────────────────────────────────────
+		if (m_logicFSM && !IsInState("Dead"))
+		{
+			if (m_PlayerCurrentHP <= 0.0f || m_fragileGaugeCurrent >= m_fragileGaugeMax)
+				m_logicFSM->SetTrigger("Die");
+		}
+
 		// FSM 파라미터 갱신
 		if (m_logicFSM)
 		{
@@ -495,6 +508,11 @@ namespace game
 		{
 			return;
 		}
+		// Dead 상태에서는 이후 로직 스킵 (이동/공격/대쉬 불가)
+		if (IsInState("Dead"))
+		{
+			return;
+		}
 		// 잔상: 대쉬 이동 구간에서만 녹화. 감속 구간(이동 종료 직전)에는 녹화하지 않아 종료 지점에 잔상이 몰리지 않게 함
 		if (IsInState("Dash") && m_afterimage && m_dashElapsedTime < m_dashDuration * m_dashAfterimageCutoffRatio)
 		{
@@ -523,6 +541,12 @@ namespace game
 		if (IsInState("Execution"))
 		{
 			m_frameCollisionNormals.clear();  // 클리어
+			return;
+		}
+		// Dead 상태에서는 물리 로직 스킵
+		if (IsInState("Dead"))
+		{
+			m_frameCollisionNormals.clear();
 			return;
 		}
 
@@ -695,6 +719,7 @@ namespace game
 		AddFSMState("WalkShoot");
 		AddFSMState("Dash");         // 대쉬 상태
 		AddFSMState("Execution");    // 처형 상태
+		AddFSMState("Dead");         // 사망 상태
 
 		m_logicFSM->UpdateStateMap();
 		m_logicFSM->SetDefaultState("Idle");
@@ -740,6 +765,16 @@ namespace game
 
 		// Execution -> Idle (처형 완료 트리거)
 		AddFSMTransition("Execution", "Idle", "ExecutionComplete", Trigger());
+
+		// ─────────────────────────────────────────────
+		// 사망 전이 (모든 상태 -> Dead)
+		// ─────────────────────────────────────────────
+		AddFSMTransition("Idle", "Dead", "Die", Trigger());
+		AddFSMTransition("Walk", "Dead", "Die", Trigger());
+		AddFSMTransition("IdleShoot", "Dead", "Die", Trigger());
+		AddFSMTransition("WalkShoot", "Dead", "Die", Trigger());
+		AddFSMTransition("Dash", "Dead", "Die", Trigger());
+		AddFSMTransition("Execution", "Dead", "Die", Trigger());
 	}
 
 
@@ -1639,7 +1674,6 @@ namespace game
 		{
 			m_PlayerCurrentHP = 0;
 		}
-		
-		// TODO: 사망 처리, UI 업데이트 등 추가 가능
+		// 사망 전이는 UpdateGameLogic에서 HP 조건으로 Dead 상태 전이 후, SceneController_Play에서 Fail() 호출
 	}
 }

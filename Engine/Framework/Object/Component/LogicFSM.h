@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -136,8 +136,8 @@ namespace engine
         // ─────────────────────────────────────────────
         // 상태 조회
         // ─────────────────────────────────────────────
-        std::string GetCurrentState() const { return m_currentState; }
-        std::string GetPreviousState() const { return m_previousState; }
+        const std::string& GetCurrentState() const { return m_currentState; }
+        const std::string& GetPreviousState() const { return m_previousState; }
         float GetStateTimer() const { return m_stateTimer; }
         
         // ─────────────────────────────────────────────
