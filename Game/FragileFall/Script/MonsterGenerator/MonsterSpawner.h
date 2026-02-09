@@ -23,6 +23,9 @@ namespace game
         int m_maxCount = 5;
         int m_anchorMonsterID = 0;
 
+        /// 포인트 중심 반경. 0이면 포인트에 정확히 스폰, >0이면 XZ 원 안에 랜덤 스폰.
+        float m_spawnRadius = 0.0f;
+
         // 포인트 10개 고정, 구역 3개(각 3/4/3). Spawner 자식=구역, 구역 자식=포인트. 중복 배치 불가, 구역 위치에는 미스폰.
         std::vector<engine::Transform*> m_allPoints;   // [zone0 포인트 3, zone1 포인트 4, zone2 포인트 3]
         std::vector<bool> m_pointUsed;                 // 포인트별 사용 여부 (SpawnParty 시작 시 초기화)

@@ -1,9 +1,9 @@
 MonsterID,MonsterName,Type,Tier,Difficulty
-1,Monster_Dull_Gray,0,1,10
-2,Monster_Dull_Green,0,2,12
-3,Monster_Dull_Blue,0,3,15
-4,Monster_Dull_Red,0,4,18
-5,Monster_Dull_Purple,0,4,21
+1,Monster_DullType_Gray,0,1,10
+2,Monster_DullType_Green,0,2,12
+3,Monster_DullType_Blue,0,3,15
+4,Monster_DullType_Red,0,4,18
+5,Monster_DullType_Purple,0,4,21
 6,Mushroom1,1,1,12
 7,Mushroom2,1,2,16
 8,Mushroom3,1,3,20

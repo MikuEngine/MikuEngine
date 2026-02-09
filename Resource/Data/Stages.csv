@@ -1,4 +1,11 @@
-StageID,MapPrefabName,LightIntensity,MinMonsterCount,MaxMonsterCount,AnchorMonsterID
-1,Stage1_ProtoType,1.0,3,6,0
-2,Stage1_ProtoType,0.9,4,7,0
-3,Stage1_ProtoType,0.8,5,8,1
+StageID,MapPrefabName,LightIntensity,MinMonsterCount,MaxMonsterCount,AnchorMonsterID,Difficulty
+1,Map_White1,1,3,10,11,35
+2,Map_White1,0.9,3,10,11,40
+3,Map_White1,0.8,3,10,12,55
+4,Map_White1,1,3,10,12,65
+5,Map_White1,0.9,3,10,13,80
+6,Map_White1,0.8,3,10,13,85
+7,Map_White1,1,3,10,14,100
+8,Map_White1,0.9,3,10,14,105
+9,Map_White1,0.8,3,10,15,120
+10,Map_Boss1,0.8,0,0,0,0
