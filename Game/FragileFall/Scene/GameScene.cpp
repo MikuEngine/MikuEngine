@@ -22,9 +22,12 @@ namespace game
         {
             { SceneID::Main,     "01_READY_Main" },
             { SceneID::Lobby,    "01_READY_Lobby" },
-            { SceneID::Play,     "Stage1_ProtoType" },
+
+            { SceneID::Play,     "90_DEV_Stage" },
+
             { SceneID::Result,   "00_FIN_Result" },
             { SceneID::Tutorial, "10_PROTO_Tutorial" },
+            { SceneID::TutorialLobby, "10_PROTO_TutorialLobby" },
         };
 
         static const std::string kInvalidSceneName = "INVALID_SCENE";

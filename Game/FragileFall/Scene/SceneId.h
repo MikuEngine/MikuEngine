@@ -9,5 +9,6 @@ namespace game
 		Play,
 		Result,
 		Tutorial,
+		TutorialLobby,
 	};
 }
