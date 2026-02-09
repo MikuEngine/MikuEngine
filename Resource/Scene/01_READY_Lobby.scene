@@ -1749,7 +1749,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -1805,7 +1806,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -1861,7 +1863,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -1979,7 +1982,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -2076,7 +2080,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
@@ -2258,7 +2263,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -2314,7 +2320,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -2427,7 +2434,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -2577,7 +2585,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -2649,7 +2658,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -2799,7 +2809,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -2871,7 +2882,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3021,7 +3033,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -3093,7 +3106,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -3243,7 +3257,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -3349,7 +3364,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -3405,7 +3421,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -3518,7 +3535,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -3574,7 +3592,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPopUpAnimator",
@@ -3693,7 +3712,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -3806,7 +3826,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -3919,7 +3940,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -4069,7 +4091,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -4141,7 +4164,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -4291,7 +4315,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -4363,7 +4388,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -4513,7 +4539,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -4585,7 +4612,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -4735,7 +4763,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -4807,7 +4836,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -4920,7 +4950,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -4992,7 +5023,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -5105,7 +5137,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5177,7 +5210,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -5283,7 +5317,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -5389,7 +5424,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -5495,7 +5531,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5567,7 +5604,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5639,7 +5677,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -5711,7 +5750,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -5817,7 +5857,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -5930,7 +5971,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -6043,7 +6085,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
@@ -6093,7 +6136,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -6199,7 +6243,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -6271,7 +6316,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
@@ -6321,7 +6367,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -6427,7 +6474,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -6499,7 +6547,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
@@ -6549,7 +6598,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -6655,7 +6705,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -6727,7 +6778,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -6840,7 +6892,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -6912,7 +6965,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -6984,7 +7038,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -7134,7 +7189,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -7206,7 +7262,8 @@
                     "AnchorMax": {
                         "x": 0.0,
                         "y": 0.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIScrollView",
@@ -7274,7 +7331,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -7337,300 +7395,6 @@
         {
             "ID": 89,
             "ParentID": 87,
-            "Name": "Scrollbar",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 1000.0,
-                        "y": 80.0
-                    },
-                    "Width": 20.0,
-                    "Height": 450.0,
-                    "Pivot": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 0.0,
-                        "y": 0.0
-                    }
-                },
-                {
-                    "Type": "UISlider",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 1,
-                    "RaycastTarget": true,
-                    "Value": 0.0,
-                    "Direction": 2,
-                    "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_02.png",
-                    "FillSprite": "",
-                    "HandleSprite": "Resource/Texture/UI/Slider/SliderButton_01.png",
-                    "TrackColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "FillColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "HandleColor": {
-                        "x": 0.6557004451751709,
-                        "y": 0.4250383675098419,
-                        "z": 0.7644787430763245,
-                        "w": 1.0
-                    },
-                    "UseFill": false
-                }
-            ]
-        },
-        {
-            "ID": 90,
-            "ParentID": 89,
-            "Name": "Background",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Slider_02.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 91,
-            "ParentID": 89,
-            "Name": "Handle",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 30.0,
-                    "Height": 40.0,
-                    "Pivot": {
-                        "x": 0.30000001192092896,
-                        "y": 1.0
-                    },
-                    "AnchorMin": {
-                        "x": 1.0,
-                        "y": 0.04444444552063942
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 0.04444444552063942
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/SliderButton_01.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 0.6557004451751709,
-                        "y": 0.4250383675098419,
-                        "z": 0.7644787430763245,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 92,
-            "ParentID": 87,
             "Name": "Viewport",
             "Active": true,
             "Components": [
@@ -7674,7 +7438,8 @@
                     "AnchorMax": {
                         "x": 0.0,
                         "y": 0.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -7735,8 +7500,8 @@
             ]
         },
         {
-            "ID": 93,
-            "ParentID": 92,
+            "ID": 90,
+            "ParentID": 89,
             "Name": "Content",
             "Active": true,
             "Components": [
@@ -7780,13 +7545,14 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 93,
+            "ID": 91,
+            "ParentID": 90,
             "Name": "AttackNodes",
             "Active": false,
             "Components": [
@@ -7830,7 +7596,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -7898,8 +7665,8 @@
             ]
         },
         {
-            "ID": 95,
-            "ParentID": 94,
+            "ID": 92,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -7943,7 +7710,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -8032,8 +7800,8 @@
             ]
         },
         {
-            "ID": 96,
-            "ParentID": 94,
+            "ID": 93,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8077,7 +7845,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -8168,8 +7937,8 @@
             ]
         },
         {
-            "ID": 97,
-            "ParentID": 94,
+            "ID": 94,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8213,7 +7982,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -8304,8 +8074,8 @@
             ]
         },
         {
-            "ID": 98,
-            "ParentID": 94,
+            "ID": 95,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8349,7 +8119,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UpgradeNodeView",
@@ -8441,8 +8212,8 @@
             ]
         },
         {
-            "ID": 99,
-            "ParentID": 94,
+            "ID": 96,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8486,7 +8257,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -8577,8 +8349,8 @@
             ]
         },
         {
-            "ID": 100,
-            "ParentID": 94,
+            "ID": 97,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8622,7 +8394,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -8713,8 +8486,8 @@
             ]
         },
         {
-            "ID": 101,
-            "ParentID": 94,
+            "ID": 98,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8758,7 +8531,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -8850,8 +8624,8 @@
             ]
         },
         {
-            "ID": 102,
-            "ParentID": 94,
+            "ID": 99,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8895,7 +8669,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -8986,8 +8761,8 @@
             ]
         },
         {
-            "ID": 103,
-            "ParentID": 94,
+            "ID": 100,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9031,7 +8806,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -9122,8 +8898,8 @@
             ]
         },
         {
-            "ID": 104,
-            "ParentID": 94,
+            "ID": 101,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9167,7 +8943,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -9259,8 +9036,8 @@
             ]
         },
         {
-            "ID": 105,
-            "ParentID": 94,
+            "ID": 102,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9304,7 +9081,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -9401,8 +9179,8 @@
             ]
         },
         {
-            "ID": 106,
-            "ParentID": 94,
+            "ID": 103,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9446,7 +9224,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -9543,8 +9322,8 @@
             ]
         },
         {
-            "ID": 107,
-            "ParentID": 94,
+            "ID": 104,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9588,7 +9367,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -9680,8 +9460,8 @@
             ]
         },
         {
-            "ID": 108,
-            "ParentID": 94,
+            "ID": 105,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9725,7 +9505,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -9816,8 +9597,8 @@
             ]
         },
         {
-            "ID": 109,
-            "ParentID": 94,
+            "ID": 106,
+            "ParentID": 91,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9861,7 +9642,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -9964,8 +9746,8 @@
             ]
         },
         {
-            "ID": 110,
-            "ParentID": 93,
+            "ID": 107,
+            "ParentID": 90,
             "Name": "SkillNodes",
             "Active": false,
             "Components": [
@@ -10009,7 +9791,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -10077,8 +9860,8 @@
             ]
         },
         {
-            "ID": 111,
-            "ParentID": 110,
+            "ID": 108,
+            "ParentID": 107,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10122,7 +9905,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -10211,8 +9995,8 @@
             ]
         },
         {
-            "ID": 112,
-            "ParentID": 110,
+            "ID": 109,
+            "ParentID": 107,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10256,7 +10040,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -10347,8 +10132,8 @@
             ]
         },
         {
-            "ID": 113,
-            "ParentID": 110,
+            "ID": 110,
+            "ParentID": 107,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10392,7 +10177,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -10476,8 +10262,8 @@
             ]
         },
         {
-            "ID": 114,
-            "ParentID": 110,
+            "ID": 111,
+            "ParentID": 107,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10521,7 +10307,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -10605,8 +10392,8 @@
             ]
         },
         {
-            "ID": 115,
-            "ParentID": 110,
+            "ID": 112,
+            "ParentID": 107,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10650,7 +10437,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -10734,8 +10522,8 @@
             ]
         },
         {
-            "ID": 116,
-            "ParentID": 110,
+            "ID": 113,
+            "ParentID": 107,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10779,7 +10567,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -10864,8 +10653,8 @@
             ]
         },
         {
-            "ID": 117,
-            "ParentID": 93,
+            "ID": 114,
+            "ParentID": 90,
             "Name": "SurviveNodes",
             "Active": true,
             "Components": [
@@ -10909,7 +10698,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -10977,8 +10767,8 @@
             ]
         },
         {
-            "ID": 118,
-            "ParentID": 117,
+            "ID": 115,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11022,7 +10812,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -11111,8 +10902,8 @@
             ]
         },
         {
-            "ID": 119,
-            "ParentID": 117,
+            "ID": 116,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11156,7 +10947,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -11247,8 +11039,8 @@
             ]
         },
         {
-            "ID": 120,
-            "ParentID": 117,
+            "ID": 117,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11292,7 +11084,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -11383,8 +11176,8 @@
             ]
         },
         {
-            "ID": 121,
-            "ParentID": 117,
+            "ID": 118,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11428,7 +11221,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -11520,8 +11314,8 @@
             ]
         },
         {
-            "ID": 122,
-            "ParentID": 117,
+            "ID": 119,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11549,8 +11343,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -150.0
+                        "x": -150.0,
+                        "y": 300.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -11565,7 +11359,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -11634,12 +11429,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -11656,8 +11451,8 @@
             ]
         },
         {
-            "ID": 123,
-            "ParentID": 117,
+            "ID": 120,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11685,8 +11480,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -150.0
+                        "x": 150.0,
+                        "y": 300.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -11701,7 +11496,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -11770,12 +11566,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -11792,8 +11588,8 @@
             ]
         },
         {
-            "ID": 124,
-            "ParentID": 117,
+            "ID": 121,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11822,7 +11618,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -150.0
+                        "y": 450.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -11837,7 +11633,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -11907,12 +11704,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -11929,8 +11726,8 @@
             ]
         },
         {
-            "ID": 125,
-            "ParentID": 117,
+            "ID": 122,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11959,7 +11756,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -150.0
+                        "y": 600.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -11974,7 +11771,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -12043,12 +11841,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -12065,8 +11863,8 @@
             ]
         },
         {
-            "ID": 126,
-            "ParentID": 117,
+            "ID": 123,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12094,8 +11892,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -150.0
+                        "x": -300.0,
+                        "y": 600.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -12110,7 +11908,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -12179,12 +11978,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -12201,8 +12000,8 @@
             ]
         },
         {
-            "ID": 127,
-            "ParentID": 117,
+            "ID": 124,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12230,8 +12029,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -150.0
+                        "x": 300.0,
+                        "y": 600.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -12246,7 +12045,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -12315,12 +12115,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -12337,8 +12137,8 @@
             ]
         },
         {
-            "ID": 128,
-            "ParentID": 117,
+            "ID": 125,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12366,8 +12166,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -150.0
+                        "x": -150.0,
+                        "y": 750.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -12382,7 +12182,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -12452,12 +12253,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -12474,8 +12275,8 @@
             ]
         },
         {
-            "ID": 129,
-            "ParentID": 117,
+            "ID": 126,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12503,8 +12304,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -150.0
+                        "x": 150.0,
+                        "y": 750.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -12519,7 +12320,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -12589,12 +12391,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -12611,8 +12413,8 @@
             ]
         },
         {
-            "ID": 130,
-            "ParentID": 117,
+            "ID": 127,
+            "ParentID": 114,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12641,7 +12443,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -150.0
+                        "y": 900.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -12656,7 +12458,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIClickArea",
@@ -12726,12 +12529,12 @@
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
                     },
-                    "MaskMode": 0,
+                    "MaskMode": 1,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -12748,8 +12551,8 @@
             ]
         },
         {
-            "ID": 131,
-            "ParentID": 93,
+            "ID": 128,
+            "ParentID": 90,
             "Name": "MoveNodes",
             "Active": false,
             "Components": [
@@ -12793,7 +12596,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -12861,8 +12665,8 @@
             ]
         },
         {
-            "ID": 132,
-            "ParentID": 131,
+            "ID": 129,
+            "ParentID": 128,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12906,7 +12710,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -12988,8 +12793,8 @@
             ]
         },
         {
-            "ID": 133,
-            "ParentID": 131,
+            "ID": 130,
+            "ParentID": 128,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13033,7 +12838,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -13117,8 +12923,8 @@
             ]
         },
         {
-            "ID": 134,
-            "ParentID": 131,
+            "ID": 131,
+            "ParentID": 128,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13162,7 +12968,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -13246,8 +13053,8 @@
             ]
         },
         {
-            "ID": 135,
-            "ParentID": 131,
+            "ID": 132,
+            "ParentID": 128,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13291,7 +13098,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -13375,6 +13183,303 @@
             ]
         },
         {
+            "ID": 133,
+            "ParentID": 87,
+            "Name": "Scrollbar",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 1000.0,
+                        "y": 80.0
+                    },
+                    "Width": 20.0,
+                    "Height": 450.0,
+                    "Pivot": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UISlider",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 1,
+                    "RaycastTarget": true,
+                    "Value": 0.0,
+                    "Direction": 2,
+                    "FillMode": 0,
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_02.png",
+                    "FillSprite": "",
+                    "HandleSprite": "Resource/Texture/UI/Slider/SliderButton_01.png",
+                    "TrackColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "FillColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "HandleColor": {
+                        "x": 0.6557004451751709,
+                        "y": 0.4250383675098419,
+                        "z": 0.7644787430763245,
+                        "w": 1.0
+                    },
+                    "UseFill": false
+                }
+            ]
+        },
+        {
+            "ID": 134,
+            "ParentID": 133,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_02.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 1280.0,
+                        "w": 720.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 135,
+            "ParentID": 133,
+            "Name": "Handle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 30.0,
+                    "Height": 40.0,
+                    "Pivot": {
+                        "x": 0.30000001192092896,
+                        "y": 1.0
+                    },
+                    "AnchorMin": {
+                        "x": 1.0,
+                        "y": 0.04444444552063942
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 0.04444444552063942
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/SliderButton_01.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.6557004451751709,
+                        "y": 0.4250383675098419,
+                        "z": 0.7644787430763245,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 1280.0,
+                        "w": 720.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
             "ID": 136,
             "ParentID": 49,
             "Name": "Btn_Upgrade",
@@ -13420,7 +13525,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIHoverScale",
@@ -13570,7 +13676,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -13642,7 +13749,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -13761,7 +13869,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -13911,7 +14020,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -13983,7 +14093,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -14055,7 +14166,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
@@ -14105,7 +14217,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -14187,7 +14300,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -14293,7 +14407,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -14399,7 +14514,8 @@
                     "AnchorMax": {
                         "x": 0.8333333134651184,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -14505,7 +14621,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -14587,7 +14704,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -14693,7 +14811,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -14799,7 +14918,8 @@
                     "AnchorMax": {
                         "x": 0.8333333134651184,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -14905,7 +15025,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -14987,7 +15108,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -15093,7 +15215,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -15199,7 +15322,8 @@
                     "AnchorMax": {
                         "x": 0.8333333134651184,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -15305,7 +15429,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -15377,7 +15502,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -15449,7 +15575,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",

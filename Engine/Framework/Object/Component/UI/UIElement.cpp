@@ -250,4 +250,49 @@ namespace engine
 		if (v > 1.0f) return 1.0f;
 		return v;
 	}
+
+	DirectX::XMMATRIX UIElement::BuildClipMatrix(const RectTransform& rt, const Canvas& c) const
+	{
+		auto& gd = GraphicsDevice::Get();
+		auto vp = gd.GetViewport();
+
+		const Vector2 scale = c.GetUIScale();
+		const Vector2 offset = c.GetUIOffset();
+
+		const UIRect& r = rt.GetWorldRect();
+
+		// 1) UI 로컬(캔버스 기준) -> 화면 픽셀
+		const float pxX = r.x * scale.x + offset.x;
+		const float pxY = r.y * scale.y + offset.y;
+		const float pxW = r.w * scale.x;
+		const float pxH = r.h * scale.y;
+
+		// 2) pivot 픽셀 위치
+		const Vector2 pivot01 = rt.GetPivot();
+		const float pxPivotX = pxX + pxW * pivot01.x;
+		const float pxPivotY = pxY + pxH * pivot01.y;
+
+		// 3) pivot - center 오프셋 (픽셀)
+		const float dxPx = (pivot01.x - 0.5f) * pxW;
+		const float dyPx = (0.5f - pivot01.y) * pxH; // y축 방향 보정(화면 down, NDC up)
+
+		const float rot = rt.GetLocalRotationZRad();
+
+		// 4) "픽셀 공간"에서 로컬 변환 구성
+		//    (unit quad가 원점 중심(-0.5~0.5)이라고 가정: 기존 코드와 동일 가정)
+		const DirectX::XMMATRIX M_localPx =
+			DirectX::XMMatrixScaling(pxW, pxH, 1.0f) *
+			DirectX::XMMatrixTranslation(-dxPx, -dyPx, 0.0f) *
+			DirectX::XMMatrixRotationZ(rot) *
+			DirectX::XMMatrixTranslation(pxPivotX, pxPivotY, 0.0f);
+
+		// 5) 픽셀 -> 클립 변환(마지막에만 적용)
+		//    (0,0) -> (-1,+1), (W,H) -> (+1,-1)
+		const DirectX::XMMATRIX M_pxToClip =
+			DirectX::XMMatrixScaling(2.0f / vp.Width, -2.0f / vp.Height, 1.0f) *
+			DirectX::XMMatrixTranslation(-1.0f, 1.0f, 0.0f);
+
+		return DirectX::XMMatrixTranspose(M_localPx * M_pxToClip);
+	}
+
 }

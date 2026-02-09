@@ -210,6 +210,13 @@ namespace engine
             m_pivot = ClampVec2(m_pivot, 0.0f, 1.0f);
             MarkUIDirty();
         }
+
+        float deg = m_rotationZ * 180.0f / DirectX::XM_PI;
+        if (ImGui::DragFloat("RotationZ (deg)", &deg, 1.0f))
+        {
+            m_rotationZ = deg * DirectX::XM_PI / 180.0f;
+            MarkUIDirty();
+        }
     }
 
     void RectTransform::Save(json& j) const
@@ -223,6 +230,8 @@ namespace engine
         j["Pivot"] = m_pivot;
         j["AnchorMin"] = m_anchorMin;
         j["AnchorMax"] = m_anchorMax;
+
+        j["RotationZDeg"] = GetLocalRotationZDeg();
     }
 
     void RectTransform::Load(const json& j)
@@ -233,6 +242,9 @@ namespace engine
         JsonGet(j, "AnchorMax", m_anchorMax);
         JsonGet(j, "Width", m_width);
         JsonGet(j, "Height", m_height);
+        float deg = 0.0f;
+        JsonGet(j, "RotationZDeg", deg);
+        SetLocalRotationZDeg(deg);
 
         MarkUIDirty(true);
     }
