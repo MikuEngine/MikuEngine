@@ -1,6 +1,6 @@
 {
     "Name": "90_Dev_Boss_2ND",
-    "NumGameObjects": 71,
+    "NumGameObjects": 72,
     "GameObjects": [
         {
             "ID": 0,
@@ -13220,6 +13220,34 @@
         },
         {
             "ID": 69,
+            "ParentID": 66,
+            "Name": "FloatingParts",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 70,
             "Name": "z_Dev_Boss_HP_Text",
             "Active": true,
             "Components": [
@@ -13275,8 +13303,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 69,
+            "ID": 71,
+            "ParentID": 70,
             "Name": "UI_BossHP",
             "Active": true,
             "Components": [
