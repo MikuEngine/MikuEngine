@@ -45,9 +45,9 @@ namespace game
         engine::Ptr<engine::GameObject> m_exitDoorObject = nullptr;
 
 
+		const float m_outlineWidth = 4.0f;
+
 		engine::Ptr<engine::GameObject> m_player = nullptr;
-
-
 
     public:
         void Awake() override;
@@ -58,6 +58,10 @@ namespace game
         void RefreshStepContext(int index);
 
         void OnSceneLoaded();
+
+        void BindButton(const std::string& goName, std::function<void()> callback);
+		void SetActiveButton(const std::string& goName, bool active, bool outline);
+        void SetupSkillNodesUI();
 
     public:
         // void OnGui() override;

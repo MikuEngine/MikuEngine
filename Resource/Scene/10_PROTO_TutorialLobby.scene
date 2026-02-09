@@ -4098,7 +4098,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -4320,7 +4320,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -4542,7 +4542,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -4764,7 +4764,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -7057,7 +7057,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -8028,7 +8028,7 @@
                 },
                 {
                     "Type": "UIClickArea",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
@@ -10377,7 +10377,7 @@
                 },
                 {
                     "Type": "UIClickArea",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -10513,7 +10513,7 @@
                 },
                 {
                     "Type": "UIClickArea",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -10642,7 +10642,7 @@
                 },
                 {
                     "Type": "UIClickArea",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -10771,7 +10771,7 @@
                 },
                 {
                     "Type": "UIClickArea",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -10844,7 +10844,7 @@
                 },
                 {
                     "Type": "UIClickArea",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -11143,7 +11143,7 @@
                 },
                 {
                     "Type": "UIClickArea",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -11770,7 +11770,7 @@
                 },
                 {
                     "Type": "UIClickArea",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -12236,7 +12236,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -14366,7 +14366,7 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "SortingOrder": 0
+                    "SortingOrder": 3
                 },
                 {
                     "Type": "UIMessageQueue",

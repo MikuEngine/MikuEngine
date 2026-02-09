@@ -178,32 +178,27 @@ namespace engine
 			const float expandU = (t / pxW); // px 기준 -> uv 비율
 			const float expandV = (t / pxH);
 
-			const float o_pxW = pxW + m_outlineThickness * 2.0f;
-			const float o_pxH = pxH + m_outlineThickness * 2.0f;
+			const float o_pxW = pxW + t * 2.0f;
+			const float o_pxH = pxH + t * 2.0f;
 
 			const float o_sx = (o_pxW / vp.Width) * 2.0f;
 			const float o_sy = (o_pxH / vp.Height) * 2.0f;
 
 			CbUIElement cbUI{};
-			//cbUI.clip = DirectX::XMMatrixTranspose(
-			//	DirectX::XMMatrixScaling(o_sx, o_sy, 1.0f) *
-			//	DirectX::XMMatrixTranslation(tx, ty, 0.0f)
-			//);
-
 			cbUI.clip = DirectX::XMMatrixTranspose(
-				DirectX::XMMatrixScaling(sx, sy, 1.0f) *
-				DirectX::XMMatrixTranslation(dxN, dyN, 0.0f) * // pivot → 원점
-				Rfix *
-				DirectX::XMMatrixTranslation(-dxN, -dyN, 0.0f) * // 원점 → pivot
+				DirectX::XMMatrixScaling(o_sx, o_sy, 1.0f) *
 				DirectX::XMMatrixTranslation(tx, ty, 0.0f)
 			);
 
+			float uMargin = t / pxW;
+			float vMargin = t / pxH;
+
 			cbUI.color = Vector4(1, 1, 1, 1);
 			cbUI.uv = Vector4(
-				m_uv.x - expandU * m_uv.z,                 // uOffset'
-				m_uv.y - expandV * m_uv.w,                 // vOffset'
-				m_uv.z * (1.0f + expandU * 2.0f),          // uScale'
-				m_uv.w * (1.0f + expandV * 2.0f)           // vScale'
+				m_uv.x - uMargin * m_uv.z,                 // uOffset'
+				m_uv.y - vMargin * m_uv.w,                 // vOffset'
+				m_uv.z * (1.0f + uMargin * 2.0f),          // uScale'
+				m_uv.w * (1.0f + vMargin * 2.0f)           // vScale'
 			);
 
 			cbUI.clipRect = clipPx;
@@ -211,8 +206,11 @@ namespace engine
 			cbUI.mask0 = m_mask0;
 			cbUI.mask1 = m_mask1;
 			cbUI.outlineEnabled = 1.0f;
-			cbUI.outlineThickness = m_outlineThickness;
+			cbUI.outlineThickness = t;
 			cbUI.outlineColor = m_outlineColor;
+
+			cbUI.effect0.x = pxW;
+			cbUI.effect0.y = pxH;
 
 			dc->UpdateSubresource(m_uiCB->GetRawBuffer(), 0, nullptr, &cbUI, 0, 0);
 			dc->VSSetConstantBuffers(static_cast<UINT>(ConstantBufferSlot::UIElement), 1, m_uiCB->GetBuffer().GetAddressOf());

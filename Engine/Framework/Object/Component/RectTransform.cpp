@@ -217,6 +217,8 @@ namespace engine
             m_rotationZ = deg * DirectX::XM_PI / 180.0f;
             MarkUIDirty();
         }
+
+        ImGui::Separator();
     }
 
     void RectTransform::Save(json& j) const

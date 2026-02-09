@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Lobby",
-    "NumGameObjects": 160,
+    "NumGameObjects": 159,
     "GameObjects": [
         {
             "ID": 0,
@@ -5706,113 +5706,6 @@
         },
         {
             "ID": 70,
-            "ParentID": 62,
-            "Name": "UIObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -97.5999984741211,
-                        "y": 15.300000190734863
-                    },
-                    "Width": 75.0,
-                    "Height": 75.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "TexturePath": "None",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 0.501960813999176
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 1,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 71,
             "ParentID": 60,
             "Name": "Desc_Panel",
             "Active": true,
@@ -5926,8 +5819,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 71,
+            "ID": 71,
+            "ParentID": 70,
             "Name": "NeedItem",
             "Active": true,
             "Components": [
@@ -6040,8 +5933,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 72,
+            "ID": 72,
+            "ParentID": 71,
             "Name": "CostSlot0",
             "Active": true,
             "Components": [
@@ -6091,8 +5984,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 73,
+            "ID": 73,
+            "ParentID": 72,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -6198,8 +6091,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 73,
+            "ID": 74,
+            "ParentID": 72,
             "Name": "Amount",
             "Active": true,
             "Components": [
@@ -6271,8 +6164,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 72,
+            "ID": 75,
+            "ParentID": 71,
             "Name": "CostSlot1",
             "Active": true,
             "Components": [
@@ -6322,8 +6215,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 76,
+            "ID": 76,
+            "ParentID": 75,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -6429,8 +6322,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 76,
+            "ID": 77,
+            "ParentID": 75,
             "Name": "Amount",
             "Active": true,
             "Components": [
@@ -6502,8 +6395,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 72,
+            "ID": 78,
+            "ParentID": 71,
             "Name": "CostSlot2",
             "Active": true,
             "Components": [
@@ -6553,8 +6446,8 @@
             ]
         },
         {
-            "ID": 80,
-            "ParentID": 79,
+            "ID": 79,
+            "ParentID": 78,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -6660,8 +6553,8 @@
             ]
         },
         {
-            "ID": 81,
-            "ParentID": 79,
+            "ID": 80,
+            "ParentID": 78,
             "Name": "Amount",
             "Active": true,
             "Components": [
@@ -6733,8 +6626,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 71,
+            "ID": 81,
+            "ParentID": 70,
             "Name": "Sub",
             "Active": true,
             "Components": [
@@ -6847,8 +6740,8 @@
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 82,
+            "ID": 82,
+            "ParentID": 81,
             "Name": "Text_UpgradeName",
             "Active": true,
             "Components": [
@@ -6920,8 +6813,8 @@
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 82,
+            "ID": 83,
+            "ParentID": 81,
             "Name": "Text_UpgradeDesc",
             "Active": true,
             "Components": [
@@ -6993,7 +6886,7 @@
             ]
         },
         {
-            "ID": 85,
+            "ID": 84,
             "ParentID": 49,
             "Name": "UI_CloseButton_Upgrade",
             "Active": true,
@@ -7144,8 +7037,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 85,
+            "ID": 85,
+            "ParentID": 84,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -7217,7 +7110,7 @@
             ]
         },
         {
-            "ID": 87,
+            "ID": 86,
             "ParentID": 49,
             "Name": "UI_ScrollView",
             "Active": true,
@@ -7286,8 +7179,8 @@
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 87,
+            "ID": 87,
+            "ParentID": 86,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -7393,8 +7286,8 @@
             ]
         },
         {
-            "ID": 89,
-            "ParentID": 87,
+            "ID": 88,
+            "ParentID": 86,
             "Name": "Viewport",
             "Active": true,
             "Components": [
@@ -7500,8 +7393,8 @@
             ]
         },
         {
-            "ID": 90,
-            "ParentID": 89,
+            "ID": 89,
+            "ParentID": 88,
             "Name": "Content",
             "Active": true,
             "Components": [
@@ -7551,10 +7444,10 @@
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 90,
+            "ID": 90,
+            "ParentID": 89,
             "Name": "AttackNodes",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -7665,8 +7558,8 @@
             ]
         },
         {
-            "ID": 92,
-            "ParentID": 91,
+            "ID": 91,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -7747,7 +7640,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7800,8 +7693,8 @@
             ]
         },
         {
-            "ID": 93,
-            "ParentID": 91,
+            "ID": 92,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -7884,7 +7777,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7937,8 +7830,8 @@
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 91,
+            "ID": 93,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8021,7 +7914,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Speed_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8074,8 +7967,8 @@
             ]
         },
         {
-            "ID": 95,
-            "ParentID": 91,
+            "ID": 94,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8159,7 +8052,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Image/AttackNode.png",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8212,8 +8105,8 @@
             ]
         },
         {
-            "ID": 96,
-            "ParentID": 91,
+            "ID": 95,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8349,8 +8242,8 @@
             ]
         },
         {
-            "ID": 97,
-            "ParentID": 91,
+            "ID": 96,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8486,8 +8379,8 @@
             ]
         },
         {
-            "ID": 98,
-            "ParentID": 91,
+            "ID": 97,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8624,8 +8517,8 @@
             ]
         },
         {
-            "ID": 99,
-            "ParentID": 91,
+            "ID": 98,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8761,8 +8654,8 @@
             ]
         },
         {
-            "ID": 100,
-            "ParentID": 91,
+            "ID": 99,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -8898,8 +8791,8 @@
             ]
         },
         {
-            "ID": 101,
-            "ParentID": 91,
+            "ID": 100,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9036,8 +8929,8 @@
             ]
         },
         {
-            "ID": 102,
-            "ParentID": 91,
+            "ID": 101,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9179,8 +9072,8 @@
             ]
         },
         {
-            "ID": 103,
-            "ParentID": 91,
+            "ID": 102,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9322,8 +9215,8 @@
             ]
         },
         {
-            "ID": 104,
-            "ParentID": 91,
+            "ID": 103,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9460,8 +9353,8 @@
             ]
         },
         {
-            "ID": 105,
-            "ParentID": 91,
+            "ID": 104,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9597,8 +9490,8 @@
             ]
         },
         {
-            "ID": 106,
-            "ParentID": 91,
+            "ID": 105,
+            "ParentID": 90,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9746,8 +9639,8 @@
             ]
         },
         {
-            "ID": 107,
-            "ParentID": 90,
+            "ID": 106,
+            "ParentID": 89,
             "Name": "SkillNodes",
             "Active": false,
             "Components": [
@@ -9860,8 +9753,8 @@
             ]
         },
         {
-            "ID": 108,
-            "ParentID": 107,
+            "ID": 107,
+            "ParentID": 106,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -9995,8 +9888,8 @@
             ]
         },
         {
-            "ID": 109,
-            "ParentID": 107,
+            "ID": 108,
+            "ParentID": 106,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10132,8 +10025,8 @@
             ]
         },
         {
-            "ID": 110,
-            "ParentID": 107,
+            "ID": 109,
+            "ParentID": 106,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10262,8 +10155,8 @@
             ]
         },
         {
-            "ID": 111,
-            "ParentID": 107,
+            "ID": 110,
+            "ParentID": 106,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10392,8 +10285,8 @@
             ]
         },
         {
-            "ID": 112,
-            "ParentID": 107,
+            "ID": 111,
+            "ParentID": 106,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10522,8 +10415,8 @@
             ]
         },
         {
-            "ID": 113,
-            "ParentID": 107,
+            "ID": 112,
+            "ParentID": 106,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10653,10 +10546,10 @@
             ]
         },
         {
-            "ID": 114,
-            "ParentID": 90,
+            "ID": 113,
+            "ParentID": 89,
             "Name": "SurviveNodes",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -10767,8 +10660,8 @@
             ]
         },
         {
-            "ID": 115,
-            "ParentID": 114,
+            "ID": 114,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -10902,8 +10795,8 @@
             ]
         },
         {
-            "ID": 116,
-            "ParentID": 114,
+            "ID": 115,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11039,8 +10932,8 @@
             ]
         },
         {
-            "ID": 117,
-            "ParentID": 114,
+            "ID": 116,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11176,8 +11069,8 @@
             ]
         },
         {
-            "ID": 118,
-            "ParentID": 114,
+            "ID": 117,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11314,8 +11207,8 @@
             ]
         },
         {
-            "ID": 119,
-            "ParentID": 114,
+            "ID": 118,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11451,8 +11344,8 @@
             ]
         },
         {
-            "ID": 120,
-            "ParentID": 114,
+            "ID": 119,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11588,8 +11481,8 @@
             ]
         },
         {
-            "ID": 121,
-            "ParentID": 114,
+            "ID": 120,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11726,8 +11619,8 @@
             ]
         },
         {
-            "ID": 122,
-            "ParentID": 114,
+            "ID": 121,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11863,8 +11756,8 @@
             ]
         },
         {
-            "ID": 123,
-            "ParentID": 114,
+            "ID": 122,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12000,8 +11893,8 @@
             ]
         },
         {
-            "ID": 124,
-            "ParentID": 114,
+            "ID": 123,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12137,8 +12030,8 @@
             ]
         },
         {
-            "ID": 125,
-            "ParentID": 114,
+            "ID": 124,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12275,8 +12168,8 @@
             ]
         },
         {
-            "ID": 126,
-            "ParentID": 114,
+            "ID": 125,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12413,8 +12306,8 @@
             ]
         },
         {
-            "ID": 127,
-            "ParentID": 114,
+            "ID": 126,
+            "ParentID": 113,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12551,8 +12444,8 @@
             ]
         },
         {
-            "ID": 128,
-            "ParentID": 90,
+            "ID": 127,
+            "ParentID": 89,
             "Name": "MoveNodes",
             "Active": false,
             "Components": [
@@ -12665,8 +12558,8 @@
             ]
         },
         {
-            "ID": 129,
-            "ParentID": 128,
+            "ID": 128,
+            "ParentID": 127,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12793,8 +12686,8 @@
             ]
         },
         {
-            "ID": 130,
-            "ParentID": 128,
+            "ID": 129,
+            "ParentID": 127,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12923,8 +12816,8 @@
             ]
         },
         {
-            "ID": 131,
-            "ParentID": 128,
+            "ID": 130,
+            "ParentID": 127,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13053,8 +12946,8 @@
             ]
         },
         {
-            "ID": 132,
-            "ParentID": 128,
+            "ID": 131,
+            "ParentID": 127,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13183,8 +13076,8 @@
             ]
         },
         {
-            "ID": 133,
-            "ParentID": 87,
+            "ID": 132,
+            "ParentID": 86,
             "Name": "Scrollbar",
             "Active": true,
             "Components": [
@@ -13266,8 +13159,8 @@
             ]
         },
         {
-            "ID": 134,
-            "ParentID": 133,
+            "ID": 133,
+            "ParentID": 132,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -13373,8 +13266,8 @@
             ]
         },
         {
-            "ID": 135,
-            "ParentID": 133,
+            "ID": 134,
+            "ParentID": 132,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -13480,7 +13373,7 @@
             ]
         },
         {
-            "ID": 136,
+            "ID": 135,
             "ParentID": 49,
             "Name": "Btn_Upgrade",
             "Active": true,
@@ -13631,8 +13524,8 @@
             ]
         },
         {
-            "ID": 137,
-            "ParentID": 136,
+            "ID": 136,
+            "ParentID": 135,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13704,7 +13597,7 @@
             ]
         },
         {
-            "ID": 138,
+            "ID": 137,
             "ParentID": 48,
             "Name": "UI_OptionPopUp",
             "Active": false,
@@ -13824,8 +13717,8 @@
             ]
         },
         {
-            "ID": 139,
-            "ParentID": 138,
+            "ID": 138,
+            "ParentID": 137,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -13975,8 +13868,8 @@
             ]
         },
         {
-            "ID": 140,
-            "ParentID": 139,
+            "ID": 139,
+            "ParentID": 138,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -14048,8 +13941,8 @@
             ]
         },
         {
-            "ID": 141,
-            "ParentID": 138,
+            "ID": 140,
+            "ParentID": 137,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -14121,8 +14014,8 @@
             ]
         },
         {
-            "ID": 142,
-            "ParentID": 138,
+            "ID": 141,
+            "ParentID": 137,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -14172,8 +14065,8 @@
             ]
         },
         {
-            "ID": 143,
-            "ParentID": 142,
+            "ID": 142,
+            "ParentID": 141,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -14255,8 +14148,8 @@
             ]
         },
         {
-            "ID": 144,
-            "ParentID": 143,
+            "ID": 143,
+            "ParentID": 142,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14362,8 +14255,8 @@
             ]
         },
         {
-            "ID": 145,
-            "ParentID": 143,
+            "ID": 144,
+            "ParentID": 142,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -14469,8 +14362,8 @@
             ]
         },
         {
-            "ID": 146,
-            "ParentID": 143,
+            "ID": 145,
+            "ParentID": 142,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -14576,8 +14469,8 @@
             ]
         },
         {
-            "ID": 147,
-            "ParentID": 142,
+            "ID": 146,
+            "ParentID": 141,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -14659,8 +14552,8 @@
             ]
         },
         {
-            "ID": 148,
-            "ParentID": 147,
+            "ID": 147,
+            "ParentID": 146,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14766,8 +14659,8 @@
             ]
         },
         {
-            "ID": 149,
-            "ParentID": 147,
+            "ID": 148,
+            "ParentID": 146,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -14873,8 +14766,8 @@
             ]
         },
         {
-            "ID": 150,
-            "ParentID": 147,
+            "ID": 149,
+            "ParentID": 146,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -14980,8 +14873,8 @@
             ]
         },
         {
-            "ID": 151,
-            "ParentID": 142,
+            "ID": 150,
+            "ParentID": 141,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -15063,8 +14956,8 @@
             ]
         },
         {
-            "ID": 152,
-            "ParentID": 151,
+            "ID": 151,
+            "ParentID": 150,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -15170,8 +15063,8 @@
             ]
         },
         {
-            "ID": 153,
-            "ParentID": 151,
+            "ID": 152,
+            "ParentID": 150,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -15277,8 +15170,8 @@
             ]
         },
         {
-            "ID": 154,
-            "ParentID": 151,
+            "ID": 153,
+            "ParentID": 150,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -15384,8 +15277,8 @@
             ]
         },
         {
-            "ID": 155,
-            "ParentID": 142,
+            "ID": 154,
+            "ParentID": 141,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15457,8 +15350,8 @@
             ]
         },
         {
-            "ID": 156,
-            "ParentID": 142,
+            "ID": 155,
+            "ParentID": 141,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -15530,8 +15423,8 @@
             ]
         },
         {
-            "ID": 157,
-            "ParentID": 142,
+            "ID": 156,
+            "ParentID": 141,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15603,7 +15496,7 @@
             ]
         },
         {
-            "ID": 158,
+            "ID": 157,
             "ParentID": 29,
             "Name": "UpgradeController",
             "Active": true,
@@ -15639,7 +15532,7 @@
             ]
         },
         {
-            "ID": 159,
+            "ID": 158,
             "Name": "WallFront",
             "Active": true,
             "Components": [

@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "SceneController_Play.h"
 
 #include <Core/App/AppContext.h>
@@ -7,6 +7,7 @@
 #include <Framework/System/SoundSystem.h>
 
 #include <Framework/Scene/SceneManager.h>
+#include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/UI/UIButton.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Framework/Object/Component/UI/UIProgressBar.h>
@@ -58,7 +59,12 @@ namespace game
         if (m_bound) return;
         m_bound = true;
 
-        StageManager::Get().BeginStage(); // 아직 맵 프리팹이 없어서 스테이지 세팅 불가
+        std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
+
+        if (currentScene != "10_PROTO_Tutorial")
+        {
+            StageManager::Get().BeginStage(); // 아직 맵 프리팹이 없어서 스테이지 세팅 불가
+        }
 
         g_msg.Load("Resource/Data/Message/MessageTable.csv");
 
