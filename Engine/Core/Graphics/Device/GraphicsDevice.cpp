@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "GraphicsDevice.h"
 
 #include <dxgi1_5.h>
@@ -591,6 +591,11 @@ namespace engine
 
     unsigned int GraphicsDevice::EndDrawPickingPass(int mouseX, int mouseY)
     {
+        if (mouseX < 0 || mouseY < 0 || mouseX >= m_gameViewport.Width || mouseY >= m_gameViewport.Height)
+        {
+            return 0;
+        }
+
         m_deviceContext->OMSetRenderTargets(0, nullptr, nullptr);
 
         D3D11_BOX srcBox{};
