@@ -182,6 +182,7 @@
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp" />
     <ClCompile Include="Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Script\Boss\BossSubPartsController.cpp" />
     <ClCompile Include="Script\CameraEffectScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\ExplosionDamageTrigger.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.h" />
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h" />
     <ClInclude Include="Script\Boss\BossScript.h" />
+    <ClInclude Include="Script\Boss\BossSubPartsController.h" />
     <ClInclude Include="Script\CameraEffectScript.h" />
     <ClInclude Include="Script\CharacterScript\Common\ExplosionDamageTrigger.h" />
     <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />

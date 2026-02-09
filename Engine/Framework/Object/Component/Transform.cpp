@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "Transform.h"
 
 #include <imgui.h>
@@ -412,6 +412,38 @@ namespace engine
         }
 
         MarkDirty();
+    }
+
+    GameObject* Transform::FindChildByName(const std::string& name)
+    {
+        for (Transform* child : m_children)
+        {
+            if (child->GetGameObject()->GetName() == name)
+            {
+                return child->GetGameObject();
+            }
+        }
+        return nullptr;
+    }
+
+    GameObject* Transform::FindChildByNameRecursive(const std::string& name)
+    {
+        for (Transform* child : m_children)
+        {
+            // 1. 현재 자식의 이름이 일치하는지 확인
+            if (child->GetGameObject()->GetName() == name)
+            {
+                return child->GetGameObject();
+            }
+
+            // 2. 일치하지 않으면 해당 자식의 자식들을 재귀적으로 탐색
+            GameObject* found = child->FindChildByNameRecursive(name);
+            if (found != nullptr)
+            {
+                return found;
+            }
+        }
+        return nullptr;
     }
 
     void Transform::OnGui()

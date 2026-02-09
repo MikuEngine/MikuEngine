@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -73,6 +73,9 @@ namespace engine
 
         void Rotate(const Vector3& axis, float angleDegree, bool isLocal = true);
         void Translate(const Vector3& translation, bool isLocal = true);
+
+        GameObject* FindChildByName(const std::string& name);
+        GameObject* FindChildByNameRecursive(const std::string& name);
 
     public:
         void OnGui() override;

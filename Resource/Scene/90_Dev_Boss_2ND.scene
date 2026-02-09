@@ -1,6 +1,6 @@
 {
     "Name": "90_Dev_Boss_2ND",
-    "NumGameObjects": 69,
+    "NumGameObjects": 71,
     "GameObjects": [
         {
             "ID": 0,
@@ -433,8 +433,8 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": -2.3495363166148309e-07,
+                        "x": -1.1920928955078125e-07,
+                        "y": -3.5762786865234375e-07,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -2700,68 +2700,6 @@
         },
         {
             "ID": 46,
-            "Name": "CrystalEffect",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 1.4530116319656372,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_effect/white/crystal_effect_white.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.349999904632568,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 47,
             "Name": "MonsterUpdateSwitch",
             "Active": true,
             "Components": [
@@ -2794,7 +2732,7 @@
             ]
         },
         {
-            "ID": 48,
+            "ID": 47,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -2804,12 +2742,12 @@
                     "Position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": -15.0
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.0,
                         "y": 0.0,
-                        "z": 0.0,
+                        "z": -0.0,
                         "w": 1.0
                     },
                     "Scale": {
@@ -2830,7 +2768,6 @@
                     "RotationSpeed": 20.0,
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
-                    "BaseBulletLifetime": 3.0,
                     "BaseBulletRange": 10.0,
                     "BaseBulletSizeScale": 4.550000190734863,
                     "BaseBulletSpeed": 15.0,
@@ -2844,12 +2781,14 @@
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.30000001192092896,
-                    "DashImpulseMultiplier": 6.0,
+                    "BaseDashDistance": 6.0,
                     "DashDecayRate": 2.0,
+                    "DashDecayDuration": 0.5,
                     "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224,
                     "MaxDashCount": 3,
                     "DashRechargeTime": 1.0,
+                    "PostDashQuickFireDuration": 0.30000001192092896,
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
                     "FragileGaugeRisePerSecond": 15.0
@@ -2938,7 +2877,7 @@
             ]
         },
         {
-            "ID": 49,
+            "ID": 48,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -2948,7 +2887,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": -15.0
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -3158,7 +3097,7 @@
             ]
         },
         {
-            "ID": 50,
+            "ID": 49,
             "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [
@@ -3229,7 +3168,7 @@
             ]
         },
         {
-            "ID": 51,
+            "ID": 50,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -3297,7 +3236,7 @@
             ]
         },
         {
-            "ID": 52,
+            "ID": 51,
             "Name": "Scene_spawn_system_data_Test",
             "Active": true,
             "Components": [
@@ -3324,8 +3263,8 @@
             ]
         },
         {
-            "ID": 53,
-            "ParentID": 52,
+            "ID": 52,
+            "ParentID": 51,
             "Name": "Collier_Wall_Front",
             "Active": true,
             "Components": [
@@ -3375,8 +3314,8 @@
             ]
         },
         {
-            "ID": 54,
-            "ParentID": 52,
+            "ID": 53,
+            "ParentID": 51,
             "Name": "Collier_Wall_Back",
             "Active": true,
             "Components": [
@@ -3426,8 +3365,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 52,
+            "ID": 54,
+            "ParentID": 51,
             "Name": "Collier_Wall_Left",
             "Active": true,
             "Components": [
@@ -3477,8 +3416,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 52,
+            "ID": 55,
+            "ParentID": 51,
             "Name": "Collier_Wall_Right",
             "Active": true,
             "Components": [
@@ -3528,8 +3467,8 @@
             ]
         },
         {
-            "ID": 57,
-            "ParentID": 52,
+            "ID": 56,
+            "ParentID": 51,
             "Name": "Collier_Crystal_Right_Front_1",
             "Active": true,
             "Components": [
@@ -3575,8 +3514,8 @@
             ]
         },
         {
-            "ID": 58,
-            "ParentID": 52,
+            "ID": 57,
+            "ParentID": 51,
             "Name": "Collier_Crystal_Right_Front_2",
             "Active": true,
             "Components": [
@@ -3622,8 +3561,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 52,
+            "ID": 58,
+            "ParentID": 51,
             "Name": "Collier_Crystal_Right_Front_3",
             "Active": true,
             "Components": [
@@ -3669,8 +3608,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 52,
+            "ID": 59,
+            "ParentID": 51,
             "Name": "Collier_Crystal_Left_Front",
             "Active": true,
             "Components": [
@@ -3720,8 +3659,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 52,
+            "ID": 60,
+            "ParentID": 51,
             "Name": "Collier_Crystal_Left_Back",
             "Active": true,
             "Components": [
@@ -3771,8 +3710,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 52,
+            "ID": 61,
+            "ParentID": 51,
             "Name": "Collier_Crystal_Right_Back",
             "Active": true,
             "Components": [
@@ -3822,8 +3761,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 52,
+            "ID": 62,
+            "ParentID": 51,
             "Name": "Stage1Test_Shin_GridMap",
             "Active": true,
             "Components": [
@@ -12884,7 +12823,7 @@
             ]
         },
         {
-            "ID": 64,
+            "ID": 63,
             "Name": "AimPointerCanvas",
             "Active": true,
             "Components": [
@@ -12928,7 +12867,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -12939,8 +12879,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 64,
+            "ID": 64,
+            "ParentID": 63,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -12984,12 +12924,13 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
         {
-            "ID": 66,
+            "ID": 65,
             "Name": "z_Dev_Boss",
             "Active": true,
             "Components": [
@@ -12998,8 +12939,8 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 3.5295801162719727,
-                        "z": 14.02025032043457
+                        "y": 3.5,
+                        "z": 10.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -13008,15 +12949,15 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 22.200000762939453,
-                        "y": 7.699999809265137,
-                        "z": 8.899999618530273
+                        "x": 8.0,
+                        "y": 8.0,
+                        "z": 8.0
                     }
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
@@ -13146,11 +13087,139 @@
                 {
                     "Type": "BulletFactory",
                     "Active": true
+                },
+                {
+                    "Type": "BossSubPartsController",
+                    "Active": true,
+                    "OrbitPartsCount": 20,
+                    "OrbitSpeed": 41.29999923706055,
+                    "OrbitRadius": 5.0,
+                    "BobbingSpeed": 1.0,
+                    "BobbingAmount": 1.2000000476837158
+                }
+            ]
+        },
+        {
+            "ID": 66,
+            "ParentID": 65,
+            "Name": "BossSubParts",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.125,
+                        "y": 0.125,
+                        "z": 0.125
+                    }
                 }
             ]
         },
         {
             "ID": 67,
+            "ParentID": 66,
+            "Name": "RotatingParts",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 68,
+            "ParentID": 67,
+            "Name": "RotatingPart",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.13127398490905762,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 69,
             "Name": "z_Dev_Boss_HP_Text",
             "Active": true,
             "Components": [
@@ -13194,7 +13263,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "Canvas",
@@ -13205,8 +13275,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 67,
+            "ID": 70,
+            "ParentID": 69,
             "Name": "UI_BossHP",
             "Active": true,
             "Components": [
@@ -13250,7 +13320,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
