@@ -1,9 +1,72 @@
 {
-    "Name": "SpawnerType1",
+    "Name": "Map_White1",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
+            "Name": "Map_White1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 4.467129230499268,
+                        "z": 25.01388168334961
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 3.0,
+                        "y": 3.0,
+                        "z": 3.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
             "Name": "SpawnerType1",
             "Active": true,
             "Components": [
@@ -12,26 +75,26 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": -1.489043116569519,
+                        "z": -8.337961196899414
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.0,
                         "y": 0.0,
-                        "z": 0.0,
+                        "z": -0.0,
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.3333333432674408,
+                        "y": 0.3333333432674408,
+                        "z": 0.3333333432674408
                     }
                 }
             ]
         },
         {
-            "ID": 1,
-            "ParentID": 0,
+            "ID": 2,
+            "ParentID": 1,
             "Name": "GridMap",
             "Active": true,
             "Components": [
@@ -9092,8 +9155,8 @@
             ]
         },
         {
-            "ID": 2,
-            "ParentID": 0,
+            "ID": 3,
+            "ParentID": 1,
             "Name": "RockStickingOut1",
             "Active": true,
             "Components": [
@@ -9178,8 +9241,8 @@
             ]
         },
         {
-            "ID": 3,
-            "ParentID": 0,
+            "ID": 4,
+            "ParentID": 1,
             "Name": "RockStickingOut2",
             "Active": true,
             "Components": [
@@ -9260,8 +9323,8 @@
             ]
         },
         {
-            "ID": 4,
-            "ParentID": 0,
+            "ID": 5,
+            "ParentID": 1,
             "Name": "RockStickingOut1",
             "Active": true,
             "Components": [
@@ -9346,8 +9409,8 @@
             ]
         },
         {
-            "ID": 5,
-            "ParentID": 0,
+            "ID": 6,
+            "ParentID": 1,
             "Name": "RockStickingOut2",
             "Active": true,
             "Components": [
@@ -9428,8 +9491,8 @@
             ]
         },
         {
-            "ID": 6,
-            "ParentID": 0,
+            "ID": 7,
+            "ParentID": 1,
             "Name": "MonsterSpawner",
             "Active": true,
             "Components": [
@@ -9466,8 +9529,8 @@
             ]
         },
         {
-            "ID": 7,
-            "ParentID": 6,
+            "ID": 8,
+            "ParentID": 7,
             "Name": "Zone1",
             "Active": true,
             "Components": [
@@ -9494,8 +9557,8 @@
             ]
         },
         {
-            "ID": 8,
-            "ParentID": 7,
+            "ID": 9,
+            "ParentID": 8,
             "Name": "Point1",
             "Active": true,
             "Components": [
@@ -9522,8 +9585,8 @@
             ]
         },
         {
-            "ID": 9,
-            "ParentID": 7,
+            "ID": 10,
+            "ParentID": 8,
             "Name": "Point2",
             "Active": true,
             "Components": [
@@ -9550,8 +9613,8 @@
             ]
         },
         {
-            "ID": 10,
-            "ParentID": 7,
+            "ID": 11,
+            "ParentID": 8,
             "Name": "Point3",
             "Active": true,
             "Components": [
@@ -9578,8 +9641,8 @@
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 6,
+            "ID": 12,
+            "ParentID": 7,
             "Name": "Zone2",
             "Active": true,
             "Components": [
@@ -9606,8 +9669,8 @@
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 11,
+            "ID": 13,
+            "ParentID": 12,
             "Name": "Point1",
             "Active": true,
             "Components": [
@@ -9634,8 +9697,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 11,
+            "ID": 14,
+            "ParentID": 12,
             "Name": "Point2",
             "Active": true,
             "Components": [
@@ -9662,8 +9725,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 11,
+            "ID": 15,
+            "ParentID": 12,
             "Name": "Point3",
             "Active": true,
             "Components": [
@@ -9690,8 +9753,8 @@
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 11,
+            "ID": 16,
+            "ParentID": 12,
             "Name": "Point4",
             "Active": true,
             "Components": [
@@ -9718,8 +9781,8 @@
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 6,
+            "ID": 17,
+            "ParentID": 7,
             "Name": "Zone3",
             "Active": true,
             "Components": [
@@ -9746,8 +9809,8 @@
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 16,
+            "ID": 18,
+            "ParentID": 17,
             "Name": "Point1",
             "Active": true,
             "Components": [
@@ -9774,8 +9837,8 @@
             ]
         },
         {
-            "ID": 18,
-            "ParentID": 16,
+            "ID": 19,
+            "ParentID": 17,
             "Name": "Point2",
             "Active": true,
             "Components": [
@@ -9802,8 +9865,8 @@
             ]
         },
         {
-            "ID": 19,
-            "ParentID": 16,
+            "ID": 20,
+            "ParentID": 17,
             "Name": "Point3",
             "Active": true,
             "Components": [

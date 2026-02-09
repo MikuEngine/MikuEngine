@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -14,6 +14,7 @@
 #include "UpgradeProgressManager.h"
 #include "Script/MonsterGenerator/MonsterSpawner.h"
 #include "Script/DoorTriggerScript.h"
+#include "Scene/GameScene.h"
 
 namespace game
 {
@@ -33,11 +34,12 @@ namespace game
             int minMonsterCount = 3;
             int maxMonsterCount = 6;
             int anchorMonsterID = 0;
+            int difficulty = 0;
         };
 
         bool ParseStageRow(const std::vector<std::string>& fields, StageRow& out)
         {
-            if (fields.size() < 6)
+            if (fields.size() < 7)
                 return false;
             try
             {
@@ -47,6 +49,7 @@ namespace game
                 out.minMonsterCount = std::stoi(fields[3]);
                 out.maxMonsterCount = std::stoi(fields[4]);
                 out.anchorMonsterID = std::stoi(fields[5]);
+                out.difficulty = std::stoi(fields[6]);
                 if (out.minMonsterCount > out.maxMonsterCount)
                     out.minMonsterCount = out.maxMonsterCount;
                 return true;
@@ -57,16 +60,24 @@ namespace game
             }
         }
 
-        bool GetStageDataFromCsv(int stageIndex, StageRow& out)
+        std::vector<StageRow> g_stageCache;
+
+        bool LoadStageCacheIfNeeded()
         {
-            std::vector<StageRow> rows;
+            if (!g_stageCache.empty())
+                return true;
             auto parser = [](const std::vector<std::string>& fields, StageRow& row) -> bool
             {
                 return ParseStageRow(fields, row);
             };
-            if (!engine::CSVReader::Load<StageRow>(g_stageCsvPath, rows, parser))
+            return engine::CSVReader::Load<StageRow>(g_stageCsvPath, g_stageCache, parser);
+        }
+
+        bool GetStageDataFromCsv(int stageIndex, StageRow& out)
+        {
+            if (!LoadStageCacheIfNeeded())
                 return false;
-            for (const auto& r : rows)
+            for (const auto& r : g_stageCache)
             {
                 if (r.stageIndex == stageIndex)
                 {
@@ -126,6 +137,7 @@ namespace game
         m_spawnedMonsters.clear();
         m_cleared = false;
         m_currentMapEnvRoot = engine::Ptr<engine::GameObject>();
+        m_stageClearRewardRuby = m_stageClearRewardSapphire = m_stageClearRewardEmerald = 0;
     }
 
     void StageManager::AddRunCurrency(int ruby, int sapphire, int emerald)
@@ -147,25 +159,9 @@ namespace game
         return !outName.empty();
     }
 
-    void StageManager::ComputeDifficulty(int stageIndex, int& targetScore, int& minCount, int& maxCount) const
-    {
-        const int baseScore = 100;
-        const int scorePerStage = 20;
-        const int baseMin = 3;
-        const int baseMax = 6;
-        const int countPerStage = 1;
-
-        targetScore = baseScore + stageIndex * scorePerStage;
-        minCount = baseMin + (stageIndex / 2) * countPerStage;
-        maxCount = baseMax + (stageIndex / 2) * countPerStage;
-        if (minCount > maxCount)
-            minCount = maxCount;
-    }
-
     void StageManager::BeginStage()
     {
         ClearStageState();
-        // 씬 변경 시 엔진이 씬을 비우므로 여기서 Destroy 하지 않음. 참조만 비움.
         m_currentMapEnvRoot = engine::Ptr<engine::GameObject>();
 
         StageRow stageRow;
@@ -183,23 +179,17 @@ namespace game
         if (hasStageData)
             ApplyStageLightIntensity(stageRow.lightIntensity);
 
-        // 맵 프리팹 안에 스포너·장애물·스폰 포인트가 포함됨. 스포너는 맵 계층에서 찾음.
         MonsterSpawner* spawner = mapRoot ? FindMonsterSpawnerInHierarchy(mapRoot) : nullptr;
         if (spawner)
         {
-            int targetScore = 100, minCount = 3, maxCount = 6;
-            ComputeDifficulty(m_currentStage, targetScore, minCount, maxCount);
-            if (hasStageData)
-            {
-                minCount = stageRow.minMonsterCount;
-                maxCount = stageRow.maxMonsterCount;
-                if (minCount > maxCount)
-                    minCount = maxCount;
-            }
+            const int targetScore = hasStageData ? stageRow.difficulty : 100;
+            int minCount = hasStageData ? stageRow.minMonsterCount : 3;
+            int maxCount = hasStageData ? stageRow.maxMonsterCount : 6;
+            if (minCount > maxCount)
+                minCount = maxCount;
             const int anchorMonsterID = hasStageData ? stageRow.anchorMonsterID : 0;
             spawner->SetManagedByStageManager(true);
             spawner->SetStageParams(targetScore, minCount, maxCount, anchorMonsterID);
-            // SpawnNow() will be called from OnSpawnerReady when spawner's Start() runs this frame.
         }
     }
 
@@ -210,6 +200,14 @@ namespace game
         spawner->SpawnNow();
         const auto& list = spawner->GetSpawnedMonsters();
         m_spawnedMonsters.assign(list.begin(), list.end());
+        spawner->ComputeAndReportStageClearReward();
+    }
+
+    void StageManager::SetStageClearReward(int ruby, int sapphire, int emerald)
+    {
+        m_stageClearRewardRuby = ruby;
+        m_stageClearRewardSapphire = sapphire;
+        m_stageClearRewardEmerald = emerald;
     }
 
     void StageManager::Update()
@@ -220,15 +218,17 @@ namespace game
         if (!hasMonsters && !m_cleared)
         {
             m_cleared = true;
+            m_runRuby += m_stageClearRewardRuby;
+            m_runSapphire += m_stageClearRewardSapphire;
+            m_runEmerald += m_stageClearRewardEmerald;
+            m_stageClearRewardRuby = m_stageClearRewardSapphire = m_stageClearRewardEmerald = 0;
+
             engine::Scene* scene = engine::SceneManager::Get().GetScene();
             if (scene)
             {
-                if (m_doorNextPosition != g_zero)
-                    SetActiveDoor("StageDoor_Next", true);
-                if (m_doorExitPosition != g_zero)
-                    SetActiveDoor("StageDoor_Exit", false);   
+                SetActiveDoor("StageDoor_Next", true);
+                SetActiveDoor("StageDoor_Exit", false);
             }
-            // TODO: 보상 콜백 호출
         }
     }
 
@@ -244,7 +244,7 @@ namespace game
         m_runRuby = m_runSapphire = m_runEmerald = 0;
         m_currentStage = 1;
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("01_READY_Lobby");
+        GameScene::Change(SceneID::Lobby);
     }
 
     void StageManager::RequestNextStage()
@@ -254,11 +254,11 @@ namespace game
         if (m_currentStage % 10 == 0)
         {
             game::LoadingScreenDrawer::OnSceneTransitionBegin();
-            engine::SceneManager::Get().ChangeScene("01_READY_Boss");
+            //GameScene::Change(SceneID::Boss);
             return;
         }
 
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
-        engine::SceneManager::Get().ChangeScene("01_READY_Stage");
+        GameScene::Change(SceneID::Play);
     }
 }

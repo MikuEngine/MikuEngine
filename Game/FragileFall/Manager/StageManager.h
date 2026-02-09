@@ -26,6 +26,11 @@ namespace game
         bool m_cleared = false;
         engine::Ptr<engine::GameObject> m_currentMapEnvRoot;  // 맵 환경(장애물·스폰 포인트 포함) 루트
 
+        /// 스테이지 시작 시(스폰 직후) 미리 정해 둔 클리어 보상. 클리어 시 m_run*에 더한 뒤 0으로 비움.
+        int m_stageClearRewardRuby = 0;
+        int m_stageClearRewardSapphire = 0;
+        int m_stageClearRewardEmerald = 0;
+
     private:
         StageManager() = default;
         ~StageManager() = default;
@@ -56,8 +61,12 @@ namespace game
         /// 현재 스테이지 번호 (1부터, 10·20·30… = 보스).
         int GetCurrentStage() const { return m_currentStage; }
 
-        /// 이번 플레이 런에서 번 재화 추가. (몬스터 드롭·클리어 보상 등에서 호출)
+        /// 이번 플레이 런에서 번 재화 추가. (스테이지 클리어 보상은 내부에서 자동 지급, 추가 보상용)
         void AddRunCurrency(int ruby, int sapphire, int emerald);
+
+        int GetRunRuby() const { return m_runRuby; }
+        int GetRunSapphire() const { return m_runSapphire; }
+        int GetRunEmerald() const { return m_runEmerald; }
 
         /// 탈출구 접촉 시. m_currentStage=1 리셋 후 로비 씬으로 전환.
         void RequestGoToLobby();
@@ -70,11 +79,13 @@ namespace game
         /// 클리어 시 생성할 "탈출구" 위치. (0,0,0)이면 생성 안 함.
         void SetDoorExitPosition(const engine::Vector3& pos) { m_doorExitPosition = pos; }
 
+        /// 스포너가 MonsterData.csv 재화 범위로 계산한 클리어 보상을 설정할 때 호출.
+        void SetStageClearReward(int ruby, int sapphire, int emerald);
+
     private:
         friend class engine::Singleton<StageManager>;
 
         void ClearStageState();
-        void ComputeDifficulty(int stageIndex, int& targetScore, int& minCount, int& maxCount) const;
         bool GetMapEnvPrefabNameForStage(int stageIndex, std::string& outName) const;
     };
 }
