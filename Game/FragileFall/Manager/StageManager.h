@@ -24,8 +24,7 @@ namespace game
         int m_runSapphire = 0;
         int m_runEmerald = 0;
         bool m_cleared = false;
-        engine::Ptr<engine::GameObject> m_currentMapEnvRoot;
-        engine::Ptr<engine::GameObject> m_currentSpawnerRoot;
+        engine::Ptr<engine::GameObject> m_currentMapEnvRoot;  // 맵 환경(장애물·스폰 포인트 포함) 루트
 
     private:
         StageManager() = default;
@@ -41,7 +40,7 @@ namespace game
         }
 
         /// 플레이 씬에서 스테이지 시작 시 호출 (예: SceneController_Play::Awake).
-        /// CSV에서 맵 환경 프리팹 조회, 난이도 세팅, 스포너+장애물 1종 랜덤 → Instantiate → 스포너 설정.
+        /// CSV에서 맵 환경 프리팹 조회 후 Instantiate. 맵 프리팹에 장애물·스폰 포인트·MonsterSpawner 포함.
         /// 스폰은 Spawner Start() → OnSpawnerReady → SpawnNow() 로 같은 프레임에 수행.
         void BeginStage();
 

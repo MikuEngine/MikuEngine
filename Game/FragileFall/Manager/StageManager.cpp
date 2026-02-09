@@ -21,7 +21,6 @@ namespace game
     {
         constexpr const char* g_stageCsvPath = "Resource/Data/Stages.csv";
         constexpr const char* g_defaultMapEnvPrefab = "";  // 비어 있으면 맵 환경 프리팹 미로드
-        const std::array<const char*, 3> g_spawnerRootNames{ "StageRoom_A", "StageRoom_B", "StageRoom_C" };
 
         const engine::Vector3 g_doorBoxSize(2.0f, 2.0f, 2.0f);
         const engine::Vector3 g_zero(0.0f, 0.0f, 0.0f);
@@ -126,6 +125,7 @@ namespace game
     {
         m_spawnedMonsters.clear();
         m_cleared = false;
+        m_currentMapEnvRoot = engine::Ptr<engine::GameObject>();
     }
 
     void StageManager::AddRunCurrency(int ruby, int sapphire, int emerald)
@@ -167,15 +167,15 @@ namespace game
         ClearStageState();
         // 씬 변경 시 엔진이 씬을 비우므로 여기서 Destroy 하지 않음. 참조만 비움.
         m_currentMapEnvRoot = engine::Ptr<engine::GameObject>();
-        m_currentSpawnerRoot = engine::Ptr<engine::GameObject>();
 
         StageRow stageRow;
         const bool hasStageData = GetStageDataFromCsv(m_currentStage, stageRow);
 
         std::string mapPrefabName = hasStageData ? stageRow.mapEnvPrefab : "";
+        engine::GameObject* mapRoot = nullptr;
         if (!mapPrefabName.empty())
         {
-            engine::GameObject* mapRoot = engine::Prefab::Instantiate(mapPrefabName);
+            mapRoot = engine::Prefab::Instantiate(mapPrefabName);
             if (mapRoot)
                 m_currentMapEnvRoot = engine::Ptr<engine::GameObject>(mapRoot);
         }
@@ -183,33 +183,24 @@ namespace game
         if (hasStageData)
             ApplyStageLightIntensity(stageRow.lightIntensity);
 
-        size_t idx = engine::Random::Int<size_t>(0, g_spawnerRootNames.size() - 1);
-        const char* spawnerPrefabName = g_spawnerRootNames[idx];
-
-        engine::GameObject* spawnerRoot = engine::Prefab::Instantiate(spawnerPrefabName);
-        if (!spawnerRoot)
-            return;
-
-        m_currentSpawnerRoot = engine::Ptr<engine::GameObject>(spawnerRoot);
-
-        MonsterSpawner* spawner = FindMonsterSpawnerInHierarchy(spawnerRoot);
-        if (!spawner)
-            return;
-
-        int targetScore = 100, minCount = 3, maxCount = 6;
-        ComputeDifficulty(m_currentStage, targetScore, minCount, maxCount);
-        if (hasStageData)
+        // 맵 프리팹 안에 스포너·장애물·스폰 포인트가 포함됨. 스포너는 맵 계층에서 찾음.
+        MonsterSpawner* spawner = mapRoot ? FindMonsterSpawnerInHierarchy(mapRoot) : nullptr;
+        if (spawner)
         {
-            minCount = stageRow.minMonsterCount;
-            maxCount = stageRow.maxMonsterCount;
-            if (minCount > maxCount)
-                minCount = maxCount;
+            int targetScore = 100, minCount = 3, maxCount = 6;
+            ComputeDifficulty(m_currentStage, targetScore, minCount, maxCount);
+            if (hasStageData)
+            {
+                minCount = stageRow.minMonsterCount;
+                maxCount = stageRow.maxMonsterCount;
+                if (minCount > maxCount)
+                    minCount = maxCount;
+            }
+            const int anchorMonsterID = hasStageData ? stageRow.anchorMonsterID : 0;
+            spawner->SetManagedByStageManager(true);
+            spawner->SetStageParams(targetScore, minCount, maxCount, anchorMonsterID);
+            // SpawnNow() will be called from OnSpawnerReady when spawner's Start() runs this frame.
         }
-
-        const int anchorMonsterID = hasStageData ? stageRow.anchorMonsterID : 0;
-        spawner->SetManagedByStageManager(true);
-        spawner->SetStageParams(targetScore, minCount, maxCount, anchorMonsterID);
-        // SpawnNow() will be called from OnSpawnerReady when spawner's Start() runs this frame.
     }
 
     void StageManager::OnSpawnerReady(MonsterSpawner* spawner)
