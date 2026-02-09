@@ -1,0 +1,79 @@
+{
+    "Name": "TestRotator",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "TestRotator",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.5,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.12999999523162842,
+                        "y": 0.20000000298023224,
+                        "z": 1.2999999523162842
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.7480000257492065,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 5.309999942779541,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "OrbitScript",
+                    "Active": true,
+                    "PlayerObjectName": "Player",
+                    "AimPointerMeshObjectName": "AimPointerMesh",
+                    "FixedY": 2.5,
+                    "OrbitRadius": 1.399999976158142,
+                    "RecoilOffsetZ": -0.3700000047683716,
+                    "RecoilOffsetY": 0.4000000059604645,
+                    "RecoilRotationX": 30.0
+                }
+            ]
+        }
+    ]
+}

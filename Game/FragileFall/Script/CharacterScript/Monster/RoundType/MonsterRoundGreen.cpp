@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundGreen.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -62,27 +62,11 @@ namespace game
         
         uint32_t layer = collider->GetLayer();
         if (layer != engine::PhysicsLayer::Index::Wall &&
-            layer != engine::PhysicsLayer::Index::SubWall &&
             layer != engine::PhysicsLayer::Index::Environment &&
             layer != engine::PhysicsLayer::Index::Enemy &&
             layer != engine::PhysicsLayer::Index::Player)
         {
             return;  // 방향 전환 불필요한 레이어는 무시
-        }
-        
-        // ─────────────────────────────────────────────
-        // SubWall과 겹치는 Wall은 방향전환 무시
-        // ─────────────────────────────────────────────
-        if (layer == engine::PhysicsLayer::Index::Wall)
-        {
-            std::string wallName = info.gameObject->GetName();
-            if (wallName.find("Collier_Crystal_Right_Front") != std::string::npos ||
-                wallName.find("Collier_Crystal_Left_Front")  != std::string::npos ||
-                wallName.find("Collier_Crystal_Left_Back")   != std::string::npos ||
-                wallName.find("Collier_Crystal_Right_Back")  != std::string::npos)
-            {
-                return;  // SubWall과 겹친 Wall → 방향전환 안 함
-            }
         }
         
         // ─────────────────────────────────────────────
@@ -110,7 +94,7 @@ namespace game
         }
         
         // ─────────────────────────────────────────────
-        // SubWall/Wall/Environment/Enemy/Player: 노말 추출
+        // Wall/Environment/Enemy/Player: 노말 추출
         // ─────────────────────────────────────────────
         engine::Vector3 collisionNormal = engine::Vector3::Zero;
         for (const auto& contact : info.contacts)
@@ -158,6 +142,45 @@ namespace game
         // 열거형 동기화
         // ─────────────────────────────────────────────
         UpdateDiagonalDirectionFromVector();
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 트리거 콜백 - SubWall 트리거 감지
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGreen::OnTriggerEnter(const engine::CollisionInfo& info)
+    {
+        if (!info.gameObject) return;
+        
+        auto* collider = info.collider.Get();
+        if (!collider) return;
+        
+        // SubWall 트리거 감지
+        if (collider->GetLayer() == engine::PhysicsLayer::Index::SubWall)
+        {
+            m_currentTriggeredSubWall = info.gameObject->GetName();
+            m_hasTriggeredSubWall = true;
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 트리거 콜백 - SubWall 트리거 해제
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGreen::OnTriggerExit(const engine::CollisionInfo& info)
+    {
+        if (!info.gameObject) return;
+        
+        auto* collider = info.collider.Get();
+        if (!collider) return;
+        
+        // SubWall 트리거 해제
+        if (collider->GetLayer() == engine::PhysicsLayer::Index::SubWall)
+        {
+            if (info.gameObject->GetName() == m_currentTriggeredSubWall)
+            {
+                m_currentTriggeredSubWall.clear();
+                m_hasTriggeredSubWall = false;
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════

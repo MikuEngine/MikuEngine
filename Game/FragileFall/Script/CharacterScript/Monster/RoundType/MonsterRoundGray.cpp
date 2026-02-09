@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterRoundGray.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -55,7 +55,6 @@ namespace game
         
         uint32_t layer = collider->GetLayer();
         if (layer != engine::PhysicsLayer::Index::Wall &&
-            layer != engine::PhysicsLayer::Index::SubWall &&
             layer != engine::PhysicsLayer::Index::Environment &&
             layer != engine::PhysicsLayer::Index::Enemy &&
             layer != engine::PhysicsLayer::Index::Player)
@@ -81,28 +80,28 @@ namespace game
         }
         
         // ─────────────────────────────────────────────
-        // Wall/SubWall 중복 오브젝트 체크 (쿨다운보다 먼저, 안전장치)
+        // Wall 중복 오브젝트 체크 (쿨다운보다 먼저, 안전장치)
         // ─────────────────────────────────────────────
-        if (layer == engine::PhysicsLayer::Index::Wall || layer == engine::PhysicsLayer::Index::SubWall)
+        if (layer == engine::PhysicsLayer::Index::Wall)
         {
             std::string objectName = info.gameObject->GetName();
             if (!m_lastCollisionWallName.empty() && objectName == m_lastCollisionWallName)
             {
-                return;  // 같은 Wall/SubWall 오브젝트 연속 충돌 → 방향전환 무시
+                return;  // 같은 Wall 오브젝트 연속 충돌 → 방향전환 무시
             }
         }
         
         // ─────────────────────────────────────────────
-        // Wall/SubWall 쿨다운 체크 (SubWall은 쿨다운 무시)
+        // Wall 쿨다운 체크
         // ─────────────────────────────────────────────
-        if (layer == engine::PhysicsLayer::Index::Wall || layer == engine::PhysicsLayer::Index::SubWall)
+        if (layer == engine::PhysicsLayer::Index::Wall)
         {
             float elapsed = engine::Time::GetElapsedSeconds(m_lastWallCollisionTime);
             bool isInCooldown = (elapsed < m_wallCollisionCooldown);
             
-            if (isInCooldown && layer != engine::PhysicsLayer::Index::SubWall)
+            if (isInCooldown)
             {
-                return;  // Wall은 쿨다운 중 무시, SubWall은 통과
+                return;  // Wall 쿨다운 중 무시
             }
         }
         
@@ -113,39 +112,31 @@ namespace game
         
         if (currentState == "IdleMove")
         {
-            // ── SubWall: 오브젝트 이름 기반 방향 결정 ──
-            if (layer == engine::PhysicsLayer::Index::SubWall)
+            // ── Wall: SubWall 트리거 체크 후 방향 결정 ──
+            if (layer == engine::PhysicsLayer::Index::Wall)
             {
-                std::string subWallName = info.gameObject->GetName();
-                MoveDirection determinedDir = DetermineDirectionFromSubWall(subWallName);
-                
-                if (determinedDir != m_currentDirection)
-                {
-                    // 방향을 직접 설정 (ChangeDirectionOnCollision 거치지 않음)
-                    m_currentDirection = determinedDir;
-                }
-                // SubWall은 collisionOccurred를 설정하지 않음 (이미 방향 직접 설정)
-                m_lastCollisionWallName = subWallName;
-                m_lastWallCollisionTime = engine::Time::GetTimestamp();
-            }
-            // ── Wall: 이동방향 기준 ±90도 회전 (즉시) ──
-            else if (layer == engine::PhysicsLayer::Index::Wall)
-            {
-                // SubWall과 겹쳐진 Wall은 방향전환 무시
                 std::string wallName = info.gameObject->GetName();
-                if (wallName.find("Collier_Crystal_Right_Front") != std::string::npos ||
-                    wallName.find("Collier_Crystal_Left_Front")  != std::string::npos ||
-                    wallName.find("Collier_Crystal_Left_Back")   != std::string::npos ||
-                    wallName.find("Collier_Crystal_Right_Back")  != std::string::npos)
+                
+                // SubWall 트리거가 활성화되어 있으면 SubWall 방향 사용
+                if (m_hasTriggeredSubWall)
                 {
-                    return;  // SubWall과 겹쳐진 Wall → 방향전환 안 함
+                    MoveDirection determinedDir = DetermineDirectionFromSubWall(m_currentTriggeredSubWall);
+                    
+                    if (determinedDir != m_currentDirection)
+                    {
+                        m_currentDirection = determinedDir;
+                    }
+                    m_lastCollisionWallName = m_currentTriggeredSubWall;
+                }
+                // 트리거 없으면 일반 Wall 처리 (±90도 회전)
+                else
+                {
+                    ChangeDirectionOnCollision();
+                    m_lastCollisionWallName = wallName;
                 }
                 
-                // FixedUpdate에서 즉시 방향 변경
-                ChangeDirectionOnCollision();
                 ResetMoveDuration();
                 OnDirectionChanged();
-                m_lastCollisionWallName = wallName;
                 m_lastWallCollisionTime = engine::Time::GetTimestamp();
             }
             // ── Environment, Enemy, Player: 노말 스냅핑 기반 ──
@@ -240,22 +231,25 @@ namespace game
             // EngageMove 상태에서 충돌 → IdleMove로 복귀 + 플레이어 무시
             StartPlayerIgnore();
             
-            // SubWall이면 방향 직접 설정
-            if (layer == engine::PhysicsLayer::Index::SubWall)
+            // Wall 충돌 시
+            if (layer == engine::PhysicsLayer::Index::Wall)
             {
-                std::string subWallName = info.gameObject->GetName();
-                MoveDirection determinedDir = DetermineDirectionFromSubWall(subWallName);
-                if (determinedDir != m_currentDirection)
+                // SubWall 트리거가 활성화되어 있으면 SubWall 방향 사용
+                if (m_hasTriggeredSubWall)
                 {
-                    m_currentDirection = determinedDir;
+                    MoveDirection determinedDir = DetermineDirectionFromSubWall(m_currentTriggeredSubWall);
+                    if (determinedDir != m_currentDirection)
+                    {
+                        m_currentDirection = determinedDir;
+                    }
+                    m_lastCollisionWallName = m_currentTriggeredSubWall;
                 }
-                m_lastCollisionWallName = subWallName;
-                m_lastWallCollisionTime = engine::Time::GetTimestamp();
-            }
-            else if (layer == engine::PhysicsLayer::Index::Wall)
-            {
-                // Wall: 이동방향 유지 (IdleMove 진입 시 90도 회전)
-                m_lastCollisionWallName = info.gameObject->GetName();
+                else
+                {
+                    // 일반 Wall: 이동방향 유지 (IdleMove 진입 시 90도 회전)
+                    m_lastCollisionWallName = info.gameObject->GetName();
+                }
+                
                 m_lastWallCollisionTime = engine::Time::GetTimestamp();
             }
             
@@ -269,11 +263,42 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 트리거 콜백 - 코너 트리거 감지 (비활성화 - SubWall로 대체)
+    // 트리거 콜백 - SubWall 트리거 감지
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundGray::OnTriggerEnter(const engine::CollisionInfo& info)
     {
-        // CornerTrigger 로직 비활성화 - SubWall 시스템으로 대체됨
+        if (!info.gameObject) return;
+        
+        auto* collider = info.collider.Get();
+        if (!collider) return;
+        
+        // SubWall 트리거 감지
+        if (collider->GetLayer() == engine::PhysicsLayer::Index::SubWall)
+        {
+            m_currentTriggeredSubWall = info.gameObject->GetName();
+            m_hasTriggeredSubWall = true;
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 트리거 콜백 - SubWall 트리거 해제
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundGray::OnTriggerExit(const engine::CollisionInfo& info)
+    {
+        if (!info.gameObject) return;
+        
+        auto* collider = info.collider.Get();
+        if (!collider) return;
+        
+        // SubWall 트리거 해제
+        if (collider->GetLayer() == engine::PhysicsLayer::Index::SubWall)
+        {
+            if (info.gameObject->GetName() == m_currentTriggeredSubWall)
+            {
+                m_currentTriggeredSubWall.clear();
+                m_hasTriggeredSubWall = false;
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════

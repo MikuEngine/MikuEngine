@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterRoundType.h"
 
 namespace engine
 {
     struct CollisionInfo;
+    class GridMap;
 }
 
 namespace game
@@ -15,14 +16,16 @@ namespace game
     // 특징:
     //   - MonsterRoundType 상속
     //   - MonsterTier::Blue 고정
-    //   - IdleMove: 곡선 이동 (매 프레임 각도 누적)
-    //   - 초기 방향: 완전 랜덤 (0~360도)
-    //   - m_roamingDuration 동안 좌/우 방향으로 m_turnScale만큼 회전하며 이동
-    //   - 충돌 시 90~180도 랜덤 방향 전환
-    //   - EngageMove: 플레이어 감지 시 고정 목표로 돌진
+    //   - IdleMove: PathfindingAgent 기반 진동 이동
+    //     • PA로 플레이어 방향 6~12m 목표 설정
+    //     • waypoint를 따라가며 사인파 진동 (진폭 0.5~3.0 랜덤)
+    //     • waypoint 도달 시 다음 waypoint로
+    //     • 최종 목표 도달 또는 7초 경과 시 새 목표 설정
+    //     • 충돌 시: 진동 정지 → 노말 기반 90도 × 2m 반사 → 새 목표 설정
+    //   - EngageMove: 플레이어 감지 시 고정 목표로 돌진 (PA 비활성화)
     //   - EngageCollision: 충돌로 돌진 종료, 회전하며 감속
     //   - EngageArrival: 목표 도달로 돌진 종료, 직진하며 감속
-    //   - Fragile 부활 시 Idle로 전이
+    //   - Round 타입: Fragile 없이 바로 Dead로 전이
     // ═══════════════════════════════════════════════════════════════
 
     class MonsterRoundBlue : public MonsterRoundType
@@ -31,27 +34,40 @@ namespace game
 
     protected:
         // ─────────────────────────────────────────────────
-        // 곡선 이동 변수 (IdleMove)
+        // IdleMove 진동 이동 변수 (PathfindingAgent 기반)
         // ─────────────────────────────────────────────────
-        float m_currentAngle = 0.0f;              // 현재 진행 방향 각도 (라디안)
-        int m_turnDirection = 1;                  // 회전 방향 (+1: 좌, -1: 우)
         
-        // ─────────────────────────────────────────────────
-        // Roaming 설정 (에디터 직렬화)
-        // ─────────────────────────────────────────────────
-        float m_roamingDuration = 0.0f;           // 현재 배회 지속 시간
-        float m_roamingTimer = 0.0f;              // 배회 경과 시간
+        // 목표 및 타이머
+        engine::Vector3 m_idleMoveTargetPosition = engine::Vector3::Zero;  // PA가 계산한 최종 목표
+        float m_idleMoveTimer = 0.0f;                      // 이동 경과 시간
+        float m_idleMoveTimeLimit = 7.0f;                  // 시간 제한 (직렬화)
+        float m_targetReachDistance = 2.0f;                // waypoint 도달 판정 거리 (직렬화)
+        bool m_hasIdleMoveTarget = false;                  // 유효한 목표 존재 여부
         
-        float m_roamingDurationMin = 1.0f;        // 배회 지속 시간 최소 (직렬화)
-        float m_roamingDurationMax = 3.0f;        // 배회 지속 시간 최대 (직렬화)
+        // PA 목표 거리 설정
+        float m_targetDistanceMin = 6.0f;                  // 플레이어 방향 최소 거리 (직렬화)
+        float m_targetDistanceMax = 12.0f;                 // 플레이어 방향 최대 거리 (직렬화)
+        int m_targetSafetyMargin = 1;                      // 목표 위치 안전 마진 (직렬화, 0=없음, 1=3x3, 2=5x5)
         
-        // ─────────────────────────────────────────────────
-        // Turn Scale 설정 (에디터 직렬화)
-        // - 초당 회전 각도 (도/초)
-        // ─────────────────────────────────────────────────
-        float m_turnScale = 0.0f;                 // 현재 회전 속도 (도/초)
-        float m_turnScaleMin = 10.0f;             // 회전 속도 최소 (직렬화)
-        float m_maxTurnScale = 45.0f;             // 회전 속도 최대 (직렬화)
+        // 진동 설정 (사인파)
+        float m_oscillationAmplitudeMin = 0.5f;            // 진폭 최소값 (직렬화)
+        float m_oscillationAmplitudeMax = 3.0f;            // 진폭 최대값 (직렬화)
+        float m_oscillationSpeedMultiplier = 5.0f;         // 진동 속도 배율 (직렬화, 좌우 이동 속도 제어)
+        
+        // 진동 런타임
+        float m_currentOscillationAmplitude = 0.0f;        // 현재 파장의 진폭
+        float m_oscillationPhase = 0.0f;                   // 사인파 위상 (0~2π)
+        engine::Vector3 m_currentWaypointTarget = engine::Vector3::Zero;  // 현재 waypoint
+        
+        // 충돌 반사 이동
+        float m_collisionReflectDistance = 2.0f;           // 충돌 시 반사 이동 거리 (직렬화)
+        bool m_isReflecting = false;                       // 반사 이동 중인지
+        float m_reflectTimer = 0.0f;                       // 반사 이동 경과 시간
+        float m_reflectDuration = 0.5f;                    // 반사 이동 지속 시간 (하드코딩)
+        engine::Vector3 m_reflectDirection = engine::Vector3::Zero;  // 반사 방향
+        
+        // GridMap 캐시 (목표 위치 안전성 체크용)
+        engine::GridMap* m_gridMap = nullptr;
         
         // ─────────────────────────────────────────────────
         // 충돌 처리용 플래그
@@ -143,12 +159,18 @@ namespace game
         void ExecuteEngageArrivalBehaviorPhysics();
         
         // ─────────────────────────────────────────────────
-        // IdleMove 헬퍼 함수
+        // IdleMove 헬퍼 함수 (진동 이동)
         // ─────────────────────────────────────────────────
-        void InitializeIdleMove();                              // IdleMove 초기화 (완전 랜덤 방향)
-        void ResetRoamingParameters();                          // Roaming 파라미터 재설정
-        void ChangeDirectionOnCollision();                      // 충돌 시 90~180도 방향 전환
-        engine::Vector3 GetDirectionVector() const;             // 현재 각도 → 방향 벡터
+        void InitializeIdleMove();                              // IdleMove 초기화 (PA로 목표 설정)
+        bool TrySetIdleMoveTarget();                            // PA로 목표 위치 설정 시도 (안전 마진 체크 포함)
+        bool IsPositionSafeForIdleMove(const engine::Vector3& position) const;  // 목표 위치 안전성 체크 (GridMap + 마진)
+        void UpdateOscillationMovement();                       // 진동하며 waypoint로 이동
+        void ResetOscillationPhase();                           // 진동 위상 초기화 (새 파장 시작)
+        bool HasReachedCurrentWaypoint() const;                 // 현재 waypoint 도달 여부
+        void AdvanceToNextWaypoint();                           // 다음 waypoint로 전환
+        bool IsIdleMoveComplete() const;                        // IdleMove 완료 여부 (목표 도달 또는 시간 초과)
+        void HandleIdleMoveCollision(const engine::Vector3& collisionNormal);  // 충돌 처리 → 반사 이동
+        engine::Vector3 CalculateReflectDirection(const engine::Vector3& collisionNormal) const;  // 노말 기반 90도 반사 방향
         
         // ─────────────────────────────────────────────────
         // EngageMove 헬퍼 함수

@@ -7,8 +7,13 @@
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
+#include <Framework/Object/Component/Pathfinding/GridMap.h>
+#include <Framework/System/SystemManager.h>
+#include <Framework/System/PathfindingSystem.h>
 #include <Framework/Physics/PhysicsLayer.h>
 #include <Engine/Core/System/MyTime.h>
+#include <random>
 
 
 namespace game
@@ -36,6 +41,18 @@ namespace game
                 meshRenderer->SetBaseColor(engine::Vector4(0.0f, 0.5f, 1.0f, 1.0f));
             }
         }
+        
+        // PathfindingAgent 설정 (IdleMove용)
+        if (m_pathfindingAgent)
+        {
+            m_pathfindingAgent->SetPathUpdateInterval(0.5f);
+            m_pathfindingAgent->SetWaypointReachDistance(1.0f);
+            m_pathfindingAgent->SetTargetMoveThreshold(1.0f);
+        }
+        
+        // GridMap 캐싱 (목표 위치 안전성 체크용)
+        auto& pathfindingSystem = engine::SystemManager::Get().GetPathfindingSystem();
+        m_gridMap = pathfindingSystem.GetGridMap();
         
         // 게임 시작 시 플레이어 무시 상태로 초기화
         // (InitializeCurrentState는 OnStateEntered를 호출하지 않으므로 수동 설정 필요)
@@ -123,10 +140,11 @@ namespace game
         
         if (currentState == "IdleMove")
         {
-            if (isObstacle || layer == engine::PhysicsLayer::Index::Enemy)
+            // Wall, Environment과의 충돌만 처리 (Enemy 제외)
+            if (isObstacle)
             {
                 m_collisionOccurred = true;
-                m_lastCollisionNormal = collisionNormal;  // 회전 제한용 노말 저장
+                m_lastCollisionNormal = collisionNormal;  // 반사 이동용 노말 저장
             }
         }
         else if (currentState == "EngageMove")
@@ -243,6 +261,20 @@ namespace game
                 bool playerInRange = IsPlayerInDetectionRange();
                 if (playerInRange)
                 {
+                    // IdleMove 상태 초기화
+                    m_hasIdleMoveTarget = false;
+                    m_idleMoveTimer = 0.0f;
+                    m_isReflecting = false;
+                    m_reflectTimer = 0.0f;
+                    m_collisionOccurred = false;
+                    
+                    // PathfindingAgent 비활성화
+                    if (m_pathfindingAgent)
+                    {
+                        m_pathfindingAgent->ClearPath();
+                    }
+                    
+                    // FSM 전환
                     m_logicFSM->SetParameter("PlayerDetected", true);
                 }
             }
@@ -302,48 +334,166 @@ namespace game
     {
         UpdatePlayerIgnoreTimer(deltaTime);
         
-        if (m_collisionOccurred)
+        // ─────────────────────────────────────────────
+        // 플레이어 감지 체크 (매 프레임)
+        // ─────────────────────────────────────────────
+        if (!m_isIgnoringPlayer && IsPlayerInDetectionRange())
         {
-            ChangeDirectionOnCollision();
-            ResetRoamingParameters();
+            // IdleMove 상태 초기화
+            m_hasIdleMoveTarget = false;
+            m_idleMoveTimer = 0.0f;
+            m_isReflecting = false;
+            m_reflectTimer = 0.0f;
             m_collisionOccurred = false;
+            
+            // PathfindingAgent 비활성화
+            if (m_pathfindingAgent)
+            {
+                m_pathfindingAgent->ClearPath();
+            }
+            
+            // FSM 전환
+            m_logicFSM->SetParameter("PlayerDetected", true);
+            return;  // 즉시 EngageMove로 전환
         }
         
-        m_roamingTimer += deltaTime;
-        
-        if (m_roamingTimer >= m_roamingDuration)
+        // 반사 이동 중
+        if (m_isReflecting)
         {
-            ResetRoamingParameters();
+            m_reflectTimer += deltaTime;
+            
+            if (m_reflectTimer >= m_reflectDuration)
+            {
+                // 반사 이동 완료 → 새 목표 설정
+                m_isReflecting = false;
+                TrySetIdleMoveTarget();
+            }
+            return;
+        }
+        
+        // 충돌 발생 시 반사 이동 시작
+        if (m_collisionOccurred)
+        {
+            HandleIdleMoveCollision(m_lastCollisionNormal);
+            m_collisionOccurred = false;
+            return;
+        }
+        
+        // 목표가 없거나 완료되었으면 새 목표 설정
+        if (!m_hasIdleMoveTarget || IsIdleMoveComplete())
+        {
+            TrySetIdleMoveTarget();
+            return;
+        }
+        
+        // 이동 타이머 업데이트
+        m_idleMoveTimer += deltaTime;
+        
+        // waypoint 도달 체크
+        if (HasReachedCurrentWaypoint())
+        {
+            AdvanceToNextWaypoint();
         }
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // IdleMove 상태 물리 행동
+    // IdleMove 상태 물리 행동 (진동하며 waypoint로 이동)
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::ExecuteIdleMoveBehaviorPhysics()
     {
         if (!m_rigidbody) return;
+        
+        // 반사 이동 중 (거리 기반 속도 계산)
+        if (m_isReflecting)
+        {
+            // 2m를 m_reflectDuration(0.5초) 동안 이동
+            float reflectSpeed = m_collisionReflectDistance / m_reflectDuration;
+            MoveInDirection(m_reflectDirection, reflectSpeed);
+            return;
+        }
 
         // 충돌 감지 시 힘 적용 중단 (벽 관통 방지)
-        // 방향 전환은 NonPhysics에서 처리됨
         if (m_collisionOccurred)
         {
             StopAllMovement();
             return;
         }
-
+        
+        // 목표가 없으면 정지
+        if (!m_hasIdleMoveTarget)
+        {
+            StopAllMovement();
+            return;
+        }
+        
         float fixedDeltaTime = engine::Time::FixedDeltaTime();
         
-        float angleChangeDeg = m_turnScale * fixedDeltaTime * static_cast<float>(m_turnDirection);
-        float angleChangeRad = angleChangeDeg * 3.14159265f / 180.0f;
-        m_currentAngle += angleChangeRad;
+        // ─────────────────────────────────────────────
+        // 1. waypoint로 향하는 기본 방향 벡터
+        // ─────────────────────────────────────────────
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 toWaypoint = m_currentWaypointTarget - myPos;
+        toWaypoint.y = 0.0f;
         
+        if (toWaypoint.LengthSquared() < 0.001f)
+        {
+            StopAllMovement();
+            return;
+        }
+        
+        toWaypoint.Normalize();
+        
+        // ─────────────────────────────────────────────
+        // 2. 이동 방향에 수직인 벡터 계산 (좌우 진동용)
+        // ─────────────────────────────────────────────
+        engine::Vector3 perpendicular(-toWaypoint.z, 0.0f, toWaypoint.x);
+        
+        // ─────────────────────────────────────────────
+        // 3. 사인파 진동 계산
+        // ─────────────────────────────────────────────
         const float TWO_PI = 2.0f * 3.14159265f;
-        while (m_currentAngle < 0.0f) m_currentAngle += TWO_PI;
-        while (m_currentAngle >= TWO_PI) m_currentAngle -= TWO_PI;
         
-        engine::Vector3 direction = GetDirectionVector();
-        MoveInDirection(direction, m_moveSpeed);
+        // 위상 업데이트 (고정 주기: 1Hz)
+        m_oscillationPhase += TWO_PI * 1.0f * fixedDeltaTime;
+        
+        // 위상이 2π를 넘으면 새 파장 시작
+        if (m_oscillationPhase >= TWO_PI)
+        {
+            ResetOscillationPhase();
+        }
+        
+        // 사인파 계산: sin(phase) * amplitude
+        float sinValue = std::sin(m_oscillationPhase);
+        float lateralOffset = sinValue * m_currentOscillationAmplitude;
+        
+        // ─────────────────────────────────────────────
+        // 4. 전진 + 진동을 독립적으로 계산하여 합성
+        // ─────────────────────────────────────────────
+        
+        // 전진 벡터 (일정한 속도)
+        engine::Vector3 forwardVelocity = toWaypoint * m_moveSpeed;
+        
+        // 진동 벡터 (진폭 → 속도 변환, 배율 적용)
+        engine::Vector3 lateralVelocity = perpendicular * lateralOffset * m_oscillationSpeedMultiplier;
+        
+        // 두 벡터 합성
+        engine::Vector3 finalVelocity = forwardVelocity + lateralVelocity;
+        finalVelocity.y = 0.0f;
+        
+        // ─────────────────────────────────────────────
+        // 5. 이동 적용 (합성된 속도로)
+        // ─────────────────────────────────────────────
+        if (finalVelocity.LengthSquared() > 0.001f)
+        {
+            float totalSpeed = finalVelocity.Length();
+            finalVelocity.Normalize();
+            MoveInDirection(finalVelocity, totalSpeed);
+        }
+        else
+        {
+            // fallback: 전진만
+            MoveInDirection(toWaypoint, m_moveSpeed);
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -439,9 +589,6 @@ namespace game
         float currentSpeed = CalculateTransitionSpeed();
         
         MoveInDirection(direction, currentSpeed);
-        
-        // IdleMove 진입을 위해 m_currentAngle 업데이트
-        m_currentAngle = currentAngle;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -483,107 +630,279 @@ namespace game
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // IdleMove 초기화
+    // IdleMove 초기화 (PA로 목표 설정)
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::InitializeIdleMove()
     {
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-        
-        std::uniform_real_distribution<float> angleDist(0.0f, 2.0f * 3.14159265f);
-        m_currentAngle = angleDist(gen);
-        
-        ResetRoamingParameters();
-        
-        m_roamingTimer = 0.0f;
+        m_hasIdleMoveTarget = false;
+        m_idleMoveTimer = 0.0f;
         m_collisionOccurred = false;
+        m_isReflecting = false;
+        
+        // PA로 목표 설정 시도
+        TrySetIdleMoveTarget();
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // Roaming 파라미터 재설정
+    // 목표 위치 안전성 체크 (GridMap + 안전 마진)
+    // - MonsterPointedType Purple의 IsPositionSafeForFlee 방식
     // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundBlue::ResetRoamingParameters()
+    bool MonsterRoundBlue::IsPositionSafeForIdleMove(const engine::Vector3& position) const
     {
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
+        if (!m_gridMap) return true;  // GridMap 없으면 체크 안함
         
-        std::uniform_real_distribution<float> durationDist(m_roamingDurationMin, m_roamingDurationMax);
-        m_roamingDuration = durationDist(gen);
+        int centerX, centerZ;
+        m_gridMap->WorldToGrid(position, centerX, centerZ);
         
-        std::uniform_int_distribution<int> dirDist(0, 1);
-        m_turnDirection = (dirDist(gen) == 0) ? 1 : -1;
-        
-        std::uniform_real_distribution<float> turnDist(m_turnScaleMin, m_maxTurnScale);
-        m_turnScale = turnDist(gen);
-        
-        m_roamingTimer = 0.0f;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // 충돌 시 방향 전환 (노말 기반 회전 제한)
-    // - m_lastCollisionNormal은 "몬스터 → 벽" 방향 (벽 안쪽)
-    // - 안전한 방향 = -m_lastCollisionNormal (벽 바깥쪽)
-    // - 안전한 방향 기준 ±90도 범위 내에서만 회전 허용
-    // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundBlue::ChangeDirectionOnCollision()
-    {
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-        
-        // 충돌 노말이 유효하지 않으면 기존 방식 사용
-        if (m_lastCollisionNormal.LengthSquared() < 0.0001f)
+        // 중심 셀이 유효하지 않거나 이동 불가능하면 즉시 false
+        if (!m_gridMap->IsValid(centerX, centerZ) || !m_gridMap->IsWalkable(centerX, centerZ))
         {
-            // 폴백: 랜덤 90~180도 회전
-            std::uniform_int_distribution<int> dirDist(0, 1);
-            bool turnLeft = (dirDist(gen) == 0);
+            return false;
+        }
+        
+        // 안전 마진이 0이면 중심만 체크
+        if (m_targetSafetyMargin <= 0)
+        {
+            return true;
+        }
+        
+        // 주변 셀 체크 (NxN 범위)
+        for (int dz = -m_targetSafetyMargin; dz <= m_targetSafetyMargin; ++dz)
+        {
+            for (int dx = -m_targetSafetyMargin; dx <= m_targetSafetyMargin; ++dx)
+            {
+                int checkX = centerX + dx;
+                int checkZ = centerZ + dz;
+                
+                // 범위를 벗어나거나 이동 불가능한 셀이 있으면 안전하지 않음
+                if (!m_gridMap->IsValid(checkX, checkZ) || !m_gridMap->IsWalkable(checkX, checkZ))
+                {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // PA로 목표 위치 설정 시도 (최대 10회 재시도)
+    // - 플레이어 방향으로 6~12m 떨어진 안전한 위치를 목표로 설정
+    // - PA로 경로 계산 후 첫 번째 waypoint를 현재 목표로 설정
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundBlue::TrySetIdleMoveTarget()
+    {
+        if (!m_pathfindingAgent || !m_targetPlayer || !m_targetPlayer->GetGameObject())
+        {
+            return false;
+        }
+        
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+        
+        // 플레이어 방향 벡터
+        engine::Vector3 toPlayer = playerPos - myPos;
+        toPlayer.y = 0.0f;
+        
+        if (toPlayer.LengthSquared() < 0.001f)
+        {
+            return false;  // 플레이어가 너무 가까움
+        }
+        
+        toPlayer.Normalize();
+        
+        // 최대 10회 재시도
+        constexpr int kMaxAttempts = 10;
+        std::uniform_real_distribution<float> distDist(m_targetDistanceMin, m_targetDistanceMax);
+        
+        for (int attempt = 0; attempt < kMaxAttempts; ++attempt)
+        {
+            // 6~12m 범위 내 랜덤 거리 선정
+            float randomDistance = distDist(gen);
             
-            std::uniform_real_distribution<float> angleDist(90.0f, 180.0f);
-            float angleChangeDeg = angleDist(gen);
-            float angleChangeRad = angleChangeDeg * 3.14159265f / 180.0f;
+            // 목표 위치 계산 (플레이어 방향으로)
+            engine::Vector3 targetPos = myPos + toPlayer * randomDistance;
             
-            m_currentAngle += turnLeft ? angleChangeRad : -angleChangeRad;
+            // 안전 마진 체크 (장애물 회피)
+            if (!IsPositionSafeForIdleMove(targetPos))
+            {
+                continue;  // 안전하지 않으면 다음 시도
+            }
+            
+            // PA로 경로 계산 (즉시 계산)
+            m_pathfindingAgent->RequestPathImmediate(targetPos);
+            
+            // 경로가 유효한지 확인
+            if (!m_pathfindingAgent->HasPath())
+            {
+                continue;  // 경로 없으면 다음 시도
+            }
+            
+            // 첫 번째 waypoint를 현재 목표로 설정
+            if (!m_pathfindingAgent->GetCurrentWaypoint(m_currentWaypointTarget))
+            {
+                continue;  // waypoint 없으면 다음 시도
+            }
+            
+            // 성공!
+            m_idleMoveTargetPosition = targetPos;
+            m_hasIdleMoveTarget = true;
+            m_idleMoveTimer = 0.0f;
+            
+            // 진동 위상 초기화 (새 파장 시작)
+            ResetOscillationPhase();
+            
+            return true;
+        }
+        
+        // 10회 실패 시
+        m_hasIdleMoveTarget = false;
+        return false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 진동 위상 초기화 (새 파장 시작)
+    // - 새로운 진폭 랜덤 선정
+    // - 위상 0으로 리셋
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundBlue::ResetOscillationPhase()
+    {
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        
+        std::uniform_real_distribution<float> ampDist(m_oscillationAmplitudeMin, m_oscillationAmplitudeMax);
+        m_currentOscillationAmplitude = ampDist(gen);
+        
+        m_oscillationPhase = 0.0f;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 현재 waypoint 도달 여부
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundBlue::HasReachedCurrentWaypoint() const
+    {
+        if (!m_hasIdleMoveTarget) return true;
+        
+        engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+        engine::Vector3 diff = m_currentWaypointTarget - myPos;
+        diff.y = 0.0f;
+        
+        return diff.LengthSquared() <= (m_targetReachDistance * m_targetReachDistance);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 다음 waypoint로 전환
+    // ═══════════════════════════════════════════════════════════════
+    void MonsterRoundBlue::AdvanceToNextWaypoint()
+    {
+        if (!m_pathfindingAgent) return;
+        
+        m_pathfindingAgent->AdvanceToNextWaypoint();
+        
+        // 다음 waypoint 가져오기
+        if (m_pathfindingAgent->GetCurrentWaypoint(m_currentWaypointTarget))
+        {
+            // 새 waypoint로 전환 시 진동 위상 초기화 (새 파장 시작)
+            ResetOscillationPhase();
         }
         else
         {
-            // 안전한 방향 = 벽 바깥쪽 = -m_lastCollisionNormal
-            engine::Vector3 safeDirection = -m_lastCollisionNormal;
-            float safeAngle = std::atan2(safeDirection.z, safeDirection.x);
-            
-            // 안전한 방향 기준 ±90도 범위 내에서 랜덤 선택
-            // (벽 안쪽을 향하지 않는 방향만 허용)
-            std::uniform_real_distribution<float> offsetDist(-90.0f, 90.0f);
-            float offsetDeg = offsetDist(gen);
-            float offsetRad = offsetDeg * 3.14159265f / 180.0f;
-            
-            m_currentAngle = safeAngle + offsetRad;
+            // 더 이상 waypoint가 없음 → 목표 완료
+            m_hasIdleMoveTarget = false;
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // IdleMove 완료 여부 (목표 도달 또는 시간 초과)
+    // ═══════════════════════════════════════════════════════════════
+    bool MonsterRoundBlue::IsIdleMoveComplete() const
+    {
+        if (!m_hasIdleMoveTarget) return true;
+        if (m_idleMoveTimer >= m_idleMoveTimeLimit) return true;
+        
+        // 마지막 waypoint 도달 확인
+        if (!m_pathfindingAgent || !m_pathfindingAgent->HasPath())
+        {
+            return true;
         }
         
-        // 각도 정규화
-        const float TWO_PI = 2.0f * 3.14159265f;
-        while (m_currentAngle < 0.0f) m_currentAngle += TWO_PI;
-        while (m_currentAngle >= TWO_PI) m_currentAngle -= TWO_PI;
+        return false;
     }
-
+    
     // ═══════════════════════════════════════════════════════════════
-    // 현재 각도 → 방향 벡터 변환
+    // 충돌 처리 → 반사 이동
+    // - 진동 정지
+    // - 충돌 노말 기반 90도 방향으로 반사
     // ═══════════════════════════════════════════════════════════════
-    engine::Vector3 MonsterRoundBlue::GetDirectionVector() const
+    void MonsterRoundBlue::HandleIdleMoveCollision(const engine::Vector3& collisionNormal)
     {
-        return engine::Vector3(
-            std::cos(m_currentAngle),
-            0.0f,
-            std::sin(m_currentAngle)
-        );
+        m_isReflecting = true;
+        m_reflectTimer = 0.0f;
+        m_reflectDirection = CalculateReflectDirection(collisionNormal);
+        m_hasIdleMoveTarget = false;  // 목표 무효화
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 노말 기반 90도 반사 방향 계산
+    // - 충돌 노말에서 90도 회전 (좌/우 50% 랜덤)
+    // ═══════════════════════════════════════════════════════════════
+    engine::Vector3 MonsterRoundBlue::CalculateReflectDirection(const engine::Vector3& collisionNormal) const
+    {
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        
+        // 충돌 노말이 유효하지 않으면 랜덤 방향
+        if (collisionNormal.LengthSquared() < 0.0001f)
+        {
+            std::uniform_real_distribution<float> angleDist(0.0f, 2.0f * 3.14159265f);
+            float randomAngle = angleDist(gen);
+            return engine::Vector3(std::cos(randomAngle), 0.0f, std::sin(randomAngle));
+        }
+        
+        // 충돌 노말을 90도 회전 (좌/우 랜덤)
+        engine::Vector3 normal = collisionNormal;
+        normal.y = 0.0f;
+        normal.Normalize();
+        
+        std::uniform_int_distribution<int> dirDist(0, 1);
+        bool turnLeft = (dirDist(gen) == 0);
+        
+        // 90도 회전: (x, z) → (turnLeft ? -z : z, turnLeft ? x : -x)
+        engine::Vector3 reflected;
+        if (turnLeft)
+        {
+            reflected.x = -normal.z;
+            reflected.y = 0.0f;
+            reflected.z = normal.x;
+        }
+        else
+        {
+            reflected.x = normal.z;
+            reflected.y = 0.0f;
+            reflected.z = -normal.x;
+        }
+        
+        reflected.Normalize();
+        return reflected;
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // EngageMove 초기화
+    // EngageMove 초기화 (PA 비활성화)
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::InitializeEngageMove()
     {
         m_hasEngageTarget = false;
         m_engageCollisionOccurred = false;
         m_engageArrivalOccurred = false;
+        
+        // PA 경로 초기화 (EngageMove는 PA 사용 안 함)
+        if (m_pathfindingAgent)
+        {
+            m_pathfindingAgent->ClearPath();
+        }
         
         if (!m_targetPlayer || !m_targetPlayer->GetGameObject())
         {
@@ -761,13 +1080,8 @@ namespace game
         }
         else if (state == "IdleMove")
         {
-            // EngageCollision/Arrival에서 온 경우: m_currentAngle 유지 (이미 설정됨)
-            // Idle에서 온 경우: 랜덤 방향
-            // 구분을 위해 항상 ResetRoamingParameters만 호출
-            ResetRoamingParameters();
-            
-            m_roamingTimer = 0.0f;
-            m_collisionOccurred = false;
+            // IdleMove 진입 시 PA로 목표 설정
+            InitializeIdleMove();
             
             if (m_logicFSM)
             {
@@ -780,6 +1094,7 @@ namespace game
             
             if (m_logicFSM)
             {
+                m_logicFSM->SetParameter("PlayerDetected", false);
                 m_logicFSM->SetParameter("EngageCollision", false);
                 m_logicFSM->SetParameter("EngageArrival", false);
             }
@@ -812,22 +1127,46 @@ namespace game
     void MonsterRoundBlue::OnGui()
     {
         ImGui::Text("=== MonsterRoundBlue ===");
-        ImGui::TextColored(ImVec4(0.0f, 0.5f, 1.0f, 1.0f), "Tier: Blue (Curved + Dash)");
+        ImGui::TextColored(ImVec4(0.0f, 0.5f, 1.0f, 1.0f), "Tier: Blue (Oscillation + Dash)");
         ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "[No Bullet Attack - Contact Damage Only]");
         ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Fires 3-way bullets on death)");
         
         MonsterRoundType::OnGui();
         
-        // Roaming 설정
+        // IdleMove 진동 이동 설정
         ImGui::Separator();
-        ImGui::Text("=== Blue Roaming Settings ===");
-        ImGui::DragFloat("Roaming Duration Min", &m_roamingDurationMin, 0.1f, 0.1f, 10.0f);
-        ImGui::DragFloat("Roaming Duration Max", &m_roamingDurationMax, 0.1f, 0.1f, 10.0f);
+        ImGui::Text("=== Blue IdleMove Settings ===");
+        ImGui::DragFloat("Time Limit (sec)", &m_idleMoveTimeLimit, 0.1f, 1.0f, 20.0f);
+        ImGui::DragFloat("Waypoint Reach Dist", &m_targetReachDistance, 0.1f, 0.5f, 5.0f);
         
+        ImGui::Spacing();
+        ImGui::Text("Target Distance (from Monster to Goal):");
+        ImGui::DragFloat("  Min Distance", &m_targetDistanceMin, 0.5f, 1.0f, 50.0f);
+        ImGui::DragFloat("  Max Distance", &m_targetDistanceMax, 0.5f, 1.0f, 50.0f);
+        
+        ImGui::Spacing();
+        ImGui::DragInt("Target Safety Margin", &m_targetSafetyMargin, 0.05f, 0, 5);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Obstacle avoidance margin (0=None, 1=3x3 cells, 2=5x5 cells)");
+        }
+        
+        // 진동 설정
         ImGui::Separator();
-        ImGui::Text("=== Blue Turn Scale Settings ===");
-        ImGui::DragFloat("Turn Scale Min (deg/s)", &m_turnScaleMin, 1.0f, 1.0f, 90.0f);
-        ImGui::DragFloat("Turn Scale Max (deg/s)", &m_maxTurnScale, 1.0f, 1.0f, 180.0f);
+        ImGui::Text("=== Blue Oscillation Settings ===");
+        ImGui::DragFloat("Amplitude Min", &m_oscillationAmplitudeMin, 0.1f, 0.1f, 10.0f);
+        ImGui::DragFloat("Amplitude Max", &m_oscillationAmplitudeMax, 0.1f, 0.1f, 10.0f);
+        ImGui::DragFloat("Speed Multiplier", &m_oscillationSpeedMultiplier, 0.5f, 0.0f, 20.0f);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Controls lateral oscillation speed (higher = faster side-to-side movement)");
+        }
+        
+        // 충돌 반사 설정
+        ImGui::Separator();
+        ImGui::Text("=== Blue Collision Settings ===");
+        ImGui::DragFloat("Reflect Distance", &m_collisionReflectDistance, 0.1f, 0.5f, 10.0f);
+        ImGui::DragFloat("Damage Cooldown", &m_damageCooldown, 0.1f, 0.1f, 5.0f);
         
         // EngageMove 설정
         ImGui::Separator();
@@ -835,22 +1174,36 @@ namespace game
         ImGui::DragFloat("Engage Move Speed", &m_engageMoveSpeed, 0.5f, 1.0f, 30.0f);
         ImGui::DragFloat("Player Ignore Duration", &m_playerIgnoreDuration, 0.1f, 0.1f, 10.0f);
         
-        // Damage 설정
-        ImGui::Separator();
-        ImGui::Text("=== Blue Damage Settings ===");
-        ImGui::DragFloat("Damage Cooldown", &m_damageCooldown, 0.1f, 0.1f, 5.0f);
-        
         // 런타임 정보 - IdleMove
         ImGui::Separator();
         ImGui::Text("=== Blue Runtime (IdleMove) ===");
-        float angleDeg = m_currentAngle * 180.0f / 3.14159265f;
-        ImGui::Text("Current Angle: %.1f deg", angleDeg);
-        ImGui::Text("Turn Direction: %s", (m_turnDirection > 0) ? "Left (CCW)" : "Right (CW)");
-        ImGui::Text("Turn Scale: %.1f deg/s", m_turnScale);
-        ImGui::Text("Roaming Timer: %.2f / %.2f", m_roamingTimer, m_roamingDuration);
+        ImGui::Text("Has Target: %s", m_hasIdleMoveTarget ? "Yes" : "No");
+        ImGui::Text("Is Reflecting: %s", m_isReflecting ? "Yes" : "No");
         
-        engine::Vector3 dir = GetDirectionVector();
-        ImGui::Text("Direction Vector: (%.2f, %.2f, %.2f)", dir.x, dir.y, dir.z);
+        if (m_hasIdleMoveTarget)
+        {
+            ImGui::Text("Target Goal: (%.2f, %.2f, %.2f)", 
+                m_idleMoveTargetPosition.x, m_idleMoveTargetPosition.y, m_idleMoveTargetPosition.z);
+            ImGui::Text("Current Waypoint: (%.2f, %.2f, %.2f)", 
+                m_currentWaypointTarget.x, m_currentWaypointTarget.y, m_currentWaypointTarget.z);
+            ImGui::Text("Timer: %.2f / %.2f sec", m_idleMoveTimer, m_idleMoveTimeLimit);
+            
+            engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+            float distToWaypoint = engine::Vector3::Distance(myPos, m_currentWaypointTarget);
+            ImGui::Text("Dist to Waypoint: %.2f m", distToWaypoint);
+        }
+        
+        if (m_isReflecting)
+        {
+            ImGui::Text("Reflect Timer: %.2f / %.2f sec", m_reflectTimer, m_reflectDuration);
+            ImGui::Text("Reflect Dir: (%.2f, %.2f, %.2f)", 
+                m_reflectDirection.x, m_reflectDirection.y, m_reflectDirection.z);
+        }
+        
+        ImGui::Spacing();
+        ImGui::Text("Oscillation:");
+        ImGui::Text("  Phase: %.2f rad", m_oscillationPhase);
+        ImGui::Text("  Current Amplitude: %.2f", m_currentOscillationAmplitude);
         
         // 런타임 정보 - 플레이어 무시
         ImGui::Separator();
@@ -884,10 +1237,22 @@ namespace game
     {
         MonsterRoundType::Save(j);
         
-        j["RoamingDurationMin"] = m_roamingDurationMin;
-        j["RoamingDurationMax"] = m_roamingDurationMax;
-        j["TurnScaleMin"] = m_turnScaleMin;
-        j["MaxTurnScale"] = m_maxTurnScale;
+        // IdleMove 진동 이동 설정
+        j["IdleMoveTimeLimit"] = m_idleMoveTimeLimit;
+        j["TargetReachDistance"] = m_targetReachDistance;
+        j["TargetDistanceMin"] = m_targetDistanceMin;
+        j["TargetDistanceMax"] = m_targetDistanceMax;
+        j["TargetSafetyMargin"] = m_targetSafetyMargin;
+        
+        // 진동 설정
+        j["OscillationAmplitudeMin"] = m_oscillationAmplitudeMin;
+        j["OscillationAmplitudeMax"] = m_oscillationAmplitudeMax;
+        j["OscillationSpeedMultiplier"] = m_oscillationSpeedMultiplier;
+        
+        // 충돌 반사 설정
+        j["CollisionReflectDistance"] = m_collisionReflectDistance;
+        
+        // EngageMove 설정
         j["DamageCooldown"] = m_damageCooldown;
         j["EngageMoveSpeed"] = m_engageMoveSpeed;
         j["PlayerIgnoreDuration"] = m_playerIgnoreDuration;
@@ -897,10 +1262,22 @@ namespace game
     {
         MonsterRoundType::Load(j);
         
-        m_roamingDurationMin = j.value("RoamingDurationMin", 1.0f);
-        m_roamingDurationMax = j.value("RoamingDurationMax", 3.0f);
-        m_turnScaleMin = j.value("TurnScaleMin", 10.0f);
-        m_maxTurnScale = j.value("MaxTurnScale", 45.0f);
+        // IdleMove 진동 이동 설정
+        m_idleMoveTimeLimit = j.value("IdleMoveTimeLimit", 7.0f);
+        m_targetReachDistance = j.value("TargetReachDistance", 2.0f);
+        m_targetDistanceMin = j.value("TargetDistanceMin", 6.0f);
+        m_targetDistanceMax = j.value("TargetDistanceMax", 12.0f);
+        m_targetSafetyMargin = j.value("TargetSafetyMargin", 1);
+        
+        // 진동 설정
+        m_oscillationAmplitudeMin = j.value("OscillationAmplitudeMin", 0.5f);
+        m_oscillationAmplitudeMax = j.value("OscillationAmplitudeMax", 3.0f);
+        m_oscillationSpeedMultiplier = j.value("OscillationSpeedMultiplier", 5.0f);
+        
+        // 충돌 반사 설정
+        m_collisionReflectDistance = j.value("CollisionReflectDistance", 2.0f);
+        
+        // EngageMove 설정
         m_damageCooldown = j.value("DamageCooldown", 1.0f);
         m_engageMoveSpeed = j.value("EngageMoveSpeed", 10.0f);
         m_playerIgnoreDuration = j.value("PlayerIgnoreDuration", 1.0f);
