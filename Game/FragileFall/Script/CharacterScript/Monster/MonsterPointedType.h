@@ -94,10 +94,13 @@ namespace game
 
         // Fragile 상태 시 몬스터 자식으로 생성되는 크리스탈 (색상별 프리팹)
         engine::GameObject* m_fragileCrystalInstance = nullptr;
+        bool m_crystalFullReached = false;              // 크리스탈이 가득 찬 시점을 감지했는지
+        float m_fragileTimerWhenCrystalFull = -1.0f;   // 크리스탈이 가득 찬 시점의 Fragile 타이머 값
 
     public:
         void Awake() override;
         void Start() override;
+        void UpdateGameLogic() override;
 
     protected:
         // ─────────────────────────────────────────────

@@ -2,8 +2,10 @@
 #include "MonsterPointedType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
+#include "Script/CrystalIceFillControllerScript.h"
 
 #include <Framework/Asset/Prefab.h>
+#include <Engine/Core/System/MyTime.h>
 
 #include <Engine/Core/System/MyTime.h>
 #include <Framework/Object/Component/AnimFSM.h>
@@ -37,6 +39,7 @@ namespace game
     void MonsterPointedType::Start()
     {
         MonsterScript::Start();
+        // m_fragileCrystalDrainTimer는 OnRevive에서만 설정
 
         // PathfindingAgent 설정 (이동 몬스터용)
         if (m_pathfindingAgent)
@@ -165,6 +168,9 @@ namespace game
             AddFSMTransition("Redemption", "Fragile", "Fragile", Trigger());
             AddFSMTransition("Laststand", "Fragile", "Fragile", Trigger());
         }
+
+        // Fragile → Idle (부활, Revive 트리거)
+        AddFSMTransition("Fragile", "Idle", "Revive", Trigger());
 
         // Fragile → Dead (Execution, Die 트리거)
         AddFSMTransition("Fragile", "Dead", "Die", Trigger());
@@ -532,7 +538,46 @@ namespace game
 
     void MonsterPointedType::ExecuteFragileBehaviorNonPhysics()
     {
-        // Fragile 상태: 아무 행동도 하지 않음 (Execution 대기)
+        // 부모 클래스의 Fragile 타이머 업데이트 (시간 초과 시 부활)
+        MonsterScript::ExecuteFragileBehaviorNonPhysics();
+
+        // Fragile 상태: 크리스탈이 채워진 후 Fragile 타이머와 동기화하여 줄어들게 함
+        if (m_fragileCrystalInstance != nullptr && m_fragileTimerStarted)
+        {
+            auto* fillScript = m_fragileCrystalInstance->GetComponent<CrystalIceFillControllerScript>();
+            if (fillScript != nullptr && GetFragileTime() > 0.0f)
+            {
+                float currentAmount = fillScript->GetParams().amount;
+                
+                // 크리스탈이 가득 찬 시점을 처음 감지했을 때
+                if (!m_crystalFullReached && currentAmount >= 1.0f)
+                {
+                    m_crystalFullReached = true;
+                    m_fragileTimerWhenCrystalFull = m_fragileTimer;
+                }
+                
+                // 크리스탈이 가득 찬 후부터 타이머와 동기화하여 줄어들게 함
+                if (m_crystalFullReached && m_fragileTimerWhenCrystalFull >= 0.0f)
+                {
+                    // 크리스탈이 가득 찬 시점부터 Fragile 타이머 종료까지의 남은 시간
+                    float remainingFragileTime = GetFragileTime() - m_fragileTimerWhenCrystalFull;
+                    if (remainingFragileTime > 0.0f)
+                    {
+                        // 경과 시간: 크리스탈이 가득 찬 시점부터 현재까지
+                        float elapsedSinceFull = m_fragileTimer - m_fragileTimerWhenCrystalFull;
+                        
+                        // 드레인 비율: 0 (가득 참) → 1 (Fragile 시간 초과)
+                        float drainRatio = elapsedSinceFull / remainingFragileTime;
+                        if (drainRatio > 1.0f) drainRatio = 1.0f;
+                        
+                        // 크리스탈 amount: 1 (가득) → 0 (비어있음)
+                        float crystalAmount = 1.0f - drainRatio;
+                        fillScript->SetFillAmount(crystalAmount);
+                    }
+                }
+                // 크리스탈이 아직 채워지는 중이면 자동 채우기 유지 (수동 제어 안 함)
+            }
+        }
     }
 
     void MonsterPointedType::OnFragile()
@@ -549,7 +594,18 @@ namespace game
         {
             crystal->GetTransform()->SetParent(GetTransform(), false);
             m_fragileCrystalInstance = crystal;
+            
+            // 크리스탈 가득 참 감지 플래그 초기화
+            m_crystalFullReached = false;
+            m_fragileTimerWhenCrystalFull = -1.0f;
+            // 크리스탈은 자체 duration으로 자동 채워짐 (SetDuration 호출 안 함)
         }
+    }
+
+    void MonsterPointedType::UpdateGameLogic()
+    {
+        MonsterScript::UpdateGameLogic();
+        // UpdateFragileTimer는 ExecuteFragileBehaviorNonPhysics()에서 호출됨
     }
 
     void MonsterPointedType::OnRevive()
