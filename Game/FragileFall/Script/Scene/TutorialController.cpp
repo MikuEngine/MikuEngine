@@ -10,6 +10,8 @@
 #include <Framework/Asset/Prefab.h>
 #include <Core/System/Input.h>
 
+#include <Framework/Object/Component/UI/UIImage.h>
+
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 
 #include "Script/DoorTriggerScript.h"
@@ -52,35 +54,25 @@ namespace game
 
     void TutorialController::Awake()
     {
-       
-        if (m_player = engine::GameObject::Find("Player"))
-        {
-			auto pc = m_player->GetComponent<PlayerControllerScript>();
-            pc->SetPlayerAtkDmg(30.0f);
-        }
-
-        m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
-        m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
-
-
-        std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
-        if (currentScene == "10_PROTO_TutorialLobby")
-        {
-            int a = 10;
-
-
-        }
 
     }
 
     void TutorialController::Start()
     {
-        
-
         if (s_tutorialController == nullptr)
         {
             s_tutorialController = GetGameObject();
-            GetGameObject()->DontDestroyOnLoad();    
+            GetGameObject()->DontDestroyOnLoad();
+
+            if (m_player = engine::GameObject::Find("Player"))
+            {
+                auto pc = m_player->GetComponent<PlayerControllerScript>();
+                //pc->SetBaseAtkDmg(30.0f);
+            }
+
+            m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
+            m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
+
             ShowPage();
         }
         else
@@ -98,12 +90,6 @@ namespace game
 
     void TutorialController::Update()
     {
-
-        if (auto pc = m_player->GetComponent<PlayerControllerScript>())
-        {
-            //LOG_PRINT("player hp : {}", pc->GetCurrentHp());
-        }
-
         // 단축키
         if ( engine::Input::IsKeyPressed(engine::Keys::F10))
         {
@@ -303,6 +289,9 @@ namespace game
     void TutorialController::OnSceneLoaded()
     {
         m_queue = nullptr;
+        m_player = nullptr;
+        m_nextDoorObject = nullptr;
+        m_exitDoorObject = nullptr;
 
         auto* go = engine::GameObject::Find("Canvas_Message");
         if (go) m_queue = go->GetComponent<UIMessageQueue>();
@@ -311,10 +300,27 @@ namespace game
 
         if (currentScene == "10_PROTO_Tutorial")
         {
+            m_player = engine::GameObject::Find("Player");
+
+            if (m_player)
+            {
+                auto pc = m_player->GetComponent<PlayerControllerScript>();
+                //if (pc) pc->SetBaseAtkDmg(30.0f);
+            }
+
+            m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
+            m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
+
             Next();
         }
         else if (currentScene == "10_PROTO_TutorialLobby")
         {
+			auto upgradeUI = engine::GameObject::Find("UI_OpenUpgrade");
+            if (upgradeUI)
+            {
+				upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, 2.0f, { 1.0f, 0.0f, 0.0f, 1.0f });
+            }
+
             Next();
         }
     }
