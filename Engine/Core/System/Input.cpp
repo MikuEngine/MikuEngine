@@ -231,6 +231,7 @@ namespace engine
 
             // 모드 변경 (이 순간 마우스는 중앙으로 숨음)
             g_mouse.SetMode(DirectX::Mouse::MODE_RELATIVE);
+            ConfineCursor(g_hWnd, true);
 
             // 다음 Update에서 델타값을 무시하도록 설정
             g_isFirstFrameAfterLock = true;
@@ -238,6 +239,7 @@ namespace engine
         else
         {
             g_mouse.SetMode(DirectX::Mouse::MODE_ABSOLUTE);
+            ConfineCursor(g_hWnd, false);
 
             POINT pt = { (int)g_virtualMousePos.x, (int)g_virtualMousePos.y };
             ClientToScreen(g_hWnd, &pt);

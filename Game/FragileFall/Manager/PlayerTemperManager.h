@@ -92,7 +92,6 @@ namespace game
 		//static bool GetIsBulletDouble();
 
 		// Refactor
-		// 이제부터 함수들은 다음과 같이 선언합니다.
 		static void Initialize();
 		static void ResetAllTemper();
 		static void ApplyTemper(PlayerControllerScript* player);

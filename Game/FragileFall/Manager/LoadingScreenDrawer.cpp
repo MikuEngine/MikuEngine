@@ -133,7 +133,7 @@ namespace game
 			auto& rm = engine::ResourceManager::Get();
 
 			g_logoTexture = rm.GetOrCreateTexture("Resource/Texture/UI/Image/EngineLogo.png", engine::LifeScope::Global);
-			g_orbitTextTexture = rm.GetOrCreateTexture("Resource/Texture/UI/Image/CircleText.png", engine::LifeScope::Global);
+			g_orbitTextTexture = rm.GetOrCreateTexture("Resource/Texture/UI/Image/MikuEngineText.png", engine::LifeScope::Global);
 			g_sceneLoadAnimTexture = rm.GetOrCreateTexture("Resource/Texture/Flame.png", engine::LifeScope::Global);
 			g_sceneLoadSpriteData = engine::AssetManager::Get().GetOrCreateSpriteData("Resource/Data/SpriteSheet/Flame.spritedata", engine::LifeScope::Global);
 			g_sceneLoadAnimData = engine::AssetManager::Get().GetOrCreateSpriteAnimationData("Resource/Data/SpriteAnim/Flame_a.animdata", engine::LifeScope::Global);

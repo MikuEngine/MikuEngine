@@ -1928,12 +1928,12 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Value": 1.0,
+                    "Value": 0.5789999961853027,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
-                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1944,7 +1944,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "HandleColor": {
                         "x": 1.0,
@@ -2010,7 +2010,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -2143,13 +2143,13 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
                         "y": 585.0,
-                        "z": 1260.0,
+                        "z": 1133.699951171875,
                         "w": 635.0
                     },
                     "MaskMode": 1,
@@ -2201,18 +2201,18 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 100.0,
-                    "Height": 100.0,
+                    "Width": 30.0,
+                    "Height": 30.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5710999965667725,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5710999965667725,
                         "y": 0.5
                     }
                 },
@@ -2222,7 +2222,7 @@
                     "Layer": 2,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5427,10 +5427,10 @@
                     "AimYOffsetWhenMoving": 0.0,
                     "CursorTexturesByState": [
                         "Resource/Texture/UI/Image/Cursor_Default.png",
-                        "Resource/Texture/UI/Image/Cursor_Click.png",
-                        "Resource/Texture/UI/Image/Aim_Idle.png",
-                        "Resource/Texture/UI/Image/Aim_Execute.png",
-                        "Resource/Texture/UI/Image/Aim_Execute.png"
+                        "Resource/Texture/UI/Cursor/Cursor_Click.png",
+                        "Resource/Texture/UI/Cursor/Sighting_Point_1.png",
+                        "Resource/Texture/UI/Cursor/Sighting_Point_2.png",
+                        "Resource/Texture/UI/Cursor/Sighting_Point_3.png"
                     ],
                     "CursorPivotsByState": [
                         {
