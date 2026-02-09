@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -635,7 +635,7 @@ namespace game
 		if (CanMove())
 		{
 			float buffMultiplier = BuffManager::GetMoveSpeedMultiplier();
-			float effectiveSpeed = m_moveSpeed * buffMultiplier;
+			float effectiveSpeed = m_temperFinal.moveSpeed * buffMultiplier;
 			if (isSliding)
 			{
 				effectiveSpeed *= m_slidingSpeedMultiplier;
@@ -923,7 +923,7 @@ namespace game
 		if (m_rigidbody && m_rigidbody->IsDynamic())
 		{
 			// 대쉬 Impulse 계산: 방향 * 속도 * 배율
-			float dashImpulse = m_moveSpeed * m_dashImpulseMultiplier;
+			float dashImpulse = m_temperFinal.moveSpeed * m_temperFinal.dashDistance;
 			engine::Vector3 impulseForce = m_dashDirection * dashImpulse;
 			
 			m_rigidbody->AddForce(impulseForce, engine::ForceMode::Impulse);
@@ -936,7 +936,7 @@ namespace game
 
 		m_isDashing = false;
 		m_dashElapsedTime = 0.0f;
-		m_dashCooldownTimer = m_dashCooldown;
+		m_dashCooldownTimer = m_temperFinal.dashCooldown;
 
 		// FSM 상태 전이 (Dash → Walk)
 		if (m_logicFSM)
@@ -1175,10 +1175,10 @@ namespace game
 				// ─────────────────────────────────────────────
 				BulletParams params;
 				params.type = BulletType::BulletPlayer;
-				params.speed = m_bulletSpeed;
-				params.range = m_bulletRange;
-				params.damage = m_playerAtkDmg;
-				params.scale = m_bulletSizeScale;
+				params.speed = m_temperFinal.bulletSpeed;
+				params.range = m_temperFinal.bulletRange;
+				params.damage = m_temperFinal.atkDmg;
+				params.scale = m_temperFinal.bulletSizeScale;
 
 				m_bulletFactory->Fire(bulletStartPos, direction, params);
 
@@ -1194,7 +1194,7 @@ namespace game
 
 				// BuffManager에서 버프 배율 가져오기
 				float buffMultiplier = BuffManager::GetAtkSpeedMultiplier();
-				float effectiveAtkSpeed = m_AtkSpeed * buffMultiplier;
+				float effectiveAtkSpeed = m_temperFinal.atkSpeed * buffMultiplier;
 				float effectiveFireRate = 0.7f / effectiveAtkSpeed;
 				
 				m_fireTimer = effectiveFireRate;
@@ -1276,15 +1276,15 @@ namespace game
 		ImGui::Indent();
 		
 		float moveSpeedMultiplier = BuffManager::GetMoveSpeedMultiplier();
-		float finalMoveSpeed = m_moveSpeed * moveSpeedMultiplier;
+		float finalMoveSpeed = m_temperFinal.moveSpeed * moveSpeedMultiplier;
 		ImGui::BeginDisabled();
 		ImGui::DragFloat("Final Move Speed", &finalMoveSpeed, 0.0f);
 		ImGui::EndDisabled();
 		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("Base: %.2f x Buff: %.2fx = %.2f", m_moveSpeed, moveSpeedMultiplier, finalMoveSpeed);
+			ImGui::SetTooltip("Base: %.2f x Buff: %.2fx = %.2f", m_temperBase.moveSpeed, moveSpeedMultiplier, finalMoveSpeed);
 		
 		float atkSpeedMultiplier = BuffManager::GetAtkSpeedMultiplier();
-		float finalAtkSpeed = m_AtkSpeed * atkSpeedMultiplier;
+		float finalAtkSpeed = m_temperFinal.atkSpeed * atkSpeedMultiplier;
 		float finalFireRate = (finalAtkSpeed > 0.001f) ? (0.7f / finalAtkSpeed) : 0.7f;
 		ImGui::BeginDisabled();
 		ImGui::DragFloat("Final Atk Speed", &finalAtkSpeed, 0.0f);
@@ -1292,7 +1292,7 @@ namespace game
 		ImGui::EndDisabled();
 		if (ImGui::IsItemHovered())
 			ImGui::SetTooltip("Base: %.2f x Buff: %.2fx = %.2f\nFire Rate: 0.7 / %.2f = %.3f sec", 
-				m_AtkSpeed, atkSpeedMultiplier, finalAtkSpeed, finalAtkSpeed, finalFireRate);
+				m_temperFinal.atkSpeed, atkSpeedMultiplier, finalAtkSpeed, finalAtkSpeed, finalFireRate);
 		
 		ImGui::Unindent();
 		ImGui::Spacing();
@@ -1436,7 +1436,9 @@ namespace game
 		ImGui::Text("Movement (Dynamic Physics):");
 		
 		// 속도 설정 (함께 표시)
-		ImGui::DragFloat("Max Speed", &m_moveSpeed, 0.1f, 0.0f, 100.0f);
+		if (ImGui::DragFloat("Base Move Speed", &m_temperBase.moveSpeed, 0.1f, 0.0f, 100.0f))
+			PlayerTemperManager::ApplyTemper(this);
+
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::SetTooltip("Target maximum movement speed (m/s)");
@@ -1472,10 +1474,10 @@ namespace game
 			{
 				engine::Vector3 linearVel = m_rigidbody->GetLinearVelocity();
 				float horizSpeed = sqrtf(linearVel.x * linearVel.x + linearVel.z * linearVel.z);
-				ImGui::Text("Current Speed: %.2f / %.2f", horizSpeed, m_moveSpeed);
+				ImGui::Text("Current Speed: %.2f / %.2f", horizSpeed, m_temperFinal.moveSpeed);
 				
 				// 진행바로 속도 표시
-				float speedRatio = m_moveSpeed > 0.0f ? horizSpeed / m_moveSpeed : 0.0f;
+				float speedRatio = m_temperFinal.moveSpeed > 0.0f ? horizSpeed / m_temperFinal.moveSpeed : 0.0f;
 				ImGui::ProgressBar(speedRatio, ImVec2(-1, 0), "");
 			}
 		}
@@ -1523,7 +1525,8 @@ namespace game
 		ImGui::Separator();
 		ImGui::Text("Dash:");
 		ImGui::DragFloat("Dash Duration (sec)", &m_dashDuration, 0.1f, 0.1f, 3.0f);
-		ImGui::DragFloat("Dash Impulse Multiplier", &m_dashImpulseMultiplier, 0.5f, 5.0f, 50.0f);
+		if (ImGui::DragFloat("Base Dash Distance", &m_temperBase.dashDistance, 0.1f, 0.0f, 100.0f))
+			PlayerTemperManager::ApplyTemper(this);
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::SetTooltip("Dash impulse = moveSpeed * this value. Higher = faster initial speed");
@@ -1543,7 +1546,9 @@ namespace game
 		{
 			ImGui::SetTooltip("잔상 녹화 구간. 대쉬 시간의 이 비율까지만 녹화 (감속 구간 제외, 0.7=70%%)");
 		}
-		ImGui::DragFloat("Dash Cooldown (sec)", &m_dashCooldown, 0.1f, 0.0f, 10.0f);
+		
+		if (ImGui::DragFloat("Dash Cooldown (sec)", &m_temperBase.dashCooldown, 0.1f, 0.0f, 10.0f))
+			PlayerTemperManager::ApplyTemper(this);
 		ImGui::DragInt("Max Dash Count", &m_MaxDashCount, 1, 1, 10);
 		if (ImGui::IsItemHovered())
 		{
@@ -1608,25 +1613,23 @@ namespace game
 		
 		bool baseChanged = false;
 		
-		if (ImGui::DragFloat("Base Atk Damage", &m_baseAtkDmg, 0.5f, 0.0f, 1000.0f))
+		if (ImGui::DragFloat("Base Atk Damage", &m_temperBase.atkDmg, 0.5f, 0.0f, 1000.0f))
 			baseChanged = true;
-		if (ImGui::DragFloat("Base Atk Speed", &m_baseAtkSpeed, 0.05f, 0.1f, 10.0f))
+		if (ImGui::DragFloat("Base Atk Speed", &m_temperBase.atkSpeed, 0.05f, 0.1f, 10.0f))
 			baseChanged = true;
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::SetTooltip("1.0 = 1.4 shots/sec (0.7s interval). Higher = faster attack.");
 		}
-		if (ImGui::DragFloat("Base Bullet Lifetime", &m_baseBulletLifetime, 0.1f, 0.1f, 20.0f))
-			baseChanged = true;
-		if (ImGui::DragFloat("Base Bullet Range", &m_baseBulletRange, 1.0f, 1.0f, 200.0f))
+		if (ImGui::DragFloat("Base Bullet Range", &m_temperBase.bulletRange, 1.0f, 1.0f, 200.0f))
 			baseChanged = true;
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::SetTooltip("BulletPlayer 사거리 (거리 단위). BulletPlayer는 lifetime 대신 range 사용");
 		}
-		if (ImGui::DragFloat("Base Bullet Size Scale", &m_baseBulletSizeScale, 0.05f, 0.1f, 10.0f))
+		if (ImGui::DragFloat("Base Bullet Size Scale", &m_temperBase.bulletSizeScale, 0.05f, 0.1f, 10.0f))
 			baseChanged = true;
-		if (ImGui::DragFloat("Base Bullet Speed", &m_baseBulletSpeed, 0.5f, 0.1f, 100.0f))
+		if (ImGui::DragFloat("Base Bullet Speed", &m_temperBase.bulletSpeed, 0.5f, 0.1f, 100.0f))
 			baseChanged = true;
 		
 		// Base값 변경 시 강화 재계산
@@ -1643,23 +1646,22 @@ namespace game
 		ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.5f, 1.0f), "Read-only. Calculated: (Base + Add) x Mul");
 		
 		ImGui::BeginDisabled();
-		ImGui::DragFloat("Actual Atk Damage", &m_playerAtkDmg, 0.0f);
-		ImGui::DragFloat("Actual Atk Speed", &m_AtkSpeed, 0.0f);
-		ImGui::DragFloat("Fire Rate (sec)", &m_fireRate, 0.0f);
+		ImGui::DragFloat("Actual Atk Damage", &m_temperFinal.atkDmg, 0.0f);
+		ImGui::DragFloat("Actual Atk Speed", &m_temperFinal.atkSpeed, 0.0f);
+		ImGui::DragFloat("Fire Rate (sec)", &m_temperFinal.fireRate, 0.0f);
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::SetTooltip("Calculated: 0.7 / AtkSpeed");
 		}
-		ImGui::DragFloat("Actual Bullet Lifetime", &m_bulletLifetime, 0.0f);
-		ImGui::DragFloat("Actual Bullet Range", &m_bulletRange, 0.0f);
+		ImGui::DragFloat("Actual Bullet Range", &m_temperFinal.bulletRange, 0.0f);
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::SetTooltip("BulletPlayer 사거리 (BulletPlayer는 lifetime 대신 range 사용)");
 		}
-		ImGui::DragFloat("Actual Bullet Size Scale", &m_bulletSizeScale, 0.0f);
-		ImGui::DragFloat("Actual Bullet Speed", &m_bulletSpeed, 0.0f);
-		bool tempDouble = m_isBulletDouble;
-		ImGui::Checkbox("Is Bullet Double", &tempDouble);
+		ImGui::DragFloat("Actual Bullet Size Scale", &m_temperFinal.bulletSizeScale, 0.0f);
+		ImGui::DragFloat("Actual Bullet Speed", &m_temperFinal.bulletSpeed, 0.0f);
+		//bool tempDouble = m_isBulletDouble;
+		//ImGui::Checkbox("Is Bullet Double", &tempDouble);
 		ImGui::EndDisabled();
 		
 		ImGui::Spacing();
@@ -1723,16 +1725,15 @@ namespace game
 	void PlayerControllerScript::Save(engine::json& j) const
 	{
 		BaseControllerScript::Save(j);
-		j["MoveSpeed"] = m_moveSpeed;
+		j["MoveSpeed"] = m_temperBase.moveSpeed;
 		j["RotationSpeed"] = m_rotationSpeed;
 		
 		// 공격 변수 - Base값만 저장 (실제값은 강화 적용 후 계산됨)
-		j["BaseAtkDmg"] = m_baseAtkDmg;
-		j["BaseAtkSpeed"] = m_baseAtkSpeed;
-		j["BaseBulletLifetime"] = m_baseBulletLifetime;
-		j["BaseBulletRange"] = m_baseBulletRange;
-		j["BaseBulletSizeScale"] = m_baseBulletSizeScale;
-		j["BaseBulletSpeed"] = m_baseBulletSpeed;
+		j["BaseAtkDmg"] = m_temperBase.atkDmg;
+		j["BaseAtkSpeed"] = m_temperBase.atkSpeed;
+		j["BaseBulletRange"] = m_temperBase.bulletRange;
+		j["BaseBulletSizeScale"] = m_temperBase.bulletSizeScale;
+		j["BaseBulletSpeed"] = m_temperBase.bulletSpeed;
 		
 		j["BulletStartOffsetY"] = m_bulletStartOffsetY;
 		j["BulletStartOffsetForward"] = m_bulletStartOffsetForward;
@@ -1750,11 +1751,11 @@ namespace game
 
 		// 대쉬 설정 (Dynamic Impulse + 독립 감속)
 		j["DashDuration"] = m_dashDuration;
-		j["DashImpulseMultiplier"] = m_dashImpulseMultiplier;
+		j["BaseDashDistance"] = m_temperBase.dashDistance;
 		j["DashDecayRate"] = m_dashDecayRate;
 		j["DashDecayDuration"] = m_dashDecayDuration;
 		j["DashAfterimageCutoffRatio"] = m_dashAfterimageCutoffRatio;
-		j["DashCooldown"] = m_dashCooldown;
+		j["DashCooldown"] = m_temperBase.dashCooldown;
 		j["MaxDashCount"] = m_MaxDashCount;
 		j["DashRechargeTime"] = m_dashRechargeTime;
 		j["PostDashQuickFireDuration"] = m_postDashQuickFireDuration;
@@ -1770,23 +1771,21 @@ namespace game
 		BaseControllerScript::Load(j);
 
 		if (j.contains("MoveSpeed"))
-			m_moveSpeed = j["MoveSpeed"].get<float>();
+			m_temperBase.moveSpeed = j["MoveSpeed"].get<float>();
 		if (j.contains("RotationSpeed"))
 			m_rotationSpeed = j["RotationSpeed"].get<float>();
 		
 		// 공격 변수 - Base값 로드
 		if (j.contains("BaseAtkDmg"))
-			m_baseAtkDmg = j["BaseAtkDmg"].get<float>();
+			m_temperBase.atkDmg = j["BaseAtkDmg"].get<float>();
 		if (j.contains("BaseAtkSpeed"))
-			m_baseAtkSpeed = j["BaseAtkSpeed"].get<float>();
-		if (j.contains("BaseBulletLifetime"))
-			m_baseBulletLifetime = j["BaseBulletLifetime"].get<float>();
+			m_temperBase.atkSpeed = j["BaseAtkSpeed"].get<float>();
 		if (j.contains("BaseBulletRange"))
-			m_baseBulletRange = j["BaseBulletRange"].get<float>();
+			m_temperBase.bulletRange = j["BaseBulletRange"].get<float>();
 		if (j.contains("BaseBulletSizeScale"))
-			m_baseBulletSizeScale = j["BaseBulletSizeScale"].get<float>();
+			m_temperBase.bulletSizeScale = j["BaseBulletSizeScale"].get<float>();
 		if (j.contains("BaseBulletSpeed"))
-			m_baseBulletSpeed = j["BaseBulletSpeed"].get<float>();
+			m_temperBase.bulletSpeed = j["BaseBulletSpeed"].get<float>();
 		
 		// 하위 호환성: 기존 씬 파일에서 실제값으로 저장된 경우 Base값으로 사용
 		if (!j.contains("BaseAtkDmg") && j.contains("FireRate"))
@@ -1794,13 +1793,10 @@ namespace game
 			// 기존 FireRate로부터 AtkSpeed 역산 (0.7 / fireRate)
 			float oldFireRate = j["FireRate"].get<float>();
 			if (oldFireRate > 0.001f)
-				m_baseAtkSpeed = 0.7f / oldFireRate;
+				m_temperBase.atkSpeed = 0.7f / oldFireRate;
 		}
 		if (!j.contains("BaseBulletSpeed") && j.contains("BulletSpeed"))
-			m_baseBulletSpeed = j["BulletSpeed"].get<float>();
-		if (!j.contains("BaseBulletLifetime") && j.contains("BulletLifetime"))
-			m_baseBulletLifetime = j["BulletLifetime"].get<float>();
-		
+			m_temperBase.bulletSpeed = j["BulletSpeed"].get<float>();
 		if (j.contains("BulletStartOffsetY"))
 			m_bulletStartOffsetY = j["BulletStartOffsetY"].get<float>();
 		if (j.contains("BulletStartOffsetForward"))
@@ -1827,8 +1823,11 @@ namespace game
 		// 대쉬 설정 (Dynamic Impulse + 독립 감속)
 		if (j.contains("DashDuration"))
 			m_dashDuration = j["DashDuration"].get<float>();
-		if (j.contains("DashImpulseMultiplier"))
-			m_dashImpulseMultiplier = j["DashImpulseMultiplier"].get<float>();
+		if (j.contains("BaseDashDistance"))
+			m_temperBase.dashDistance = j["BaseDashDistance"].get<float>();
+		// (하위호환 원하면)
+		else if (j.contains("DashImpulseMultiplier"))
+			m_temperBase.dashDistance = j["DashImpulseMultiplier"].get<float>();
 		if (j.contains("DashDecayRate"))
 			m_dashDecayRate = j["DashDecayRate"].get<float>();
 		if (j.contains("DashDecayDuration"))
@@ -1836,7 +1835,7 @@ namespace game
 		if (j.contains("DashAfterimageCutoffRatio"))
 			m_dashAfterimageCutoffRatio = j["DashAfterimageCutoffRatio"].get<float>();
 		if (j.contains("DashCooldown"))
-			m_dashCooldown = j["DashCooldown"].get<float>();
+			m_temperBase.dashCooldown = j["DashCooldown"].get<float>();
 		if (j.contains("MaxDashCount"))
 			m_MaxDashCount = j["MaxDashCount"].get<int>();
 		if (j.contains("DashRechargeTime"))

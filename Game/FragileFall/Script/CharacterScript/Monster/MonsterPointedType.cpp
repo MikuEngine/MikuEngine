@@ -3,6 +3,8 @@
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
 
+#include <Framework/Asset/Prefab.h>
+
 #include <Engine/Core/System/MyTime.h>
 #include <Framework/Object/Component/AnimFSM.h>
 #include <Framework/Object/Component/Pathfinding/PathfindingAgent.h>
@@ -25,6 +27,9 @@ namespace game
         
         // Pointed 타입 고정
         m_attackType = AttackType::Pointed;
+
+        // 처형(Dead) 시 바로 사라지도록 딜레이 제거
+        m_deathDelay = 0.0f;
         
         // 스탯은 씬 파일에서 로드됨 (Load 함수 참조)
     }
@@ -528,6 +533,33 @@ namespace game
     void MonsterPointedType::ExecuteFragileBehaviorNonPhysics()
     {
         // Fragile 상태: 아무 행동도 하지 않음 (Execution 대기)
+    }
+
+    void MonsterPointedType::OnFragile()
+    {
+        MonsterScript::OnFragile();
+
+        if (m_fragileCrystalInstance != nullptr)
+            return;
+
+        const char* tierStr = GetMonsterTierStr(m_monsterTier);
+        std::string prefabName = std::string("FragileCrystal_") + tierStr;
+        engine::GameObject* crystal = engine::Prefab::Instantiate(prefabName);
+        if (crystal && crystal->GetTransform() && GetTransform())
+        {
+            crystal->GetTransform()->SetParent(GetTransform(), false);
+            m_fragileCrystalInstance = crystal;
+        }
+    }
+
+    void MonsterPointedType::OnRevive()
+    {
+        if (m_fragileCrystalInstance != nullptr)
+        {
+            m_fragileCrystalInstance->Destroy();
+            m_fragileCrystalInstance = nullptr;
+        }
+        MonsterScript::OnRevive();
     }
 
     void MonsterPointedType::ExecuteDeadBehaviorNonPhysics()

@@ -4,6 +4,12 @@
 #include <Framework/Object/Component/UI/UIButton.h>
 #include <Framework/Object/Component/UI/UISlider.h>
 
+namespace engine
+{
+    class UIText;
+    class UIProgressBar;
+}
+
 namespace game
 {
     class AimModeController;
@@ -73,5 +79,11 @@ namespace game
 
         AimModeController* m_aimMode = nullptr;
         PlayerControllerScript* m_playerScript = nullptr;
+
+        // HUD: Canvas_HUD > Currency > Ruby/Sapphire/Emerald > * Count (UIText), Fragile Gauge > Fragile Gauge Progress (UIProgressBar)
+        engine::UIText* m_currencyRubyText = nullptr;
+        engine::UIText* m_currencySapphireText = nullptr;
+        engine::UIText* m_currencyEmeraldText = nullptr;
+        engine::UIProgressBar* m_fragileGaugeProgress = nullptr;
     };
 }

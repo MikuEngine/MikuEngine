@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -57,37 +57,12 @@ namespace game
         REGISTER_SCRIPT(PlayerControllerScript, BaseControllerScript)
 
     protected:
-        engine::AfterimageRenderer* m_afterimage = nullptr;
-
-        // ═══════════════════════════════════════════════════════════════
-        // 공격 변수 - Base값 (Save/Load 대상, OnGui 편집 가능)
-        // PlayerTemperManager가 이 값을 읽어서 강화 계산 후 실제값 설정
-        // ═══════════════════════════════════════════════════════════════
-        float m_baseAtkDmg = 10.0f;             // 기본 공격력
-        float m_baseAtkSpeed = 1.0f;            // 기본 공격속도 스케일 (1.0 = 초당 1.4발)
-        float m_baseBulletLifetime = 3.0f;      // 기본 총알 수명 (초)
-        float m_baseBulletRange = 50.0f;        // 기본 총알 사거리 (BulletPlayer 전용)
-        float m_baseBulletSizeScale = 0.7f;     // 기본 총알 스케일 (Prefab 기본 1.0 × 0.7 = 0.7)
-        float m_baseBulletSpeed = 1.0f;         // 기본 총알 속도
-
-        // ═══════════════════════════════════════════════════════════════
-        // 공격 변수 - 실제값 (PlayerTemperManager가 설정, OnGui 조회만)
-        // 공식: 실제값 = (Base + 합연산) × 곱연산
-        // ═══════════════════════════════════════════════════════════════
-        float m_playerAtkDmg = 10.0f;           // 실제 공격력
-        float m_AtkSpeed = 1.0f;                // 실제 공격속도 스케일
-        float m_fireRate = 0.7f;                // 발사 간격 (초). m_AtkSpeed로부터 계산됨. 0.7 / m_AtkSpeed
-        float m_bulletLifetime = 3.0f;          // 실제 총알 수명 (초) - BulletPlayer는 사용 안 함
-        float m_bulletRange = 50.0f;            // 실제 총알 사거리 (BulletPlayer 전용)
-        float m_bulletSizeScale = 0.7f;         // 실제 총알 스케일
-        float m_bulletSpeed = 1.0f;             // 실제 총알 속도
-        bool m_isBulletDouble = false;          // 더블샷 (PlayerTemperManager가 설정)
-
-
         // ─────────────────────────────────────────────
         // 컴포넌트 참조
         // ─────────────────────────────────────────────
         engine::Rigidbody* m_rigidbody = nullptr;
+        engine::AfterimageRenderer* m_afterimage = nullptr;
+
         AimModeController* m_aimPointer = nullptr;
         BulletFactory* m_bulletFactory = nullptr;
 
@@ -105,7 +80,6 @@ namespace game
         // ─────────────────────────────────────────────
         // 이동 설정
         // ─────────────────────────────────────────────
-        float m_moveSpeed = 13.0f;
         float m_rotationSpeed = 10.0f;  // 회전 속도 (rad/sec)
 
         // ─────────────────────────────────────────────
@@ -120,9 +94,7 @@ namespace game
         // - Impulse로 순간 가속 후 지수 감쇠
         // ─────────────────────────────────────────────
         float m_dashDuration = 0.3f;                    // 대쉬 지속 시간 (초)
-        float m_dashImpulseMultiplier = 15.0f;          // 대쉬 Impulse 배율 (m_moveSpeed 기준)
         float m_dashDecayRate = 4.0f;                   // 대쉬 지수 감쇠율 (높을수록 빠르게 감속)
-        float m_dashCooldown = 0.2f;                    // 대쉬 쿨다운 (초)
         int m_MaxDashCount = 3;
         int m_CurrentDashCount = 3;
         float m_dashRechargeTime = 1.0f;
@@ -238,6 +210,86 @@ namespace game
         // 이전 프레임 이동 상태 (이동 시작 감지용)
         bool m_wasMoving = false;       
        
+    private:
+        // PlayerTemperManager 전달
+
+        // =========================
+        // Temper Base (저장/편집 대상)
+        // =========================
+        struct TemperBaseStats
+        {
+            // Attack
+            float atkDmg = 10.0f;
+            float atkSpeed = 1.0f;          // 스케일(1.0 기준)
+            float bulletRange = 50.0f;
+            float bulletSizeScale = 0.7f;
+            float bulletSpeed = 1.0f;
+
+            // Execution
+            float exeFragileRegen = 20.0f;
+            float exeRange = 10.0f;
+            float exeSplashDmg = 10.0f;
+            float exeSplashRange = 5.0f;
+            float exeDashChargeRegen = 1.0f; // apply에서 float로 받고 내부 int 변환 가능
+            float exeHpRegen = 5.0f;
+
+            // Health
+            float hpRegenOnClear = 10.0f;
+            float fragileMax = 100.0f;
+            float fragileRegenOnClear = 20.0f;
+            float fragileGainRate = 1.0f;
+            float dashInvincibleTime = 0.1f;
+
+            // Vitality / Movement
+            float maxHp = 100.0f;
+            float invincibleTime = 0.5f;
+            float moveSpeed = 13.0f;
+
+            // Dash
+            float dashDistance = 15.0f;     // 현재는 dashImpulseMultiplier 역할로 쓰는 값
+            float dashCooldown = 0.2f;
+        };
+
+        // =========================
+        // Temper Final (런타임/표시용)
+        // =========================
+        struct TemperFinalStats
+        {
+            // Attack
+            float atkDmg = 10.0f;
+            float atkSpeed = 1.0f;
+            float fireRate = 0.7f;          // 0.7 / atkSpeed
+            float bulletRange = 50.0f;
+            float bulletSizeScale = 0.7f;
+            float bulletSpeed = 1.0f;
+
+            // Execution
+            float exeFragileRegen = 20.0f;
+            float exeRange = 10.0f;
+            float exeSplashDmg = 10.0f;
+            float exeSplashRange = 5.0f;
+            int   exeDashChargeRegen = 1;
+            float exeHpRegen = 5.0f;
+
+            // Health
+            float hpRegenOnClear = 10.0f;
+            float fragileMax = 100.0f;
+            float fragileRegenOnClear = 20.0f;
+            float fragileGainRate = 1.0f;
+            float dashInvincibleTime = 0.1f;
+
+            // Vitality / Movement
+            float maxHp = 100.0f;
+            float invincibleTime = 0.5f;
+            float moveSpeed = 13.0f;
+
+            // Dash
+            float dashDistance = 15.0f;
+            float dashCooldown = 0.2f;
+        };
+
+        TemperBaseStats  m_temperBase;
+        TemperFinalStats m_temperFinal;
 
     public:
         void Awake() override;
@@ -357,7 +409,6 @@ namespace game
         // ─────────────────────────────────────────────
         // 발사 시스템 접근자
         // ─────────────────────────────────────────────
-        float GetFireRate() const { return m_fireRate; }
         void RegisterFireCallback(engine::ScriptBase* owner, const FireCallback& callback);
         
         // ─────────────────────────────────────────────
@@ -367,89 +418,66 @@ namespace game
         bool CanFireNow() const { return m_canFireNow; }
         void SetCanFireNow(bool canFire) { m_canFireNow = canFire; }
 
-        // ─────────────────────────────────────────────
-        // 공격 변수 - Base값 Getter (PlayerTemperManager용)
-        // ─────────────────────────────────────────────
-        float GetBaseAtkDmg() const { return m_baseAtkDmg; }
-        float GetBaseAtkSpeed() const { return m_baseAtkSpeed; }
-        float GetBaseBulletLifetime() const { return m_baseBulletLifetime; }
-        float GetBaseBulletRange() const { return m_baseBulletRange; }
-        float GetBaseBulletSizeScale() const { return m_baseBulletSizeScale; }
-        float GetBaseBulletSpeed() const { return m_baseBulletSpeed; }
+    public:
+        // Getter
+        float GetBaseAtkDmg() const { return m_temperBase.atkDmg; }
+        float GetBaseAtkSpeed() const { return  m_temperBase.atkSpeed; }
+        float GetBaseBulletRange() const { return m_temperBase.bulletRange; }
+        float GetBaseBulletSizeScale() const { return m_temperBase.bulletSizeScale; }
+        float GetBaseBulletSpeed() const { return m_temperBase.bulletSpeed; }
 
+        float GetBaseExeFragileRegen() const { return m_temperBase.exeFragileRegen; }
+        float GetBaseExeRange() const { return m_temperBase.exeRange; }
+        float GetBaseExeSplashDmg() const { return m_temperBase.exeSplashDmg; }
+        float GetBaseExeSplashRange() const { return m_temperBase.exeSplashRange; }
+        float GetBaseExeDashChargeRegen() const { return m_temperBase.exeDashChargeRegen; }
+        float GetBaseExeHpRegen() const { return m_temperBase.exeHpRegen; }
 
-        // ─────────────────────────────────────────────
-        // 공격 변수 - 실제값 Setter (PlayerTemperManager용)
-        // ─────────────────────────────────────────────
-        void SetPlayerAtkDmg(float value) { m_playerAtkDmg = value; }
-        void SetBaseAtkDmg(float value) { m_baseAtkDmg = value; }
-        void SetAtkSpeed(float value) { m_AtkSpeed = value; }
-        void SetFireRate(float value) { m_fireRate = value; }
-        void SetBulletLifetime(float value) { m_bulletLifetime = value; }
-        void SetBulletRange(float value) { m_bulletRange = value; }
-        void SetBulletSizeScale(float value) { m_bulletSizeScale = value; }
-        void SetBulletSpeed(float value) { m_bulletSpeed = value; }
-        void SetIsBulletDouble(bool value) { m_isBulletDouble = value; }
+        float GetBaseMaxHp() const { return m_temperBase.maxHp; }
+        float GetBaseInvincibleTime() const { return m_temperBase.invincibleTime; }
+        float GetBaseMoveSpeed() const { return m_temperBase.moveSpeed; }
+        float GetBaseDashDistance() const { return m_temperBase.dashDistance; }
+        float GetBaseDashCooldown() const { return m_temperBase.dashCooldown; }
+
+        float GetBaseHpRegenOnClear() const { return m_temperBase.hpRegenOnClear; }
+        float GetBaseFragileMax() const { return m_temperBase.fragileMax; }
+        float GetBaseFragileRegenOnClear() const { return m_temperBase.fragileRegenOnClear; }
+        float GetBaseFragileGainRate() const { return m_temperBase.fragileGainRate; }
+        float GetBaseDashInvincibleTime() const { return m_temperBase.dashInvincibleTime; }
+
+        // Setter
+        void SetPlayerAtkDmg(float v) { m_temperFinal.atkDmg = v; }
+        void SetAtkSpeed(float v) { m_temperFinal.atkSpeed = v; }
+        void SetFireRate(float v) { m_temperFinal.fireRate = v; }
+
+        void SetBulletRange(float v) { m_temperFinal.bulletRange = v; }
+        void SetBulletSizeScale(float v) { m_temperFinal.bulletSizeScale = v; }
+        void SetBulletSpeed(float v) { m_temperFinal.bulletSpeed = v; }
+
+        void SetExeFragileRegen(float v) { m_temperFinal.exeFragileRegen = v; }
+        void SetExeRange(float v) { m_temperFinal.exeRange = v; }
+        void SetExeSplashDmg(float v) { m_temperFinal.exeSplashDmg = v; }
+        void SetExeSplashRange(float v) { m_temperFinal.exeSplashRange = v; }
+        void SetExeDashChargeRegen(float v) { m_temperFinal.exeDashChargeRegen = static_cast<int>(v); }
+        void SetExeHpRegen(float v) { m_temperFinal.exeHpRegen = v; }
+
+        void SetMaxHp(float v) { m_temperFinal.maxHp = v; }
+        void SetInvincibleTime(float v) { m_temperFinal.invincibleTime = v; }
+        void SetMoveSpeed(float v) { m_temperFinal.moveSpeed = v; }
+        void SetDashDistance(float v) { m_temperFinal.dashDistance = v; }
+        void SetDashCooldown(float v) { m_temperFinal.dashCooldown = v; }
+
+        void SetHpRegenOnClear(float v) { m_temperFinal.hpRegenOnClear = v; }
+        void SetFragileMax(float v) { m_temperFinal.fragileMax = v; }
+        void SetFragileRegenOnClear(float v) { m_temperFinal.fragileRegenOnClear = v; }
+        void SetFragileGainRate(float v) { m_temperFinal.fragileGainRate = v; }
+        void SetDashInvincibleTime(float v) { m_temperFinal.dashInvincibleTime = v; }
+
+        float GetAtkSpeed() const { return m_temperFinal.atkSpeed; }
+        float GetFireRate() const { return m_temperFinal.fireRate; }
+
         void SetAfterImage(engine::AfterimageRenderer* comp) { m_afterimage = comp; }
         engine::AfterimageRenderer* GetAfterImage() const { return m_afterimage; }
-
-
-
-        // 처형 (Execution)
-        float GetBaseExeFragileRegen() const { return m_exeFragileRegen; }
-        void  SetExeFragileRegen(float v) { m_exeFragileRegen = v; }
-
-        float GetBaseExeSplashDmg() const { return m_exeSplashDmg; }
-        void  SetExeSplashDmg(float v) { m_exeSplashDmg = v; }
-
-        float GetBaseExeSplashRange() const { return m_exeSplashRange; }
-        void  SetExeSplashRange(float v) { m_exeSplashRange = v; }
-
-        float GetBaseExeDashChargeRegen() const { return static_cast<float>(m_exeDashChargeRegen); }
-        void  SetExeDashChargeRegen(float v) { m_exeDashChargeRegen = static_cast<int>(v); }
-
-        float GetBaseExeHpRegen() const { return m_exeHpRegen; }
-        void  SetExeHpRegen(float v) { m_exeHpRegen = v; }
-
-        // 체력/생존 (Vitality)
-        float GetBaseHpRegenOnClear() const { return m_hpRegenOnClear; }
-        void  SetHpRegenOnClear(float v) { m_hpRegenOnClear = v; }
-
-        float GetBaseExeRange() const { return m_executionRange; }
-        void SetExeRange(float v) { m_executionRange = v; }
-
-        float GetBaseFragileMax() const { return m_fragileMax; }
-        void  SetFragileMax(float v) { m_fragileMax = v; }
-
-        float GetBaseFragileRegenOnClear() const { return m_fragileRegenOnClear; }
-        void  SetFragileRegenOnClear(float v) { m_fragileRegenOnClear = v; }
-
-        float GetBaseFragileGainRate() const { return m_fragileGainRate; }
-        void  SetFragileGainRate(float v) { m_fragileGainRate = v; }
-
-        // 이동/대시 (Movement)
-        float GetBaseDashInvincibleTime() const { return m_dashInvincibleTime; }
-        void  SetDashInvincibleTime(float v) { m_dashInvincibleTime = v; }
-
-        float GetBaseMaxHp() const { return m_PlayerMaxHP; }
-        void  SetMaxHp(float value) { m_PlayerMaxHP = value; }
-
-        // 무적 시간
-        float GetBaseInvincibleTime() const { return m_invincibleTime; }
-        void  SetInvincibleTime(float value) { m_invincibleTime = value; }
-
-
-        float GetBaseMoveSpeed() const { return m_moveSpeed; }
-        float GetMoveSpeed() const { return m_moveSpeed; }
-        void  SetMoveSpeed(float value) { m_moveSpeed = value; }
-
-        // 대시 거리 (m_dashImpulseMultiplier가 대시 거리를 결정하는 물리 힘입니다)
-        float GetBaseDashDistance() const { return m_dashImpulseMultiplier; }
-        void  SetDashDistance(float value) { m_dashImpulseMultiplier = value; }
-
-        // 대시 쿨다운
-        float GetBaseDashCooldown() const { return m_dashCooldown; }
-        void  SetDashCooldown(float value) { m_dashCooldown = value; }
 
         // 처형: Execution 상태일 때 재생 중인 처형 애니메이션의 정규화 시간 (0~1). 아니면 -1
         float GetExecutionAnimNormalizedTime() const;

@@ -157,11 +157,33 @@ namespace game
 
         size_t maxSpawn = m_allPoints.size() < 10 ? m_allPoints.size() : 10;
         size_t count = partyIDs.size() < maxSpawn ? partyIDs.size() : maxSpawn;
+        m_lastSpawnedPartyIDs.assign(partyIDs.begin(), partyIDs.begin() + static_cast<std::ptrdiff_t>(count));
         for (size_t i = 0; i < count; i++)
         {
             engine::Vector3 pos = GetNextSpawnPosition();
             SpawnOne(partyIDs[i], pos);
         }
+    }
+
+    void MonsterSpawner::ComputeAndReportStageClearReward()
+    {
+        int totalRuby = 0, totalSapphire = 0, totalEmerald = 0;
+        for (int monsterID : m_lastSpawnedPartyIDs)
+        {
+            const MonsterData* data = m_partyGenerator.FindMonsterByID(monsterID);
+            if (!data)
+                continue;
+            int rMin = data->minRuby, rMax = data->maxRuby;
+            int sMin = data->minSapphire, sMax = data->maxSapphire;
+            int eMin = data->minEmerald, eMax = data->maxEmerald;
+            if (rMin > rMax) std::swap(rMin, rMax);
+            if (sMin > sMax) std::swap(sMin, sMax);
+            if (eMin > eMax) std::swap(eMin, eMax);
+            totalRuby += engine::Random::Int(rMin, rMax);
+            totalSapphire += engine::Random::Int(sMin, sMax);
+            totalEmerald += engine::Random::Int(eMin, eMax);
+        }
+        StageManager::Get().SetStageClearReward(totalRuby, totalSapphire, totalEmerald);
     }
 
     void MonsterSpawner::OnGui()
