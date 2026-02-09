@@ -6,6 +6,7 @@
 namespace engine
 {
     struct CollisionInfo;
+    class GameObject;
     class GridMap;
 }
 
@@ -91,6 +92,9 @@ namespace game
         // GridMap 캐시 (도망 위치 유효성 체크용)
         engine::GridMap* m_gridMap = nullptr;
 
+        // Fragile 상태 시 몬스터 자식으로 생성되는 크리스탈 (색상별 프리팹)
+        engine::GameObject* m_fragileCrystalInstance = nullptr;
+
     public:
         void Awake() override;
         void Start() override;
@@ -137,6 +141,10 @@ namespace game
 
         // 충돌 콜백 (Redemption 반사용)
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
+
+        // Fragile/부활 콜백 (크리스탈 생성·제거)
+        void OnFragile() override;
+        void OnRevive() override;
         
         // 상태 진입 콜백
         void OnStateEntered(const std::string& state) override;
