@@ -52,7 +52,7 @@ namespace game
     {
         if (auto tutorialPlayer = engine::GameObject::Find("Player"))
         {
-            tutorialPlayer->GetComponent<PlayerControllerScript>()->SetBaseAtkDmg(30.0f);          
+            tutorialPlayer->GetComponent<PlayerControllerScript>()->SetPlayerAtkDmg(30.0f);          
         }
 
         m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");

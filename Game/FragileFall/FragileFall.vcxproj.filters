@@ -61,7 +61,6 @@
     <ClCompile Include="Script\CharacterScript\Monster\MonsterDullType.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
     <ClCompile Include="Script\CheckRotateScript.cpp" />
-    <ClCompile Include="Script\TemperTestScript.cpp" />
     <ClCompile Include="Manager\UpgradeProgressManager.cpp" />
     <ClCompile Include="Script\CrystalIceFillControllerScript.cpp" />
     <ClCompile Include="Script\CornerTrigger.cpp" />
@@ -146,7 +145,6 @@
     <ClInclude Include="Script\CharacterScript\Player\PlayerControllerScript.h" />
     <ClInclude Include="Script\UpgradeTypes.h" />
     <ClInclude Include="Script\CheckRotateScript.h" />
-    <ClInclude Include="Script\TemperTestScript.h" />
     <ClInclude Include="Manager\UpgradeProgressManager.h" />
     <ClInclude Include="Script\CrystalIceFillControllerScript.h" />
     <ClInclude Include="Script\CornerTrigger.h" />
