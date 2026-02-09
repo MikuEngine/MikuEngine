@@ -20,7 +20,7 @@ namespace game
     void AimModeController::Awake()
     {
         m_cursorTexByState[(int)AimCursorState::Default] = "Resource/Texture/UI/Image/Cursor_Default.png";
-        m_cursorTexByState[(int)AimCursorState::Clicked] = "Resource/Texture/UI/Image/Cursor_Click.png";
+        m_cursorTexByState[(int)AimCursorState::Clicked] = "Resource/Texture/UI/Cursor/Cursor_Click.png";
 
         m_cursorTexByState[(int)AimCursorState::AimIdle] = "Resource/Texture/UI/Image/Aim_Idle.png";
         m_cursorTexByState[(int)AimCursorState::AimFiring] = "Resource/Texture/UI/Image/Aim_Firing.png";
@@ -327,35 +327,35 @@ namespace game
         std::string selectedTex[5] = {};
         static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga" };
 
-        if (engine::DrawFileSelector("Default", "Resource/Texture/UI/Image", texExtensions, selectedTex[0]))
+        if (engine::DrawFileSelector("Default", "Resource/Texture/UI/Cursor", texExtensions, selectedTex[0]))
         {
             m_cursorTexByState[0] = selectedTex[0];
         }
         ImGui::SameLine();
         ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[0]).filename().string().c_str());
 
-        if (engine::DrawFileSelector("Clicked", "Resource/Texture/UI/Image", texExtensions, selectedTex[1]))
+        if (engine::DrawFileSelector("Clicked", "Resource/Texture/UI/Cursor", texExtensions, selectedTex[1]))
         {
             m_cursorTexByState[1] = selectedTex[1];
         }
         ImGui::SameLine();
         ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[1]).filename().string().c_str());
 
-        if (engine::DrawFileSelector("AimIdle", "Resource/Texture/UI/Image", texExtensions, selectedTex[2]))
+        if (engine::DrawFileSelector("AimIdle", "Resource/Texture/UI/Cursor", texExtensions, selectedTex[2]))
         {
             m_cursorTexByState[2] = selectedTex[2];
         }
         ImGui::SameLine();
         ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[2]).filename().string().c_str());
         
-        if (engine::DrawFileSelector("AimFiring", "Resource/Texture/UI/Image", texExtensions, selectedTex[3]))
+        if (engine::DrawFileSelector("AimFiring", "Resource/Texture/UI/Cursor", texExtensions, selectedTex[3]))
         {
             m_cursorTexByState[3] = selectedTex[3];
         }
         ImGui::SameLine();
         ImGui::Text("Texture: %s", std::filesystem::path(m_cursorTexByState[3]).filename().string().c_str());
 
-        if (engine::DrawFileSelector("AimExecute", "Resource/Texture/UI/Image", texExtensions, selectedTex[4]))
+        if (engine::DrawFileSelector("AimExecute", "Resource/Texture/UI/Cursor", texExtensions, selectedTex[4]))
         {
             m_cursorTexByState[4] = selectedTex[4];
         }
