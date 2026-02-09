@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -23,7 +23,6 @@ namespace game
         
         // Round 타입 고정
         m_attackType = AttackType::Round;
-        m_isDoUpdate = false;
     }
 
     void MonsterRoundType::Start()
@@ -50,25 +49,13 @@ namespace game
 
     void MonsterRoundType::Update()
     {
-        // 업데이트 중지 체크
-        if (!m_isDoUpdate)
-        {
-            CheckAndApplyUpdateSwitch();
-            return;
-        }
-
+        // 스위치 체크는 부모(MonsterScript)에서 처리
         MonsterScript::Update();
     }
 
     void MonsterRoundType::FixedUpdate()
     {
-        // 업데이트 중지 체크
-        if (!m_isDoUpdate)
-        {
-            CheckAndApplyUpdateSwitch();
-            return;
-        }
-
+        // 스위치 체크는 부모(MonsterScript)에서 처리
         MonsterScript::FixedUpdate();
     }
 

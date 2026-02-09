@@ -2788,7 +2788,7 @@
                 {
                     "Type": "MonsterUpdateActivationSwitch",
                     "Active": true,
-                    "ActivationDelay": 0.10000000149011612,
+                    "ActivationDelay": 3.0,
                     "IsUpdateAllowed": false
                 }
             ]

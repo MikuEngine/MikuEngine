@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -24,6 +24,9 @@ namespace game
 	void MonsterScript::Awake()
 	{
 		BaseControllerScript::Awake();
+		
+		// 모든 몬스터는 스위치가 활성화될 때까지 업데이트 중지
+		m_isDoUpdate = false;
 	}
 
 	void MonsterScript::Start()
@@ -70,16 +73,50 @@ namespace game
 
 		// 첫 발사 쿨타임 설정 (게임 시작 즉시 발사 방지)
 		m_fireTimer = 0.0f;
+		
+		// ─────────────────────────────────────────────
+		// MonsterUpdateSwitch 찾기 (한 번만 실행)
+		// ─────────────────────────────────────────────
+		auto* scene = engine::SceneManager::Get().GetScene();
+		if (scene)
+		{
+			auto* switchObj = scene->FindGameObject("MonsterUpdateSwitch");
+			if (switchObj)
+			{
+				m_updateSwitch = switchObj->GetComponent<MonsterUpdateActivationSwitch>();
+			}
+		}
+		
+		// 스위치가 없으면 즉시 업데이트 활성화
+		if (!m_updateSwitch)
+		{
+			m_isDoUpdate = true;
+			m_hasSwitchActivated = true;
+		}
 	}
 
 	void MonsterScript::Update()
 	{
+		// 업데이트 중지 체크 (스위치 연동)
+		if (!m_isDoUpdate)
+		{
+			CheckAndApplyUpdateSwitch();
+			return;
+		}
+		
 		// 부모 클래스 Update 호출
 		BaseControllerScript::Update();
 	}
 
 	void MonsterScript::FixedUpdate()
 	{
+		// 업데이트 중지 체크 (스위치 연동)
+		if (!m_isDoUpdate)
+		{
+			CheckAndApplyUpdateSwitch();
+			return;
+		}
+		
 		// 부모 클래스 FixedUpdate 호출
 		BaseControllerScript::FixedUpdate();
 	}
@@ -122,35 +159,21 @@ namespace game
 			return;
 		}
 
-		// 스위치를 아직 찾지 못했으면 찾기 (한 번만 실행)
+		// 스위치가 없으면 즉시 활성화 (Start()에서 이미 찾음)
 		if (!m_updateSwitch)
 		{
-			auto* scene = engine::SceneManager::Get().GetScene();
-			if (scene)
-			{
-				auto* switchObj = scene->FindGameObject("MonsterUpdateSwitch");
-				if (switchObj)
-				{
-					m_updateSwitch = switchObj->GetComponent<MonsterUpdateActivationSwitch>();
-				}
-			}
+			m_isDoUpdate = true;
+			m_hasSwitchActivated = true;
+			return;
 		}
 
 		// 스위치 상태 반영
-		if (m_updateSwitch)
-		{
-			m_isDoUpdate = m_updateSwitch->m_isUpdateAllowed;
+		m_isDoUpdate = m_updateSwitch->m_isUpdateAllowed;
 
-			// 스위치가 활성화되면 더 이상 체크 안 함
-			if (m_isDoUpdate)
-			{
-				m_hasSwitchActivated = true;
-			}
-		}
-		else
+		// 스위치가 활성화되면 더 이상 체크 안 함
+		if (m_isDoUpdate)
 		{
-			// 스위치가 없으면 기본값 유지 (업데이트 허용)
-			m_isDoUpdate = true;
+			m_hasSwitchActivated = true;
 		}
 	}
 

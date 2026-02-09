@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -160,7 +160,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 업데이트 중지 시스템 (MonsterUpdateSwitch 연동)
         // ─────────────────────────────────────────────
-        bool m_isDoUpdate = true;                    // 업데이트 실행 여부 (기본값: true)
+        bool m_isDoUpdate = false;                   // 업데이트 실행 여부 (기본값: false, 스위치가 활성화되면 true)
         bool m_hasSwitchActivated = false;           // 스위치가 한 번이라도 활성화되었는지
         
         // ─────────────────────────────────────────────
@@ -367,7 +367,7 @@ namespace game
         
         // ─────────────────────────────────────────────
         // 업데이트 중지 시스템 (MonsterUpdateSwitch 연동)
-        // - 팀원과 조율 후 Start()에서 호출 필요
+        // - Update/FixedUpdate에서 자동 호출
         // ─────────────────────────────────────────────
         void CheckAndApplyUpdateSwitch();
         
