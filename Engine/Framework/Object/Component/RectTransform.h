@@ -31,6 +31,8 @@ namespace engine
 		Vector2 m_anchorMin{ 0.5f, 0.5f };
 		Vector2 m_anchorMax{ 0.5f, 0.5f };
 
+		float m_rotationZ = 0.0f;
+
 		UIRect m_worldRect{};
 		bool m_uiDirty = true;
 
@@ -48,6 +50,8 @@ namespace engine
 		const Vector2& GetAnchorMin() const;
 		const Vector2& GetAnchorMax() const;
 		const UIRect& GetWorldRect() const;
+		float GetLocalRotationZRad() const { return m_rotationZ; }
+		float GetLocalRotationZDeg() const { return m_rotationZ * 180.0f / DirectX::XM_PI; }
 		RectTransform* FindPrentRectTransform() const;
 
 		bool IsUIDirty() const;
@@ -61,7 +65,11 @@ namespace engine
 		void SetPivot(const Vector2& pivot);
 		void SetAnchorMin(const Vector2& anchorMin);
 		void SetAnchorMax(const Vector2& anchorMax);
-
+		void SetLocalRotationZDeg(float deg)
+		{
+			m_rotationZ = deg * DirectX::XM_PI / 180.0f;
+			m_uiDirty = true;
+		}
 		void MarkUIDirty(bool v = true);
 
 	public:

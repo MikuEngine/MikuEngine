@@ -97,6 +97,17 @@ namespace engine
 		const float sx = (pxW / vp.Width) * 2.0f;
 		const float sy = (pxH / vp.Height) * 2.0f;
 
+		const float rot = rt->GetLocalRotationZRad();
+		const float aspect = sx / sy;
+
+		DirectX::XMMATRIX Rfix =
+			DirectX::XMMatrixScaling(1.0f, aspect, 1.0f) *
+			DirectX::XMMatrixRotationZ(rot) *
+			DirectX::XMMatrixScaling(1.0f, 1.0f / aspect, 1.0f);
+
+		const float dxN = (0.5f - rt->GetPivot().x) * sx;
+		const float dyN = (rt->GetPivot().y - 0.5f) * sy;
+
 		if (!m_texture || !m_vertexBuffer || !m_indexBuffer)
 			return;
 
@@ -174,8 +185,16 @@ namespace engine
 			const float o_sy = (o_pxH / vp.Height) * 2.0f;
 
 			CbUIElement cbUI{};
+			//cbUI.clip = DirectX::XMMatrixTranspose(
+			//	DirectX::XMMatrixScaling(o_sx, o_sy, 1.0f) *
+			//	DirectX::XMMatrixTranslation(tx, ty, 0.0f)
+			//);
+
 			cbUI.clip = DirectX::XMMatrixTranspose(
-				DirectX::XMMatrixScaling(o_sx, o_sy, 1.0f) *
+				DirectX::XMMatrixScaling(sx, sy, 1.0f) *
+				DirectX::XMMatrixTranslation(dxN, dyN, 0.0f) * // pivot → 원점
+				Rfix *
+				DirectX::XMMatrixTranslation(-dxN, -dyN, 0.0f) * // 원점 → pivot
 				DirectX::XMMatrixTranslation(tx, ty, 0.0f)
 			);
 
@@ -208,8 +227,16 @@ namespace engine
 		// ===== Texture Pass =====
 		{
 			CbUIElement cbUI{};
+			//cbUI.clip = DirectX::XMMatrixTranspose(
+			//	DirectX::XMMatrixScaling(sx, sy, 1.0f) *
+			//	DirectX::XMMatrixTranslation(tx, ty, 0.0f)
+			//);
+
 			cbUI.clip = DirectX::XMMatrixTranspose(
 				DirectX::XMMatrixScaling(sx, sy, 1.0f) *
+				DirectX::XMMatrixTranslation(dxN, dyN, 0.0f) * // pivot → 원점
+				Rfix *
+				DirectX::XMMatrixTranslation(-dxN, -dyN, 0.0f) * // 원점 → pivot
 				DirectX::XMMatrixTranslation(tx, ty, 0.0f)
 			);
 
