@@ -1542,6 +1542,10 @@
                     "Active": true,
                     "Duration": 0.15000000596046448,
                     "ClosedOffsetY": -700.0
+                },
+                {
+                    "Type": "UISliderValueTextBinder",
+                    "Active": true
                 }
             ]
         },
@@ -2300,7 +2304,7 @@
         {
             "ID": 25,
             "ParentID": 24,
-            "Name": "Text_VolmeVal",
+            "Name": "Text_VolumeVal",
             "Active": true,
             "Components": [
                 {
