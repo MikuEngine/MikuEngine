@@ -5428,9 +5428,9 @@
                     "CursorTexturesByState": [
                         "Resource/Texture/UI/Image/Cursor_Default.png",
                         "Resource/Texture/UI/Image/Cursor_Click.png",
-                        "",
-                        "",
-                        ""
+                        "Resource/Texture/UI/Image/Aim_Idle.png",
+                        "Resource/Texture/UI/Image/Aim_Execute.png",
+                        "Resource/Texture/UI/Image/Aim_Execute.png"
                     ],
                     "CursorPivotsByState": [
                         {
