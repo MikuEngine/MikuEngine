@@ -1866,6 +1866,11 @@ namespace game
 		
 		m_PlayerCurrentHP -= damage;
 		
+		if (m_onDamaged)
+		{
+			m_onDamaged();
+		}
+
 		if (m_PlayerCurrentHP < 0)
 		{
 			m_PlayerCurrentHP = 0;

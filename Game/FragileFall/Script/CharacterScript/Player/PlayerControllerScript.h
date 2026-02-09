@@ -20,6 +20,9 @@ namespace game
     
     // 발사 이벤트 콜백 타입
     using FireCallback = std::function<void()>;
+
+    // 피격 이벤트 콜백
+    using DamageCallback = std::function<void()>;
     
     // 발사 콜백 엔트리 (Ptr 기반 자동 유효성 관리)
     struct FireCallbackEntry
@@ -407,6 +410,9 @@ namespace game
         // ─────────────────────────────────────────────
         bool ValidateComponents() const;  // 컴포넌트 유효성 검사
 
+        // 대미지 처리
+        DamageCallback m_onDamaged = nullptr;   // 피격 콜백 저장용
+
     public:
         // ─────────────────────────────────────────────
         // 처형 시스템 접근자
@@ -430,6 +436,7 @@ namespace game
         float GetCurrentHp() const { return m_PlayerCurrentHP; }
         
         // 데미지 처리
+        void SetOnDamaged(DamageCallback callback) { m_onDamaged = std::move(callback); }
         void TakeDamage(float damage);
 
         // 프레자일 게이지 (몬스터 있을 때 상승, UI/직렬화용)

@@ -118,6 +118,7 @@ namespace engine
 		UIEffectType GetEffectType() const { return static_cast<UIEffectType>(m_effectMode); }
 
 		void SetEffectParam(int index, const Vector4& val);
+		const Vector4 GetEffectParam(int index);
 
 		void SetEffect0(const Vector4& v) { m_effect0 = v; m_dirty = true; }
 		void SetEffect1(const Vector4& v) { m_effect1 = v; m_dirty = true; }

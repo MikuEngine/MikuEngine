@@ -18,6 +18,7 @@ static const uint UI_FX_SCANLINE = 10u;
 static const uint UI_FX_GLOW_PULSE = 11u;
 static const uint UI_FX_STATIC_NOISE = 12u;
 static const uint UI_FX_PRESSED_SINK = 13u;
+static const uint UI_FX_SCREEN_HIT = 14u;
 
 // [Group 2] UV 변형 (UV Distort FX) - 샘플링 전에 실행
 static const uint UI_FX_PIXELATE = 20u;
@@ -368,6 +369,32 @@ void ApplyFx_PressedSink(float2 uv, inout float4 col)
     col.rgb *= lerp(0.5, 1.0, innerShadow); // 그림자 적용
 }
 
+void ApplyFx_ScreenHit(float2 uv, inout float4 col)
+{
+    // g_effect0.x : 피격 강도 (0.0 ~ 1.0)
+    // g_effect0.y : 시간 (심장 박동 효과용)
+    
+    float intensity = g_effect0.x;
+    float time = g_time * 2.0;
+
+    // 1. 화면 가장자리 계산 (Vignette)
+    // 중심에서 멀어질수록 값이 커짐
+    float dist = distance(uv, float2(0.5, 0.5));
+    float vignette = smoothstep(0.3, 0.8, dist); // 0.3~0.8 범위에서 서서히 진해짐
+
+    // 2. 심장 박동 느낌의 애니메이션 (Pulse)
+    float pulse = (sin(time) * 0.5 + 0.5) * 0.3;
+    vignette += pulse * intensity;
+
+    // 3. 피 색상 정의 (어두운 붉은색)
+    float3 bloodColor = float3(0.4, 0.0, 0.0);
+
+    // 4. 합성
+    // 원본이 투명하더라도(col.a가 0이어도) vignette가 높은 곳은 색을 입힘
+    col.rgb = lerp(col.rgb, bloodColor, vignette * intensity);
+    col.a = max(col.a, vignette * intensity); // 투명도를 강제로 올려서 보이게 함
+}
+
 //////////////////////////////////////////////////////////////////////////
 // 
 //  Masking
@@ -534,7 +561,11 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             ApplyFx_SelectOrbit(uv, finalColor);
             break;
         case UI_FX_PRESSED_SINK:
-            ApplyFx_PressedSink(input.texCoord, finalColor);
+            ApplyFx_PressedSink(uv, finalColor);
+            break;
+        
+        case UI_FX_SCREEN_HIT:
+            ApplyFx_ScreenHit(uv, finalColor);
             break;
     }
     

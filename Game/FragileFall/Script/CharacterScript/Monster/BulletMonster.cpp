@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -274,10 +274,14 @@ namespace game
 		// 일반 타입: 플레이어, 환경, 벽과 충돌 시
 		if (isPlayer || isEnvironment || isWall)
 		{
-			//if (isPlayer)
-			//{
-			//	player->onHit(m_params.damage);
-			//}
+			if (isPlayer)
+			{
+				auto* playerScript = info.gameObject->GetComponent<PlayerControllerScript>();
+				if (playerScript)
+				{
+					playerScript->TakeDamage(m_params.damage);
+				}
+			}
 
 			m_isDying = true;
 			m_deathTimer = 0.0f;

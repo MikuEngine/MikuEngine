@@ -1429,7 +1429,7 @@
             "ID": 16,
             "ParentID": 15,
             "Name": "UI_OptionPopUp",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -1952,7 +1952,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Value": 0.5789999961853027,
+                    "Value": 1.0,
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
@@ -2175,7 +2175,7 @@
                     "ClipRect": {
                         "x": 960.0,
                         "y": 585.0,
-                        "z": 1133.699951171875,
+                        "z": 1260.0,
                         "w": 635.0
                     },
                     "MaskMode": 1,
@@ -2234,11 +2234,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.5710999965667725,
+                        "x": 0.949999988079071,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.5710999965667725,
+                        "x": 0.949999988079071,
                         "y": 0.5
                     },
                     "RotationZDeg": 0.0
@@ -2429,7 +2429,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Value": 0.5059999823570251,
+                    "Value": 1.0,
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
@@ -2652,7 +2652,7 @@
                     "ClipRect": {
                         "x": 960.0,
                         "y": 715.0,
-                        "z": 1111.800048828125,
+                        "z": 1260.0,
                         "w": 765.0
                     },
                     "MaskMode": 1,
@@ -2711,11 +2711,11 @@
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.5053999423980713,
+                        "x": 0.949999988079071,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.5053999423980713,
+                        "x": 0.949999988079071,
                         "y": 0.5
                     },
                     "RotationZDeg": 0.0
@@ -3849,7 +3849,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -10.0
+                        "y": 0.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -3874,8 +3874,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "Text": "뒤로",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 50,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -4914,7 +4914,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "게임 종료",
-                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -4987,8 +4987,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "게임을 종료하시겠습니까?",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 40,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -5178,7 +5178,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -10.0
+                        "y": 0.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -5203,8 +5203,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "종료",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 40,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 50,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -5212,7 +5212,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -5394,7 +5394,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -10.0
+                        "y": 0.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -5419,8 +5419,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "Text": "취소",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 40,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 50,
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,

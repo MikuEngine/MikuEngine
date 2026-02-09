@@ -1,6 +1,6 @@
 {
     "Name": "90_DEV_Stage",
-    "NumGameObjects": 88,
+    "NumGameObjects": 89,
     "GameObjects": [
         {
             "ID": 0,
@@ -6522,6 +6522,113 @@
         },
         {
             "ID": 77,
+            "ParentID": 62,
+            "Name": "HitImage",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 1920.0,
+                    "Height": 1080.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 0.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 78,
             "ParentID": 12,
             "Name": "Canvas",
             "Active": true,
@@ -6578,8 +6685,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 77,
+            "ID": 79,
+            "ParentID": 78,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -6692,7 +6799,7 @@
             ]
         },
         {
-            "ID": 79,
+            "ID": 80,
             "ParentID": 12,
             "Name": "Canvas_KillPopUp",
             "Active": true,
@@ -6749,7 +6856,7 @@
             ]
         },
         {
-            "ID": 80,
+            "ID": 81,
             "ParentID": 12,
             "Name": "Script_Controller",
             "Active": true,
@@ -6792,7 +6899,7 @@
             ]
         },
         {
-            "ID": 81,
+            "ID": 82,
             "ParentID": 12,
             "Name": "AimPointerCanvas",
             "Active": true,
@@ -6849,8 +6956,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 81,
+            "ID": 83,
+            "ParentID": 82,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -6956,7 +7063,7 @@
             ]
         },
         {
-            "ID": 83,
+            "ID": 84,
             "Name": "TempGridMap",
             "Active": true,
             "Components": [
@@ -17749,7 +17856,7 @@
             ]
         },
         {
-            "ID": 84,
+            "ID": 85,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -17894,7 +18001,7 @@
             ]
         },
         {
-            "ID": 85,
+            "ID": 86,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -18114,7 +18221,7 @@
             ]
         },
         {
-            "ID": 86,
+            "ID": 87,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -18182,7 +18289,7 @@
             ]
         },
         {
-            "ID": 87,
+            "ID": 88,
             "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [
