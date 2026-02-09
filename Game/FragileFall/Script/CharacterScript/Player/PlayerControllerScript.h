@@ -66,6 +66,36 @@ namespace game
         AimModeController* m_aimPointer = nullptr;
         BulletFactory* m_bulletFactory = nullptr;
 
+        // ═══════════════════════════════════════════════════════════════
+        // 공격 변수 - Base값 (Save/Load 대상, OnGui 편집 가능)
+        // PlayerTemperManager가 이 값을 읽어서 강화 계산 후 실제값 설정
+        // ═══════════════════════════════════════════════════════════════
+        float m_baseAtkDmg = 10.0f;             // 기본 공격력
+        float m_baseAtkSpeed = 1.0f;            // 기본 공격속도 스케일 (1.0 = 초당 1.4발)
+        float m_baseBulletLifetime = 3.0f;      // 기본 총알 수명 (초)
+        float m_baseBulletRange = 50.0f;        // 기본 총알 사거리 (BulletPlayer 전용)
+        float m_baseBulletSizeScale = 0.7f;     // 기본 총알 스케일 (Prefab 기본 1.0 × 0.7 = 0.7)
+        float m_baseBulletSpeed = 1.0f;         // 기본 총알 속도
+
+        // ═══════════════════════════════════════════════════════════════
+        // 공격 변수 - 실제값 (PlayerTemperManager가 설정, OnGui 조회만)
+        // 공식: 실제값 = (Base + 합연산) × 곱연산
+        // ═══════════════════════════════════════════════════════════════
+        float m_playerAtkDmg = 10.0f;           // 실제 공격력
+        float m_AtkSpeed = 1.0f;                // 실제 공격속도 스케일
+        float m_fireRate = 0.7f;                // 발사 간격 (초). m_AtkSpeed로부터 계산됨. 0.7 / m_AtkSpeed
+        float m_bulletLifetime = 3.0f;          // 실제 총알 수명 (초) - BulletPlayer는 사용 안 함
+        float m_bulletRange = 50.0f;            // 실제 총알 사거리 (BulletPlayer 전용)
+        float m_bulletSizeScale = 0.7f;         // 실제 총알 스케일
+        float m_bulletSpeed = 1.0f;             // 실제 총알 속도
+        bool m_isBulletDouble = false;          // 더블샷 (PlayerTemperManager가 설정)
+        float m_moveSpeed = 13.0f;
+        float m_dashImpulseMultiplier = 15.0f;          // 대쉬 Impulse 배율 (m_moveSpeed 기준)
+        float m_dashCooldown = 0.2f;                    // 대쉬 쿨다운 (초)
+
+
+
+
         //HP
         float m_PlayerMaxHP = 100.0f;
         float m_PlayerCurrentHP = 100.0f;
@@ -105,10 +135,24 @@ namespace game
         // ─────────────────────────────────────────────
         // 대쉬 런타임 상태
         // ─────────────────────────────────────────────
-        bool m_isDashing = false;                       // 대쉬 중 여부
+        bool m_isDashing = false;                       // 대쉬 중 여부 (FSM 동기화)
         float m_dashCooldownTimer = 0.0f;               // 쿨다운 타이머
         float m_dashElapsedTime = 0.0f;                 // 대쉬 경과 시간
         engine::Vector3 m_dashDirection = engine::Vector3::Zero;  // 대쉬 방향 (시작 시 고정)
+        
+        // ─────────────────────────────────────────────
+        // 대쉬 감속 시스템 (타이머와 독립적)
+        // - 타이머 종료 후에도 감속은 계속 진행
+        // - 최종 이동속도까지만 감속 (버프 포함)
+        // ─────────────────────────────────────────────
+        bool m_isDashDecaying = false;                  // 감속 진행 중 여부
+        float m_dashDecayStartSpeed = 0.0f;             // 감속 시작 시 속도
+        float m_dashDecayElapsedTime = 0.0f;            // 감속 경과 시간
+        float m_dashDecayDuration = 0.5f;               // 감속 지속 시간 (초)
+             
+        
+
+
 
         // 처형 관련
         float m_exeFragileRegen = 20.0f;
@@ -167,6 +211,10 @@ namespace game
         bool m_fsmInitialized = false;
         bool m_canFireNow = true;       // 애니 발사 프레임 통과 시 AimMeshController가 true로 설정
         bool m_hasFiredThisSession = false;  // 이번 클릭/홀드에서 1발 이상 쐈는지 (첫 발은 즉시 허용용)
+        
+        // 대쉬 후 즉시 발사 시스템
+        float m_postDashQuickFireTimer = 0.0f;       // 대쉬 후 즉시 발사 가능 남은 시간
+        float m_postDashQuickFireDuration = 0.3f;    // 대쉬 후 즉시 발사 가능 지속 시간 (1회만)
 
         float m_IdleDransitionWaitTime = 0.1f;
         float m_IdleDransitionWaitTimer = 0.0f;
@@ -319,6 +367,8 @@ namespace game
         void HandleDash();               // 대쉬 처리 (FixedUpdate에서 호출)
         void StartDash();                // 대쉬 시작
         void EndDash();                  // 대쉬 종료
+        void StartDashDecay();           // 대쉬 감속 시작
+        void HandleDashDecay();          // 대쉬 감속 처리 (FixedUpdate에서 호출)
         void HandleShooting(float deltaTime);  // Update에서 호출 (DeltaTime 사용)
 
         // ─────────────────────────────────────────────

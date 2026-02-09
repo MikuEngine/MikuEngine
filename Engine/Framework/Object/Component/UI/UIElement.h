@@ -102,5 +102,7 @@ namespace engine
 
 		// helper
 		float Clamp01(float v);
+
+		DirectX::XMMATRIX BuildClipMatrix(const RectTransform& rt, const Canvas& c) const;
 	};
 }

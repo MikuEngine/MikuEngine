@@ -469,6 +469,14 @@ namespace game
 		}
 
 		// ─────────────────────────────────────────────
+		// 대쉬 후 즉시 발사 타이머 갱신
+		// ─────────────────────────────────────────────
+		if (m_postDashQuickFireTimer > 0.0f)
+		{
+			m_postDashQuickFireTimer -= deltaTime;
+		}
+
+		// ─────────────────────────────────────────────
 		// 대쉬 충전 시스템
 		// - 사용한 대쉬가 있으면 충전 시작
 		// - 타이머가 0이 되면 대쉬 1개 회복 후 타이머 리셋
@@ -556,6 +564,16 @@ namespace game
 			HandleDash();
 			m_frameCollisionNormals.clear();  // 클리어
 			return;
+		}
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 대쉬 감속 처리 (FSM 상태와 무관하게 동작)
+		// - Dash 상태가 아니어도 감속 중이면 처리
+		// - 최종 이동속도까지 자연스럽게 감속
+		// ═══════════════════════════════════════════════════════════════
+		if (m_isDashDecaying)
+		{
+			HandleDashDecay();
 		}
 
 		// ═══════════════════════════════════════════════════════════════
@@ -646,7 +664,23 @@ namespace game
 		// 상태 전이 시 초기화 처리
 		// 각 상태에 필요한 설정 수행
 
-		if (state == "Execution")
+		if (state == "Dash")
+		{
+			// ═══════════════════════════════════════════════════════════════
+			// Dash 상태 진입 시 안전 장치
+			// - FSM은 Dash인데 m_isDashing이 false인 경우 (레이스 컨디션)
+			// - StartDash()가 early return했지만 FSM 트리거는 발동된 경우
+			// ═══════════════════════════════════════════════════════════════
+			if (!m_isDashing)
+			{
+				// 버그 상황 감지: 즉시 종료 처리
+				if (m_logicFSM)
+				{
+					m_logicFSM->SetTrigger("DashComplete");
+				}
+			}
+		}
+		else if (state == "Execution")
 		{
 			// 처형 상태 진입 시 속도 초기화
 			m_currentVelocity = engine::Vector3::Zero;
@@ -657,11 +691,16 @@ namespace game
 				m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
 			}
 
-			// 대쉬 중이었다면 대쉬 상태 초기화
+			// 대쉬 중이었다면 대쉬 완전 종료
 			if (m_isDashing)
-			{				
-				m_isDashing = false;
-				m_dashElapsedTime = 0.0f;
+			{
+				EndDash();
+			}
+			
+			// 감속 중이었다면 감속 중단
+			if (m_isDashDecaying)
+			{
+				m_isDashDecaying = false;
 			}
 		}
 	}
@@ -671,7 +710,39 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::OnStateExited(const std::string& state)
 	{
-		if (state == "Execution")
+		if (state == "Dash")
+		{
+			// ═══════════════════════════════════════════════════════════════
+			// Dash 상태 이탈 시 강제 정리 (안전 장치)
+			// - EndDash()가 호출되지 않은 경우를 대비
+			// - FSM 상태는 빠져나왔는데 m_isDashing이 true인 경우 처리
+			// ═══════════════════════════════════════════════════════════════
+			if (m_isDashing)
+			{
+				m_isDashing = false;
+				m_dashElapsedTime = 0.0f;
+				m_dashCooldownTimer = m_dashCooldown;
+				
+				// 잔상 녹화 종료
+				if (m_afterimage)
+				{
+					m_afterimage->EndRecording();
+				}
+				
+				// 대시 종료 트리거 전달 (BuffManager)
+				BuffManager::OnDashEnded();
+				
+				// 대쉬 후 즉시 발사 시스템 활성화 (EndDash()를 거치지 않은 경우)
+				m_postDashQuickFireTimer = m_postDashQuickFireDuration;
+				
+				// 감속 시작 (EndDash()를 거치지 않은 경우)
+				if (!m_isDashDecaying)
+				{
+					StartDashDecay();
+				}
+			}
+		}
+		else if (state == "Execution")
 		{
 			// ═══════════════════════════════════════════════════════════════
 			// 처형 완료 트리거 전달 (BuffManager가 버프 처리)
@@ -819,6 +890,14 @@ namespace game
 		m_dashDirection = moveDir;
 		m_isDashing = true;
 		m_dashElapsedTime = 0.0f;
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 감속 시스템 초기화
+		// - 대쉬 시작 시 이전 감속 중단
+		// ═══════════════════════════════════════════════════════════════
+		m_isDashDecaying = false;
+		m_dashDecayElapsedTime = 0.0f;
+		m_dashDecayStartSpeed = 0.0f;
 
 		// ═══════════════════════════════════════════════════════════════
 		// 대쉬 카운트 관리
@@ -869,13 +948,23 @@ namespace game
 		// 대시 종료 트리거 전달 (BuffManager가 버프 처리)
 		// ═══════════════════════════════════════════════════════════════
 		BuffManager::OnDashEnded();
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 대쉬 후 즉시 발사 시스템 활성화 (0.3초간 1회만 가능)
+		// ═══════════════════════════════════════════════════════════════
+		m_postDashQuickFireTimer = m_postDashQuickFireDuration;
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 감속 시작 (FSM 전이와 독립적)
+		// ═══════════════════════════════════════════════════════════════
+		StartDashDecay();
 	}
 
 	// ═══════════════════════════════════════════════════════════════
-	// 대쉬 처리 (Dynamic Rigidbody + Impulse 방식)
+	// 대쉬 처리 (타이머만 관리, 감속은 별도 처리)
 	// - StartDash()에서 Impulse 적용됨
-	// - PhysX가 충돌/감속 자동 처리
-	// - 여기서는 시간만 체크하고 종료
+	// - 타이머 종료 시 FSM 전이만 수행
+	// - 감속은 StartDashDecay()로 시작하여 별도 진행
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::HandleDash()
 	{
@@ -895,45 +984,92 @@ namespace game
 			EndDash();
 			return;
 		}
-
-		// ═══════════════════════════════════════════════════════════════
-		// 대쉬 지수 감쇠 (매 프레임 속도 감소)
-		// - 초반 급가속 후 빠르게 감속
-		// - decayFactor = e^(-progress * decayRate)
-		// ═══════════════════════════════════════════════════════════════
-		if (m_rigidbody && m_rigidbody->IsDynamic() && m_dashDecayRate > 0.0f)
-		{
-			// 진행률 (0 → 1)
-			float progress = m_dashElapsedTime / m_dashDuration;
-			
-			// 지수 감쇠 계수 (progress가 커질수록 decayFactor가 작아짐)
-			// decayRate가 클수록 빠르게 감속
-			float decayFactor = expf(-progress * m_dashDecayRate);
-			
-			// 현재 수평 속도 가져오기
-			engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
-			engine::Vector3 horizontalVel(currentVel.x, 0.0f, currentVel.z);
-			
-			// 대쉬 방향으로의 속도만 감쇠 적용
-			float speedInDashDir = horizontalVel.Dot(m_dashDirection);
-			if (speedInDashDir > 0.0f)
-			{
-				// 이전 프레임 대비 감쇠량 계산
-				float prevProgress = (m_dashElapsedTime - fixedDelta) / m_dashDuration;
-				float prevDecay = expf(-prevProgress * m_dashDecayRate);
-				float decayRatio = (prevDecay > 0.0001f) ? decayFactor / prevDecay : decayFactor;
-				
-				// 감쇠 적용 (대쉬 방향 성분만)
-				engine::Vector3 dashVelComponent = m_dashDirection * speedInDashDir;
-				engine::Vector3 otherVelComponent = horizontalVel - dashVelComponent;
-				
-				engine::Vector3 newHorizontalVel = dashVelComponent * decayRatio + otherVelComponent;
-				m_rigidbody->SetLinearVelocity(engine::Vector3(newHorizontalVel.x, currentVel.y, newHorizontalVel.z));
-			}
-		}
 		
 		// 회전 속도 강제 0 (대쉬 중에도 적용)
 		ForceStopRotation();
+	}
+	
+	// ═══════════════════════════════════════════════════════════════
+	// 대쉬 감속 시작
+	// - EndDash()에서 호출
+	// - 현재 속도를 저장하고 감속 시작
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::StartDashDecay()
+	{
+		if (!m_rigidbody || !m_rigidbody->IsDynamic()) return;
+		
+		// 현재 수평 속도를 감속 시작 속도로 저장
+		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+		engine::Vector3 horizontalVel(currentVel.x, 0.0f, currentVel.z);
+		m_dashDecayStartSpeed = horizontalVel.Length();
+		
+		// 감속 시작
+		m_isDashDecaying = true;
+		m_dashDecayElapsedTime = 0.0f;
+	}
+	
+	// ═══════════════════════════════════════════════════════════════
+	// 대쉬 감속 처리
+	// - 최종 이동속도(버프 포함)까지만 감속
+	// - 지수 감쇠 적용
+	// - FSM 상태와 무관하게 동작
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::HandleDashDecay()
+	{
+		if (!m_isDashDecaying) return;
+		if (!m_rigidbody || !m_rigidbody->IsDynamic()) return;
+		
+		float fixedDelta = engine::Time::FixedDeltaTime();
+		m_dashDecayElapsedTime += fixedDelta;
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 목표 속도 계산 (버프 포함)
+		// ═══════════════════════════════════════════════════════════════
+		float buffMultiplier = BuffManager::GetMoveSpeedMultiplier();
+		float targetSpeed = m_moveSpeed * buffMultiplier;
+		
+		// 현재 속도
+		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
+		engine::Vector3 horizontalVel(currentVel.x, 0.0f, currentVel.z);
+		float currentSpeed = horizontalVel.Length();
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 목표 속도 이하면 감속 종료
+		// ═══════════════════════════════════════════════════════════════
+		if (currentSpeed <= targetSpeed)
+		{
+			m_isDashDecaying = false;
+			return;
+		}
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 지수 감쇠 (시작 속도 → 목표 속도)
+		// - t: 0 → 1 (지수 곡선)
+		// - newSpeed: startSpeed → targetSpeed
+		// ═══════════════════════════════════════════════════════════════
+		float progress = m_dashDecayElapsedTime / m_dashDecayDuration;
+		float t = 1.0f - expf(-progress * m_dashDecayRate);
+		
+		// 시작 속도 → 목표 속도로 보간
+		float newSpeed = m_dashDecayStartSpeed * (1.0f - t) + targetSpeed * t;
+		
+		// 목표 속도 이하로 내려가지 않도록 클램프
+		if (newSpeed < targetSpeed)
+		{
+			newSpeed = targetSpeed;
+			m_isDashDecaying = false;
+		}
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 속도 적용 (방향 유지, 크기만 조정)
+		// ═══════════════════════════════════════════════════════════════
+		if (horizontalVel.LengthSquared() > 0.0001f)
+		{
+			engine::Vector3 direction = horizontalVel;
+			direction.Normalize();
+			engine::Vector3 newVel = direction * newSpeed;
+			m_rigidbody->SetLinearVelocity(engine::Vector3(newVel.x, currentVel.y, newVel.z));
+		}
 	}
 
 	void PlayerControllerScript::HandleShooting(float deltaTime)
@@ -951,13 +1087,17 @@ namespace game
 		// - 꾹 누르면: 마우스 홀드 시 발사
 		// - 한 번 클릭: 손 떼도 IdleShoot 유지 → 애니 발사 프레임 도달 시 1발만 발사
 		// - 버프 적용: m_AtkSpeed * m_buffAtkSpeedMultiplier로 실제 공격속도 계산
+		// - 대쉬 후 0.3초: m_canFireNow 체크 우회하여 즉시 발사 가능 (1회만)
 		// ─────────────────────────────────────────────
 		bool isMouseHeld = engine::Input::IsMouseHeld(engine::Input::Buttons::LEFT);
 		std::string shootState = m_logicFSM->GetCurrentState();
 		bool inShootState = (shootState == "IdleShoot" || shootState == "WalkShoot");
 		bool allowFirstShotWithoutHold = inShootState && !m_hasFiredThisSession && m_canFireNow && m_fireTimer <= 0.0f;
+		
+		// 대쉬 후 즉시 발사 가능 여부 (1회만, 애니메이션 싱크 무시)
+		bool isPostDashQuickFireActive = (m_postDashQuickFireTimer > 0.0f);
 
-		bool doFire = m_fireTimer <= 0.0f && m_canFireNow && (isMouseHeld || allowFirstShotWithoutHold);
+		bool doFire = m_fireTimer <= 0.0f && (m_canFireNow || isPostDashQuickFireActive) && (isMouseHeld || allowFirstShotWithoutHold);
 
 		if (doFire)
 		{
@@ -1058,8 +1198,22 @@ namespace game
 				float effectiveFireRate = 0.7f / effectiveAtkSpeed;
 				
 				m_fireTimer = effectiveFireRate;
-				m_canFireNow = false;
 				m_hasFiredThisSession = true;
+				
+				// 대쉬 후 즉시 발사를 사용했다면 타이머 종료 및 다음 발사 준비
+				if (m_postDashQuickFireTimer > 0.0f)
+				{
+					m_postDashQuickFireTimer = 0.0f;
+					
+					// m_canFireNow = true로 설정하여 0.7초 후 즉시 발사 가능
+					// (애니메이션 0.2 지점 대기 없이)
+					m_canFireNow = true;
+				}
+				else
+				{
+					// 정상 발사: 다음 애니메이션 0.2 지점까지 대기
+					m_canFireNow = false;
+				}
 			}
 		}
 	}
@@ -1380,7 +1534,12 @@ namespace game
 		ImGui::DragFloat("Dash Decay Rate", &m_dashDecayRate, 0.1f, 0.0f, 10.0f);
 		if (ImGui::IsItemHovered())
 		{
-			ImGui::SetTooltip("Exponential decay rate. Higher = faster slowdown during dash");
+			ImGui::SetTooltip("Exponential decay rate. Higher = faster slowdown");
+		}
+		ImGui::DragFloat("Dash Decay Duration (sec)", &m_dashDecayDuration, 0.1f, 0.1f, 2.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("감속 지속 시간. 이 시간 동안 대쉬 속도 → 최종 이동속도로 감속");
 		}
 		ImGui::DragFloat("Dash Afterimage Cutoff", &m_dashAfterimageCutoffRatio, 0.05f, 0.2f, 1.0f);
 		if (ImGui::IsItemHovered())
@@ -1400,17 +1559,49 @@ namespace game
 		{
 			ImGui::SetTooltip("Time to recharge one dash");
 		}
+		ImGui::DragFloat("Post-Dash Quick Fire Duration (sec)", &m_postDashQuickFireDuration, 0.05f, 0.0f, 1.0f);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("대쉬 후 즉시 발사 가능 시간. 이 시간 안에 1회만 애니메이션 싱크 무시하고 즉시 발사 가능");
+		}
 		
 		// 대쉬 상태 표시
-		ImGui::Text("Dash State: %s", m_isDashing ? "DASHING" : "Ready");
-		ImGui::Text("Dash Count: %d / %d", m_CurrentDashCount, m_MaxDashCount);
+		ImGui::Spacing();
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime Status:");
+		ImGui::Text("  FSM State: %s", m_logicFSM ? m_logicFSM->GetCurrentState().c_str() : "N/A");
+		ImGui::Text("  Dash Active: %s", m_isDashing ? "YES" : "NO");
+		ImGui::Text("  Dash Decaying: %s", m_isDashDecaying ? "YES" : "NO");
+		ImGui::Text("  Dash Count: %d / %d", m_CurrentDashCount, m_MaxDashCount);
+		
 		if (m_dashCooldownTimer > 0.0f)
 		{
-			ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "Cooldown: %.1f sec", m_dashCooldownTimer);
+			ImGui::TextColored(ImVec4(1, 0.5f, 0, 1), "  Cooldown: %.2f sec", m_dashCooldownTimer);
 		}
+		
+		if (m_postDashQuickFireTimer > 0.0f)
+		{
+			ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "  Quick Fire: %.2f sec (Available)", 
+				m_postDashQuickFireTimer);
+		}
+		
 		if (m_isDashing)
 		{
-			ImGui::Text("Dash Progress: %.0f%%", (m_dashElapsedTime / m_dashDuration) * 100.0f);
+			float progress = (m_dashDuration > 0.0f) ? (m_dashElapsedTime / m_dashDuration) * 100.0f : 0.0f;
+			ImGui::Text("  Dash Progress: %.0f%% (%.2f / %.2f sec)", progress, m_dashElapsedTime, m_dashDuration);
+		}
+		
+		if (m_isDashDecaying)
+		{
+			float decayProgress = (m_dashDecayDuration > 0.0f) ? (m_dashDecayElapsedTime / m_dashDecayDuration) * 100.0f : 0.0f;
+			ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.8f, 1.0f), "  Decay Progress: %.0f%% (%.2f / %.2f sec)", 
+				decayProgress, m_dashDecayElapsedTime, m_dashDecayDuration);
+			ImGui::Text("  Decay Start Speed: %.2f m/s", m_dashDecayStartSpeed);
+			
+			// 현재 목표 속도 표시
+			float buffMultiplier = BuffManager::GetMoveSpeedMultiplier();
+			float targetSpeed = m_moveSpeed * buffMultiplier;
+			ImGui::Text("  Target Speed: %.2f m/s (Base: %.2f x Buff: %.2fx)", 
+				targetSpeed, m_moveSpeed, buffMultiplier);
 		}
 
 		// ═══════════════════════════════════════════════════════════════
@@ -1558,14 +1749,16 @@ namespace game
 		j["CollisionPushBackForce"] = m_collisionPushBackForce;
 		j["SlidingSpeedMultiplier"] = m_slidingSpeedMultiplier;
 
-		// 대쉬 설정 (Dynamic Impulse + 지수 감쇠)
+		// 대쉬 설정 (Dynamic Impulse + 독립 감속)
 		j["DashDuration"] = m_dashDuration;
 		j["BaseDashDistance"] = m_temperBase.dashDistance;
 		j["DashDecayRate"] = m_dashDecayRate;
+		j["DashDecayDuration"] = m_dashDecayDuration;
 		j["DashAfterimageCutoffRatio"] = m_dashAfterimageCutoffRatio;
 		j["DashCooldown"] = m_temperBase.dashCooldown;
 		j["MaxDashCount"] = m_MaxDashCount;
 		j["DashRechargeTime"] = m_dashRechargeTime;
+		j["PostDashQuickFireDuration"] = m_postDashQuickFireDuration;
 
 		// 프레자일 게이지
 		j["FragileGaugeCurrent"] = m_fragileGaugeCurrent;
@@ -1627,7 +1820,7 @@ namespace game
 		if (j.contains("SlidingSpeedMultiplier"))
 			m_slidingSpeedMultiplier = j["SlidingSpeedMultiplier"].get<float>();
 
-		// 대쉬 설정 (Dynamic Impulse + 지수 감쇠)
+		// 대쉬 설정 (Dynamic Impulse + 독립 감속)
 		if (j.contains("DashDuration"))
 			m_dashDuration = j["DashDuration"].get<float>();
 		if (j.contains("BaseDashDistance"))
@@ -1637,6 +1830,8 @@ namespace game
 			m_temperBase.dashDistance = j["DashImpulseMultiplier"].get<float>();
 		if (j.contains("DashDecayRate"))
 			m_dashDecayRate = j["DashDecayRate"].get<float>();
+		if (j.contains("DashDecayDuration"))
+			m_dashDecayDuration = j["DashDecayDuration"].get<float>();
 		if (j.contains("DashAfterimageCutoffRatio"))
 			m_dashAfterimageCutoffRatio = j["DashAfterimageCutoffRatio"].get<float>();
 		if (j.contains("DashCooldown"))
@@ -1645,6 +1840,8 @@ namespace game
 			m_MaxDashCount = j["MaxDashCount"].get<int>();
 		if (j.contains("DashRechargeTime"))
 			m_dashRechargeTime = j["DashRechargeTime"].get<float>();
+		if (j.contains("PostDashQuickFireDuration"))
+			m_postDashQuickFireDuration = j["PostDashQuickFireDuration"].get<float>();
 
 		// 프레자일 게이지
 		if (j.contains("FragileGaugeCurrent"))

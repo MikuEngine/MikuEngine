@@ -229,6 +229,18 @@ namespace game
             m_bulletParams.scale = m_bulletScale;
             m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
             break;
+        case MonsterTier::Red:
+            // ─────────────────────────────────────────────
+            // 난사 공격 (BurstFire)
+            // - speed, lifetime, damage, scale은 인스펙터 설정값 사용
+            // ─────────────────────────────────────────────
+            m_bulletParams.type = BulletType::Linear;
+            m_bulletParams.speed = m_bulletSpeed;
+            m_bulletParams.lifetime = m_bulletLifetime;
+            m_bulletParams.damage = m_attackDamage;
+            m_bulletParams.scale = m_bulletScale;
+            m_bulletParams.explosionRadius = m_explosionRadius;  // 부모 값 복사 (미사용)
+            break;
         case MonsterTier::Green:
             // ─────────────────────────────────────────────
             // 포물선 전용 파라미터
