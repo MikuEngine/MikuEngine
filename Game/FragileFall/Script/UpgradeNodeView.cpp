@@ -373,31 +373,27 @@ namespace game
         switch (s)
         {
         case NodeState::Purchased:
-            // [강화됨] 황금빛 광택 효과
-            m_image->SetEffect(engine::UIEffectType::LiquidShine);
-            speed = 0.7f;     // 천천히
-            width = 0.15f;
-            m_image->SetEffectParam(0, { speed, width, 0.0f, 0.0f });
-            m_image->SetEffectParam(1, color);
-            outline = { 1.0f, 0.9f, 0.1f, 1.0f }; // 황금색
-            outlineOn = true;
-            break;
-
-        case NodeState::Selected:
-            // [선택됨]
+            // [강화됨]
             m_image->SetEffect(engine::UIEffectType::SelectOrbit);
             speed = 2.0f;
             intensity = 0.1f;
             // z:궤도위치, w:궤도강도
             m_image->SetEffectParam(0, { speed, intensity, 0.46f, 3.0f });
 
-            // Param 1: 노드 아이콘 베이스 색상 (예: 약간 어두운 붉은색)
-            m_image->SetEffectParam(1, { 0.8f, 0.2f, 0.2f, 1.0f });
-
-            // Param 2: 외곽을 도는 입자 색상
-            m_image->SetEffectParam(2, { 1.0f, 1.0f, 1.0f, 1.0f });
+            // Param 1 (Base): 진한 에메랄드
+            m_image->SetEffectParam(1, { 0.1f, 0.8f, 0.4f, 1.0f });
+            // Param 2 (Orbit): 밝은 민트색
+            m_image->SetEffectParam(2, { 0.5f, 1.0f, 0.7f, 1.0f });
 
             outline = { 1.0f, 1.0f, 1.0f, 1.0f };
+            outlineOn = true;
+            break;
+
+        case NodeState::Selected:
+            // [선택됨]
+            m_image->SetEffect(engine::UIEffectType::PressedSink);
+            m_image->SetEffectParam(0, { 0.8f, 0.15f, 0.005f, 0.0f });
+            outline = { 1.0f, 0.9f, 0.1f, 1.0f }; // 황금색
             outlineOn = true;
             break;
 
@@ -416,7 +412,7 @@ namespace game
             break;
         }
 
-        m_image->SetOutline(outlineOn, 5.0f, outline);
+        m_image->SetOutline(outlineOn, 10.0f, outline);
     }
 
     void UpgradeNodeView::NormalizeIdsByCategory()

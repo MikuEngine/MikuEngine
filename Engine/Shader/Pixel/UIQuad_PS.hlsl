@@ -17,6 +17,7 @@ static const uint UI_FX_NONE = 0u;
 static const uint UI_FX_SCANLINE = 10u;
 static const uint UI_FX_GLOW_PULSE = 11u;
 static const uint UI_FX_STATIC_NOISE = 12u;
+static const uint UI_FX_PRESSED_SINK = 13u;
 
 // [Group 2] UV 변형 (UV Distort FX) - 샘플링 전에 실행
 static const uint UI_FX_PIXELATE = 20u;
@@ -345,6 +346,28 @@ void ApplyFx_SelectOrbit(float2 uv, inout float4 col)
     col.rgb += (orbit * ringMask * orbitInt * orbitColor);
 }
 
+// ex 14) 눌린 효과 (음각/Pressed Sink)
+void ApplyFx_PressedSink(float2 uv, inout float4 col)
+{
+    float intensity = g_effect0.x;
+    float shadowSize = g_effect0.y;
+    float pushVal = g_effect0.z;
+
+    // --- 개선: 시간에 따른 미세한 박동(Pulse) ---
+    // 선택되어 있는 동안 아주 미세하게 들썩거리며 "나 선택됨"을 알림
+    float pulse = sin(g_time * 2.0) * 0.5 + 0.5;
+    float dynamicShadow = shadowSize * (1.0 + pulse * 0.2); // 그림자가 살짝 커졌다 작아졌다 함
+
+    // 1. 내부 그림자
+    float shadowX = smoothstep(0.0, dynamicShadow, uv.x);
+    float shadowY = smoothstep(0.0, dynamicShadow, uv.y);
+    float innerShadow = saturate(shadowX * shadowY);
+
+    // 2. 색상 적용 (Intensity 반영)
+    col.rgb *= lerp(1.0, 0.8, intensity); // 기본적으로 약간 어둡게
+    col.rgb *= lerp(0.5, 1.0, innerShadow); // 그림자 적용
+}
+
 //////////////////////////////////////////////////////////////////////////
 // 
 //  Masking
@@ -445,7 +468,18 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     {
         ApplyFx_Pixelate(uv);
     }
+    else if (g_effectMode == UI_FX_PRESSED_SINK)
+    {
+        // 이미지를 대각선 아래로 아주 살짝 미는 효과 (0.01~0.02 정도)
+        float push = g_effect0.z; // g_effect0.z에 이동값 전달
+        uv += float2(push, push);
+    }
 
+    if (uv.x > 1.0 || uv.y > 1.0 || uv.x < 0.0 || uv.y < 0.0)
+    {
+        return float4(0, 0, 0, 0);
+    }
+    
     // 3. 메인 텍스처 샘플링
     float4 tex = g_texBlit.Sample(g_samLinear, uv);
     tex.rgb = SRGBToLinear(tex.rgb);
@@ -498,6 +532,9 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             break;
         case UI_FX_SELECT_ORBIT:
             ApplyFx_SelectOrbit(uv, finalColor);
+            break;
+        case UI_FX_PRESSED_SINK:
+            ApplyFx_PressedSink(input.texCoord, finalColor);
             break;
     }
     

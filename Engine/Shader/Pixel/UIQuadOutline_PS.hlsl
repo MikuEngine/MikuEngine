@@ -1,7 +1,5 @@
 #include "../Include/Shared.hlsli"
 
-#define MAX_OUTLINE_RADIUS 4
-
 static const uint UI_MASK_RECT = 1u;
 
 bool InsideRect(float2 p, float4 r)
@@ -9,7 +7,7 @@ bool InsideRect(float2 p, float4 r)
     return (p.x >= r.x && p.y >= r.y && p.x <= r.z && p.y <= r.w);
 }
 
-// ¾ËÆÄ »ùÇÃ (UV ¹üÀ§ ¹ÛÀº 0À¸·Î Ã³¸®)
+// ì•ŒíŒŒ ìƒ˜í”Œ (UV ë²”ìœ„ ë°–ì€ 0ìœ¼ë¡œ ì²˜ë¦¬)
 float AlphaAt(float2 uv)
 {
     float alpha;
@@ -39,47 +37,48 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             discard;
     }
     
-    // Áß½É ÇÈ¼¿ ¾ËÆÄ
+    // ì¤‘ì‹¬ í”½ì…€ ì•ŒíŒŒ
     float centerAlpha = AlphaAt(uv);
 
-    // ¿øº» ÇÈ¼¿Àº ±×´ë·Î Ãâ·ÂÇÏÁö ¾ÊÀ½ (Outline ÆĞ½º Àü¿ë)
+    // ì›ë³¸ í”½ì…€ì€ ê·¸ëŒ€ë¡œ ì¶œë ¥í•˜ì§€ ì•ŠìŒ (Outline íŒ¨ìŠ¤ ì „ìš©)
     if (centerAlpha > 0.0)
         discard;
 
-    // texel Å©±â °è»ê
+    // texel í¬ê¸° ê³„ì‚°
     uint w, h;
     g_texBlit.GetDimensions(w, h);
     float2 texel = float2(1.0 / max(1u, w), 1.0 / max(1u, h));
 
+    int radius = (int) clamp(g_outlineThickness, 1.0, 16.0);
     bool hasNeighbor = false;
     
-    // ÁÖº¯ ÇÈ¼¿ Å½»ö (¿øÇü)
-    [unroll]
-    for (int y = -MAX_OUTLINE_RADIUS; y <= MAX_OUTLINE_RADIUS; ++y)
+    // ì£¼ë³€ í”½ì…€ íƒìƒ‰ (ì›í˜•)
+    [loop]
+    for (int y = -radius; y <= radius; ++y)
     {
-        [unroll]
-        for (int x = -MAX_OUTLINE_RADIUS; x <= MAX_OUTLINE_RADIUS; ++x)
+        [loop]
+        for (int x = -radius; x <= radius; ++x)
         {
             if (x == 0 && y == 0)
                 continue;
 
-            if ((x * x + y * y) > (MAX_OUTLINE_RADIUS * MAX_OUTLINE_RADIUS))
+            // ì›í˜• ê²€ì‚¬
+            if ((x * x + y * y) > (radius * radius))
                 continue;
 
             float2 suv = uv + float2((float) x, (float) y) * texel;
 
-            if (AlphaAt(suv) > 0.0)
+            if (AlphaAt(suv) > 0.1) // 0.0ë³´ë‹¤ëŠ” ì•½ê°„ì˜ ì„ê³„ì¹˜(0.1)ê°€ ê¹”ë”í•¨
             {
                 hasNeighbor = true;
                 break;
             }
         }
-
         if (hasNeighbor)
             break;
     }
 
-    // ÁÖº¯¿¡ ¿øº» ÇÈ¼¿ÀÌ ÀÖÀ¸¸é ¡æ ¾Æ¿ô¶óÀÎ
+    // ì£¼ë³€ì— ì›ë³¸ í”½ì…€ì´ ìˆìœ¼ë©´ â†’ ì•„ì›ƒë¼ì¸
     if (hasNeighbor)
     {
         return g_outlineColor;
