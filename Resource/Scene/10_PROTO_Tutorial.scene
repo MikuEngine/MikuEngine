@@ -1,6 +1,6 @@
 {
     "Name": "10_PROTO_Tutorial",
-    "NumGameObjects": 109,
+    "NumGameObjects": 112,
     "GameObjects": [
         {
             "ID": 0,
@@ -9218,6 +9218,14 @@
                     "LineMonsterOffset": 1.5,
                     "LineBaseLength": 0.5,
                     "LineHeight": 0.6000000238418579,
+                    "LinePixelsPerMeter": 70.0,
+                    "LineMinPixels": 103.0,
+                    "LinePixelStep": 50.0,
+                    "ReflectIndicatorPrefabName": "Execution_Reflect_Indicator",
+                    "ReflectIndicatorHeight": 1.5,
+                    "ReflectIndicatorOffset": 1.5,
+                    "OffsetScaleZ": 1.0,
+                    "OffsetScaleX": 1.0,
                     "EffectPrefabName": "ExcutionEffectSprite",
                     "EffectDuration": 0.800000011920929,
                     "EffectScaleMultiplier": 1.5,
@@ -12107,10 +12115,6 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                },
-                {
-                    "Type": "SceneController_Play",
-                    "Active": true
                 },
                 {
                     "Type": "UIKillPopupQueue",
@@ -17703,6 +17707,183 @@
                             ]
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "ID": 109,
+            "Name": "AimPointerCanvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Type": "AimModeController",
+                    "Active": true,
+                    "CanvasObjectName": "AimPointerCanvas",
+                    "CursorSize": {
+                        "x": 30.0,
+                        "y": 30.0
+                    },
+                    "TargetPlaneY": 1.5,
+                    "AimYOffsetWhenMoving": 0.0,
+                    "CursorTexturesByState": [
+                        "Resource/Texture/UI/Image/Cursor_Default.png",
+                        "Resource/Texture/UI/Image/Cursor_Click.png",
+                        "Resource/Texture/UI/Image/Aim_Idle.png",
+                        "Resource/Texture/UI/Image/Aim_Execute.png",
+                        "Resource/Texture/UI/Image/Aim_Execute.png"
+                    ],
+                    "CursorPivotsByState": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        }
+                    ],
+                    "CursorState": 0
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 10
+                }
+            ]
+        },
+        {
+            "ID": 110,
+            "ParentID": 109,
+            "Name": "AimCursor",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 111,
+            "Name": "SceneController_Play",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SceneController_Play",
+                    "Active": true
                 }
             ]
         }

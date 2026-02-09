@@ -44,6 +44,11 @@ namespace game
         // ─────────────────────────────────────────────
         engine::Ptr<engine::GameObject> m_exitDoorObject = nullptr;
 
+
+		engine::Ptr<engine::GameObject> m_player = nullptr;
+
+
+
     public:
         void Awake() override;
         void Start() override;
