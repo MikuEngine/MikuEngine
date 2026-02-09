@@ -7702,7 +7702,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7839,7 +7839,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7976,7 +7976,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Speed_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8114,7 +8114,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8221,7 +8221,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Projectile_Size_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSizeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8358,7 +8358,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Projectile_Speed_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8495,7 +8495,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8633,7 +8633,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8770,7 +8770,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Speed_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8907,7 +8907,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9045,7 +9045,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9069,9 +9069,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.7843137383460999,
+                        "y": 0.1568627506494522,
+                        "z": 0.1568627506494522,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -9224,7 +9224,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9248,9 +9248,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.9411764740943909,
+                        "y": 0.1568627506494522,
+                        "z": 0.1568627506494522,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -9362,7 +9362,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Speed_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9499,7 +9499,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9648,7 +9648,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/Projectile_Size_Up_Skill_Icon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
