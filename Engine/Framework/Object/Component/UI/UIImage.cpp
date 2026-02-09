@@ -423,6 +423,21 @@ namespace engine
 		}
 	}
 
+	const Vector4 UIImage::GetEffectParam(int index)
+	{
+		switch (index)
+		{
+		case 0: return m_effect0; break;
+		case 1: return m_effect1; break;
+		case 2: return m_effect2; break;
+
+		default:
+			break;
+		}
+
+		return Vector4();
+	}
+
 	bool UIImage::HasRenderType(RenderType type) const
 	{
 		return type == RenderType::Screen;

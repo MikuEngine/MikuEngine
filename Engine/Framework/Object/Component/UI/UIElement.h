@@ -35,6 +35,7 @@ namespace engine
 		GlowPulse = 11,
 		StaticNoise = 12,
 		PressedSink = 13,
+		ScreenHit = 14,
 
 		// [Group 2] UV FX
 		Pixelate = 20,

@@ -157,7 +157,7 @@ namespace game
 			// 폰트생성
 			g_loadingFont = std::make_shared<engine::FontData>();
 			engine::FontData::Desc fd{};
-			fd.ttfPath = "Resource/Font/malgun.ttf";
+			fd.ttfPath = "Resource/Font/Chilgok_lws_Font.ttf";
 			fd.pixelSize = 40; // 생성할 텍스처의 퀄리티 기준
 			fd.atlasWidth = 1024;
 			fd.atlasHeight = 1024;

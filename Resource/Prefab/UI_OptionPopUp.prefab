@@ -5,7 +5,7 @@
             "ID": 0,
             "ParentID": -1,
             "Name": "UI_OptionPopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -47,7 +47,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIPanel",
@@ -117,6 +118,10 @@
                     "Active": true,
                     "Duration": 0.15000000596046448,
                     "ClosedOffsetY": -700.0
+                },
+                {
+                    "Type": "UISliderValueTextBinder",
+                    "Active": true
                 }
             ]
         },
@@ -166,7 +171,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIButton",
@@ -301,7 +307,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -10.0
+                        "y": 0.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -316,7 +322,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -325,8 +332,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "Text": "뒤로",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 50,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -388,7 +395,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -460,7 +468,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 }
             ]
         },
@@ -510,7 +519,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -518,12 +528,12 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Value": 1.0,
+                    "Value": 0.5789999961853027,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
-                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -534,7 +544,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "HandleColor": {
                         "x": 1.0,
@@ -592,7 +602,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -600,7 +611,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -698,7 +709,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -733,13 +745,13 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
                         "y": 585.0,
-                        "z": 1260.0,
+                        "z": 1133.699951171875,
                         "w": 635.0
                     },
                     "MaskMode": 1,
@@ -791,20 +803,21 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 100.0,
-                    "Height": 100.0,
+                    "Width": 30.0,
+                    "Height": 30.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5710999965667725,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5710999965667725,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -812,7 +825,7 @@
                     "Layer": 2,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -866,6 +879,79 @@
         },
         {
             "ID": 9,
+            "ParentID": 8,
+            "Name": "Text_VolumeVal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 10.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 35,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 10,
             "ParentID": 4,
             "Name": "UI_SFXSlider",
             "Active": true,
@@ -910,7 +996,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -918,12 +1005,12 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Value": 1.0,
+                    "Value": 0.5059999823570251,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
-                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -934,7 +1021,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "HandleColor": {
                         "x": 1.0,
@@ -947,8 +1034,8 @@
             ]
         },
         {
-            "ID": 10,
-            "ParentID": 9,
+            "ID": 11,
+            "ParentID": 10,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -992,7 +1079,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -1000,7 +1088,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1053,8 +1141,8 @@
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 9,
+            "ID": 12,
+            "ParentID": 10,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -1098,7 +1186,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -1133,13 +1222,13 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 960.0,
                         "y": 715.0,
-                        "z": 1260.0,
+                        "z": 1111.800048828125,
                         "w": 765.0
                     },
                     "MaskMode": 1,
@@ -1159,8 +1248,8 @@
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 9,
+            "ID": 13,
+            "ParentID": 10,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -1191,20 +1280,21 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 100.0,
-                    "Height": 100.0,
+                    "Width": 30.0,
+                    "Height": 30.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5053999423980713,
                         "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 0.8333333134651184,
+                        "x": 0.5053999423980713,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -1212,7 +1302,7 @@
                     "Layer": 2,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1265,7 +1355,80 @@
             ]
         },
         {
-            "ID": 13,
+            "ID": 14,
+            "ParentID": 13,
+            "Name": "Text_SFXVal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 10.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 35,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 15,
             "ParentID": 4,
             "Name": "UI_SensitivitySlider",
             "Active": true,
@@ -1310,7 +1473,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UISlider",
@@ -1321,9 +1485,9 @@
                     "Value": 1.0,
                     "Direction": 0,
                     "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Track.png",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
-                    "HandleSprite": "Resource/Texture/UI/Slider/Handle.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -1334,7 +1498,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "HandleColor": {
                         "x": 1.0,
@@ -1347,8 +1511,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 13,
+            "ID": 16,
+            "ParentID": 15,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -1392,7 +1556,8 @@
                     "AnchorMax": {
                         "x": 1.0,
                         "y": 1.0
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -1400,219 +1565,7 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Track.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 1280.0,
-                        "w": 720.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 15,
-            "ParentID": 13,
-            "Name": "Fill",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 2,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 960.0,
-                        "y": 845.0,
-                        "z": 1260.0,
-                        "w": 895.0
-                    },
-                    "MaskMode": 1,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 16,
-            "ParentID": 13,
-            "Name": "Handle",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.8333333134651184,
-                        "y": 0.5
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 2,
-                    "OrderInLayer": 3,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Handle.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Slider_01_1.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -1666,6 +1619,293 @@
         },
         {
             "ID": 17,
+            "ParentID": 15,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 0.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 960.0,
+                        "y": 845.0,
+                        "z": 1260.0,
+                        "w": 895.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 18,
+            "ParentID": 15,
+            "Name": "Handle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 30.0,
+                    "Height": 30.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.949999988079071,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.949999988079071,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 1280.0,
+                        "w": 720.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "ParentID": 18,
+            "Name": "Text_SensiVal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 10.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 2,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "0",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 35,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": true,
+                    "AlignH": 1,
+                    "AlignV": 2,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 20,
             "ParentID": 4,
             "Name": "Text_Sound",
             "Active": true,
@@ -1710,7 +1950,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1737,7 +1978,7 @@
             ]
         },
         {
-            "ID": 18,
+            "ID": 21,
             "ParentID": 4,
             "Name": "Text_Effect",
             "Active": true,
@@ -1782,7 +2023,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",
@@ -1809,7 +2051,7 @@
             ]
         },
         {
-            "ID": 19,
+            "ID": 22,
             "ParentID": 4,
             "Name": "Text_Sound",
             "Active": true,
@@ -1854,7 +2096,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",

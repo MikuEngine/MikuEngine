@@ -11,7 +11,7 @@
 #include <Framework/Object/Component/UI/UIButton.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Framework/Object/Component/UI/UIProgressBar.h>
-#include "Script/UI/UIPopUpAnimator.h"
+#include <Framework/Object/Component/UI/UIImage.h>
 
 #include "Manager/TimeScaler.h"
 #include "Manager/StageManager.h"
@@ -19,6 +19,8 @@
 #include <Script/AimModeController.h>
 #include <Script/CharacterScript/Player/PlayerControllerScript.h>
 #include <Manager/MessageCatalog.h>
+
+#include <Script/UI/UIPopUpAnimator.h>
 #include <Script/UI/UIMessageQueue.h>
 
 #include "Scene/GameScene.h"
@@ -104,6 +106,23 @@ namespace game
             m_playerScript = go->GetComponent<PlayerControllerScript>();
         }
 
+        if (auto* go = engine::GameObject::Find("HitImage"))
+            m_hitImage = go->GetComponent<engine::UIImage>();
+
+        if (m_playerScript)
+        {
+            m_playerScript->SetOnDamaged([this] {
+                if (m_hitImage)
+                {
+                    m_hitImage->SetEffect(engine::UIEffectType::ScreenHit);
+
+                    m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
+                }
+                
+                // TODO: 사운드 있다면 여기에 추가
+                });
+        }
+
         m_menuPopUp = engine::GameObject::Find("Panel_Menu");
         if (m_menuPopUp) m_menuPopUp->SetActive(false);
 
@@ -156,6 +175,20 @@ namespace game
     {
         StageManager::Get().Update();
 
+        if (m_hitImage)
+        {
+            auto params = m_hitImage->GetEffectParam(0);
+
+            // 강도가 남아있다면 매 프레임 감소
+            if (params.x > 0.0f)
+            {
+                params.x -= engine::Time::DeltaTime() * 2.5f; // 약 0.4초 동안 페이드 아웃
+                if (params.x < 0.0f) params.x = 0.0f;
+
+                m_hitImage->SetEffectParam(0, params);
+            }
+        }
+
         // HUD: 런 재화 개수, 프레자일 게이지
         if (m_currencyRubyText)
             m_currencyRubyText->SetText(std::to_string(StageManager::Get().GetRunRuby()));
@@ -191,6 +224,7 @@ namespace game
             SetMenuOpen(true);
         }
 
+        // Debug
         if (engine::Input::IsKeyPressed(engine::Keys::F4))
         {
             Fail();
@@ -201,6 +235,21 @@ namespace game
             if (auto* go = engine::GameObject::Find("UIMessageQueue"))
                 if (auto* q = go->GetComponent<game::UIMessageQueue>())
                     q->PushMessageKey("Kill_001");
+        }
+
+        if (engine::Input::IsKeyHeld(engine::Keys::F3) && engine::Input::IsKeyPressed(engine::Keys::P))
+        {
+            // 실제 플레이어의 TakeDamage를 호출하여 전체 시스템을 테스트합니다.
+            if (m_playerScript)
+            {
+                // 데미지 1.0을 주면서 피격 콜백과 HP 감소가 정상 작동하는지 확인
+                m_playerScript->TakeDamage(1.0f);
+
+                //if (m_hitImage) {
+                //     m_hitImage->SetEffect(engine::UIEffectType::ScreenHit);
+                //     m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
+                //}
+            }
         }
     }
 
@@ -319,7 +368,23 @@ namespace game
         m_isDead = true;
         if (m_failPanel)
             m_failPanel->SetActive(true);
-        TimeScaler::StopWorld();
+
+        const bool isAnyPopupOpen = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen || m_isDead);
+
+        if (isAnyPopupOpen)
+            TimeScaler::StopWorld();
+        else
+            TimeScaler::PlayWorld();
+
+        auto* aimGO = engine::GameObject::Find("Player");
+
+        if (aimGO)
+        {
+            if (auto* amc = aimGO->GetComponent<AimModeController>())
+            {
+                amc->SetPaused(isAnyPopupOpen);
+            }
+        }
     }
 
     void SceneController_Play::UpdateBlocker()
@@ -334,7 +399,7 @@ namespace game
         else
             TimeScaler::PlayWorld();
 
-        auto* aimGO = engine::GameObject::Find("AimPointerCanvas");
+        auto* aimGO = engine::GameObject::Find("Player");
 
         if (aimGO)
         {

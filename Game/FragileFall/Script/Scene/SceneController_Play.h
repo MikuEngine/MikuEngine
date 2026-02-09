@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/UI/UIButton.h>
@@ -8,6 +8,7 @@ namespace engine
 {
     class UIText;
     class UIProgressBar;
+    class UIImage;
 }
 
 namespace game
@@ -85,5 +86,6 @@ namespace game
         engine::UIText* m_currencySapphireText = nullptr;
         engine::UIText* m_currencyEmeraldText = nullptr;
         engine::UIProgressBar* m_fragileGaugeProgress = nullptr;
+        engine::UIImage* m_hitImage = nullptr;
     };
 }
