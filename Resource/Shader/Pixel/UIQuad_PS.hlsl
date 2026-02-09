@@ -448,7 +448,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
 
     // 3. 메인 텍스처 샘플링
     float4 tex = g_texBlit.Sample(g_samLinear, uv);
-    finalColor.rgb = SRGBToLinear(finalColor.rgb);
+    tex.rgb = SRGBToLinear(tex.rgb);
     finalColor *= tex;
 
     // 4. 색상/알파 기반 이펙트 (텍스처 샘플링 후)
