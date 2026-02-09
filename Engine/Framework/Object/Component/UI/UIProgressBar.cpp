@@ -72,6 +72,12 @@ namespace engine
 
 		m_value = v;
 		m_dirty = true;
+
+		if (m_dirty)
+		{
+			UpdateVisuals();
+			m_dirty = false;
+		}
 	}
 
 	void UIProgressBar::SetDirection(Direction dir)

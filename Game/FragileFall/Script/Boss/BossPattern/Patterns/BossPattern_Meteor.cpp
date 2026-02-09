@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BossPattern_Meteor.h"
 
 #include <Framework/Asset/Prefab.h>
@@ -183,7 +183,7 @@ namespace game
         // 예측 오프셋 크기 제한 (대시 등으로 인한 과도한 예측 방지)
         // - 플레이어 기본 이동속도 기준으로 최대 예측 거리 제한
         // - 예: moveSpeed=13, fallTime=2 → 최대 26m까지만 예측
-        float baseMoveSpeed = player->GetMoveSpeed();
+        float baseMoveSpeed = player->GetBaseMoveSpeed();
         float maxPredictionMagnitude = baseMoveSpeed * fallTime;
         float currentMagnitude = predictionOffset.Length();
         if (currentMagnitude > maxPredictionMagnitude)
