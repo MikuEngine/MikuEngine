@@ -29,7 +29,12 @@ namespace game
 
         const size_t numZones = m_zoneStartIndex.empty() ? 0 : m_zoneStartIndex.size() - 1;
         if (numZones == 0)
-            return m_allPoints[0]->GetWorldPosition();
+        {
+            engine::Vector3 pos = m_allPoints[0]->GetWorldPosition();
+            if (m_spawnRadius > 0.0f)
+                pos += engine::Random::InsideUnitCircle() * m_spawnRadius;
+            return pos;
+        }
 
         for (size_t z = 0; z < numZones; z++)
         {
@@ -49,10 +54,16 @@ namespace game
             size_t idx = available[engine::Random::Int<size_t>(0, available.size() - 1)];
             m_pointUsed[idx] = true;
             m_nextZoneIndex = (zone + 1) % numZones;
-            return m_allPoints[idx]->GetWorldPosition();
+            engine::Vector3 pos = m_allPoints[idx]->GetWorldPosition();
+            if (m_spawnRadius > 0.0f)
+                pos += engine::Random::InsideUnitCircle() * m_spawnRadius;
+            return pos;
         }
 
-        return m_allPoints[0]->GetWorldPosition();
+        engine::Vector3 pos = m_allPoints[0]->GetWorldPosition();
+        if (m_spawnRadius > 0.0f)
+            pos += engine::Random::InsideUnitCircle() * m_spawnRadius;
+        return pos;
     }
 
     engine::GameObject* MonsterSpawner::SpawnOne(int monsterID, const engine::Vector3& position)
@@ -169,6 +180,7 @@ namespace game
         ImGui::InputInt("Min Count", &m_minCount);
         ImGui::InputInt("Max Count", &m_maxCount);
         ImGui::InputInt("Anchor Monster ID", &m_anchorMonsterID);
+        ImGui::InputFloat("Spawn Radius", &m_spawnRadius, 0.1f, 1.0f, "%.2f");
     }
 
     void MonsterSpawner::Save(engine::json& j) const
@@ -179,6 +191,7 @@ namespace game
         j["MinCount"] = m_minCount;
         j["MaxCount"] = m_maxCount;
         j["AnchorMonsterID"] = m_anchorMonsterID;
+        j["SpawnRadius"] = m_spawnRadius;
     }
 
     void MonsterSpawner::Load(const engine::json& j)
@@ -189,5 +202,6 @@ namespace game
         engine::JsonGet(j, "MinCount", m_minCount);
         engine::JsonGet(j, "MaxCount", m_maxCount);
         engine::JsonGet(j, "AnchorMonsterID", m_anchorMonsterID);
+        engine::JsonGet(j, "SpawnRadius", m_spawnRadius);
     }
 }

@@ -64,22 +64,12 @@ namespace game
         AttackType type;
         MonsterTier tier;
         int difficulty;
-        
-        // 기본 생성자
-        MonsterData()
-            : monsterID(0)
-            , type(AttackType::Dull)
-            , tier(MonsterTier::Gray)
-            , difficulty(0)
-        {}
-        
-        // 파라미터 생성자
-        MonsterData(int id, AttackType type, MonsterTier tier, int difficulty)
-            : monsterID(id)
-            , type(type)
-            , tier(tier)
-            , difficulty(difficulty)
-        {}
+        int minRuby;
+        int maxRuby;
+        int minSapphire;
+        int maxSapphire;
+        int minEmerald;
+        int maxEmerald;
         
         // 비교 연산자 (난이도 기준 정렬용)
         bool operator<(const MonsterData& other) const
