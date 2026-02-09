@@ -8,6 +8,8 @@
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIButton.h>
+#include <Framework/Object/Component/UI/UIText.h>
+#include <Framework/Object/Component/UI/UIProgressBar.h>
 #include "Script/UI/UIPopUpAnimator.h"
 
 #include "Manager/TimeScaler.h"
@@ -56,7 +58,7 @@ namespace game
         if (m_bound) return;
         m_bound = true;
 
-        //StageManager::Get().BeginStage(); // 아직 맵 프리팹이 없어서 스테이지 세팅 불가
+        StageManager::Get().BeginStage(); // 아직 맵 프리팹이 없어서 스테이지 세팅 불가
 
         g_msg.Load("Resource/Data/Message/MessageTable.csv");
 
@@ -131,11 +133,36 @@ namespace game
         if (auto* go = engine::GameObject::Find("UI_SensitivitySlider"))
             if (auto* slider = go->GetComponent<engine::UISlider>())
                 slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
+
+        // HUD: Currency counts (Canvas_HUD > Currency > Ruby/Sapphire/Emerald > * Count)
+        if (auto* go = engine::GameObject::Find("Ruby Count"))
+            m_currencyRubyText = go->GetComponent<engine::UIText>();
+        if (auto* go = engine::GameObject::Find("Sapphire Count"))
+            m_currencySapphireText = go->GetComponent<engine::UIText>();
+        if (auto* go = engine::GameObject::Find("Emerald Count"))
+            m_currencyEmeraldText = go->GetComponent<engine::UIText>();
+        // Fragile Gauge (Canvas_HUD > Fragile Gauge > Fragile Gauge Progress)
+        if (auto* go = engine::GameObject::Find("Fragile Gauge Progress"))
+            m_fragileGaugeProgress = go->GetComponent<engine::UIProgressBar>();
     }
 
     void SceneController_Play::Update()
     {
         StageManager::Get().Update();
+
+        // HUD: 런 재화 개수, 프레자일 게이지
+        if (m_currencyRubyText)
+            m_currencyRubyText->SetText(std::to_string(StageManager::Get().GetRunRuby()));
+        if (m_currencySapphireText)
+            m_currencySapphireText->SetText(std::to_string(StageManager::Get().GetRunSapphire()));
+        if (m_currencyEmeraldText)
+            m_currencyEmeraldText->SetText(std::to_string(StageManager::Get().GetRunEmerald()));
+        if (m_fragileGaugeProgress && m_playerScript)
+        {
+            float maxVal = m_playerScript->GetFragileGaugeMax();
+            float t = (maxVal > 0.0f) ? (m_playerScript->GetFragileGaugeCurrent() / maxVal) : 0.0f;
+            m_fragileGaugeProgress->SetValue(t);
+        }
 
         // 플레이어 사망 시 실패 (HP 0, 프레자일 100%, 또는 Dead 상태)
         if (!m_isDead && m_playerScript)

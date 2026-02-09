@@ -2606,7 +2606,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -3050,7 +3050,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
@@ -3272,7 +3272,7 @@
                 },
                 {
                     "Type": "UIButton",
-                    "Active": true,
+                    "Active": false,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,

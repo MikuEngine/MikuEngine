@@ -3,6 +3,8 @@
 #include "Script/UI/UIMessageQueue.h"
 
 #include <Framework/Object/GameObject/GameObject.h>
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
+
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 #include <Framework/Asset/Prefab.h>
@@ -50,18 +52,31 @@ namespace game
 
     void TutorialController::Awake()
     {
-        if (auto tutorialPlayer = engine::GameObject::Find("Player"))
+       
+        if (m_player = engine::GameObject::Find("Player"))
         {
-            tutorialPlayer->GetComponent<PlayerControllerScript>()->SetPlayerAtkDmg(30.0f);          
+			auto pc = m_player->GetComponent<PlayerControllerScript>();
+            pc->SetPlayerAtkDmg(30.0f);
         }
 
         m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
         m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
 
+
+        std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
+        if (currentScene == "10_PROTO_TutorialLobby")
+        {
+            int a = 10;
+
+
+        }
+
     }
 
     void TutorialController::Start()
     {
+        
+
         if (s_tutorialController == nullptr)
         {
             s_tutorialController = GetGameObject();
@@ -83,6 +98,12 @@ namespace game
 
     void TutorialController::Update()
     {
+
+        if (auto pc = m_player->GetComponent<PlayerControllerScript>())
+        {
+            //LOG_PRINT("player hp : {}", pc->GetCurrentHp());
+        }
+
         // 단축키
         if ( engine::Input::IsKeyPressed(engine::Keys::F10))
         {

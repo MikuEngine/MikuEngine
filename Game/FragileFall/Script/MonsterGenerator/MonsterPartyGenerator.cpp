@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterPartyGenerator.h"
 #include <Common/Debug/Debug.h>
 #include <algorithm>
@@ -39,11 +39,8 @@ namespace game
         // CSV 파서 함수 정의
         auto parser = [](const std::vector<std::string>& fields, MonsterData& out) -> bool
         {
-            if (fields.size() != 5)
-            {
+            if (fields.size() < 11)
                 return false;
-            }
-            
             try
             {
                 out.monsterID = std::stoi(fields[0]);

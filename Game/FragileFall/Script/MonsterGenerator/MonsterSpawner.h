@@ -35,6 +35,9 @@ namespace game
         /// StageManager 생존 체크용. SpawnParty() 시작 시 clear, SpawnOne() 성공 시 push.
         std::vector<engine::Ptr<engine::GameObject>> m_spawnedMonsters;
 
+        /// 마지막 SpawnParty에 사용된 몬스터 ID 목록. 클리어 보상 계산용.
+        std::vector<int> m_lastSpawnedPartyIDs;
+
         /// true면 Start()에서 스폰하지 않음. StageManager가 SetStageParams() 후 SpawnNow() 호출.
         bool m_managedByStageManager = false;
 
@@ -61,6 +64,9 @@ namespace game
 
         /// StageManager가 SetStageParams() 후 호출. Start()와 동일 스폰 로직(DB 로드, Generator 설정, GenerateParty, SpawnParty).
         void SpawnNow();
+
+        /// MonsterData.csv 재화 범위로 클리어 보상 합산 후 StageManager에 설정. OnSpawnerReady 직후 StageManager가 호출.
+        void ComputeAndReportStageClearReward();
 
     public:
         void OnGui() override;
