@@ -19,12 +19,12 @@ namespace game
 {
     void AimModeController::Awake()
     {
-        m_cursorTexByState[(int)AimCursorState::Default] = "Resource/Texture/UI/Image/Cursor_Default.png";
+        m_cursorTexByState[(int)AimCursorState::Default] = "Resource/Texture/UI/Cursor/Cursor_Default.png";
         m_cursorTexByState[(int)AimCursorState::Clicked] = "Resource/Texture/UI/Cursor/Cursor_Click.png";
 
-        m_cursorTexByState[(int)AimCursorState::AimIdle] = "Resource/Texture/UI/Image/Aim_Idle.png";
-        m_cursorTexByState[(int)AimCursorState::AimFiring] = "Resource/Texture/UI/Image/Aim_Firing.png";
-        m_cursorTexByState[(int)AimCursorState::AimExecute] = "Resource/Texture/UI/Image/Aim_Execute.png";
+        m_cursorTexByState[(int)AimCursorState::AimIdle] = "Resource/Texture/UI/Cursor/Aim_Idle.png";
+        m_cursorTexByState[(int)AimCursorState::AimFiring] = "Resource/Texture/UI/Cursor/Aim_Firing.png";
+        m_cursorTexByState[(int)AimCursorState::AimExecute] = "Resource/Texture/UI/Cursor/Aim_Execute.png";
 
         ////////////////////////////////////////////////////////////////////////////////////////////
 

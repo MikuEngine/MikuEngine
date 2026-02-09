@@ -3612,7 +3612,7 @@
             "ID": 50,
             "ParentID": 49,
             "Name": "UI_UpgradePopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -8221,7 +8221,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Projectile_Size_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8358,7 +8358,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Projectile_Speed_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8495,7 +8495,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8633,7 +8633,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8770,7 +8770,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Speed_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8907,7 +8907,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9045,7 +9045,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9224,7 +9224,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9362,7 +9362,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Speed_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9499,7 +9499,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Damage_Range_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9648,7 +9648,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/Projectile_Size_Up_Skill_Icon.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
