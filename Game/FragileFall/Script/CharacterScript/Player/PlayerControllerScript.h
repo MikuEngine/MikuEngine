@@ -133,10 +133,20 @@ namespace game
         // ─────────────────────────────────────────────
         // 대쉬 런타임 상태
         // ─────────────────────────────────────────────
-        bool m_isDashing = false;                       // 대쉬 중 여부
+        bool m_isDashing = false;                       // 대쉬 중 여부 (FSM 동기화)
         float m_dashCooldownTimer = 0.0f;               // 쿨다운 타이머
         float m_dashElapsedTime = 0.0f;                 // 대쉬 경과 시간
         engine::Vector3 m_dashDirection = engine::Vector3::Zero;  // 대쉬 방향 (시작 시 고정)
+        
+        // ─────────────────────────────────────────────
+        // 대쉬 감속 시스템 (타이머와 독립적)
+        // - 타이머 종료 후에도 감속은 계속 진행
+        // - 최종 이동속도까지만 감속 (버프 포함)
+        // ─────────────────────────────────────────────
+        bool m_isDashDecaying = false;                  // 감속 진행 중 여부
+        float m_dashDecayStartSpeed = 0.0f;             // 감속 시작 시 속도
+        float m_dashDecayElapsedTime = 0.0f;            // 감속 경과 시간
+        float m_dashDecayDuration = 0.5f;               // 감속 지속 시간 (초)
              
         
 
@@ -199,6 +209,10 @@ namespace game
         bool m_fsmInitialized = false;
         bool m_canFireNow = true;       // 애니 발사 프레임 통과 시 AimMeshController가 true로 설정
         bool m_hasFiredThisSession = false;  // 이번 클릭/홀드에서 1발 이상 쐈는지 (첫 발은 즉시 허용용)
+        
+        // 대쉬 후 즉시 발사 시스템
+        float m_postDashQuickFireTimer = 0.0f;       // 대쉬 후 즉시 발사 가능 남은 시간
+        float m_postDashQuickFireDuration = 0.3f;    // 대쉬 후 즉시 발사 가능 지속 시간 (1회만)
 
         float m_IdleDransitionWaitTime = 0.1f;
         float m_IdleDransitionWaitTimer = 0.0f;
@@ -271,6 +285,8 @@ namespace game
         void HandleDash();               // 대쉬 처리 (FixedUpdate에서 호출)
         void StartDash();                // 대쉬 시작
         void EndDash();                  // 대쉬 종료
+        void StartDashDecay();           // 대쉬 감속 시작
+        void HandleDashDecay();          // 대쉬 감속 처리 (FixedUpdate에서 호출)
         void HandleShooting(float deltaTime);  // Update에서 호출 (DeltaTime 사용)
 
         // ─────────────────────────────────────────────
@@ -380,59 +396,59 @@ namespace game
 
 
         // 처형 (Execution)
-        float GetBaseExeFragileRegen() const { return 20.0f; }
+        float GetBaseExeFragileRegen() const { return m_exeFragileRegen; }
         void  SetExeFragileRegen(float v) { m_exeFragileRegen = v; }
 
-        float GetBaseExeSplashDmg() const { return 10.0f; }
+        float GetBaseExeSplashDmg() const { return m_exeSplashDmg; }
         void  SetExeSplashDmg(float v) { m_exeSplashDmg = v; }
 
-        float GetBaseExeSplashRange() const { return 5.0f; }
+        float GetBaseExeSplashRange() const { return m_exeSplashRange; }
         void  SetExeSplashRange(float v) { m_exeSplashRange = v; }
 
-        float GetBaseExeDashChargeRegen() const { return 1.0f; }
+        float GetBaseExeDashChargeRegen() const { return static_cast<float>(m_exeDashChargeRegen); }
         void  SetExeDashChargeRegen(float v) { m_exeDashChargeRegen = static_cast<int>(v); }
 
-        float GetBaseExeHpRegen() const { return 5.0f; }
+        float GetBaseExeHpRegen() const { return m_exeHpRegen; }
         void  SetExeHpRegen(float v) { m_exeHpRegen = v; }
 
         // 체력/생존 (Vitality)
-        float GetBaseHpRegenOnClear() const { return 10.0f; }
+        float GetBaseHpRegenOnClear() const { return m_hpRegenOnClear; }
         void  SetHpRegenOnClear(float v) { m_hpRegenOnClear = v; }
 
-        float GetBaseExeRange() const { return 10.0f; }
+        float GetBaseExeRange() const { return m_executionRange; }
         void SetExeRange(float v) { m_executionRange = v; }
 
-        float GetBaseFragileMax() const { return 100.0f; }
+        float GetBaseFragileMax() const { return m_fragileMax; }
         void  SetFragileMax(float v) { m_fragileMax = v; }
 
-        float GetBaseFragileRegenOnClear() const { return 20.0f; }
+        float GetBaseFragileRegenOnClear() const { return m_fragileRegenOnClear; }
         void  SetFragileRegenOnClear(float v) { m_fragileRegenOnClear = v; }
 
-        float GetBaseFragileGainRate() const { return 1.0f; }
+        float GetBaseFragileGainRate() const { return m_fragileGainRate; }
         void  SetFragileGainRate(float v) { m_fragileGainRate = v; }
 
         // 이동/대시 (Movement)
-        float GetBaseDashInvincibleTime() const { return 0.1f; }
+        float GetBaseDashInvincibleTime() const { return m_dashInvincibleTime; }
         void  SetDashInvincibleTime(float v) { m_dashInvincibleTime = v; }
 
-        float GetBaseMaxHp() const { return 100.0f; } // 기본 체력 100
+        float GetBaseMaxHp() const { return m_PlayerMaxHP; }
         void  SetMaxHp(float value) { m_PlayerMaxHP = value; }
 
-        // 무적 시간 (기본값 0.5초)
-        float GetBaseInvincibleTime() const { return 0.5f; }
+        // 무적 시간
+        float GetBaseInvincibleTime() const { return m_invincibleTime; }
         void  SetInvincibleTime(float value) { m_invincibleTime = value; }
 
 
-        float GetBaseMoveSpeed() const { return 13.0f; }
+        float GetBaseMoveSpeed() const { return m_moveSpeed; }
         float GetMoveSpeed() const { return m_moveSpeed; }
         void  SetMoveSpeed(float value) { m_moveSpeed = value; }
 
         // 대시 거리 (m_dashImpulseMultiplier가 대시 거리를 결정하는 물리 힘입니다)
-        float GetBaseDashDistance() const { return m_dashImpulseMultiplier; } // 기본 임펄스 배율 15.0
+        float GetBaseDashDistance() const { return m_dashImpulseMultiplier; }
         void  SetDashDistance(float value) { m_dashImpulseMultiplier = value; }
 
-        // 대시 쿨다운 (기본값 0.2초)
-        float GetBaseDashCooldown() const { return 0.2f; }
+        // 대시 쿨다운
+        float GetBaseDashCooldown() const { return m_dashCooldown; }
         void  SetDashCooldown(float value) { m_dashCooldown = value; }
 
         // 처형: Execution 상태일 때 재생 중인 처형 애니메이션의 정규화 시간 (0~1). 아니면 -1

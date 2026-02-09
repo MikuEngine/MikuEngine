@@ -22,9 +22,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.019999999552965164,
+                        "y": 0.019999999552965164,
+                        "z": 0.019999999552965164
                     }
                 },
                 {
@@ -35,7 +35,7 @@
                     "MaxSpeedBrakeFactor": 15.0,
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 13.0,
+                    "MoveSpeed": 8.0,
                     "RotationSpeed": 20.0,
                     "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
@@ -52,13 +52,15 @@
                     "ExecutionRange": 10.0,
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
-                    "DashDuration": 0.30000001192092896,
-                    "DashImpulseMultiplier": 6.0,
-                    "DashDecayRate": 2.0,
-                    "DashAfterimageCutoffRatio": 0.4000000059604645,
+                    "DashDuration": 0.25,
+                    "DashImpulseMultiplier": 3.0,
+                    "DashDecayRate": 1.5,
+                    "DashDecayDuration": 0.4000000059604645,
+                    "DashAfterimageCutoffRatio": 0.3499999940395355,
                     "DashCooldown": 0.20000000298023224,
                     "MaxDashCount": 3,
                     "DashRechargeTime": 1.0,
+                    "PostDashQuickFireDuration": 0.4000000059604645,
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
                     "FragileGaugeRisePerSecond": 15.0
@@ -114,11 +116,11 @@
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
                     "CursorTexturesByState": [
-                        "Resource/Texture/UI/Image/Cursor_Default.png",
-                        "Resource/Texture/UI/Image/Cursor_Click.png",
-                        "Resource/Texture/UI/Image/Aim_Idle.png",
-                        "Resource/Texture/UI/Image/Aim_Firing.png",
-                        "Resource/Texture/UI/Image/Aim_Execute.png"
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     "CursorPivotsByState": [
                         {
