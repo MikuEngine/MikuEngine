@@ -43,7 +43,7 @@
 		],
 		"Option": "SFX/Player"
 	},
-		{ 
+	{ 
 		"Type": "SoundQue",
 		"Name": "Player_Break",
 		"Paths": [
