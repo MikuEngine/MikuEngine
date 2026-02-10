@@ -8,6 +8,7 @@
 #include "Script/ExecutionSlowScript.h"
 #include "Script/ExecutionEffectScript.h"
 #include "Script/CameraEffectScript.h"
+#include "Script/AimModeController.h"
 
 #include <Core/System/Input.h>
 #include <Core/System/MyTime.h>
@@ -60,6 +61,17 @@ namespace game
         if (!m_player)
         {
             LOG_PRINT("[ExecutionIndicatorManager] WARNING: Player not found!");
+        }
+        
+        // AimModeController 찾기 (Player 오브젝트에서)
+        if (m_player)
+        {
+            m_aimController = m_player->GetGameObject()->GetComponent<AimModeController>();
+            
+            if (!m_aimController)
+            {
+                LOG_ERROR("[ExecutionIndicatorManager] AimModeController not found on Player!");
+            }
         }
 
         // 슬로우 효과 스크립트 찾기 (자기 자신 오브젝트에서)
@@ -140,6 +152,16 @@ namespace game
             // 거리에 따른 표시 처리
             bool isInRange = IsMonsterInExecutionRange(fragileMonster);
             
+            // ═══════════════════════════════════════════════════════════════
+            // AimModeController에 처형 대상 위에 마우스가 있는지 즉시 알림
+            // - 사거리 내 + 처형 중이 아님
+            // ═══════════════════════════════════════════════════════════════
+            bool isOnExecutionTarget = isInRange && !isCurrentlyExecuting;
+            if (m_aimController)
+            {
+                m_aimController->SetOnExecutionTarget(isOnExecutionTarget);
+            }
+            
             // 라인: 사거리 내이고 현재 처형 중이 아닌 경우에만 표시
             if (m_player && m_lineInstance && fragileMonster->GetTransform() && !isCurrentlyExecuting && isInRange)
             {
@@ -193,6 +215,14 @@ namespace game
                 HideIndicator();
                 HideLine();
                 HideReflectIndicator();
+            }
+            
+            // ═══════════════════════════════════════════════════════════════
+            // 마우스가 처형 대상 위에 없음을 AimModeController에 알림
+            // ═══════════════════════════════════════════════════════════════
+            if (m_aimController)
+            {
+                m_aimController->SetOnExecutionTarget(false);
             }
         }
     }
@@ -1105,6 +1135,38 @@ namespace game
         if (ImGui::IsItemHovered())
         {
             ImGui::SetTooltip("Frames to wait after collider trigger change before teleport");
+        }
+
+        ImGui::Separator();
+        ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "=== DEBUG: Execution Cursor ===");
+        
+        // AimController 연결 상태
+        if (m_aimController)
+        {
+            ImGui::TextColored(ImVec4(0, 1, 0, 1), "AimController: FOUND");
+            
+            // 현재 처형 대상 감지 상태
+            engine::GameObject* fragileMonster = GetFragileMonsterUnderMouse();
+            if (fragileMonster)
+            {
+                bool isCurrentlyExecuting = (m_executingGameObject.Get() == fragileMonster);
+                bool isInRange = IsMonsterInExecutionRange(fragileMonster);
+                bool shouldShowExecute = isInRange && !isCurrentlyExecuting;
+                
+                ImGui::TextColored(ImVec4(0, 1, 1, 1), "Fragile Monster Under Mouse: %s", fragileMonster->GetName().c_str());
+                ImGui::Text("  In Range: %s", isInRange ? "YES" : "NO");
+                ImGui::Text("  Currently Executing: %s", isCurrentlyExecuting ? "YES" : "NO");
+                ImGui::TextColored(shouldShowExecute ? ImVec4(0, 1, 0, 1) : ImVec4(1, 0, 0, 1), 
+                    "  Should Show Execute: %s", shouldShowExecute ? "YES" : "NO");
+            }
+            else
+            {
+                ImGui::Text("Fragile Monster Under Mouse: None");
+            }
+        }
+        else
+        {
+            ImGui::TextColored(ImVec4(1, 0, 0, 1), "AimController: NOT FOUND!");
         }
 
         ImGui::Separator();

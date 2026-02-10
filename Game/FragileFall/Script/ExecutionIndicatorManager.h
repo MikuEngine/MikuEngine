@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Ptr.h>
@@ -16,6 +16,7 @@ namespace game
     class PlayerControllerScript;
     class ExecutionSlowScript;
     class CameraEffectScript;
+    class AimModeController;
 
     // ═══════════════════════════════════════════════════════════════
     // ExecutionIndicatorManager - Fragile 몬스터 처형 인디케이터 관리
@@ -78,6 +79,9 @@ namespace game
         
         // 플레이어 참조
         engine::Ptr<PlayerControllerScript> m_player;
+        
+        // AimModeController 참조 (커서 상태 업데이트용)
+        engine::Ptr<class AimModeController> m_aimController;
         
         // 라인 인스턴스
         engine::Ptr<engine::GameObject> m_lineInstance;

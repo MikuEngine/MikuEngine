@@ -56,6 +56,9 @@ namespace game
     public:
         /** 이동 중일 때만 Y 보정 적용. 서서 쏠 때는 0, 걸을 때만 m_aimYOffsetWhenMoving 사용 */
         void SetMoving(bool moving) { m_isMoving = moving; }
+        
+        /** 처형 대상 위에 커서가 있는지 설정 (ExecutionIndicatorManager에서 호출) */
+        void SetOnExecutionTarget(bool isOnTarget) { m_isOnExecutionTarget = isOnTarget; }
 
         // 플레이어에서 에임포인터 방향을 얻는 함수
         engine::Vector3 GetDirectionFrom(const engine::Vector3& fromPosition) const;
@@ -101,6 +104,11 @@ namespace game
         /** 서서 쏠 때는 0, 걸을 때만 적용되는 에임 Y 보정 (양수=위, 음수=아래). 서서 쏠 때는 Target Plane Y로 조정 */
         float m_aimYOffsetWhenMoving = 0.0f;
         bool m_isMoving = false;  // 플레이어가 이동 중인지 (외부에서 SetMoving으로 설정)
+    
+    public:
+        // 처형 완료 후 타이머 (ExecutionIndicatorManager가 접근)
+        float m_postExecutionTimer = 0.0f;
+        float m_postExecutionDuration = 0.5f;  // 처형 완료 후 Execute 커서 유지 시간 (초)
 
 
     private:

@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "PhysicsSystem.h"
 
 #include "Framework/System/SystemManager.h"
@@ -297,8 +297,22 @@ namespace engine
         // 2. Fixed Timestep 시뮬레이션 (단일 Accumulator 패턴)
         // - PhysicsSystem이 fixed timestep의 유일한 관리자
         // - ScriptSystem.CallFixedUpdate()도 여기서 호출
+        // 
+        // ═══════════════════════════════════════════════════════════════
+        // TimeScale 처리 (Unity 방식):
+        // - accumulator: UnscaledDeltaTime 사용 (업데이트 빈도 유지)
+        // - simulate(): Scaled FixedDeltaTime 사용 (스텝 크기 조정)
+        // 
+        // 이렇게 하면:
+        // - 물리 업데이트 빈도: 항상 일정 (60Hz)
+        // - 슬로우 모션: 각 스텝의 시간이 줄어듦
+        // - 결과: 부드러운 슬로우 모션 효과
+        // ═══════════════════════════════════════════════════════════════
         float& accumulator = scene->GetPhysicsAccumulator();
-        accumulator += deltaTime;
+        accumulator += Time::UnscaledDeltaTime();  // ★ Unscaled 사용
+        //accumulator += Time::DeltaTime();  
+        // TimeScale 적용된 FixedDeltaTime 계산
+        float scaledFixedTimeStep = m_settings.fixedTimeStep * Time::GetTimeScale(0);
         
         uint32_t steps = 0;
         while (accumulator >= m_settings.fixedTimeStep && 
@@ -307,8 +321,8 @@ namespace engine
             // Script FixedUpdate 호출 (물리 시뮬레이션 전)
             SystemManager::Get().GetScriptSystem().CallFixedUpdate();
             
-            // Physics 시뮬레이션
-            Simulate(scene, m_settings.fixedTimeStep);
+            // Physics 시뮬레이션 (Scaled TimeStep 사용)
+            Simulate(scene, scaledFixedTimeStep);  // ★ Scaled 사용
             accumulator -= m_settings.fixedTimeStep;
             steps++;
         }

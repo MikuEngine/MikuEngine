@@ -2869,11 +2869,12 @@
                     "Active": true,
                     "CanvasObjectName": "AimPointerCanvas",
                     "CursorSize": {
-                        "x": 30.0,
-                        "y": 30.0
+                        "x": 50.0,
+                        "y": 50.0
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
+                    "PostExecutionDuration": 0.5,
                     "CursorTexturesByState": [
                         "",
                         "",
@@ -13541,9 +13542,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 1.5522593259811401,
-                        "y": 1.1233778423047625e-06,
-                        "z": -4.8757829666137695
+                        "x": -10.041016578674316,
+                        "y": 1.1965748853981495e-06,
+                        "z": 3.7332816123962402
                     },
                     "Rotation": {
                         "x": -0.0,

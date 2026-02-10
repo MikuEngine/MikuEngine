@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "AimModeController.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
@@ -77,6 +77,16 @@ namespace game
 
         TickWorldAim(mousePx, mode);
         TickUICursor(mousePx, mode);
+        
+        // 처형 완료 후 타이머 감소
+        if (m_postExecutionTimer > 0.0f)
+        {
+            m_postExecutionTimer -= engine::Time::DeltaTime();
+            if (m_postExecutionTimer < 0.0f)
+            {
+                m_postExecutionTimer = 0.0f;
+            }
+        }
     }
 
     void AimModeController::SetCombatAimEnabled(bool enabled)
@@ -104,10 +114,19 @@ namespace game
         if (mode == AimMode::Pointer)
             return leftDown ? AimCursorState::Clicked : AimCursorState::Default;
 
+        // ═══════════════════════════════════════════════════════════════
+        // AimExecute 표시 조건:
+        // 1. 처형 대상 몬스터 위에 마우스
+        // 2. 처형 대상 위 + 발사 중 (Firing 대신 Execute 유지)
+        // 3. 처형 완료 후 0.5초 동안 (다른 조건 활성화되면 즉시 전환)
+        // ═══════════════════════════════════════════════════════════════
         if (m_isOnExecutionTarget)
-            return AimCursorState::AimExecute;           
+            return AimCursorState::AimExecute;
+        
+        if (m_postExecutionTimer > 0.0f)
+            return AimCursorState::AimExecute;
 
-        return leftDown ? AimCursorState::AimFiring : AimCursorState::AimIdle; //(여기서 처형 가능이거나, 마우스를 적 위에 올릴 시)
+        return leftDown ? AimCursorState::AimFiring : AimCursorState::AimIdle;
     }
     AimModeController::AimMode AimModeController::ComputeEffectiveMode() const
     {
@@ -322,10 +341,34 @@ namespace game
         if (ImGui::IsItemHovered())
             ImGui::SetTooltip("걸을 때만 적용되는 에임 Y 보정. 서서 쏠 때는 0 (Target Plane Y로 조정). 양수=위, 음수=아래");
         ImGui::Text("Moving: %s", m_isMoving ? "Yes" : "No");
+        
+        ImGui::Separator();
+        ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "=== Execution Cursor Debug ===");
+        ImGui::DragFloat("Post-Execution Duration", &m_postExecutionDuration, 0.05f, 0.0f, 2.0f);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("처형 완료 후 Execute 커서 유지 시간 (초)");
+        
+        ImGui::TextColored(m_isOnExecutionTarget ? ImVec4(0, 1, 0, 1) : ImVec4(0.5f, 0.5f, 0.5f, 1), 
+            "On Execution Target: %s", m_isOnExecutionTarget ? "TRUE" : "false");
+        
+        if (m_postExecutionTimer > 0.0f)
+        {
+            ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "Post-Execution Timer: %.2f sec", m_postExecutionTimer);
+        }
+        else
+        {
+            ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1), "Post-Execution Timer: %.2f sec", m_postExecutionTimer);
+        }
+        
+        // 현재 계산된 커서 상태 표시
+        AimMode effectiveMode = GetEffectiveMode();
+        AimCursorState desiredState = ComputeDesiredCursorState(effectiveMode);
+        const char* stateNames[] = { "Default", "Clicked", "AimIdle", "AimFiring", "AimExecute" };
+        ImGui::TextColored(ImVec4(1, 1, 0, 1), "Desired Cursor State: %s", stateNames[static_cast<int>(desiredState)]);
 
         ImGui::Separator();
         ImGui::Text("UI Cursor");
-        ImGui::Text("Press P to swap cursor image.");
+       
 
         std::string selectedTex[5] = {};
         static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga" };
@@ -382,6 +425,9 @@ namespace game
 
         j["TargetPlaneY"] = m_targetPlaneY;
         j["AimYOffsetWhenMoving"] = m_aimYOffsetWhenMoving;
+        
+        // 처형 커서 설정
+        j["PostExecutionDuration"] = m_postExecutionDuration;
 
         // 상태별 텍스처 배열 저장
         engine::json cursorTextures = engine::json::array();
@@ -411,6 +457,9 @@ namespace game
         engine::JsonGet(j, "AimYOffsetWhenMoving", m_aimYOffsetWhenMoving);
         if (j.contains("AimYOffset") && !j.contains("AimYOffsetWhenMoving"))
             m_aimYOffsetWhenMoving = j["AimYOffset"].get<float>();
+        
+        // 처형 커서 설정
+        engine::JsonGet(j, "PostExecutionDuration", m_postExecutionDuration);
 
         int state = (int)AimCursorState::Default;
         engine::JsonGet(j, "CursorState", state);

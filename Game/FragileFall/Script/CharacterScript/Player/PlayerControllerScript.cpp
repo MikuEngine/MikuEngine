@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -770,13 +770,21 @@ namespace game
 				}
 			}
 		}
-		else if (state == "Execution")
+	else if (state == "Execution")
+	{
+		// ═══════════════════════════════════════════════════════════════
+		// 처형 완료 트리거 전달 (BuffManager가 버프 처리)
+		// ═══════════════════════════════════════════════════════════════
+		BuffManager::OnExecutionCompleted();
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 처형 완료: AimModeController에 처형 후 타이머 시작 (0.5초 유지)
+		// ═══════════════════════════════════════════════════════════════
+		if (m_aimPointer)
 		{
-			// ═══════════════════════════════════════════════════════════════
-			// 처형 완료 트리거 전달 (BuffManager가 버프 처리)
-			// ═══════════════════════════════════════════════════════════════
-			BuffManager::OnExecutionCompleted();
+			m_aimPointer->m_postExecutionTimer = m_aimPointer->m_postExecutionDuration;
 		}
+	}
 	}
 
 	float PlayerControllerScript::GetExecutionAnimNormalizedTime() const
