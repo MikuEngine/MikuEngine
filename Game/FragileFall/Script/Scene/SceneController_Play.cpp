@@ -294,12 +294,14 @@ namespace game
     void SceneController_Play::BackToLobby()
     {
         StageManager::Get().ResetFragileGauge();  // 로비로 복귀 시 프레자일 게이지 초기화
+        StageManager::Get().ResetRunHp(100.0f);   // 재시작시 HP 초기화
         GameScene::Change(SceneID::Lobby);
     }
 
     void SceneController_Play::BackToRestart()
     {
         StageManager::Get().ResetFragileGauge();  // 재시작 시 프레자일 게이지 초기화
+        StageManager::Get().ResetRunHp(100.0f);   // 재시작시 HP 초기화
         GameScene::Change(SceneID::Play);
     }
 
