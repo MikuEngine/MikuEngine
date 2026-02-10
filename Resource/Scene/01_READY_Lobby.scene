@@ -7943,20 +7943,11 @@
                     "Type": "UpgradeNodeView",
                     "Active": true,
                     "Category": 0,
-                    "NodeId": 2,
-                    "Parent": [
-                        0
-                    ],
-                    "Name": "공격 속도 증가 1",
-                    "Desc": "미타의 공격 속도가 0.2 상승합니다.\n공격 주기가 단축됩니다.",
-                    "Effects": [
-                        {
-                            "Op": 0,
-                            "Stat": 1,
-                            "Value": 0.20000000298023224,
-                            "Bool": false
-                        }
-                    ],
+                    "NodeId": 100,
+                    "Parent": [],
+                    "Name": "",
+                    "Desc": "",
+                    "Effects": [],
                     "Ruby": 1,
                     "Sapphire": 1,
                     "Emerald": 1
@@ -8080,21 +8071,11 @@
                     "Type": "UpgradeNodeView",
                     "Active": true,
                     "Category": 0,
-                    "NodeId": 3,
-                    "Parent": [
-                        1,
-                        2
-                    ],
-                    "Name": "투사체 속도 증가 1",
-                    "Desc": "미타가 지닌 총알의 속도가 0.2 상승합니다.\n원거리 공격의 명중률을 보조합니다.",
-                    "Effects": [
-                        {
-                            "Op": 0,
-                            "Stat": 4,
-                            "Value": 0.20000000298023224,
-                            "Bool": false
-                        }
-                    ],
+                    "NodeId": 100,
+                    "Parent": [],
+                    "Name": "",
+                    "Desc": "",
+                    "Effects": [],
                     "Ruby": 1,
                     "Sapphire": 1,
                     "Emerald": 1
