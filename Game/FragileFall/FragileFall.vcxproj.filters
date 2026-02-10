@@ -83,6 +83,7 @@
     <ClCompile Include="Script\UI\UISliderValueTextBinder.cpp" />
     <ClCompile Include="Script\HUDController.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Tutorial.cpp" />
+    <ClCompile Include="Script\PlayerPreviewScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -174,5 +175,6 @@
     <ClInclude Include="Script\UI\UISliderValueTextBinder.h" />
     <ClInclude Include="Script\HUDController.h" />
     <ClInclude Include="Script\Scene\SceneController_Tutorial.h" />
+    <ClInclude Include="Script\PlayerPreviewScript.h" />
   </ItemGroup>
 </Project>
