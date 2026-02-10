@@ -197,6 +197,7 @@
     <ClCompile Include="Script\DoorTriggerScript.cpp" />
     <ClCompile Include="Script\ExecutionEffectScript.cpp" />
     <ClCompile Include="Script\ExecutionSlowScript.cpp" />
+    <ClCompile Include="Script\HUDController.cpp" />
     <ClCompile Include="Script\LobbyInteraction.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="Script\DoorTriggerScript.h" />
     <ClInclude Include="Script\ExecutionEffectScript.h" />
     <ClInclude Include="Script\ExecutionSlowScript.h" />
+    <ClInclude Include="Script\HUDController.h" />
     <ClInclude Include="Script\Interface\IDamageable.h" />
     <ClInclude Include="Script\ItemType.h" />
     <ClInclude Include="Script\LobbyInteraction.h" />
