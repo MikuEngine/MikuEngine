@@ -14,6 +14,7 @@
 #include "UpgradeProgressManager.h"
 #include "Script/MonsterGenerator/MonsterSpawner.h"
 #include "Script/DoorTriggerScript.h"
+#include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Scene/GameScene.h"
 
 namespace game
@@ -210,6 +211,14 @@ namespace game
         m_stageClearRewardEmerald = emerald;
     }
 
+    void StageManager::RegisterTutorialMonster(engine::GameObject* monster)
+    {
+        if (monster)
+        {
+            m_spawnedMonsters.push_back(engine::Ptr<engine::GameObject>(monster));
+        }
+    }
+
     void StageManager::Update()
     {
         bool hasMonsters = std::any_of(m_spawnedMonsters.begin(), m_spawnedMonsters.end(),
@@ -223,11 +232,25 @@ namespace game
             m_runEmerald += m_stageClearRewardEmerald;
             m_stageClearRewardRuby = m_stageClearRewardSapphire = m_stageClearRewardEmerald = 0;
 
+            // 스테이지 클리어 시 플레이어의 현재 프레자일 게이지를 저장
             engine::Scene* scene = engine::SceneManager::Get().GetScene();
             if (scene)
             {
-                SetActiveDoor("StageDoor_Next", true);
-                SetActiveDoor("StageDoor_Exit", false);
+                auto* playerGO = scene->FindGameObject("Player");
+                if (playerGO)
+                {
+                    auto* playerScript = playerGO->GetComponent<PlayerControllerScript>();
+                    if (playerScript)
+                    {
+                        SaveFragileGauge(playerScript->GetFragileGaugeCurrent());
+                    }
+                }
+
+                if (scene->GetName() != "10_PROTO_Tutorial")
+                {
+                    SetActiveDoor("StageDoor_Next", true);
+                    SetActiveDoor("StageDoor_Exit", false);
+                }
             }
         }
     }
@@ -243,6 +266,8 @@ namespace game
         UpgradeProgressManager::AddCurrency(m_runRuby, m_runSapphire, m_runEmerald);
         m_runRuby = m_runSapphire = m_runEmerald = 0;
         m_currentStage = 1;
+        ResetFragileGauge();  // 로비로 복귀 시 프레자일 게이지 초기화
+        ResetRunHp(100.0f);
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
         GameScene::Change(SceneID::Lobby);
     }

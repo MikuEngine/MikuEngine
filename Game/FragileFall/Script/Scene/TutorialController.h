@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
+#include <Script/CharacterScript/Player/PlayerControllerScript.h>
 
 namespace game
 {
@@ -32,6 +33,13 @@ namespace game
         engine::Ptr<engine::GameObject> m_nextDoorObject = nullptr;
 
         // ─────────────────────────────────────────────
+        // step 1
+        // ─────────────────────────────────────────────
+        float m_timer = 0.0f;
+        int m_gaugePhase = 0; // 0: 40->70, 1: 70->40, 2: 종료
+
+
+        // ─────────────────────────────────────────────
         // step 2
         // ─────────────────────────────────────────────
         bool m_isSpawnMonster = false;
@@ -45,9 +53,7 @@ namespace game
         engine::Ptr<engine::GameObject> m_exitDoorObject = nullptr;
 
 
-		const float m_outlineWidth = 4.0f;
-
-		engine::Ptr<engine::GameObject> m_player = nullptr;
+		float m_outlineWidth = 4.0f;
 
     public:
         void Awake() override;
@@ -61,7 +67,19 @@ namespace game
 
         void BindButton(const std::string& goName, std::function<void()> callback);
 		void SetActiveButton(const std::string& goName, bool active, bool outline);
-        void SetupSkillNodesUI();
+        void SetupSkillNodesUI(const std::string& goName, bool isChildSetup = false);
+
+        void SetIndex(int step, int page)
+        {
+            m_stepIndex = step;
+            m_pageIndex = page;
+		}
+
+        void TutorialFinish();
+
+    private:
+        PlayerControllerScript* GetPlayer();
+        void UpdateGaugeAnimation();
 
     public:
         // void OnGui() override;

@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Lobby",
-    "NumGameObjects": 162,
+    "NumGameObjects": 170,
     "GameObjects": [
         {
             "ID": 0,
@@ -131,7 +131,8 @@
                     },
                     "UseSkyboxTexture": 1,
                     "UseIBLTexture": 1,
-                    "UseIBL": 1
+                    "UseIBL": 1,
+                    "IBLIntensity": 1.0
                 }
             ]
         },
@@ -2176,7 +2177,7 @@
                 {
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/player/Final/main_character_final.fbx",
+                    "MeshFilePath": "Resource/Model/player/Final/main_character/main_character_final.fbx",
                     "SocketFilePath": "Resource/Data/Socket/main_character_final.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
@@ -5281,7 +5282,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_03_Yellow.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5388,7 +5389,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_01_White.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item01_Blue.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5495,7 +5496,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_02_Purple.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6100,7 +6101,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/AmethystShard.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6331,7 +6332,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/DarkEssence.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item01_Blue.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6562,7 +6563,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/Miku.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7674,13 +7675,13 @@
                     "Category": 0,
                     "NodeId": 0,
                     "Parent": [],
-                    "Name": "공격력 증가",
-                    "Desc": "공격력이 5 증가합니다.",
+                    "Name": "공격력 증가 1",
+                    "Desc": "미타의 공격력이 2 상승합니다.\n전투 효율을 높이기 위한 기본적인 강화입니다.",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
-                            "Value": 5.0,
+                            "Value": 2.0,
                             "Bool": false
                         }
                     ],
@@ -7702,7 +7703,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7811,13 +7812,13 @@
                     "Parent": [
                         0
                     ],
-                    "Name": "공격력 증가",
-                    "Desc": "공격력이 5 증가합니다.",
+                    "Name": "공격력 증가 2",
+                    "Desc": "미타의 공격력이 2 상승합니다.\n전투 효율을 더욱 높여줍니다.",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
-                            "Value": 5.0,
+                            "Value": 2.0,
                             "Bool": false
                         }
                     ],
@@ -7839,7 +7840,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7948,8 +7949,8 @@
                     "Parent": [
                         0
                     ],
-                    "Name": "공격 속도 감소",
-                    "Desc": "공격 속도가 0.2초 감소합니다.",
+                    "Name": "공격 속도 증가 1",
+                    "Desc": "미타의 공격 속도가 0.2 상승합니다.\n공격 주기가 단축됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -7976,7 +7977,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8086,8 +8087,8 @@
                         1,
                         2
                     ],
-                    "Name": "투사체 속도",
-                    "Desc": "투사체의 속도가 0.2m/s 증가합니다.",
+                    "Name": "투사체 속도 증가 1",
+                    "Desc": "미타가 지닌 총알의 속도가 0.2 상승합니다.\n원거리 공격의 명중률을 보조합니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8114,7 +8115,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/BulletSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8221,7 +8222,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSizeUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/BulletSizeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8287,8 +8288,8 @@
                     "Parent": [
                         103
                     ],
-                    "Name": "투사체 크기 증가",
-                    "Desc": "투사체의 크기가 0.2 증가합니다.",
+                    "Name": "투사체 크기 증가 1",
+                    "Desc": "미타가 지닌 총알의 크기가 0.2 상승합니다.\n공격 판정이 보다 안정화됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8358,7 +8359,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/BulletSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8424,8 +8425,8 @@
                     "Parent": [
                         103
                     ],
-                    "Name": "투사체 속도 증가",
-                    "Desc": "투사체의 발사 속도가 0.2m/s 증가합니다.",
+                    "Name": "투사체 속도 증가 2",
+                    "Desc": "미타가 지닌 총알의 속도가 0.2 상승합니다.\n보다 빠르게 적들을 맞출 수 있을겁니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8495,7 +8496,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackRangeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8562,8 +8563,8 @@
                         104,
                         105
                     ],
-                    "Name": "사거리 증가",
-                    "Desc": "사거리가 2 증가합니다.",
+                    "Name": "사거리 증가 1",
+                    "Desc": "미타의 공격 사거리가 2 상승합니다.\n안전한 거리에서의 전투를 가능하게 합니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8633,7 +8634,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8699,13 +8700,13 @@
                     "Parent": [
                         106
                     ],
-                    "Name": "공격력 증가",
-                    "Desc": "공격력이 5 증가합니다.",
+                    "Name": "공격력 증가 3",
+                    "Desc": "미타의 공격력이 2 상승합니다.\n더 깊은 동굴에 들어가도 두려울 것이 없습니다.",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
-                            "Value": 5.0,
+                            "Value": 2.0,
                             "Bool": false
                         }
                     ],
@@ -8770,7 +8771,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8836,8 +8837,8 @@
                     "Parent": [
                         106
                     ],
-                    "Name": "공격 속도",
-                    "Desc": "공격 속도가 0.2 감소합니다.",
+                    "Name": "공격 속도 증가 2",
+                    "Desc": "미타의 공격 속도가 0.2 상승합니다.\n연속적인 공격 능력이 강화됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8907,7 +8908,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8974,14 +8975,20 @@
                         107,
                         108
                     ],
-                    "Name": "공격력 증가",
-                    "Desc": "공격력이 5 증가합니다.",
+                    "Name": "공격력 개조 1",
+                    "Desc": "미타의 공격력이 5 상승, 공격 속도가 0.4 감소합니다.\n최대 출력을 위한 준비를 합니다.",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
                             "Value": 5.0,
                             "Bool": true
+                        },
+                        {
+                            "Op": 0,
+                            "Stat": 1,
+                            "Value": -0.4000000059604645,
+                            "Bool": false
                         }
                     ],
                     "Ruby": 1,
@@ -9045,7 +9052,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9069,9 +9076,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.7843137383460999,
-                        "y": 0.1568627506494522,
-                        "z": 0.1568627506494522,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -9111,19 +9118,13 @@
                     "Parent": [
                         107
                     ],
-                    "Name": "공격력 10",
-                    "Desc": "공격력이 10 증가합니다.\n대신 공격 속도가 0.4m/s 증가합니다.",
+                    "Name": "공격력 증가 4",
+                    "Desc": "미타의 공격력이 3 상승합니다. \n고위험 동굴에 들어가기 전 미타가 전투 태세를 갖춥니다.  ",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
-                            "Value": 100.0,
-                            "Bool": false
-                        },
-                        {
-                            "Op": 0,
-                            "Stat": 1,
-                            "Value": -0.4000000059604645,
+                            "Value": 3.0,
                             "Bool": false
                         }
                     ],
@@ -9198,8 +9199,8 @@
                     "Parent": [
                         108
                     ],
-                    "Name": "공속 0.4",
-                    "Desc": "사거리 -5",
+                    "Name": "공격 속도 개조",
+                    "Desc": "미타의 공격 속도가 0.4 상승, 사거리가 5 감소합니다.\n근접 전투에도 두렵지 않습니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -9224,7 +9225,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9248,9 +9249,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.9411764740943909,
-                        "y": 0.1568627506494522,
-                        "z": 0.1568627506494522,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -9342,8 +9343,8 @@
                         110,
                         109
                     ],
-                    "Name": "공속 0.2",
-                    "Desc": "공속 0.2",
+                    "Name": "공격 속도 증가 3",
+                    "Desc": "미타의 공격 속도가 0.2 상승합니다.\n누구보다 빠른 공격 속도를 보여줍니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -9362,7 +9363,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9477,10 +9478,11 @@
                     "Category": 0,
                     "NodeId": 113,
                     "Parent": [
-                        109
+                        109,
+                        111
                     ],
-                    "Name": "사거리 2",
-                    "Desc": "사거리 2",
+                    "Name": "사거리 증가 2",
+                    "Desc": "미타의 공격 사거리가 2 상승합니다.\n이정도면 저격수라고도 할 수 있습니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -9499,7 +9501,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackRangeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9616,8 +9618,8 @@
                     "Parent": [
                         112
                     ],
-                    "Name": "최종",
-                    "Desc": "공속0.2\n사거리 3\n공격력 5",
+                    "Name": "탐굴가의 총",
+                    "Desc": "미타의 공격력 5, 사거리 3, 공격 속도 0.2 상승합니다.\n진정한 탐굴가를 위한 총기로 개조됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -9648,7 +9650,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10376,7 +10378,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 159.0,
+                        "x": 150.0,
                         "y": 150.0
                     },
                     "Width": 100.0,
@@ -12649,7 +12651,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
+                        "x": -300.0,
                         "y": -150.0
                     },
                     "Width": 100.0,
@@ -12674,7 +12676,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/MoveSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12738,12 +12740,19 @@
                     "Category": 3,
                     "NodeId": 400,
                     "Parent": [],
-                    "Name": "대시 충전시간 감소",
-                    "Desc": "대시의 충전시간이 1초 감소됩니다.",
-                    "Effects": [],
-                    "Ruby": 10,
-                    "Sapphire": 0,
-                    "Emerald": 0
+                    "Name": "이속 증가 1",
+                    "Desc": "미타의 이동 속도가 5 상승합니다.\n기동성이 강화됩니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 17,
+                            "Value": 5.0,
+                            "Bool": false
+                        }
+                    ],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
                 }
             ]
         },
@@ -12778,7 +12787,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": -150.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -12802,7 +12811,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/MoveSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12865,11 +12874,9 @@
                     "Active": true,
                     "Category": 3,
                     "NodeId": 401,
-                    "Parent": [
-                        400
-                    ],
-                    "Name": "대시 이동 거리 증가",
-                    "Desc": "대시로 한번에 이동할 수 있는 거리가\n1m 증가합니다.",
+                    "Parent": [],
+                    "Name": "대쉬 후 이속 증가 1",
+                    "Desc": "미타가 대쉬하면 1초간 이동 속도가 n만큼 상승합니다.\n대쉬 후 빠르게 거리를 벌릴 수 있습니다.",
                     "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 2,
@@ -12907,8 +12914,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -150.0,
-                        "y": 150.0
+                        "x": 300.0,
+                        "y": -150.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -12932,7 +12939,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/DashSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12995,11 +13002,9 @@
                     "Active": true,
                     "Category": 3,
                     "NodeId": 402,
-                    "Parent": [
-                        401
-                    ],
-                    "Name": "이동 속도 증가",
-                    "Desc": "이동 속도가 10% 증가합니다.",
+                    "Parent": [],
+                    "Name": "대쉬 이동 거리 증가 1",
+                    "Desc": "미타의 대쉬 거리가 n 상승합니다.\n위험한 상황에서 더 빨리 거리를 벌릴 수 있습니다.",
                     "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 5,
@@ -13037,8 +13042,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 150.0,
-                        "y": 150.0
+                        "x": -300.0,
+                        "y": 0.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -13062,7 +13067,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/MoveSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13126,10 +13131,10 @@
                     "Category": 3,
                     "NodeId": 403,
                     "Parent": [
-                        401
+                        400
                     ],
-                    "Name": "대시 무적 시간 증가",
-                    "Desc": "대시의 무적 시간이 3초 증가합니다.",
+                    "Name": "이속 증가 2",
+                    "Desc": "미타의 이동 속도가 n 상승합니다.\n기동성이 대폭 강화됩니다.",
                     "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 7,
@@ -13139,6 +13144,1078 @@
         },
         {
             "ID": 133,
+            "ParentID": 128,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 404,
+                    "Parent": [
+                        401
+                    ],
+                    "Name": "대쉬 후 공격력 증가 1",
+                    "Desc": "미타가 대쉬하면 1초간 공격력이 n만큼 상승합니다.\n대쉬 후 강력한 공격을 이어갈 수 있습니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 22,
+                            "Value": 1.0,
+                            "Bool": false
+                        }
+                    ],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 134,
+            "ParentID": 128,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 300.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 405,
+                    "Parent": [
+                        402
+                    ],
+                    "Name": "대쉬 이동 거리 증가 2",
+                    "Desc": "미타의 대쉬 거리가 n 상승합니다\n접근과 회피 둘 다 용이합니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 18,
+                            "Value": 0.0,
+                            "Bool": false
+                        }
+                    ],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/DashSpeedUp.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 135,
+            "ParentID": 128,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -150.0,
+                        "y": 150.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 406,
+                    "Parent": [
+                        403,
+                        404
+                    ],
+                    "Name": "대쉬 무적 시간 증가 1",
+                    "Desc": "미타가 대쉬한 후 무적 시간이 n 상승합니다.\n적의 공격은 스치기만 할 뿐입니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 0,
+                            "Value": 0.0,
+                            "Bool": false
+                        }
+                    ],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/InvinciveTime.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 136,
+            "ParentID": 128,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 150.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 407,
+                    "Parent": [
+                        404,
+                        405
+                    ],
+                    "Name": "대쉬 쿨타임 감소 1",
+                    "Desc": "미타의 대쉬 쿨타임이 n 감소합니다.\n대쉬의 흐름이 끊기지 않습니다.",
+                    "Effects": [],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/DashCoolDown.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 137,
+            "ParentID": 128,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 300.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 408,
+                    "Parent": [
+                        406,
+                        407
+                    ],
+                    "Name": " 대쉬 후 이속 증가 2 ",
+                    "Desc": "미타가 대쉬하면 2초간 이동 속도가 n 만큼 상승합니다.\n이동과 회피에 특화됩니다.",
+                    "Effects": [],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/MoveSpeedUp.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 138,
+            "ParentID": 128,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -150.0,
+                        "y": 450.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 409,
+                    "Parent": [
+                        408
+                    ],
+                    "Name": "대쉬 무적 시간 증가 2",
+                    "Desc": "미타가 대쉬한 후 무적 시간이 0.25초 상승합니다.\n위험 속에서도 과감한 진입이 가능합니다.",
+                    "Effects": [],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/InvinciveTime.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 139,
+            "ParentID": 128,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 450.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 410,
+                    "Parent": [
+                        408
+                    ],
+                    "Name": "대쉬 쿨타임 감소 2",
+                    "Desc": "미타의 대쉬 쿨타임이 n 감소합니다.\n아무도 미타의 움직임을 따라올 수 없습니다.",
+                    "Effects": [],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/DashCoolDown.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 140,
+            "ParentID": 128,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 600.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 3,
+                    "NodeId": 411,
+                    "Parent": [
+                        409,
+                        410
+                    ],
+                    "Name": "대쉬 후 공격력 증가",
+                    "Desc": "미타가 대쉬하면 1초간 공격력이 n만큼 상승합니다.\n빠른 진입! 강한 타격!",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 0,
+                            "Value": 0.0,
+                            "Bool": false
+                        }
+                    ],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 141,
             "ParentID": 87,
             "Name": "Scrollbar",
             "Active": true,
@@ -13197,7 +14274,7 @@
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_02.png",
                     "FillSprite": "",
-                    "HandleSprite": "Resource/Texture/UI/Slider/SliderButton_01.png",
+                    "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
                         "y": 1.0,
@@ -13211,9 +14288,9 @@
                         "w": 1.0
                     },
                     "HandleColor": {
-                        "x": 0.6557004451751709,
-                        "y": 0.4250383675098419,
-                        "z": 0.7644787430763245,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "UseFill": false
@@ -13221,8 +14298,8 @@
             ]
         },
         {
-            "ID": 134,
-            "ParentID": 133,
+            "ID": 142,
+            "ParentID": 141,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -13328,8 +14405,8 @@
             ]
         },
         {
-            "ID": 135,
-            "ParentID": 133,
+            "ID": 143,
+            "ParentID": 141,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -13361,18 +14438,18 @@
                         "y": 0.0
                     },
                     "Width": 30.0,
-                    "Height": 40.0,
+                    "Height": 30.0,
                     "Pivot": {
-                        "x": 0.30000001192092896,
-                        "y": 1.0
+                        "x": 0.5,
+                        "y": 0.5
                     },
                     "AnchorMin": {
                         "x": 1.0,
-                        "y": 0.04444444552063942
+                        "y": 0.03333333507180214
                     },
                     "AnchorMax": {
                         "x": 1.0,
-                        "y": 0.04444444552063942
+                        "y": 0.03333333507180214
                     },
                     "RotationZDeg": 0.0
                 },
@@ -13382,7 +14459,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/SliderButton_01.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13406,9 +14483,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.6557004451751709,
-                        "y": 0.4250383675098419,
-                        "z": 0.7644787430763245,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -13435,7 +14512,7 @@
             ]
         },
         {
-            "ID": 136,
+            "ID": 144,
             "ParentID": 50,
             "Name": "Btn_Upgrade",
             "Active": true,
@@ -13586,8 +14663,8 @@
             ]
         },
         {
-            "ID": 137,
-            "ParentID": 136,
+            "ID": 145,
+            "ParentID": 144,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13659,7 +14736,7 @@
             ]
         },
         {
-            "ID": 138,
+            "ID": 146,
             "ParentID": 49,
             "Name": "UI_OptionPopUp",
             "Active": false,
@@ -13783,8 +14860,8 @@
             ]
         },
         {
-            "ID": 139,
-            "ParentID": 138,
+            "ID": 147,
+            "ParentID": 146,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -13934,8 +15011,8 @@
             ]
         },
         {
-            "ID": 140,
-            "ParentID": 139,
+            "ID": 148,
+            "ParentID": 147,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -14007,8 +15084,8 @@
             ]
         },
         {
-            "ID": 141,
-            "ParentID": 138,
+            "ID": 149,
+            "ParentID": 146,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -14080,8 +15157,8 @@
             ]
         },
         {
-            "ID": 142,
-            "ParentID": 138,
+            "ID": 150,
+            "ParentID": 146,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -14131,8 +15208,8 @@
             ]
         },
         {
-            "ID": 143,
-            "ParentID": 142,
+            "ID": 151,
+            "ParentID": 150,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -14189,7 +15266,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -14214,8 +15291,8 @@
             ]
         },
         {
-            "ID": 144,
-            "ParentID": 143,
+            "ID": 152,
+            "ParentID": 151,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14321,8 +15398,8 @@
             ]
         },
         {
-            "ID": 145,
-            "ParentID": 143,
+            "ID": 153,
+            "ParentID": 151,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -14375,7 +15452,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14428,8 +15505,8 @@
             ]
         },
         {
-            "ID": 146,
-            "ParentID": 143,
+            "ID": 154,
+            "ParentID": 151,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -14535,8 +15612,8 @@
             ]
         },
         {
-            "ID": 147,
-            "ParentID": 146,
+            "ID": 155,
+            "ParentID": 154,
             "Name": "Text_VolumeVal",
             "Active": true,
             "Components": [
@@ -14608,8 +15685,8 @@
             ]
         },
         {
-            "ID": 148,
-            "ParentID": 142,
+            "ID": 156,
+            "ParentID": 150,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -14666,7 +15743,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -14691,8 +15768,8 @@
             ]
         },
         {
-            "ID": 149,
-            "ParentID": 148,
+            "ID": 157,
+            "ParentID": 156,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14798,8 +15875,8 @@
             ]
         },
         {
-            "ID": 150,
-            "ParentID": 148,
+            "ID": 158,
+            "ParentID": 156,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -14852,7 +15929,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14905,8 +15982,8 @@
             ]
         },
         {
-            "ID": 151,
-            "ParentID": 148,
+            "ID": 159,
+            "ParentID": 156,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -15012,8 +16089,8 @@
             ]
         },
         {
-            "ID": 152,
-            "ParentID": 151,
+            "ID": 160,
+            "ParentID": 159,
             "Name": "Text_SFXVal",
             "Active": true,
             "Components": [
@@ -15085,8 +16162,8 @@
             ]
         },
         {
-            "ID": 153,
-            "ParentID": 142,
+            "ID": 161,
+            "ParentID": 150,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -15143,7 +16220,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -15168,8 +16245,8 @@
             ]
         },
         {
-            "ID": 154,
-            "ParentID": 153,
+            "ID": 162,
+            "ParentID": 161,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -15275,8 +16352,8 @@
             ]
         },
         {
-            "ID": 155,
-            "ParentID": 153,
+            "ID": 163,
+            "ParentID": 161,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -15329,7 +16406,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15382,8 +16459,8 @@
             ]
         },
         {
-            "ID": 156,
-            "ParentID": 153,
+            "ID": 164,
+            "ParentID": 161,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -15489,8 +16566,8 @@
             ]
         },
         {
-            "ID": 157,
-            "ParentID": 156,
+            "ID": 165,
+            "ParentID": 164,
             "Name": "Text_SensiVal",
             "Active": true,
             "Components": [
@@ -15562,8 +16639,8 @@
             ]
         },
         {
-            "ID": 158,
-            "ParentID": 142,
+            "ID": 166,
+            "ParentID": 150,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15635,8 +16712,8 @@
             ]
         },
         {
-            "ID": 159,
-            "ParentID": 142,
+            "ID": 167,
+            "ParentID": 150,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -15708,8 +16785,8 @@
             ]
         },
         {
-            "ID": 160,
-            "ParentID": 142,
+            "ID": 168,
+            "ParentID": 150,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15781,7 +16858,7 @@
             ]
         },
         {
-            "ID": 161,
+            "ID": 169,
             "ParentID": 30,
             "Name": "UpgradeController",
             "Active": true,

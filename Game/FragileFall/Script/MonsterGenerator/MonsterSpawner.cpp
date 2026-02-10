@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterSpawner.h"
 #include "Manager/StageManager.h"
 
@@ -25,14 +25,19 @@ namespace game
     engine::Vector3 MonsterSpawner::GetNextSpawnPosition()
     {
         if (m_allPoints.empty())
+        {
             return engine::Vector3(0.0f, 0.0f, 0.0f);
+        }
 
         const size_t numZones = m_zoneStartIndex.empty() ? 0 : m_zoneStartIndex.size() - 1;
         if (numZones == 0)
         {
             engine::Vector3 pos = m_allPoints[0]->GetWorldPosition();
             if (m_spawnRadius > 0.0f)
+            {
                 pos += engine::Random::InsideUnitCircle() * m_spawnRadius;
+            }
+
             return pos;
         }
 
@@ -46,23 +51,34 @@ namespace game
             for (size_t i = start; i < end; i++)
             {
                 if (i < m_pointUsed.size() && !m_pointUsed[i])
+                {
                     available.push_back(i);
+                }
             }
+
             if (available.empty())
+            {
                 continue;
+            }
 
             size_t idx = available[engine::Random::Int<size_t>(0, available.size() - 1)];
             m_pointUsed[idx] = true;
             m_nextZoneIndex = (zone + 1) % numZones;
             engine::Vector3 pos = m_allPoints[idx]->GetWorldPosition();
             if (m_spawnRadius > 0.0f)
+            {
                 pos += engine::Random::InsideUnitCircle() * m_spawnRadius;
+            }
+
             return pos;
         }
 
         engine::Vector3 pos = m_allPoints[0]->GetWorldPosition();
         if (m_spawnRadius > 0.0f)
+        {
             pos += engine::Random::InsideUnitCircle() * m_spawnRadius;
+        }
+
         return pos;
     }
 
@@ -98,9 +114,14 @@ namespace game
     void MonsterSpawner::SpawnNow()
     {
         if (!m_partyGenerator.IsDBLoaded() && !m_monsterCsvPath.empty())
+        {
             LoadMonsterDB();
+        }
+
         if (!m_partyGenerator.IsDBLoaded())
+        {
             return;
+        }
 
         m_nextZoneIndex = 0;
         m_partyGenerator.SetTargetScore(m_targetScore);
@@ -125,7 +146,9 @@ namespace game
     {
         engine::Transform* self = GetTransform();
         if (!self)
+        {
             return;
+        }
 
         m_spawnedMonsters.clear();
         m_allPoints.clear();
@@ -137,7 +160,10 @@ namespace game
         {
             const std::vector<engine::Transform*>& points = zone->GetChildren();
             for (engine::Transform* pt : points)
+            {
                 m_allPoints.push_back(pt);
+            }
+
             m_zoneStartIndex.push_back(m_allPoints.size());
         }
         m_pointUsed.assign(m_allPoints.size(), false);
@@ -172,17 +198,38 @@ namespace game
         {
             const MonsterData* data = m_partyGenerator.FindMonsterByID(monsterID);
             if (!data)
+            {
                 continue;
-            int rMin = data->minRuby, rMax = data->maxRuby;
-            int sMin = data->minSapphire, sMax = data->maxSapphire;
-            int eMin = data->minEmerald, eMax = data->maxEmerald;
-            if (rMin > rMax) std::swap(rMin, rMax);
-            if (sMin > sMax) std::swap(sMin, sMax);
-            if (eMin > eMax) std::swap(eMin, eMax);
-            totalRuby += engine::Random::Int(rMin, rMax);
-            totalSapphire += engine::Random::Int(sMin, sMax);
-            totalEmerald += engine::Random::Int(eMin, eMax);
+            }
+            
+            // 루비: rubyCount번 뽑기, 각각 rubyChance% 확률로 성공 시 +1
+            for (int i = 0; i < data->rubyCount; ++i)
+            {
+                if (engine::Random::Chance(data->rubyChance))
+                {
+                    totalRuby++;
+                }
+            }
+            
+            // 사파이어: sapphireCount번 뽑기, 각각 sapphireChance% 확률로 성공 시 +1
+            for (int i = 0; i < data->sapphireCount; ++i)
+            {
+                if (engine::Random::Chance(data->sapphireChance))
+                {
+                    totalSapphire++;
+                }
+            }
+            
+            // 에메랄드: emeraldCount번 뽑기, 각각 emeraldChance% 확률로 성공 시 +1
+            for (int i = 0; i < data->emeraldCount; ++i)
+            {
+                if (engine::Random::Chance(data->emeraldChance))
+                {
+                    totalEmerald++;
+                }
+            }
         }
+
         StageManager::Get().SetStageClearReward(totalRuby, totalSapphire, totalEmerald);
     }
 

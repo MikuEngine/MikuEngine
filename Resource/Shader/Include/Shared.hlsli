@@ -87,7 +87,7 @@ cbuffer Frame : register(b0) // 프레임 당 한번만 갱신되는 버퍼
     float g_useIBLTexture;
     
     float3 g_iblAmbientColor;
-    float __pad_skybox1;
+    float g_iblIntensity;
     
     // 포스트프로세싱 추가 설정
     float g_enableBloom;

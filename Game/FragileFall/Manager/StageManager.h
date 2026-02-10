@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace engine
 {
@@ -26,22 +26,32 @@ namespace game
         bool m_cleared = false;
         engine::Ptr<engine::GameObject> m_currentMapEnvRoot;  // 맵 환경(장애물·스폰 포인트 포함) 루트
 
+        /// 스테이지 간 유지되는 프레자일 게이지 값
+        float m_savedFragileGaugeCurrent = 0.0f;
+
         /// 스테이지 시작 시(스폰 직후) 미리 정해 둔 클리어 보상. 클리어 시 m_run*에 더한 뒤 0으로 비움.
         int m_stageClearRewardRuby = 0;
         int m_stageClearRewardSapphire = 0;
         int m_stageClearRewardEmerald = 0;
+
+        // 플레이어 현재 체력 보관
+        float m_runHp = 100.0f;
 
     private:
         StageManager() = default;
         ~StageManager() = default;
 
     public:
+        void ResetRunHp(float hpMax = 100.0f) { m_runHp = hpMax; }
+        float GetRunHP() const { return m_runHp; }
+        void SetRunHP(float hp) { m_runHp = std::max(0.0f, hp); }
 
         /// 로비에서 플레이 진입 시 호출. m_currentStage = 1 후 씬 전환은 호출 측에서.
         void ResetToStage1()
         {
             m_currentStage = 1;
             m_runRuby = m_runSapphire = m_runEmerald = 0;
+            ResetFragileGauge();  // 새 플레이 시작 시 프레자일 게이지 초기화
         }
 
         /// 플레이 씬에서 스테이지 시작 시 호출 (예: SceneController_Play::Awake).
@@ -57,6 +67,11 @@ namespace game
 
         /// 프레자일 게이지용. 몬스터가 하나라도 살아 있으면 true.
         bool ShouldFragileGaugeRise() const;
+
+        /// 프레자일 게이지 관리
+        void SaveFragileGauge(float currentGauge) { m_savedFragileGaugeCurrent = currentGauge; }
+        float GetSavedFragileGauge() const { return m_savedFragileGaugeCurrent; }
+        void ResetFragileGauge() { m_savedFragileGaugeCurrent = 0.0f; }
 
         /// 현재 스테이지 번호 (1부터, 10·20·30… = 보스).
         int GetCurrentStage() const { return m_currentStage; }
@@ -81,6 +96,9 @@ namespace game
 
         /// 스포너가 MonsterData.csv 재화 범위로 계산한 클리어 보상을 설정할 때 호출.
         void SetStageClearReward(int ruby, int sapphire, int emerald);
+
+        // 튜토리얼 몬스터 전용
+        void RegisterTutorialMonster(engine::GameObject* monster);
 
     private:
         friend class engine::Singleton<StageManager>;

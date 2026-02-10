@@ -55,6 +55,16 @@ namespace game
 		}
 
 		game::PlayerTemperManager::ApplyTemper(this);
+
+		// 스테이지 간 유지되는 프레자일 게이지 복원
+		float savedFragileGauge = game::StageManager::Get().GetSavedFragileGauge();
+		if (savedFragileGauge > 0.0f)
+		{
+			m_fragileGaugeCurrent = savedFragileGauge;
+		}
+
+		m_PlayerCurrentHP = StageManager::Get().GetRunHP();
+		m_PlayerMaxHP = 100.0f;
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -1868,21 +1878,15 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::TakeDamage(float damage)
 	{
-		return;
+		if (damage <= 0.0f) return;
 
-		if (damage <= 0) return;
-		
 		m_PlayerCurrentHP -= damage;
-		
-		if (m_onDamaged)
-		{
-			m_onDamaged();
-		}
+		if (m_PlayerCurrentHP < 0.0f) m_PlayerCurrentHP = 0.0f;
 
-		if (m_PlayerCurrentHP < 0)
-		{
-			m_PlayerCurrentHP = 0;
-		}
+		StageManager::Get().SetRunHP(m_PlayerCurrentHP);
+
+		if (m_onDamaged) m_onDamaged();
+
 		// 사망 전이는 UpdateGameLogic에서 HP 조건으로 Dead 상태 전이 후, SceneController_Play에서 Fail() 호출
 	}
 }

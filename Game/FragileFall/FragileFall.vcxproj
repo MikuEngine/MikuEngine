@@ -197,6 +197,7 @@
     <ClCompile Include="Script\DoorTriggerScript.cpp" />
     <ClCompile Include="Script\ExecutionEffectScript.cpp" />
     <ClCompile Include="Script\ExecutionSlowScript.cpp" />
+    <ClCompile Include="Script\HUDController.cpp" />
     <ClCompile Include="Script\LobbyInteraction.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterData.cpp" />
     <ClCompile Include="Script\MonsterGenerator\MonsterGenerateTest.cpp" />
@@ -211,6 +212,7 @@
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
+    <ClCompile Include="Script\Scene\SceneController_Tutorial.cpp" />
     <ClCompile Include="Script\Scene\TutorialController.cpp" />
     <ClCompile Include="Script\StateTextRenderer.cpp" />
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
@@ -281,6 +283,7 @@
     <ClInclude Include="Script\DoorTriggerScript.h" />
     <ClInclude Include="Script\ExecutionEffectScript.h" />
     <ClInclude Include="Script\ExecutionSlowScript.h" />
+    <ClInclude Include="Script\HUDController.h" />
     <ClInclude Include="Script\Interface\IDamageable.h" />
     <ClInclude Include="Script\ItemType.h" />
     <ClInclude Include="Script\LobbyInteraction.h" />
@@ -297,6 +300,7 @@
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />
     <ClInclude Include="Script\Scene\SceneController_Main.h" />
+    <ClInclude Include="Script\Scene\SceneController_Tutorial.h" />
     <ClInclude Include="Script\Scene\TutorialController.h" />
     <ClInclude Include="Script\StateTextRenderer.h" />
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />
