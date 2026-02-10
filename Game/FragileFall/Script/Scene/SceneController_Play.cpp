@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "SceneController_Play.h"
 
 #include <Core/App/AppContext.h>
@@ -218,7 +218,7 @@ namespace game
             //    if (ratio >= 0.9f) {
             //        // 90% 이상: 거의 화면을 다 덮는 수준 (강도 0.8 ~ 1.0)
             //        intensity = 0.8f + (ratio - 0.9f) * 2.0f;
-            //    }
+            //    }ㅂㄷ
             //    else if (ratio >= 0.6f) {
             //        // 60% 이상: 시야를 절반 정도 가림 (강도 0.5 ~ 0.7)
             //        intensity = 0.5f + (ratio - 0.6f) * 0.66f;
