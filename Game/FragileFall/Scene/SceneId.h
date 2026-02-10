@@ -10,5 +10,6 @@ namespace game
 		Result,
 		Tutorial,
 		TutorialLobby,
+		Boss
 	};
 }

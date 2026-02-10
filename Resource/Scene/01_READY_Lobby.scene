@@ -2220,7 +2220,16 @@
                         {
                             "Name": "Walk",
                             "Path": "Resource/Animation/main_character_animation_running.fbx",
-                            "Notifies": []
+                            "Notifies": [
+                                {
+                                    "Name": "Event_LeftFootStep",
+                                    "Time": 0.2758747935295105
+                                },
+                                {
+                                    "Name": "Event_RightFootStep",
+                                    "Time": 0.7425414323806763
+                                }
+                            ]
                         }
                     ],
                     "Layers": [
@@ -2277,6 +2286,10 @@
                             ]
                         }
                     ]
+                },
+				{
+                    "Type": "PlayerPreviewScript",
+                    "Active": true
                 }
             ]
         },

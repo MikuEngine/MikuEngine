@@ -29,7 +29,10 @@ namespace engine
         uint64_t offset;            // 패키지 파일 내 데이터 시작 위치
         uint64_t compressedSize;    // 압축된 크기 (패키지에 저장된 크기)
         uint64_t uncompressedSize;  // 원본 크기 (메모리에 로드될 크기)
+
+#ifdef _DEBUG
         char path[256];             // 디버그용 경로
+#endif //_DEBUG
 
         // 압축 여부 확인 (저장된 크기가 원본보다 작으면 압축된 것)
         bool IsCompressed() const { return compressedSize != uncompressedSize; }

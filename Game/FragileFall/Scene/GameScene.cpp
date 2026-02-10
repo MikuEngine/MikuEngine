@@ -28,6 +28,7 @@ namespace game
             { SceneID::Result,   "00_FIN_Result" },
             { SceneID::Tutorial, "10_PROTO_Tutorial" },
             { SceneID::TutorialLobby, "10_PROTO_TutorialLobby" },
+            { SceneID::Boss, "90_Dev_Boss_2ND" },
         };
 
         static const std::string kInvalidSceneName = "INVALID_SCENE";
