@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/Object/Component/Component.h"
 
@@ -25,6 +25,7 @@ namespace engine
         int m_useSkyboxTexture = -1;  // -1 = use ProjectSettings, 0 = false, 1 = true
         int m_useIBLTexture = -1;
         int m_useIBL = -1;
+        float m_iblIntensity = 1.0f;
 
     public:
         ~EnvironmentSettings();
@@ -51,6 +52,10 @@ namespace engine
         const Vector3& GetSkyboxColor() const;
         const Vector3& GetSkyboxHorizonColor() const;
         const Vector3& GetIBLAmbientColor() const;
+
+        void SetIBLIntensity(float intensity);
+
+        float GetIBLIntensity() const;
 
         // 플래그
         void SetUseSkyboxTexture(int use);  // -1 = use ProjectSettings

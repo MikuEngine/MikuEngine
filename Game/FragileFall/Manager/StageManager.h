@@ -97,6 +97,9 @@ namespace game
         /// 스포너가 MonsterData.csv 재화 범위로 계산한 클리어 보상을 설정할 때 호출.
         void SetStageClearReward(int ruby, int sapphire, int emerald);
 
+        // 튜토리얼 몬스터 전용
+        void RegisterTutorialMonster(engine::GameObject* monster);
+
     private:
         friend class engine::Singleton<StageManager>;
 

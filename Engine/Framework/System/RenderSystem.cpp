@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "RenderSystem.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"
@@ -316,6 +316,7 @@ namespace engine
         cbFrame.skyboxHorizonColor = GetSkyboxHorizonColor();
         cbFrame.useIBLTexture = GetUseIBLTexture() ? 1.0f : 0.0f;
         cbFrame.iblAmbientColor = GetIBLAmbientColor();
+        cbFrame.iblIntensity = GetIBLIntensity();
         
         // 포스트프로세싱 설정
         cbFrame.exposure = GetExposure();
@@ -632,6 +633,15 @@ namespace engine
             return envSettings->GetUseIBL() > 0;
         
         return m_projectSettings.useIBL;
+    }
+
+    float RenderSystem::GetIBLIntensity() const
+    {
+        auto* envSettings = SystemManager::Get().GetEnvironmentSystem().GetEnvironmentSettings();
+        if (envSettings)
+            return envSettings->GetIBLIntensity();
+
+        return 1.0f;
     }
 
     // 포스트프로세싱 값 가져오기 (컴포넌트 > ProjectSettings)

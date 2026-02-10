@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <directxtk/SimpleMath.h>
 
@@ -57,7 +57,7 @@ namespace engine
 		float useIBLTexture;
 		
 		Vector3 iblAmbientColor;
-		float __pad_skybox1;
+		float iblIntensity;
 		
 		// 포스트프로세싱 추가 설정
 		float enableBloom;  // 1.0f = true, 0.0f = false

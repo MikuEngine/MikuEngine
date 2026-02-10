@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Framework/System/System.h"
 #include "Framework/Object/Component/Renderer/Renderer.h"
@@ -169,6 +169,7 @@ namespace engine
         bool GetUseSkyboxTexture() const;
         bool GetUseIBLTexture() const;
         bool GetUseIBL() const;
+        float GetIBLIntensity() const;
 
         // 헬퍼 메서드: 포스트프로세싱
         float GetBloomStrength() const;

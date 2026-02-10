@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "EnvironmentSettings.h"
 
 #include "Framework/System/SystemManager.h"
@@ -84,6 +84,16 @@ namespace engine
     const Vector3& EnvironmentSettings::GetIBLAmbientColor() const
     {
         return m_iblAmbientColor;
+    }
+
+    void EnvironmentSettings::SetIBLIntensity(float intensity)
+    {
+        m_iblIntensity = intensity;
+    }
+
+    float EnvironmentSettings::GetIBLIntensity() const
+    {
+        return m_iblIntensity;
     }
 
     void EnvironmentSettings::SetUseSkyboxTexture(int use)
@@ -249,6 +259,8 @@ namespace engine
         {
             m_useIBL = useIBL - 1;  // 0 -> -1, 1 -> 0, 2 -> 1
         }
+
+        ImGui::DragFloat("IBL Intensity", &m_iblIntensity, 0.001f, 0.0f, 100.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
     }
 
     void EnvironmentSettings::Save(json& j) const
@@ -265,6 +277,7 @@ namespace engine
         j["UseSkyboxTexture"] = m_useSkyboxTexture;
         j["UseIBLTexture"] = m_useIBLTexture;
         j["UseIBL"] = m_useIBL;
+        j["IBLIntensity"] = m_iblIntensity;
     }
 
     void EnvironmentSettings::Load(const json& j)
@@ -281,5 +294,6 @@ namespace engine
         JsonGet(j, "UseSkyboxTexture", m_useSkyboxTexture);
         JsonGet(j, "UseIBLTexture", m_useIBLTexture);
         JsonGet(j, "UseIBL", m_useIBL);
+        JsonGet(j, "IBLIntensity", m_iblIntensity);
     }
 }

@@ -188,7 +188,7 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
         horizonOcclusion *= horizonOcclusion;
         specularIBL *= horizonOcclusion;
 
-        ambientLighting = (diffuseIBL + specularIBL) * ao;
+        ambientLighting = (diffuseIBL + specularIBL) * ao * g_iblIntensity;
     }
     
     float3 final = directLighting + ambientLighting + emissive;
