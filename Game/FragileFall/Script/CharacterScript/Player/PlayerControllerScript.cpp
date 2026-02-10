@@ -393,6 +393,14 @@ namespace game
 			// 대쉬 상태 전이
 			m_logicFSM->SetTrigger("StartDash");
 			StartDash();
+
+			// 대쉬 사운드
+			engine::SoundSystem::Get().Play("Player_Dash", "SFX/Player", true);
+		}
+		else if ((isShiftPressed || isSpaceBarPressed) && m_CurrentDashCount <= 0)
+		{
+			// 대쉬 없을 때 사운드
+			engine::SoundSystem::Get().Play("Player_Dash_None", "SFX/Player", true);
 		}
 	}
 
