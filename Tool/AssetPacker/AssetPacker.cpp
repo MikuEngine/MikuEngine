@@ -32,7 +32,10 @@ struct FileEntry
     uint64_t offset;
     uint64_t compressedSize;    // 압축된 크기
     uint64_t uncompressedSize;  // 원본 크기
+
+#ifdef _DEBUG
     char path[256];
+#endif //_DEBUG
 };
 
 #pragma pack(pop)
@@ -123,9 +126,11 @@ int main(int argc, char* argv[])
 
         entry.uncompressedSize = srcSize;
 
-        // 경로 저장
+        // 디버그용 경로 저장
+#ifdef _DEBUG
         size_t pathLen = std::min(normalizedPath.length(), size_t(255));
         std::memcpy(entry.path, normalizedPath.c_str(), pathLen);
+#endif //_DEBUG
 
         // 압축 시도
         int maxDestSize = LZ4_compressBound(static_cast<int>(srcSize));

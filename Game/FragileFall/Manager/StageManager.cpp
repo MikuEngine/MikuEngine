@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -267,7 +267,7 @@ namespace game
         if (m_currentStage % 10 == 0)
         {
             game::LoadingScreenDrawer::OnSceneTransitionBegin();
-            //GameScene::Change(SceneID::Boss);
+            GameScene::Change(SceneID::Boss);
             return;
         }
 

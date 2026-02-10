@@ -85,7 +85,7 @@
         {
             "ID": 2,
             "Name": "PointLight",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -131,7 +131,7 @@
         {
             "ID": 3,
             "Name": "SpotLight",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -202,10 +202,10 @@
                 {
                     "Type": "EnvironmentSettings",
                     "Active": true,
-                    "SkyboxTexturePath": "",
-                    "IBLIrradiancePath": "",
-                    "IBLSpecularPath": "",
-                    "IBLBrdfLutPath": "",
+                    "SkyboxTexturePath": "Resource/Texture/Sunset_-4.5EnvHDR.dds",
+                    "IBLIrradiancePath": "Resource/Texture/Sunset_-4.5DiffuseHDR.dds",
+                    "IBLSpecularPath": "Resource/Texture/Sunset_-4.5SpecularHDR.dds",
+                    "IBLBrdfLutPath": "Resource/Texture/Sunset_-4.5Brdf.dds",
                     "SkyboxColor": {
                         "x": -1.0,
                         "y": -1.0,
@@ -223,7 +223,8 @@
                     },
                     "UseSkyboxTexture": 1,
                     "UseIBLTexture": 1,
-                    "UseIBL": 1
+                    "UseIBL": 1,
+                    "IBLIntensity": 1.0
                 }
             ]
         },
