@@ -13895,7 +13895,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -14081,7 +14081,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14372,7 +14372,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -14558,7 +14558,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14849,7 +14849,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -15035,7 +15035,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
