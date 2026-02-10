@@ -389,7 +389,7 @@ namespace game
 
 			if (g_sceneLoadSpriteData && g_sceneLoadAnimData && !g_sceneLoadAnimData->GetFrames().empty())
 			{
-				g_sceneLoadAnimTime += engine::Time::DeltaTime();
+				g_sceneLoadAnimTime += engine::Time::UnscaledDeltaTime();
 				float duration = g_sceneLoadAnimData->GetDuration();
 				if (duration > 0.0f && g_sceneLoadAnimTime >= duration)
 					g_sceneLoadAnimTime = fmodf(g_sceneLoadAnimTime, duration);
