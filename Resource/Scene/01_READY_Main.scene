@@ -4168,8 +4168,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "기획",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 40,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -4241,7 +4241,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "신윤석    이주연",
-                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -4428,8 +4428,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "아트\n",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 40,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -4501,7 +4501,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "오세훈    주영성",
-                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -4688,8 +4688,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "프로그래밍",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 40,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -4761,7 +4761,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "강신익    도옥현    정철    황태현",
-                    "FontPath": "Resource/Font/malgun.ttf",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
