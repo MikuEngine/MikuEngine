@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "SceneController_Play.h"
 
 #include <Core/App/AppContext.h>
@@ -392,11 +392,13 @@ namespace game
 
     void SceneController_Play::BackToLobby()
     {
+        StageManager::Get().ResetFragileGauge();  // 로비로 복귀 시 프레자일 게이지 초기화
         GameScene::Change(SceneID::Lobby);
     }
 
     void SceneController_Play::BackToRestart()
     {
+        StageManager::Get().ResetFragileGauge();  // 재시작 시 프레자일 게이지 초기화
         GameScene::Change(SceneID::Play);
     }
 

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -55,6 +55,13 @@ namespace game
 		}
 
 		game::PlayerTemperManager::ApplyTemper(this);
+
+		// 스테이지 간 유지되는 프레자일 게이지 복원
+		float savedFragileGauge = game::StageManager::Get().GetSavedFragileGauge();
+		if (savedFragileGauge > 0.0f)
+		{
+			m_fragileGaugeCurrent = savedFragileGauge;
+		}
 	}
 
 	// ═══════════════════════════════════════════════════════════════

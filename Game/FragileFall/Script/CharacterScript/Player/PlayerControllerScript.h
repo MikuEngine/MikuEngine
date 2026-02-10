@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -444,6 +444,7 @@ namespace game
         // 프레자일 게이지 (몬스터 있을 때 상승, UI/직렬화용)
         float GetFragileGaugeCurrent() const { return m_fragileGaugeCurrent; }
         float GetFragileGaugeMax() const { return m_fragileGaugeMax; }
+        void SetFragileGaugeCurrent(float value) { m_fragileGaugeCurrent = value; }
 
         // ─────────────────────────────────────────────
         // 발사 시스템 접근자
