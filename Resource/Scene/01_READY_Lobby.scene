@@ -9706,7 +9706,7 @@
             "ID": 107,
             "ParentID": 90,
             "Name": "SkillNodes",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -10613,7 +10613,7 @@
             "ID": 114,
             "ParentID": 90,
             "Name": "SurviveNodes",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -10778,7 +10778,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPMaxUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10842,8 +10842,8 @@
                     "Category": 2,
                     "NodeId": 300,
                     "Parent": [],
-                    "Name": "체력 증가",
-                    "Desc": "체력이 1 증가합니다.",
+                    "Name": "체력 증가 1",
+                    "Desc": "미타의 체력이 1 상승합니다.\n전투에서 좀 더 오래 살아남을 수 있습니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -10913,7 +10913,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPMaxUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10979,8 +10979,8 @@
                     "Parent": [
                         300
                     ],
-                    "Name": "체력 증가 1",
-                    "Desc": "체력이 1 증가",
+                    "Name": "체력 증가 2",
+                    "Desc": "미타의 체력이 1 상승합니다.\n생존의 여유가 늘어납니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11050,7 +11050,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageMax.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11116,8 +11116,8 @@
                     "Parent": [
                         300
                     ],
-                    "Name": "프레자일 최대치",
-                    "Desc": "10 증가",
+                    "Name": "프레자일 최대치 1",
+                    "Desc": "미타의 프레자일 게이지 최대치가 10 상승합니다.\n정신적 여유가 생깁니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11187,7 +11187,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11254,8 +11254,8 @@
                         301,
                         302
                     ],
-                    "Name": "스테이지 클리어",
-                    "Desc": "시 \n체력회복 0.5",
+                    "Name": "체력 회복 1",
+                    "Desc": "미타가 던전 클리어 시 체력을 0.5 회복합니다.\n던전이 꼭 나쁜 것만은 아니었나 봅니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11335,8 +11335,8 @@
                     "Parent": [
                         303
                     ],
-                    "Name": "체력증가1",
-                    "Desc": "체력증가 1",
+                    "Name": "체력 증가 3",
+                    "Desc": "미타의 체력이 1 상승합니다.\n기본 체력이 강화됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11355,7 +11355,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPMaxUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11472,8 +11472,8 @@
                     "Parent": [
                         303
                     ],
-                    "Name": "프레자일 게이지",
-                    "Desc": "상승량\n-0.2",
+                    "Name": "프레자일 상승량 1",
+                    "Desc": "미타의 프레자일 게이지 상승량이 0.2 감소합니다.\n정신적 한계에 도달하기까지 시간이 늘어납니다.",
                     "Effects": [
                         {
                             "Op": 1,
@@ -11492,7 +11492,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageReduce.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11610,8 +11610,8 @@
                         304,
                         305
                     ],
-                    "Name": "스테이지",
-                    "Desc": "클리어시\n프레자일 게이지 회복 5",
+                    "Name": "프레자일 회복 1",
+                    "Desc": "미타가 던전 클리어 시 프레자일 게이지를 5 회복합니다.\n생각보다 마음의 여유가 생깁니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11630,7 +11630,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11747,13 +11747,13 @@
                     "Parent": [
                         306
                     ],
-                    "Name": "스테이지 클리어시",
-                    "Desc": "체력 회복",
+                    "Name": "피격 시 무적 1",
+                    "Desc": "피격 시 무적 시간이 0.1초 증가합니다.\n연속 피해에 면역이 생깁니다.",
                     "Effects": [
                         {
                             "Op": 0,
-                            "Stat": 12,
-                            "Value": 0.5,
+                            "Stat": 16,
+                            "Value": 0.10000000149011612,
                             "Bool": false
                         }
                     ],
@@ -11767,7 +11767,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11884,13 +11884,13 @@
                     "Parent": [
                         306
                     ],
-                    "Name": "피격시",
-                    "Desc": "무적시간 0.1초 증가",
+                    "Name": "체력 회복 2",
+                    "Desc": "미타가 던전 클리어 시 체력을 0.5 회복합니다.\n이제는 던전이 조금 익숙해지는 느낌입니다.",
                     "Effects": [
                         {
                             "Op": 0,
-                            "Stat": 16,
-                            "Value": 0.10000000149011612,
+                            "Stat": 12,
+                            "Value": 0.5,
                             "Bool": false
                         }
                     ],
@@ -11904,7 +11904,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/InvinciveTime.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12021,8 +12021,8 @@
                     "Parent": [
                         306
                     ],
-                    "Name": "프레자일 최대치 10",
-                    "Desc": "10",
+                    "Name": "프레자일 최대치 2",
+                    "Desc": "미타의 프레자일 게이지 최대치가 10 상승합니다.\n길게 탐험하고 싶다면 추천드립니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -12041,7 +12041,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageMax.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12159,8 +12159,8 @@
                         308,
                         307
                     ],
-                    "Name": "스테이지 클리어",
-                    "Desc": "시\n체력회복 0.5",
+                    "Name": "체력 회복 3",
+                    "Desc": "미타가 던전 클리어 시 체력을 0.5 회복합니다.\n깊은 던전을 탐굴하려면 필요할 것입니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -12179,7 +12179,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12297,13 +12297,13 @@
                         307,
                         309
                     ],
-                    "Name": "프레자일 게이지",
-                    "Desc": "상승량\n-0.3",
+                    "Name": "프레자일 상승량 2",
+                    "Desc": "미타의 프레자일 게이지 상승량이 0.3 감소합니다.\n정신적 한계를 장기적으로 완화합니다.",
                     "Effects": [
                         {
-                            "Op": 1,
+                            "Op": 0,
                             "Stat": 15,
-                            "Value": 0.9700000286102295,
+                            "Value": -0.30000001192092896,
                             "Bool": false
                         }
                     ],
@@ -12317,7 +12317,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageReduce.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12435,8 +12435,8 @@
                         310,
                         311
                     ],
-                    "Name": "스테이지 클리어시",
-                    "Desc": "프레자일 게이지 회복 10",
+                    "Name": "프레자일 회복 2",
+                    "Desc": "미타가 던전 클리어 시 프레자일 게이지를 10 회복합니다.\n다음 스테이지를 안정된 상태로 맞이합니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -12455,7 +12455,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageMax.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12511,7 +12511,7 @@
             "ID": 128,
             "ParentID": 90,
             "Name": "MoveNodes",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
