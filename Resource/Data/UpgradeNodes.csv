@@ -1,0 +1,2 @@
+﻿nodeId,category,name,desc,book,crystal1,crystal2,parents,E1Kind,E1Op,E1Key,E1Value,E1Bool,E2Kind,E2Op,E2Key,E2Value,E2Bool,E3Kind,E3Op,E3Key,E3Value,E3Bool
+0,Attack,공격력 증가 1,"미타의 공격력이 2 상승합니다.\n전투 효율을 높이기 위한 기본적인 강화입니다.",1,1,1,,Stat,Add,AtkDmg,2,,,,,,,,,,,

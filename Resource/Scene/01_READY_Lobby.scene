@@ -2287,7 +2287,7 @@
                         }
                     ]
                 },
-				{
+                {
                     "Type": "PlayerPreviewScript",
                     "Active": true
                 }
@@ -7689,7 +7689,7 @@
                     "NodeId": 0,
                     "Parent": [],
                     "Name": "공격력 증가 1",
-                    "Desc": "미타의 공격력이 2 상승합니다.\n전투 효율을 높이기 위한 기본적인 강화입니다.",
+                    "Desc": "",
                     "Effects": [
                         {
                             "Op": 0,

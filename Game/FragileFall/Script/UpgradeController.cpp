@@ -14,6 +14,8 @@
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Manager/UpgradeProgressManager.h>
 
+#include <Common/Utility/CSVReader.h>
+
 namespace game
 {
     namespace
@@ -87,25 +89,25 @@ namespace game
             }
         }
 
-        static void ApplyOneEffect(const UpgradeNodeView::TemperEffect& e)
+        static void ApplyOneEffect(const game::TemperEffect& e)
         {
             using game::PlayerTemperManager;
-            using TemperOp = UpgradeNodeView::TemperOp;
-            using TemperStat = UpgradeNodeView::TemperStat;
+            using TemperOp = game::TemperOp;
+            using TemperStat = game::StatType;
 
-            // 1. 불린(특수) 강화 처리
-            if (e.op == UpgradeNodeView::TemperOp::Bool)
-            {
-                if (e.stat == UpgradeNodeView::TemperStat::BulletDouble)
-                    PlayerTemperManager::SetIsBulletDouble(e.b);
-                return;
-            }
+            //// 1. 불린(특수) 강화 처리
+            //if (e.op == UpgradeNodeView::TemperOp::Bool)
+            //{
+            //    if (e.stat == UpgradeNodeView::StatType::BulletDouble)
+            //        PlayerTemperManager::SetIsBulletDouble(e.b);
+            //    return;
+            //}
 
             // 2. 수치 강화 처리 (Add/Mul)
             // TemperStat과 StatType이 같은 순서라면 static_cast 가능
             // 아니라면 별도의 Convert 함수를 거칩니다.
             StatType targetStat = static_cast<StatType>(e.stat);
-            CalcType targetCalc = (e.op == UpgradeNodeView::TemperOp::Add) ? CalcType::Add : CalcType::Mul;
+            CalcType targetCalc = (e.op == game::TemperOp::Add) ? CalcType::Add : CalcType::Mul;
 
             // 현재 수치 가져오기 -> 계산 -> 설정 (단 한 줄!)
             float currentVal = PlayerTemperManager::GetStat(targetStat, targetCalc);
@@ -119,6 +121,29 @@ namespace game
             for (const auto& e : view.m_effects)
                 ApplyOneEffect(e);
         }
+
+        static int CategoryBase(game::UpgradeCategory c)
+        {
+            return (int)c;
+        }
+
+        static engine::GameObject* FindChildGOByName(engine::GameObject* parent, const char* name)
+        {
+            if (!parent) return nullptr;
+            auto* pt = parent->GetTransform();
+            if (!pt) return nullptr;
+
+            for (engine::Transform* ct : pt->GetChildren())
+            {
+                if (!ct) continue;
+                auto* go = ct->GetGameObject();
+                if (go && go->GetName() == name)
+                    return go;
+            }
+            return nullptr;
+        }
+
+
     }
 
     void UpgradeController::Awake()
@@ -155,9 +180,19 @@ namespace game
         ClearSelectedInfoUI();
 
         AutoRegisterNodesFromContent("Content");
+        AssignNodeIdsFromHierarchy();
 
         BuildNodeTree();
+
+        // CSV 주입
+        LoadDefsFromCsv();
+        ApplyDefsToViews();
+
+        RecomputeUnlocked();
+        RefreshNodeVisuals();
         ApplyCategoryFilter();
+
+
 
         BindCostSlots();
         HideAllCostSlots();
@@ -223,8 +258,10 @@ namespace game
 
         // 노드 오브젝트 로드
         AutoRegisterNodesFromContent("Content");
-
         BuildNodeTree();
+
+        LoadDefsFromCsv();
+        ApplyDefsToViews();
 
         // 저장된 구매 목록 반영
         engine::JsonArrayForEach(j, "Purchased",
@@ -428,6 +465,44 @@ namespace game
         }
     }
 
+    void UpgradeController::LoadDefsFromCsv()
+    {
+        m_db.Clear();
+
+        if (!m_db.Load(m_dbPath))
+        {
+            LOG_PRINT("[UpgradeController] CSV load failed: {}", m_dbPath);
+        }
+    }
+
+    void UpgradeController::ApplyDefsToViews()
+    {
+        for (auto& [id, view] : m_views)
+        {
+            if (!view) continue;
+
+            const UpgradeNodeRow* row = m_db.Find(id);
+            if (!row)
+            {
+                // CSV에 정의가 없으면 기존 인스펙터 값 유지
+                continue;
+            }
+
+            // 표기/설명
+            view->m_name = row->name;
+            view->m_desc = row->desc;
+
+            // 코스트
+            view->m_costRuby = row->ruby;
+            view->m_costSapphire = row->sapphire;
+            view->m_costEmerald = row->emerald;
+
+            // 부모 / 효과
+            view->m_parents = row->parents;
+            view->m_effects = row->effects;
+        }
+    }
+
     void UpgradeController::AutoRegisterNodesFromContent(const std::string& contentRootName)
     {
         m_nodeObjects.clear();
@@ -439,6 +514,53 @@ namespace game
         if (!rootT) return;
 
         CollectUpgradeNodesRecursive(rootT, m_nodeObjects);
+    }
+
+    void UpgradeController::AssignNodeIdsFromHierarchy()
+    {
+        auto* content = engine::GameObject::Find("Content");
+        if (!content) return;
+
+        struct CatRoot
+        {
+            const char* rootName;
+            UpgradeCategory cat;
+        };
+
+        const CatRoot roots[] =
+        {
+            { "AttackNodes",  UpgradeCategory::Attack },
+            { "SkillNodes",   UpgradeCategory::Skill  },
+            { "SurviveNodes", UpgradeCategory::Life   },
+            { "MoveNodes",    UpgradeCategory::Move   },
+        };
+
+        for (const auto& r : roots)
+        {
+            auto* rootGO = FindChildGOByName(content, r.rootName);
+            if (!rootGO) continue;
+
+            auto* rt = rootGO->GetTransform();
+            if (!rt) continue;
+
+            int local = 0;
+
+            // 자식 순서 = localId
+            for (engine::Transform* ct : rt->GetChildren())
+            {
+                if (!ct) continue;
+                auto* childGO = ct->GetGameObject();
+                if (!childGO) continue;
+
+                auto* view = childGO->GetComponent<game::UpgradeNodeView>();
+                if (!view) continue;
+
+                view->m_category = r.cat;
+                view->m_nodeId = CategoryBase(r.cat) + local; // 100+0, 100+1...
+                // parents는 CSV로 덮어쓸 예정이면 여기서는 건드리지 않아도 됩니다.
+                local++;
+            }
+        }
     }
 
     void UpgradeController::BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb)
