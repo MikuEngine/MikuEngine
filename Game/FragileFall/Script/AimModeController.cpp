@@ -104,6 +104,9 @@ namespace game
         if (mode == AimMode::Pointer)
             return leftDown ? AimCursorState::Clicked : AimCursorState::Default;
 
+        if (m_isOnExecutionTarget)
+            return AimCursorState::AimExecute;           
+
         return leftDown ? AimCursorState::AimFiring : AimCursorState::AimIdle; //(여기서 처형 가능이거나, 마우스를 적 위에 올릴 시)
     }
     AimModeController::AimMode AimModeController::ComputeEffectiveMode() const
@@ -112,7 +115,7 @@ namespace game
             return AimMode::Pointer;
 
         if (m_combatAimEnabled)
-            return AimMode::CombatAim;
+            return AimMode::CombatAim;       
 
         return m_baseMode;
     }

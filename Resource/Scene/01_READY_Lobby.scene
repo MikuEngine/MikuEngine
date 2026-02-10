@@ -131,7 +131,8 @@
                     },
                     "UseSkyboxTexture": 1,
                     "UseIBLTexture": 1,
-                    "UseIBL": 1
+                    "UseIBL": 1,
+                    "IBLIntensity": 1.0
                 }
             ]
         },
@@ -2219,7 +2220,16 @@
                         {
                             "Name": "Walk",
                             "Path": "Resource/Animation/main_character_animation_running.fbx",
-                            "Notifies": []
+                            "Notifies": [
+                                {
+                                    "Name": "Event_LeftFootStep",
+                                    "Time": 0.2758747935295105
+                                },
+                                {
+                                    "Name": "Event_RightFootStep",
+                                    "Time": 0.7425414323806763
+                                }
+                            ]
                         }
                     ],
                     "Layers": [
@@ -2276,6 +2286,10 @@
                             ]
                         }
                     ]
+                },
+				{
+                    "Type": "PlayerPreviewScript",
+                    "Active": true
                 }
             ]
         },
@@ -5281,7 +5295,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_03_Yellow.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5388,7 +5402,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_01_White.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item01_Blue.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5495,7 +5509,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_02_Purple.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6100,7 +6114,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/AmethystShard.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6331,7 +6345,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/DarkEssence.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item01_Blue.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6562,7 +6576,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/Miku.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7674,13 +7688,13 @@
                     "Category": 0,
                     "NodeId": 0,
                     "Parent": [],
-                    "Name": "공격력 증가",
-                    "Desc": "공격력이 5 증가합니다.",
+                    "Name": "공격력 증가 1",
+                    "Desc": "미타의 공격력이 2 상승합니다.\n전투 효율을 높이기 위한 기본적인 강화입니다.",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
-                            "Value": 5.0,
+                            "Value": 2.0,
                             "Bool": false
                         }
                     ],
@@ -7702,7 +7716,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7811,13 +7825,13 @@
                     "Parent": [
                         0
                     ],
-                    "Name": "공격력 증가",
-                    "Desc": "공격력이 5 증가합니다.",
+                    "Name": "공격력 증가 2",
+                    "Desc": "미타의 공격력이 2 상승합니다.\n전투 효율을 더욱 높여줍니다.",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
-                            "Value": 5.0,
+                            "Value": 2.0,
                             "Bool": false
                         }
                     ],
@@ -7839,7 +7853,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7948,8 +7962,8 @@
                     "Parent": [
                         0
                     ],
-                    "Name": "공격 속도 감소",
-                    "Desc": "공격 속도가 0.2초 감소합니다.",
+                    "Name": "공격 속도 증가 1",
+                    "Desc": "미타의 공격 속도가 0.2 상승합니다.\n공격 주기가 단축됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -7976,7 +7990,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8086,8 +8100,8 @@
                         1,
                         2
                     ],
-                    "Name": "투사체 속도",
-                    "Desc": "투사체의 속도가 0.2m/s 증가합니다.",
+                    "Name": "투사체 속도 증가 1",
+                    "Desc": "미타가 지닌 총알의 속도가 0.2 상승합니다.\n원거리 공격의 명중률을 보조합니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8114,7 +8128,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/BulletSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8221,7 +8235,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSizeUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/BulletSizeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8287,8 +8301,8 @@
                     "Parent": [
                         103
                     ],
-                    "Name": "투사체 크기 증가",
-                    "Desc": "투사체의 크기가 0.2 증가합니다.",
+                    "Name": "투사체 크기 증가 1",
+                    "Desc": "미타가 지닌 총알의 크기가 0.2 상승합니다.\n공격 판정이 보다 안정화됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8358,7 +8372,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/BulletSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8424,8 +8438,8 @@
                     "Parent": [
                         103
                     ],
-                    "Name": "투사체 속도 증가",
-                    "Desc": "투사체의 발사 속도가 0.2m/s 증가합니다.",
+                    "Name": "투사체 속도 증가 2",
+                    "Desc": "미타가 지닌 총알의 속도가 0.2 상승합니다.\n보다 빠르게 적들을 맞출 수 있을겁니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8495,7 +8509,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackRangeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8562,8 +8576,8 @@
                         104,
                         105
                     ],
-                    "Name": "사거리 증가",
-                    "Desc": "사거리가 2 증가합니다.",
+                    "Name": "사거리 증가 1",
+                    "Desc": "미타의 공격 사거리가 2 상승합니다.\n안전한 거리에서의 전투를 가능하게 합니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8633,7 +8647,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8699,13 +8713,13 @@
                     "Parent": [
                         106
                     ],
-                    "Name": "공격력 증가",
-                    "Desc": "공격력이 5 증가합니다.",
+                    "Name": "공격력 증가 3",
+                    "Desc": "미타의 공격력이 2 상승합니다.\n더 깊은 동굴에 들어가도 두려울 것이 없습니다.",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
-                            "Value": 5.0,
+                            "Value": 2.0,
                             "Bool": false
                         }
                     ],
@@ -8770,7 +8784,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8836,8 +8850,8 @@
                     "Parent": [
                         106
                     ],
-                    "Name": "공격 속도",
-                    "Desc": "공격 속도가 0.2 감소합니다.",
+                    "Name": "공격 속도 증가 2",
+                    "Desc": "미타의 공격 속도가 0.2 상승합니다.\n연속적인 공격 능력이 강화됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -8907,7 +8921,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8974,14 +8988,20 @@
                         107,
                         108
                     ],
-                    "Name": "공격력 증가",
-                    "Desc": "공격력이 5 증가합니다.",
+                    "Name": "공격력 개조 1",
+                    "Desc": "미타의 공격력이 5 상승, 공격 속도가 0.4 감소합니다.\n최대 출력을 위한 준비를 합니다.",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
                             "Value": 5.0,
                             "Bool": true
+                        },
+                        {
+                            "Op": 0,
+                            "Stat": 1,
+                            "Value": -0.4000000059604645,
+                            "Bool": false
                         }
                     ],
                     "Ruby": 1,
@@ -9045,7 +9065,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9111,19 +9131,13 @@
                     "Parent": [
                         107
                     ],
-                    "Name": "공격력 10",
-                    "Desc": "공격력이 10 증가합니다.\n대신 공격 속도가 0.4m/s 증가합니다.",
+                    "Name": "공격력 증가 4",
+                    "Desc": "미타의 공격력이 3 상승합니다. \n고위험 동굴에 들어가기 전 미타가 전투 태세를 갖춥니다.  ",
                     "Effects": [
                         {
                             "Op": 0,
                             "Stat": 0,
-                            "Value": 100.0,
-                            "Bool": false
-                        },
-                        {
-                            "Op": 0,
-                            "Stat": 1,
-                            "Value": -0.4000000059604645,
+                            "Value": 3.0,
                             "Bool": false
                         }
                     ],
@@ -9198,8 +9212,8 @@
                     "Parent": [
                         108
                     ],
-                    "Name": "공속 0.4",
-                    "Desc": "사거리 -5",
+                    "Name": "공격 속도 개조",
+                    "Desc": "미타의 공격 속도가 0.4 상승, 사거리가 5 감소합니다.\n근접 전투에도 두렵지 않습니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -9224,7 +9238,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9342,8 +9356,8 @@
                         110,
                         109
                     ],
-                    "Name": "공속 0.2",
-                    "Desc": "공속 0.2",
+                    "Name": "공격 속도 증가 3",
+                    "Desc": "미타의 공격 속도가 0.2 상승합니다.\n누구보다 빠른 공격 속도를 보여줍니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -9362,7 +9376,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9477,10 +9491,11 @@
                     "Category": 0,
                     "NodeId": 113,
                     "Parent": [
-                        109
+                        109,
+                        111
                     ],
-                    "Name": "사거리 2",
-                    "Desc": "사거리 2",
+                    "Name": "사거리 증가 2",
+                    "Desc": "미타의 공격 사거리가 2 상승합니다.\n이정도면 저격수라고도 할 수 있습니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -9499,7 +9514,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackRangeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9616,8 +9631,8 @@
                     "Parent": [
                         112
                     ],
-                    "Name": "최종",
-                    "Desc": "공속0.2\n사거리 3\n공격력 5",
+                    "Name": "탐굴가의 총",
+                    "Desc": "미타의 공격력 5, 사거리 3, 공격 속도 0.2 상승합니다.\n진정한 탐굴가를 위한 총기로 개조됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -9648,7 +9663,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9869,7 +9884,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_GuageRegeon.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10004,7 +10019,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_RangeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10141,7 +10156,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10271,7 +10286,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_RangeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10401,7 +10416,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10555,7 +10570,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_GuageRegeon.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10776,7 +10791,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPMaxUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10840,8 +10855,8 @@
                     "Category": 2,
                     "NodeId": 300,
                     "Parent": [],
-                    "Name": "체력 증가",
-                    "Desc": "체력이 1 증가합니다.",
+                    "Name": "체력 증가 1",
+                    "Desc": "미타의 체력이 1 상승합니다.\n전투에서 좀 더 오래 살아남을 수 있습니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -10911,7 +10926,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPMaxUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10977,8 +10992,8 @@
                     "Parent": [
                         300
                     ],
-                    "Name": "체력 증가 1",
-                    "Desc": "체력이 1 증가",
+                    "Name": "체력 증가 2",
+                    "Desc": "미타의 체력이 1 상승합니다.\n생존의 여유가 늘어납니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11048,7 +11063,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageMax.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11114,8 +11129,8 @@
                     "Parent": [
                         300
                     ],
-                    "Name": "프레자일 최대치",
-                    "Desc": "10 증가",
+                    "Name": "프레자일 최대치 1",
+                    "Desc": "미타의 프레자일 게이지 최대치가 10 상승합니다.\n정신적 여유가 생깁니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11185,7 +11200,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11252,8 +11267,8 @@
                         301,
                         302
                     ],
-                    "Name": "스테이지 클리어",
-                    "Desc": "시 \n체력회복 0.5",
+                    "Name": "체력 회복 1",
+                    "Desc": "미타가 던전 클리어 시 체력을 0.5 회복합니다.\n던전이 꼭 나쁜 것만은 아니었나 봅니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11333,8 +11348,8 @@
                     "Parent": [
                         303
                     ],
-                    "Name": "체력증가1",
-                    "Desc": "체력증가 1",
+                    "Name": "체력 증가 3",
+                    "Desc": "미타의 체력이 1 상승합니다.\n기본 체력이 강화됩니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11353,7 +11368,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPMaxUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11470,8 +11485,8 @@
                     "Parent": [
                         303
                     ],
-                    "Name": "프레자일 게이지",
-                    "Desc": "상승량\n-0.2",
+                    "Name": "프레자일 상승량 1",
+                    "Desc": "미타의 프레자일 게이지 상승량이 0.2 감소합니다.\n정신적 한계에 도달하기까지 시간이 늘어납니다.",
                     "Effects": [
                         {
                             "Op": 1,
@@ -11490,7 +11505,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageReduce.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11608,8 +11623,8 @@
                         304,
                         305
                     ],
-                    "Name": "스테이지",
-                    "Desc": "클리어시\n프레자일 게이지 회복 5",
+                    "Name": "프레자일 회복 1",
+                    "Desc": "미타가 던전 클리어 시 프레자일 게이지를 5 회복합니다.\n생각보다 마음의 여유가 생깁니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -11628,7 +11643,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11745,13 +11760,13 @@
                     "Parent": [
                         306
                     ],
-                    "Name": "스테이지 클리어시",
-                    "Desc": "체력 회복",
+                    "Name": "피격 시 무적 1",
+                    "Desc": "피격 시 무적 시간이 0.1초 증가합니다.\n연속 피해에 면역이 생깁니다.",
                     "Effects": [
                         {
                             "Op": 0,
-                            "Stat": 12,
-                            "Value": 0.5,
+                            "Stat": 16,
+                            "Value": 0.10000000149011612,
                             "Bool": false
                         }
                     ],
@@ -11765,7 +11780,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -11882,13 +11897,13 @@
                     "Parent": [
                         306
                     ],
-                    "Name": "피격시",
-                    "Desc": "무적시간 0.1초 증가",
+                    "Name": "체력 회복 2",
+                    "Desc": "미타가 던전 클리어 시 체력을 0.5 회복합니다.\n이제는 던전이 조금 익숙해지는 느낌입니다.",
                     "Effects": [
                         {
                             "Op": 0,
-                            "Stat": 16,
-                            "Value": 0.10000000149011612,
+                            "Stat": 12,
+                            "Value": 0.5,
                             "Bool": false
                         }
                     ],
@@ -11902,7 +11917,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/InvinciveTime.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12019,8 +12034,8 @@
                     "Parent": [
                         306
                     ],
-                    "Name": "프레자일 최대치 10",
-                    "Desc": "10",
+                    "Name": "프레자일 최대치 2",
+                    "Desc": "미타의 프레자일 게이지 최대치가 10 상승합니다.\n길게 탐험하고 싶다면 추천드립니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -12039,7 +12054,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageMax.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12157,8 +12172,8 @@
                         308,
                         307
                     ],
-                    "Name": "스테이지 클리어",
-                    "Desc": "시\n체력회복 0.5",
+                    "Name": "체력 회복 3",
+                    "Desc": "미타가 던전 클리어 시 체력을 0.5 회복합니다.\n깊은 던전을 탐굴하려면 필요할 것입니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -12177,7 +12192,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/HPRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12295,13 +12310,13 @@
                         307,
                         309
                     ],
-                    "Name": "프레자일 게이지",
-                    "Desc": "상승량\n-0.3",
+                    "Name": "프레자일 상승량 2",
+                    "Desc": "미타의 프레자일 게이지 상승량이 0.3 감소합니다.\n정신적 한계를 장기적으로 완화합니다.",
                     "Effects": [
                         {
-                            "Op": 1,
+                            "Op": 0,
                             "Stat": 15,
-                            "Value": 0.9700000286102295,
+                            "Value": -0.30000001192092896,
                             "Bool": false
                         }
                     ],
@@ -12315,7 +12330,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageReduce.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12433,8 +12448,8 @@
                         310,
                         311
                     ],
-                    "Name": "스테이지 클리어시",
-                    "Desc": "프레자일 게이지 회복 10",
+                    "Name": "프레자일 회복 2",
+                    "Desc": "미타가 던전 클리어 시 프레자일 게이지를 10 회복합니다.\n다음 스테이지를 안정된 상태로 맞이합니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -12453,7 +12468,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Node/GuageMax.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12674,7 +12689,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/MoveSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12738,12 +12753,19 @@
                     "Category": 3,
                     "NodeId": 400,
                     "Parent": [],
-                    "Name": "대시 충전시간 감소",
-                    "Desc": "대시의 충전시간이 1초 감소됩니다.",
-                    "Effects": [],
-                    "Ruby": 10,
-                    "Sapphire": 0,
-                    "Emerald": 0
+                    "Name": "이속 증가 1",
+                    "Desc": "미타의 이동 속도가 5 상승합니다.\n기동성이 강화됩니다.",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 17,
+                            "Value": 5.0,
+                            "Bool": false
+                        }
+                    ],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
                 }
             ]
         },
@@ -12802,7 +12824,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/MoveSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12866,16 +12888,9 @@
                     "Category": 3,
                     "NodeId": 401,
                     "Parent": [],
-                    "Name": "대시 후 1초동안",
-                    "Desc": "이속 0.5",
-                    "Effects": [
-                        {
-                            "Op": 0,
-                            "Stat": 21,
-                            "Value": 0.5,
-                            "Bool": false
-                        }
-                    ],
+                    "Name": "대쉬 후 이속 증가 1",
+                    "Desc": "미타가 대쉬하면 1초간 이동 속도가 n만큼 상승합니다.\n대쉬 후 빠르게 거리를 벌릴 수 있습니다.",
+                    "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 2,
                     "Emerald": 0
@@ -12937,7 +12952,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashSpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/DashSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13001,8 +13016,8 @@
                     "Category": 3,
                     "NodeId": 402,
                     "Parent": [],
-                    "Name": "이동 속도 증가",
-                    "Desc": "이동 속도가 10% 증가합니다.",
+                    "Name": "대쉬 이동 거리 증가 1",
+                    "Desc": "미타의 대쉬 거리가 n 상승합니다.\n위험한 상황에서 더 빨리 거리를 벌릴 수 있습니다.",
                     "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 5,
@@ -13065,7 +13080,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/MoveSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13131,8 +13146,8 @@
                     "Parent": [
                         400
                     ],
-                    "Name": "대시 무적 시간 증가",
-                    "Desc": "대시의 무적 시간이 3초 증가합니다.",
+                    "Name": "이속 증가 2",
+                    "Desc": "미타의 이동 속도가 n 상승합니다.\n기동성이 대폭 강화됩니다.",
                     "Effects": [],
                     "Ruby": 10,
                     "Sapphire": 7,
@@ -13205,8 +13220,8 @@
                     "Parent": [
                         401
                     ],
-                    "Name": "대시후",
-                    "Desc": "1초 공격력 증가",
+                    "Name": "대쉬 후 공격력 증가 1",
+                    "Desc": "미타가 대쉬하면 1초간 공격력이 n만큼 상승합니다.\n대쉬 후 강력한 공격을 이어갈 수 있습니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -13225,7 +13240,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13342,12 +13357,12 @@
                     "Parent": [
                         402
                     ],
-                    "Name": "대시",
-                    "Desc": "이동거리 증가",
+                    "Name": "대쉬 이동 거리 증가 2",
+                    "Desc": "미타의 대쉬 거리가 n 상승합니다\n접근과 회피 둘 다 용이합니다.",
                     "Effects": [
                         {
                             "Op": 0,
-                            "Stat": 0,
+                            "Stat": 18,
                             "Value": 0.0,
                             "Bool": false
                         }
@@ -13362,7 +13377,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashSpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/DashSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13480,8 +13495,8 @@
                         403,
                         404
                     ],
-                    "Name": "",
-                    "Desc": "",
+                    "Name": "대쉬 무적 시간 증가 1",
+                    "Desc": "미타가 대쉬한 후 무적 시간이 n 상승합니다.\n적의 공격은 스치기만 할 뿐입니다.",
                     "Effects": [
                         {
                             "Op": 0,
@@ -13500,7 +13515,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SUR_InvincibleTime.png",
+                    "TexturePath": "Resource/Texture/UI/Node/InvinciveTime.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13618,8 +13633,8 @@
                         404,
                         405
                     ],
-                    "Name": "",
-                    "Desc": "",
+                    "Name": "대쉬 쿨타임 감소 1",
+                    "Desc": "미타의 대쉬 쿨타임이 n 감소합니다.\n대쉬의 흐름이 끊기지 않습니다.",
                     "Effects": [],
                     "Ruby": 1,
                     "Sapphire": 1,
@@ -13631,7 +13646,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashCoolDown.png",
+                    "TexturePath": "Resource/Texture/UI/Node/DashCoolDown.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13749,8 +13764,8 @@
                         406,
                         407
                     ],
-                    "Name": "",
-                    "Desc": "",
+                    "Name": " 대쉬 후 이속 증가 2 ",
+                    "Desc": "미타가 대쉬하면 2초간 이동 속도가 n 만큼 상승합니다.\n이동과 회피에 특화됩니다.",
                     "Effects": [],
                     "Ruby": 1,
                     "Sapphire": 1,
@@ -13762,7 +13777,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/MoveSpeedUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13879,8 +13894,8 @@
                     "Parent": [
                         408
                     ],
-                    "Name": "",
-                    "Desc": "",
+                    "Name": "대쉬 무적 시간 증가 2",
+                    "Desc": "미타가 대쉬한 후 무적 시간이 0.25초 상승합니다.\n위험 속에서도 과감한 진입이 가능합니다.",
                     "Effects": [],
                     "Ruby": 1,
                     "Sapphire": 1,
@@ -13892,7 +13907,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SUR_InvincibleTime.png",
+                    "TexturePath": "Resource/Texture/UI/Node/InvinciveTime.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14009,8 +14024,8 @@
                     "Parent": [
                         408
                     ],
-                    "Name": "",
-                    "Desc": "",
+                    "Name": "대쉬 쿨타임 감소 2",
+                    "Desc": "미타의 대쉬 쿨타임이 n 감소합니다.\n아무도 미타의 움직임을 따라올 수 없습니다.",
                     "Effects": [],
                     "Ruby": 1,
                     "Sapphire": 1,
@@ -14022,7 +14037,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashCoolDown.png",
+                    "TexturePath": "Resource/Texture/UI/Node/DashCoolDown.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14140,8 +14155,8 @@
                         409,
                         410
                     ],
-                    "Name": "",
-                    "Desc": "",
+                    "Name": "대쉬 후 공격력 증가",
+                    "Desc": "미타가 대쉬하면 1초간 공격력이 n만큼 상승합니다.\n빠른 진입! 강한 타격!",
                     "Effects": [
                         {
                             "Op": 0,
@@ -14160,7 +14175,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/AttackDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15264,7 +15279,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -15450,7 +15465,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15741,7 +15756,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -15927,7 +15942,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16218,7 +16233,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -16404,7 +16419,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,

@@ -1,5 +1,5 @@
 ﻿#include "GamePCH.h"
-#include "SceneController_Play.h"
+#include "SceneController_Tutorial.h"
 
 #include <Core/App/AppContext.h>
 #include <Core/App/WinApp.h>
@@ -24,6 +24,7 @@
 #include <Script/UI/UIMessageQueue.h>
 
 #include "Scene/GameScene.h"
+#include "Script/Scene/TutorialController.h"
 
 namespace game
 {
@@ -56,17 +57,10 @@ namespace game
         static game::MessageCatalog g_msg;
     }
 
-    void SceneController_Play::Awake()
+    void SceneController_Tutorial::Awake()
     {
         if (m_bound) return;
         m_bound = true;
-
-        std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
-
-        if (currentScene != "10_PROTO_Tutorial")
-        {
-            StageManager::Get().BeginStage(); // 아직 맵 프리팹이 없어서 스테이지 세팅 불가
-        }
 
         g_msg.Load("Resource/Data/Message/MessageTable.csv");
 
@@ -75,26 +69,19 @@ namespace game
                 q->SetCatalog(&g_msg);
 
         // Buttons
-        BindButton("UI_OpenMenu", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->OpenMenu(); });
-        BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->OpenOption(); });
-        BindButton("UI_BackToPlay", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->BackToPlay(); });
-        BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->CheckBackToMain(true); });
-        BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->Back(); });
-
-        BindButton("OK_Button", [self = engine::Ptr<SceneController_Play>(this)]() {if (self) self->BackToLobby(); });
-        BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->CheckBackToMain(false); });
-
-        // If Dead
-        BindButton("ToLobby_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->BackToLobby(); });
-        BindButton("Restart_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->BackToRestart(); });
+        BindButton("UI_OpenMenu", [self = engine::Ptr<SceneController_Tutorial>(this)]() {if (self) self->OpenMenu(); });
+        BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Tutorial>(this)]() {if (self) self->OpenOption(); });
+        BindButton("UI_BackToPlay", [self = engine::Ptr<SceneController_Tutorial>(this)]() {if (self) self->BackToPlay(); });
+        BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Tutorial>(this)]() {if (self) self->CheckBackToTutorialLobby(true); });
+        BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Tutorial>(this)]() {if (self) self->Back(); });
 
         // Sliders
-        BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->OnBGMChanged(v); });
-        BindSlider("UI_SFXSlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->OnSFXChanged(v); });
-        BindSlider("UI_SensitivitySlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->SetSensitivity(v); });
+        BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Tutorial>(this)](float v) {if (self) self->OnBGMChanged(v); });
+        BindSlider("UI_SFXSlider", [self = engine::Ptr<SceneController_Tutorial>(this)](float v) {if (self) self->OnSFXChanged(v); });
+        BindSlider("UI_SensitivitySlider", [self = engine::Ptr<SceneController_Tutorial>(this)](float v) {if (self) self->SetSensitivity(v); });
     }
 
-    void SceneController_Play::Start()
+    void SceneController_Tutorial::Start()
     {
         if (!TimeScaler::IsActive())
             TimeScaler::PlayWorld();
@@ -103,7 +90,28 @@ namespace game
         if (go)
         {
             m_aimMode = go->GetComponent<AimModeController>();
-            m_playerScript = go->GetComponent<PlayerControllerScript>();
+            m_playerScript = go->GetComponent<PlayerControllerScript>();     
+        }
+
+        if (auto* go = engine::GameObject::Find("HitImage"))
+            m_hitImage = go->GetComponent<engine::UIImage>();
+
+        if (m_playerScript)
+        {
+            m_playerScript->SetOnDamaged([this] {
+                if (m_hitImage)
+                {
+                    m_hitImage->SetEffect(engine::UIEffectType::ScreenHit);
+
+                    m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
+                }
+
+                // 튜토리얼에서 죽지않음
+                float maxHp = m_playerScript->GetMaxHp();
+                m_playerScript->SetCurrentHp(maxHp);
+
+                // TODO: 사운드 있다면 여기에 추가
+                });
         }
 
         m_menuPopUp = engine::GameObject::Find("Panel_Menu");
@@ -115,17 +123,9 @@ namespace game
         m_blocker = engine::GameObject::Find("Panel_Blocker");
         if (m_blocker) m_blocker->SetActive(false);
 
-        m_realGiveupPopUp = engine::GameObject::Find("UI_RealGiveupPopUp");
-        if (m_realGiveupPopUp) m_realGiveupPopUp->SetActive(false);
-
-        m_failPanel = engine::GameObject::Find("Panel_Fail");
-        if (m_failPanel) m_failPanel->SetActive(false);
-
         m_isMenuOpen = false;
         m_isOptionOpen = false;
-        m_isDead = false;
 
-        if (!m_isDead) TimeScaler::PlayWorld();
 
         auto& app = engine::AppContext::GetApp();
         const auto& s = app.GetUserSettings();
@@ -141,77 +141,97 @@ namespace game
         if (auto* go = engine::GameObject::Find("UI_SensitivitySlider"))
             if (auto* slider = go->GetComponent<engine::UISlider>())
                 slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
+
+        // HUD: Currency counts (Canvas_HUD > Currency > Ruby/Sapphire/Emerald > * Count)
+        if (auto* go = engine::GameObject::Find("Ruby Count"))
+            m_currencyRubyText = go->GetComponent<engine::UIText>();
+        if (auto* go = engine::GameObject::Find("Sapphire Count"))
+            m_currencySapphireText = go->GetComponent<engine::UIText>();
+        if (auto* go = engine::GameObject::Find("Emerald Count"))
+            m_currencyEmeraldText = go->GetComponent<engine::UIText>();
+        // Fragile Gauge (Canvas_HUD > Fragile Gauge > Fragile Gauge Progress)
+        if (auto* go = engine::GameObject::Find("Fragile Gauge Progress"))
+            m_fragileGaugeProgress = go->GetComponent<engine::UIProgressBar>();
     }
 
-    void SceneController_Play::Update()
+    void SceneController_Tutorial::Update()
     {
         StageManager::Get().Update();
 
-        // 플레이어 사망 시 실패 (HP 0, 프레자일 100%, 또는 Dead 상태)
-        if (!m_isDead && m_playerScript)
+        if (m_hitImage)
         {
-            bool fragileFull = m_playerScript->GetFragileGaugeCurrent() >= m_playerScript->GetFragileGaugeMax();
-            bool hpZero = m_playerScript->GetCurrentHp() <= 0.0f;
-            bool playerDeadState = (m_playerScript->GetCurrentState() == "Dead");
-            if (fragileFull || hpZero || playerDeadState)
-                Fail();
+            auto params = m_hitImage->GetEffectParam(0);
+
+            // 강도가 남아있다면 매 프레임 감소
+            if (params.x > 0.0f)
+            {
+                params.x -= engine::Time::DeltaTime() * 2.5f; // 약 0.4초 동안 페이드 아웃
+                if (params.x < 0.0f) params.x = 0.0f;
+
+                m_hitImage->SetEffectParam(0, params);
+            }
         }
 
-        if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))
+        /*/ HUD: 런 재화 개수, 프레자일 게이지
+        if (m_currencyRubyText)
+            m_currencyRubyText->SetText(std::to_string(StageManager::Get().GetRunRuby()));
+        if (m_currencySapphireText)
+            m_currencySapphireText->SetText(std::to_string(StageManager::Get().GetRunSapphire()));
+        if (m_currencyEmeraldText)
+            m_currencyEmeraldText->SetText(std::to_string(StageManager::Get().GetRunEmerald()));
+        //*/
+        if (m_fragileGaugeProgress && m_playerScript)
+        {
+            float maxVal = m_playerScript->GetFragileGaugeMax();
+            float current = m_playerScript->GetFragileGaugeCurrent();
+
+            float t = (maxVal > 0.0f) ? (current / maxVal) : 0.0f;
+
+            // 튜토리얼 전용 90프로 넘지 않도록 조정
+            if (t > 0.9f)
+            {
+                t = 0.9f;
+            }
+
+            m_fragileGaugeProgress->SetValue(t);
+        }
+
+        if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
             engine::SoundSystem::Get().PlayUI("UI_Click_Random");
 
             if (m_isOptionOpen) { Back(); return; }
-            if (m_isGiveupOpen) { CheckBackToMain(false); return; }
             if (m_isMenuOpen) { SetMenuOpen(false); return; }
 
             SetMenuOpen(true);
         }
 
-        // Debug
-        if (engine::Input::IsKeyPressed(engine::Keys::F4))
-        {
-            Fail();
-        }
 
+        /*//
         if (engine::Input::IsKeyPressed(engine::Keys::K))
         {
             if (auto* go = engine::GameObject::Find("UIMessageQueue"))
                 if (auto* q = go->GetComponent<game::UIMessageQueue>())
                     q->PushMessageKey("Kill_001");
         }
-
-        if (engine::Input::IsKeyHeld(engine::Keys::F3) && engine::Input::IsKeyPressed(engine::Keys::P))
-        {
-            // 실제 플레이어의 TakeDamage를 호출하여 전체 시스템을 테스트합니다.
-            if (m_playerScript)
-            {
-                // 데미지 1.0을 주면서 피격 콜백과 HP 감소가 정상 작동하는지 확인
-                m_playerScript->TakeDamage(1.0f);
-
-                //if (m_hitImage) {
-                //     m_hitImage->SetEffect(engine::UIEffectType::ScreenHit);
-                //     m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
-                //}
-            }
-        }
+        //*/
     }
 
-    void SceneController_Play::OnGui()
+    void SceneController_Tutorial::OnGui()
     {
     }
 
-    void SceneController_Play::Save(engine::json& j) const
+    void SceneController_Tutorial::Save(engine::json& j) const
     {
         Object::Save(j);
     }
 
-    void SceneController_Play::Load(const engine::json& j)
+    void SceneController_Tutorial::Load(const engine::json& j)
     {
         Object::Load(j);
     }
 
-    void SceneController_Play::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
+    void SceneController_Tutorial::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
     {
         auto* go = engine::GameObject::Find(name);
         if (!go) return;
@@ -223,7 +243,7 @@ namespace game
         if (cb) cb(); });
     }
 
-    void SceneController_Play::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)
+    void SceneController_Tutorial::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)
     {
         auto* go = engine::GameObject::Find(name);
         if (!go) return;
@@ -234,11 +254,11 @@ namespace game
         slider->SetOnValueChanged(std::move(cb));
     }
 
-    void SceneController_Play::SetMenuOpen(bool open)
+    void SceneController_Tutorial::SetMenuOpen(bool open)
     {
         m_isMenuOpen = open;
 
-        const bool shouldStop = (m_isOptionOpen || m_isMenuOpen || m_isGiveupOpen || m_isDead);
+        const bool shouldStop = (m_isOptionOpen || m_isMenuOpen);
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
 
@@ -262,83 +282,49 @@ namespace game
         UpdateBlocker();
     }
 
-    void SceneController_Play::OpenMenu()
+    void SceneController_Tutorial::OpenMenu()
     {
         SetMenuOpen(true);
     }
 
-    void SceneController_Play::OpenOption()
+    void SceneController_Tutorial::OpenOption()
     {
         SetOptionOpen(true);
         SetMenuOpen(false);
     }
 
-    void SceneController_Play::BackToPlay()
+    void SceneController_Tutorial::BackToPlay()
     {
         SetMenuOpen(false);
     }
 
-    void SceneController_Play::CheckBackToMain(bool open)
+    void SceneController_Tutorial::CheckBackToTutorialLobby(bool open)
     {
-        m_isGiveupOpen = open;
-        m_realGiveupPopUp->SetActive(open);
+        if (auto tutorial = engine::GameObject::Find("TutorialScript_Controller"))
+        {
+			tutorial->GetComponent<TutorialController>()->SetIndex(4, 1);
+        }
+
+        engine::SceneManager::Get().ChangeScene("10_PROTO_TutorialLobby");
 
         UpdateBlocker();
     }
 
-    void SceneController_Play::BackToMain()
+    void SceneController_Tutorial::BackToMain()
     {
         GameScene::Change(SceneID::Main);
     }
 
-    void SceneController_Play::BackToLobby()
-    {
-        StageManager::Get().ResetFragileGauge();  // 로비로 복귀 시 프레자일 게이지 초기화
-        StageManager::Get().ResetRunHp(100.0f);   // 재시작시 HP 초기화
-        GameScene::Change(SceneID::Lobby);
-    }
-
-    void SceneController_Play::BackToRestart()
-    {
-        StageManager::Get().ResetFragileGauge();  // 재시작 시 프레자일 게이지 초기화
-        StageManager::Get().ResetRunHp(100.0f);   // 재시작시 HP 초기화
-        GameScene::Change(SceneID::Play);
-    }
-
-    void SceneController_Play::Back()
+    void SceneController_Tutorial::Back()
     {
         SetOptionOpen(false);
         SetMenuOpen(true);
     }
 
-    void SceneController_Play::Fail()
-    {
-        m_isDead = true;
-        if (m_failPanel)
-            m_failPanel->SetActive(true);
-
-        const bool isAnyPopupOpen = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen || m_isDead);
-
-        if (isAnyPopupOpen)
-            TimeScaler::StopWorld();
-        else
-            TimeScaler::PlayWorld();
-
-        auto* aimGO = engine::GameObject::Find("Player");
-
-        if (aimGO)
-        {
-            if (auto* amc = aimGO->GetComponent<AimModeController>())
-            {
-                amc->SetPaused(isAnyPopupOpen);
-            }
-        }
-    }
-
-    void SceneController_Play::UpdateBlocker()
+    void SceneController_Tutorial::UpdateBlocker()
     {
         if (!m_blocker) return;
-        const bool isAnyPopupOpen = (m_isMenuOpen || m_isOptionOpen || m_isGiveupOpen || m_isDead);
+        const bool isAnyPopupOpen = (m_isMenuOpen || m_isOptionOpen);
 
         m_blocker->SetActive(isAnyPopupOpen);
 
@@ -358,7 +344,7 @@ namespace game
         }
     }
 
-    void SceneController_Play::OnBGMChanged(float v)
+    void SceneController_Tutorial::OnBGMChanged(float v)
     {
         auto& app = engine::AppContext::GetApp();
 
@@ -368,7 +354,7 @@ namespace game
         app.SetUserSettings(s);
     }
 
-    void SceneController_Play::OnSFXChanged(float v)
+    void SceneController_Tutorial::OnSFXChanged(float v)
     {
         auto& app = engine::AppContext::GetApp();
 
@@ -378,7 +364,7 @@ namespace game
         app.SetUserSettings(s);
     }
 
-    void SceneController_Play::SetSensitivity(float v)
+    void SceneController_Tutorial::SetSensitivity(float v)
     {
         auto& app = engine::AppContext::GetApp();
 
@@ -388,11 +374,11 @@ namespace game
         app.SetUserSettings(s);
     }
 
-    void SceneController_Play::SetOptionOpen(bool open)
+    void SceneController_Tutorial::SetOptionOpen(bool open)
     {
         m_isOptionOpen = open;
 
-        const bool shouldStop = (m_isOptionOpen || m_isMenuOpen || m_isGiveupOpen || m_isDead);
+        const bool shouldStop = (m_isOptionOpen || m_isMenuOpen);
         if (shouldStop) TimeScaler::StopWorld();
         else            TimeScaler::PlayWorld();
 

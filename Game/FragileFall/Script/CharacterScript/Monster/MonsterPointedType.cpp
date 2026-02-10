@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterPointedType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -54,6 +54,11 @@ namespace game
         m_gridMap = pathfindingSystem.GetGridMap();
     }
 
+    void MonsterPointedType::Update()
+    {
+        MonsterScript::Update();
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // FSM 초기화
     // ═══════════════════════════════════════════════════════════════
@@ -82,9 +87,9 @@ namespace game
         // ─────────────────────────────────────────────
         // 파라미터 정의
         // ─────────────────────────────────────────────
-        m_logicFSM->SetParameter("PlayerInDetectionRange", m_isPlayerInDetectionRange);
-        m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
-        m_logicFSM->SetParameter("PlayerInFleeRange", m_isPlayerInFleeRange);
+        m_logicFSM->SetParameter("PlayerInDetectionRange", m_isPlayerInDetectionRange && m_isActive);
+        m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange && m_isActive);
+        m_logicFSM->SetParameter("PlayerInFleeRange", m_isPlayerInFleeRange && m_isActive);
         m_logicFSM->SetParameter("CanFire", m_canFire);
         m_logicFSM->SetParameter("AttackComplete", false);
         m_logicFSM->SetParameter("Fragile", m_isFragile);
@@ -409,10 +414,10 @@ namespace game
         m_canFire = (m_fireTimer <= 0.0f);
 
         // FSM 파라미터 업데이트
-        m_logicFSM->SetParameter("PlayerInDetectionRange", m_isPlayerInDetectionRange);
-        m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
-        m_logicFSM->SetParameter("PlayerInFleeRange", m_isPlayerInFleeRange);
-        m_logicFSM->SetParameter("CanFire", m_canFire);
+        m_logicFSM->SetParameter("PlayerInDetectionRange", m_isPlayerInDetectionRange && m_isActive);
+        m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange && m_isActive);
+        m_logicFSM->SetParameter("PlayerInFleeRange", m_isPlayerInFleeRange && m_isActive);
+        m_logicFSM->SetParameter("CanFire", m_canFire && m_isActive);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -529,7 +534,7 @@ namespace game
     }
 
     void MonsterPointedType::ExecuteIdleBehaviorNonPhysics(float deltaTime)
-    {
+    {       
         // Redemption 재시도를 위한 Idle 대기
         if (m_isNoWayOut)
         {
@@ -615,7 +620,7 @@ namespace game
     }
 
     void MonsterPointedType::UpdateGameLogic()
-    {
+    {      
         MonsterScript::UpdateGameLogic();
         // UpdateFragileTimer는 ExecuteFragileBehaviorNonPhysics()에서 호출됨
     }
@@ -980,7 +985,7 @@ namespace game
         else if (state == "Idle")
         {
             StopAllMovement();
-            StopRotation();
+            StopRotation();         
             
             // Redemption 재시도를 위한 Idle인 경우 0.1초 후 자동 전이
             // (NoWayOut이 true면 Redemption 재시도용 Idle)

@@ -245,8 +245,10 @@ namespace game
 
         // 몬스터 위치에 오프셋 적용
         // 인디케이터는 부모가 없으므로 로컬 위치 = 월드 위치
-        engine::Vector3 position = targetTransform->GetWorldPosition() + m_indicatorOffset;
-        m_indicatorTransform->SetLocalPosition(position);
+        engine::Vector3 position = targetTransform->GetWorldPosition();
+        position.y = 0.0f;
+        engine::Vector3 rPos = position + m_indicatorOffset;
+        m_indicatorTransform->SetLocalPosition(rPos);
 
         // 활성화
         m_indicatorInstance->SetActive(true);
@@ -345,23 +347,23 @@ namespace game
         m_lineTransform->SetLocalRotation(rotation);
 
         // ─────────────────────────────────────────────
-        // UV 방식: Width 자동 설정 + Transform Scale 역계산
+        // 타일링 방식: 50px 텍스처를 UV Wrap으로 반복
         // ─────────────────────────────────────────────
         
         // 실제 라인 길이 = 오프셋 적용된 두 점 사이의 거리
         float lineLength = (lineEnd - lineStart).Length();
-        if (lineLength < 0.0f) lineLength = 0.0f;
+        if (lineLength < 0.001f) lineLength = 0.0f;
 
         // 상수 정의
-        const float TEXTURE_WIDTH = 3000.0f;          // 텍스처 전체 너비 (픽셀)
-        const float SPRITE_WIDTH = 3000.0f;           // SpriteRenderer Width (텍스처 로드 시 자동 설정됨)
-        const float ENGINE_PPU = 100.0f;              // 엔진 정책: 100 픽셀 = 1 유닛
+        const float TEXTURE_WIDTH = 50.0f;           // 텍스처 1타일 너비 (픽셀)
+        const float SPRITE_WIDTH = 50.0f;            // SpriteRenderer Width (텍스처 로드 시 자동 설정됨)
+        const float ENGINE_PPU = 100.0f;             // 엔진 정책: 100 픽셀 = 1 유닛
 
         // 렌더링할 픽셀 크기 계산 (계단식 증가)
         // 1단계: 거리 기반 픽셀 계산
         float pixelsToRender = lineLength * m_linePixelsPerMeter;
         
-        // 2단계: 단위 픽셀로 내림 (계단식 증가)
+        // 2단계: 단위 픽셀로 내림 (계단식 증가, 50px 단위 = 1타일 단위)
         if (m_linePixelStep > 0.001f)
         {
             pixelsToRender = std::floor(pixelsToRender / m_linePixelStep) * m_linePixelStep;
@@ -370,27 +372,26 @@ namespace game
         // 3단계: 최소값 보장
         pixelsToRender = std::max(m_lineMinPixels, pixelsToRender);
 
-        // UV Scale: 텍스처 샘플링 범위 (점선 간격 일정 유지)
-        float uvScaleX = pixelsToRender / TEXTURE_WIDTH;  // 예: 700 / 3000 = 0.233
-
-        // UV Offset: 화살표가 오른쪽 끝에 있으므로, 오른쪽부터 샘플링
-        float uvOffsetX = 1.0f - uvScaleX;  // 예: 1.0 - 0.233 = 0.767
+        // UV Scale: 텍스처 반복 횟수 (예: 700px / 50px = 14타일)
+        // Sampler가 WRAP 모드이므로 uvScaleX > 1.0 시 텍스처가 자동 반복됨
+        float uvScaleX = pixelsToRender / TEXTURE_WIDTH;
 
         // 엔진 렌더링 공식: finalSize = (SPRITE_WIDTH / ENGINE_PPU) × uvScale × transformScale
+        // 예: (50/100) × 14 = 7.0 유닛 (쿼드 기본 크기)
         // 목표: finalSize = lineLength
         // 역계산: transformScale = lineLength / ((SPRITE_WIDTH / ENGINE_PPU) × uvScale)
-        float baseSize = (SPRITE_WIDTH / ENGINE_PPU) * uvScaleX;  // 예: (3000/100) × 0.233 = 6.99
-        float xScale = (baseSize > 0.001f) ? (lineLength / baseSize) : 1.0f;  // 예: 10 / 6.99 = 1.43
+        float baseSize = (SPRITE_WIDTH / ENGINE_PPU) * uvScaleX;
+        float xScale = (baseSize > 0.001f) ? (lineLength / baseSize) : 1.0f;
 
         engine::Vector3 currentScale = m_lineTransform->GetLocalScale();
         m_lineTransform->SetLocalScale(engine::Vector3(xScale, currentScale.y, currentScale.z));
 
-        // SpriteRenderer에 UV 설정 적용
+        // SpriteRenderer에 UV 타일링 설정 적용
         if (auto* renderer = m_lineInstance->GetComponent<engine::SpriteRenderer>())
         {
             renderer->SetSpriteInfo(
-                engine::Vector2(uvOffsetX, 0.0f),      // UV Offset (오른쪽부터 샘플링)
-                engine::Vector2(uvScaleX, 1.0f),       // UV Scale (X만 조절, Y는 1.0)
+                engine::Vector2(0.0f, 0.0f),           // UV Offset (시작점부터)
+                engine::Vector2(uvScaleX, 1.0f),       // UV Scale (X축 타일 반복, Y는 1.0)
                 engine::Vector2(0.5f, 0.5f)            // Pivot (Center 유지)
             );
         }

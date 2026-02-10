@@ -31,7 +31,11 @@ namespace game
         // Public 멤버 (몬스터가 접근)
         // ─────────────────────────────────────────────
         bool m_isUpdateAllowed = false;  // 몬스터 업데이트 허용 여부
+        bool m_hasActivated = false;     // 한 번 활성화되었는지 (중복 실행 방지)
 
+        bool GetIsUpdateAllowed() { return m_isUpdateAllowed; }
+        void SetSwitchActivation(bool setparam);
+       
     private:
         // ─────────────────────────────────────────────
         // 설정 (인스펙터 직렬화)
@@ -42,7 +46,7 @@ namespace game
         // 런타임 상태
         // ─────────────────────────────────────────────
         float m_elapsedTime = 0.0f;      // 경과 시간
-        bool m_hasActivated = false;     // 한 번 활성화되었는지 (중복 실행 방지)
+       
 
     public:
         MonsterUpdateActivationSwitch() = default;
@@ -52,7 +56,8 @@ namespace game
         // 생명주기
         // ─────────────────────────────────────────────
         void Awake() override;
-        void Update() override;
+        void Start() override;
+        void Update() override;         
 
         // ─────────────────────────────────────────────
         // GUI / 직렬화

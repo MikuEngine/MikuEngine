@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -99,7 +99,11 @@ namespace game
         //float m_dashCooldown = 0.2f;                    // 대쉬 쿨다운 (초)
 
 
-
+        //치트-무적
+        bool m_isInvincible = false;
+        
+        // 대쉬 기준 속도. 이 값은 상수로 쓰인다.
+        const float m_dashInitSpeed = 8.0f;
 
         //HP
         float m_PlayerMaxHP = 100.0f;
@@ -153,10 +157,7 @@ namespace game
         bool m_isDashDecaying = false;                  // 감속 진행 중 여부
         float m_dashDecayStartSpeed = 0.0f;             // 감속 시작 시 속도
         float m_dashDecayElapsedTime = 0.0f;            // 감속 경과 시간
-        float m_dashDecayDuration = 0.5f;               // 감속 지속 시간 (초)
-             
-        
-
+        float m_dashDecayDuration = 0.5f;               // 감속 지속 시간 (초)      
 
 
         // 처형 관련
@@ -502,6 +503,7 @@ namespace game
         void SetExeHpRegen(float v) { m_temperFinal.exeHpRegen = v; }
 
         void SetMaxHp(float v) { m_temperFinal.maxHp = v; }
+        void SetCurrentHp(float v) { m_PlayerCurrentHP = v; }
         void SetInvincibleTime(float v) { m_temperFinal.invincibleTime = v; }
         void SetMoveSpeed(float v) { m_temperFinal.moveSpeed = v; }
         void SetDashDistance(float v) { m_temperFinal.dashDistance = v; }
@@ -509,6 +511,7 @@ namespace game
 
         void SetHpRegenOnClear(float v) { m_temperFinal.hpRegenOnClear = v; }
         void SetFragileMax(float v) { m_temperFinal.fragileMax = v; }
+		void SetCurrentFragile(float v) { m_fragileGaugeCurrent = v; }
         void SetFragileRegenOnClear(float v) { m_temperFinal.fragileRegenOnClear = v; }
         void SetFragileGainRate(float v) { m_temperFinal.fragileGainRate = v; }
         void SetDashInvincibleTime(float v) { m_temperFinal.dashInvincibleTime = v; }

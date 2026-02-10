@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterUpdateActivationSwitch.h"
 
 #include <Engine/Core/System/MyTime.h>
@@ -11,7 +11,15 @@ namespace game
     void MonsterUpdateActivationSwitch::Awake()
     {
         // 초기 상태: 업데이트 비활성화
-        m_isUpdateAllowed = false;
+        m_isUpdateAllowed = true;
+        m_elapsedTime = 0.0f;
+        m_hasActivated = false;
+    }
+
+    void MonsterUpdateActivationSwitch::Start()
+    {
+        // 초기 상태: 업데이트 비활성화
+        m_isUpdateAllowed = true;
         m_elapsedTime = 0.0f;
         m_hasActivated = false;
     }
@@ -24,13 +32,26 @@ namespace game
         // 시간 누적
         m_elapsedTime += engine::Time::DeltaTime();
 
+       
         // 설정된 시간이 지나면 업데이트 허용
         if (m_elapsedTime >= m_activationDelay)
         {
             m_isUpdateAllowed = true;
             m_hasActivated = true;
         }
+        else if (m_elapsedTime >= 0.05f)
+        {
+            m_isUpdateAllowed = false;
+        } 
+    }  
+
+    void MonsterUpdateActivationSwitch::SetSwitchActivation(bool setparam)
+    {
+        m_isUpdateAllowed = setparam;
+        m_hasActivated = setparam;
     }
+
+  
 
     // ═══════════════════════════════════════════════════════════════
     // GUI / 직렬화

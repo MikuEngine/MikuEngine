@@ -211,6 +211,14 @@ namespace game
         m_stageClearRewardEmerald = emerald;
     }
 
+    void StageManager::RegisterTutorialMonster(engine::GameObject* monster)
+    {
+        if (monster)
+        {
+            m_spawnedMonsters.push_back(engine::Ptr<engine::GameObject>(monster));
+        }
+    }
+
     void StageManager::Update()
     {
         bool hasMonsters = std::any_of(m_spawnedMonsters.begin(), m_spawnedMonsters.end(),
@@ -238,8 +246,11 @@ namespace game
                     }
                 }
 
-                SetActiveDoor("StageDoor_Next", true);
-                SetActiveDoor("StageDoor_Exit", false);
+                if (scene->GetName() != "10_PROTO_Tutorial")
+                {
+                    SetActiveDoor("StageDoor_Next", true);
+                    SetActiveDoor("StageDoor_Exit", false);
+                }
             }
         }
     }
@@ -256,6 +267,7 @@ namespace game
         m_runRuby = m_runSapphire = m_runEmerald = 0;
         m_currentStage = 1;
         ResetFragileGauge();  // 로비로 복귀 시 프레자일 게이지 초기화
+        ResetRunHp(100.0f);
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
         GameScene::Change(SceneID::Lobby);
     }

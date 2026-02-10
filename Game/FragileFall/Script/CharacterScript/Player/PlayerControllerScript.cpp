@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -62,6 +62,26 @@ namespace game
 		{
 			m_fragileGaugeCurrent = savedFragileGauge;
 		}
+
+		m_PlayerCurrentHP = StageManager::Get().GetRunHP();
+		m_PlayerMaxHP = 100.0f;
+
+
+		// sound notify 바인딩
+		auto animMesh = engine::GameObject::Find("PlayerAnimMesh");
+		if (!animMesh) return;
+		auto animator = animMesh->GetComponent<engine::SkeletalAnimator>();
+		if (!animator) return;
+
+		animator->BindNotify("Event_LeftFootStep", [this]()
+			{
+				engine::SoundSystem::Get().Play("Player_FootStep_Left_Random", "SFX/Player", true);
+			});
+
+		animator->BindNotify("Event_RightFootStep", [this]()
+			{
+				engine::SoundSystem::Get().Play("Player_FootStep_Right_Random", "SFX/Player", true);
+			});
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -685,7 +705,8 @@ namespace game
 				{
 					m_logicFSM->SetTrigger("DashComplete");
 				}
-			}
+			}			
+
 		}
 		else if (state == "Execution")
 		{
@@ -888,15 +909,20 @@ namespace game
 			// 이동 입력이 없으면 대쉬 취소 (안전 장치)
 			return;
 		}
-
+		
 		m_afterimage->BeginRecording();
 
 		moveDir.y = 0.0f;
 		moveDir.Normalize();
 
 		m_dashDirection = moveDir;
+
+		engine::Vector3 dashStartSpeed = m_dashDirection * m_dashInitSpeed;
+		m_rigidbody->SetLinearVelocity(dashStartSpeed);
+
 		m_isDashing = true;
 		m_dashElapsedTime = 0.0f;
+
 		
 		// ═══════════════════════════════════════════════════════════════
 		// 감속 시스템 초기화
@@ -930,7 +956,7 @@ namespace game
 		if (m_rigidbody && m_rigidbody->IsDynamic())
 		{
 			// 대쉬 Impulse 계산: 방향 * 속도 * 배율
-			float dashImpulse = m_temperFinal.moveSpeed * m_temperFinal.dashDistance;
+			float dashImpulse = m_dashInitSpeed * m_temperFinal.dashDistance;
 			engine::Vector3 impulseForce = m_dashDirection * dashImpulse;
 			
 			m_rigidbody->AddForce(impulseForce, engine::ForceMode::Impulse);
@@ -1697,22 +1723,29 @@ namespace game
 		ImGui::Text("References:");
 		ImGui::InputText("AimPointer Object", &m_aimPointerObjectName);
 
-		// 프레자일 게이지 (몬스터 있을 때 상승, 직렬화·GUI 조정)
-		ImGui::Separator();
-		ImGui::Text("Fragile Gauge:");
-		ImGui::DragFloat("Fragile Gauge Max", &m_fragileGaugeMax, 1.0f, 1.0f, 1000.0f);
-		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("최대치. 몬스터가 있을 때 이 값까지 상승.");
-		ImGui::DragFloat("Fragile Gauge Rise/sec", &m_fragileGaugeRisePerSecond, 0.5f, 0.0f, 200.0f);
-		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("몬스터가 있을 때 초당 상승량.");
-		float gaugeRatio = m_fragileGaugeMax > 0.0f ? (m_fragileGaugeCurrent / m_fragileGaugeMax) : 0.0f;
-		ImGui::Text("Current: %.1f / %.1f", m_fragileGaugeCurrent, m_fragileGaugeMax);
-		ImGui::ProgressBar(gaugeRatio, ImVec2(-1, 0), "");
+	// 프레자일 게이지 (몬스터 있을 때 상승, 직렬화·GUI 조정)
+	ImGui::Separator();
+	ImGui::Text("Fragile Gauge:");
+	ImGui::DragFloat("Fragile Gauge Max", &m_fragileGaugeMax, 1.0f, 1.0f, 1000.0f);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("최대치. 몬스터가 있을 때 이 값까지 상승.");
+	ImGui::DragFloat("Fragile Gauge Rise/sec", &m_fragileGaugeRisePerSecond, 0.5f, 0.0f, 200.0f);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("몬스터가 있을 때 초당 상승량.");
+	float gaugeRatio = m_fragileGaugeMax > 0.0f ? (m_fragileGaugeCurrent / m_fragileGaugeMax) : 0.0f;
+	ImGui::Text("Current: %.1f / %.1f", m_fragileGaugeCurrent, m_fragileGaugeMax);
+	ImGui::ProgressBar(gaugeRatio, ImVec2(-1, 0), "");
 
-		ImGui::Separator();
-		ImGui::Text("Runtime Info:");
-		ImGui::Text("Is Moving Backward: %s", m_isBackward ? "Yes" : "No");
+	// 무적 상태
+	ImGui::Separator();
+	ImGui::Text("Invincibility:");
+	ImGui::Checkbox("Is Invincible", &m_isInvincible);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("무적 상태 (데미지 무시)");
+
+	ImGui::Separator();
+	ImGui::Text("Runtime Info:");
+	ImGui::Text("Is Moving Backward: %s", m_isBackward ? "Yes" : "No");
 
 		ImGui::Unindent();
 
@@ -1767,11 +1800,14 @@ namespace game
 		j["DashRechargeTime"] = m_dashRechargeTime;
 		j["PostDashQuickFireDuration"] = m_postDashQuickFireDuration;
 
-		// 프레자일 게이지
-		j["FragileGaugeCurrent"] = m_fragileGaugeCurrent;
-		j["FragileGaugeMax"] = m_fragileGaugeMax;
-		j["FragileGaugeRisePerSecond"] = m_fragileGaugeRisePerSecond;
-	}
+	// 프레자일 게이지
+	j["FragileGaugeCurrent"] = m_fragileGaugeCurrent;
+	j["FragileGaugeMax"] = m_fragileGaugeMax;
+	j["FragileGaugeRisePerSecond"] = m_fragileGaugeRisePerSecond;
+	
+	// 무적 상태
+	j["IsInvincible"] = m_isInvincible;
+}
 
 	void PlayerControllerScript::Load(const engine::json& j)
 	{
@@ -1850,38 +1886,42 @@ namespace game
 		if (j.contains("PostDashQuickFireDuration"))
 			m_postDashQuickFireDuration = j["PostDashQuickFireDuration"].get<float>();
 
-		// 프레자일 게이지
-		if (j.contains("FragileGaugeCurrent"))
-			m_fragileGaugeCurrent = j["FragileGaugeCurrent"].get<float>();
-		if (j.contains("FragileGaugeMax"))
-			m_fragileGaugeMax = j["FragileGaugeMax"].get<float>();
-		if (j.contains("FragileGaugeRisePerSecond"))
-			m_fragileGaugeRisePerSecond = j["FragileGaugeRisePerSecond"].get<float>();
-		
-		// ═══════════════════════════════════════════════════════════════
-		// Base값 로드 완료 후 강화 적용하여 실제값 계산
-		// ═══════════════════════════════════════════════════════════════
-		PlayerTemperManager::ApplyTemper(this);
-	}
+	// 프레자일 게이지
+	if (j.contains("FragileGaugeCurrent"))
+		m_fragileGaugeCurrent = j["FragileGaugeCurrent"].get<float>();
+	if (j.contains("FragileGaugeMax"))
+		m_fragileGaugeMax = j["FragileGaugeMax"].get<float>();
+	if (j.contains("FragileGaugeRisePerSecond"))
+		m_fragileGaugeRisePerSecond = j["FragileGaugeRisePerSecond"].get<float>();
+	
+	// 무적 상태
+	if (j.contains("IsInvincible"))
+		m_isInvincible = j["IsInvincible"].get<bool>();
+	
+	// ═══════════════════════════════════════════════════════════════
+	// Base값 로드 완료 후 강화 적용하여 실제값 계산
+	// ═══════════════════════════════════════════════════════════════
+	PlayerTemperManager::ApplyTemper(this);
+}
 
 	// ═══════════════════════════════════════════════════════════════
 	// 데미지 처리
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::TakeDamage(float damage)
 	{
-		if (damage <= 0) return;
-		
-		m_PlayerCurrentHP -= damage;
-		
-		if (m_onDamaged)
+		if (m_isInvincible)
 		{
-			m_onDamaged();
+			return;
 		}
+		if (damage <= 0.0f) return;
 
-		if (m_PlayerCurrentHP < 0)
-		{
-			m_PlayerCurrentHP = 0;
-		}
+		m_PlayerCurrentHP -= damage;
+		if (m_PlayerCurrentHP < 0.0f) m_PlayerCurrentHP = 0.0f;
+
+		StageManager::Get().SetRunHP(m_PlayerCurrentHP);
+
+		if (m_onDamaged) m_onDamaged();
+
 		// 사망 전이는 UpdateGameLogic에서 HP 조건으로 Dead 상태 전이 후, SceneController_Play에서 Fail() 호출
 	}
 }

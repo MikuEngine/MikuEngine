@@ -22,7 +22,7 @@ namespace game
     }
 
     void BaseControllerScript::Update()
-    {
+    {        
         // 1. 입력 처리 → FSM 파라미터 설정
         ProcessInput();
         

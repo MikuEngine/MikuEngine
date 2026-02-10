@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -160,9 +160,11 @@ namespace game
         // ─────────────────────────────────────────────
         // 업데이트 중지 시스템 (MonsterUpdateSwitch 연동)
         // ─────────────────────────────────────────────
-        bool m_isDoUpdate = false;                   // 업데이트 실행 여부 (기본값: false, 스위치가 활성화되면 true)
-        bool m_hasSwitchActivated = false;           // 스위치가 한 번이라도 활성화되었는지
+        bool m_isDoUpdate = false;                   // 업데이트 실행 여부 (기본값:true -> 첫번째 Idle진입 확인 후 false)
+        bool m_isReadyAndWait = false;
+        bool m_isActive = false;
         
+
         // ─────────────────────────────────────────────
         // Fragile 부활 시스템
         // ─────────────────────────────────────────────

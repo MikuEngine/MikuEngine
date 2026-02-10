@@ -209,9 +209,11 @@
     <ClCompile Include="Script\ParticleAttachment.cpp" />
     <ClCompile Include="Script\PathfindTest.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerAimMeshController.cpp" />
+    <ClCompile Include="Script\PlayerPreviewScript.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
+    <ClCompile Include="Script\Scene\SceneController_Tutorial.cpp" />
     <ClCompile Include="Script\Scene\TutorialController.cpp" />
     <ClCompile Include="Script\StateTextRenderer.cpp" />
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
@@ -296,9 +298,11 @@
     <ClInclude Include="Script\ParticleAttachment.h" />
     <ClInclude Include="Script\PathfindTest.h" />
     <ClInclude Include="Script\CharacterScript\Player\PlayerAimMeshController.h" />
+    <ClInclude Include="Script\PlayerPreviewScript.h" />
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />
     <ClInclude Include="Script\Scene\SceneController_Main.h" />
+    <ClInclude Include="Script\Scene\SceneController_Tutorial.h" />
     <ClInclude Include="Script\Scene\TutorialController.h" />
     <ClInclude Include="Script\StateTextRenderer.h" />
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />

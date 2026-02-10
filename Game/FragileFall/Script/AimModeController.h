@@ -66,6 +66,7 @@ namespace game
     private:
         AimMode m_baseMode = AimMode::Pointer;
         bool    m_combatAimEnabled = false;
+        bool    m_isOnExecutionTarget = false;
         bool    m_paused = false;
 
         AimMode ComputeEffectiveMode() const;
@@ -92,7 +93,7 @@ namespace game
         std::array<std::string, (int)AimCursorState::Count> m_cursorTexByState;
         std::array<engine::Vector2, (int)AimCursorState::Count> m_cursorPivotByState;
 
-        engine::Vector2 m_cursorSize{ 30.0f, 30.0f };
+        engine::Vector2 m_cursorSize{ 50.0f, 50.0f };
         engine::Vector2 m_cursorPivot{ 0.0f, 0.0f };
 
         // 월드 좌표 계산 설정
