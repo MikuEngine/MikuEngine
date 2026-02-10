@@ -7763,15 +7763,8 @@
                     "Active": true
                 },
                 {
-                    "Type": "UIKillPopupQueue",
-                    "Active": true,
-                    "LifeTime": 3.0,
-                    "Spacing": 110.0,
-                    "SpawnPos": {
-                        "x": 660.0,
-                        "y": -400.0
-                    },
-                    "MaxQueue": 3
+                    "Type": "HUDController",
+                    "Active": true
                 }
             ]
         },
