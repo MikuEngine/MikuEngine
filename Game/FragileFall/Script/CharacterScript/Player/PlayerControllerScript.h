@@ -98,6 +98,9 @@ namespace game
         //float m_dashImpulseMultiplier = 15.0f;          // 대쉬 Impulse 배율 (m_moveSpeed 기준)
         //float m_dashCooldown = 0.2f;                    // 대쉬 쿨다운 (초)
 
+
+        //치트-무적
+        bool m_isInvincible = false;
         
         // 대쉬 기준 속도. 이 값은 상수로 쓰인다.
         const float m_dashInitSpeed = 8.0f;
