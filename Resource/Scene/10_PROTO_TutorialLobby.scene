@@ -2204,6 +2204,7 @@
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
+                    "PostExecutionDuration": 0.5,
                     "CursorTexturesByState": [
                         "Resource/Texture/UI/Image/Cursor_Default.png",
                         "Resource/Texture/UI/Image/Cursor_Click.png",
@@ -5435,7 +5436,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_03_Yellow.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5542,7 +5543,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_01_White.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item01_Blue.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5649,7 +5650,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_02_Purple.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6254,7 +6255,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_03_Yellow.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6485,7 +6486,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_01_White.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item01_Blue.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6716,7 +6717,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_02_Purple.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7663,7 +7664,7 @@
             "ID": 94,
             "ParentID": 93,
             "Name": "AttackNodes",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -7856,7 +7857,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7993,7 +7994,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8130,7 +8131,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8268,7 +8269,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8375,7 +8376,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSizeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8512,7 +8513,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8649,7 +8650,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8787,7 +8788,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8924,7 +8925,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9061,7 +9062,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9199,7 +9200,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9378,7 +9379,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9516,7 +9517,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9653,7 +9654,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9802,7 +9803,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10023,7 +10024,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_GuageRegeon.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10158,7 +10159,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_RangeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10295,7 +10296,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10425,7 +10426,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_RangeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10555,7 +10556,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10709,7 +10710,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_GuageRegeon.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10765,7 +10766,7 @@
             "ID": 117,
             "ParentID": 93,
             "Name": "SurviveNodes",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -12663,7 +12664,7 @@
             "ID": 131,
             "ParentID": 93,
             "Name": "MoveNodes",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -12828,7 +12829,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12956,7 +12957,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13084,7 +13085,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashSpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13212,7 +13213,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13372,7 +13373,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13509,7 +13510,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashSpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13647,7 +13648,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SUR_InvincibleTime.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13778,7 +13779,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashCoolDown.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13909,7 +13910,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14039,7 +14040,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SUR_InvincibleTime.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14169,7 +14170,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashCoolDown.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14307,7 +14308,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15411,7 +15412,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -15597,7 +15598,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15888,7 +15889,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -16074,7 +16075,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16365,7 +16366,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -16551,7 +16552,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,

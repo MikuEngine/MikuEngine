@@ -2064,6 +2064,7 @@
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
+                    "PostExecutionDuration": 0.5,
                     "CursorTexturesByState": [
                         "Resource/Texture/UI/Image/Cursor_Default.png",
                         "Resource/Texture/UI/Image/Cursor_Click.png",
