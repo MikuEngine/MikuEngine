@@ -364,7 +364,7 @@ namespace game
         m_image->ClearEffect();
         m_click->SetInteractable(s != NodeState::Disabled);
 
-        float speed, intensity, width;
+        float speed, intensity/*, width*/; // warning C4101: 'width' :참조되지 않은 지역 변수입니다.
         engine::Vector4 color = m_baseColor;
 
         engine::Vector4 outline = { 0,0,0,0 };
