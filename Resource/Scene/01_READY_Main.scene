@@ -147,7 +147,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/Miku.png",
+                    "TexturePath": "Resource/Texture/Fragile_Fall_Main_Title_illust.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -202,7 +202,7 @@
         {
             "ID": 3,
             "ParentID": 1,
-            "Name": "GameTileText",
+            "Name": "UIObject",
             "Active": true,
             "Components": [
                 {
@@ -230,10 +230,10 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -300.0
+                        "y": 0.0
                     },
-                    "Width": 100.0,
-                    "Height": 100.0,
+                    "Width": 1920.0,
+                    "Height": 1080.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
@@ -249,14 +249,34 @@
                     "RotationZDeg": 0.0
                 },
                 {
-                    "Type": "UIText",
+                    "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "Fragile\nFall",
-                    "FontPath": "Resource/Font/omyu pretty_Font.ttf",
-                    "FontPx": 150,
+                    "TexturePath": "Resource/Texture/Fragile_Fall_Main_Title_Logo.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -264,11 +284,25 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
                 }
             ]
         },
@@ -358,8 +392,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -80.0,
-                        "y": 0.0
+                        "x": 0.0,
+                        "y": 40.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -652,9 +686,9 @@
                     "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 60,
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -876,9 +910,9 @@
                     "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 60,
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -1100,9 +1134,9 @@
                     "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 60,
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -1324,9 +1358,9 @@
                     "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 60,
                     "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
