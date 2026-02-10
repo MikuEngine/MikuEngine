@@ -87,5 +87,6 @@ namespace game
         engine::UIText* m_currencyEmeraldText = nullptr;
         engine::UIProgressBar* m_fragileGaugeProgress = nullptr;
         engine::UIImage* m_hitImage = nullptr;
+        engine::UIImage* m_fragileImage = nullptr;
     };
 }

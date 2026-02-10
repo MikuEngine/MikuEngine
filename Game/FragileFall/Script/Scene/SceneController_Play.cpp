@@ -109,6 +109,9 @@ namespace game
         if (auto* go = engine::GameObject::Find("HitImage"))
             m_hitImage = go->GetComponent<engine::UIImage>();
 
+        if (auto* go = engine::GameObject::Find("FragileImage"))
+            m_fragileImage = go->GetComponent<engine::UIImage>();
+
         if (m_playerScript)
         {
             m_playerScript->SetOnDamaged([this] {
@@ -199,8 +202,48 @@ namespace game
         if (m_fragileGaugeProgress && m_playerScript)
         {
             float maxVal = m_playerScript->GetFragileGaugeMax();
-            float t = (maxVal > 0.0f) ? (m_playerScript->GetFragileGaugeCurrent() / maxVal) : 0.0f;
-            m_fragileGaugeProgress->SetValue(t);
+            float currentVal = m_playerScript->GetFragileGaugeCurrent();
+            float ratio = (maxVal > 0.0f) ? (currentVal / maxVal) : 0.0f;
+            m_fragileGaugeProgress->SetValue(ratio);
+
+            // 프레자일 게이지 화면 연출 (보류)
+            //if (ratio > 0.3f)
+            //{
+            //    m_fragileImage->SetActive(true);
+            //    m_fragileImage->SetEffect(engine::UIEffectType::AbyssalDecay);
+
+            //    // --- 단계별 강도 보정 (0.3, 0.6, 0.9에서 확 바뀌게) ---
+            //    float intensity = 0.0f;
+
+            //    if (ratio >= 0.9f) {
+            //        // 90% 이상: 거의 화면을 다 덮는 수준 (강도 0.8 ~ 1.0)
+            //        intensity = 0.8f + (ratio - 0.9f) * 2.0f;
+            //    }
+            //    else if (ratio >= 0.6f) {
+            //        // 60% 이상: 시야를 절반 정도 가림 (강도 0.5 ~ 0.7)
+            //        intensity = 0.5f + (ratio - 0.6f) * 0.66f;
+            //    }
+            //    else {
+            //        // 30% 이상: 외곽 위주로 잠식 (강도 0.2 ~ 0.4)
+            //        intensity = 0.2f + (ratio - 0.3f) * 0.66f;
+            //    }
+
+            //    // 값 범위 고정 (0.01 ~ 1.0) 
+            //    intensity = std::max(0.01f, std::min(1.0f, intensity));
+
+            //    // 셰이더의 intensity = saturate((g_time - startTime) / 1.0f) 이므로
+            //    // startTime = g_time - intensity 가 되면 원하는 강도 지점으로 고정됨
+            //    float fakeStartTime = engine::Time::UnscaledTime() - intensity;
+
+            //    m_fragileImage->SetEffectParam(1, { fakeStartTime, 0.0f, 0.0f, 0.0f });
+            //}
+            //else
+            //{
+            //    // 30% 미만일 때 파라미터 초기화 후 비활성화
+            //    m_fragileImage->SetEffectParam(1, { 0.0f, 0.0f, 0.0f, 0.0f });
+            //    m_fragileImage->ClearEffect();
+            //    m_fragileImage->SetActive(false);
+            //}
         }
 
         // 플레이어 사망 시 실패 (HP 0, 프레자일 100%, 또는 Dead 상태)
