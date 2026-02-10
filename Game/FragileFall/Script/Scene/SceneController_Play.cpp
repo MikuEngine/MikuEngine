@@ -61,12 +61,7 @@ namespace game
         if (m_bound) return;
         m_bound = true;
 
-        std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
-
-        if (currentScene != "10_PROTO_Tutorial")
-        {
-            StageManager::Get().BeginStage(); // 아직 맵 프리팹이 없어서 스테이지 세팅 불가
-        }
+        StageManager::Get().BeginStage(); // 아직 맵 프리팹이 없어서 스테이지 세팅 불가
 
         g_msg.Load("Resource/Data/Message/MessageTable.csv");
 
