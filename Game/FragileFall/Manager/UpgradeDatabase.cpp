@@ -99,23 +99,41 @@ namespace game
             return false;
         }
 
-        // 주인님 프로젝트 enum 이름에 맞춰 채우시면 됩니다.
-        // (여기서는 “문자열 키”를 CSV에서 쓰는 전제로 샘플만 넣었습니다.)
         static bool ParseStatKey(const std::string& s, game::StatType& out)
         {
             const std::string t = Trim(s);
 
-            if (t == "AtkDmg") return (out = game::StatType::AtkDmg), true;
-            if (t == "AtkSpeed") return (out = game::StatType::AtkSpeed), true;
-            if (t == "BulletRange") return (out = game::StatType::BulletRange), true;
-            if (t == "BulletSize") return (out = game::StatType::BulletSize), true;
-            if (t == "BulletSpeed") return (out = game::StatType::BulletSpeed), true;
+            // --- Attack ---
+            if (t == "AtkDmg")          return (out = game::StatType::AtkDmg), true;
+            if (t == "AtkSpeed")       return (out = game::StatType::AtkSpeed), true;
+            if (t == "BulletRange")    return (out = game::StatType::BulletRange), true;
+            if (t == "BulletSize")     return (out = game::StatType::BulletSize), true;
+            if (t == "BulletSpeed")    return (out = game::StatType::BulletSpeed), true;
 
-            if (t == "MoveSpeed") return (out = game::StatType::MoveSpeed), true;
-            if (t == "Dash_Distance") return (out = game::StatType::Dash_Distance), true;
-            if (t == "Dash_Cooldown") return (out = game::StatType::Dash_Cooldown), true;
+            // --- Execution ---
+            if (t == "Exe_FragileRegen")     return (out = game::StatType::Exe_FragileRegen), true;
+            if (t == "Exe_Range")            return (out = game::StatType::Exe_Range), true;
+            if (t == "Exe_SplashDmg")        return (out = game::StatType::Exe_SplashDmg), true;
+            if (t == "Exe_SplashRange")      return (out = game::StatType::Exe_SplashRange), true;
+            if (t == "Exe_DashChargeRegen")  return (out = game::StatType::Exe_DashChargeRegen), true;
+            if (t == "Exe_HpRegen")           return (out = game::StatType::Exe_HpRegen), true;
 
-            if (t == "BulletDouble") return (out = game::StatType::BulletDouble), true;
+            // --- Vital ---
+            if (t == "Hp_Max")               return (out = game::StatType::Hp_Max), true;
+            if (t == "Hp_RegenOnClear")      return (out = game::StatType::Hp_RegenOnClear), true;
+            if (t == "Fragile_Max")          return (out = game::StatType::Fragile_Max), true;
+            if (t == "Fragile_RegenOnClear") return (out = game::StatType::Fragile_RegenOnClear), true;
+            if (t == "Fragile_GainRate")     return (out = game::StatType::Fragile_GainRate), true;
+            if (t == "InvincibleTime")       return (out = game::StatType::InvincibleTime), true;
+
+            // --- Movement ---
+            if (t == "MoveSpeed")            return (out = game::StatType::MoveSpeed), true;
+            if (t == "Dash_Distance")        return (out = game::StatType::Dash_Distance), true;
+            if (t == "Dash_Cooldown")        return (out = game::StatType::Dash_Cooldown), true;
+            if (t == "Dash_InvincibleTime")  return (out = game::StatType::Dash_InvincibleTime), true;
+
+            // --- Special ---
+            if (t == "BulletDouble")         return (out = game::StatType::BulletDouble), true;
 
             return false;
         }
@@ -130,18 +148,45 @@ namespace game
             ExecMaxStacks,
         };
 
-        static bool ParseBuffKey(const std::string& s, BuffKey& out)
+        static bool ParseBuffId(const std::string& s, game::BuffId& out)
         {
             const std::string t = Trim(s);
 
-            if (t == "DashBuffDuration")         return (out = BuffKey::DashDuration), true;
-            if (t == "DashBuffMoveSpeedBonus")   return (out = BuffKey::DashMoveSpeedBonus), true;
-
-            if (t == "ExecutionBuffDuration")    return (out = BuffKey::ExecDuration), true;
-            if (t == "ExecutionBuffAtkSpeedBonus") return (out = BuffKey::ExecAtkSpeedBonus), true;
-            if (t == "ExecutionBuffMaxStacks")   return (out = BuffKey::ExecMaxStacks), true;
+            if (t == "Dash_MoveSpeed")     return (out = game::BuffId::Dash_MoveSpeed), true;
+            if (t == "Dash_AtkDmg")        return (out = game::BuffId::Dash_AtkDmg), true;
+            if (t == "Execution_AtkSpeed") return (out = game::BuffId::Execution_AtkSpeed), true;
 
             return false;
+        }
+
+        static bool ParseBuffField(const std::string& s, game::BuffField& out)
+        {
+            const std::string t = Trim(s);
+
+            if (t == "Duration") return (out = game::BuffField::Duration), true;
+            if (t == "Bonus")    return (out = game::BuffField::Bonus), true;
+
+            return false;
+        }
+
+        static bool ParseBuffKey(const std::string& keyStr, game::BuffId& outBuff, game::BuffField& outField)
+        {
+            const std::string t = Trim(keyStr);
+
+            const size_t dot = t.find('.');
+            if (dot == std::string::npos)
+                return false;
+
+            const std::string left = t.substr(0, dot);       // BuffId
+            const std::string right = t.substr(dot + 1);     // Field
+
+            if (!ParseBuffId(left, outBuff))
+                return false;
+
+            if (!ParseBuffField(right, outField))
+                return false;
+
+            return true;
         }
 
         enum class SpecialKey
@@ -277,9 +322,16 @@ namespace game
                     // 여기서는 “BulletDouble은 Bool로 켜고 끄기”로 가정
                     e.stat = game::StatType::BulletDouble;
                 }
-                else
+                else if (e.kind == game::TemperEffect::Kind::Buff)
                 {
-                    (void)keyStr;
+                    game::BuffId bid{};
+                    game::BuffField bf{};
+
+                    if (!ParseBuffKey(keyStr, bid, bf))
+                        continue;
+
+                    e.buff = bid;
+                    e.field = bf;
                 }
 
                 out.effects.push_back(e);
