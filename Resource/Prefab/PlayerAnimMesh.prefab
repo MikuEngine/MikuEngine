@@ -157,12 +157,30 @@
                         {
                             "Name": "WalkBackward",
                             "Path": "Resource/Animation/main_character_animation_running.fbx",
-                            "Notifies": []
+                            "Notifies": [
+                                {
+                                    "Name": "Event_LeftFootStep",
+                                    "Time": 0.24870260059833527
+                                },
+                                {
+                                    "Name": "Event_RightFootStep",
+                                    "Time": 0.7209581136703491
+                                }
+                            ]
                         },
                         {
                             "Name": "WalkForward",
                             "Path": "Resource/Animation/main_character_animation_running.fbx",
-                            "Notifies": []
+                            "Notifies": [
+                                {
+                                    "Name": "Event_LeftFootStep",
+                                    "Time": 0.20958083868026733
+                                },
+                                {
+                                    "Name": "Event_RightFootStep",
+                                    "Time": 0.7153692841529846
+                                }
+                            ]
                         }
                     ],
                     "Layers": [

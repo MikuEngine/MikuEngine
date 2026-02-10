@@ -112,7 +112,7 @@ namespace engine
 
         void RefreshSoundList();
 
-        void Play(const std::string& key, const std::string& option, float volume = 1.0f, float pitch = 1.0f, LifeScope scope = LifeScope::Scene);
+        void Play(const std::string& key, const std::string& option, bool randomPitch = false, float volume = 1.0f, float pitch = 1.0f, LifeScope scope = LifeScope::Scene);
         void PlayUI(const std::string name);
 
         // FMOD Listener 설정 (CameraSystem에서 Main Camera 정보를 받아와서 호출해줘야 함)

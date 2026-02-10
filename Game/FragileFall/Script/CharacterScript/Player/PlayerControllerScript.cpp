@@ -65,6 +65,23 @@ namespace game
 
 		m_PlayerCurrentHP = StageManager::Get().GetRunHP();
 		m_PlayerMaxHP = 100.0f;
+
+
+		// sound notify 바인딩
+		auto animMesh = engine::GameObject::Find("PlayerAnimMesh");
+		if (!animMesh) return;
+		auto animator = animMesh->GetComponent<engine::SkeletalAnimator>();
+		if (!animator) return;
+
+		animator->BindNotify("Event_LeftFootStep", [this]()
+			{
+				engine::SoundSystem::Get().Play("Player_FootStep_Left_Random", "SFX/Player", true);
+			});
+
+		animator->BindNotify("Event_RightFootStep", [this]()
+			{
+				engine::SoundSystem::Get().Play("Player_FootStep_Right_Random", "SFX/Player", true);
+			});
 	}
 
 	// ═══════════════════════════════════════════════════════════════

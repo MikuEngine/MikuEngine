@@ -671,7 +671,7 @@ namespace engine
         m_listenerUp = up;
     }
 
-    void SoundSystem::Play(const std::string& key, const std::string& option, float volume, float pitch, LifeScope scope)
+    void SoundSystem::Play(const std::string& key, const std::string& option, bool randomPitch, float volume, float pitch, LifeScope scope)
     {
         Sound* targetSound = nullptr;
 
@@ -707,13 +707,23 @@ namespace engine
             channel->setMode(FMOD_2D);
 
             channel->setVolume(volume);
-            channel->setPitch(pitch);
 
+            float finalPitch = pitch;
+
+            if (randomPitch)
+            {
+                float randomRatio = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+                // 0.8(최소) + (0.0~1.0 * 0.4(범위)) = 0.8 ~ 1.6
+                finalPitch = 0.8f + (randomRatio * 0.8f);
+            }
+
+            channel->setPitch(finalPitch);
             channel->setPaused(false);
         }
     }
 
-    void SoundSystem::PlayUI(const std::string name) { Play(name, "SFX", 1.0f, 1.0f, LifeScope::Global); }
+    void SoundSystem::PlayUI(const std::string name) { Play(name, "SFX", false, 1.0f, 1.0f, LifeScope::Global); }
     void SoundSystem::SetMasterVolume(float v) { m_master = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetBGMVolume(float v) { m_bgm = Clamp01(v); ApplyVolumes(); }
     void SoundSystem::SetSFXVolume(float v) { m_sfx = Clamp01(v); ApplyVolumes(); }
