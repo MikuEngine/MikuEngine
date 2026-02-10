@@ -24,9 +24,12 @@ namespace game
 	void MonsterScript::Awake()
 	{
 		BaseControllerScript::Awake();
-		
-		// 모든 몬스터는 스위치가 활성화될 때까지 업데이트 중지
-		m_isDoUpdate = false;
+
+		m_isDoUpdate = true;
+		m_isReadyAndWait = false;
+		m_isActive = false;
+		//m_isFirstIdle = true;
+		//m_isReadyAndWait = false;
 	}
 
 	void MonsterScript::Start()
@@ -66,14 +69,22 @@ namespace game
 		}
 
 		// Rigidbody Mass, Damping, Constraints는 씬 파일에서 로드됨
-				
+
 
 		// 플레이어 찾기
 		FindPlayer();
 
 		// 첫 발사 쿨타임 설정 (게임 시작 즉시 발사 방지)
 		m_fireTimer = 0.0f;
-		
+
+		// ═══════════════════════════════════════════════════════════════
+		// 업데이트 제어: Idle 도달까지는 실행, 이후 스위치 타이머 적용
+		// ═══════════════════════════════════════════════════════════════
+		m_isDoUpdate = true;
+		m_isReadyAndWait = false;
+		m_isActive = false;
+
+
 		// ─────────────────────────────────────────────
 		// MonsterUpdateSwitch 찾기 (한 번만 실행)
 		// ─────────────────────────────────────────────
@@ -86,39 +97,40 @@ namespace game
 				m_updateSwitch = switchObj->GetComponent<MonsterUpdateActivationSwitch>();
 			}
 		}
-		
-		// 스위치가 없으면 즉시 업데이트 활성화
-		if (!m_updateSwitch)
-		{
-			m_isDoUpdate = true;
-			m_hasSwitchActivated = true;
-		}
 	}
 
 	void MonsterScript::Update()
 	{
-		// 업데이트 중지 체크 (스위치 연동)
+		m_isDoUpdate = m_updateSwitch->GetIsUpdateAllowed();
+
 		if (!m_isDoUpdate)
 		{
-			CheckAndApplyUpdateSwitch();
 			return;
 		}
-		
+		else
+		{			
+			if (m_updateSwitch->m_hasActivated)
+			{
+				m_isActive = true;
+			}
+		}
+
+
 		// 부모 클래스 Update 호출
 		BaseControllerScript::Update();
 	}
 
-	void MonsterScript::FixedUpdate()
+	// 업데이트 중지 체크 포함
+	inline void MonsterScript::FixedUpdate()
 	{
-		// 업데이트 중지 체크 (스위치 연동)
-		if (!m_isDoUpdate)
+		if (!m_isActive)
 		{
-			CheckAndApplyUpdateSwitch();
 			return;
 		}
-		
+
 		// 부모 클래스 FixedUpdate 호출
 		BaseControllerScript::FixedUpdate();
+
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -139,7 +151,7 @@ namespace game
 
 		// PathfindingAgent 검색 (같은 GameObject에 있어야 함)
 		m_pathfindingAgent = GetGameObject()->GetComponent<engine::PathfindingAgent>();
-		
+
 		// 피격 효과: 원래 색상 저장
 		if (m_skeletalMeshRenderer)
 		{
@@ -147,35 +159,6 @@ namespace game
 		}
 	}
 
-	// ═══════════════════════════════════════════════════════════════
-	// 업데이트 중지 시스템
-	// ═══════════════════════════════════════════════════════════════
-	void MonsterScript::CheckAndApplyUpdateSwitch()
-	{
-		// 이미 스위치가 활성화되었으면 더 이상 체크 안 함 (최적화)
-		if (m_hasSwitchActivated)
-		{
-			m_isDoUpdate = true;
-			return;
-		}
-
-		// 스위치가 없으면 즉시 활성화 (Start()에서 이미 찾음)
-		if (!m_updateSwitch)
-		{
-			m_isDoUpdate = true;
-			m_hasSwitchActivated = true;
-			return;
-		}
-
-		// 스위치 상태 반영
-		m_isDoUpdate = m_updateSwitch->m_isUpdateAllowed;
-
-		// 스위치가 활성화되면 더 이상 체크 안 함
-		if (m_isDoUpdate)
-		{
-			m_hasSwitchActivated = true;
-		}
-	}
 
 	// ═══════════════════════════════════════════════════════════════
 	// 플레이어 추적
@@ -302,12 +285,12 @@ namespace game
 	{
 		constexpr float kPi = 3.14159265f;
 		constexpr float kDegToRad = kPi / 180.0f;
-		
+
 		float maxAngleRad = m_maxLaunchAngle * kDegToRad;
 		float sin2MaxAngle = std::sin(2.0f * maxAngleRad);
-		
+
 		if (sin2MaxAngle < 0.0001f) sin2MaxAngle = 0.0001f;  // 0으로 나누기 방지
-		
+
 		float speed = std::sqrt(m_AttackRange * m_ownGravity / sin2MaxAngle) + 0.001f;
 		return speed;
 	}
@@ -333,12 +316,12 @@ namespace game
 		constexpr float kDegToRad = kPi / 180.0f;
 		constexpr float kMinDistance = 0.5f;
 		constexpr float kMinSpeed = 1.0f;  // 최소 속도
-		
+
 		// 수평 거리 계산 (XZ 평면)
 		float dx = targetPos.x - startPos.x;
 		float dz = targetPos.z - startPos.z;
 		float R = std::sqrt(dx * dx + dz * dz);
-		
+
 		// ─────────────────────────────────────────────
 		// 최소 거리 체크
 		// ─────────────────────────────────────────────
@@ -353,33 +336,33 @@ namespace game
 			if (outSpeed < kMinSpeed) outSpeed = kMinSpeed;
 			return true;
 		}
-		
+
 		// ─────────────────────────────────────────────
 		// 거리에 따른 발사각 선형 매핑
 		//    - 거리 0 → minAngle
 		//    - 거리 = AttackRange → maxAngle
 		// ─────────────────────────────────────────────
 		float t = R / m_AttackRange;  // 0 ~ 1 (1 초과 가능)
-		
+
 		bool inRange = true;
 		if (t > 1.0f)
 		{
 			t = 1.0f;
 			inRange = false;  // 사거리 초과
 		}
-		
+
 		outAngleDeg = m_minLaunchAngle + t * (m_maxLaunchAngle - m_minLaunchAngle);
-		
+
 		// ─────────────────────────────────────────────
 		// 속도 역산: v = sqrt(R × g / sin(2θ))
 		// ─────────────────────────────────────────────
 		float angleRad = outAngleDeg * kDegToRad;
 		float sin2Angle = std::sin(2.0f * angleRad);
 		if (sin2Angle < 0.0001f) sin2Angle = 0.0001f;  // 0으로 나누기 방지
-		
+
 		outSpeed = std::sqrt(R * m_ownGravity / sin2Angle);
 		if (outSpeed < kMinSpeed) outSpeed = kMinSpeed;
-		
+
 		return inRange;
 	}
 
@@ -405,8 +388,8 @@ namespace game
 		engine::Vector3 direction;
 
 		// waypoint 가져오기 시도
-		bool hasValidWaypoint = m_pathfindingAgent->HasPath() && 
-		                        m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
+		bool hasValidWaypoint = m_pathfindingAgent->HasPath() &&
+			m_pathfindingAgent->GetCurrentWaypoint(nextWaypoint);
 
 		if (!hasValidWaypoint)
 		{
@@ -443,7 +426,7 @@ namespace game
 		direction.Normalize();
 
 		RotateToDirection(direction, 0.0f);  // deltaTime 불필요 (물리 엔진이 처리)
-		
+
 		// AddForce 기반 이동 (충돌 응답 보존)
 		ApplyMovementForce(direction, m_moveSpeed);
 	}
@@ -457,7 +440,7 @@ namespace game
 	void MonsterScript::MoveInDirection(const engine::Vector3& direction, float speed)
 	{
 		if (!m_rigidbody || speed <= 0.0f) return;
-		
+
 		engine::Vector3 normalizedDir = direction;
 		if (normalizedDir.LengthSquared() > 0.001f)
 		{
@@ -467,7 +450,7 @@ namespace game
 		{
 			return;  // 방향 벡터가 너무 작으면 무시
 		}
-		
+
 		if (m_rigidbody->IsDynamic())
 		{
 			// Dynamic: AddForce 기반 이동 (충돌 응답 보존)
@@ -490,6 +473,7 @@ namespace game
 	void MonsterScript::ProcessInput()
 	{
 		if (!m_logicFSM) return;
+		//if (!m_isActive) return;
 
 		// 플레이어를 찾지 못했으면 재탐색
 		if (!m_targetPlayer)
@@ -501,7 +485,9 @@ namespace game
 		m_isPlayerInRange = IsPlayerInRange();
 
 		// FSM 파라미터 업데이트
-		m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange);
+
+
+		m_logicFSM->SetParameter("PlayerInRange", m_isPlayerInRange && m_isActive);
 	}
 
 	// ═══════════════════════════════════════════════════════════════
@@ -558,6 +544,7 @@ namespace game
 	void MonsterScript::ExecuteIdleBehaviorNonPhysics()
 	{
 		// 비물리 Idle 처리
+
 	}
 
 	void MonsterScript::ExecuteFragileBehaviorNonPhysics()
@@ -572,7 +559,7 @@ namespace game
 		if (m_deathTimerStarted)
 		{
 			m_deathTimer += engine::Time::DeltaTime();
-			
+
 			if (m_deathTimer >= m_deathDelay)
 			{
 				// 2초 후 오브젝트 파괴
@@ -643,7 +630,11 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void MonsterScript::OnStateEntered(const std::string& state)
 	{
-		if (state == "Fragile")
+		if (state == "Idle")
+		{
+			StopRotation();
+		}
+		else if (state == "Fragile")
 		{
 			StopAllMovement();
 			OnFragile();
@@ -652,10 +643,6 @@ namespace game
 		{
 			StopAllMovement();
 			OnDeath();
-		}
-		else if (state == "Idle")
-		{
-			StopRotation();
 		}
 	}
 
@@ -720,7 +707,7 @@ namespace game
 		// Fragile 상태 진입 시 타이머 시작
 		m_fragileTimer = 0.0f;
 		m_fragileTimerStarted = true;
-		
+
 		// 추후 이펙트나 사운드 추가 가능
 		engine::SoundSystem::Get().Play("Monster_Fragile", "SFX/Monster");
 	}
@@ -730,10 +717,10 @@ namespace game
 		// Dead 상태 진입 시 파괴 타이머 시작
 		m_deathTimer = 0.0f;
 		m_deathTimerStarted = true;
-		
+
 		// Fragile 타이머 정지
 		m_fragileTimerStarted = false;
-		
+
 		// 추후 Death 애니메이션이나 이펙트 재생 가능
 		auto effect = engine::Prefab::Instantiate("Effect_Break_V1.01_big_white");
 		if (effect && effect->GetTransform())
@@ -750,9 +737,9 @@ namespace game
 	void MonsterScript::UpdateFragileTimer(float deltaTime)
 	{
 		if (!m_fragileTimerStarted) return;
-		
+
 		m_fragileTimer += deltaTime;
-		
+
 		// Fragile 시간 초과 시 부활
 		if (m_fragileTimer >= m_fragileTime)
 		{
@@ -764,12 +751,12 @@ namespace game
 	{
 		// 체력 100% 회복
 		m_Hp = m_maxHp;
-		
+
 		// Fragile 상태 해제
 		m_isFragile = false;
 		m_fragileTimerStarted = false;
 		m_fragileTimer = 0.0f;
-		
+
 		// Idle 상태로 전이
 		if (m_logicFSM)
 		{
@@ -777,10 +764,10 @@ namespace game
 			// FSM에 Revive 트리거가 없으면 직접 상태 설정
 			m_logicFSM->SetTrigger("Revive");
 		}
-		
+
 		// 부활 콜백
 		OnRevive();
-		
+
 		LOG_PRINT("[MonsterScript] Monster revived from Fragile state!");
 	}
 
@@ -800,7 +787,7 @@ namespace game
 		//m_monsterData.Type = m_attackType;
 		//m_monsterData.Tier = m_monsterTier;
 		//m_monsterData.Difficulty = m_difficulty;
-		
+
 		// MonsterData에 없는 값들은 MonsterScript에서만 관리
 		// (체력, 이동속도, 공격력, Fragile시간, 인식범위)
 	}
@@ -820,7 +807,7 @@ namespace game
 
 		m_isHitFlashing = true;
 		m_hitFlashTimer = 0.0f;
-		
+
 		// 흰색으로 변경
 		m_skeletalMeshRenderer->SetBaseColor(m_hitFlashColor);
 	}
@@ -844,7 +831,7 @@ namespace game
 
 		m_isHitFlashing = false;
 		m_hitFlashTimer = 0.0f;
-		
+
 		// 원래 색상으로 복원
 		m_skeletalMeshRenderer->SetBaseColor(m_originalColor);
 	}
@@ -983,15 +970,15 @@ namespace game
 		// ─────────────────────────────────────────────
 		ImGui::Separator();
 		ImGui::Text("=== Fire Settings ===");
-		
+
 		if (!HasBulletAttack())
 		{
 			ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "[No Bullet Attack - Settings Disabled]");
 			ImGui::BeginDisabled(true);
 		}
-		
+
 		ImGui::DragFloat("Rotation Speed", &m_rotationSpeed, 0.1f, 0.0f, 10.0f);
-		
+
 		// 단발 모드일 때 fireRate 비활성화
 		if (m_isDoSingleShot)
 		{
@@ -1004,7 +991,7 @@ namespace game
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "(Single Shot Mode - Ignored)");
 		}
-		
+
 		// Parabolic 타입은 속도 자동 계산
 		if (IsParabolicBullet())
 		{
@@ -1019,79 +1006,79 @@ namespace game
 		{
 			ImGui::DragFloat("Bullet Speed", &m_bulletSpeed, 0.1f, 0.1f, 100.0f);
 		}
-		
+
 		ImGui::DragFloat("Bullet Lifetime", &m_bulletLifetime, 0.1f, 0.5f, 10.0f);
-		
-	// 총알 스케일 (슬라이더: 0.5~9.0, 최소값: 0.01)
-	ImGui::DragFloat("Bullet Scale", &m_bulletScale, 0.1f, 0.5f, 9.0f);
-	// 직접 입력 시 0.01 미만 클램프
-	if (m_bulletScale < 0.01f)
-	{
-		m_bulletScale = 0.01f;
-	}
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Min: 0.01)");
-	
-	// ─────────────────────────────────────────────
-	// 포물선 설정 (Parabolic 타입일 때만 표시)
-	// ─────────────────────────────────────────────
-	if (IsParabolicBullet())
-	{
-		ImGui::Separator();
-		ImGui::Text("=== Parabolic Bullet Settings ===");
-		
-		// 중력 편집 가능 (5~20)
-		ImGui::DragFloat("Gravity", &m_ownGravity, 0.1f, kMinGravity, kMaxGravity, "%.1f m/s^2");
-		
-		// 폭발 범위 설정
-		ImGui::DragFloat("Explosion Radius", &m_explosionRadius, 0.1f, 0.5f, 20.0f);
+
+		// 총알 스케일 (슬라이더: 0.5~9.0, 최소값: 0.01)
+		ImGui::DragFloat("Bullet Scale", &m_bulletScale, 0.1f, 0.5f, 9.0f);
+		// 직접 입력 시 0.01 미만 클램프
+		if (m_bulletScale < 0.01f)
+		{
+			m_bulletScale = 0.01f;
+		}
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Trigger size on impact)");
-		
-		// 속도 읽기 전용 (자동 계산)
-		float calculatedSpeed = CalculateParabolicSpeed();
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Min: 0.01)");
+
+		// ─────────────────────────────────────────────
+		// 포물선 설정 (Parabolic 타입일 때만 표시)
+		// ─────────────────────────────────────────────
+		if (IsParabolicBullet())
+		{
+			ImGui::Separator();
+			ImGui::Text("=== Parabolic Bullet Settings ===");
+
+			// 중력 편집 가능 (5~20)
+			ImGui::DragFloat("Gravity", &m_ownGravity, 0.1f, kMinGravity, kMaxGravity, "%.1f m/s^2");
+
+			// 폭발 범위 설정
+			ImGui::DragFloat("Explosion Radius", &m_explosionRadius, 0.1f, 0.5f, 20.0f);
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Trigger size on impact)");
+
+			// 속도 읽기 전용 (자동 계산)
+			float calculatedSpeed = CalculateParabolicSpeed();
+			ImGui::BeginDisabled(true);
+			ImGui::DragFloat("Bullet Speed (Parabolic)", &calculatedSpeed, 0.5f, 1.0f, 100.0f, "%.1f m/s");
+			ImGui::EndDisabled();
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(auto)");
+
+			// 각도 범위 설정
+			ImGui::DragFloat("Min Launch Angle", &m_minLaunchAngle, 1.0f, 0.0f, 44.0f, "%.1f deg");
+			ImGui::DragFloat("Max Launch Angle", &m_maxLaunchAngle, 1.0f, 45.0f, 89.0f, "%.1f deg");
+
+			// 각도 범위 검증
+			if (m_minLaunchAngle >= m_maxLaunchAngle)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f),
+					"WARNING: Min >= Max angle!");
+			}
+
+			// 범위 정보
+			ImGui::Spacing();
+			ImGui::TextColored(ImVec4(0.7f, 0.7f, 1.0f, 1.0f), "Range Info:");
+			ImGui::Text("  Attack Range: %.1f m", m_AttackRange);
+			ImGui::Text("  Max Range (at %.0f deg): %.1f m", m_maxLaunchAngle, m_AttackRange);
+			ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f),
+				"  (Speed auto-calculated to reach AttackRange at MaxAngle)");
+
+			// 런타임 정보 (상세)
+			ImGui::Spacing();
+			ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime values (read-only):");
+			ImGui::Text("  Launch Angle: %.1f deg", m_bulletParams.launchAngle);
+			ImGui::Text("  Speed: %.2f m/s", m_bulletParams.speed);
+			ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f),
+				"  (Angle calculated at fire time based on player distance)");
+		}
+
+		// 단발 발사 모드 (읽기 전용)
+		ImGui::Separator();
 		ImGui::BeginDisabled(true);
-		ImGui::DragFloat("Bullet Speed (Parabolic)", &calculatedSpeed, 0.5f, 1.0f, 100.0f, "%.1f m/s");
+		ImGui::Checkbox("Single Shot Mode", &m_isDoSingleShot);
 		ImGui::EndDisabled();
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(auto)");
-		
-		// 각도 범위 설정
-		ImGui::DragFloat("Min Launch Angle", &m_minLaunchAngle, 1.0f, 0.0f, 44.0f, "%.1f deg");
-		ImGui::DragFloat("Max Launch Angle", &m_maxLaunchAngle, 1.0f, 45.0f, 89.0f, "%.1f deg");
-		
-		// 각도 범위 검증
-		if (m_minLaunchAngle >= m_maxLaunchAngle)
-		{
-			ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), 
-				"WARNING: Min >= Max angle!");
-		}
-		
-		// 범위 정보
-		ImGui::Spacing();
-		ImGui::TextColored(ImVec4(0.7f, 0.7f, 1.0f, 1.0f), "Range Info:");
-		ImGui::Text("  Attack Range: %.1f m", m_AttackRange);
-		ImGui::Text("  Max Range (at %.0f deg): %.1f m", m_maxLaunchAngle, m_AttackRange);
-		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
-			"  (Speed auto-calculated to reach AttackRange at MaxAngle)");
-		
-		// 런타임 정보 (상세)
-		ImGui::Spacing();
-		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Runtime values (read-only):");
-		ImGui::Text("  Launch Angle: %.1f deg", m_bulletParams.launchAngle);
-		ImGui::Text("  Speed: %.2f m/s", m_bulletParams.speed);
-		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), 
-			"  (Angle calculated at fire time based on player distance)");
-	}
-	
-	// 단발 발사 모드 (읽기 전용)
-	ImGui::Separator();
-	ImGui::BeginDisabled(true);
-	ImGui::Checkbox("Single Shot Mode", &m_isDoSingleShot);
-	ImGui::EndDisabled();
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Read Only - Set in scene file)");
-		
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "(Read Only - Set in scene file)");
+
 		if (!HasBulletAttack())
 		{
 			ImGui::EndDisabled();
@@ -1141,7 +1128,7 @@ namespace game
 		// 몬스터 분류 정보
 		j["AttackType"] = static_cast<int>(m_attackType);
 		j["MonsterTier"] = static_cast<int>(m_monsterTier);
-		
+
 		// 공통 스탯 (6개)
 		j["Hp"] = m_Hp;
 		j["MaxHp"] = m_maxHp;
@@ -1150,10 +1137,10 @@ namespace game
 		j["FragileTime"] = m_fragileTime;
 		j["Difficulty"] = m_difficulty;
 		j["DetectionRange"] = m_detectionRange;
-		
+
 		// 기타 스탯
 		j["AttackRange"] = m_AttackRange;
-		
+
 		// 발사 설정
 		j["RotationSpeed"] = m_rotationSpeed;
 		j["FireRate"] = m_fireRate;
@@ -1170,7 +1157,7 @@ namespace game
 		j["MinLaunchAngle"] = m_minLaunchAngle;
 		j["MaxLaunchAngle"] = m_maxLaunchAngle;
 		j["ExplosionRadius"] = m_explosionRadius;
-		
+
 		// 단발 발사 모드
 		j["IsDoSingleShot"] = m_isDoSingleShot;
 	}
@@ -1191,10 +1178,10 @@ namespace game
 		m_fragileTime = j.value("FragileTime", 5.0f);
 		m_difficulty = j.value("Difficulty", 1);
 		m_detectionRange = j.value("DetectionRange", 15.0f);
-		
+
 		// 기타 스탯
 		m_AttackRange = j.value("AttackRange", 10.0f);
-		
+
 		// 발사 설정
 		m_rotationSpeed = j.value("RotationSpeed", 2.0f);
 		m_fireRate = j.value("FireRate", 3.0f);
@@ -1211,7 +1198,7 @@ namespace game
 		m_minLaunchAngle = j.value("MinLaunchAngle", 20.0f);
 		m_maxLaunchAngle = j.value("MaxLaunchAngle", 70.0f);
 		m_explosionRadius = j.value("ExplosionRadius", 3.0f);
-		
+
 		// 단발 발사 모드
 		m_isDoSingleShot = j.value("IsDoSingleShot", false);
 	}

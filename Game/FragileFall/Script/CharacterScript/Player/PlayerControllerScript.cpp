@@ -678,7 +678,8 @@ namespace game
 				{
 					m_logicFSM->SetTrigger("DashComplete");
 				}
-			}
+			}			
+
 		}
 		else if (state == "Execution")
 		{
@@ -881,15 +882,20 @@ namespace game
 			// 이동 입력이 없으면 대쉬 취소 (안전 장치)
 			return;
 		}
-
+		
 		m_afterimage->BeginRecording();
 
 		moveDir.y = 0.0f;
 		moveDir.Normalize();
 
 		m_dashDirection = moveDir;
+
+		engine::Vector3 dashStartSpeed = m_dashDirection * m_dashInitSpeed;
+		m_rigidbody->SetLinearVelocity(dashStartSpeed);
+
 		m_isDashing = true;
 		m_dashElapsedTime = 0.0f;
+
 		
 		// ═══════════════════════════════════════════════════════════════
 		// 감속 시스템 초기화
@@ -923,7 +929,7 @@ namespace game
 		if (m_rigidbody && m_rigidbody->IsDynamic())
 		{
 			// 대쉬 Impulse 계산: 방향 * 속도 * 배율
-			float dashImpulse = m_temperFinal.moveSpeed * m_temperFinal.dashDistance;
+			float dashImpulse = m_dashInitSpeed * m_temperFinal.dashDistance;
 			engine::Vector3 impulseForce = m_dashDirection * dashImpulse;
 			
 			m_rigidbody->AddForce(impulseForce, engine::ForceMode::Impulse);
@@ -1862,6 +1868,8 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::TakeDamage(float damage)
 	{
+		return;
+
 		if (damage <= 0) return;
 		
 		m_PlayerCurrentHP -= damage;

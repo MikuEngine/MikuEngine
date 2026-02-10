@@ -98,8 +98,9 @@ namespace game
         //float m_dashImpulseMultiplier = 15.0f;          // 대쉬 Impulse 배율 (m_moveSpeed 기준)
         //float m_dashCooldown = 0.2f;                    // 대쉬 쿨다운 (초)
 
-
-
+        
+        // 대쉬 기준 속도. 이 값은 상수로 쓰인다.
+        const float m_dashInitSpeed = 8.0f;
 
         //HP
         float m_PlayerMaxHP = 100.0f;
@@ -153,10 +154,7 @@ namespace game
         bool m_isDashDecaying = false;                  // 감속 진행 중 여부
         float m_dashDecayStartSpeed = 0.0f;             // 감속 시작 시 속도
         float m_dashDecayElapsedTime = 0.0f;            // 감속 경과 시간
-        float m_dashDecayDuration = 0.5f;               // 감속 지속 시간 (초)
-             
-        
-
+        float m_dashDecayDuration = 0.5f;               // 감속 지속 시간 (초)      
 
 
         // 처형 관련

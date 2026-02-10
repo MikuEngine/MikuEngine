@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterDullType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -27,6 +27,15 @@ namespace game
     void MonsterDullType::Start()
     {
         MonsterScript::Start();
+
+        if (m_rigidbody)
+        {
+            m_rigidbody->SetConstraints(engine::RigidbodyConstraints::FreezeAll);         
+        }
+        else
+        {
+            LOG_ERROR("[MonsterDullType] Rigidbody not found! Cannot apply constraints.");
+        }
         
         // 둔탁 타입은 StaticMesh를 사용하므로 애니메이션 관련 초기화 불필요
     }
@@ -146,6 +155,8 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     void MonsterDullType::UpdateGameLogic()
     {
+        MonsterScript::UpdateGameLogic();
+
         if (m_monsterTier == MonsterTier::Purple)
         {
             if (!m_isDead)
@@ -162,7 +173,7 @@ namespace game
             }
         }
 
-        MonsterScript::UpdateGameLogic();
+        
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -196,7 +207,7 @@ namespace game
 
     void MonsterDullType::ExecuteIdleBehaviorNonPhysics()
     {
-        // 비물리 Idle 처리
+        // 비물리 Idle 처리      
     }
 
     void MonsterDullType::ExecuteFragileBehaviorNonPhysics()
@@ -256,12 +267,21 @@ namespace game
 
     bool MonsterDullType::CheckMonstersPurpleType()
     {
+        int monsterCount = 0;
+        int selfCount = 0;
+
         const auto& gameObjects = engine::SceneManager::Get().GetScene()->GetGameObjects();
 
         for (const auto& go : gameObjects)
         {
-            if (!go || go.get() == GetGameObject())
+            if (!go)
+            {
                 continue;
+            }
+            else if (go.get() == GetGameObject())
+            {
+                selfCount++;
+            }
 
             auto* monster = go->GetComponent<MonsterScript>();
 

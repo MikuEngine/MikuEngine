@@ -1,6 +1,6 @@
 {
     "Name": "90_Test_MonLogicOnStage1",
-    "NumGameObjects": 87,
+    "NumGameObjects": 86,
     "GameObjects": [
         {
             "ID": 0,
@@ -433,7 +433,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
+                        "x": 0.006644010543823242,
                         "y": -2.3495363166148309e-07,
                         "z": 0.0
                     },
@@ -2828,7 +2828,7 @@
                     "KinematicDeceleration": 70.0,
                     "MoveSpeed": 8.0,
                     "RotationSpeed": 20.0,
-                    "BaseAtkDmg": 10.0,
+                    "BaseAtkDmg": 82.5,
                     "BaseAtkSpeed": 1.399999976158142,
                     "BaseBulletRange": 10.0,
                     "BaseBulletSizeScale": 1.0,
@@ -3195,11 +3195,11 @@
                     },
                     "LinePrefabName": "IndicatorLine",
                     "LinePlayerOffset": 1.0,
-                    "LineMonsterOffset": 1.5,
-                    "LineBaseLength": 0.5,
+                    "LineMonsterOffset": 1.0,
+                    "LineBaseLength": 1.0,
                     "LineHeight": 0.6000000238418579,
-                    "LinePixelsPerMeter": 70.0,
-                    "LineMinPixels": 103.0,
+                    "LinePixelsPerMeter": 90.0,
+                    "LineMinPixels": 50.0,
                     "LinePixelStep": 50.0,
                     "ReflectIndicatorPrefabName": "Execution_Reflect_Indicator",
                     "ReflectIndicatorHeight": 1.5,
@@ -3210,8 +3210,8 @@
                     "EffectDuration": 0.800000011920929,
                     "EffectScaleMultiplier": 1.5,
                     "MonsterDeathDelay": 0.05000000074505806,
-                    "ExecutionTeleportAtNormalizedTime": 0.5,
-                    "ExecutionMinDuration": 0.4000000059604645,
+                    "ExecutionTeleportAtNormalizedTime": 0.30000001192092896,
+                    "ExecutionMinDuration": 0.10000000149011612,
                     "TeleportAfterimageNumSlices": 32,
                     "TeleportAfterimageUseDefaultGradient": false,
                     "TeleportAfterimageTrailGradient": 0.9700000286102295,
@@ -13565,448 +13565,8 @@
         },
         {
             "ID": 78,
-            "Name": "Monster_Round_Gray",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -9.480030059814453,
-                        "y": 0.8743999004364014,
-                        "z": -10.82974624633789
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "MonsterRoundGray",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 0,
-                    "Hp": 20.0,
-                    "MaxHp": 20.0,
-                    "MoveSpeed": 10.0,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 0.0,
-                    "AttackRange": 0.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 0.009999999776482582,
-                    "BulletSpeed": 0.0,
-                    "BulletLifetime": 0.0,
-                    "BulletScale": 1.0,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 9.800000190734863,
-                    "MinLaunchAngle": 20.0,
-                    "MaxLaunchAngle": 70.0,
-                    "ExplosionRadius": 3.0,
-                    "IsDoSingleShot": false,
-                    "IdleWaitTime": 1.0,
-                    "AttackAnimationDuration": 1.0,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_IdleMove": "IdleMove",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Repositioning": "Repositioning",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead",
-                    "MoveDurationMin": 1.0,
-                    "MoveDurationMax": 4.0,
-                    "RaycastDetectionRange": 100.0,
-                    "PlayerIgnoreCountMin": 1,
-                    "PlayerIgnoreCountMax": 3,
-                    "WallCollisionCooldown": 0.019999999552965164,
-                    "BoundaryMinX": -50.0,
-                    "BoundaryMaxX": 50.0,
-                    "BoundaryMinZ": -50.0,
-                    "BoundaryMaxZ": 50.0,
-                    "ObstacleCheckDistance": 2.0,
-                    "RepositioningSpeed": 5.0,
-                    "RepositioningDuration": 2.0
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/white/crystal_sphere_white.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 10.0,
-                    "linearDamping": 10.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 42
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 0,
-                    "radius": 1.090000033378601
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                }
-            ]
-        },
-        {
-            "ID": 79,
-            "Name": "Monster_RoundType_Green",
-            "Active": false,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -8.818670272827148,
-                        "y": 1.5000009536743164,
-                        "z": -0.6432645320892334
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 10.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 42
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/green/crystal_sphere_green.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 0.0540541410446167,
-                        "y": 1.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 0.07722008228302002,
-                        "y": 1.0,
-                        "z": 0.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "MonsterRoundGreen",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 0,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 14.0,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 100.0,
-                    "AttackRange": 16.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 3.0,
-                    "BulletSpeed": 10.0,
-                    "BulletLifetime": 4.0,
-                    "BulletScale": 1.5,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 31.299999237060547,
-                    "MinLaunchAngle": 30.0,
-                    "MaxLaunchAngle": 70.0,
-                    "ExplosionRadius": 3.0,
-                    "IsDoSingleShot": false,
-                    "IdleWaitTime": 1.0,
-                    "AttackAnimationDuration": 1.0,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_IdleMove": "IdleMove",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Repositioning": "Repositioning",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead",
-                    "DamageCooldown": 1.0
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "BulletFactory",
-                    "Active": true
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 0,
-                    "radius": 1.5,
-                    "height": 8.199999809265137
-                }
-            ]
-        },
-        {
-            "ID": 80,
-            "Name": "Monster_RoundType_Purple",
-            "Active": false,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -8.818670272827148,
-                        "y": 1.5000009536743164,
-                        "z": -0.6432645320892334
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 10.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 42
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/purple/crystal_sphere_purple.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 0.5868721008300781,
-                        "y": 0.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 0.8648648262023926,
-                        "y": 0.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 0,
-                    "radius": 1.5,
-                    "height": 8.199999809265137
-                },
-                {
-                    "Type": "MonsterRoundPurple",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 0,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 14.0,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 15.0,
-                    "AttackRange": 10.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 0.0,
-                    "BulletSpeed": 0.0,
-                    "BulletLifetime": 0.0,
-                    "BulletScale": 1.0,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 9.800000190734863,
-                    "MinLaunchAngle": 20.0,
-                    "MaxLaunchAngle": 70.0,
-                    "ExplosionRadius": 3.0,
-                    "IsDoSingleShot": false,
-                    "IdleWaitTime": 0.0010000000474974513,
-                    "AttackAnimationDuration": 1.0,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_IdleMove": "IdleMove",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Repositioning": "Repositioning",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead",
-                    "SplitCount": 0,
-                    "DamageCooldown": 1.0,
-                    "PrefabName": "Monster_RoundType_Purple"
-                }
-            ]
-        },
-        {
-            "ID": 81,
             "Name": "Monster_PointedType_Purple",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -14244,8 +13804,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 81,
+            "ID": 79,
+            "ParentID": 78,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
@@ -14301,166 +13861,7 @@
             ]
         },
         {
-            "ID": 83,
-            "Name": "Monster_RoundType_Blue",
-            "Active": false,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -11.286678314208984,
-                        "y": 1.4999995231628418,
-                        "z": 6.069833755493164
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/blue/crystal_sphere_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 0.0,
-                        "y": 0.24710440635681152,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 0.0,
-                        "y": 0.13127398490905762,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.949999809265137,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 0.5,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 42
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "MonsterRoundBlue",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 0,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 6.0,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 12.0,
-                    "AttackRange": 5.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 0.0,
-                    "BulletSpeed": 15.0,
-                    "BulletLifetime": 10.0,
-                    "BulletScale": 1.0,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 9.800000190734863,
-                    "MinLaunchAngle": 20.0,
-                    "MaxLaunchAngle": 70.0,
-                    "ExplosionRadius": 3.0,
-                    "IsDoSingleShot": true,
-                    "IdleWaitTime": 1.0,
-                    "AttackAnimationDuration": 1.0,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_IdleMove": "IdleMove",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Repositioning": "Repositioning",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead",
-                    "IdleMoveTimeLimit": 7.0,
-                    "TargetReachDistance": 2.0,
-                    "TargetDistanceMin": 4.0,
-                    "TargetDistanceMax": 8.0,
-                    "TargetSafetyMargin": 1,
-                    "OscillationAmplitudeMin": 0.5,
-                    "OscillationAmplitudeMax": 2.0,
-                    "OscillationSpeedMultiplier": 5.0,
-                    "CollisionReflectDistance": 2.0,
-                    "DamageCooldown": 1.0,
-                    "EngageMoveSpeed": 16.0,
-                    "PlayerIgnoreDuration": 1.0
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 0,
-                    "radius": 1.5,
-                    "height": 8.199999809265137
-                },
-                {
-                    "Type": "PathfindingAgent",
-                    "Active": true,
-                    "PathUpdateInterval": 1.0,
-                    "WaypointReachDistance": 0.5,
-                    "TargetMoveThreshold": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 84,
+            "ID": 80,
             "Name": "StateTextRendererCanvas",
             "Active": true,
             "Components": [
@@ -14534,9 +13935,9 @@
             ]
         },
         {
-            "ID": 85,
+            "ID": 81,
             "Name": "Monster_DullType_Red",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -14655,7 +14056,7 @@
                     "FireRate": 3.0,
                     "BulletSpeed": 15.0,
                     "BulletLifetime": 5.0,
-                    "BulletScale": 4.900000095367432,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
@@ -14668,8 +14069,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 85,
+            "ID": 82,
+            "ParentID": 81,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
@@ -14721,6 +14122,348 @@
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 83,
+            "Name": "Monster_PointedType_Gray",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 8.26090145111084,
+                        "y": 2.258210770378355e-06,
+                        "z": -5.83686637878418
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 5.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 30.0,
+                    "useGravity": false,
+                    "constraints": 42
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.350000023841858,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "radius": 1.2000000476837158,
+                    "height": 4.329999923706055
+                },
+                {
+                    "Type": "MonsterPointedType",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 0,
+                    "Hp": 100.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 10.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 300.0,
+                    "AttackRange": 7.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 15.0,
+                    "BulletLifetime": 3.0,
+                    "BulletScale": 1.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false,
+                    "AttackAnimationDuration": 1.100000023841858,
+                    "FleeRange": 10.0,
+                    "SafeRange": 14.0,
+                    "FleeSpeedMultiplier": 1.7000000476837158,
+                    "FleeDistanceMin": 20.0,
+                    "FleeDistanceMax": 70.0,
+                    "FleeSafetyMargin": 1,
+                    "WallCollisionInfoTimeout": 3.0,
+                    "FleeStuckCheckInterval": 2.0,
+                    "FleeStuckDistanceThreshold": 0.5,
+                    "RedemptionSpeedMultiplier": 1.5,
+                    "RedemptionTargetDistance": 5.0
+                },
+                {
+                    "Type": "PathfindingAgent",
+                    "Active": true,
+                    "PathUpdateInterval": 1.0,
+                    "WaypointReachDistance": 0.5,
+                    "TargetMoveThreshold": 1.0
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Final/monster/white_monster/crystal_monster_white_final.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "SkeletalAnimator",
+                    "Active": true,
+                    "Animations": [
+                        {
+                            "Name": "Fire",
+                            "Path": "Resource/Animation/main_character_animation_zombie_shooting.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "Idle",
+                            "Path": "Resource/Animation/main_character_animation_idle.fbx",
+                            "Notifies": []
+                        },
+                        {
+                            "Name": "WalkForward",
+                            "Path": "Resource/Animation/main_character_animation_zombie_running.fbx",
+                            "Notifies": []
+                        }
+                    ],
+                    "Layers": [
+                        {
+                            "Name": "New Layer",
+                            "Weight": 1.0,
+                            "BlendMode": 0,
+                            "MaskBones": [
+                                "Player_Rig",
+                                "Hips",
+                                "DEF-Weapon",
+                                "Ctrl-Weapon",
+                                "Spine",
+                                "UpLeg.Left",
+                                "UpLeg.Right",
+                                "Spine1",
+                                "Leg.Left",
+                                "Leg.Right",
+                                "Spine2",
+                                "Foot.Left",
+                                "Foot.Right",
+                                "Neck",
+                                "Shoulder.Left",
+                                "Shoulder.Right",
+                                "ToeBase.Left",
+                                "ToeBase.Right",
+                                "Head",
+                                "Arm.Left",
+                                "Arm.Right",
+                                "Toe_End.Left",
+                                "Toe_End.Right",
+                                "HeadTop_End",
+                                "ForeArm.Left",
+                                "ForeArm.Right",
+                                "Hand.Left",
+                                "Hand.Right",
+                                "HandThumb1.Left",
+                                "HandIndex1.Left",
+                                "HandThumb1.Right",
+                                "HandIndex1.Right",
+                                "HandThumb2.Left",
+                                "HandIndex2.Left",
+                                "Snap-Hand.L",
+                                "HandThumb2.Right",
+                                "HandIndex2.Right",
+                                "HandThumb3.Left",
+                                "HandIndex3.Left",
+                                "HandThumb3.Right",
+                                "HandIndex3.Right",
+                                "HandThumb4.Left",
+                                "HandIndex4.Left",
+                                "HandThumb4.Right",
+                                "HandIndex4.Right"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Type": "AnimFSM",
+                    "Active": true,
+                    "LogicFSMObjectName": "",
+                    "BaseLayerIndex": 0,
+                    "UpperBodyLayerIndex": 1,
+                    "EnableProceduralAim": false,
+                    "MaxYaw": 70.0,
+                    "MaxPitch": 45.0,
+                    "AimLerpSpeed": 30.0,
+                    "SpineBoneName": "Spine",
+                    "AnimStates": []
+                }
+            ]
+        },
+        {
+            "ID": 84,
+            "ParentID": 83,
+            "Name": "PickingBoundaryCol",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.200000047683716,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 66.66667175292969,
+                        "y": 66.66667175292969,
+                        "z": 66.66667175292969
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 7,
+                    "materialType": 1,
+                    "radius": 2.299999952316284
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 85,
+            "Name": "IndicatorLineSample",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 1.754557490348816,
+                        "y": 1.5000004768371582,
+                        "z": -10.019145011901855
+                    },
+                    "Rotation": {
+                        "x": 0.7071068286895752,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071068286895752
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0000656843185425,
+                        "z": 1.0000656843185425
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "Resource/Texture/Target_Line.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 1,
+                    "BillboardType": 0,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
                 }
             ]
         }

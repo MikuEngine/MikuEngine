@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Ptr.h>
@@ -51,8 +51,8 @@ namespace game
         float m_lineMonsterOffset = 0.5f;   // 라인-몬스터 간 오프셋 거리
         float m_lineBaseLength = 1.0f;      // 스케일 1일 때 라인의 월드 길이
         float m_lineHeight = 0.5f;          // 라인의 Y 높이
-        float m_linePixelsPerMeter = 70.0f; // 1m당 픽셀 수 (점선 밀도 조절)
-        float m_lineMinPixels = 103.0f;     // 최소 드로우 픽셀 크기
+        float m_linePixelsPerMeter = 50.0f; // 1m당 픽셀 수 (점선 밀도 조절)
+        float m_lineMinPixels = 50.0;     // 최소 드로우 픽셀 크기
         float m_linePixelStep = 50.0f;      // 증가 단위 픽셀 (계단식 증가)
         
         // ─────────────────────────────────────────────
@@ -96,12 +96,16 @@ namespace game
         float m_monsterDeathDelay = 0.05f;        // 텔레포트 후 몬스터 Death까지 대기 시간 (초)
         /** 처형 애니메이션 재생 비율(0~1) 도달 시 순간이동·처형 실행. 0.5 = 50% 재생 후 */
         float m_executionTeleportAtNormalizedTime = 0.5f;
+
         /** 처형 애니 최소 재생 시간(초). 이 시간이 지나야 비율 조건과 함께 처형 발동 (가까운 적이어도 애니가 잠깐은 보이게) */
         float m_executionMinDuration = 0.4f;
+
         /** 처형 순간이동 시 잔상(Afterimage) 구간에 넣을 슬라이스 수. 0이면 잔상 미사용. 클수록 잔상이 길고 촘촘함 */
         size_t m_teleportAfterimageNumSlices = 32;
+
         /** true면 AfterimageRenderer 기본 trail gradient 사용, false면 아래 값으로 오버라이드 */
         bool m_teleportAfterimageUseDefaultGradient = false;
+
         /** 텔레포트 잔상용 trail gradient 오버라이드 (0~1). 1에 가까울수록 구간 전체 비슷한 알파, 작을수록 앞쪽이 빨리 흐려짐. UseDefaultGradient가 true면 무시 */
         float m_teleportAfterimageTrailGradient = 0.97f;
 
