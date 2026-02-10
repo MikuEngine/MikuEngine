@@ -7689,16 +7689,9 @@
                     "Category": 0,
                     "NodeId": 0,
                     "Parent": [],
-                    "Name": "공격력 증가 1",
+                    "Name": "",
                     "Desc": "",
-                    "Effects": [
-                        {
-                            "Op": 0,
-                            "Stat": 0,
-                            "Value": 2.0,
-                            "Bool": false
-                        }
-                    ],
+                    "Effects": [],
                     "Ruby": 1,
                     "Sapphire": 1,
                     "Emerald": 1
@@ -7822,20 +7815,11 @@
                     "Type": "UpgradeNodeView",
                     "Active": true,
                     "Category": 0,
-                    "NodeId": 1,
-                    "Parent": [
-                        0
-                    ],
-                    "Name": "공격력 증가 2",
-                    "Desc": "미타의 공격력이 2 상승합니다.\n전투 효율을 더욱 높여줍니다.",
-                    "Effects": [
-                        {
-                            "Op": 0,
-                            "Stat": 0,
-                            "Value": 2.0,
-                            "Bool": false
-                        }
-                    ],
+                    "NodeId": 100,
+                    "Parent": [],
+                    "Name": "",
+                    "Desc": "",
+                    "Effects": [],
                     "Ruby": 1,
                     "Sapphire": 1,
                     "Emerald": 1

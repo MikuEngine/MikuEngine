@@ -71,8 +71,10 @@ namespace game
             if (!token.empty())
                 out.push_back(ToInt(token, 0));
 
-            // 0 제거
-            out.erase(std::remove(out.begin(), out.end(), 0), out.end());
+            // 잘못된 값만 제거 (예: -1)
+            out.erase(std::remove_if(out.begin(), out.end(),
+                [](int v) { return v < 0 || v > 99; }), out.end());
+
             return out;
         }
 
@@ -201,10 +203,10 @@ namespace game
             const int localId = ToInt(fields[0], -1);
             if (localId < 0 || localId > 99) return false;
 
+            out.category = ParseCategory(fields[1]);
             const int base = (int)out.category;         // Attack=100 같은 값
             out.nodeId = base + localId;                // fullId
 
-            out.category = ParseCategory(fields[1]);
             out.name = fields[2];
             out.desc = UnescapeNewlines(fields[3]);
             //out.desc = fields[3];
