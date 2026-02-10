@@ -15,6 +15,7 @@
 #include <Manager/UpgradeProgressManager.h>
 
 #include <Common/Utility/CSVReader.h>
+#include <Manager/BuffManager.h>
 
 namespace game
 {
@@ -94,26 +95,51 @@ namespace game
             using game::PlayerTemperManager;
             using TemperOp = game::TemperOp;
             using TemperStat = game::StatType;
+            using game::BuffManager;
 
-            //// 1. 불린(특수) 강화 처리
-            //if (e.op == UpgradeNodeView::TemperOp::Bool)
-            //{
-            //    if (e.stat == UpgradeNodeView::StatType::BulletDouble)
-            //        PlayerTemperManager::SetIsBulletDouble(e.b);
-            //    return;
-            //}
+            // 기본 강화
+            if (e.kind == game::TemperEffect::Kind::Stat)
+            {
+                StatType targetStat = static_cast<StatType>(e.stat);
+                CalcType targetCalc = (e.op == game::TemperOp::Add) ? CalcType::Add : CalcType::Mul;
 
-            // 2. 수치 강화 처리 (Add/Mul)
-            // TemperStat과 StatType이 같은 순서라면 static_cast 가능
-            // 아니라면 별도의 Convert 함수를 거칩니다.
-            StatType targetStat = static_cast<StatType>(e.stat);
-            CalcType targetCalc = (e.op == game::TemperOp::Add) ? CalcType::Add : CalcType::Mul;
+                float currentVal = PlayerTemperManager::GetStat(targetStat, targetCalc);
+                float nextVal = (targetCalc == CalcType::Add) ? (currentVal + e.value) : (currentVal * e.value);
 
-            // 현재 수치 가져오기 -> 계산 -> 설정 (단 한 줄!)
-            float currentVal = PlayerTemperManager::GetStat(targetStat, targetCalc);
-            float nextVal = (targetCalc == CalcType::Add) ? (currentVal + e.value) : (currentVal * e.value);
+                PlayerTemperManager::SetStat(targetStat, targetCalc, nextVal);
+                return;
+            }
 
-            PlayerTemperManager::SetStat(targetStat, targetCalc, nextVal);
+            if (e.kind == game::TemperEffect::Kind::Buff)
+            {
+                switch (e.buff)
+                {
+                case BuffId::Dash_MoveSpeed:
+                    if (e.field == game::BuffField::Duration)
+                        BuffManager::SetDashBuffDuration(e.value);
+                    else if (e.field == game::BuffField::Bonus)
+                        BuffManager::SetDashBuffMoveSpeedBonus(e.value);
+                    break;
+
+                case BuffId::Dash_AtkDmg:
+                    if (e.field == game::BuffField::Duration)
+                        BuffManager::SetDashAtkDmgBuffDuration(e.value);
+                    else if (e.field == game::BuffField::Bonus)
+                        BuffManager::SetDashAtkDmgBuffBonus(e.value);
+                    break;
+
+                case BuffId::Execution_AtkSpeed:
+                    if (e.field == game::BuffField::Duration)
+                        BuffManager::SetExecutionBuffDuration(e.value);
+                    else if (e.field == game::BuffField::Bonus)
+                        BuffManager::SetExecutionBuffAtkSpeedBonus(e.value);
+                    break;
+
+                default:
+                    break;
+                }
+                return;
+            }
         }
 
         static void ApplyTemperFromView(const UpgradeNodeView& view)
@@ -583,7 +609,13 @@ namespace game
         if (!button) return;
 
         button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
-        if (cb) cb(); });
+        if (cb) cb(); }); auto it = m_views.find(m_selectedNodeId);
+        if (it == m_views.end() || !it->second)
+        {
+            ClearSelectedInfoUI();
+            return;
+        }
+        UpgradeNodeView* view = it->second;
     }
 
     void UpgradeController::SetCategory(UpgradeCategory c)
@@ -636,13 +668,12 @@ namespace game
 
         auto it = m_views.find(m_selectedNodeId);
 
-        UpgradeNodeView* view = it->second;
-
         if (it == m_views.end() || !it->second)
         {
             ClearSelectedInfoUI();
             return;
         }
+        UpgradeNodeView* view = it->second;
 
         if (m_nameText) m_nameText->SetText(view->m_name);
         if (m_descText) m_descText->SetText(view->m_desc);

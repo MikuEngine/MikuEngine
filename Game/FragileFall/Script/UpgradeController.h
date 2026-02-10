@@ -91,13 +91,6 @@ namespace game
         // Content안에 있는 노드들 모으기
         void AssignNodeIdsFromHierarchy();
 
-
-
-
-
-
-
-
         void BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb);
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
 
