@@ -99,41 +99,58 @@ namespace game
             return false;
         }
 
+        static std::string NormalizeKey(std::string s)
+        {
+            s = Trim(s);
+            std::transform(s.begin(), s.end(), s.begin(),
+                [](unsigned char c) { return (char)std::tolower(c); });
+
+            // 내부 공백 제거 (csv에 "atk_dmg " 같은 실수 방어)
+            s.erase(std::remove_if(s.begin(), s.end(),
+                [](unsigned char c) { return std::isspace(c) != 0; }), s.end());
+
+            return s;
+        }
+
+
         static bool ParseStatKey(const std::string& s, game::StatType& out)
         {
-            const std::string t = Trim(s);
+            const std::string t = NormalizeKey(s);
 
             // --- Attack ---
-            if (t == "AtkDmg")          return (out = game::StatType::AtkDmg), true;
-            if (t == "AtkSpeed")       return (out = game::StatType::AtkSpeed), true;
-            if (t == "BulletRange")    return (out = game::StatType::BulletRange), true;
-            if (t == "BulletSize")     return (out = game::StatType::BulletSize), true;
-            if (t == "BulletSpeed")    return (out = game::StatType::BulletSpeed), true;
+            if (t == "atk_dmg")          return (out = game::StatType::AtkDmg), true;
+            if (t == "atk_spd")       return (out = game::StatType::AtkSpeed), true;
+            
+            if (t == "bullet_rng")    return (out = game::StatType::BulletRange), true;
+            if (t == "bullet_size")     return (out = game::StatType::BulletSize), true;
+            if (t == "bullet_spd")    return (out = game::StatType::BulletSpeed), true;
 
             // --- Execution ---
-            if (t == "Exe_FragileRegen")     return (out = game::StatType::Exe_FragileRegen), true;
-            if (t == "Exe_Range")            return (out = game::StatType::Exe_Range), true;
-            if (t == "Exe_SplashDmg")        return (out = game::StatType::Exe_SplashDmg), true;
-            if (t == "Exe_SplashRange")      return (out = game::StatType::Exe_SplashRange), true;
-            if (t == "Exe_DashChargeRegen")  return (out = game::StatType::Exe_DashChargeRegen), true;
-            if (t == "Exe_HpRegen")           return (out = game::StatType::Exe_HpRegen), true;
+            if (t == "exe_fragile_regen")    return (out = game::StatType::Exe_FragileRegen), true;
+            if (t == "exe_range")            return (out = game::StatType::Exe_Range), true;
+            if (t == "exe_splash_dmg")       return (out = game::StatType::Exe_SplashDmg), true;
+            if (t == "exe_splash_rng")       return (out = game::StatType::Exe_SplashRange), true;
+            if (t == "exe_dash_charge_regen")return (out = game::StatType::Exe_DashChargeRegen), true;
+            if (t == "exe_hp_regen")         return (out = game::StatType::Exe_HpRegen), true;
 
             // --- Vital ---
-            if (t == "Hp_Max")               return (out = game::StatType::Hp_Max), true;
-            if (t == "Hp_RegenOnClear")      return (out = game::StatType::Hp_RegenOnClear), true;
-            if (t == "Fragile_Max")          return (out = game::StatType::Fragile_Max), true;
-            if (t == "Fragile_RegenOnClear") return (out = game::StatType::Fragile_RegenOnClear), true;
-            if (t == "Fragile_GainRate")     return (out = game::StatType::Fragile_GainRate), true;
-            if (t == "InvincibleTime")       return (out = game::StatType::InvincibleTime), true;
+            if (t == "hp_max")               return (out = game::StatType::Hp_Max), true;
+            if (t == "hp_reg_clear")         return (out = game::StatType::Hp_RegenOnClear), true;
+            
+            if (t == "fragile_max")          return (out = game::StatType::Fragile_Max), true;
+            if (t == "fragile_reg_clear")    return (out = game::StatType::Fragile_RegenOnClear), true;
+            if (t == "fragile_gain")         return (out = game::StatType::Fragile_GainRate), true;
+
+            if (t == "inv_time")             return (out = game::StatType::InvincibleTime), true;
 
             // --- Movement ---
-            if (t == "MoveSpeed")            return (out = game::StatType::MoveSpeed), true;
-            if (t == "Dash_Distance")        return (out = game::StatType::Dash_Distance), true;
-            if (t == "Dash_Cooldown")        return (out = game::StatType::Dash_Cooldown), true;
-            if (t == "Dash_InvincibleTime")  return (out = game::StatType::Dash_InvincibleTime), true;
+            if (t == "move_spd")             return (out = game::StatType::MoveSpeed), true;
+            if (t == "dash_dist")            return (out = game::StatType::Dash_Distance), true;
+            if (t == "dash_cd")              return (out = game::StatType::Dash_Cooldown), true;
+            if (t == "dash_inv_time")        return (out = game::StatType::Dash_InvincibleTime), true;
 
             // --- Special ---
-            if (t == "BulletDouble")         return (out = game::StatType::BulletDouble), true;
+            if (t == "bullet_double")        return (out = game::StatType::BulletDouble), true;
 
             return false;
         }
@@ -152,9 +169,9 @@ namespace game
         {
             const std::string t = Trim(s);
 
-            if (t == "Dash_MoveSpeed")     return (out = game::BuffId::Dash_MoveSpeed), true;
-            if (t == "Dash_AtkDmg")        return (out = game::BuffId::Dash_AtkDmg), true;
-            if (t == "Execution_AtkSpeed") return (out = game::BuffId::Execution_AtkSpeed), true;
+            if (t == "dash_ms")     return (out = game::BuffId::Dash_MoveSpeed), true;
+            if (t == "dash_ad")        return (out = game::BuffId::Dash_AtkDmg), true;
+            if (t == "exe_as") return (out = game::BuffId::Execution_AtkSpeed), true;
 
             return false;
         }
@@ -163,8 +180,8 @@ namespace game
         {
             const std::string t = Trim(s);
 
-            if (t == "Duration") return (out = game::BuffField::Duration), true;
-            if (t == "Bonus")    return (out = game::BuffField::Bonus), true;
+            if (t == "sec") return (out = game::BuffField::Duration), true;
+            if (t == "val")    return (out = game::BuffField::Bonus), true;
 
             return false;
         }
