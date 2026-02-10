@@ -6,6 +6,7 @@
 #include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Framework/Object/Component/UI/UIProgressBar.h>
+#include <Framework/Object/Component/RectTransform.h>
 
 #include "CharacterScript/Player/PlayerControllerScript.h"
 
@@ -18,6 +19,9 @@ namespace game
 
     void HUDController::Start()
     {
+        CacheHearts();
+        ApplyHearts();
+
         if (auto* go = engine::GameObject::Find("HitImage"))
             m_hitImage = go->GetComponent<engine::UIImage>();
 
@@ -42,12 +46,14 @@ namespace game
 
         if (m_playerScript)
         {
-            m_playerScript->SetOnDamaged([this] {
-                if (m_hitImage)
-                {
-                    m_hitImage->SetEffect(engine::UIEffectType::ScreenHit);
+            m_playerScript->SetOnDamaged([self = engine::Ptr<HUDController>(this)] {
+                if (!self) return;
 
-                    m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
+                if (self->m_hitImage)
+                {
+                    self->m_hitImage->SetEffect(engine::UIEffectType::ScreenHit);
+
+                    self->m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
                 }
 
                 // TODO: 사운드 있다면 여기에 추가
@@ -124,6 +130,16 @@ namespace game
             //    m_fragileImage->SetActive(false);
             //}
         }
+
+        if (m_playerScript)
+        {
+            int newHalfHp = CalcHalfHPFromPlayer();
+            if (newHalfHp != m_halfHp)
+            {
+                m_halfHp = newHalfHp;
+                ApplyHearts();
+            }
+        }
     }
 
     void HUDController::OnGui()
@@ -140,4 +156,106 @@ namespace game
     {
         Object::Load(j);
     }
+
+    void HUDController::CacheHearts()
+    {
+        if (m_cached) return;
+
+        // Heart(0)~Heart(4) 캐싱
+        for (int i = 0; i < kHeartCount; ++i)
+        {
+            const std::string name = "Heart(" + std::to_string(i) + ")";
+            if (auto* go = engine::GameObject::Find(name))
+            {
+                m_hearts[i] = go->GetComponent<engine::UIImage>();
+                m_heartRT[i] = go->GetComponent<engine::RectTransform>();
+
+                // 마스크 기본 모드(전체 표시)
+                if (m_hearts[i])
+                    m_hearts[i]->SetMaskMode(engine::MaskMode::None);
+            }
+        }
+
+        m_cached = true;
+    }
+
+    void HUDController::OnDamagedHalf()
+    {
+        m_halfHp -= 1;
+        if (m_halfHp < 0) m_halfHp = 0;
+
+        ApplyHearts();
+    }
+
+    int HUDController::CalcHalfHPFromPlayer() const
+    {
+        if (!m_playerScript) return 0;
+
+        const int hp = (int)m_playerScript->GetCurrentHp(); // 0~100
+        int half = hp / 10;                                // 0~10
+
+        // 5하트면 max half는 10
+        if (half < 0) half = 0;
+        if (half > kHeartCount * 2) half = kHeartCount * 2;
+
+        return half;
+    }
+
+    void HUDController::ApplyHearts()
+    {
+        for (int i = 0; i < kHeartCount; ++i)
+        {
+            const int filled = m_halfHp - i * 2; // 이 하트에 배정된 half(2/1/0)
+            if (filled >= 2)      SetHeartFull(i);
+            else if (filled == 1) SetHeartHalf(i);
+            else                  SetHeartEmpty(i);
+        }
+    }
+
+    engine::Vector4 HUDController::GetHeartFullClip(int i) const
+    {
+        if (!m_heartRT[i]) return { 0,0,0,0 };
+
+        const auto r = m_heartRT[i]->GetWorldRect();
+        return { r.x, r.y, r.x + r.w, r.y + r.h };
+    }
+
+    engine::Vector4 HUDController::GetHeartHalfClip(int i) const
+    {
+        if (!m_heartRT[i]) return { 0,0,0,0 };
+
+        const auto r = m_heartRT[i]->GetWorldRect();
+        return { r.x, r.y, r.x + r.w * 0.5f, r.y + r.h };
+    }
+
+    void HUDController::SetHeartFull(int i)
+    {
+        if (!m_hearts[i]) return;
+
+        m_hearts[i]->SetColor({ 1,1,1,1 });
+        m_hearts[i]->SetMaskMode(engine::MaskMode::None);
+
+        m_hearts[i]->SetClipRect(GetHeartFullClip(i));
+    }
+
+    void HUDController::SetHeartHalf(int i)
+    {
+        if (!m_hearts[i]) return;
+
+        m_hearts[i]->SetColor({ 1,1,1,1 });
+        
+        // Half일때 마스크 Rect모드로
+        m_hearts[i]->SetMaskMode(engine::MaskMode::Rect);
+
+        m_hearts[i]->SetClipRect(GetHeartHalfClip(i));
+    }
+
+    void HUDController::SetHeartEmpty(int i)
+    {
+        if (!m_hearts[i]) return;
+
+        m_hearts[i]->SetColor({ 1,1,1,0 });
+        m_hearts[i]->SetMaskMode(engine::MaskMode::None);
+    }
+
 }

@@ -233,7 +233,7 @@ namespace engine
 			cbUI.clip = DirectX::XMMatrixTranspose(
 				DirectX::XMMatrixScaling(sx, sy, 1.0f) *
 				DirectX::XMMatrixTranslation(dxN, dyN, 0.0f) * // pivot → 원점
-				Rfix *
+				/*Rfix **/
 				DirectX::XMMatrixTranslation(-dxN, -dyN, 0.0f) * // 원점 → pivot
 				DirectX::XMMatrixTranslation(tx, ty, 0.0f)
 			);
