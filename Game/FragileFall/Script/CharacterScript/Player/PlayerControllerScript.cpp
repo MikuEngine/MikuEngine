@@ -721,7 +721,7 @@ namespace game
 			{
 				m_isDashing = false;
 				m_dashElapsedTime = 0.0f;
-				m_dashCooldownTimer = m_dashCooldown;
+				m_dashCooldownTimer = m_temperFinal.dashCooldown;
 				
 				// 잔상 녹화 종료
 				if (m_afterimage)
@@ -1026,7 +1026,7 @@ namespace game
 		// 목표 속도 계산 (버프 포함)
 		// ═══════════════════════════════════════════════════════════════
 		float buffMultiplier = BuffManager::GetMoveSpeedMultiplier();
-		float targetSpeed = m_moveSpeed * buffMultiplier;
+		float targetSpeed = m_temperFinal.moveSpeed * buffMultiplier;
 		
 		// 현재 속도
 		engine::Vector3 currentVel = m_rigidbody->GetLinearVelocity();
@@ -1599,9 +1599,9 @@ namespace game
 			
 			// 현재 목표 속도 표시
 			float buffMultiplier = BuffManager::GetMoveSpeedMultiplier();
-			float targetSpeed = m_moveSpeed * buffMultiplier;
+			float targetSpeed = m_temperFinal.moveSpeed * buffMultiplier;
 			ImGui::Text("  Target Speed: %.2f m/s (Base: %.2f x Buff: %.2fx)", 
-				targetSpeed, m_moveSpeed, buffMultiplier);
+				targetSpeed, m_temperFinal.moveSpeed, buffMultiplier);
 		}
 
 		// ═══════════════════════════════════════════════════════════════
