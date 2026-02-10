@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "MonsterPartyGenerator.h"
 #include <Common/Debug/Debug.h>
 #include <algorithm>
@@ -48,12 +48,12 @@ namespace game
                 out.type = static_cast<AttackType>(std::stoi(fields[2]));
                 out.tier = static_cast<MonsterTier>(std::stoi(fields[3]));
                 out.difficulty = std::stoi(fields[4]);
-                out.minRuby = std::stoi(fields[5]);
-                out.maxRuby = std::stoi(fields[6]);
-                out.minSapphire = std::stoi(fields[7]);
-                out.maxSapphire = std::stoi(fields[8]);
-                out.minEmerald = std::stoi(fields[9]);
-                out.maxEmerald = std::stoi(fields[10]);
+                out.rubyCount = std::stoi(fields[5]);
+                out.sapphireCount = std::stoi(fields[6]);
+                out.emeraldCount = std::stoi(fields[7]);
+                out.rubyChance = std::stof(fields[8]);
+                out.sapphireChance = std::stof(fields[9]);
+                out.emeraldChance = std::stof(fields[10]);
                 return true;
             }
             catch (...)

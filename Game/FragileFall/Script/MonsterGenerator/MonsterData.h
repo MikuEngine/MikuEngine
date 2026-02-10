@@ -64,12 +64,12 @@ namespace game
         AttackType type;
         MonsterTier tier;
         int difficulty;
-        int minRuby;
-        int maxRuby;
-        int minSapphire;
-        int maxSapphire;
-        int minEmerald;
-        int maxEmerald;
+        int rubyCount;
+        int sapphireCount;
+        int emeraldCount;
+        float rubyChance;
+        float sapphireChance;
+        float emeraldChance;
         
         // 비교 연산자 (난이도 기준 정렬용)
         bool operator<(const MonsterData& other) const
