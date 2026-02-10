@@ -1,6 +1,6 @@
 {
     "Name": "90_Test_MonLogicOnStage1",
-    "NumGameObjects": 86,
+    "NumGameObjects": 85,
     "GameObjects": [
         {
             "ID": 0,
@@ -131,7 +131,8 @@
                     },
                     "UseSkyboxTexture": 1,
                     "UseIBLTexture": 1,
-                    "UseIBL": 1
+                    "UseIBL": 1,
+                    "IBLIntensity": 1.0
                 }
             ]
         },
@@ -2853,7 +2854,8 @@
                     "PostDashQuickFireDuration": 0.4000000059604645,
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
-                    "FragileGaugeRisePerSecond": 15.0
+                    "FragileGaugeRisePerSecond": 15.0,
+                    "IsInvincible": true
                 },
                 {
                     "Type": "LogicFSM",
@@ -3191,13 +3193,13 @@
                     "IndicatorOffset": {
                         "x": 0.0,
                         "y": 1.5,
-                        "z": -0.5
+                        "z": 0.0
                     },
                     "LinePrefabName": "IndicatorLine",
                     "LinePlayerOffset": 1.0,
-                    "LineMonsterOffset": 1.0,
+                    "LineMonsterOffset": 1.7999999523162842,
                     "LineBaseLength": 1.0,
-                    "LineHeight": 0.6000000238418579,
+                    "LineHeight": 1.5,
                     "LinePixelsPerMeter": 90.0,
                     "LineMinPixels": 50.0,
                     "LinePixelStep": 50.0,
@@ -14419,51 +14421,6 @@
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 58
-                }
-            ]
-        },
-        {
-            "ID": 85,
-            "Name": "IndicatorLineSample",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 1.754557490348816,
-                        "y": 1.5000004768371582,
-                        "z": -10.019145011901855
-                    },
-                    "Rotation": {
-                        "x": 0.7071068286895752,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.7071068286895752
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0000656843185425,
-                        "z": 1.0000656843185425
-                    }
-                },
-                {
-                    "Type": "SpriteRenderer",
-                    "Active": true,
-                    "TextureFilePath": "Resource/Texture/Target_Line.png",
-                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
-                    "RenderType": 1,
-                    "BillboardType": 0,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "CullMode": 0
                 }
             ]
         }
