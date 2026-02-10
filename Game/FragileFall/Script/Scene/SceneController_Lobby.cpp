@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "SceneController_Lobby.h"
 
 #include <Core/App/AppContext.h>
@@ -216,7 +216,7 @@ namespace game
                 if (auto* anim = m_playerPreview->GetComponent<engine::SkeletalAnimator>())
                 {
                     // CrossFade 시간을 0.3~0.5초 정도로 주어 부드럽게 연결
-                    anim->PlayCrossFade("Walk", 0.4f, true);
+                    anim->PlayCrossFade("Walk", 0.4f, true, 0, 1.7f);
                 }
             }
 
