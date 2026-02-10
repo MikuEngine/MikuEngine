@@ -131,7 +131,8 @@
                     },
                     "UseSkyboxTexture": 1,
                     "UseIBLTexture": 1,
-                    "UseIBL": 1
+                    "UseIBL": 1,
+                    "IBLIntensity": 1.0
                 }
             ]
         },
@@ -6100,7 +6101,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/AmethystShard.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item_03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6331,7 +6332,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/DarkEssence.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item_01_White.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6562,7 +6563,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/Miku.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item_02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
