@@ -97,21 +97,29 @@ namespace game
 				m_updateSwitch = switchObj->GetComponent<MonsterUpdateActivationSwitch>();
 			}
 		}
+		if (!m_updateSwitch)
+		{
+			m_isDoUpdate = true;
+			m_isActive = true;
+		}
 	}
 
 	void MonsterScript::Update()
 	{
-		m_isDoUpdate = m_updateSwitch->GetIsUpdateAllowed();
-
-		if (!m_isDoUpdate)
+		if (m_updateSwitch)
 		{
-			return;
-		}
-		else
-		{			
-			if (m_updateSwitch->m_hasActivated)
+			m_isDoUpdate = m_updateSwitch->GetIsUpdateAllowed();
+
+			if (!m_isDoUpdate)
 			{
-				m_isActive = true;
+				return;
+			}
+			else
+			{
+				if (m_updateSwitch->m_hasActivated)
+				{
+					m_isActive = true;
+				}
 			}
 		}
 

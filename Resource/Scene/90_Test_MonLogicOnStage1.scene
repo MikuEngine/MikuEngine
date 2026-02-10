@@ -1,6 +1,6 @@
 {
     "Name": "90_Test_MonLogicOnStage1",
-    "NumGameObjects": 85,
+    "NumGameObjects": 84,
     "GameObjects": [
         {
             "ID": 0,
@@ -2763,39 +2763,6 @@
         },
         {
             "ID": 47,
-            "Name": "MonsterUpdateSwitch",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "MonsterUpdateActivationSwitch",
-                    "Active": true,
-                    "ActivationDelay": 3.0,
-                    "IsUpdateAllowed": false
-                }
-            ]
-        },
-        {
-            "ID": 48,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -2941,7 +2908,7 @@
             ]
         },
         {
-            "ID": 49,
+            "ID": 48,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -3161,7 +3128,7 @@
             ]
         },
         {
-            "ID": 50,
+            "ID": 49,
             "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [
@@ -3232,7 +3199,7 @@
             ]
         },
         {
-            "ID": 51,
+            "ID": 50,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -3300,7 +3267,7 @@
             ]
         },
         {
-            "ID": 52,
+            "ID": 51,
             "Name": "AimPointerCanvas",
             "Active": true,
             "Components": [
@@ -3356,8 +3323,8 @@
             ]
         },
         {
-            "ID": 53,
-            "ParentID": 52,
+            "ID": 52,
+            "ParentID": 51,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -3407,7 +3374,7 @@
             ]
         },
         {
-            "ID": 54,
+            "ID": 53,
             "Name": "Scene_spawn_system_data_Test_mdfy",
             "Active": true,
             "Components": [
@@ -3434,8 +3401,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 54,
+            "ID": 54,
+            "ParentID": 53,
             "Name": "Collier_Wall_Front",
             "Active": true,
             "Components": [
@@ -3485,8 +3452,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 54,
+            "ID": 55,
+            "ParentID": 53,
             "Name": "Collier_Wall_Back",
             "Active": true,
             "Components": [
@@ -3536,8 +3503,8 @@
             ]
         },
         {
-            "ID": 57,
-            "ParentID": 54,
+            "ID": 56,
+            "ParentID": 53,
             "Name": "Collier_Wall_Left",
             "Active": true,
             "Components": [
@@ -3587,8 +3554,8 @@
             ]
         },
         {
-            "ID": 58,
-            "ParentID": 54,
+            "ID": 57,
+            "ParentID": 53,
             "Name": "Collier_Wall_Right",
             "Active": true,
             "Components": [
@@ -3638,8 +3605,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 54,
+            "ID": 58,
+            "ParentID": 53,
             "Name": "Collier_Crystal_Right_Front_1",
             "Active": true,
             "Components": [
@@ -3685,8 +3652,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 54,
+            "ID": 59,
+            "ParentID": 53,
             "Name": "Collier_Crystal_Right_Front_2",
             "Active": true,
             "Components": [
@@ -3732,8 +3699,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 54,
+            "ID": 60,
+            "ParentID": 53,
             "Name": "Collier_Crystal_Right_Front_3",
             "Active": true,
             "Components": [
@@ -3779,8 +3746,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 54,
+            "ID": 61,
+            "ParentID": 53,
             "Name": "Collier_Crystal_Left_Front",
             "Active": true,
             "Components": [
@@ -3830,8 +3797,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 54,
+            "ID": 62,
+            "ParentID": 53,
             "Name": "Collier_Crystal_Left_Back",
             "Active": true,
             "Components": [
@@ -3881,8 +3848,8 @@
             ]
         },
         {
-            "ID": 64,
-            "ParentID": 54,
+            "ID": 63,
+            "ParentID": 53,
             "Name": "Collier_Crystal_Right_Back",
             "Active": true,
             "Components": [
@@ -3932,8 +3899,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 54,
+            "ID": 64,
+            "ParentID": 53,
             "Name": "Stage1Test_Shin_GridMap",
             "Active": true,
             "Components": [
@@ -12994,8 +12961,8 @@
             ]
         },
         {
-            "ID": 66,
-            "ParentID": 54,
+            "ID": 65,
+            "ParentID": 53,
             "Name": "Collier_Crystal_Right_Front_4",
             "Active": true,
             "Components": [
@@ -13041,7 +13008,7 @@
             ]
         },
         {
-            "ID": 67,
+            "ID": 66,
             "Name": "SubWall",
             "Active": true,
             "Components": [
@@ -13068,8 +13035,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 67,
+            "ID": 67,
+            "ParentID": 66,
             "Name": "Col_Left_Back_SubWall",
             "Active": true,
             "Components": [
@@ -13119,8 +13086,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 67,
+            "ID": 68,
+            "ParentID": 66,
             "Name": "Col_Right_Back_SubWall",
             "Active": true,
             "Components": [
@@ -13170,8 +13137,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 67,
+            "ID": 69,
+            "ParentID": 66,
             "Name": "Col_Left_Front_SubWall",
             "Active": true,
             "Components": [
@@ -13221,8 +13188,8 @@
             ]
         },
         {
-            "ID": 71,
-            "ParentID": 67,
+            "ID": 70,
+            "ParentID": 66,
             "Name": "Col_Right_Front_1_SubWall",
             "Active": true,
             "Components": [
@@ -13268,8 +13235,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 67,
+            "ID": 71,
+            "ParentID": 66,
             "Name": "Col_Right_Front_2_SubWall",
             "Active": true,
             "Components": [
@@ -13315,8 +13282,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 67,
+            "ID": 72,
+            "ParentID": 66,
             "Name": "Col_Right_Front_3_SubWall",
             "Active": true,
             "Components": [
@@ -13362,8 +13329,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 67,
+            "ID": 73,
+            "ParentID": 66,
             "Name": "Col_Right_Front_4_SubWall",
             "Active": true,
             "Components": [
@@ -13413,8 +13380,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 67,
+            "ID": 74,
+            "ParentID": 66,
             "Name": "Col_Right_Front_5_SubWall",
             "Active": true,
             "Components": [
@@ -13464,8 +13431,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 67,
+            "ID": 75,
+            "ParentID": 66,
             "Name": "Col_Right_Front_6_SubWall",
             "Active": true,
             "Components": [
@@ -13515,8 +13482,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 67,
+            "ID": 76,
+            "ParentID": 66,
             "Name": "Col_Right_Front_7_SubWall",
             "Active": true,
             "Components": [
@@ -13566,7 +13533,7 @@
             ]
         },
         {
-            "ID": 78,
+            "ID": 77,
             "Name": "Monster_PointedType_Purple",
             "Active": false,
             "Components": [
@@ -13806,8 +13773,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 78,
+            "ID": 78,
+            "ParentID": 77,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
@@ -13863,7 +13830,7 @@
             ]
         },
         {
-            "ID": 80,
+            "ID": 79,
             "Name": "StateTextRendererCanvas",
             "Active": true,
             "Components": [
@@ -13937,7 +13904,7 @@
             ]
         },
         {
-            "ID": 81,
+            "ID": 80,
             "Name": "Monster_DullType_Red",
             "Active": false,
             "Components": [
@@ -14071,8 +14038,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 81,
+            "ID": 81,
+            "ParentID": 80,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
@@ -14128,7 +14095,7 @@
             ]
         },
         {
-            "ID": 83,
+            "ID": 82,
             "Name": "Monster_PointedType_Gray",
             "Active": true,
             "Components": [
@@ -14368,8 +14335,8 @@
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 83,
+            "ID": 83,
+            "ParentID": 82,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
