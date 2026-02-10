@@ -15,6 +15,7 @@
 #include <Framework/Object/Component/UI/UIClickArea.h>
 #include <Framework/Object/Component/RectTransform.h>
 
+#include "Manager/StageManager.h"
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 
 #include "Script/DoorTriggerScript.h"
@@ -75,12 +76,6 @@ namespace game
             s_tutorialController = GetGameObject();
             GetGameObject()->DontDestroyOnLoad();
 
-            if (m_player = engine::GameObject::Find("Player"))
-            {
-                auto pc = m_player->GetComponent<PlayerControllerScript>();
-                //pc->SetBaseAtkDmg(30.0f);
-            }
-
             m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
             m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
 
@@ -132,6 +127,10 @@ namespace game
                 // step 1
                 // ─────────────────────────────────────────────
                 case 1:
+                    if (m_gaugePhase == 3)
+                    {
+						Next();
+                    }
                     break;
                 // ─────────────────────────────────────────────
                 // step 2
@@ -142,8 +141,9 @@ namespace game
                         m_spawnedMonster = engine::Prefab::Instantiate(m_monsterName);
                         if (m_spawnedMonster && m_spawnedMonster->GetTransform())
                         {
+                            game::StageManager::Get().RegisterTutorialMonster(m_spawnedMonster.Get());
                             m_spawnedMonster->GetTransform()->SetWorldMatrix(spawnObject->GetTransform()->GetWorld());
-                            m_isSpawnMonster = true;                      
+                            m_isSpawnMonster = true;                
                         }
                     }
                     break;
@@ -217,6 +217,11 @@ namespace game
                 }
             }
         }
+
+		if (m_stepIndex == 1)
+        {
+            UpdateGaugeAnimation();
+        }
     }
 
     void TutorialController::InitializeStep()
@@ -226,6 +231,8 @@ namespace game
         m_stepTimer = 0.0f;
         m_isTimerActive = false;
         m_isStateCheck = false;
+        m_timer = 0.0f;
+        m_gaugePhase = 0;
         
         if (m_nextDoorObject)
         {
@@ -264,60 +271,75 @@ namespace game
             m_stepTimer = 8.0f;
             break;
             // ─────────────────────────────────────────────
-            // step 1 :
+            // step 1 : 다음 맵 진입 시 프레자일 게이지 설명
             // ─────────────────────────────────────────────
         case 1:
+        {
+            m_isTimerActive = true;
+            m_timer = 0.0f;
+            m_gaugePhase = 0;
+            auto player = GetPlayer();
+            if (!player) break;
+            player->SetCurrentFragile(player->GetFragileGaugeMax() * 0.4f);
             break;
-            // ─────────────────────────────────────────────
-            // step 2 : 일반 몬스터(회색 둔탁) 1종을 소환하여 사격하게 UI로 유도
-            //          뾰족 몬스터를 사격 프레자일 상태로 만들도록 유도
-            // ─────────────────────────────────────────────
+        }
+        // ─────────────────────────────────────────────
+        // step 2 : 일반 몬스터(회색 둔탁) 1종을 소환하여 사격하게 UI로 유도
+        //          뾰족 몬스터를 사격 프레자일 상태로 만들도록 유도
+        // ─────────────────────────────────────────────
         case 2:
+            {
             m_isTimerActive = true;
             m_stepTimer = 5.0f;
+            auto player = GetPlayer();
+            if (player) player->SetCurrentFragile(0.0f);
             break;
-            // ─────────────────────────────────────────────
-            // step 3 : 몬스터가 프레자일 상태가 될 경우 UI 변경후 N초후 순차대로 출력
-            // ─────────────────────────────────────────────
+            }
+        // ─────────────────────────────────────────────
+        // step 3 : 몬스터가 프레자일 상태가 될 경우 UI 변경후 N초후 순차대로 출력
+        // ─────────────────────────────────────────────
         case 3:
             break;
-            // ─────────────────────────────────────────────
-            // step 4 : 처형시 다음맵으로 가는문 개방
-            //          처형시 설명 UI를 먼저 띄워주고 N초 뒤로비로 가는 문 2종 개방 후 복귀를 유도
-            // ─────────────────────────────────────────────
+        // ─────────────────────────────────────────────
+        // step 4 : 처형시 다음맵으로 가는문 개방
+        //          처형시 설명 UI를 먼저 띄워주고 N초 뒤로비로 가는 문 2종 개방 후 복귀를 유도
+        // ─────────────────────────────────────────────
         case 4:
             m_isTimerActive = true;
             m_stepTimer = 0.3f;
             break;
-            // ─────────────────────────────────────────────
-            // step 5 : 로비 UI 진입시 설명창을 띄워주며 강화 버튼을 누르라는 UI 표시
-            // ─────────────────────────────────────────────
+        // ─────────────────────────────────────────────
+        // step 5 : 로비 UI 진입시 설명창을 띄워주며 강화 버튼을 누르라는 UI 표시
+        // ─────────────────────────────────────────────
         case 5:
+            m_outlineWidth = 4.0f;
             BindButton("UI_OpenUpgrade", [this]() {
-                SetActiveButton("UI_OpenUpgrade", false, false);
                 Next();
             });
             break;
-            // ─────────────────────────────────────────────
-            // step 6 : 기술 부분 클릭 유도
-            // ─────────────────────────────────────────────
+        // ─────────────────────────────────────────────
+        // step 6 : 기술 부분 클릭 유도
+        // ─────────────────────────────────────────────
         case 6:
+            m_outlineWidth = 12.0f;
             BindButton("Btn_Skill", [this]() {
                 SetActiveButton("Btn_Skill", false, false);
                 Next();
             });
             break;
-            // ─────────────────────────────────────────────
-            // step 7 : 기술에 첫 번째 스킬 처형(브레이크) 시 프레자일 게이지 회복
-            // ─────────────────────────────────────────────
+        // ─────────────────────────────────────────────
+        // step 7 : 기술에 첫 번째 스킬 처형(브레이크) 시 프레자일 게이지 회복
+        // ─────────────────────────────────────────────
         case 7:
-            SetupSkillNodesUI();
+            m_outlineWidth = 6.0f;
+            SetupSkillNodesUI("SkillNodes");
             break;
-            // ─────────────────────────────────────────────
-            // step 8 : 재화가 들어간다는 설명과 함께 강화 유도
-            // ─────────────────────────────────────────────
+        // ─────────────────────────────────────────────
+        // step 8 : 재화가 들어간다는 설명과 함께 강화 유도
+        // ─────────────────────────────────────────────
         case 8:
             {
+            m_outlineWidth = 4.0f;
             auto upgradeUI = engine::GameObject::Find("Desc_Panel");
             if (upgradeUI)
             {
@@ -333,13 +355,27 @@ namespace game
             });
             break;
             }
-            // ─────────────────────────────────────────────
-            // step 9 : 강화를 성공하면 x버튼을 눌러서 다시 로비로 가서 본 게임 시작
-            // ─────────────────────────────────────────────
+        // ─────────────────────────────────────────────
+        // step 9 : 강화를 성공하면 x버튼을 눌러서 다시 로비로 가서 본 게임 시작
+        // ─────────────────────────────────────────────
         case 9:
+            m_outlineWidth = 8.0f;
             BindButton("UI_CloseButton_Upgrade", [this]() {
-                SetActiveButton("UI_CloseButton_Upgrade", false, false);
-				SetActiveButton("UI_EnterPlay", true, true);
+                SetupSkillNodesUI("AttackNodes", true);
+                SetupSkillNodesUI("SkillNodes", true);
+                SetupSkillNodesUI("SurviveNodes", true);
+                SetupSkillNodesUI("MoveNodes", true);
+                SetActiveButton("UI_CloseButton_Upgrade", true, false);
+				SetActiveButton("UI_EnterPlay", true, false);
+                SetActiveButton("UI_OpenUpgrade", true, false);
+                SetActiveButton("UI_OpenOption", true, false);
+                SetActiveButton("UI_BackToMain", true, false);
+                SetActiveButton("Btn_Attack", true, false);
+                SetActiveButton("Btn_Skill", true, false);
+                SetActiveButton("Btn_Survive", true, false);
+                SetActiveButton("Btn_Move", true, false);
+                Next();
+                TutorialFinish();
             });
             break;
         }
@@ -348,7 +384,6 @@ namespace game
     void TutorialController::OnSceneLoaded()
     {
         m_queue = nullptr;
-        m_player = nullptr;
         m_nextDoorObject = nullptr;
         m_exitDoorObject = nullptr;
 
@@ -359,14 +394,6 @@ namespace game
 
         if (currentScene == "10_PROTO_Tutorial")
         {
-            m_player = engine::GameObject::Find("Player");
-
-            if (m_player)
-            {
-                auto pc = m_player->GetComponent<PlayerControllerScript>();
-                //if (pc) pc->SetBaseAtkDmg(30.0f);
-            }
-
             m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
             m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
              
@@ -413,9 +440,9 @@ namespace game
         }
     }
 
-    void TutorialController::SetupSkillNodesUI()
+    void TutorialController::SetupSkillNodesUI(const std::string& goName, bool isChildSetup)
     {
-        engine::GameObject* parentGo = engine::GameObject::Find("SkillNodes");
+        engine::GameObject* parentGo = engine::GameObject::Find(goName);
         if (!parentGo) return;
 
         engine::RectTransform* parentRT = parentGo->GetComponent<engine::RectTransform>();
@@ -423,26 +450,33 @@ namespace game
 
         const std::vector<engine::Transform*>& children = parentRT->GetChildren();
 
-        if (!children.empty())
+        if (isChildSetup)
         {
-            engine::GameObject* firstNode = children[0]->GetGameObject();
-            if (firstNode)
+            for (size_t i = 0; i < children.size(); ++i)
             {
-				LOG_PRINT("Activate Skill Node UI");
-
-                auto button = firstNode->GetComponent<engine::UIClickArea>();
-                
-                button->SetActive(true);
-                button->AddOnClick([this, button](int buttonIndex){
-                    button->SetActive(false);
-                    this->Next();
-                });
-
-                firstNode->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+                if (children[i] && children[i]->GetGameObject())
+                {
+                    children[i]->GetGameObject()->SetActive(true);
+                }
             }
-            else
+        }
+        else
+        {
+            if (!children.empty())
             {
-                LOG_PRINT("not found not found Activate Skill Node UI");
+                engine::GameObject* firstNode = children[0]->GetGameObject();
+                if (firstNode)
+                {
+                    auto button = firstNode->GetComponent<engine::UIClickArea>();
+
+                    button->SetActive(true);
+                    button->AddOnClick([this, button](int buttonIndex) {
+                        button->SetActive(false);
+                        this->Next();
+                        });
+
+                    firstNode->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+                }
             }
         }
     }
@@ -527,6 +561,70 @@ namespace game
         // [참고] 이전 스텝의 모든 페이지를 한꺼번에 다 Push하고 싶다면 
         // 반복문을 써야겠지만, 보통은 해당 위치의 한 페이지만 다시 보여줍니다.
         ShowPage();
+    }
+
+    void TutorialController::TutorialFinish()
+    {
+
+
+    }
+
+    PlayerControllerScript* TutorialController::GetPlayer()
+    {
+        auto* go = engine::GameObject::Find("Player");
+        auto* playerScript = go ? go->GetComponent<game::PlayerControllerScript>() : nullptr;
+        return playerScript;
+    }
+
+    void TutorialController::UpdateGaugeAnimation()
+    {
+        if (m_gaugePhase >= 3) return;
+
+        m_timer += engine::Time::DeltaTime();
+        float duration = 0.5f;
+        float t = m_timer / duration;
+        if (t > 1.0f) t = 1.0f;
+
+        auto player = GetPlayer();
+        if (!player) return;
+
+        float maxVal = player->GetFragileGaugeMax();
+        float startVal = maxVal * 0.4f; // 40% 지점
+        float endVal = maxVal * 0.7f;   // 70% 지점
+        float range = maxVal * 0.3f;    // 30% 폭 (70% - 40%)
+
+        if (m_gaugePhase == 0) // 40 -> 70 상승
+        {
+            float val = startVal + (range * t);
+            player->SetCurrentFragile(val);
+
+            if (t >= 1.0f) {
+                m_timer = 0.0f;
+                m_gaugePhase = 1;
+            }
+        }
+        else if (m_gaugePhase == 1) // 70 -> 40 하락
+        {
+            float val = endVal - (range * t);
+            player->SetCurrentFragile(val);
+
+            if (t >= 1.0f) {
+                m_timer = 0.0f;
+                m_gaugePhase = 2;
+            }
+        }
+        else if (m_gaugePhase == 2)
+        {
+            float val = startVal + (range * t);
+            player->SetCurrentFragile(val);
+
+            if (t >= 1.0f) {
+                m_timer = 0.0f;
+                m_gaugePhase = 3;
+                m_isTimerActive = true;
+                m_stepTimer = 2.0f;
+            }
+        }
     }
 
     void TutorialController::Save(engine::json& j) const

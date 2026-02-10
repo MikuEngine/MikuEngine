@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -211,6 +211,14 @@ namespace game
         m_stageClearRewardEmerald = emerald;
     }
 
+    void StageManager::RegisterTutorialMonster(engine::GameObject* monster)
+    {
+        if (monster)
+        {
+            m_spawnedMonsters.push_back(engine::Ptr<engine::GameObject>(monster));
+        }
+    }
+
     void StageManager::Update()
     {
         bool hasMonsters = std::any_of(m_spawnedMonsters.begin(), m_spawnedMonsters.end(),
@@ -238,8 +246,11 @@ namespace game
                     }
                 }
 
-                SetActiveDoor("StageDoor_Next", true);
-                SetActiveDoor("StageDoor_Exit", false);
+                if (scene->GetName() != "10_PROTO_Tutorial")
+                {
+                    SetActiveDoor("StageDoor_Next", true);
+                    SetActiveDoor("StageDoor_Exit", false);
+                }
             }
         }
     }
