@@ -82,11 +82,5 @@ namespace game
         PlayerControllerScript* m_playerScript = nullptr;
 
         // HUD: Canvas_HUD > Currency > Ruby/Sapphire/Emerald > * Count (UIText), Fragile Gauge > Fragile Gauge Progress (UIProgressBar)
-        engine::UIText* m_currencyRubyText = nullptr;
-        engine::UIText* m_currencySapphireText = nullptr;
-        engine::UIText* m_currencyEmeraldText = nullptr;
-        engine::UIProgressBar* m_fragileGaugeProgress = nullptr;
-        engine::UIImage* m_hitImage = nullptr;
-        engine::UIImage* m_fragileImage = nullptr;
     };
 }

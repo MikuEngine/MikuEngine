@@ -12866,9 +12866,16 @@
                     "Category": 3,
                     "NodeId": 401,
                     "Parent": [],
-                    "Name": "대시 이동 거리 증가",
-                    "Desc": "대시로 한번에 이동할 수 있는 거리가\n1m 증가합니다.",
-                    "Effects": [],
+                    "Name": "대시 후 1초동안",
+                    "Desc": "이속 0.5",
+                    "Effects": [
+                        {
+                            "Op": 0,
+                            "Stat": 21,
+                            "Value": 0.5,
+                            "Bool": false
+                        }
+                    ],
                     "Ruby": 10,
                     "Sapphire": 2,
                     "Emerald": 0
