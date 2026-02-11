@@ -55,6 +55,8 @@ namespace game
 			m_fsmInitialized = true;
 		}
 
+		// 인스펙터 직렬화 MaxHP를 강화 계산의 base로 동기화한다.
+		m_temperBase.maxHp = m_PlayerMaxHP;
 		game::PlayerTemperManager::ApplyTemper(this);
 
 		// 스테이지 간 유지되는 프레자일 게이지 복원
@@ -2102,6 +2104,7 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	// ═══════════════════════════════════════════════════════════════
 	// Base값 로드 완료 후 강화 적용하여 실제값 계산
 	// ═══════════════════════════════════════════════════════════════
+	m_temperBase.maxHp = m_PlayerMaxHP;
 	PlayerTemperManager::ApplyTemper(this);
 }
 
