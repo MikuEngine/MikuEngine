@@ -872,6 +872,7 @@ namespace game
 		// ═══════════════════════════════════════════════════════════════
 		if (m_aimPointer)
 		{
+			m_aimPointer->SetExecutionInProgress(false);
 			m_aimPointer->m_postExecutionTimer = m_aimPointer->m_postExecutionDuration;
 		}
 		
@@ -1343,6 +1344,16 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 				{
 					direction = GetTransform()->GetForward();
 				}
+				
+				// 디버그 표시용: 마지막 실제 발사 XZ 방향 저장
+				engine::Vector3 firedXZ = direction;
+				firedXZ.y = 0.0f;
+				if (firedXZ.LengthSquared() > 0.0001f)
+				{
+					firedXZ.Normalize();
+					m_lastFiredDirectionXZ = firedXZ;
+					m_hasLastFiredDirection = true;
+				}
 
 				// ─────────────────────────────────────────────
 				// BulletParams 설정 및 발사
@@ -1398,6 +1409,16 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		entry.owner = owner;
 		entry.callback = callback;
 		m_fireCallbacks.push_back(entry);
+	}
+
+	float PlayerControllerScript::GetEffectiveFireRate() const
+	{
+		const float buffMultiplier = BuffManager::GetAtkSpeedMultiplier();
+		const float effectiveAtkSpeed = m_temperFinal.atkSpeed * buffMultiplier;
+		if (effectiveAtkSpeed <= 0.0001f)
+			return 0.7f;
+
+		return 0.7f / effectiveAtkSpeed;
 	}
 
 	// ═══════════════════════════════════════════════════════════════

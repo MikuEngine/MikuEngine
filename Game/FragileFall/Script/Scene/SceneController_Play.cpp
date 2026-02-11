@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "SceneController_Play.h"
 
 #include <Core/App/AppContext.h>
@@ -83,6 +83,16 @@ namespace game
         BindButton("ToLobby_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->BackToLobby(); });
         BindButton("Restart_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->BackToRestart(); });
 
+
+        BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("UI_BackToPlay", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("OK_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("ToLobby_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("Restart_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->OnBGMChanged(v); });
         BindSlider("UI_SFXSlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->OnSFXChanged(v); });
@@ -154,7 +164,7 @@ namespace game
 
         if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
-            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+            engine::SoundSystem::Get().PlayUI("UI_Click");
 
             if (m_isOptionOpen) { Back(); return; }
             if (m_isGiveupOpen) { CheckBackToMain(false); return; }
@@ -214,8 +224,25 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click");
         if (cb) cb(); });
+    }
+
+    void SceneController_Play::BindButton(const std::string& name, engine::UIButton::HoverCallback cb)
+    {
+        auto* go = engine::GameObject::Find(name);
+        if (!go) return;
+
+        auto* button = go->GetComponent<engine::UIButton>();
+        if (!button) return;
+
+        button->AddOnHover([cb](bool isHovered) {
+            if (isHovered)
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Horver");
+            }
+            if (cb) cb(isHovered);
+            });
     }
 
     void SceneController_Play::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)

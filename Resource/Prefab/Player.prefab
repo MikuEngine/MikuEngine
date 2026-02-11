@@ -13,18 +13,18 @@
                     "Position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": -10.0
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.0,
                         "y": 0.0,
-                        "z": 0.0,
+                        "z": -0.0,
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.019999999552965164,
-                        "y": 0.019999999552965164,
-                        "z": 0.019999999552965164
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     }
                 },
                 {
@@ -35,9 +35,9 @@
                     "MaxSpeedBrakeFactor": 15.0,
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
-                    "MoveSpeed": 8.0,
+                    "MoveSpeed": 13.0,
                     "RotationSpeed": 20.0,
-                    "BaseAtkDmg": 82.5,
+                    "BaseAtkDmg": 10.0,
                     "BaseAtkSpeed": 1.399999976158142,
                     "BaseBulletRange": 10.0,
                     "BaseBulletSizeScale": 1.0,
@@ -51,23 +51,25 @@
                     "ExecutionRange": 10.0,
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
-                    "DashDuration": 0.25,
-                    "BaseDashDistance": 3.0,
-                    "DashDecayRate": 1.5,
-                    "DashDecayDuration": 0.4000000059604645,
-                    "DashAfterimageCutoffRatio": 0.3499999940395355,
+                    "DashDuration": 0.30000001192092896,
+                    "DashMaxDurationLimit": 0.6000000238418579,
+                    "BaseDashDistance": 6.0,
+                    "DashDecayRate": 2.0,
+                    "DashDecayDuration": 0.5,
+                    "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224,
                     "MaxDashCount": 3,
                     "DashRechargeTime": 1.0,
-                    "PostDashQuickFireDuration": 0.4000000059604645,
+                    "PostDashQuickFireDuration": 0.30000001192092896,
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
-                    "FragileGaugeRisePerSecond": 15.0,
+                    "FragileGaugeRisePerSecond": 1.0,
+                    "PlayerMaxHP": 100.0,
                     "IsInvincible": true,
-                    "EED_Enable": true,
+                    "EED_Enable": false,
                     "EED_DamageScale": 5.0,
-                    "EED_Damage": 200.0,
-                    "EED_Duration": 3.0
+                    "EED_Damage": 15.0,
+                    "EED_Duration": 1.0
                 },
                 {
                     "Type": "LogicFSM",
@@ -112,44 +114,21 @@
                 {
                     "Type": "AimModeController",
                     "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
                     "CursorSize": {
                         "x": 50.0,
                         "y": 50.0
                     },
-                    "TargetPlaneY": 1.5,
-                    "AimYOffsetWhenMoving": 0.0,
-                    "PostExecutionDuration": 0.5,
-                    "CursorTexturesByState": [
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
+                    "TargetPlaneY": 1.7000000476837158,
+                    "AimYOffsetWhenMoving": -0.4000000059604645,
+                    "OnEnemyRayMaxDistance": 1000.0,
+                    "EnableCursorPulse": true,
+                    "PulseMaxDistance": 10.0,
+                    "PulsePeakTimeScale": 0.30000001192092896,
+                    "PulseDurationPerFR": 0.800000011920929,
+                    "ExecutionIntroScale": 2.0,
+                    "ExecutionIntroDistancePx": 50.0,
+                    "ExecutionIntroDuration": 0.5,
+                    "PostExecutionDuration": 0.5
                 }
             ]
         }

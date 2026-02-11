@@ -128,7 +128,7 @@
             "ID": 1,
             "ParentID": 0,
             "Name": "Icon",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",

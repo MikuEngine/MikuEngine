@@ -1,6 +1,6 @@
 {
     "Name": "10_PROTO_Tutorial",
-    "NumGameObjects": 117,
+    "NumGameObjects": 126,
     "GameObjects": [
         {
             "ID": 0,
@@ -12311,7 +12311,7 @@
         {
             "ID": 55,
             "ParentID": 54,
-            "Name": "Canvas",
+            "Name": "Canvas_ScreenEffect",
             "Active": true,
             "Components": [
                 {
@@ -12367,6 +12367,277 @@
         },
         {
             "ID": 56,
+            "ParentID": 55,
+            "Name": "FragileImage",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 1920.0,
+                    "Height": 1080.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.8648648262023926,
+                        "y": 0.0,
+                        "z": 1.0,
+                        "w": 0.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 57,
+            "ParentID": 55,
+            "Name": "HitImage",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 1920.0,
+                    "Height": 1080.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.3921568691730499,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 58,
+            "ParentID": 54,
+            "Name": "Canvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 59,
             "ParentID": 54,
             "Name": "StateText",
             "Active": true,
@@ -12439,7 +12710,7 @@
             ]
         },
         {
-            "ID": 57,
+            "ID": 60,
             "ParentID": 54,
             "Name": "StateTextCanvas",
             "Active": true,
@@ -12514,7 +12785,7 @@
             ]
         },
         {
-            "ID": 58,
+            "ID": 61,
             "ParentID": 54,
             "Name": "Canvas",
             "Active": true,
@@ -12566,13 +12837,13 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "SortingOrder": 1
+                    "SortingOrder": 9
                 }
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 58,
+            "ID": 62,
+            "ParentID": 61,
             "Name": "Panel_Menu",
             "Active": false,
             "Components": [
@@ -12691,8 +12962,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 59,
+            "ID": 63,
+            "ParentID": 62,
             "Name": "UI_OpenOption",
             "Active": true,
             "Components": [
@@ -12842,8 +13113,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 60,
+            "ID": 64,
+            "ParentID": 63,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -12915,8 +13186,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 59,
+            "ID": 65,
+            "ParentID": 62,
             "Name": "UI_BackToPlay",
             "Active": true,
             "Components": [
@@ -13066,8 +13337,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 62,
+            "ID": 66,
+            "ParentID": 65,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13139,8 +13410,8 @@
             ]
         },
         {
-            "ID": 64,
-            "ParentID": 59,
+            "ID": 67,
+            "ParentID": 62,
             "Name": "UI_BackToMain",
             "Active": true,
             "Components": [
@@ -13290,8 +13561,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 64,
+            "ID": 68,
+            "ParentID": 67,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13363,8 +13634,8 @@
             ]
         },
         {
-            "ID": 66,
-            "ParentID": 59,
+            "ID": 69,
+            "ParentID": 62,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -13436,8 +13707,8 @@
             ]
         },
         {
-            "ID": 67,
-            "ParentID": 58,
+            "ID": 70,
+            "ParentID": 61,
             "Name": "UI_OptionPopUp",
             "Active": false,
             "Components": [
@@ -13560,8 +13831,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 67,
+            "ID": 71,
+            "ParentID": 70,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -13711,8 +13982,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 68,
+            "ID": 72,
+            "ParentID": 71,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13784,8 +14055,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 67,
+            "ID": 73,
+            "ParentID": 70,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -13857,8 +14128,8 @@
             ]
         },
         {
-            "ID": 71,
-            "ParentID": 67,
+            "ID": 74,
+            "ParentID": 70,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -13908,8 +14179,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 71,
+            "ID": 75,
+            "ParentID": 74,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -13991,8 +14262,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 72,
+            "ID": 76,
+            "ParentID": 75,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14098,8 +14369,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 72,
+            "ID": 77,
+            "ParentID": 75,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -14205,8 +14476,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 72,
+            "ID": 78,
+            "ParentID": 75,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -14312,8 +14583,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 75,
+            "ID": 79,
+            "ParentID": 78,
             "Name": "Text_VolumeVal",
             "Active": true,
             "Components": [
@@ -14385,8 +14656,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 71,
+            "ID": 80,
+            "ParentID": 74,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -14468,8 +14739,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 77,
+            "ID": 81,
+            "ParentID": 80,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14575,8 +14846,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 77,
+            "ID": 82,
+            "ParentID": 80,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -14682,8 +14953,8 @@
             ]
         },
         {
-            "ID": 80,
-            "ParentID": 77,
+            "ID": 83,
+            "ParentID": 80,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -14789,8 +15060,8 @@
             ]
         },
         {
-            "ID": 81,
-            "ParentID": 80,
+            "ID": 84,
+            "ParentID": 83,
             "Name": "Text_SFXVal",
             "Active": true,
             "Components": [
@@ -14862,8 +15133,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 71,
+            "ID": 85,
+            "ParentID": 74,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -14945,8 +15216,8 @@
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 82,
+            "ID": 86,
+            "ParentID": 85,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -15052,8 +15323,8 @@
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 82,
+            "ID": 87,
+            "ParentID": 85,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -15159,8 +15430,8 @@
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 82,
+            "ID": 88,
+            "ParentID": 85,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -15266,8 +15537,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 85,
+            "ID": 89,
+            "ParentID": 88,
             "Name": "Text_SensiVal",
             "Active": true,
             "Components": [
@@ -15339,8 +15610,8 @@
             ]
         },
         {
-            "ID": 87,
-            "ParentID": 71,
+            "ID": 90,
+            "ParentID": 74,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15412,8 +15683,8 @@
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 71,
+            "ID": 91,
+            "ParentID": 74,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -15485,8 +15756,8 @@
             ]
         },
         {
-            "ID": 89,
-            "ParentID": 71,
+            "ID": 92,
+            "ParentID": 74,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15558,7 +15829,7 @@
             ]
         },
         {
-            "ID": 90,
+            "ID": 93,
             "ParentID": 54,
             "Name": "Canvas_HUD",
             "Active": true,
@@ -15610,234 +15881,13 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "SortingOrder": 0
+                    "SortingOrder": 5
                 }
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 90,
-            "Name": "HUD",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -800.0,
-                        "y": 400.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIPanel",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "None",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 92,
-            "ParentID": 91,
-            "Name": "Profile",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 150.0,
-                    "Height": 150.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/Miku.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 93,
-            "ParentID": 90,
+            "ID": 94,
+            "ParentID": 93,
             "Name": "Currency",
             "Active": true,
             "Components": [
@@ -15893,8 +15943,8 @@
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 93,
+            "ID": 95,
+            "ParentID": 94,
             "Name": "Ruby",
             "Active": true,
             "Components": [
@@ -15966,8 +16016,8 @@
             ]
         },
         {
-            "ID": 95,
-            "ParentID": 94,
+            "ID": 96,
+            "ParentID": 95,
             "Name": "Ruby Count",
             "Active": true,
             "Components": [
@@ -16039,8 +16089,8 @@
             ]
         },
         {
-            "ID": 96,
-            "ParentID": 93,
+            "ID": 97,
+            "ParentID": 94,
             "Name": "Sapphire",
             "Active": true,
             "Components": [
@@ -16112,8 +16162,8 @@
             ]
         },
         {
-            "ID": 97,
-            "ParentID": 96,
+            "ID": 98,
+            "ParentID": 97,
             "Name": "Sapphire Count",
             "Active": true,
             "Components": [
@@ -16185,8 +16235,8 @@
             ]
         },
         {
-            "ID": 98,
-            "ParentID": 93,
+            "ID": 99,
+            "ParentID": 94,
             "Name": "Emerald",
             "Active": true,
             "Components": [
@@ -16258,8 +16308,8 @@
             ]
         },
         {
-            "ID": 99,
-            "ParentID": 98,
+            "ID": 100,
+            "ParentID": 99,
             "Name": "Emerald Count",
             "Active": true,
             "Components": [
@@ -16331,9 +16381,9 @@
             ]
         },
         {
-            "ID": 100,
-            "ParentID": 90,
-            "Name": "Fragile Gauge",
+            "ID": 101,
+            "ParentID": 93,
+            "Name": "HPBar",
             "Active": true,
             "Components": [
                 {
@@ -16360,11 +16410,11 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
+                        "x": -853.2000122070313,
+                        "y": 384.79998779296875
                     },
                     "Width": 100.0,
-                    "Height": 100.0,
+                    "Height": 113.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
@@ -16378,98 +16428,13 @@
                         "y": 0.5
                     },
                     "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
-                }
-            ]
-        },
-        {
-            "ID": 101,
-            "ParentID": 100,
-            "Name": "Fragile Gauge Progress",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -796.2000122070313,
-                        "y": -331.1000061035156
-                    },
-                    "Width": 274.70001220703125,
-                    "Height": 28.399999618530273,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIProgressBar",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Value": 0.5619999766349792,
-                    "Shape": 0,
-                    "Direction": 0,
-                    "FillMode": 0,
-                    "StartAngleRad": -1.5707963705062866,
-                    "Clockwise": true,
-                    "InnerRadius01": 0.6000000238418579,
-                    "BgSprite": "",
-                    "FillSprite": "",
-                    "BgColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "FillColor": {
-                        "x": 0.5868721008300781,
-                        "y": 0.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
                 }
             ]
         },
         {
             "ID": 102,
             "ParentID": 101,
-            "Name": "Background",
+            "Name": "Heart_Case",
             "Active": true,
             "Components": [
                 {
@@ -16499,19 +16464,19 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 0.0,
-                    "Height": 0.0,
+                    "Width": 40.0,
+                    "Height": 35.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
                     },
                     "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
+                        "x": 0.5,
+                        "y": 0.5
                     },
                     "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
+                        "x": 0.5,
+                        "y": 0.5
                     },
                     "RotationZDeg": 0.0
                 },
@@ -16521,7 +16486,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16575,7 +16540,1156 @@
         },
         {
             "ID": 103,
+            "ParentID": 102,
+            "Name": "Heart(0)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 104,
             "ParentID": 101,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 45.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 105,
+            "ParentID": 104,
+            "Name": "Heart(1)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 106,
+            "ParentID": 101,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 90.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 107,
+            "ParentID": 106,
+            "Name": "Heart(2)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 108,
+            "ParentID": 101,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 135.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 109,
+            "ParentID": 108,
+            "Name": "Heart(3)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 110,
+            "ParentID": 101,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 180.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 111,
+            "ParentID": 110,
+            "Name": "Heart(4)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 112,
+            "ParentID": 93,
+            "Name": "Fragile Gauge Progress",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -652.4000244140625,
+                        "y": 461.29998779296875
+                    },
+                    "Width": 500.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIProgressBar",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Value": 0.0,
+                    "Shape": 0,
+                    "Direction": 0,
+                    "FillMode": 0,
+                    "StartAngleRad": -1.5707963705062866,
+                    "Clockwise": true,
+                    "InnerRadius01": 0.6000000238418579,
+                    "BgSprite": "",
+                    "FillSprite": "",
+                    "BgColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "FillColor": {
+                        "x": 0.5868721008300781,
+                        "y": 0.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 113,
+            "ParentID": 112,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/ProgressBar/Fragile_Gauge_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 114,
+            "ParentID": 112,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -16628,7 +17742,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/ProgressBar/Fragile_Gauge_bar.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16655,16 +17769,16 @@
                         "x": 0.5868721008300781,
                         "y": 0.0,
                         "z": 1.0,
-                        "w": 1.0
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
                         "x": 26.449981689453125,
-                        "y": 194.6999969482422,
-                        "z": 180.8313751220703,
-                        "w": 223.09999084472656
+                        "y": 751.2999877929688,
+                        "z": 26.99938201904297,
+                        "w": 779.7000122070313
                     },
-                    "MaskMode": 1,
+                    "MaskMode": 0,
                     "Mask0": {
                         "x": 0.0,
                         "y": 0.0,
@@ -16681,187 +17795,7 @@
             ]
         },
         {
-            "ID": 104,
-            "ParentID": 100,
-            "Name": "UIObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -885.0,
-                        "y": -344.1000061035156
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "Fragile Gauge\n",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 105,
-            "ParentID": 90,
-            "Name": "HitImage",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 1920.0,
-                    "Height": 1080.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "TexturePath": "None",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 0.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 1,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 106,
+            "ID": 115,
             "ParentID": 54,
             "Name": "HUD",
             "Active": true,
@@ -16975,8 +17909,8 @@
             ]
         },
         {
-            "ID": 107,
-            "ParentID": 106,
+            "ID": 116,
+            "ParentID": 115,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -17089,8 +18023,8 @@
             ]
         },
         {
-            "ID": 108,
-            "ParentID": 106,
+            "ID": 117,
+            "ParentID": 115,
             "Name": "Profile",
             "Active": true,
             "Components": [
@@ -17196,7 +18130,7 @@
             ]
         },
         {
-            "ID": 109,
+            "ID": 118,
             "ParentID": 54,
             "Name": "Canvas_KillPopUp",
             "Active": true,
@@ -17253,7 +18187,7 @@
             ]
         },
         {
-            "ID": 110,
+            "ID": 119,
             "ParentID": 54,
             "Name": "Label",
             "Active": true,
@@ -17326,7 +18260,7 @@
             ]
         },
         {
-            "ID": 111,
+            "ID": 120,
             "ParentID": 54,
             "Name": "Icon",
             "Active": true,
@@ -17433,7 +18367,7 @@
             ]
         },
         {
-            "ID": 112,
+            "ID": 121,
             "ParentID": 54,
             "Name": "UIToastPopUp",
             "Active": true,
@@ -17556,7 +18490,7 @@
             ]
         },
         {
-            "ID": 113,
+            "ID": 122,
             "ParentID": 54,
             "Name": "Canvas_Message",
             "Active": true,
@@ -17617,7 +18551,7 @@
             ]
         },
         {
-            "ID": 114,
+            "ID": 123,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -17666,6 +18600,7 @@
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.30000001192092896,
+                    "DashMaxDurationLimit": 0.6000000238418579,
                     "BaseDashDistance": 6.0,
                     "DashDecayRate": 2.0,
                     "DashDecayDuration": 0.5,
@@ -17677,6 +18612,8 @@
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 300.0,
                     "FragileGaugeRisePerSecond": 15.0,
+                    "PlayerMaxHP": 100.0,
+                    "InvincibleTime": 0.5,
                     "IsInvincible": false,
                     "EED_Enable": false,
                     "EED_DamageScale": 5.0,
@@ -17768,7 +18705,7 @@
             ]
         },
         {
-            "ID": 115,
+            "ID": 124,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -18006,7 +18943,7 @@
             ]
         },
         {
-            "ID": 116,
+            "ID": 125,
             "Name": "SceneController_Tutorial",
             "Active": true,
             "Components": [

@@ -54,7 +54,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 충돌 처리
         // ─────────────────────────────────────────────
-        void TakeDamage(float damage) override;
+        //void TakeDamage(float damage) override;
         void OnTriggerEnter(const engine::CollisionInfo& info) override;
 
         // ─────────────────────────────────────────────

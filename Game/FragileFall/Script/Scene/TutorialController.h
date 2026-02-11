@@ -4,6 +4,11 @@
 #include <Script/CharacterScript/Player/PlayerControllerScript.h>
 #include <Framework/Object/Component/UI/UIClickArea.h>
 
+namespace engine
+{
+    class UIImage;
+}
+
 namespace game
 {
     class UIMessageQueue;
@@ -72,6 +77,7 @@ namespace game
         void OnSceneLoaded();
 
         void BindButton(const std::string& goName, std::function<void()> callback);
+        void HighlightButton(const std::string& goName, bool enable);
         void UnBindAllButtons();
 		void SetActiveButton(const std::string& goName, bool active, bool outline);
         void SetupSkillNodesUI(const std::string& goName, bool isChildSetup = false, bool isActive = false);
@@ -87,6 +93,10 @@ namespace game
     private:
         PlayerControllerScript* GetPlayer();
         void UpdateGaugeAnimation();
+
+        engine::UIImage* m_outline1 = nullptr;
+        engine::UIImage* m_outline2 = nullptr;
+        engine::UIImage* m_outline3 = nullptr;
 
     public:
         // void OnGui() override;

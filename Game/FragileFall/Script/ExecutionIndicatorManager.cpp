@@ -710,6 +710,12 @@ namespace game
     {
         if (!target || m_isWaitingForTrigger || !m_player) return;
 
+        // 처형 요청이 시작되는 즉시 Execute 커서를 고정한다.
+        if (m_aimController)
+        {
+            m_aimController->SetExecutionInProgress(true);
+        }
+
         // ─────────────────────────────────────────────
         // 연속 처형: 기존 처형 진행 중이면 정리 후 새 처형 시작
         // ─────────────────────────────────────────────
@@ -824,6 +830,11 @@ namespace game
         }
 
         m_executingGameObject = nullptr;
+
+        if (m_aimController)
+        {
+            m_aimController->SetExecutionInProgress(false);
+        }
 
         // 인디케이터 매니저는 계속 동작 (호버/라인 표시 등)
     }

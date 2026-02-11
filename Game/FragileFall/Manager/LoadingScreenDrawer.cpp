@@ -78,7 +78,7 @@ namespace game
 		std::shared_ptr<engine::SpriteAnimationData> g_sceneLoadAnimData;
 		float g_sceneLoadAnimTime = 0.0f;
 		std::shared_ptr<engine::Texture> g_loadingTextTexture;
-		constexpr float SCENE_LOAD_ANIM_Y_RATIO = 0.34f;
+		constexpr float SCENE_LOAD_ANIM_Y_RATIO = 0.40f;
 		constexpr float SCENE_LOAD_BAR_Y_RATIO = 0.52f;
 		constexpr float SCENE_LOAD_TEXT_Y_RATIO = 0.72f;
 		constexpr float SCENE_LOAD_ANIM_SIZE_PX = 200.0f;
@@ -106,7 +106,6 @@ namespace game
 			"강화는 영구적으로 미타한테 영향을 줍니다.",
 			"쉬운 일은 아니지만, 강화 없이도 올클리어할 수 있습니다.",
 			"가끔은 로비로 돌아가서 정비를 하는건 어떨까요?",
-			"모든 빌드가 풀강인가요? 개발자한테 오세요.",
 			"던전은 수정으로 잠식되기 전 유명한 광산이였습니다.",
 			"수정에 잠식된 사람은 죽기 전까지 잠식이 풀리지 않습니다.",
 			"미타의 나이는 21살입니다.",
@@ -209,6 +208,8 @@ namespace game
 			fd.atlasHeight = 1024;
 			fd.maxPages = 1;
 			fd.atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+			fd.syntheticBold = true;
 
 			g_loadingFont = std::make_shared<engine::FontData>();
 			g_loadingFont->Initialize(engine::GraphicsDevice::Get().GetDevice().Get(), fd);
@@ -422,7 +423,7 @@ namespace game
 		const float sTextH = SCENE_LOAD_TEXT_HEIGHT_PX * scale;
 
 		const engine::Vector4 barBgColor(0.2f, 0.2f, 0.2f, 0.9f);
-		const engine::Vector4 barFillColor(0.4f, 0.7f, 1.0f, 1.0f);
+		const engine::Vector4 barFillColor(1.0f, 228 / 255.0f, 120 / 255.0f, 1.0f);
 
 		// IA
 		dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
