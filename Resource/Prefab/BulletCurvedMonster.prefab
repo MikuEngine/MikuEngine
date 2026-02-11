@@ -52,7 +52,7 @@
                     ],
                     "isTrigger": true,
                     "syncWithTransform": true,
-                    "layer": 6,
+                    "layer": 21,
                     "materialType": 0,
                     "radius": 0.5
                 },
@@ -62,6 +62,7 @@
                     "MeshFilePath": "Resource/Model/Sphere.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
