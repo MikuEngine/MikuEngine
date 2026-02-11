@@ -110,7 +110,7 @@ namespace game
                 // 30% 이상일 때: 강도 0.1 ~ 0.4 사이를 부드럽게 (혹은 0.1 고정)
                 else if (ratio >= 0.3f)
                 {
-                    intensity = 0.2f;
+                    intensity = 0.30f;
                 }
                 // 0% ~ 30% 미만: 강도 0.0 ~ 0.1 미만 부드럽게
                 else

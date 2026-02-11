@@ -403,41 +403,37 @@ void ApplyFx_PurpleCorruption(float2 uv, inout float4 col)
         return;
 
     float2 center = uv - 0.5;
+    float ellipseDist = length(center * float2(1.0, 1.2)); // 타원 거리
     
-    // 타원형 거리 계산
-    float ellipseDist = sqrt(dot(center * float2(1.0, 1.2), center * float2(1.0, 1.2)));
+    // --- [추가] 중앙으로 흐르는 방향 벡터 계산 ---
+    // 방향(dir)은 중앙(center)을 향하고, 시간(g_time)에 따라 흐름
+    float2 dir = normalize(center);
+    float flowSpeed = 0.08;
+    // uv에 dir * g_time을 더해주면 노이즈가 중앙으로 빨려 들어가는 느낌이 남
+    float2 flowUV = uv + dir * g_time * flowSpeed;
 
-    // --- [수정 1] 노이즈 입자 키우기 (Tiling 4.0 -> 1.5~2.0) ---
-    // 숫자가 작아질수록 노이즈 덩어리가 커집니다.
-    float n = Noise01(uv, float2(1.8, 1.8), float2(0.1, 0.05), g_time * 0.2);
-    
-    // 노이즈 대비 (타들어가는 경계를 더 덩어리감 있게)
-    float burnNoise = smoothstep(0.3, 0.7, n);
+    // 노이즈 입자는 크게 유지
+    float n = Noise01(flowUV, float2(1.5, 1.5), float2(0.0, 0.0), 0.0);
+    float burnNoise = smoothstep(0.2, 0.8, n);
 
-    // --- [수정 2] 잠식 공식 보정 (더 스멀스멀 들어오게) ---
-    // intensity가 낮을 때 더 외곽에 머물도록 threshold 범위를 살짝 조정
-    float threshold = 1.1 - (intensity * 1.2);
-    
-    // 마스크 생성 (경계면을 조금 더 부드럽게: 0.3 -> 0.4)
-    float mask = smoothstep(threshold, threshold + 0.4, ellipseDist + burnNoise * 0.25);
+    // 잠식 범위 제어 (C++에서 intensity가 최대 0.4이므로 이에 맞춰 조정)
+    // 0.4일 때 40% 정도 들어오게 하려면 threshold 조절이 필요
+    float threshold = 1.2 - (intensity * 1.8);
+    float mask = smoothstep(threshold, threshold + 0.5, ellipseDist + burnNoise * 0.3);
 
-    // 4. 색상 설정
-    float3 deepPurple = float3(0.05, 0.0, 0.15); // 더 깊은 심연색
-    float3 edgePurple = float3(0.7, 0.2, 1.0); // 더 밝은 경계선
+    // 색상 설정
+    float3 deepPurple = float3(0.08, 0.0, 0.15);
+    float3 edgePurple = float3(0.6, 0.2, 1.0);
 
-    // 경계선 추출
-    float edge = smoothstep(0.12, 0.0, abs((ellipseDist + burnNoise * 0.25) - threshold)) * intensity;
+    // 경계선 글로우
+    float edge = smoothstep(0.15, 0.0, abs((ellipseDist + burnNoise * 0.3) - threshold)) * (intensity * 2.5);
 
-    // 5. 최종 합성
     col.rgb = lerp(col.rgb, deepPurple, mask);
-    col.rgb += edge * edgePurple * 2.5; // 경계선 광채 강화
+    col.rgb += edge * edgePurple;
 
-    // --- [수정 3] 알파 제어 ---
-    // 이미지 기본 알파가 0이어도 mask 영역만큼은 보라색이 그려짐
-    // intensity를 곱해줘서 게이지가 낮을 땐 외곽 안개도 투명하게 시작함
-    col.a = max(col.a, mask * saturate(intensity * 1.5));
+    // 알파 제어
+    col.a = max(col.a, mask * saturate(intensity * 2.0 + 0.2));
 }
-
 //////////////////////////////////////////////////////////////////////////
 // 
 //  Masking
