@@ -126,7 +126,7 @@ namespace engine
             // if (m_editorState == EditorState::Play) Input::SetLockMode(true);
         }
 
-        // 단축키 'h' : 에디터 숨김 
+        // 단축키 'F1' : 에디터 숨김 
         if (Input::IsKeyReleased(Keys::F1))
         {
             m_showEditorUI = !m_showEditorUI;

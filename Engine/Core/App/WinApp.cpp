@@ -390,14 +390,14 @@ namespace engine
         {
             if (currentState == EditorState::Play)
             {
-                // 게임 플레이 중에는 무조건 락
-                shouldLock = true;
-
 #ifdef _DEBUG
-                // Debug: Play에서도 기본 커서 보이기
-                shouldHideCursor = false;
+                const bool wantsCapture = EditorManager::Get().WantsMouseCapture();
+
+                // Debug 기본: Play에서도 커서 보이게
+                shouldLock = wantsCapture;                 // F1로 숨기면 캡처
+                shouldHideCursor = wantsCapture;           // 캡처 중엔 OS 커서 숨김
 #else
-                // Release: Play에서 커서 숨기기
+                shouldLock = true;
                 shouldHideCursor = true;
 #endif
             }
@@ -420,18 +420,20 @@ namespace engine
         // 확정된 상태로 LockMode와 Input 업데이트를 수행
         Input::SetLockMode(shouldLock);
 
-        CURSORINFO ci = { sizeof(CURSORINFO) };
-        ci.cbSize = sizeof(CURSORINFO);
-        if (GetCursorInfo(&ci))
-        {
-            bool isCurrentlyShowing = (ci.flags & CURSOR_SHOWING);
+        static bool s_lastHide = false;
 
-            // 숨겨야 하는데 보이고 있다면 -> 숨김
-            if (shouldHideCursor && isCurrentlyShowing)
-                ::ShowCursor(false);
-            // 보여야 하는데 숨겨져 있다면 -> 보임
-            else if (!shouldHideCursor && !isCurrentlyShowing)
-                ::ShowCursor(true);
+        if (s_lastHide != shouldHideCursor)
+        {
+            s_lastHide = shouldHideCursor;
+
+            if (shouldHideCursor)
+            {
+                while (::ShowCursor(false) >= 0) {}
+            }
+            else
+            {
+                while (::ShowCursor(true) < 0) {}
+            }
         }
 
 #ifdef _DEBUG
