@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -64,8 +64,10 @@ namespace game
 			m_fragileGaugeCurrent = savedFragileGauge;
 		}
 
+		// 플레이 씬 시작 시 현재 플레이어의 MaxHP 기준으로 RunHP를 초기화한다.
+		StageManager::Get().ResetRunHp(m_PlayerMaxHP);
 		m_PlayerCurrentHP = StageManager::Get().GetRunHP();
-		m_PlayerMaxHP = 100.0f;
+		m_PlayerCurrentHP = std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP);
 
 
 		// sound notify 바인딩
@@ -1863,6 +1865,16 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	ImGui::Text("Current: %.1f / %.1f", m_fragileGaugeCurrent, m_fragileGaugeMax);
 	ImGui::ProgressBar(gaugeRatio, ImVec2(-1, 0), "");
 
+	// HP (Max는 편집 가능, Current는 읽기 전용)
+	ImGui::Separator();
+	ImGui::Text("HP:");
+	ImGui::DragFloat("Player Max HP", &m_PlayerMaxHP, 1.0f, 1.0f, 10000.0f);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("플레이어 최대 체력 (직렬화 저장)");
+	ImGui::Text("Player Current HP (ReadOnly): %.1f", m_PlayerCurrentHP);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("런타임 현재 체력 (읽기 전용)");
+
 	// 무적 상태
 	ImGui::Separator();
 	ImGui::Text("Invincibility:");
@@ -1932,6 +1944,7 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	j["FragileGaugeCurrent"] = m_fragileGaugeCurrent;
 	j["FragileGaugeMax"] = m_fragileGaugeMax;
 	j["FragileGaugeRisePerSecond"] = m_fragileGaugeRisePerSecond;
+	j["PlayerMaxHP"] = m_PlayerMaxHP;
 	
 	// 무적 상태
 	j["IsInvincible"] = m_isInvincible;
@@ -2029,6 +2042,8 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		m_fragileGaugeMax = j["FragileGaugeMax"].get<float>();
 	if (j.contains("FragileGaugeRisePerSecond"))
 		m_fragileGaugeRisePerSecond = j["FragileGaugeRisePerSecond"].get<float>();
+	if (j.contains("PlayerMaxHP"))
+		m_PlayerMaxHP = j["PlayerMaxHP"].get<float>();
 	
 	// 무적 상태
 	if (j.contains("IsInvincible"))
