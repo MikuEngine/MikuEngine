@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -133,6 +133,7 @@ namespace game
         // - Impulse로 순간 가속 후 지수 감쇠
         // ─────────────────────────────────────────────
         float m_dashDuration = 0.3f;                    // 대쉬 지속 시간 (초)
+        float m_dashMaxDurationLimit = 0.6f;            // 대쉬 상태 강제 탈출 최대 허용 시간 (초)
         float m_dashDecayRate = 4.0f;                   // 대쉬 지수 감쇠율 (높을수록 빠르게 감속)
         int m_MaxDashCount = 3;
         int m_CurrentDashCount = 3;
@@ -147,6 +148,8 @@ namespace game
         bool m_isDashing = false;                       // 대쉬 중 여부 (FSM 동기화)
         float m_dashCooldownTimer = 0.0f;               // 쿨다운 타이머
         float m_dashElapsedTime = 0.0f;                 // 대쉬 경과 시간
+        float m_dashStateElapsedTime = 0.0f;            // Dash 상태 경과 시간(타임아웃 체크용)
+        bool m_dashForceExitPending = false;            // Dash 상태 진입 프레임에 발견된 이상 상황 지연 탈출 플래그
         engine::Vector3 m_dashDirection = engine::Vector3::Zero;  // 대쉬 방향 (시작 시 고정)
         
         // ─────────────────────────────────────────────
@@ -380,7 +383,7 @@ namespace game
         // ─────────────────────────────────────────────
         
         void HandleDash();               // 대쉬 처리 (FixedUpdate에서 호출)
-        void StartDash();                // 대쉬 시작
+        void StartDash(const engine::Vector3& moveDir);  // 대쉬 시작
         void EndDash();                  // 대쉬 종료
         void StartDashDecay();           // 대쉬 감속 시작
         void HandleDashDecay();          // 대쉬 감속 처리 (FixedUpdate에서 호출)

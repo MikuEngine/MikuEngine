@@ -54,6 +54,17 @@
 	},
 	{ 
 		"Type": "SoundQue",
+		"Name": "Monster_Shot_Random",
+		"Paths": [
+			"Resource/Sound/SFX/Monster/Monster_shot_1.mp3",
+			"Resource/Sound/SFX/Monster/Monster_shot_2.mp3",
+			"Resource/Sound/SFX/Monster/Monster_shot_3.mp3",
+			"Resource/Sound/SFX/Monster/Monster_shot_4.mp3"
+		],
+		"Option": "SFX/Monster"
+	},
+	{ 
+		"Type": "SoundQue",
 		"Name": "Monster_Damaged_Random",
 		"Paths": [
 			"Resource/Sound/SFX/Monster/Monster_Damaged_1.mp3",
@@ -73,7 +84,9 @@
 		],
 		"Option": "SFX/Item"
 	},
-	{ "Type": "Sound", "Path": "Resource/Sound/Suki_Yuki_Maji_Magic.mp3", "Option": "BGM" },
+	{ "Type": "Sound", "Path": "Resource/Sound/BGM/Tilte_BGM.wav", "Option": "BGM" },
+	{ "Type": "Sound", "Path": "Resource/Sound/BGM/Lobby_BGM.wav", "Option": "BGM" },
+	{ "Type": "Sound", "Path": "Resource/Sound/BGM/Combat_1.wav", "Option": "BGM" },
 	{ "Type": "Sound", "Name": "UI_Open", "Path": "Resource/Sound/SFX/UI/UI_Open.wav", "Option": "SFX/UI" },
 	{ "Type": "Sound", "Name": "UI_Close", "Path": "Resource/Sound/SFX/UI/UI_Close.wav", "Option": "SFX/UI" },
 	{ "Type": "Sound", "Name": "Player_Dash", "Path": "Resource/Sound/SFX/Player/Player_Dash.wav", "Option": "SFX/Player" },

@@ -6,6 +6,7 @@
 #include "Script/MonsterUpdateActivationSwitch.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
+#include <Framework/Object/Component/AnimFSM.h>
 #include <Framework/Object/Component/Transform.h>
 #include <Framework/Object/Component/Animator/SkeletalAnimator.h>
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
@@ -108,6 +109,22 @@ namespace game
 	{
 		if (m_updateSwitch)
 		{
+			// 최초 활성화 전, Idle에 진입한 첫 순간에만 대기 카운트를 시작한다.
+			if (!m_isActive && !m_isReadyAndWait && m_updateSwitch->ShouldWaitAfterIdle())
+			{
+				if (GetCurrentState() == "Idle")
+				{
+					// 대기 진입 직전에 Idle 애니메이션을 1회 강제 동기화해 T-Pose를 방지한다.
+					if (m_animFSM)
+					{
+						m_animFSM->SetAnimState("Idle");
+					}
+
+					m_isReadyAndWait = true;
+					m_updateSwitch->BeginDelayAfterIdle();
+				}
+			}
+
 			m_isDoUpdate = m_updateSwitch->GetIsUpdateAllowed();
 
 			if (!m_isDoUpdate)
@@ -116,7 +133,7 @@ namespace game
 			}
 			else
 			{
-				if (m_updateSwitch->m_hasActivated)
+				if (m_updateSwitch->HasActivated())
 				{
 					m_isActive = true;
 				}

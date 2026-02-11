@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Component/ComponentFactory.h>
@@ -30,10 +30,13 @@ namespace game
         // ─────────────────────────────────────────────
         // Public 멤버 (몬스터가 접근)
         // ─────────────────────────────────────────────
-        bool m_isUpdateAllowed = false;  // 몬스터 업데이트 허용 여부
-        bool m_hasActivated = false;     // 한 번 활성화되었는지 (중복 실행 방지)
+        bool m_isUpdateAllowed = false;  // 몬스터 업데이트 허용 여부 (런타임 전용)
+        bool m_hasActivated = false;     // 한 번 활성화되었는지 (런타임 전용)
 
-        bool GetIsUpdateAllowed() { return m_isUpdateAllowed; }
+        bool GetIsUpdateAllowed() const { return m_isUpdateAllowed; }
+        bool HasActivated() const { return m_hasActivated; }
+        bool ShouldWaitAfterIdle() const { return m_waitAfterIdle; }
+        void BeginDelayAfterIdle();
         void SetSwitchActivation(bool setparam);
        
     private:
@@ -41,11 +44,15 @@ namespace game
         // 설정 (인스펙터 직렬화)
         // ─────────────────────────────────────────────
         float m_activationDelay = 1.0f;  // 업데이트 허용까지 대기 시간 (초)
+        bool m_waitAfterIdle = true;     // true: Idle 도달 후 대기 시작, false: 씬 시작 즉시 대기 시작
 
         // ─────────────────────────────────────────────
         // 런타임 상태
         // ─────────────────────────────────────────────
         float m_elapsedTime = 0.0f;      // 경과 시간
+        bool m_waitingForDelay = false;  // 실제 대기 카운트 진행 중인지
+
+        void ResetRuntimeState();
        
 
     public:

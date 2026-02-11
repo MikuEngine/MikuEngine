@@ -318,6 +318,14 @@ namespace game
 	{
 		if (!m_logicFSM) return;
 
+		// Dash 진입 프레임에서 감지된 비정상 케이스는 다음 프레임 입력 단계에서 탈출 트리거를 건다.
+		// (같은 프레임 UpdateFSM의 Trigger reset에 먹히는 문제 회피)
+		if (m_dashForceExitPending)
+		{
+			m_logicFSM->SetTrigger("DashComplete");
+			m_dashForceExitPending = false;
+		}
+
 		// Execution 상태에서는 입력 무시
 		if (IsInState("Execution"))
 		{
@@ -384,16 +392,15 @@ namespace game
 		// ─────────────────────────────────────────────
 		bool isShiftPressed = engine::Input::IsKeyPressed(engine::Keys::LeftShift);
 		bool isSpaceBarPressed = engine::Input::IsKeyPressed(engine::Keys::Space);
+		bool hasDashDirection = m_inputMoveDir.LengthSquared() >= 0.0001f;
 
 		bool isDashAble = m_logicFSM->GetCurrentState() != "Execution" && m_logicFSM->GetCurrentState() != "Dash" && m_logicFSM->GetCurrentState() != "Dead";
 
-		bool isMoving = m_isMoving;
-
-		if ((isShiftPressed || isSpaceBarPressed) && isMoving && m_dashCooldownTimer <= 0.0f && m_CurrentDashCount > 0)
+		if (isDashAble && (isShiftPressed || isSpaceBarPressed) && hasDashDirection && m_dashCooldownTimer <= 0.0f && m_CurrentDashCount > 0)
 		{
 			// 대쉬 상태 전이
 			m_logicFSM->SetTrigger("StartDash");
-			StartDash();
+			StartDash(m_inputMoveDir);
 
 			// 대쉬 사운드
 			engine::SoundSystem::Get().Play("Player_Dash", "SFX/Player", true);
@@ -510,6 +517,32 @@ namespace game
 		if (m_postDashQuickFireTimer > 0.0f)
 		{
 			m_postDashQuickFireTimer -= deltaTime;
+		}
+
+		// ─────────────────────────────────────────────
+		// Dash 상태 타임아웃 안전장치
+		// - m_dashDuration과 별개로 Dash 상태 고착을 막기 위한 상한
+		// ─────────────────────────────────────────────
+		if (IsInState("Dash"))
+		{
+			m_dashStateElapsedTime += deltaTime;
+			if (m_dashStateElapsedTime >= m_dashMaxDurationLimit)
+			{
+				if (m_isDashing)
+				{
+					EndDash();
+				}
+				else if (m_logicFSM)
+				{
+					m_logicFSM->SetTrigger("DashComplete");
+				}
+				m_dashStateElapsedTime = 0.0f;
+				m_dashForceExitPending = false;
+			}
+		}
+		else
+		{
+			m_dashStateElapsedTime = 0.0f;
 		}
 
 		// ─────────────────────────────────────────────
@@ -709,11 +742,8 @@ namespace game
 			// ═══════════════════════════════════════════════════════════════
 			if (!m_isDashing)
 			{
-				// 버그 상황 감지: 즉시 종료 처리
-				if (m_logicFSM)
-				{
-					m_logicFSM->SetTrigger("DashComplete");
-				}
+				// 버그 상황 감지: 같은 프레임 즉시 트리거 대신 다음 프레임에서 지연 탈출
+				m_dashForceExitPending = true;
 			}			
 
 		}
@@ -758,6 +788,8 @@ namespace game
 			{
 				m_isDashing = false;
 				m_dashElapsedTime = 0.0f;
+				m_dashStateElapsedTime = 0.0f;
+				m_dashForceExitPending = false;
 				m_dashCooldownTimer = m_temperFinal.dashCooldown;
 				
 				// 잔상 녹화 종료
@@ -956,10 +988,10 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	// 대쉬 처리 (Dynamic Rigidbody + Impulse)
 	// ═══════════════════════════════════════════════════════════════
-	void PlayerControllerScript::StartDash()
+void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	{
 		// 입력 방향이 없으면 대쉬 불가
-		engine::Vector3 moveDir = GetMoveInputDirection();
+		engine::Vector3 moveDir = moveDirInput;
 		if (moveDir.LengthSquared() < 0.0001f)
 		{
 			// 이동 입력이 없으면 대쉬 취소 (안전 장치)
@@ -978,6 +1010,8 @@ namespace game
 
 		m_isDashing = true;
 		m_dashElapsedTime = 0.0f;
+		m_dashStateElapsedTime = 0.0f;
+		m_dashForceExitPending = false;
 
 		
 		// ═══════════════════════════════════════════════════════════════
@@ -1025,6 +1059,8 @@ namespace game
 
 		m_isDashing = false;
 		m_dashElapsedTime = 0.0f;
+		m_dashStateElapsedTime = 0.0f;
+		m_dashForceExitPending = false;
 		m_dashCooldownTimer = m_temperFinal.dashCooldown;
 
 		// FSM 상태 전이 (Dash → Walk)
@@ -1622,6 +1658,7 @@ namespace game
 		ImGui::Separator();
 		ImGui::Text("Dash:");
 		ImGui::DragFloat("Dash Duration (sec)", &m_dashDuration, 0.1f, 0.1f, 3.0f);
+		ImGui::DragFloat("Dash Max Duration Limit (sec)", &m_dashMaxDurationLimit, 0.05f, 0.1f, 3.0f);
 		if (ImGui::DragFloat("Base Dash Distance", &m_temperBase.dashDistance, 0.1f, 0.0f, 100.0f))
 			PlayerTemperManager::ApplyTemper(this);
 		if (ImGui::IsItemHovered())
@@ -1686,6 +1723,7 @@ namespace game
 			float progress = (m_dashDuration > 0.0f) ? (m_dashElapsedTime / m_dashDuration) * 100.0f : 0.0f;
 			ImGui::Text("  Dash Progress: %.0f%% (%.2f / %.2f sec)", progress, m_dashElapsedTime, m_dashDuration);
 		}
+		ImGui::Text("  Dash State Elapsed: %.2f / %.2f sec", m_dashStateElapsedTime, m_dashMaxDurationLimit);
 		
 		if (m_isDashDecaying)
 		{
@@ -1880,6 +1918,7 @@ namespace game
 
 		// 대쉬 설정 (Dynamic Impulse + 독립 감속)
 		j["DashDuration"] = m_dashDuration;
+		j["DashMaxDurationLimit"] = m_dashMaxDurationLimit;
 		j["BaseDashDistance"] = m_temperBase.dashDistance;
 		j["DashDecayRate"] = m_dashDecayRate;
 		j["DashDecayDuration"] = m_dashDecayDuration;
@@ -1961,6 +2000,8 @@ namespace game
 		// 대쉬 설정 (Dynamic Impulse + 독립 감속)
 		if (j.contains("DashDuration"))
 			m_dashDuration = j["DashDuration"].get<float>();
+		if (j.contains("DashMaxDurationLimit"))
+			m_dashMaxDurationLimit = j["DashMaxDurationLimit"].get<float>();
 		if (j.contains("BaseDashDistance"))
 			m_temperBase.dashDistance = j["BaseDashDistance"].get<float>();
 		// (하위호환 원하면)

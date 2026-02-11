@@ -31,7 +31,7 @@
                     "Type": "MonsterUpdateActivationSwitch",
                     "Active": true,
                     "ActivationDelay": 3.0,
-                    "IsUpdateAllowed": false
+                    "WaitAfterIdle": true
                 }
             ]
         }

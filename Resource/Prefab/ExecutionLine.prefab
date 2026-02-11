@@ -12,14 +12,14 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": -1.1920928955078125e-07,
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": 0.7071067690849304,
+                        "x": 0.7071068286895752,
                         "y": 0.0,
                         "z": 0.0,
-                        "w": 0.7071067094802856
+                        "w": 0.7071068286895752
                     },
                     "Scale": {
                         "x": 1.0,
@@ -30,7 +30,7 @@
                 {
                     "Type": "SpriteRenderer",
                     "Active": true,
-                    "TextureFilePath": "Resource/Texture/temp_Long_dotLine_Arrow.png",
+                    "TextureFilePath": "Resource/Texture/Target_Line.png",
                     "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",

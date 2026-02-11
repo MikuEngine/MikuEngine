@@ -1,5 +1,6 @@
 ﻿#include "GamePCH.h"
 #include "LoadingScreenDrawer.h"
+#include <random>
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
 #include <Core/Graphics/Resource/ResourceManager.h>
@@ -57,6 +58,7 @@ namespace game
 		std::shared_ptr<engine::BlendState> g_blendPremul;
 		std::shared_ptr<engine::DepthStencilState> g_depthNone;
 		std::shared_ptr<engine::FontData> g_loadingFont;
+		std::shared_ptr<engine::FontData> g_randomMessage;
 
 		float g_orbitAngle = 0.0f;
 
@@ -76,10 +78,10 @@ namespace game
 		std::shared_ptr<engine::SpriteAnimationData> g_sceneLoadAnimData;
 		float g_sceneLoadAnimTime = 0.0f;
 		std::shared_ptr<engine::Texture> g_loadingTextTexture;
-		constexpr float SCENE_LOAD_ANIM_Y_RATIO = 0.28f;
+		constexpr float SCENE_LOAD_ANIM_Y_RATIO = 0.34f;
 		constexpr float SCENE_LOAD_BAR_Y_RATIO = 0.52f;
 		constexpr float SCENE_LOAD_TEXT_Y_RATIO = 0.72f;
-		constexpr float SCENE_LOAD_ANIM_SIZE_PX = 100.0f;
+		constexpr float SCENE_LOAD_ANIM_SIZE_PX = 200.0f;
 		constexpr float SCENE_LOAD_TEXT_WIDTH_PX = 200.0f;
 		constexpr float SCENE_LOAD_TEXT_HEIGHT_PX = 40.0f;
 
@@ -91,6 +93,30 @@ namespace game
 		constexpr float LOADING_TEXT_GRACE_SEC = 0.0f;
 		constexpr float LOADING_STEP_SEC = 0.30f;
 		float g_loadingElapsed = 0.0f;
+
+		std::mt19937 g_rng{ std::random_device{}() };
+		std::string g_pickedRandomMessage;
+
+		static const std::vector<std::string> g_randomMessages =
+		{
+			"(대충 겁나 쩌는 세계관 설명)",
+			"ㅁㄴㅇㄹ",
+			"TMI 쓰기",
+			"잠시만 기다려 주세요",
+			"미타는 미쿠와 리타를 모티브로 만들어진 이름입니다."
+		};
+	}
+
+	static void PickRandomMessage()
+	{
+		if (g_randomMessages.empty())
+		{
+			g_pickedRandomMessage.clear();
+			return;
+		}
+
+		std::uniform_int_distribution<size_t> dist(0, g_randomMessages.size() - 1);
+		g_pickedRandomMessage = g_randomMessages[dist(g_rng)];
 	}
 
 	static bool NextUtf8Codepoint(const char*& p, const char* end, uint32_t& outCp)
@@ -145,9 +171,9 @@ namespace game
 
 			g_logoTexture = rm.GetOrCreateTexture("Resource/Texture/UI/Image/EngineLogo.png", engine::LifeScope::Global);
 			g_orbitTextTexture = rm.GetOrCreateTexture("Resource/Texture/UI/Image/MikuEngineText.png", engine::LifeScope::Global);
-			g_sceneLoadAnimTexture = rm.GetOrCreateTexture("Resource/Texture/Flame.png", engine::LifeScope::Global);
-			g_sceneLoadSpriteData = engine::AssetManager::Get().GetOrCreateSpriteData("Resource/Data/SpriteSheet/Flame.spritedata", engine::LifeScope::Global);
-			g_sceneLoadAnimData = engine::AssetManager::Get().GetOrCreateSpriteAnimationData("Resource/Data/SpriteAnim/Flame_a.animdata", engine::LifeScope::Global);
+			g_sceneLoadAnimTexture = rm.GetOrCreateTexture("Resource/Texture/Loading_image_sprite.png", engine::LifeScope::Global);
+			g_sceneLoadSpriteData = engine::AssetManager::Get().GetOrCreateSpriteData("Resource/Data/SpriteSheet/Loading_image_sprite.spritedata", engine::LifeScope::Global);
+			g_sceneLoadAnimData = engine::AssetManager::Get().GetOrCreateSpriteAnimationData("Resource/Data/SpriteAnim/Loading_image_sprite.animdata", engine::LifeScope::Global);
 			if (g_sceneLoadSpriteData && g_sceneLoadAnimData)
 				g_sceneLoadAnimData->SetupFramesIndex(g_sceneLoadSpriteData.get());
 			g_loadingTextTexture = rm.GetOrCreateTexture("Resource/Texture/LoadingText.png", engine::LifeScope::Global);
@@ -166,7 +192,6 @@ namespace game
 			g_whiteTexture = rm.GetDefaultTexture(engine::DefaultTextureType::White);
 
 			// 폰트생성
-			g_loadingFont = std::make_shared<engine::FontData>();
 			engine::FontData::Desc fd{};
 			fd.ttfPath = "Resource/Font/Chilgok_lws_Font.ttf";
 			fd.pixelSize = 40; // 생성할 텍스처의 퀄리티 기준
@@ -175,7 +200,10 @@ namespace game
 			fd.maxPages = 1;
 			fd.atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
+			g_loadingFont = std::make_shared<engine::FontData>();
 			g_loadingFont->Initialize(engine::GraphicsDevice::Get().GetDevice().Get(), fd);
+
+			g_randomMessage = g_loadingFont;
 
 			once = true;
 		}
@@ -363,9 +391,12 @@ namespace game
 		auto* dc = gd.GetDeviceContext().Get();
 
 		const D3D11_VIEWPORT vp = gd.GetViewport();
-		const float scale = vp.Height / 1080.0f;
 
-		const float textOffsetY = 150.0f;
+		const float scaleX = vp.Width / 1920.0f;
+		const float scaleY = vp.Height / 1080.0f;
+		const float scale = (scaleX < scaleY) ? scaleX : scaleY;
+
+		const float textOffsetY = 150.0f * scale;
 
 		const float centerX = vp.Width * 0.5f;
 		const float animCenterY = vp.Height * SCENE_LOAD_ANIM_Y_RATIO;
@@ -452,13 +483,6 @@ namespace game
 		const float fillCenterX = centerX - (sBarW - fillWidth) * 0.5f;
 		DrawUIQuad(dc, fillCenterX, barCenterY, fillWidth, sBarH, vp, barFillColor);
 
-		// 3) 그 아래: '로딩중...' 텍스트 이미지
-		//if (g_loadingTextTexture)
-		//{
-		//	dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_loadingTextTexture->GetSRV().GetAddressOf());
-		//	DrawUIQuad(dc, centerX, textCenterY, sTextW, sTextH, vp);
-		//}
-
 		// 3) 로고 아래 텍스트
 		if (g_loadingFont)
 		{
@@ -473,7 +497,7 @@ namespace game
 			else
 			{
 				// (B) 이후엔 단계 애니메이션
-				g_loadingDotsTime += engine::Time::UnscaledDeltaTime();
+				//g_loadingDotsTime += engine::Time::UnscaledDeltaTime();
 				g_loadStep = (int)floorf(g_loadingDotsTime / LOADING_STEP_SEC) % 6; // 0~5
 
 				switch (g_loadStep)
@@ -492,14 +516,35 @@ namespace game
 			const char* p = loadingStr.data();
 			const char* end = p + loadingStr.size();
 			uint32_t cp;
+
 			while (NextUtf8Codepoint(p, end, cp)) {
-				totalWidth += g_loadingFont->EnsureGlyph(dc, cp).advance;
+				totalWidth += g_loadingFont->EnsureGlyph(dc, cp).advance * scale;
 			}
 
 			const float textStartX = centerX - (totalWidth * 0.5f);
-			const float textStartY = textCenterY - (40.0f * scale * 0.5f);
+			const float textStartY = textCenterY + 70.0f;
 
 			DrawTextQuad(dc, g_loadingFont, loadingStr, textStartX, textStartY, 40, vp, engine::Vector4(1, 1, 1, 1), scale);
+		}
+
+		if (g_randomMessage && !g_pickedRandomMessage.empty())
+		{
+			const float msgCenterY = textCenterY;
+
+			// 중앙 정렬 폭 계산 (scale 반영)
+			float msgW = 0.0f;
+			const char* p2 = g_pickedRandomMessage.data();
+			const char* e2 = p2 + g_pickedRandomMessage.size();
+			uint32_t cp2 = 0;
+
+			while (NextUtf8Codepoint(p2, e2, cp2))
+				msgW += g_randomMessage->EnsureGlyph(dc, cp2).advance * scale;
+
+			const float msgStartX = centerX - (msgW * 0.5f);
+			const float msgStartY = msgCenterY - (40.0f * scale * 0.5f);
+
+			DrawTextQuad(dc, g_randomMessage, g_pickedRandomMessage, msgStartX, msgStartY, 40, vp,
+				engine::Vector4(1, 1, 1, 1), scale);
 		}
 
 		ID3D11ShaderResourceView* nullSRV = nullptr;
@@ -531,6 +576,8 @@ namespace game
 		g_loadingDotsTime = 0.0f;
 		g_loadStep = 0;
 		g_sceneLoadAnimTime = 0.0f;
+
+		PickRandomMessage();
 	}
 
 	void LoadingScreenDrawer::OnShutdown()
