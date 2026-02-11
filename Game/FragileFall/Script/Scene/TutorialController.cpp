@@ -58,7 +58,7 @@ namespace game
 
     void TutorialController::Awake()
     {
-        //*/ 강화 튜토리얼 디버깅용
+        /*/ 강화 튜토리얼 디버깅용
         std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
         if (currentScene == "10_PROTO_TutorialLobby")
         {
@@ -79,7 +79,7 @@ namespace game
             m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
             m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
 
-            //ShowPage();
+            ShowPage();
         }
         else
         {
