@@ -384,7 +384,6 @@
                 {
                     "Type": "AimModeController",
                     "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
                     "CursorSize": {
                         "x": 30.0,
                         "y": 30.0
@@ -392,9 +391,6 @@
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
                     "PostExecutionDuration": 0.5
-                        }
-                    ],
-                    "CursorState": 0
                 }
             ]
         },
@@ -3654,7 +3650,7 @@
                     "radius": 6.0,
                     "height": 12.0
                 }
-                    ]
+            ]
         },
         {
             "ID": 61,
@@ -3849,7 +3845,7 @@
                     "radius": 3.0,
                     "height": 14.0
                 }
-                    ]
+            ]
         },
         {
             "ID": 65,
@@ -3875,7 +3871,7 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0
-                }
+                    }
                 },
                 {
                     "Type": "CapsuleCollider",
@@ -13420,187 +13416,6 @@
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 25,
-            "ParentID": 24,
-            "Name": "Col_Left_Back_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -23.002986907958984,
-                        "y": -1.402430772781372,
-                        "z": -7.627548694610596
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.3794826567173004,
-                        "z": -0.0,
-                        "w": 0.9251988530158997
-                    },
-                    "Scale": {
-                        "x": 1.0000067949295044,
-                        "y": 0.9999999403953552,
-                        "z": 1.0000075101852417
-                    }
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "size": [
-                        30.0,
-                        20.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 26,
-            "ParentID": 24,
-            "Name": "Col_Right_Back_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 21.62158966064453,
-                        "y": -1.3979750871658325,
-                        "z": -10.2558012008667
-                    },
-                    "Rotation": {
-                        "x": 0.0013658686075359583,
-                        "y": -0.44594606757164,
-                        "z": 0.000604693777859211,
-                        "w": 0.8950585722923279
-                    },
-                    "Scale": {
-                        "x": 1.0000001192092896,
-                        "y": 1.0,
-                        "z": 0.9999603629112244
-                    }
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "size": [
-                        30.0,
-                        20.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 27,
-            "ParentID": 24,
-            "Name": "Col_Left_Front_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -14.834155082702637,
-                        "y": -0.06593792885541916,
-                        "z": 12.662989616394043
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": -0.13815678656101227,
-                        "z": -0.0,
-                        "w": 0.9904103875160217
-                    },
-                    "Scale": {
-                        "x": 0.9999991655349731,
-                        "y": 0.9999998807907104,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "size": [
-                        27.649999618530273,
-                        20.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 28,
-            "ParentID": 24,
-            "Name": "Col_Right_Front_1_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 14.715471267700195,
-                        "y": 0.0,
-                        "z": 14.6329927444458
-                    },
-                    "Rotation": {
                         "x": -0.0,
                         "y": 0.0,
                         "z": -0.0,
@@ -13611,25 +13426,6 @@
                         "y": 1.0,
                         "z": 1.0
                     }
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "radius": 5.0
                 }
             ]
         },
@@ -13648,251 +13444,6 @@
                         "z": 5.10134744644165
                     },
                     "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "radius": 5.0
-                }
-            ]
-        },
-        {
-            "ID": 31,
-            "ParentID": 24,
-            "Name": "Col_Right_Front_4_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 22.4804744720459,
-                        "y": 4.6661608621434425e-07,
-                        "z": 7.502570629119873
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "size": [
-                        4.130000114440918,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 32,
-            "ParentID": 24,
-            "Name": "Col_Right_Front_5_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 17.5001220703125,
-                        "y": -1.0677632644728874e-07,
-                        "z": 9.661670684814453
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.26555612683296204,
-                        "z": -0.0,
-                        "w": 0.964095413684845
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "size": [
-                        6.619999885559082,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 33,
-            "ParentID": 24,
-            "Name": "Col_Right_Front_6_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 17.723297119140625,
-                        "y": 8.247737355304707e-07,
-                        "z": 10.24860668182373
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "size": [
-                        6.619999885559082,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 34,
-            "ParentID": 24,
-            "Name": "Col_Right_Front_7_SubWall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 10.106505393981934,
-                        "y": 8.592065796619863e-07,
-                        "z": 14.624590873718262
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.41310444474220276,
-                        "z": -0.0,
-                        "w": 0.9106836318969727
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 19,
-                    "materialType": 0,
-                    "size": [
-                        6.619999885559082,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 35,
-            "Name": "StateTextRendererCanvas",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
                         "x": 0.0,
                         "y": 0.8826807737350464,
                         "z": 0.0,
@@ -13902,80 +13453,6 @@
                         "x": 1.000004768371582,
                         "y": 2.700000047683716,
                         "z": 1.000004768371582
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
-                },
-                {
-                    "Type": "StateTextRenderer",
-                    "Active": true,
-                    "PrefabName": "StateText",
-                    "WorldOffset": {
-                        "x": 0.0,
-                        "y": 2.0,
-                        "z": 0.0
-                    },
-                    "HideWhenOffscreen": true,
-                    "ShowHpText": true,
-                    "HpFontSize": 12,
-                    "StateFontSize": 15,
-                    "HpTextYOffset": 20.0,
-                    "ShowDashText": true,
-                    "DashFontSize": 15,
-                    "DashTextYOffset": 35.0
-                }
-            ]
-        },
-        {
-            "ID": 36,
-            "Name": "Wall",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 3.5,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 1.0,
-                        "z": 0.0,
-                        "w": -4.371138828673793e-08
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
                     }
                 },
                 {
@@ -14012,12 +13489,10 @@
                         1.0,
                         1.0
                     ]
-                }
-            ]
-        },
-        {
+                },
+                {
                     "Type": "CapsuleCollider",
-            "Active": true,
+                    "Active": true,
                     "center": [
                         0.0,
                         0.0,
@@ -14097,10 +13572,8 @@
                         1.0,
                         1.0
                     ]
-                }
-            ]
-        },
-        {
+                },
+                {
                     "Type": "CapsuleCollider",
                     "Active": true,
                     "center": [
@@ -14119,42 +13592,6 @@
                     "materialType": 0,
                     "radius": 1.5,
                     "height": 9.779999732971191
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/white/crystal_white.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 3.319999933242798,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
                 }
             ]
         },
@@ -14171,68 +13608,6 @@
                         "x": -13.016042709350586,
                         "y": -0.7148325443267822,
                         "z": -5.790988445281982
-                    },
-                    "Rotation": {
-                        "x": 0.09199090301990509,
-                        "y": 0.9765514731407166,
-                        "z": -0.018253671005368233,
-                        "w": 0.1937827169895172
-                    },
-                    "Scale": {
-                        "x": 2.480069160461426,
-                        "y": 2.480001926422119,
-                        "z": 2.480154037475586
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/white/crystal_white.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 46,
-            "Name": "CrystalWhite",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -23.992300033569336,
-                        "y": -0.5511682033538818,
-                        "z": 10.85761833190918
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -14280,12 +13655,10 @@
                         1.0,
                         1.0
                     ]
-                }
-            ]
-        },
-        {
+                },
+                {
                     "Type": "CapsuleCollider",
-            "Active": true,
+                    "Active": true,
                     "center": [
                         0.0,
                         0.0,
@@ -14302,42 +13675,6 @@
                     "materialType": 0,
                     "radius": 1.5,
                     "height": 9.779999732971191
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/white/crystal_white.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 4.179999828338623,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
                 }
             ]
         },
@@ -14354,62 +13691,6 @@
                         "x": 11.46622371673584,
                         "y": 0.0,
                         "z": -7.2790632247924805
-                    },
-                    "Scale": {
-                        "x": 2.7699999809265137,
-                        "y": 2.7699999809265137,
-                        "z": 2.7699999809265137
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/white/crystal_white.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 4.599999904632568,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 49,
-            "Name": "CrystalWhite",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 21.68630599975586,
-                        "y": 0.021289587020874023,
-                        "z": -8.174287796020508
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -14457,12 +13738,10 @@
                         1.0,
                         1.0
                     ]
-                }
-            ]
-        },
-        {
+                },
+                {
                     "Type": "CapsuleCollider",
-            "Active": true,
+                    "Active": true,
                     "center": [
                         0.0,
                         0.0,
