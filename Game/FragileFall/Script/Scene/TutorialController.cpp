@@ -90,7 +90,6 @@ namespace game
 
             GetGameObject()->Destroy();
         }
-
     }
 
     void TutorialController::Update()
@@ -317,7 +316,7 @@ namespace game
         // step 5 : 로비 UI 진입시 설명창을 띄워주며 강화 버튼을 누르라는 UI 표시
         // ─────────────────────────────────────────────
         case 5:
-            m_outlineWidth = 4.0f;
+            HighlightButton("UI_OpenUpgrade", true);
             SetActiveButton("UI_EnterPlay", false, false);
             SetActiveButton("UI_OpenOption", false, false);
             SetActiveButton("UI_BackToMain", false, false);
@@ -331,6 +330,7 @@ namespace game
             SetupSkillNodesUI("SurviveNodes", false, false);
             SetupSkillNodesUI("MoveNodes", false, false);
             BindButton("UI_OpenUpgrade", [this]() {
+                HighlightButton("UI_OpenUpgrade", false);
                 Next();
             });
             break;
@@ -338,9 +338,19 @@ namespace game
         // step 6 : 기술 부분 클릭 유도
         // ─────────────────────────────────────────────
         case 6:
-            m_outlineWidth = 12.0f;
+            // 아웃라인 이미지 바인딩 시키기
+            if (auto* go = engine::GameObject::Find("Outline1"))
+                m_outline1 = go->GetComponent<engine::UIImage>();
+
+            if (auto* go = engine::GameObject::Find("Outline2"))
+                m_outline2 = go->GetComponent<engine::UIImage>();
+
+            if (auto* go = engine::GameObject::Find("Outline3"))
+                m_outline3 = go->GetComponent<engine::UIImage>();
+
+            m_outline1->SetActive(true);
             BindButton("Btn_Skill", [this]() {
-                SetActiveButton("Btn_Skill", false, false);
+                m_outline1->SetActive(false);
                 Next();
             });
             break;
@@ -362,13 +372,11 @@ namespace game
             {
                 upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
             }
-            BindButton("Btn_Upgrade", [this, upgradeUI] () {
-                this->SetActiveButton("Btn_Upgrade", false, false);
-                if (upgradeUI)
-                {
-                    upgradeUI->GetComponent<engine::UIImage>()->SetOutline(false, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
-                }
-                this->Next();
+
+            m_outline2->SetActive(true);
+            BindButton("Btn_Upgrade", [this] () {
+                m_outline2->SetActive(false);
+                Next();
             });
             break;
             }
@@ -377,7 +385,9 @@ namespace game
         // ─────────────────────────────────────────────
         case 9:
             m_outlineWidth = 8.0f;
+            m_outline3->SetActive(true);
             BindButton("UI_CloseButton_Upgrade", [this]() {
+                m_outline3->SetActive(false);
                 SetupSkillNodesUI("AttackNodes", false, true);
                 SetupSkillNodesUI("SkillNodes", false, true);
                 SetupSkillNodesUI("SurviveNodes", false, true);
@@ -434,11 +444,16 @@ namespace game
 				m_bindButtonNames.insert(goName);
             }
         }
+    }
 
-        auto upgradeUI = engine::GameObject::Find(goName);
-        if (upgradeUI)
+    void TutorialController::HighlightButton(const std::string& goName, bool enable)
+    {
+        if (auto* go = engine::GameObject::Find(goName))
         {
-            upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+            if (auto* img = go->GetComponent<engine::UIImage>())
+            {
+                img->SetOutline(enable, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+            }
         }
     }
 
