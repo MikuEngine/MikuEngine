@@ -392,13 +392,22 @@ namespace engine
             {
                 // 게임 플레이 중에는 무조건 락
                 shouldLock = true;
+
+#ifdef _DEBUG
+                // Debug: Play에서도 기본 커서 보이기
+                shouldHideCursor = false;
+#else
+                // Release: Play에서 커서 숨기기
                 shouldHideCursor = true;
+#endif
             }
 #ifdef _DEBUG
             else if (currentState == EditorState::Edit || currentState == EditorState::Pause)
             {
+                const bool wantsCapture = EditorManager::Get().WantsMouseCapture();
+
                 // 에디터 모드, 일시정지일 때: 우클릭 중이면 카메라 회전을 위해 마우스를 가두고 숨김
-                if (Input::IsMouseHeld(Buttons::RIGHT))
+                if (Input::IsMouseHeld(Buttons::RIGHT) || wantsCapture)
                 {
                     shouldLock = true;
                     shouldHideCursor = true;

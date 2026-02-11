@@ -54,6 +54,7 @@ namespace engine
 
         bool m_shouldOpenUnsavedPopup = false;
         bool m_showEditorUI = true;
+        bool m_wantsMouseCapture = false;
         bool m_pendingMouseSync = false;
 
         // hierarchy search
@@ -76,6 +77,8 @@ namespace engine
         void SetSelectedObject(GameObject* obj);  // 선택 시 부모 계층 자동 펼침
 
         void DrawEditorGrid();
+
+        bool WantsMouseCapture() const { return m_wantsMouseCapture; }
 
     private:
         void DrawPlayController();

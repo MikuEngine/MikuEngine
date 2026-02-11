@@ -132,6 +132,9 @@ namespace engine
             m_showEditorUI = !m_showEditorUI;
 
             m_selectedObject = nullptr;
+
+            m_wantsMouseCapture = !m_showEditorUI;
+            m_pendingMouseSync = true;
         }
 
         // 단축키 'F5', 'F6' : Play, Pause

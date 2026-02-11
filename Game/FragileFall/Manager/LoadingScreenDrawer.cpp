@@ -28,6 +28,17 @@ namespace game
 {
 	namespace
 	{
+		// Default ViewPort
+		constexpr float kRefW = 1920.0f;
+		constexpr float kRefH = 1080.0f;
+
+		static float CalcUIScale(const D3D11_VIEWPORT& vp)
+		{
+			const float sx = vp.Width / kRefW;
+			const float sy = vp.Height / kRefH;
+			return (sx < sy) ? sx : sy; // 종횡비 달라도 UI가 화면 밖으로 나가지 않게
+		}
+
 		bool g_isFirstLoad = true;
 
 		std::shared_ptr<engine::Texture> g_logoTexture;
@@ -295,6 +306,8 @@ namespace game
 		auto* dc = gd.GetDeviceContext().Get();
 		const D3D11_VIEWPORT vp = gd.GetViewport();
 
+		const float scale = CalcUIScale(vp);
+
 		const float centerX = vp.Width * 0.5f;
 		const float centerY = vp.Height * 0.5f;
 		const float aspect = vp.Width / vp.Height;
@@ -320,19 +333,25 @@ namespace game
 		dc->PSSetShader(g_uiPS->GetRawShader(), nullptr, 0);
 		dc->PSSetSamplers(static_cast<UINT>(engine::SamplerSlot::Linear), 1, g_linearSampler->GetSamplerState().GetAddressOf());
 
+		// 스케일된 크기
+		const float sOrbit = ORBIT_RADIUS_PX * scale;
+		const float sLogo = LOGO_SIZE_PX * scale;
+
 		// 1) 회전하는 텍스트(이미지)
 		if (g_orbitTextTexture)
 		{
 			g_orbitAngle += engine::Time::DeltaTime() * ORBIT_SPEED_RAD_PER_SEC;
 			dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_orbitTextTexture->GetSRV().GetAddressOf());
 
-			DrawUIQuad(dc, centerX, centerY, ORBIT_RADIUS_PX, ORBIT_RADIUS_PX, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 0, g_orbitAngle);
+			DrawUIQuad(dc, centerX, centerY, sOrbit, sOrbit, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 0, g_orbitAngle);
 		}
 
 		// 2) 가운데 동그란 로고
-		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_logoTexture->GetSRV().GetAddressOf());
-		DrawUIQuad(dc, centerX, centerY, LOGO_SIZE_PX, LOGO_SIZE_PX, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 1);
-		
+		if (g_logoTexture)
+		{
+			dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, g_logoTexture->GetSRV().GetAddressOf());
+			DrawUIQuad(dc, centerX, centerY, sLogo, sLogo, vp, engine::Vector4(1, 1, 1, 1), engine::Vector4(0, 0, 1, 1), 1);
+		}
 
 		ID3D11ShaderResourceView* nullSRV = nullptr;
 		dc->PSSetShaderResources(static_cast<UINT>(engine::TextureSlot::Blit), 1, &nullSRV);
