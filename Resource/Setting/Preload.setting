@@ -56,10 +56,10 @@
 		"Type": "SoundQue",
 		"Name": "Monster_Shot_Random",
 		"Paths": [
-			"Resource/Sound/SFX/Monster/Monster_shot_1.mp3",
-			"Resource/Sound/SFX/Monster/Monster_shot_2.mp3",
-			"Resource/Sound/SFX/Monster/Monster_shot_3.mp3",
-			"Resource/Sound/SFX/Monster/Monster_shot_4.mp3"
+			"Resource/Sound/SFX/Monster/Monster_shot_1.wav",
+			"Resource/Sound/SFX/Monster/Monster_shot_2.wav",
+			"Resource/Sound/SFX/Monster/Monster_shot_3.wav",
+			"Resource/Sound/SFX/Monster/Monster_shot_4.wav"
 		],
 		"Option": "SFX/Monster"
 	},
