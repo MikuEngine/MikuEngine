@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "ResourceManager.h"
 
 #include "Core/Graphics/Resource/IndexBuffer.h"
@@ -48,6 +48,7 @@ namespace engine
 
         m_globalCachedResources.clear();
         m_sceneCachedResources.clear();
+        m_fileTexturePaths.clear();
     }
 
     std::shared_ptr<IndexBuffer> ResourceManager::GetOrCreateIndexBuffer(
@@ -114,6 +115,7 @@ namespace engine
         CacheResource(texture, scope);
 
         m_textures[path] = texture;
+        m_fileTexturePaths.insert(path);
 
         return texture;
     }
@@ -140,6 +142,7 @@ namespace engine
         CacheResource(texture, scope);
 
         m_textures[name] = texture;
+        m_fileTexturePaths.erase(name);
 
         return texture;
     }
@@ -166,8 +169,46 @@ namespace engine
         CacheResource(texture, scope);
 
         m_textures[name] = texture;
+        m_fileTexturePaths.erase(name);
 
         return texture;
+    }
+
+    void ResourceManager::ReloadAllFileTextures()
+    {
+        for (auto it = m_fileTexturePaths.begin(); it != m_fileTexturePaths.end();)
+        {
+            const std::string& path = *it;
+            auto textureIt = m_textures.find(path);
+            if (textureIt == m_textures.end())
+            {
+                it = m_fileTexturePaths.erase(it);
+                continue;
+            }
+
+            auto texture = textureIt->second.lock();
+            if (!texture)
+            {
+                it = m_fileTexturePaths.erase(it);
+                continue;
+            }
+
+            texture->ReloadFromFile(path);
+
+            ++it;
+        }
+    }
+
+    void ResourceManager::InvalidateMeshBuffers(const std::string& filePath)
+    {
+        std::erase_if(
+            m_vertexBuffers,
+            [&filePath](const auto& pair)
+            {
+                return pair.first.filePath == filePath;
+            });
+
+        m_indexBuffers.erase(filePath);
     }
 
     std::shared_ptr<ConstantBuffer> ResourceManager::GetOrCreateConstantBuffer(

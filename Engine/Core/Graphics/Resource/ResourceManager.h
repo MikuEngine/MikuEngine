@@ -1,9 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include "Core/Graphics/Resource/ResourceKey.h"
 #include "Core/Graphics/Resource/VertexBuffer.h"
 #include "Core/Graphics/Resource/DefaultResourceTypes.h"
 #include "Common/Utility/CommonTypes.h"
+#include <unordered_set>
 
 namespace engine
 {
@@ -30,6 +31,7 @@ namespace engine
         std::unordered_map<VertexBufferKey, std::weak_ptr<VertexBuffer>> m_vertexBuffers;
         std::unordered_map<std::string, std::weak_ptr<IndexBuffer>> m_indexBuffers;
         std::unordered_map<std::string, std::weak_ptr<Texture>> m_textures;
+        std::unordered_set<std::string> m_fileTexturePaths;
         std::unordered_map<std::string, std::weak_ptr<ConstantBuffer>> m_constantBuffers;
         std::unordered_map<std::string, std::weak_ptr<VertexShader>> m_vertexShaders;
         std::unordered_map<std::string, std::weak_ptr<PixelShader>> m_pixelShaders;
@@ -141,6 +143,9 @@ namespace engine
             const std::string& name,
             const D3D11_BLEND_DESC& desc,
             LifeScope scope = LifeScope::Owning);
+
+        void ReloadAllFileTextures();
+        void InvalidateMeshBuffers(const std::string& filePath);
 
         // default
         std::shared_ptr<Texture> GetDefaultTexture(DefaultTextureType type);

@@ -282,6 +282,21 @@ namespace engine
         HR_CHECK(device->CreateShaderResourceView(m_texture.Get(), &srvDesc, &m_srv));
     }
 
+    bool Texture::ReloadFromFile(const std::string& filePath)
+    {
+        Texture reloaded;
+        reloaded.Create(filePath);
+
+        if (reloaded.GetRawSRV() == nullptr)
+        {
+            LOG_ERROR("텍스처 리로드 실패. 기존 텍스처 유지: {}", filePath);
+            return false;
+        }
+
+        *this = std::move(reloaded);
+        return true;
+    }
+
     const Microsoft::WRL::ComPtr<ID3D11Texture2D>& Texture::GetTexture() const
     {
         return m_texture;
