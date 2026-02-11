@@ -39,14 +39,51 @@ namespace engine
 
 	void UIButton::AddOnClick(ClickCallback&& cb)
 	{
+		AddOnClick(nullptr, std::move(cb));
+	}
+
+	void UIButton::AddOnClick(void* owner, ClickCallback&& cb)
+	{
 		if (!cb) return;
 		m_onClick.push_back(std::move(cb));
+		m_ownerTracker.push_back({ owner, m_onClick.size() - 1 });
 	}
 
 	void UIButton::AddOnHover(HoverCallback&& cb)
 	{
 		if (!cb) return;
 		m_onHover.push_back(std::move(cb));
+	}
+
+	void UIButton::UnbindOnClick(void* owner)
+	{
+		if (!owner) return;
+
+		for (auto it = m_ownerTracker.begin(); it != m_ownerTracker.end(); )
+		{
+			if (it->first == owner)
+			{
+				size_t targetIdx = it->second;
+
+				if (targetIdx < m_onClick.size())
+				{
+					m_onClick.erase(m_onClick.begin() + targetIdx);
+
+					for (auto& entry : m_ownerTracker)
+					{
+						if (entry.second > targetIdx)
+						{
+							entry.second--;
+						}
+					}
+				}
+				it = m_ownerTracker.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
 	}
 
 	void UIButton::SetSprites(const std::string& normal, const std::string& hover, const std::string& pressed, const std::string& disabled)
