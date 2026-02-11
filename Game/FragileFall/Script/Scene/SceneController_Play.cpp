@@ -160,6 +160,12 @@ namespace game
             bool playerDeadState = (m_playerScript->GetCurrentState() == "Dead");
             if (fragileFull || hpZero || playerDeadState)
                 Fail();
+
+            // sound
+            if (fragileFull)
+            {
+                engine::SoundSystem::Get().Play("Player_Dead_Fragile", "SFX/Player");
+            }
         }
 
         if (!m_isDead && engine::Input::IsKeyPressed(engine::Keys::Escape))

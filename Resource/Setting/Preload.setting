@@ -96,6 +96,7 @@
 	{ "Type": "Sound", "Name": "Player_Dash", "Path": "Resource/Sound/SFX/Player/Player_Dash.wav", "Option": "SFX/Player" },
 	{ "Type": "Sound", "Name": "Player_Dash_None", "Path": "Resource/Sound/SFX/Player/Player_Dash_None.wav", "Option": "SFX/Player" },
 	{ "Type": "Sound", "Name": "Player_Shot_Fragile", "Path": "Resource/Sound/SFX/Player/Player_Shot_Fragile.wav", "Option": "SFX/Player" },
+	{ "Type": "Sound", "Name": "Player_Dead_Fragile", "Path": "Resource/Sound/SFX/Player/Player_Dead_Fragile.wav", "Option": "SFX/Player" },
 	{ "Type": "Sound", "Name": "Monster_Fragile", "Path": "Resource/Sound/SFX/Monster/Monster_Fragile.wav", "Option": "SFX/Monster" },
 	{ "Type": "Sound", "Name": "Monster_Fragile_Cracking", "Path": "Resource/Sound/SFX/Monster/Monster_Fragile_Cracking.wav", "Option": "SFX/Monster" },
 	{ "Type": "Sound", "Name": "Monster_Fragile_End", "Path": "Resource/Sound/SFX/Monster/Monster_Fragile_End.wav", "Option": "SFX/Monster" },
