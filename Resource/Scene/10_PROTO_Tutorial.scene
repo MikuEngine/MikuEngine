@@ -9236,6 +9236,7 @@
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
+                    "PostExecutionDuration": 0.5,
                     "CursorTexturesByState": [
                         "Resource/Texture/UI/Image/Cursor_Default.png",
                         "Resource/Texture/UI/Image/Cursor_Click.png",
@@ -17605,7 +17606,8 @@
                     "PostDashQuickFireDuration": 0.30000001192092896,
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 300.0,
-                    "FragileGaugeRisePerSecond": 15.0
+                    "FragileGaugeRisePerSecond": 15.0,
+                    "IsInvincible": false
                 },
                 {
                     "Type": "LogicFSM",
@@ -17657,6 +17659,7 @@
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
+                    "PostExecutionDuration": 0.5,
                     "CursorTexturesByState": [
                         "",
                         "",

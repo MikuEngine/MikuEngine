@@ -14,6 +14,9 @@
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Manager/UpgradeProgressManager.h>
 
+#include <Common/Utility/CSVReader.h>
+#include <Manager/BuffManager.h>
+
 namespace game
 {
     namespace
@@ -87,31 +90,56 @@ namespace game
             }
         }
 
-        static void ApplyOneEffect(const UpgradeNodeView::TemperEffect& e)
+        static void ApplyOneEffect(const game::TemperEffect& e)
         {
             using game::PlayerTemperManager;
-            using TemperOp = UpgradeNodeView::TemperOp;
-            using TemperStat = UpgradeNodeView::TemperStat;
+            using TemperOp = game::TemperOp;
+            using TemperStat = game::StatType;
+            using game::BuffManager;
 
-            // 1. 불린(특수) 강화 처리
-            if (e.op == UpgradeNodeView::TemperOp::Bool)
+            // 기본 강화
+            if (e.kind == game::TemperEffect::Kind::Stat)
             {
-                if (e.stat == UpgradeNodeView::TemperStat::BulletDouble)
-                    PlayerTemperManager::SetIsBulletDouble(e.b);
+                StatType targetStat = static_cast<StatType>(e.stat);
+                CalcType targetCalc = (e.op == game::TemperOp::Add) ? CalcType::Add : CalcType::Mul;
+
+                float currentVal = PlayerTemperManager::GetStat(targetStat, targetCalc);
+                float nextVal = (targetCalc == CalcType::Add) ? (currentVal + e.value) : (currentVal * e.value);
+
+                PlayerTemperManager::SetStat(targetStat, targetCalc, nextVal);
                 return;
             }
 
-            // 2. 수치 강화 처리 (Add/Mul)
-            // TemperStat과 StatType이 같은 순서라면 static_cast 가능
-            // 아니라면 별도의 Convert 함수를 거칩니다.
-            StatType targetStat = static_cast<StatType>(e.stat);
-            CalcType targetCalc = (e.op == UpgradeNodeView::TemperOp::Add) ? CalcType::Add : CalcType::Mul;
+            if (e.kind == game::TemperEffect::Kind::Buff)
+            {
+                switch (e.buff)
+                {
+                case BuffId::Dash_MoveSpeed:
+                    if (e.field == game::BuffField::Duration)
+                        BuffManager::SetDashBuffDuration(e.value);
+                    else if (e.field == game::BuffField::Bonus)
+                        BuffManager::SetDashBuffMoveSpeedBonus(e.value);
+                    break;
 
-            // 현재 수치 가져오기 -> 계산 -> 설정 (단 한 줄!)
-            float currentVal = PlayerTemperManager::GetStat(targetStat, targetCalc);
-            float nextVal = (targetCalc == CalcType::Add) ? (currentVal + e.value) : (currentVal * e.value);
+                case BuffId::Dash_AtkDmg:
+                    if (e.field == game::BuffField::Duration)
+                        BuffManager::SetDashAtkDmgBuffDuration(e.value);
+                    else if (e.field == game::BuffField::Bonus)
+                        BuffManager::SetDashAtkDmgBuffBonus(e.value);
+                    break;
 
-            PlayerTemperManager::SetStat(targetStat, targetCalc, nextVal);
+                case BuffId::Execution_AtkSpeed:
+                    if (e.field == game::BuffField::Duration)
+                        BuffManager::SetExecutionBuffDuration(e.value);
+                    else if (e.field == game::BuffField::Bonus)
+                        BuffManager::SetExecutionBuffAtkSpeedBonus(e.value);
+                    break;
+
+                default:
+                    break;
+                }
+                return;
+            }
         }
 
         static void ApplyTemperFromView(const UpgradeNodeView& view)
@@ -119,6 +147,29 @@ namespace game
             for (const auto& e : view.m_effects)
                 ApplyOneEffect(e);
         }
+
+        static int CategoryBase(game::UpgradeCategory c)
+        {
+            return (int)c;
+        }
+
+        static engine::GameObject* FindChildGOByName(engine::GameObject* parent, const char* name)
+        {
+            if (!parent) return nullptr;
+            auto* pt = parent->GetTransform();
+            if (!pt) return nullptr;
+
+            for (engine::Transform* ct : pt->GetChildren())
+            {
+                if (!ct) continue;
+                auto* go = ct->GetGameObject();
+                if (go && go->GetName() == name)
+                    return go;
+            }
+            return nullptr;
+        }
+
+
     }
 
     void UpgradeController::Awake()
@@ -155,9 +206,19 @@ namespace game
         ClearSelectedInfoUI();
 
         AutoRegisterNodesFromContent("Content");
+        AssignNodeIdsFromHierarchy();
 
         BuildNodeTree();
+
+        // CSV 주입
+        LoadDefsFromCsv();
+        ApplyDefsToViews();
+
+        RecomputeUnlocked();
+        RefreshNodeVisuals();
         ApplyCategoryFilter();
+
+
 
         BindCostSlots();
         HideAllCostSlots();
@@ -223,8 +284,10 @@ namespace game
 
         // 노드 오브젝트 로드
         AutoRegisterNodesFromContent("Content");
-
         BuildNodeTree();
+
+        LoadDefsFromCsv();
+        ApplyDefsToViews();
 
         // 저장된 구매 목록 반영
         engine::JsonArrayForEach(j, "Purchased",
@@ -428,6 +491,44 @@ namespace game
         }
     }
 
+    void UpgradeController::LoadDefsFromCsv()
+    {
+        m_db.Clear();
+
+        if (!m_db.Load(m_dbPath))
+        {
+            LOG_PRINT("[UpgradeController] CSV load failed: {}", m_dbPath);
+        }
+    }
+
+    void UpgradeController::ApplyDefsToViews()
+    {
+        for (auto& [id, view] : m_views)
+        {
+            if (!view) continue;
+
+            const UpgradeNodeRow* row = m_db.Find(id);
+            if (!row)
+            {
+                // CSV에 정의가 없으면 기존 인스펙터 값 유지
+                continue;
+            }
+
+            // 표기/설명
+            view->m_name = row->name;
+            view->m_desc = row->desc;
+
+            // 코스트
+            view->m_costRuby = row->ruby;
+            view->m_costSapphire = row->sapphire;
+            view->m_costEmerald = row->emerald;
+
+            // 부모 / 효과
+            view->m_parents = row->parents;
+            view->m_effects = row->effects;
+        }
+    }
+
     void UpgradeController::AutoRegisterNodesFromContent(const std::string& contentRootName)
     {
         m_nodeObjects.clear();
@@ -439,6 +540,53 @@ namespace game
         if (!rootT) return;
 
         CollectUpgradeNodesRecursive(rootT, m_nodeObjects);
+    }
+
+    void UpgradeController::AssignNodeIdsFromHierarchy()
+    {
+        auto* content = engine::GameObject::Find("Content");
+        if (!content) return;
+
+        struct CatRoot
+        {
+            const char* rootName;
+            UpgradeCategory cat;
+        };
+
+        const CatRoot roots[] =
+        {
+            { "AttackNodes",  UpgradeCategory::Attack },
+            { "SkillNodes",   UpgradeCategory::Skill  },
+            { "SurviveNodes", UpgradeCategory::Life   },
+            { "MoveNodes",    UpgradeCategory::Move   },
+        };
+
+        for (const auto& r : roots)
+        {
+            auto* rootGO = FindChildGOByName(content, r.rootName);
+            if (!rootGO) continue;
+
+            auto* rt = rootGO->GetTransform();
+            if (!rt) continue;
+
+            int local = 0;
+
+            // 자식 순서 = localId
+            for (engine::Transform* ct : rt->GetChildren())
+            {
+                if (!ct) continue;
+                auto* childGO = ct->GetGameObject();
+                if (!childGO) continue;
+
+                auto* view = childGO->GetComponent<game::UpgradeNodeView>();
+                if (!view) continue;
+
+                view->m_category = r.cat;
+                view->m_nodeId = CategoryBase(r.cat) + local; // 100+0, 100+1...
+                // parents는 CSV로 덮어쓸 예정이면 여기서는 건드리지 않아도 됩니다.
+                local++;
+            }
+        }
     }
 
     void UpgradeController::BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb)
@@ -461,7 +609,13 @@ namespace game
         if (!button) return;
 
         button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
-        if (cb) cb(); });
+        if (cb) cb(); }); auto it = m_views.find(m_selectedNodeId);
+        if (it == m_views.end() || !it->second)
+        {
+            ClearSelectedInfoUI();
+            return;
+        }
+        UpgradeNodeView* view = it->second;
     }
 
     void UpgradeController::SetCategory(UpgradeCategory c)
@@ -514,13 +668,12 @@ namespace game
 
         auto it = m_views.find(m_selectedNodeId);
 
-        UpgradeNodeView* view = it->second;
-
         if (it == m_views.end() || !it->second)
         {
             ClearSelectedInfoUI();
             return;
         }
+        UpgradeNodeView* view = it->second;
 
         if (m_nameText) m_nameText->SetText(view->m_name);
         if (m_descText) m_descText->SetText(view->m_desc);

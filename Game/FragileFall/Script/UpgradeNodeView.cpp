@@ -185,7 +185,7 @@ namespace game
         {
             TemperEffect e;
             e.op = TemperOp::Add;
-            e.stat = TemperStat::AtkDmg;
+            e.stat = StatType::AtkDmg;
             e.value = 0.0f;
             e.b = false;
             m_effects.push_back(e);
@@ -213,7 +213,7 @@ namespace game
             // 스탯 종류 선택 (확장된 목록 사용)
             int st = (int)e.stat;
             if (ImGui::Combo("Target Stat", &st, statNames, IM_ARRAYSIZE(statNames)))
-                e.stat = (TemperStat)st;
+                e.stat = (StatType)st;
 
             // 값 입력창
             if (e.op == TemperOp::Bool)
@@ -347,7 +347,7 @@ namespace game
                 engine::JsonGet(ej, "Bool", e.b);
 
                 e.op = (TemperOp)op;
-                e.stat = (TemperStat)st;
+                e.stat = (StatType)st;
 
                 m_effects.push_back(e);
             });

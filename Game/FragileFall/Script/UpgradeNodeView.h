@@ -6,9 +6,35 @@
 
 #include "UpgradeTypes.h"
 #include "ItemType.h"
+#include "Script/CharacterScript/Player/StatId.h"
 
 namespace game
 {
+    // States
+    enum class TemperOp { Add, Mul, Bool };
+
+    // 버프 필드(파라미터)
+    enum class BuffField
+    {
+        Duration,     // float
+        Bonus,        // float
+    };
+
+    struct TemperEffect
+    {
+        TemperOp op = TemperOp::Add;
+
+        enum class Kind { Stat, Buff, Special } kind;
+
+        StatType stat = StatType::AtkDmg;
+
+        BuffId buff = BuffId::Dash_MoveSpeed;
+        BuffField field = BuffField::Bonus;
+
+        float value = 0.0f;
+        bool b = false;
+    };
+
     class UpgradeNodeView :
         public engine::Script<UpgradeNodeView>
     {
@@ -56,32 +82,6 @@ namespace game
         engine::Vector4 m_nodeColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     public:
-        // States
-        enum class TemperOp { Add, Mul, Bool };
-        enum class TemperStat
-        {
-            // Attack
-            AtkDmg, AtkSpeed, BulletRange, BulletSize, BulletSpeed,
-            // Execution
-            Exe_FragileRegen, Exe_Range, Exe_SplashDmg, Exe_SplashRange, Exe_DashRegen, Exe_HpRegen,
-            // Vital
-            Hp_Max, Hp_RegenOnClear, Fragile_Max, Fragile_RegenOnClear, Fragile_GainRate, InvincibleTime,
-            // Move
-            MoveSpeed, Dash_Distance, Dash_Cooldown, Dash_Invincible,
-            // Buff
-            Buff_MoveSpeedAfterDash, Buff_AtkDmgAfterDash, Buff_DurationAfterDash,
-            // Special
-            BulletDouble
-        };
-
-        struct TemperEffect
-        {
-            TemperOp op = TemperOp::Add;
-            TemperStat stat = TemperStat::AtkDmg;
-            float value;
-            bool b;
-        };
-
         std::vector<TemperEffect> m_effects;
 
     private:

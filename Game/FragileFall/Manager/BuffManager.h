@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace game
 {
@@ -44,6 +44,7 @@ namespace game
 		// ─────────────────────────────────────────────
 		static float GetMoveSpeedMultiplier();   // 이동속도 배율 (1.0 = 기본, 1.1 = 10% 증가)
 		static float GetAtkSpeedMultiplier();    // 공격속도 배율 (1.0 = 기본, 1.1 = 10% 증가)
+		static float GetAtkDmgMultiplier();		 // 공격력 배율
 
 		// ─────────────────────────────────────────────
 		// 버프 상태 조회 (UI, 디버그용)
@@ -63,6 +64,13 @@ namespace game
 
 		static void SetDashBuffMoveSpeedBonus(float value);
 		static float GetDashBuffMoveSpeedBonus();
+
+		// 공격력 버프
+		static void  SetDashAtkDmgBuffDuration(float value);
+		static float GetDashAtkDmgBuffDuration();
+
+		static void  SetDashAtkDmgBuffBonus(float value);
+		static float GetDashAtkDmgBuffBonus();
 
 		// ─────────────────────────────────────────────
 		// 처형 버프 설정 Setter/Getter

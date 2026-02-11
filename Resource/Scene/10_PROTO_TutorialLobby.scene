@@ -1,6 +1,6 @@
 {
     "Name": "10_PROTO_TutorialLobby",
-    "NumGameObjects": 173,
+    "NumGameObjects": 176,
     "GameObjects": [
         {
             "ID": 0,
@@ -2204,6 +2204,7 @@
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
+                    "PostExecutionDuration": 0.5,
                     "CursorTexturesByState": [
                         "Resource/Texture/UI/Image/Cursor_Default.png",
                         "Resource/Texture/UI/Image/Cursor_Click.png",
@@ -5435,7 +5436,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_03_Yellow.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5542,7 +5543,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_01_White.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item01_Blue.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -5649,7 +5650,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_02_Purple.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6254,7 +6255,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_03_Yellow.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item03_Yellow.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6485,7 +6486,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_01_White.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item01_Blue.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -6716,7 +6717,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "TexturePath": "Resource/Texture/UI/Image/Item_02_Purple.png",
+                    "TexturePath": "Resource/Texture/UI/Image/Item02_Purple.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7663,7 +7664,7 @@
             "ID": 94,
             "ParentID": 93,
             "Name": "AttackNodes",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -7856,7 +7857,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -7993,7 +7994,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8130,7 +8131,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8268,7 +8269,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8375,7 +8376,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSizeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8512,7 +8513,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_BulletSpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8649,7 +8650,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8787,7 +8788,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -8924,7 +8925,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9061,7 +9062,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9199,7 +9200,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9378,7 +9379,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9516,7 +9517,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9653,7 +9654,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_RangeUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9802,7 +9803,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10023,7 +10024,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_GuageRegeon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ExeGuageRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10158,7 +10159,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_RangeUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ExeRangeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10295,7 +10296,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ExeDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10425,7 +10426,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_RangeUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ExeRangeUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10555,7 +10556,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_DamageUp.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ExeDamageUp.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10709,7 +10710,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SKL_GuageRegeon.png",
+                    "TexturePath": "Resource/Texture/UI/Node/ExeGuageRegion.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -10763,9 +10764,400 @@
         },
         {
             "ID": 117,
+            "ParentID": 110,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -150.0,
+                        "y": 450.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 1,
+                    "NodeId": 206,
+                    "Parent": [
+                        205
+                    ],
+                    "Name": "",
+                    "Desc": "",
+                    "Effects": [],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/ExeDashCharge.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 118,
+            "ParentID": 110,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 150.0,
+                        "y": 450.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 1,
+                    "NodeId": 207,
+                    "Parent": [
+                        205
+                    ],
+                    "Name": "",
+                    "Desc": "",
+                    "Effects": [],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/HPMaxUp.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 119,
+            "ParentID": 110,
+            "Name": "Node",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 600.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIClickArea",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Interactable": true
+                },
+                {
+                    "Type": "UpgradeNodeView",
+                    "Active": true,
+                    "Category": 1,
+                    "NodeId": 208,
+                    "Parent": [
+                        206,
+                        207
+                    ],
+                    "Name": "",
+                    "Desc": "",
+                    "Effects": [],
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Node/ExeDashCharge.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 160.0,
+                        "y": 345.0,
+                        "z": 1260.0,
+                        "w": 844.2999877929688
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 120,
             "ParentID": 93,
             "Name": "SurviveNodes",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -10876,8 +11268,8 @@
             ]
         },
         {
-            "ID": 118,
-            "ParentID": 117,
+            "ID": 121,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11011,8 +11403,8 @@
             ]
         },
         {
-            "ID": 119,
-            "ParentID": 117,
+            "ID": 122,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11148,8 +11540,8 @@
             ]
         },
         {
-            "ID": 120,
-            "ParentID": 117,
+            "ID": 123,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11285,8 +11677,8 @@
             ]
         },
         {
-            "ID": 121,
-            "ParentID": 117,
+            "ID": 124,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11423,8 +11815,8 @@
             ]
         },
         {
-            "ID": 122,
-            "ParentID": 117,
+            "ID": 125,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11560,8 +11952,8 @@
             ]
         },
         {
-            "ID": 123,
-            "ParentID": 117,
+            "ID": 126,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11697,8 +12089,8 @@
             ]
         },
         {
-            "ID": 124,
-            "ParentID": 117,
+            "ID": 127,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11835,8 +12227,8 @@
             ]
         },
         {
-            "ID": 125,
-            "ParentID": 117,
+            "ID": 128,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -11972,8 +12364,8 @@
             ]
         },
         {
-            "ID": 126,
-            "ParentID": 117,
+            "ID": 129,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12109,8 +12501,8 @@
             ]
         },
         {
-            "ID": 127,
-            "ParentID": 117,
+            "ID": 130,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12246,8 +12638,8 @@
             ]
         },
         {
-            "ID": 128,
-            "ParentID": 117,
+            "ID": 131,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12384,8 +12776,8 @@
             ]
         },
         {
-            "ID": 129,
-            "ParentID": 117,
+            "ID": 132,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12522,8 +12914,8 @@
             ]
         },
         {
-            "ID": 130,
-            "ParentID": 117,
+            "ID": 133,
+            "ParentID": 120,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12660,10 +13052,10 @@
             ]
         },
         {
-            "ID": 131,
+            "ID": 134,
             "ParentID": 93,
             "Name": "MoveNodes",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -12774,8 +13166,8 @@
             ]
         },
         {
-            "ID": 132,
-            "ParentID": 131,
+            "ID": 135,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12828,7 +13220,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -12902,8 +13294,8 @@
             ]
         },
         {
-            "ID": 133,
-            "ParentID": 131,
+            "ID": 136,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -12956,7 +13348,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13030,8 +13422,8 @@
             ]
         },
         {
-            "ID": 134,
-            "ParentID": 131,
+            "ID": 137,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13084,7 +13476,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashSpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13158,8 +13550,8 @@
             ]
         },
         {
-            "ID": 135,
-            "ParentID": 131,
+            "ID": 138,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13212,7 +13604,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13288,8 +13680,8 @@
             ]
         },
         {
-            "ID": 136,
-            "ParentID": 131,
+            "ID": 139,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13372,7 +13764,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13425,8 +13817,8 @@
             ]
         },
         {
-            "ID": 137,
-            "ParentID": 131,
+            "ID": 140,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13509,7 +13901,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashSpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13562,8 +13954,8 @@
             ]
         },
         {
-            "ID": 138,
-            "ParentID": 131,
+            "ID": 141,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13647,7 +14039,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SUR_InvincibleTime.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13700,8 +14092,8 @@
             ]
         },
         {
-            "ID": 139,
-            "ParentID": 131,
+            "ID": 142,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13778,7 +14170,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashCoolDown.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13831,8 +14223,8 @@
             ]
         },
         {
-            "ID": 140,
-            "ParentID": 131,
+            "ID": 143,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -13909,7 +14301,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_SpeedUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -13962,8 +14354,8 @@
             ]
         },
         {
-            "ID": 141,
-            "ParentID": 131,
+            "ID": 144,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -14039,7 +14431,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/SUR_InvincibleTime.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14092,8 +14484,8 @@
             ]
         },
         {
-            "ID": 142,
-            "ParentID": 131,
+            "ID": 145,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -14169,7 +14561,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/MOV_DashCoolDown.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14222,8 +14614,8 @@
             ]
         },
         {
-            "ID": 143,
-            "ParentID": 131,
+            "ID": 146,
+            "ParentID": 134,
             "Name": "Node",
             "Active": true,
             "Components": [
@@ -14307,7 +14699,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Node/ATK_DamageUp.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14360,7 +14752,7 @@
             ]
         },
         {
-            "ID": 144,
+            "ID": 147,
             "ParentID": 90,
             "Name": "Scrollbar",
             "Active": true,
@@ -14417,7 +14809,7 @@
                     "Value": 0.0,
                     "Direction": 2,
                     "FillMode": 0,
-                    "TrackSprite": "Resource/Texture/UI/Slider/Slider_02.png",
+                    "TrackSprite": "Resource/Texture/UI/Slider/Rough_Scroll_Line.png",
                     "FillSprite": "",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
@@ -14443,8 +14835,8 @@
             ]
         },
         {
-            "ID": 145,
-            "ParentID": 144,
+            "ID": 148,
+            "ParentID": 147,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14497,7 +14889,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Slider_02.png",
+                    "TexturePath": "Resource/Texture/UI/Slider/Rough_Scroll_Line.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -14550,8 +14942,8 @@
             ]
         },
         {
-            "ID": 146,
-            "ParentID": 144,
+            "ID": 149,
+            "ParentID": 147,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -14585,7 +14977,7 @@
                     "Width": 30.0,
                     "Height": 30.0,
                     "Pivot": {
-                        "x": 0.5,
+                        "x": 0.800000011920929,
                         "y": 0.5
                     },
                     "AnchorMin": {
@@ -14657,7 +15049,7 @@
             ]
         },
         {
-            "ID": 147,
+            "ID": 150,
             "ParentID": 53,
             "Name": "Btn_Upgrade",
             "Active": true,
@@ -14808,8 +15200,8 @@
             ]
         },
         {
-            "ID": 148,
-            "ParentID": 147,
+            "ID": 151,
+            "ParentID": 150,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -14881,7 +15273,7 @@
             ]
         },
         {
-            "ID": 149,
+            "ID": 152,
             "ParentID": 52,
             "Name": "UI_OptionPopUp",
             "Active": false,
@@ -15005,8 +15397,8 @@
             ]
         },
         {
-            "ID": 150,
-            "ParentID": 149,
+            "ID": 153,
+            "ParentID": 152,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -15156,8 +15548,8 @@
             ]
         },
         {
-            "ID": 151,
-            "ParentID": 150,
+            "ID": 154,
+            "ParentID": 153,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -15229,8 +15621,8 @@
             ]
         },
         {
-            "ID": 152,
-            "ParentID": 149,
+            "ID": 155,
+            "ParentID": 152,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -15302,8 +15694,8 @@
             ]
         },
         {
-            "ID": 153,
-            "ParentID": 149,
+            "ID": 156,
+            "ParentID": 152,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -15353,8 +15745,8 @@
             ]
         },
         {
-            "ID": 154,
-            "ParentID": 153,
+            "ID": 157,
+            "ParentID": 156,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -15411,7 +15803,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -15436,8 +15828,8 @@
             ]
         },
         {
-            "ID": 155,
-            "ParentID": 154,
+            "ID": 158,
+            "ParentID": 157,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -15543,8 +15935,8 @@
             ]
         },
         {
-            "ID": 156,
-            "ParentID": 154,
+            "ID": 159,
+            "ParentID": 157,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -15597,7 +15989,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -15650,8 +16042,8 @@
             ]
         },
         {
-            "ID": 157,
-            "ParentID": 154,
+            "ID": 160,
+            "ParentID": 157,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -15757,8 +16149,8 @@
             ]
         },
         {
-            "ID": 158,
-            "ParentID": 157,
+            "ID": 161,
+            "ParentID": 160,
             "Name": "Text_VolumeVal",
             "Active": true,
             "Components": [
@@ -15830,8 +16222,8 @@
             ]
         },
         {
-            "ID": 159,
-            "ParentID": 153,
+            "ID": 162,
+            "ParentID": 156,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -15888,7 +16280,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -15913,8 +16305,8 @@
             ]
         },
         {
-            "ID": 160,
-            "ParentID": 159,
+            "ID": 163,
+            "ParentID": 162,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -16020,8 +16412,8 @@
             ]
         },
         {
-            "ID": 161,
-            "ParentID": 159,
+            "ID": 164,
+            "ParentID": 162,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -16074,7 +16466,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16127,8 +16519,8 @@
             ]
         },
         {
-            "ID": 162,
-            "ParentID": 159,
+            "ID": 165,
+            "ParentID": 162,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -16234,8 +16626,8 @@
             ]
         },
         {
-            "ID": 163,
-            "ParentID": 162,
+            "ID": 166,
+            "ParentID": 165,
             "Name": "Text_SFXVal",
             "Active": true,
             "Components": [
@@ -16307,8 +16699,8 @@
             ]
         },
         {
-            "ID": 164,
-            "ParentID": 153,
+            "ID": 167,
+            "ParentID": 156,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -16365,7 +16757,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -16390,8 +16782,8 @@
             ]
         },
         {
-            "ID": 165,
-            "ParentID": 164,
+            "ID": 168,
+            "ParentID": 167,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -16497,8 +16889,8 @@
             ]
         },
         {
-            "ID": 166,
-            "ParentID": 164,
+            "ID": 169,
+            "ParentID": 167,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -16551,7 +16943,7 @@
                     "Layer": 2,
                     "OrderInLayer": 2,
                     "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Slider/Fill.png",
+                    "TexturePath": "None",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -16604,8 +16996,8 @@
             ]
         },
         {
-            "ID": 167,
-            "ParentID": 164,
+            "ID": 170,
+            "ParentID": 167,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -16711,8 +17103,8 @@
             ]
         },
         {
-            "ID": 168,
-            "ParentID": 167,
+            "ID": 171,
+            "ParentID": 170,
             "Name": "Text_SensiVal",
             "Active": true,
             "Components": [
@@ -16784,8 +17176,8 @@
             ]
         },
         {
-            "ID": 169,
-            "ParentID": 153,
+            "ID": 172,
+            "ParentID": 156,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -16857,8 +17249,8 @@
             ]
         },
         {
-            "ID": 170,
-            "ParentID": 153,
+            "ID": 173,
+            "ParentID": 156,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -16930,8 +17322,8 @@
             ]
         },
         {
-            "ID": 171,
-            "ParentID": 153,
+            "ID": 174,
+            "ParentID": 156,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -17003,7 +17395,7 @@
             ]
         },
         {
-            "ID": 172,
+            "ID": 175,
             "ParentID": 33,
             "Name": "UpgradeController",
             "Active": true,

@@ -191,6 +191,12 @@ namespace game
             if (t > 0.9f)
             {
                 t = 0.9f;
+                m_playerScript->SetCurrentFragile(maxVal * 0.9f);
+            }
+            else
+            {
+                // 90% 미만일 때는 정상적으로 업데이트
+                m_playerScript->SetCurrentFragile(maxVal * t);
             }
 
             m_fragileGaugeProgress->SetValue(t);
