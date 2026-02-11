@@ -1,6 +1,6 @@
 {
     "Name": "Shin_Map_collidertest_purple",
-    "NumGameObjects": 48,
+    "NumGameObjects": 63,
     "GameObjects": [
         {
             "ID": 0,
@@ -70,7 +70,7 @@
                         "y": 0.41960784792900085,
                         "z": 0.9137254953384399
                     },
-                    "Intensity": 3.0,
+                    "Intensity": 1.2999999523162842,
                     "Range": 10.0,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -131,7 +131,8 @@
                     },
                     "UseSkyboxTexture": 1,
                     "UseIBLTexture": 1,
-                    "UseIBL": 1
+                    "UseIBL": 1,
+                    "IBLIntensity": 0.05999999865889549
                 }
             ]
         },
@@ -167,7 +168,7 @@
                     "BloomThreshold": 1.600000023841858,
                     "BloomSoftKnee": 1.7000000476837158,
                     "EnableBloom": 1,
-                    "Exposure": -5.0,
+                    "Exposure": -2.5,
                     "EnableToneMapping": -1,
                     "FXAAQualitySubpix": -1.0,
                     "FXAAQualityEdgeThreshold": -1.0,
@@ -185,7 +186,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
+                        "x": -0.06508928537368774,
                         "y": 1.4552080631256104,
                         "z": 0.0
                     },
@@ -11078,7 +11079,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 3.5,
+                        "y": 5.5,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -11140,7 +11141,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": -1.399999976158142,
+                        "y": -0.5,
                         "z": 3.0
                     },
                     "Rotation": {
@@ -11201,7 +11202,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 18.89303970336914,
+                        "x": 21.818307876586914,
                         "y": 7.253697872161865,
                         "z": -8.03083610534668
                     },
@@ -11226,7 +11227,7 @@
                         "y": 0.2823529541492462,
                         "z": 0.9333333373069763
                     },
-                    "Intensity": 37.5,
+                    "Intensity": 14.199999809265137,
                     "Range": 12.399999618530273,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -11272,7 +11273,7 @@
                         "y": 0.2823529541492462,
                         "z": 0.9333333373069763
                     },
-                    "Intensity": 39.099998474121094,
+                    "Intensity": 11.699999809265137,
                     "Range": 10.899999618530273,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -11318,7 +11319,7 @@
                         "y": 0.2823529541492462,
                         "z": 0.9333333373069763
                     },
-                    "Intensity": 44.79999923706055,
+                    "Intensity": 11.0,
                     "Range": 9.399999618530273,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -11364,7 +11365,7 @@
                         "y": 0.2823529541492462,
                         "z": 0.9333333373069763
                     },
-                    "Intensity": 37.29999923706055,
+                    "Intensity": 12.100000381469727,
                     "Range": 15.699999809265137,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -11410,7 +11411,7 @@
                         "y": 0.2823529541492462,
                         "z": 0.9333333373069763
                     },
-                    "Intensity": 47.20000076293945,
+                    "Intensity": 15.899999618530273,
                     "Range": 10.100000381469727,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -11649,6 +11650,936 @@
                     "HeightRatio": 0.8999999761581421,
                     "ShadowBias": 9.999999747378752e-05,
                     "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 48,
+            "Name": "CrystalPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -21.509254455566406,
+                        "y": 3.604435920715332,
+                        "z": -14.495643615722656
+                    },
+                    "Rotation": {
+                        "x": -0.003955292049795389,
+                        "y": 0.8490228056907654,
+                        "z": 0.1572849601507187,
+                        "w": -0.5043867826461792
+                    },
+                    "Scale": {
+                        "x": 3.750056505203247,
+                        "y": 3.7500030994415283,
+                        "z": 3.750053644180298
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.740000009536743,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 49,
+            "Name": "CrystalPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -24.8168888092041,
+                        "y": -1.2276653051376343,
+                        "z": -10.024505615234375
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.9693331718444824,
+                        "z": 0.0,
+                        "w": 0.24575048685073853
+                    },
+                    "Scale": {
+                        "x": 4.400089263916016,
+                        "y": 4.399999618530273,
+                        "z": 4.400089263916016
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 2.680000066757202,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 50,
+            "Name": "CrystalPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -26.529834747314453,
+                        "y": 4.039336204528809,
+                        "z": 5.979272842407227
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.8211512565612793,
+                        "z": 0.0,
+                        "w": 0.5707105994224548
+                    },
+                    "Scale": {
+                        "x": 4.494654178619385,
+                        "y": 4.494499683380127,
+                        "z": 4.494654178619385
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.730000019073486,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 51,
+            "Name": "CrystalPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.707416534423828,
+                        "y": 6.365219593048096,
+                        "z": -8.6045503616333
+                    },
+                    "Rotation": {
+                        "x": 0.11672262847423553,
+                        "y": -0.15858256816864014,
+                        "z": 0.22593413293361664,
+                        "w": 0.954034149646759
+                    },
+                    "Scale": {
+                        "x": 1.9396593570709229,
+                        "y": 2.141580581665039,
+                        "z": 2.6800365447998047
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 5.059999942779541,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 52,
+            "Name": "CrystalPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 23.83061408996582,
+                        "y": 0.0,
+                        "z": 11.716205596923828
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": -0.49346911907196045,
+                        "z": -0.0,
+                        "w": 0.8697633147239685
+                    },
+                    "Scale": {
+                        "x": 2.235901355743408,
+                        "y": 2.2358999252319336,
+                        "z": 2.235901355743408
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.650000095367432,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 53,
+            "Name": "CrystalPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 26.869834899902344,
+                        "y": -1.167244553565979,
+                        "z": 9.636197090148926
+                    },
+                    "Rotation": {
+                        "x": 0.010494186542928219,
+                        "y": 0.9455658793449402,
+                        "z": 0.0181257501244545,
+                        "w": -0.32475611567497253
+                    },
+                    "Scale": {
+                        "x": 4.201196193695068,
+                        "y": 4.201134204864502,
+                        "z": 4.201190948486328
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 2.7899999618530273,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 54,
+            "Name": "CrystalSharpPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -29.1015625,
+                        "y": 0.18945860862731934,
+                        "z": 17.944982528686523
+                    },
+                    "Rotation": {
+                        "x": -0.10223273187875748,
+                        "y": 0.27780967950820923,
+                        "z": -0.1612926870584488,
+                        "w": 0.9414642453193665
+                    },
+                    "Scale": {
+                        "x": 7.119602203369141,
+                        "y": 7.119603633880615,
+                        "z": 7.119600296020508
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sharp/purple/crystal_sharp_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.5099999904632568,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 55,
+            "Name": "CrystalSharpPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 30.663557052612305,
+                        "y": 8.347090721130371,
+                        "z": 15.454259872436523
+                    },
+                    "Rotation": {
+                        "x": -0.07605975866317749,
+                        "y": -0.42069247364997864,
+                        "z": 0.1608343869447708,
+                        "w": 0.8895869851112366
+                    },
+                    "Scale": {
+                        "x": 5.547601222991943,
+                        "y": 5.547600746154785,
+                        "z": 5.547600269317627
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sharp/purple/crystal_sharp_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 2.700000047683716,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 56,
+            "Name": "CrystalSharpPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 31.73613166809082,
+                        "y": 0.009054419584572315,
+                        "z": 8.481303215026855
+                    },
+                    "Rotation": {
+                        "x": -0.28520825505256653,
+                        "y": 0.05686895176768303,
+                        "z": 0.18709363043308258,
+                        "w": 0.9383059740066528
+                    },
+                    "Scale": {
+                        "x": 3.099602699279785,
+                        "y": 4.427839279174805,
+                        "z": 3.255702018737793
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sharp/purple/crystal_sharp_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 57,
+            "Name": "CrystalSharpPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 34.31812286376953,
+                        "y": 1.9503363546391483e-06,
+                        "z": 3.9273757934570313
+                    },
+                    "Rotation": {
+                        "x": -0.20958520472049713,
+                        "y": 0.6938235759735107,
+                        "z": -0.22307398915290833,
+                        "w": -0.6518595814704895
+                    },
+                    "Scale": {
+                        "x": 7.779123783111572,
+                        "y": 5.7816314697265625,
+                        "z": 6.2614288330078125
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sharp/purple/crystal_sharp_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.11100000143051147,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 0.5199999809265137,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 58,
+            "Name": "CrystalSharpPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 1.0613033771514893,
+                        "y": 0.1689249873161316,
+                        "z": 19.305171966552734
+                    },
+                    "Rotation": {
+                        "x": 0.10674992948770523,
+                        "y": 0.8518837094306946,
+                        "z": -0.15435396134853363,
+                        "w": -0.48895150423049927
+                    },
+                    "Scale": {
+                        "x": 3.0300326347351074,
+                        "y": 3.030000925064087,
+                        "z": 3.030076026916504
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sharp/purple/crystal_sharp_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.360000133514404,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 59,
+            "Name": "CrystalSharpPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -24.698036193847656,
+                        "y": -0.7236749529838562,
+                        "z": -1.2480493783950806
+                    },
+                    "Rotation": {
+                        "x": -0.14048713445663452,
+                        "y": 0.10495517402887344,
+                        "z": -0.20398931205272675,
+                        "w": 0.9631386995315552
+                    },
+                    "Scale": {
+                        "x": 4.09435510635376,
+                        "y": 6.070002555847168,
+                        "z": 6.070007801055908
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sharp/purple/crystal_sharp_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 60,
+            "Name": "CrystalPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -13.456049919128418,
+                        "y": 2.270261764526367,
+                        "z": 22.89913558959961
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.7398871779441833,
+                        "z": 0.0,
+                        "w": -0.6727309823036194
+                    },
+                    "Scale": {
+                        "x": 2.290006160736084,
+                        "y": 2.2899999618530273,
+                        "z": 2.290006160736084
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.440000057220459,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 61,
+            "Name": "CrystalPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -22.546396255493164,
+                        "y": 1.3159154653549194,
+                        "z": 20.860488891601563
+                    },
+                    "Rotation": {
+                        "x": -0.099566251039505,
+                        "y": 0.5651925206184387,
+                        "z": -0.14207778871059418,
+                        "w": 0.8065096735954285
+                    },
+                    "Scale": {
+                        "x": 2.6100053787231445,
+                        "y": 2.6100003719329834,
+                        "z": 2.610003709793091
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 62,
+            "Name": "CrystalSharpPurple",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -1.9924761056900024,
+                        "y": 3.022867202758789,
+                        "z": 22.132505416870117
+                    },
+                    "Rotation": {
+                        "x": -0.17890208959579468,
+                        "y": -0.010892748832702637,
+                        "z": -0.059790097177028656,
+                        "w": 0.9819880723953247
+                    },
+                    "Scale": {
+                        "x": 1.9600017070770264,
+                        "y": 1.9599988460540771,
+                        "z": 1.9600000381469727
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_sharp/purple/crystal_sharp_purple.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }
