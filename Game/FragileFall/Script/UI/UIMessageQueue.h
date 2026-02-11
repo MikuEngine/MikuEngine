@@ -14,6 +14,7 @@ namespace game
         Kill = 0,
         Tutorial = 1,
         System = 2,
+        TutorialLobby = 3,
     };
 
     class UIMessageQueue :
@@ -66,9 +67,11 @@ namespace game
 
         std::deque<Item> m_itemsKill;
         std::deque<Item> m_itemsTutorial;
+        std::deque<Item> m_itemsTutorialLobby;
 
         ChannelConfig m_kill;
         ChannelConfig m_tutorial;
+        ChannelConfig m_tutorialLobby;
 
         MessageCatalog* m_catalog = nullptr;
 

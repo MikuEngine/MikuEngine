@@ -4,6 +4,8 @@
 #include <Script/CharacterScript/Player/PlayerControllerScript.h>
 #include <Framework/Object/Component/UI/UIClickArea.h>
 
+#include "Script/UI/UIMessageQueue.h"
+
 namespace engine
 {
     class UIImage;
@@ -11,8 +13,6 @@ namespace engine
 
 namespace game
 {
-    class UIMessageQueue;
-
     struct TutorialStep
     {
         std::vector<std::string> pages; // 동시에 보여줄 메시지들
@@ -24,6 +24,7 @@ namespace game
         REGISTER_SCRIPT(TutorialController, Script)
 
     private:
+        UIMessageChannel m_messageChannel = UIMessageChannel::Tutorial;
         UIMessageQueue* m_queue = nullptr;
         int m_stepIndex = 0;
         int m_pageIndex = 0;

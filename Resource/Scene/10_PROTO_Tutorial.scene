@@ -1,6 +1,6 @@
 {
     "Name": "10_PROTO_Tutorial",
-    "NumGameObjects": 126,
+    "NumGameObjects": 142,
     "GameObjects": [
         {
             "ID": 0,
@@ -9174,7 +9174,10 @@
                     "Type": "AimPointerMeshScript",
                     "Active": true,
                     "AimPointerObjectName": "Player",
-                    "FixedY": 2.200000047683716
+                    "FixedY": 2.200000047683716,
+                    "ScaleAtNearest": 0.800000011920929,
+                    "ScaleMin": 0.05000000074505806,
+                    "ScaleMax": 5.0
                 }
             ]
         },
@@ -9227,48 +9230,6 @@
                     "RotationZDeg": 0.0
                 },
                 {
-                    "Type": "AimModeController",
-                    "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
-                    "CursorSize": {
-                        "x": 30.0,
-                        "y": 30.0
-                    },
-                    "TargetPlaneY": 1.5,
-                    "AimYOffsetWhenMoving": 0.0,
-                    "PostExecutionDuration": 0.5,
-                    "CursorTexturesByState": [
-                        "Resource/Texture/UI/Image/Cursor_Default.png",
-                        "Resource/Texture/UI/Image/Cursor_Click.png",
-                        "Resource/Texture/UI/Image/Aim_Idle.png",
-                        "Resource/Texture/UI/Image/Aim_Execute.png",
-                        "Resource/Texture/UI/Image/Aim_Execute.png"
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
-                },
-                {
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
@@ -9309,11 +9270,11 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 30.0,
-                    "Height": 30.0,
+                    "Width": 50.0,
+                    "Height": 50.0,
                     "Pivot": {
-                        "x": 0.0,
-                        "y": 0.0
+                        "x": 0.5,
+                        "y": 0.5
                     },
                     "AnchorMin": {
                         "x": 0.5,
@@ -9331,7 +9292,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_1_1.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -9385,6 +9346,1718 @@
         },
         {
             "ID": 5,
+            "ParentID": 4,
+            "Name": "AimIdle_N",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_1_(1).png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 4,
+            "Name": "AimIdle_W",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_1_(2).png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 4,
+            "Name": "AimIdle_S",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_1_(3).png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "ParentID": 4,
+            "Name": "AimIdle_E",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_1_(4).png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "ParentID": 3,
+            "Name": "AimCursor_OnEnemy",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Aim_Firing.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "ParentID": 9,
+            "Name": "AimIdle_N",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_2_(1).png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "ParentID": 9,
+            "Name": "AimIdle_W",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_2_(2).png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "ParentID": 9,
+            "Name": "AimIdle_S",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_2_(3).png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "ParentID": 9,
+            "Name": "AimIdle_E",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Sighting_Point_2_(4).png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "ParentID": 3,
+            "Name": "AimCursor_Execution",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Aim_Firing.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 15,
+            "ParentID": 14,
+            "Name": "AimIdle_NW",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Aim_Execute_NW.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 16,
+            "ParentID": 14,
+            "Name": "AimIdle_NE",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Aim_Execute_NE.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 17,
+            "ParentID": 14,
+            "Name": "AimIdle_SE",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Aim_Execute_SE.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 18,
+            "ParentID": 14,
+            "Name": "AimIdle_SW",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Aim_Execute_SW.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 19,
+            "ParentID": 3,
+            "Name": "AimCursor_Click",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Cursor_Click.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 20,
+            "ParentID": 3,
+            "Name": "AimCursor_Default",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Cursor/Cursor_Default.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 21,
             "Name": "MonsterSpawnPoint",
             "Active": true,
             "Components": [
@@ -9411,7 +11084,7 @@
             ]
         },
         {
-            "ID": 6,
+            "ID": 22,
             "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [
@@ -9482,7 +11155,7 @@
             ]
         },
         {
-            "ID": 7,
+            "ID": 23,
             "Name": "Environment",
             "Active": true,
             "Components": [
@@ -9509,8 +11182,8 @@
             ]
         },
         {
-            "ID": 8,
-            "ParentID": 7,
+            "ID": 24,
+            "ParentID": 23,
             "Name": "DirectionalLight",
             "Active": true,
             "Components": [
@@ -9556,8 +11229,8 @@
             ]
         },
         {
-            "ID": 9,
-            "ParentID": 7,
+            "ID": 25,
+            "ParentID": 23,
             "Name": "SkyBox",
             "Active": true,
             "Components": [
@@ -9611,8 +11284,8 @@
             ]
         },
         {
-            "ID": 10,
-            "ParentID": 7,
+            "ID": 26,
+            "ParentID": 23,
             "Name": "PostProcessing",
             "Active": true,
             "Components": [
@@ -9653,7 +11326,7 @@
             ]
         },
         {
-            "ID": 11,
+            "ID": 27,
             "Name": "Map",
             "Active": true,
             "Components": [
@@ -9680,8 +11353,8 @@
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 11,
+            "ID": 28,
+            "ParentID": 27,
             "Name": "WallFront",
             "Active": true,
             "Components": [
@@ -9766,8 +11439,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 11,
+            "ID": 29,
+            "ParentID": 27,
             "Name": "WallBack",
             "Active": true,
             "Components": [
@@ -9852,8 +11525,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 11,
+            "ID": 30,
+            "ParentID": 27,
             "Name": "WallLeft",
             "Active": true,
             "Components": [
@@ -9915,8 +11588,8 @@
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 14,
+            "ID": 31,
+            "ParentID": 30,
             "Name": "WallLeft2",
             "Active": true,
             "Components": [
@@ -10001,8 +11674,8 @@
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 11,
+            "ID": 32,
+            "ParentID": 27,
             "Name": "WallRight",
             "Active": true,
             "Components": [
@@ -10064,8 +11737,8 @@
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 16,
+            "ID": 33,
+            "ParentID": 32,
             "Name": "WallRight2",
             "Active": true,
             "Components": [
@@ -10150,8 +11823,8 @@
             ]
         },
         {
-            "ID": 18,
-            "ParentID": 11,
+            "ID": 34,
+            "ParentID": 27,
             "Name": "Ground",
             "Active": true,
             "Components": [
@@ -10213,8 +11886,8 @@
             ]
         },
         {
-            "ID": 19,
-            "ParentID": 11,
+            "ID": 35,
+            "ParentID": 27,
             "Name": "StageDoor_Next",
             "Active": true,
             "Components": [
@@ -10282,8 +11955,8 @@
             ]
         },
         {
-            "ID": 20,
-            "ParentID": 11,
+            "ID": 36,
+            "ParentID": 27,
             "Name": "StageDoor_Exit",
             "Active": true,
             "Components": [
@@ -10351,8 +12024,8 @@
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 11,
+            "ID": 37,
+            "ParentID": 27,
             "Name": "DoorTorchLeft",
             "Active": true,
             "Components": [
@@ -10414,8 +12087,8 @@
             ]
         },
         {
-            "ID": 22,
-            "ParentID": 21,
+            "ID": 38,
+            "ParentID": 37,
             "Name": "TorchLight",
             "Active": true,
             "Components": [
@@ -10480,8 +12153,8 @@
             ]
         },
         {
-            "ID": 23,
-            "ParentID": 11,
+            "ID": 39,
+            "ParentID": 27,
             "Name": "DoorTorchRight",
             "Active": true,
             "Components": [
@@ -10543,8 +12216,8 @@
             ]
         },
         {
-            "ID": 24,
-            "ParentID": 23,
+            "ID": 40,
+            "ParentID": 39,
             "Name": "TorchLight",
             "Active": true,
             "Components": [
@@ -10609,8 +12282,8 @@
             ]
         },
         {
-            "ID": 25,
-            "ParentID": 11,
+            "ID": 41,
+            "ParentID": 27,
             "Name": "RockStickingOut1",
             "Active": true,
             "Components": [
@@ -10695,8 +12368,8 @@
             ]
         },
         {
-            "ID": 26,
-            "ParentID": 11,
+            "ID": 42,
+            "ParentID": 27,
             "Name": "RockStickingOut2",
             "Active": true,
             "Components": [
@@ -10777,8 +12450,8 @@
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 11,
+            "ID": 43,
+            "ParentID": 27,
             "Name": "RockStickingOut1",
             "Active": true,
             "Components": [
@@ -10863,8 +12536,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 11,
+            "ID": 44,
+            "ParentID": 27,
             "Name": "RockStickingOut2",
             "Active": true,
             "Components": [
@@ -10945,8 +12618,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 11,
+            "ID": 45,
+            "ParentID": 27,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -11008,8 +12681,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 29,
+            "ID": 46,
+            "ParentID": 45,
             "Name": "LightWhite",
             "Active": true,
             "Components": [
@@ -11055,8 +12728,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 11,
+            "ID": 47,
+            "ParentID": 27,
             "Name": "CrystalBlue",
             "Active": true,
             "Components": [
@@ -11118,8 +12791,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 31,
+            "ID": 48,
+            "ParentID": 47,
             "Name": "LightBlue",
             "Active": true,
             "Components": [
@@ -11165,8 +12838,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 11,
+            "ID": 49,
+            "ParentID": 27,
             "Name": "CrystalGreen",
             "Active": true,
             "Components": [
@@ -11228,8 +12901,8 @@
             ]
         },
         {
-            "ID": 34,
-            "ParentID": 33,
+            "ID": 50,
+            "ParentID": 49,
             "Name": "LightGreen",
             "Active": true,
             "Components": [
@@ -11275,8 +12948,8 @@
             ]
         },
         {
-            "ID": 35,
-            "ParentID": 11,
+            "ID": 51,
+            "ParentID": 27,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -11338,8 +13011,8 @@
             ]
         },
         {
-            "ID": 36,
-            "ParentID": 35,
+            "ID": 52,
+            "ParentID": 51,
             "Name": "LightPurple",
             "Active": true,
             "Components": [
@@ -11385,8 +13058,8 @@
             ]
         },
         {
-            "ID": 37,
-            "ParentID": 11,
+            "ID": 53,
+            "ParentID": 27,
             "Name": "CrystalRed",
             "Active": true,
             "Components": [
@@ -11448,8 +13121,8 @@
             ]
         },
         {
-            "ID": 38,
-            "ParentID": 37,
+            "ID": 54,
+            "ParentID": 53,
             "Name": "LightRed",
             "Active": true,
             "Components": [
@@ -11495,8 +13168,8 @@
             ]
         },
         {
-            "ID": 39,
-            "ParentID": 11,
+            "ID": 55,
+            "ParentID": 27,
             "Name": "CrystalSharpSingle",
             "Active": true,
             "Components": [
@@ -11523,8 +13196,8 @@
             ]
         },
         {
-            "ID": 40,
-            "ParentID": 39,
+            "ID": 56,
+            "ParentID": 55,
             "Name": "CrystalSharpSingleWhite",
             "Active": true,
             "Components": [
@@ -11586,8 +13259,8 @@
             ]
         },
         {
-            "ID": 41,
-            "ParentID": 39,
+            "ID": 57,
+            "ParentID": 55,
             "Name": "CrystalSharpSingleBlue",
             "Active": true,
             "Components": [
@@ -11649,8 +13322,8 @@
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 39,
+            "ID": 58,
+            "ParentID": 55,
             "Name": "CrystalSharpSingleGreen",
             "Active": true,
             "Components": [
@@ -11712,8 +13385,8 @@
             ]
         },
         {
-            "ID": 43,
-            "ParentID": 39,
+            "ID": 59,
+            "ParentID": 55,
             "Name": "CrystalSharpSinglePurple",
             "Active": true,
             "Components": [
@@ -11775,8 +13448,8 @@
             ]
         },
         {
-            "ID": 44,
-            "ParentID": 39,
+            "ID": 60,
+            "ParentID": 55,
             "Name": "CrystalSharpSingleRed",
             "Active": true,
             "Components": [
@@ -11838,8 +13511,8 @@
             ]
         },
         {
-            "ID": 45,
-            "ParentID": 11,
+            "ID": 61,
+            "ParentID": 27,
             "Name": "CrystalSharp",
             "Active": true,
             "Components": [
@@ -11866,8 +13539,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 45,
+            "ID": 62,
+            "ParentID": 61,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -11929,8 +13602,8 @@
             ]
         },
         {
-            "ID": 47,
-            "ParentID": 45,
+            "ID": 63,
+            "ParentID": 61,
             "Name": "CrystalSharpBlue",
             "Active": true,
             "Components": [
@@ -11992,8 +13665,8 @@
             ]
         },
         {
-            "ID": 48,
-            "ParentID": 45,
+            "ID": 64,
+            "ParentID": 61,
             "Name": "CrystalSharpGreen",
             "Active": true,
             "Components": [
@@ -12055,8 +13728,8 @@
             ]
         },
         {
-            "ID": 49,
-            "ParentID": 45,
+            "ID": 65,
+            "ParentID": 61,
             "Name": "CrystalSharpPurple",
             "Active": true,
             "Components": [
@@ -12118,8 +13791,8 @@
             ]
         },
         {
-            "ID": 50,
-            "ParentID": 45,
+            "ID": 66,
+            "ParentID": 61,
             "Name": "CrystalSharpRed",
             "Active": true,
             "Components": [
@@ -12181,8 +13854,8 @@
             ]
         },
         {
-            "ID": 51,
-            "ParentID": 11,
+            "ID": 67,
+            "ParentID": 27,
             "Name": "SoundTrigger_Next",
             "Active": true,
             "Components": [
@@ -12216,8 +13889,8 @@
             ]
         },
         {
-            "ID": 52,
-            "ParentID": 11,
+            "ID": 68,
+            "ParentID": 27,
             "Name": "SoundTrigger_Exit",
             "Active": true,
             "Components": [
@@ -12251,7 +13924,7 @@
             ]
         },
         {
-            "ID": 53,
+            "ID": 69,
             "Name": "TutorialScript_Controller",
             "Active": true,
             "Components": [
@@ -12282,7 +13955,7 @@
             ]
         },
         {
-            "ID": 54,
+            "ID": 70,
             "Name": "UI",
             "Active": true,
             "Components": [
@@ -12309,8 +13982,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 54,
+            "ID": 71,
+            "ParentID": 70,
             "Name": "Canvas_ScreenEffect",
             "Active": true,
             "Components": [
@@ -12366,8 +14039,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 55,
+            "ID": 72,
+            "ParentID": 71,
             "Name": "FragileImage",
             "Active": true,
             "Components": [
@@ -12473,8 +14146,8 @@
             ]
         },
         {
-            "ID": 57,
-            "ParentID": 55,
+            "ID": 73,
+            "ParentID": 71,
             "Name": "HitImage",
             "Active": true,
             "Components": [
@@ -12580,8 +14253,8 @@
             ]
         },
         {
-            "ID": 58,
-            "ParentID": 54,
+            "ID": 74,
+            "ParentID": 70,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -12637,8 +14310,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 54,
+            "ID": 75,
+            "ParentID": 70,
             "Name": "StateText",
             "Active": true,
             "Components": [
@@ -12710,8 +14383,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 54,
+            "ID": 76,
+            "ParentID": 70,
             "Name": "StateTextCanvas",
             "Active": true,
             "Components": [
@@ -12785,8 +14458,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 54,
+            "ID": 77,
+            "ParentID": 70,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -12842,8 +14515,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 61,
+            "ID": 78,
+            "ParentID": 77,
             "Name": "Panel_Menu",
             "Active": false,
             "Components": [
@@ -12962,8 +14635,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 62,
+            "ID": 79,
+            "ParentID": 78,
             "Name": "UI_OpenOption",
             "Active": true,
             "Components": [
@@ -13113,8 +14786,8 @@
             ]
         },
         {
-            "ID": 64,
-            "ParentID": 63,
+            "ID": 80,
+            "ParentID": 79,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13186,8 +14859,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 62,
+            "ID": 81,
+            "ParentID": 78,
             "Name": "UI_BackToPlay",
             "Active": true,
             "Components": [
@@ -13337,8 +15010,8 @@
             ]
         },
         {
-            "ID": 66,
-            "ParentID": 65,
+            "ID": 82,
+            "ParentID": 81,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13410,8 +15083,8 @@
             ]
         },
         {
-            "ID": 67,
-            "ParentID": 62,
+            "ID": 83,
+            "ParentID": 78,
             "Name": "UI_BackToMain",
             "Active": true,
             "Components": [
@@ -13561,8 +15234,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 67,
+            "ID": 84,
+            "ParentID": 83,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -13634,8 +15307,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 62,
+            "ID": 85,
+            "ParentID": 78,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -13707,8 +15380,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 61,
+            "ID": 86,
+            "ParentID": 77,
             "Name": "UI_OptionPopUp",
             "Active": false,
             "Components": [
@@ -13831,8 +15504,8 @@
             ]
         },
         {
-            "ID": 71,
-            "ParentID": 70,
+            "ID": 87,
+            "ParentID": 86,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -13982,8 +15655,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 71,
+            "ID": 88,
+            "ParentID": 87,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -14055,8 +15728,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 70,
+            "ID": 89,
+            "ParentID": 86,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -14128,8 +15801,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 70,
+            "ID": 90,
+            "ParentID": 86,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -14179,8 +15852,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 74,
+            "ID": 91,
+            "ParentID": 90,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -14262,8 +15935,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 75,
+            "ID": 92,
+            "ParentID": 91,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14369,8 +16042,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 75,
+            "ID": 93,
+            "ParentID": 91,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -14476,8 +16149,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 75,
+            "ID": 94,
+            "ParentID": 91,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -14583,8 +16256,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 78,
+            "ID": 95,
+            "ParentID": 94,
             "Name": "Text_VolumeVal",
             "Active": true,
             "Components": [
@@ -14656,8 +16329,8 @@
             ]
         },
         {
-            "ID": 80,
-            "ParentID": 74,
+            "ID": 96,
+            "ParentID": 90,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -14739,8 +16412,8 @@
             ]
         },
         {
-            "ID": 81,
-            "ParentID": 80,
+            "ID": 97,
+            "ParentID": 96,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -14846,8 +16519,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 80,
+            "ID": 98,
+            "ParentID": 96,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -14953,8 +16626,8 @@
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 80,
+            "ID": 99,
+            "ParentID": 96,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -15060,8 +16733,8 @@
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 83,
+            "ID": 100,
+            "ParentID": 99,
             "Name": "Text_SFXVal",
             "Active": true,
             "Components": [
@@ -15133,8 +16806,8 @@
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 74,
+            "ID": 101,
+            "ParentID": 90,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -15216,8 +16889,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 85,
+            "ID": 102,
+            "ParentID": 101,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -15323,8 +16996,8 @@
             ]
         },
         {
-            "ID": 87,
-            "ParentID": 85,
+            "ID": 103,
+            "ParentID": 101,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -15430,8 +17103,8 @@
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 85,
+            "ID": 104,
+            "ParentID": 101,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -15537,8 +17210,8 @@
             ]
         },
         {
-            "ID": 89,
-            "ParentID": 88,
+            "ID": 105,
+            "ParentID": 104,
             "Name": "Text_SensiVal",
             "Active": true,
             "Components": [
@@ -15610,8 +17283,8 @@
             ]
         },
         {
-            "ID": 90,
-            "ParentID": 74,
+            "ID": 106,
+            "ParentID": 90,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15683,8 +17356,8 @@
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 74,
+            "ID": 107,
+            "ParentID": 90,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -15756,8 +17429,8 @@
             ]
         },
         {
-            "ID": 92,
-            "ParentID": 74,
+            "ID": 108,
+            "ParentID": 90,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -15829,8 +17502,8 @@
             ]
         },
         {
-            "ID": 93,
-            "ParentID": 54,
+            "ID": 109,
+            "ParentID": 70,
             "Name": "Canvas_HUD",
             "Active": true,
             "Components": [
@@ -15886,8 +17559,8 @@
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 93,
+            "ID": 110,
+            "ParentID": 109,
             "Name": "Currency",
             "Active": true,
             "Components": [
@@ -15943,8 +17616,8 @@
             ]
         },
         {
-            "ID": 95,
-            "ParentID": 94,
+            "ID": 111,
+            "ParentID": 110,
             "Name": "Ruby",
             "Active": true,
             "Components": [
@@ -16016,8 +17689,8 @@
             ]
         },
         {
-            "ID": 96,
-            "ParentID": 95,
+            "ID": 112,
+            "ParentID": 111,
             "Name": "Ruby Count",
             "Active": true,
             "Components": [
@@ -16089,8 +17762,8 @@
             ]
         },
         {
-            "ID": 97,
-            "ParentID": 94,
+            "ID": 113,
+            "ParentID": 110,
             "Name": "Sapphire",
             "Active": true,
             "Components": [
@@ -16162,8 +17835,8 @@
             ]
         },
         {
-            "ID": 98,
-            "ParentID": 97,
+            "ID": 114,
+            "ParentID": 113,
             "Name": "Sapphire Count",
             "Active": true,
             "Components": [
@@ -16235,8 +17908,8 @@
             ]
         },
         {
-            "ID": 99,
-            "ParentID": 94,
+            "ID": 115,
+            "ParentID": 110,
             "Name": "Emerald",
             "Active": true,
             "Components": [
@@ -16308,8 +17981,8 @@
             ]
         },
         {
-            "ID": 100,
-            "ParentID": 99,
+            "ID": 116,
+            "ParentID": 115,
             "Name": "Emerald Count",
             "Active": true,
             "Components": [
@@ -16381,8 +18054,8 @@
             ]
         },
         {
-            "ID": 101,
-            "ParentID": 93,
+            "ID": 117,
+            "ParentID": 109,
             "Name": "HPBar",
             "Active": true,
             "Components": [
@@ -16432,8 +18105,8 @@
             ]
         },
         {
-            "ID": 102,
-            "ParentID": 101,
+            "ID": 118,
+            "ParentID": 117,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -16539,8 +18212,8 @@
             ]
         },
         {
-            "ID": 103,
-            "ParentID": 102,
+            "ID": 119,
+            "ParentID": 118,
             "Name": "Heart(0)",
             "Active": true,
             "Components": [
@@ -16646,8 +18319,8 @@
             ]
         },
         {
-            "ID": 104,
-            "ParentID": 101,
+            "ID": 120,
+            "ParentID": 117,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -16753,8 +18426,8 @@
             ]
         },
         {
-            "ID": 105,
-            "ParentID": 104,
+            "ID": 121,
+            "ParentID": 120,
             "Name": "Heart(1)",
             "Active": true,
             "Components": [
@@ -16860,8 +18533,8 @@
             ]
         },
         {
-            "ID": 106,
-            "ParentID": 101,
+            "ID": 122,
+            "ParentID": 117,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -16967,8 +18640,8 @@
             ]
         },
         {
-            "ID": 107,
-            "ParentID": 106,
+            "ID": 123,
+            "ParentID": 122,
             "Name": "Heart(2)",
             "Active": true,
             "Components": [
@@ -17074,8 +18747,8 @@
             ]
         },
         {
-            "ID": 108,
-            "ParentID": 101,
+            "ID": 124,
+            "ParentID": 117,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -17181,8 +18854,8 @@
             ]
         },
         {
-            "ID": 109,
-            "ParentID": 108,
+            "ID": 125,
+            "ParentID": 124,
             "Name": "Heart(3)",
             "Active": true,
             "Components": [
@@ -17288,8 +18961,8 @@
             ]
         },
         {
-            "ID": 110,
-            "ParentID": 101,
+            "ID": 126,
+            "ParentID": 117,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -17395,8 +19068,8 @@
             ]
         },
         {
-            "ID": 111,
-            "ParentID": 110,
+            "ID": 127,
+            "ParentID": 126,
             "Name": "Heart(4)",
             "Active": true,
             "Components": [
@@ -17502,8 +19175,8 @@
             ]
         },
         {
-            "ID": 112,
-            "ParentID": 93,
+            "ID": 128,
+            "ParentID": 109,
             "Name": "Fragile Gauge Progress",
             "Active": true,
             "Components": [
@@ -17581,8 +19254,8 @@
             ]
         },
         {
-            "ID": 113,
-            "ParentID": 112,
+            "ID": 129,
+            "ParentID": 128,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -17688,8 +19361,8 @@
             ]
         },
         {
-            "ID": 114,
-            "ParentID": 112,
+            "ID": 130,
+            "ParentID": 128,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -17795,8 +19468,8 @@
             ]
         },
         {
-            "ID": 115,
-            "ParentID": 54,
+            "ID": 131,
+            "ParentID": 70,
             "Name": "HUD",
             "Active": true,
             "Components": [
@@ -17909,8 +19582,8 @@
             ]
         },
         {
-            "ID": 116,
-            "ParentID": 115,
+            "ID": 132,
+            "ParentID": 131,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -18023,8 +19696,8 @@
             ]
         },
         {
-            "ID": 117,
-            "ParentID": 115,
+            "ID": 133,
+            "ParentID": 131,
             "Name": "Profile",
             "Active": true,
             "Components": [
@@ -18130,8 +19803,8 @@
             ]
         },
         {
-            "ID": 118,
-            "ParentID": 54,
+            "ID": 134,
+            "ParentID": 70,
             "Name": "Canvas_KillPopUp",
             "Active": true,
             "Components": [
@@ -18187,8 +19860,8 @@
             ]
         },
         {
-            "ID": 119,
-            "ParentID": 54,
+            "ID": 135,
+            "ParentID": 70,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -18260,8 +19933,8 @@
             ]
         },
         {
-            "ID": 120,
-            "ParentID": 54,
+            "ID": 136,
+            "ParentID": 70,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -18367,8 +20040,8 @@
             ]
         },
         {
-            "ID": 121,
-            "ParentID": 54,
+            "ID": 137,
+            "ParentID": 70,
             "Name": "UIToastPopUp",
             "Active": true,
             "Components": [
@@ -18490,8 +20163,8 @@
             ]
         },
         {
-            "ID": 122,
-            "ParentID": 54,
+            "ID": 138,
+            "ParentID": 70,
             "Name": "Canvas_Message",
             "Active": true,
             "Components": [
@@ -18551,7 +20224,7 @@
             ]
         },
         {
-            "ID": 123,
+            "ID": 139,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -18663,49 +20336,26 @@
                 {
                     "Type": "AimModeController",
                     "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
                     "CursorSize": {
                         "x": 30.0,
                         "y": 30.0
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
-                    "PostExecutionDuration": 0.5,
-                    "CursorTexturesByState": [
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
+                    "OnEnemyRayMaxDistance": 1000.0,
+                    "EnableCursorPulse": true,
+                    "PulseMaxDistance": 10.0,
+                    "PulsePeakTimeScale": 0.5,
+                    "PulseDurationPerFR": 1.0,
+                    "ExecutionIntroScale": 1.5,
+                    "ExecutionIntroDistancePx": 10.0,
+                    "ExecutionIntroDuration": 0.5,
+                    "PostExecutionDuration": 0.5
                 }
             ]
         },
         {
-            "ID": 124,
+            "ID": 140,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -18943,7 +20593,7 @@
             ]
         },
         {
-            "ID": 125,
+            "ID": 141,
             "Name": "SceneController_Tutorial",
             "Active": true,
             "Components": [

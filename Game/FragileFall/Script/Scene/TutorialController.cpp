@@ -337,7 +337,6 @@ namespace game
             SetupSkillNodesUI("SurviveNodes", false, false);
             SetupSkillNodesUI("MoveNodes", false, false);
             BindButton("UI_OpenUpgrade", [this]() {
-                SetActiveButton("UI_OpenUpgrade", false, false);
                 HighlightButton("UI_OpenUpgrade", false);
                 Next();
             });
@@ -383,7 +382,10 @@ namespace game
             {
                 upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
             }
-            m_outline2->SetActive(true);
+            if (m_outline2)
+            {
+                m_outline2->SetActive(true);
+            }
 
             BindButton("Btn_Upgrade", [this] () {
                 m_outline2->SetActive(false);
@@ -398,7 +400,10 @@ namespace game
         // ─────────────────────────────────────────────
         case 9:
             m_outlineWidth = 8.0f;
-            m_outline3->SetActive(true);
+            if (m_outline3)
+            {
+                m_outline3->SetActive(true);
+            }
             BindButton("UI_CloseButton_Upgrade", [this]() {
                 m_outline3->SetActive(false);
                 SetupSkillNodesUI("AttackNodes", false, true);
@@ -442,6 +447,7 @@ namespace game
         }
         else if (currentScene == "10_PROTO_TutorialLobby")
         {
+            m_messageChannel = UIMessageChannel::TutorialLobby;
             Next();
         }
     }
@@ -582,7 +588,8 @@ namespace game
         const auto& step = g_steps[m_stepIndex];
         if (m_pageIndex < 0 || m_pageIndex >= (int)step.pages.size()) return;
 
-        m_queue->PushMessage(UIMessageChannel::Tutorial, step.pages[m_pageIndex]);
+
+        m_queue->PushMessage(m_messageChannel, step.pages[m_pageIndex]);
 
         RefreshStepContext(m_stepIndex);
     }
@@ -602,7 +609,7 @@ namespace game
         if (m_pageIndex < (int)step.pages.size() - 1)
         {
             m_pageIndex++;
-            m_queue->PushMessage(UIMessageChannel::Tutorial, step.pages[m_pageIndex]);
+            m_queue->PushMessage(m_messageChannel, step.pages[m_pageIndex]);
             return;
         }
 
@@ -619,12 +626,12 @@ namespace game
             const auto& nextStep = g_steps[m_stepIndex];
 
             // 기존 튜토리얼 채널 메시지를 즉시 지우고 새 스텝의 첫 페이지를 세팅
-            m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.0f);
-            m_queue->SetSingle(UIMessageChannel::Tutorial, nextStep.pages[0]);
+            m_queue->ClearChannel(m_messageChannel, 0.0f);
+            m_queue->SetSingle(m_messageChannel, nextStep.pages[0]);
         }
         else
         {
-            m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.2f);
+            m_queue->ClearChannel(m_messageChannel, 0.2f);
         }
     }
 
@@ -633,7 +640,7 @@ namespace game
         if (m_stepIndex <= 0 && m_pageIndex <= 0) return;
 
         // 이전으로 돌아갈 때는 기존에 쌓인 걸 지우고 다시 보여주는 게 깔끔합니다.
-        m_queue->ClearChannel(UIMessageChannel::Tutorial, 0.1f);
+        m_queue->ClearChannel(m_messageChannel, 0.1f);
 
         if (m_pageIndex > 0)
         {

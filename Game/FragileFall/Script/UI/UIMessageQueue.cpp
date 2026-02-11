@@ -21,6 +21,13 @@ namespace game
         m_tutorial.lifeTime = 9999.0f;         
         m_tutorial.spacing = 160.0f;
         m_tutorial.prefabKey = "UIToastPopUp_Tutorial";
+
+        m_tutorialLobby.canvas = engine::GameObject::Find("Canvas_Message"); // 강화 튜토리얼
+        m_tutorialLobby.spawnPos = { 510.0f, -300.0f };  // 원하는 위치
+        m_tutorialLobby.maxVisible = 3;
+        m_tutorialLobby.lifeTime = 9999.0f;
+        m_tutorialLobby.spacing = 160.0f;
+        m_tutorialLobby.prefabKey = "UIToastPopUp_TutorialLobby";
     }
 
     void UIMessageQueue::Start()
@@ -33,6 +40,7 @@ namespace game
         // 메시지 흐름
         UpdateChannel(m_itemsKill, m_kill);
         UpdateChannel(m_itemsTutorial, m_tutorial);
+        UpdateChannel(m_itemsTutorialLobby, m_tutorialLobby);
     }
 
     void UIMessageQueue::OnGui()
@@ -73,8 +81,8 @@ namespace game
 
     void UIMessageQueue::PushMessage(UIMessageChannel ch, const std::string& text, const std::string& iconKey)
     {
-        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : m_itemsTutorial;
-        auto& cfg = (ch == UIMessageChannel::Kill) ? m_kill : m_tutorial;
+        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : (ch == UIMessageChannel::Tutorial) ? m_itemsTutorial : m_itemsTutorialLobby;
+        auto& cfg = (ch == UIMessageChannel::Kill) ? m_kill : (ch == UIMessageChannel::Tutorial) ? m_tutorial : m_tutorialLobby;
 
         if (!cfg.canvas) return;
 
@@ -124,8 +132,8 @@ namespace game
 
     void UIMessageQueue::Advance(UIMessageChannel ch, float fadeOutOverride)
     {
-        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : m_itemsTutorial;
-        auto& cfg = (ch == UIMessageChannel::Kill) ? m_kill : m_tutorial;
+        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : (ch == UIMessageChannel::Tutorial) ? m_itemsTutorial : m_itemsTutorialLobby;
+        auto& cfg = (ch == UIMessageChannel::Kill) ? m_kill : (ch == UIMessageChannel::Tutorial) ? m_tutorial : m_tutorialLobby;
 
         // visible 중 "첫 번째(=현재)" 하나만 페이드아웃
         for (auto& it : q)
@@ -146,7 +154,7 @@ namespace game
 
     void UIMessageQueue::SetSingle(UIMessageChannel ch, const std::string& text, bool playEnter)
     {
-        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : m_itemsTutorial;
+        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : (ch == UIMessageChannel::Tutorial) ? m_itemsTutorial : m_itemsTutorialLobby;
 
         // 1) 이미 보이는 게 있으면 (단, 나가는 중이 아닌 것만)
         for (auto& it : q)
@@ -167,7 +175,7 @@ namespace game
 
     void UIMessageQueue::ClearChannel(UIMessageChannel ch, float fadeOutOverride)
     {
-        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : m_itemsTutorial;
+        auto& q = (ch == UIMessageChannel::Kill) ? m_itemsKill : (ch == UIMessageChannel::Tutorial)? m_itemsTutorial : m_itemsTutorialLobby;
 
         for (auto& it : q)
         {
