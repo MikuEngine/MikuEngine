@@ -179,7 +179,25 @@ namespace game
         BindButton("Btn_Survive", [self = engine::Ptr<UpgradeController>(this)]() {if (self) self->SetCategory(UpgradeCategory::Life); });
         BindButton("Btn_Move", [self = engine::Ptr<UpgradeController>(this)]() {if (self) self->SetCategory(UpgradeCategory::Move);});
         
-        BindButton("Btn_Upgrade", [self = engine::Ptr<UpgradeController>(this)]() {if (!self)return; if (self->m_selectedNodeId == 0) return; self->ApplyUpgrade(self->m_selectedNodeId); });
+        BindButton("Btn_Upgrade", [self = engine::Ptr<UpgradeController>(this)]()
+        {
+                if (!self)return;
+                if (self->m_selectedNodeId == 0)
+                {
+                    engine::SoundSystem::Get().PlayUI("Upgrade_Disable");
+                    return;
+                }
+
+                bool isSuccess = self->ApplyUpgrade(self->m_selectedNodeId);
+                std::string soundName = isSuccess ? "Upgrade_Success" : "Upgrade_Disable";
+                engine::SoundSystem::Get().PlayUI(soundName);
+        });
+
+        BindButton("Btn_Attack", [self = engine::Ptr<UpgradeController>(this)](bool hovered) {});
+        BindButton("Btn_Skill", [self = engine::Ptr<UpgradeController>(this)](bool hovered) {});
+        BindButton("Btn_Survive", [self = engine::Ptr<UpgradeController>(this)](bool hovered) {});
+        BindButton("Btn_Move", [self = engine::Ptr<UpgradeController>(this)](bool hovered) {});
+
     }
 
     void UpgradeController::Start()
@@ -608,14 +626,35 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click");
-        if (cb) cb(); }); auto it = m_views.find(m_selectedNodeId);
+        button->AddOnClick([cb, name]() {    
+            if (name != "Btn_Upgrade") engine::SoundSystem::Get().PlayUI("UI_Click");
+            if (cb) cb(); 
+        });
+        
+        auto it = m_views.find(m_selectedNodeId);
         if (it == m_views.end() || !it->second)
         {
             ClearSelectedInfoUI();
             return;
         }
         UpgradeNodeView* view = it->second;
+    }
+
+    void UpgradeController::BindButton(const std::string& name, engine::UIButton::HoverCallback cb)
+    {
+        auto* go = engine::GameObject::Find(name);
+        if (!go) return;
+
+        auto* button = go->GetComponent<engine::UIButton>();
+        if (!button) return;
+
+        button->AddOnHover([cb](bool isHovered) {
+            if (isHovered)
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Horver");
+            }
+            if (cb) cb(isHovered);
+        });
     }
 
     void UpgradeController::SetCategory(UpgradeCategory c)

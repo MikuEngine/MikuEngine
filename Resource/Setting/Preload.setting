@@ -81,6 +81,8 @@
 	{ "Type": "Sound", "Name": "UI_Click", "Path": "Resource/Sound/SFX/UI/Click_2.wav", "Option": "SFX/UI" },
 	{ "Type": "Sound", "Name": "UI_Open", "Path": "Resource/Sound/SFX/UI/UI_Open.wav", "Option": "SFX/UI" },
 	{ "Type": "Sound", "Name": "UI_Close", "Path": "Resource/Sound/SFX/UI/UI_Close.wav", "Option": "SFX/UI" },
+	{ "Type": "Sound", "Name": "Upgrade_Success", "Path": "Resource/Sound/SFX/UI/Upgrade_Success.wav", "Option": "SFX/UI" },
+	{ "Type": "Sound", "Name": "Upgrade_Disable", "Path": "Resource/Sound/SFX/UI/Upgrade_Disable.wav", "Option": "SFX/UI" },
 	{ "Type": "Sound", "Name": "Player_Dash", "Path": "Resource/Sound/SFX/Player/Player_Dash.wav", "Option": "SFX/Player" },
 	{ "Type": "Sound", "Name": "Player_Dash_None", "Path": "Resource/Sound/SFX/Player/Player_Dash_None.wav", "Option": "SFX/Player" },
 	{ "Type": "Sound", "Name": "Monster_Fragile", "Path": "Resource/Sound/SFX/Monster/Monster_Fragile.wav", "Option": "SFX/Monster" },

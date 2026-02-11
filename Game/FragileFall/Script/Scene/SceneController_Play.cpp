@@ -88,6 +88,8 @@ namespace game
         BindButton("UI_BackToPlay", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
         BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
         BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("OK_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
+        BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
         BindButton("ToLobby_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
         BindButton("Restart_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
 
