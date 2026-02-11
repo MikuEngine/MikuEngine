@@ -46,20 +46,26 @@ namespace engine
 	{
 		if (!cb) return;
 		m_onClick.push_back(std::move(cb));
-		m_ownerTracker.push_back({ owner, m_onClick.size() - 1 });
+		m_clickOwnerTracker.push_back({ owner, m_onClick.size() - 1 });
 	}
 
 	void UIButton::AddOnHover(HoverCallback&& cb)
 	{
-		if (!cb) return;
-		m_onHover.push_back(std::move(cb));
+		AddOnHover(nullptr, std::move(cb));
 	}
 
-	void UIButton::UnbindOnClick(void* owner)
+	void UIButton::AddOnHover(void* owner, HoverCallback&& cb)
+	{
+		if (!cb) return;
+		m_onHover.push_back(std::move(cb));
+		m_hoverOwnerTracker.push_back({ owner, m_onHover.size() - 1 });	
+	}
+
+	void UIButton::UnbindCallback(void* owner)
 	{
 		if (!owner) return;
 
-		for (auto it = m_ownerTracker.begin(); it != m_ownerTracker.end(); )
+		for (auto it = m_clickOwnerTracker.begin(); it != m_clickOwnerTracker.end(); )
 		{
 			if (it->first == owner)
 			{
@@ -69,7 +75,7 @@ namespace engine
 				{
 					m_onClick.erase(m_onClick.begin() + targetIdx);
 
-					for (auto& entry : m_ownerTracker)
+					for (auto& entry : m_clickOwnerTracker)
 					{
 						if (entry.second > targetIdx)
 						{
@@ -77,7 +83,33 @@ namespace engine
 						}
 					}
 				}
-				it = m_ownerTracker.erase(it);
+				it = m_clickOwnerTracker.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
+		for (auto it = m_hoverOwnerTracker.begin(); it != m_hoverOwnerTracker.end(); )
+		{
+			if (it->first == owner)
+			{
+				size_t targetIdx = it->second;
+
+				if (targetIdx < m_onHover.size())
+				{
+					m_onHover.erase(m_onHover.begin() + targetIdx);
+
+					for (auto& entry : m_hoverOwnerTracker)
+					{
+						if (entry.second > targetIdx)
+						{
+							entry.second--;
+						}
+					}
+				}
+				it = m_hoverOwnerTracker.erase(it);
 			}
 			else
 			{

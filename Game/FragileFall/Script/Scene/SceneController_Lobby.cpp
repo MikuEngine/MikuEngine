@@ -111,6 +111,12 @@ namespace game
         BindButton("UI_CloseButton_Upgrade", [self = engine::Ptr<SceneController_Lobby>(this)]() {if (self) self->BackToHub(); });
 
         BindButton("UI_EnterPlay", [self = engine::Ptr<SceneController_Lobby>(this)](bool hovered) {if (self) self->ShowEffect("UI_EnterPlay", hovered); });
+        BindButton("UI_OpenUpgrade", [self = engine::Ptr<SceneController_Lobby>(this)](bool hovered) {});
+        BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Lobby>(this)](bool hovered) {});
+        BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Lobby>(this)](bool hovered) {});
+        BindButton("UI_BackToHub", [self = engine::Ptr<SceneController_Lobby>(this)](bool hovered) {});
+        BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Lobby>(this)](bool hovered) {});
+        BindButton("UI_CloseButton_Upgrade", [self = engine::Ptr<SceneController_Lobby>(this)](bool hovered) {});
 
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Lobby>(this)](float v) {if (self) self->OnBGMChanged(v); });
@@ -280,7 +286,7 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click");
         if (cb) cb(); });
     }
 
@@ -292,7 +298,13 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnHover(std::move(cb));
+        button->AddOnHover([cb](bool isHovered){
+            if (isHovered)
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Horver");
+            }
+            if (cb) cb(isHovered);
+            });
     }
 
     void SceneController_Lobby::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)
@@ -458,14 +470,14 @@ namespace game
         if (m_isOptionOpen)
         {
             SetOptionOpen(false);
-            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+            engine::SoundSystem::Get().PlayUI("UI_Click");
             return;
         }
 
         if (m_isUpgradeOpen)
         {
             SetUpgradeOpen(false);
-            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+            engine::SoundSystem::Get().PlayUI("UI_Click");
             return;
         }
     }
