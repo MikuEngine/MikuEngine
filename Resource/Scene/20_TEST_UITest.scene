@@ -18038,10 +18038,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true
                 }
             ]
         },
@@ -18273,10 +18269,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true
                 }
             ]
         },
@@ -18508,10 +18500,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true
                 }
             ]
         },
@@ -20190,6 +20178,11 @@
                 {
                     "Type": "HUDController",
                     "Active": true
+                },
+                {
+                    "Type": "UICurrencyAnimator",
+                    "Active": true,
+                    "countSpeed": 50.0
                 }
             ]
         },
