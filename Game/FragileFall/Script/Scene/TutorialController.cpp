@@ -331,6 +331,7 @@ namespace game
             SetupSkillNodesUI("SurviveNodes", false, false);
             SetupSkillNodesUI("MoveNodes", false, false);
             BindButton("UI_OpenUpgrade", [this]() {
+                SetActiveButton("UI_OpenUpgrade", false, false);
                 HighlightButton("UI_OpenUpgrade", false);
                 Next();
             });
@@ -351,6 +352,7 @@ namespace game
 
             m_outline1->SetActive(true);
             BindButton("Btn_Skill", [this]() {
+                SetActiveButton("Btn_Skill", false, false);
                 m_outline1->SetActive(false);
                 Next();
             });
@@ -377,6 +379,7 @@ namespace game
 
             BindButton("Btn_Upgrade", [this] () {
                 m_outline2->SetActive(false);
+                SetActiveButton("Btn_Upgrade", false, false);
                 HighlightButton("Desc_Panel", false);
                 Next();
             });
