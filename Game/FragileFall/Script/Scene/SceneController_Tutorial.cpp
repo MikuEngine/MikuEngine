@@ -75,6 +75,11 @@ namespace game
         BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Tutorial>(this)]() {if (self) self->CheckBackToTutorialLobby(true); });
         BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Tutorial>(this)]() {if (self) self->Back(); });
 
+        BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Tutorial>(this)](bool hovered) {});
+        BindButton("UI_BackToPlay", [self = engine::Ptr<SceneController_Tutorial>(this)](bool hovered) {});
+        BindButton("UI_BackToMain", [self = engine::Ptr<SceneController_Tutorial>(this)](bool hovered) {});
+        BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Tutorial>(this)](bool hovered) {});
+
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Tutorial>(this)](float v) {if (self) self->OnBGMChanged(v); });
         BindSlider("UI_SFXSlider", [self = engine::Ptr<SceneController_Tutorial>(this)](float v) {if (self) self->OnSFXChanged(v); });
@@ -204,7 +209,7 @@ namespace game
 
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
-            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+            engine::SoundSystem::Get().PlayUI("UI_Click");
 
             if (m_isOptionOpen) { Back(); return; }
             if (m_isMenuOpen) { SetMenuOpen(false); return; }
@@ -247,6 +252,23 @@ namespace game
 
         button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click");
         if (cb) cb(); });
+    }
+
+    void SceneController_Tutorial::BindButton(const std::string& name, engine::UIButton::HoverCallback cb)
+    {
+        auto* go = engine::GameObject::Find(name);
+        if (!go) return;
+
+        auto* button = go->GetComponent<engine::UIButton>();
+        if (!button) return;
+
+        button->AddOnHover([cb](bool isHovered) {
+            if (isHovered)
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Horver");
+            }
+            if (cb) cb(isHovered);
+        });
     }
 
     void SceneController_Tutorial::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)

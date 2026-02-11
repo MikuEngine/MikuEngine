@@ -58,7 +58,7 @@ namespace game
 
     void TutorialController::Awake()
     {
-        /*/ 강화 튜토리얼 디버깅용
+        //*/ 강화 튜토리얼 디버깅용
         std::string currentScene = (engine::SceneManager::Get().GetScene()) ? engine::SceneManager::Get().GetScene()->GetName() : "";
         if (currentScene == "10_PROTO_TutorialLobby")
         {
@@ -79,7 +79,7 @@ namespace game
             m_nextDoorObject = engine::GameObject::Find("StageDoor_Next");
             m_exitDoorObject = engine::GameObject::Find("StageDoor_Exit");
 
-            ShowPage();
+            //ShowPage();
         }
         else
         {
@@ -373,10 +373,11 @@ namespace game
             {
                 upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
             }
-
             m_outline2->SetActive(true);
+
             BindButton("Btn_Upgrade", [this] () {
                 m_outline2->SetActive(false);
+                HighlightButton("Desc_Panel", false);
                 Next();
             });
             break;
@@ -442,18 +443,7 @@ namespace game
             {
 				btn->SetActive(true);
 
-
                 btn->AddOnClick(this, std::move(callback));
-
-                /*/
-                btn->AddOnHover([](bool isHovered)
-                    {
-                        if (isHovered)
-                        {
-                            engine::SoundSystem::Get().PlayUI("UI_Hover");
-                        }
-                    });
-                //*/
 
 				m_bindButtonNames.insert(goName);
             }
