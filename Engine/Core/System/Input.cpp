@@ -265,4 +265,37 @@ namespace engine
         g_prevWheel = g_mouseState.scrollWheelValue;
         g_wheelDelta = 0.0f;
     }
+
+    void Input::Reset()
+    {
+        // 게임 좌표계에서의 중앙 좌표 계산
+        auto vp = GraphicsDevice::Get().GetViewport();
+        float gameLogicalCenterX = vp.Width * 0.5f;
+        float gameLogicalCenterY = vp.Height * 0.5f;
+
+        // 게임 좌표를 가상 마우스 좌표로 역변환 (GetMousePosition의 역연산)
+        // GetMousePosition: (virtualPos - offset) / scale = gamePos
+        // 역변환: virtualPos = gamePos * scale + offset
+        g_virtualMousePos.x = gameLogicalCenterX * g_scaleX + g_offsetX;
+        g_virtualMousePos.y = gameLogicalCenterY * g_scaleY + g_offsetY;
+
+        // 실제 OS 커서는 윈도우 클라이언트 영역 중앙으로 이동
+        RECT clientRect;
+        GetClientRect(g_hWnd, &clientRect);
+        int windowCenterX = (clientRect.right - clientRect.left) / 2;
+        int windowCenterY = (clientRect.bottom - clientRect.top) / 2;
+        
+        POINT centerPoint = { windowCenterX, windowCenterY };
+        ClientToScreen(g_hWnd, &centerPoint);
+        SetCursorPos(centerPoint.x, centerPoint.y);
+
+        // 마우스 상태 추적기 초기화 (버튼 상태 리셋)
+        g_mouseStateTracker.Reset();
+        g_keyboardStateTracker.Reset();
+
+        // 휠 델타 초기화
+        g_mouseState = g_mouse.GetState();
+        g_prevWheel = g_mouseState.scrollWheelValue;
+        g_wheelDelta = 0.0f;
+    }
 }
