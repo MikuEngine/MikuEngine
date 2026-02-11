@@ -185,6 +185,8 @@ namespace engine
 
             Time::Update();
 
+            Input::Reset();
+
             m_isSceneStarted = true;
         }
     }

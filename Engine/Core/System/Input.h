@@ -43,5 +43,6 @@ namespace engine
         static void SetLockMode(bool lock);
 
         static void SyncVirtualMouseFromOS();
+        static void Reset();
     };
 }
