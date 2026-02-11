@@ -1,0 +1,43 @@
+{
+    "name": "Loading_image_sprite.png",
+    "width": 1200,
+    "height": 300,
+    "sprites": [
+        {
+            "name": "Loading_image_sprite_0",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 300.0,
+            "height": 300.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Loading_image_sprite_1",
+            "x": 300.0,
+            "y": 0.0,
+            "width": 300.0,
+            "height": 300.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Loading_image_sprite_2",
+            "x": 600.0,
+            "y": 0.0,
+            "width": 300.0,
+            "height": 300.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        },
+        {
+            "name": "Loading_image_sprite_3",
+            "x": 900.0,
+            "y": 0.0,
+            "width": 300.0,
+            "height": 300.0,
+            "pivotX": 0.5,
+            "pivotY": 0.5
+        }
+    ]
+}
