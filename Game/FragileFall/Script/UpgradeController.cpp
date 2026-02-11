@@ -608,7 +608,7 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click");
         if (cb) cb(); }); auto it = m_views.find(m_selectedNodeId);
         if (it == m_views.end() || !it->second)
         {

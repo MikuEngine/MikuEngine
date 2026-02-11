@@ -60,6 +60,15 @@ namespace game
         BindButton("OK_Button", [self = engine::Ptr<SceneController_Main>(this)]() {if (self) self->QuitGame(); });
         BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Main>(this)] {if (self) self->CheckQuit(false); });
 
+        BindButton("UI_StartButton", [self = engine::Ptr<SceneController_Main>(this)](bool hovered) {});
+        BindButton("UI_OptionButton", [self = engine::Ptr<SceneController_Main>(this)](bool hovered) {});
+        BindButton("UI_CreditButton", [self = engine::Ptr<SceneController_Main>(this)](bool hovered) {});
+        BindButton("UI_QuitButton", [self = engine::Ptr<SceneController_Main>(this)](bool hovered) {});
+        BindButton("UI_CloseButton_Option", [self = engine::Ptr<SceneController_Main>(this)](bool hovered) {});
+        BindButton("UI_CloseButton_Credit", [self = engine::Ptr<SceneController_Main>(this)](bool hovered) {});
+        BindButton("OK_Button", [self = engine::Ptr<SceneController_Main>(this)](bool hovered) {});
+        BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Main>(this)](bool hovered) {});
+
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Main>(this)](float v) {if (self) self->OnBGMChanged(v); });
         BindSlider("UI_SFXSlider", [self = engine::Ptr<SceneController_Main>(this)](float v) {if (self) self->OnSFXChanged(v); });
@@ -104,7 +113,7 @@ namespace game
     {
         if (engine::Input::IsKeyPressed(engine::Keys::Escape))
         {
-            engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+            engine::SoundSystem::Get().PlayUI("UI_Click");
 
             if (m_isOptionOpen || m_isCreditOpen)
             {
@@ -140,8 +149,9 @@ namespace game
         auto* button = go->GetComponent<engine::UIButton>();
         if (!button) return;
 
-        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click_Random");
+        button->AddOnClick([cb]() {engine::SoundSystem::Get().PlayUI("UI_Click");
         if (cb) cb(); });
+
 
         //if (auto* button = go->GetComponent<engine::UIButton>())
         //{
@@ -154,6 +164,23 @@ namespace game
         //        else img->ClearEffect();
         //        });
         //}
+    }
+
+    void SceneController_Main::BindButton(const std::string& name, engine::UIButton::HoverCallback cb)
+    {
+        auto* go = engine::GameObject::Find(name);
+        if (!go) return;
+
+        auto* button = go->GetComponent<engine::UIButton>();
+        if (!button) return;
+
+        button->AddOnHover([cb](bool isHovered) {
+            if (isHovered)
+            {
+                engine::SoundSystem::Get().PlayUI("UI_Horver");
+            }
+            if (cb) cb(isHovered);
+            });
     }
 
     void SceneController_Main::BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb)

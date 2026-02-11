@@ -24,6 +24,7 @@ namespace game
     private:
         // Bind
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
+        void BindButton(const std::string& name, engine::UIButton::HoverCallback cb);
         void BindSlider(const std::string& name, engine::UISlider::ValueChangedCallback cb);
 
         // Button

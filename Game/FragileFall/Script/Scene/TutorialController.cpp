@@ -14,6 +14,7 @@
 #include <Framework/Object/Component/UI/UIButton.h>
 #include <Framework/Object/Component/RectTransform.h>
 
+#include <Framework/System/SoundSystem.h>
 #include "Manager/StageManager.h"
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 
@@ -430,7 +431,20 @@ namespace game
             if (auto* btn = go->GetComponent<engine::UIButton>())
             {
 				btn->SetActive(true);
+
+
                 btn->AddOnClick(this, std::move(callback));
+
+                /*/
+                btn->AddOnHover([](bool isHovered)
+                    {
+                        if (isHovered)
+                        {
+                            engine::SoundSystem::Get().PlayUI("UI_Hover");
+                        }
+                    });
+                //*/
+
 				m_bindButtonNames.insert(goName);
             }
         }
@@ -451,7 +465,7 @@ namespace game
             {
                 if (auto* btn = go->GetComponent<engine::UIButton>())
                 {
-                    btn->UnbindOnClick(this);
+                    btn->UnbindCallback(this);
                 }
             }
         }
