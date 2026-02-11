@@ -10,7 +10,6 @@ namespace engine
 
 namespace game
 {
-    class AimModeController;
     class PlayerControllerScript;
 
     // ═══════════════════════════════════════════════════════════════
@@ -36,7 +35,6 @@ namespace game
         engine::GameObject* m_aimPointerMeshObject = nullptr;
         engine::AnimFSM* m_animFSM = nullptr;
         engine::LogicFSM* m_logicFSM = nullptr;  // Player의 LogicFSM
-        AimModeController* m_aimPointer = nullptr;
         PlayerControllerScript* m_playerControllerScript = nullptr;
 
         // ─────────────────────────────────────────────

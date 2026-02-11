@@ -3,6 +3,7 @@
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
 #include <Framework/Object/Ptr.h>
+#include <algorithm>
 #include <functional>
 #include <vector>
 
@@ -106,9 +107,11 @@ namespace game
         // 대쉬 기준 속도. 이 값은 상수로 쓰인다.
         const float m_dashInitSpeed = 8.0f;
 
-        //HP
+        //HP        
         float m_PlayerMaxHP = 100.0f;
         float m_PlayerCurrentHP = 100.0f;
+
+        float m_PlayerBaseMaxHP = 100.0f; // 강화 시, 스케일 1.0일 때의 기본값
 
         // ─────────────────────────────────────────────
         // 프레자일 게이지 (몬스터가 있을 때만 상승, StageManager 연동)
@@ -522,8 +525,13 @@ namespace game
         void SetExeDashChargeRegen(float v) { m_temperFinal.exeDashChargeRegen = static_cast<int>(v); }
         void SetExeHpRegen(float v) { m_temperFinal.exeHpRegen = v; }
 
-        void SetMaxHp(float v) { m_temperFinal.maxHp = v; }
-        void SetCurrentHp(float v) { m_PlayerCurrentHP = v; }
+        void SetMaxHp(float v)
+        {
+            m_temperFinal.maxHp = v;
+            m_PlayerMaxHP = std::max(1.0f, v);
+            m_PlayerCurrentHP = std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP);
+        }
+        void SetCurrentHp(float v) { m_PlayerCurrentHP = std::clamp(v, 0.0f, m_PlayerMaxHP); }
         void SetInvincibleTime(float v)
         {
             m_temperFinal.invincibleTime = v;

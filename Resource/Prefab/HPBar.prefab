@@ -1,0 +1,1768 @@
+{
+    "Name": "HPBar",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "HPBar",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": -853.2000122070313,
+                        "y": 384.79998779296875
+                    },
+                    "Width": 100.0,
+                    "Height": 113.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 1,
+            "Name": "Heart(0)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 0,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 45.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 3,
+            "Name": "Heart(1)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "ParentID": 0,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 90.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 5,
+            "Name": "Heart(2)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 0,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 135.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "ParentID": 7,
+            "Name": "Heart(3)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "ParentID": 0,
+            "Name": "Heart_Case",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 180.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "ParentID": 9,
+            "Name": "Heart(4)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 11,
+            "ParentID": 0,
+            "Name": "Heart_Case",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 225.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 12,
+            "ParentID": 11,
+            "Name": "Heart(5)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 1.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "ParentID": 0,
+            "Name": "Heart_Case",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 270.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 14,
+            "ParentID": 13,
+            "Name": "Heart(6)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 15,
+            "ParentID": 0,
+            "Name": "Heart_Case",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 315.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 16,
+            "ParentID": 15,
+            "Name": "Heart(7)",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 40.0,
+                    "Height": 35.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "Resource/Texture/UI/HP/Player_HP_Heart.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        }
+    ]
+}

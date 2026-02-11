@@ -1,6 +1,7 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerTemperManager.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include <cmath>
 
 namespace game
 {
@@ -80,7 +81,14 @@ namespace game
 		Apply(StatType::Exe_HpRegen,         player->GetBaseExeHpRegen(),         &PlayerControllerScript::SetExeHpRegen);
 
 		// --- 체력/생존 (Vitality) ---
-		Apply(StatType::Hp_Max, player->GetBaseMaxHp(), &PlayerControllerScript::SetMaxHp);
+		// HP는 하트 1칸=20 규칙에 맞춰 20 단위로 스냅한다.
+		{
+			const float add = GetStat(StatType::Hp_Max, CalcType::Add);
+			const float mul = GetStat(StatType::Hp_Max, CalcType::Mul);
+			const float rawMaxHp = (player->GetBaseMaxHp() + add) * mul;
+			const float snappedMaxHp = std::round(rawMaxHp / 20.0f) * 20.0f;
+			player->SetMaxHp(std::max(20.0f, snappedMaxHp));
+		}
 		Apply(StatType::Hp_RegenOnClear, player->GetBaseHpRegenOnClear(), &PlayerControllerScript::SetHpRegenOnClear);
 		Apply(StatType::Fragile_Max, player->GetBaseFragileMax(), &PlayerControllerScript::SetFragileMax);
 		Apply(StatType::Fragile_RegenOnClear, player->GetBaseFragileRegenOnClear(), &PlayerControllerScript::SetFragileRegenOnClear);

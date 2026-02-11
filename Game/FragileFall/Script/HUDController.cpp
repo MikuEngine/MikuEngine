@@ -1,5 +1,6 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "HUDController.h"
+#include <algorithm>
 
 #include <Manager/StageManager.h>
 
@@ -46,6 +47,8 @@ namespace game
 
         if (m_playerScript)
         {
+            m_visibleHeartCount = CalcVisibleHeartCountFromPlayer();
+            m_halfHp = CalcHalfHPFromPlayer();
             m_playerScript->SetOnDamaged([self = engine::Ptr<HUDController>(this)] {
                 if (!self) return;
 
@@ -132,9 +135,11 @@ namespace game
 
         if (m_playerScript)
         {
+            int newVisibleHearts = CalcVisibleHeartCountFromPlayer();
             int newHalfHp = CalcHalfHPFromPlayer();
-            if (newHalfHp != m_halfHp)
+            if (newVisibleHearts != m_visibleHeartCount || newHalfHp != m_halfHp)
             {
+                m_visibleHeartCount = newVisibleHearts;
                 m_halfHp = newHalfHp;
                 ApplyHearts();
             }
@@ -166,6 +171,7 @@ namespace game
             const std::string name = "Heart(" + std::to_string(i) + ")";
             if (auto* go = engine::GameObject::Find(name))
             {
+                m_heartGO[i] = go;
                 m_hearts[i] = go->GetComponent<engine::UIImage>();
                 m_heartRT[i] = go->GetComponent<engine::RectTransform>();
 
@@ -190,20 +196,38 @@ namespace game
     {
         if (!m_playerScript) return 0;
 
-        const int hp = (int)m_playerScript->GetCurrentHp(); // 0~100
-        int half = hp / 10;                                // 0~10
+        const int hp = static_cast<int>(m_playerScript->GetCurrentHp());
+        int half = hp / kHpPerHalfHeart;
 
-        // 5하트면 max half는 10
+        const int maxHalfHp = m_visibleHeartCount * 2;
         if (half < 0) half = 0;
-        if (half > kHeartCount * 2) half = kHeartCount * 2;
+        if (half > maxHalfHp) half = maxHalfHp;
 
         return half;
+    }
+
+    int HUDController::CalcVisibleHeartCountFromPlayer() const
+    {
+        if (!m_playerScript) return 5;
+
+        const float maxHp = m_playerScript->GetMaxHp();
+        int hearts = static_cast<int>(maxHp / static_cast<float>(kHpPerHeart));
+        hearts = std::clamp(hearts, 1, kHeartCount);
+        return hearts;
     }
 
     void HUDController::ApplyHearts()
     {
         for (int i = 0; i < kHeartCount; ++i)
         {
+            if (m_heartGO[i])
+            {
+                m_heartGO[i]->SetActive(i < m_visibleHeartCount);
+            }
+
+            if (i >= m_visibleHeartCount)
+                continue;
+
             const int filled = m_halfHp - i * 2; // 이 하트에 배정된 half(2/1/0)
             if (filled >= 2)      SetHeartFull(i);
             else if (filled == 1) SetHeartHalf(i);

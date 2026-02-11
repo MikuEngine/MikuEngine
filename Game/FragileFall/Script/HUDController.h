@@ -1,11 +1,13 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
 namespace engine
 {
+    class GameObject;
     class UIImage;
     class UIProgressBar;
+    class RectTransform;
     class UIText;
 }
 
@@ -33,6 +35,7 @@ namespace game
         void OnDamagedHalf();
 
         int CalcHalfHPFromPlayer() const;
+        int CalcVisibleHeartCountFromPlayer() const;
 
         void ApplyHearts();
 
@@ -55,12 +58,15 @@ namespace game
         engine::UIImage* m_hitImage = nullptr;
         engine::UIImage* m_fragileImage = nullptr;
 
-        static constexpr int kHeartCount = 5;
-        static constexpr int kMaxHalfHP = kHeartCount * 2;
+        static constexpr int kHeartCount = 8;
+        static constexpr int kHpPerHalfHeart = 10;
+        static constexpr int kHpPerHeart = 20;
         engine::Ptr<engine::UIImage> m_hearts[kHeartCount];
+        engine::Ptr<engine::GameObject> m_heartGO[kHeartCount];
         engine::Ptr<engine::RectTransform> m_heartRT[kHeartCount];
 
-        int m_halfHp = kMaxHalfHP;
+        int m_halfHp = 10;
+        int m_visibleHeartCount = 5;
         bool m_cached = false;
     };
 }

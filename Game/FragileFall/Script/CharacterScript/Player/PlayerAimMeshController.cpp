@@ -1,7 +1,5 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerAimMeshController.h"
-
-#include "Script/AimModeController.h"
 
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
@@ -176,12 +174,6 @@ namespace game
             m_logicFSM = m_playerObject->GetComponent<engine::LogicFSM>();
         }
 
-        // Player의 AimPointer
-        if (!m_aimPointer && m_playerObject)
-        {
-            m_aimPointer = m_playerObject->GetComponent<AimModeController>();
-        }
-        
         // PlayerControllerScript 참조 및 콜백 등록
         if (!m_playerControllerScript && m_playerObject)
         {
@@ -536,7 +528,6 @@ namespace game
         ImGui::Text("Components:");
         ImGui::Text("AnimFSM: %s", m_animFSM ? "[OK]" : "[NOT FOUND]");
         ImGui::Text("LogicFSM (Player): %s", m_logicFSM ? "[OK]" : "[NOT FOUND]");
-        ImGui::Text("AimPointer (Player): %s", m_aimPointer ? "[OK]" : "[NOT FOUND]");
 
         ImGui::Separator();
 

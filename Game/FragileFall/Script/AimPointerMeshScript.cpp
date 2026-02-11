@@ -2,18 +2,12 @@
 #include "AimPointerMeshScript.h"
 
 #include "AimModeController.h"
-#include "Script/Interface/IDamageable.h"
-#include "Script/CharacterScript/Player/PlayerControllerScript.h"
-#include "Script/CharacterScript/Monster/MonsterScript.h"
-#include "Script/Boss/BossPattern/Components/BossPillar.h"
-#include "Script/Boss/BossPattern/Components/BossBigProjectile.h"
 
 #include <Framework/Object/Component/Camera.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Scene/Scene.h>
 #include <Framework/Object/GameObject/GameObject.h>
-#include <algorithm>
 
 namespace game
 {
@@ -75,53 +69,6 @@ namespace game
         }
         GetTransform()->SetLocalPosition(meshPos);
         UpdateDistanceBasedScale();
-
-        RefreshOnEnemyState();
-    }
-
-    void AimPointerMeshScript::OnTriggerEnter(const engine::CollisionInfo& info)
-    {
-        if (!info.gameObject)
-            return;
-
-        if (!IsValidOnEnemyTarget(info.gameObject))
-            return;
-
-        const auto it = std::find_if(
-            m_overlapTargets.begin(),
-            m_overlapTargets.end(),
-            [&](const engine::Ptr<engine::GameObject>& target)
-            {
-                return target == info.gameObject;
-            }
-        );
-
-        if (it == m_overlapTargets.end())
-        {
-            m_overlapTargets.emplace_back(info.gameObject);
-        }
-
-        RefreshOnEnemyState();
-    }
-
-    void AimPointerMeshScript::OnTriggerExit(const engine::CollisionInfo& info)
-    {
-        if (!info.gameObject)
-            return;
-
-        m_overlapTargets.erase(
-            std::remove_if(
-                m_overlapTargets.begin(),
-                m_overlapTargets.end(),
-                [&](const engine::Ptr<engine::GameObject>& target)
-                {
-                    return !target || target == info.gameObject;
-                }
-            ),
-            m_overlapTargets.end()
-        );
-
-        RefreshOnEnemyState();
     }
 
     engine::Vector3 AimPointerMeshScript::GetWorldPosition() const
@@ -182,54 +129,6 @@ namespace game
         GetTransform()->SetLocalScale(engine::Vector3(scale, scale, scale));
         if (m_collider)
             m_collider->CheckAndSyncTransformScale();
-    }
-
-    bool AimPointerMeshScript::IsValidOnEnemyTarget(const engine::Ptr<engine::GameObject>& other) const
-    {
-        if (!other)
-            return false;
-
-        // 플레이어는 항상 제외
-        if (other->GetComponent<PlayerControllerScript>())
-            return false;
-
-        auto* damageable = other->GetInterface<IDamageable>();
-        if (!damageable)
-            return false;
-
-        // Fragile 계열은 OnEnemy 제외
-        if (auto* monster = dynamic_cast<MonsterScript*>(damageable))
-        {
-            return !monster->m_isFragile && !monster->m_isDead;
-        }
-        if (auto* pillar = dynamic_cast<BossPillar*>(damageable))
-        {
-            return !pillar->IsCrystalized();
-        }
-        if (auto* bigProjectile = dynamic_cast<BossBigProjectile*>(damageable))
-        {
-            return !bigProjectile->IsCrystallized() && !bigProjectile->IsDestroyed();
-        }
-        // 그 외 IDamageable은 기본적으로 유효 대상으로 취급
-        return true;
-    }
-
-    void AimPointerMeshScript::RefreshOnEnemyState()
-    {
-        m_overlapTargets.erase(
-            std::remove_if(
-                m_overlapTargets.begin(),
-                m_overlapTargets.end(),
-                [&](const engine::Ptr<engine::GameObject>& target)
-                {
-                    return !target || !IsValidOnEnemyTarget(target);
-                }
-            ),
-            m_overlapTargets.end()
-        );
-
-        const bool isOnEnemy = !m_overlapTargets.empty();
-        m_lastOnEnemy = isOnEnemy;
     }
 
     void AimPointerMeshScript::OnGui()

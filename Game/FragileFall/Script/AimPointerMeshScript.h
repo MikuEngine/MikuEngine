@@ -1,8 +1,6 @@
 #pragma once
 
 #include <Framework/Object/Component/Script.h>
-#include <Framework/Object/Ptr.h>
-#include <vector>
 
 namespace engine
 {
@@ -44,14 +42,10 @@ namespace game
         float m_scaleRefDistance = 1.0f;                // 런타임 기준 거리(시작 시 커서 위치 기준)
         float m_scaleMin = 0.05f;
         float m_scaleMax = 5.0f;
-        std::vector<engine::Ptr<engine::GameObject>> m_overlapTargets; // 현재 트리거 중인 유효 대상
-        bool m_lastOnEnemy = false;
 
     public:
         void Start() override;
         void Update() override;
-        void OnTriggerEnter(const engine::CollisionInfo& info) override;
-        void OnTriggerExit(const engine::CollisionInfo& info) override;
 
     public:
         // 현재 위치 반환 (다른 스크립트에서 참조용)
@@ -66,7 +60,5 @@ namespace game
         void CacheAimPointer();
         void CacheCameraAndCollider();
         void UpdateDistanceBasedScale();
-        void RefreshOnEnemyState();
-        bool IsValidOnEnemyTarget(const engine::Ptr<engine::GameObject>& other) const;
     };
 }

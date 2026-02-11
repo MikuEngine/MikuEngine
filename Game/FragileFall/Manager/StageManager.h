@@ -1,4 +1,5 @@
-﻿#pragma once
+#pragma once
+#include <algorithm>
 
 namespace engine
 {
@@ -36,15 +37,20 @@ namespace game
 
         // 플레이어 현재 체력 보관
         float m_runHp = 100.0f;
+        float m_runHpMax = 100.0f;
 
     private:
         StageManager() = default;
         ~StageManager() = default;
 
     public:
-        void ResetRunHp(float hpMax = 100.0f) { m_runHp = hpMax; }
+        void ResetRunHp(float hpMax = 100.0f)
+        {
+            m_runHpMax = std::max(1.0f, hpMax);
+            m_runHp = m_runHpMax;
+        }
         float GetRunHP() const { return m_runHp; }
-        void SetRunHP(float hp) { m_runHp = std::max(0.0f, hp); }
+        void SetRunHP(float hp) { m_runHp = std::clamp(hp, 0.0f, m_runHpMax); }
 
         /// 로비에서 플레이 진입 시 호출. m_currentStage = 1 후 씬 전환은 호출 측에서.
         void ResetToStage1()
