@@ -54,9 +54,40 @@ namespace game
         // 피격 떨림 상태
         float m_currentHitShake = 0.0f;       // 현재 피격 떨림 강도
 
+        // Intro Assemble
+        bool m_introActive = false;
+        bool m_introAssembled = true;
+        float m_introElapsed = 0.0f;
+        float m_introAssembleDuration = 1.2f;
+        float m_introSpawnRadius = 22.0f;
+        float m_introSpawnBaseHeight = 2.5f;
+        float m_introSpawnHeightJitter = 5.0f;
+        float m_introFrontSpreadDegree = 65.0f;
+        int m_introDirectionMode = 0;  // 0: front random, 1: sphere, 2: eight directions
+        float m_introStaggerPerPart = 0.02f;
+        float m_introStaggerJitter = 0.04f;
+        bool m_introStaggerRandomOrder = true;
+
+        std::vector<engine::Transform*> m_introParts;
+        std::vector<engine::Vector3> m_introStartLocalPositions;
+        std::vector<engine::Vector3> m_introStartLocalRotations;
+        std::vector<engine::Vector3> m_introTargetLocalPositions;
+        std::vector<engine::Vector3> m_introTargetRotations;
+        std::vector<float> m_introPartStartTimes;
+        std::vector<engine::Vector3> m_floatingInitialLocalPositions;
+        std::vector<engine::Vector3> m_nestInitialLocalPositions;
+
     private:
         // 떨림 효과 헬퍼 함수
         engine::Vector3 ApplyShakeEffect(const engine::Vector3& originalPos, int partIndex);
+        engine::Vector3 ComputeRotatingTargetLocalPosition(size_t partIndex, size_t totalCount) const;
+        engine::Vector3 ComputeFloatingTargetLocalPosition(size_t partIndex) const;
+        engine::Vector3 ComputeNestTargetLocalPosition(size_t partIndex) const;
+        engine::Vector3 ComputeIntroDynamicTargetLocalPosition(size_t introPartIndex) const;
+        engine::Vector3 ComputeRotatingTargetLocalRotation(size_t partIndex, size_t totalCount) const;
+        engine::Vector3 ComputeIntroDynamicTargetLocalRotation(size_t introPartIndex) const;
+        engine::Vector3 GenerateIntroSpawnOffset(size_t partIndex, size_t totalCount) const;
+        void UpdateIntroAssembly(float deltaTime);
 
     public:
         //void Awake() override;
@@ -70,5 +101,8 @@ namespace game
         
         // 피격시 떨림 효과 트리거
         void TriggerHitShake(float intensity = 1.0f);
+        void PrepareIntroAssembly();
+        bool IsIntroAssemblyComplete() const { return m_introAssembled; }
+        void SetIntroAssembleDuration(float duration) { m_introAssembleDuration = (duration < 0.01f) ? 0.01f : duration; }
     };
 }

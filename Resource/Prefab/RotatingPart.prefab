@@ -22,15 +22,15 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.5,
-                        "y": 1.7000000476837158,
-                        "z": 0.5
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     }
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sharp_single/purple/crystal_sharp_single_purple.fbx",
                     "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
@@ -38,9 +38,9 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.0,
+                        "x": 1.0,
                         "y": 1.0,
-                        "z": 0.13127398490905762,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
@@ -51,7 +51,7 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
+                    "MaterialEmissiveIntensity": 4.289999961853027,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,

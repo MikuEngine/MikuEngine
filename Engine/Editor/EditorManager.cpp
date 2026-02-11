@@ -1559,6 +1559,8 @@ namespace engine
             m_editorState = EditorState::Play;
 
             m_pendingMouseSync = true;
+
+            SceneManager::Get().SetSceneStartFlag(false);
         }
         else
         {

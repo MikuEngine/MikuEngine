@@ -43,6 +43,7 @@ namespace engine
         SceneState m_sceneState = SceneState::Active;
         bool m_isSceneChanged = false;
         bool m_isSceneStarted = false;
+        bool m_isSceneStartFinished = false;
 
         /// 비동기 로드 시 워커가 Scene::Load() 수행 → 메인에서 Load() 생략. 동기 로드 시 false 유지.
         bool m_sceneLoadDoneByWorker = false;
@@ -78,6 +79,9 @@ namespace engine
         // 초기 Scene의 GameObject, Component의 Initialize, Awake가 끝난 후
         // Script의 Start가 불리기 직전
         void CallOnSceneStart();
+        void CallOnSceneStartFinished();
+
+        void SetSceneStartFlag(bool flag);
 
     private:
         friend class Singleton<SceneManager>;

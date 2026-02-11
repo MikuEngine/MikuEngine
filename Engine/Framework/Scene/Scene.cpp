@@ -49,7 +49,7 @@ namespace engine
 
         GameObject* ptr = m_incubator.back().get();
         ptr->m_name = name;
-        ptr->m_sceneIndex = static_cast<int32_t>(m_gameObjects.size() - 1);
+        ptr->m_sceneIndex = -1;
 
         switch (type)
         {

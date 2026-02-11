@@ -1,13 +1,15 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/Interface/IDamageable.h"
 
 namespace engine
 {
+    class GameObject;
     class StaticMeshRenderer;
     class Transform;
     class UIText;
+    class Camera;
 }
 
 namespace game
@@ -16,6 +18,8 @@ namespace game
     class BossPatternManager;
     class BossPillar;
     class BulletFactory;
+    class BossSubPartsController;
+    class AimModeController;
 
     class BossScript :
         public engine::Script<BossScript>,
@@ -170,6 +174,7 @@ namespace game
 
         // pattern
         std::unique_ptr<BossPatternManager> m_patternManager = nullptr;
+        bool m_patternsInitialized = false;
 
         // player
         engine::Ptr<PlayerControllerScript> m_targetPlayer = nullptr;
@@ -180,6 +185,48 @@ namespace game
 
         // BulletFactory (보스 GameObject 내에서 찾기)
         engine::Ptr<BulletFactory> m_bulletFactory = nullptr;
+
+        // Boss intro sequence
+        bool m_enableIntroSequence = true;
+        bool m_isBattleStarted = true;
+        float m_introMoveToBossDuration = 1.2f;
+        float m_introHoldDuration = 0.35f;
+        float m_introAssembleDuration = 1.2f;
+        float m_introReturnDuration = 1.0f;
+        float m_introCameraPlayerOffsetX = 0.0f;
+        float m_introCameraPlayerOffsetY = 8.0f;
+        float m_introCameraPlayerOffsetZ = -6.0f;
+        float m_introCameraBossDistance = 8.0f;
+        float m_introCameraBossHeight = 16.0f;
+
+        enum class IntroPhase
+        {
+            None,
+            MoveToBoss,
+            HoldAtBoss,
+            AssembleParts,
+            ReturnToPlayer,
+            Complete,
+        };
+        IntroPhase m_introPhase = IntroPhase::None;
+        float m_introPhaseElapsed = 0.0f;
+        bool m_isIntroRunning = false;
+        bool m_introAssembleTriggered = false;
+
+        engine::Ptr<BossSubPartsController> m_subPartsController = nullptr;
+        engine::Ptr<engine::GameObject> m_subPartsRoot = nullptr;
+        engine::Ptr<AimModeController> m_targetAimController = nullptr;
+        engine::Camera* m_mainCamera = nullptr;
+        engine::Transform* m_cameraTransform = nullptr;
+        bool m_hasSceneStartCameraPose = false;
+        engine::Vector3 m_sceneStartCameraWorldPosition = engine::Vector3::Zero;
+        engine::Quaternion m_sceneStartCameraWorldRotation = engine::Quaternion::Identity;
+        engine::Vector3 m_introCameraOriginalPosition = engine::Vector3::Zero;
+        engine::Quaternion m_introCameraOriginalRotation = engine::Quaternion::Identity;
+        engine::Vector3 m_introCameraStartPosition = engine::Vector3::Zero;
+        engine::Vector3 m_introCameraBossTargetPosition = engine::Vector3::Zero;
+        engine::Quaternion m_introCameraBossTargetRotation = engine::Quaternion::Identity;
+        engine::Vector3 m_introLookTargetOffset = engine::Vector3(0.0f, 2.5f, 0.0f);
 
     public:
         BossScript();
@@ -196,6 +243,10 @@ namespace game
         void UpdatePatternSystem(float deltaTime);
         void OnPatternStarted(const std::string& patternName);
         void OnPatternFinished(const std::string& patternName);
+        void SetBattleStarted(bool started) { m_isBattleStarted = started; }
+        bool IsBattleStarted() const { return m_isBattleStarted; }
+        void StartIntroSequence();
+        void SkipIntroSequence();
 
         void TakeDamage(float damage, bool isShieldPierce = false) override;
         void CheckHealth();
@@ -294,5 +345,13 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
+
+    private:
+        void CacheIntroReferences();
+        void BeginIntroSequence();
+        void UpdateIntroSequence(float deltaTime);
+        void EndIntroSequence(bool forceComplete);
+        static float EaseInOutSine(float t);
+        void UpdateIntroCameraLookAtBoss();
     };
 }
