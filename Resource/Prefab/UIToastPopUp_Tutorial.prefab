@@ -287,8 +287,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "글자",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 20,
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 25,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,

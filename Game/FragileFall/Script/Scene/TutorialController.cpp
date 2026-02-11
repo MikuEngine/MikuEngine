@@ -373,10 +373,11 @@ namespace game
             {
                 upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
             }
-
             m_outline2->SetActive(true);
+
             BindButton("Btn_Upgrade", [this] () {
                 m_outline2->SetActive(false);
+                HighlightButton("Desc_Panel", false);
                 Next();
             });
             break;
@@ -442,18 +443,7 @@ namespace game
             {
 				btn->SetActive(true);
 
-
                 btn->AddOnClick(this, std::move(callback));
-
-                /*/
-                btn->AddOnHover([](bool isHovered)
-                    {
-                        if (isHovered)
-                        {
-                            engine::SoundSystem::Get().PlayUI("UI_Hover");
-                        }
-                    });
-                //*/
 
 				m_bindButtonNames.insert(goName);
             }
