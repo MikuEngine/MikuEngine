@@ -23,6 +23,7 @@
 #include "Script/LobbyInteraction.h"
 
 #include "Scene/GameScene.h"
+#include <Framework/Object/Component/UI/UIScrollView.h>
 
 namespace game
 {
@@ -430,6 +431,16 @@ namespace game
         if (m_isUpgradeOpen)
         {
             SetUpgradeOpen(false);
+
+            auto* ugdGO = engine::GameObject::Find("UI_ScrollView");
+            if (ugdGO)
+            {
+                if (auto* uc = ugdGO->GetComponent<engine::UIScrollView>())
+                {
+                    uc->SetScrollY(0.0f);
+                }
+            }
+
             engine::SoundSystem::Get().PlayUI("UI_Click_Random");
             return;
         }
