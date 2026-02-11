@@ -4688,7 +4688,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -18787,7 +18787,11 @@
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
                     "FragileGaugeRisePerSecond": 1.0,
-                    "IsInvincible": false
+                    "IsInvincible": false,
+                    "EED_Enable": false,
+                    "EED_DamageScale": 5.0,
+                    "EED_Damage": 15.0,
+                    "EED_Duration": 1.0
                 },
                 {
                     "Type": "LogicFSM",
@@ -19193,17 +19197,17 @@
                     "RaycastMaxDistance": 1000.0,
                     "IndicatorOffset": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 1.5,
+                        "z": -0.5
                     },
                     "LinePrefabName": "ExecutionLine",
                     "LinePlayerOffset": 0.699999988079071,
                     "LineMonsterOffset": 1.7999999523162842,
-                    "LineBaseLength": 30.0,
-                    "LineHeight": 1.5,
-                    "LinePixelsPerMeter": 105.0,
-                    "LineMinPixels": 103.0,
-                    "LinePixelStep": 52.0,
+                    "LineBaseLength": 1.0,
+                    "LineHeight": 1.0,
+                    "LinePixelsPerMeter": 98.0,
+                    "LineMinPixels": 50.0,
+                    "LinePixelStep": 50.0,
                     "ReflectIndicatorPrefabName": "Execution_Reflect_Indicator",
                     "ReflectIndicatorHeight": 1.5,
                     "ReflectIndicatorOffset": 4.0,
