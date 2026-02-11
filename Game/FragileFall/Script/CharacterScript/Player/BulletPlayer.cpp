@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
@@ -12,6 +12,30 @@
 
 namespace game
 {
+    namespace
+    {
+        // BulletPlayer 메쉬는 +Y 축이 정면이므로 X축 +90도 보정이 필요하다.
+        // 방향은 사용자가 요청한 대로 "현재의 반대 방향"을 바라보게 한다.
+        engine::Quaternion BuildBulletRotationFromDirection(const engine::Vector3& position, const engine::Vector3& direction)
+        {
+            (void)position;
+
+            engine::Vector3 normalizedDir = direction;
+            normalizedDir.Normalize();
+
+            // yaw는 XZ 평면 기준으로 계산.
+            const float yawRad = std::atan2(normalizedDir.x, normalizedDir.z);
+            const float yawDeg = engine::ToDegree(yawRad);
+
+            // +Y 정면 메쉬 보정: pitch +90
+            const engine::Vector3 euler(90.0f, yawDeg, 0.0f);
+            return engine::Quaternion::CreateFromYawPitchRoll(
+                engine::ToRadian(euler.y),
+                engine::ToRadian(euler.x),
+                engine::ToRadian(euler.z));
+        }
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // 초기화 (Factory에서 호출)
     // ═══════════════════════════════════════════════════════════════
@@ -42,30 +66,27 @@ namespace game
         if (m_movement)
         {
             engine::Vector3 velocity = m_movement->GetVelocity();
+            bool hasValidRotation = false;
+            engine::Quaternion bulletRot = engine::Quaternion::Identity;
 
             if (velocity.LengthSquared() > 0.0001f)
             {
                 m_direction = velocity;
                 m_direction.Normalize();
 
-                engine::Vector3 up = engine::Vector3::Up;
-                if (std::abs(m_direction.Dot(up)) > 0.99f)
-                {
-                    up = engine::Vector3::Right;
-                }
-
-                engine::Matrix lookAtMatrix = engine::Matrix::CreateWorld(
-                    m_startPosition,
-                    m_direction,
-                    up
-                );
-
-                engine::Quaternion lookRot = engine::Quaternion::CreateFromRotationMatrix(lookAtMatrix);
-                GetTransform()->SetLocalRotation(lookRot);
+                bulletRot = BuildBulletRotationFromDirection(m_startPosition, m_direction);
+                hasValidRotation = true;
+                GetTransform()->SetLocalRotation(bulletRot);
             }
             
             if (auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>())
             {
+                // Dynamic Rigidbody는 이후 PhysX -> Transform 동기화가 이루어지므로
+                // 초기 회전을 Actor에도 즉시 반영해 두지 않으면 Transform 회전이 덮어써질 수 있다.
+                if (hasValidRotation)
+                {
+                    rb->ForceSetRotation(bulletRot, true);
+                }
                 rb->SetLinearVelocity(velocity);
             }
         }
@@ -107,22 +128,10 @@ namespace game
         }
     }
 
-	// 총알 방향으로 회전
+	// Start에서 한 번 회전 세팅하면 충분함
     void BulletPlayer::LateUpdate()
     {
-        if (m_isDying) return;
-        auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>();
-        if (!rb) return;
-
-        if (m_direction.LengthSquared() > 0.0001f)
-        {
-            float yawRad = std::atan2(m_direction.x, m_direction.z);
-            float yawDeg = engine::ToDegree(yawRad);
-
-            engine::Vector3 euler(90.0f, yawDeg, 0.0f);
-
-            GetTransform()->SetLocalRotation(euler);
-        }
+        // no-op
     }
 
     // ═══════════════════════════════════════════════════════════════

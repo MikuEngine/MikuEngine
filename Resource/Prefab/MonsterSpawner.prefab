@@ -30,11 +30,12 @@
                 {
                     "Type": "MonsterSpawner",
                     "Active": true,
-                    "MonsterCsvPath": "Resource/Data/TestData/TestMonsterData.txt",
+                    "MonsterCsvPath": "Resource/Data/MonsterData.csv",
                     "TargetScore": 500,
                     "MinCount": 3,
                     "MaxCount": 5,
-                    "AnchorMonsterID": 0
+                    "AnchorMonsterID": 0,
+                    "SpawnRadius": 0.0
                 }
             ]
         },
