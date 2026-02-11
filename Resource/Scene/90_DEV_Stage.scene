@@ -958,7 +958,7 @@
         {
             "ID": 16,
             "ParentID": 15,
-            "Name": "Canvas",
+            "Name": "Canvas_ScreenEffect",
             "Active": true,
             "Components": [
                 {
@@ -1336,7 +1336,7 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "SortingOrder": 1
+                    "SortingOrder": 9
                 }
             ]
         },
@@ -5951,7 +5951,7 @@
                     "Type": "Canvas",
                     "Active": true,
                     "LockRectTransform": true,
-                    "SortingOrder": 10
+                    "SortingOrder": 5
                 }
             ]
         },
