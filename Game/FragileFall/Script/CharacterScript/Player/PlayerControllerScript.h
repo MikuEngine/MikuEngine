@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -233,6 +233,10 @@ namespace game
         // 대쉬 후 즉시 발사 시스템
         float m_postDashQuickFireTimer = 0.0f;       // 대쉬 후 즉시 발사 가능 남은 시간
         float m_postDashQuickFireDuration = 0.3f;    // 대쉬 후 즉시 발사 가능 지속 시간 (1회만)
+        
+        // 디버그용: 마지막으로 실제 발사된 XZ 방향 벡터
+        engine::Vector3 m_lastFiredDirectionXZ = engine::Vector3::Zero;
+        bool m_hasLastFiredDirection = false;
 
         float m_IdleDransitionWaitTime = 0.1f;
         float m_IdleDransitionWaitTimer = 0.0f;
@@ -530,12 +534,17 @@ namespace game
 
         float GetAtkSpeed() const { return m_temperFinal.atkSpeed; }
         float GetFireRate() const { return m_temperFinal.fireRate; }
+        float GetEffectiveFireRate() const;
 
         void SetAfterImage(engine::AfterimageRenderer* comp) { m_afterimage = comp; }
         engine::AfterimageRenderer* GetAfterImage() const { return m_afterimage; }
 
         // 처형: Execution 상태일 때 재생 중인 처형 애니메이션의 정규화 시간 (0~1). 아니면 -1
         float GetExecutionAnimNormalizedTime() const;
+        
+        // 디버그용: 마지막 발사 XZ 방향
+        bool HasLastFiredDirection() const { return m_hasLastFiredDirection; }
+        engine::Vector3 GetLastFiredDirectionXZ() const { return m_lastFiredDirectionXZ; }
 
         // 처형 시작 (ExecutionIndicatorManager에서 호출)
         void StartExecution(engine::GameObject* targetMonster);

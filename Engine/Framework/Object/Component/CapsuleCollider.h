@@ -46,6 +46,7 @@ namespace engine
     protected:
         physx::PxGeometry* CreateGeometry() override;
         void UpdateGeometry() override;
+        void ApplyScaleRatio(const Vector3& scaleRatio) override;
         void UpdateLocalPose() override;  // PhysX 캡슐이 X축 기본이므로 Y축으로 변환
 
     public:
