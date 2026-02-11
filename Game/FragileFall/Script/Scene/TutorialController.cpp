@@ -12,7 +12,6 @@
 
 #include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/UI/UIButton.h>
-#include <Framework/Object/Component/UI/UIClickArea.h>
 #include <Framework/Object/Component/RectTransform.h>
 
 #include "Manager/StageManager.h"
@@ -113,6 +112,12 @@ namespace game
             if (m_stepTimer <= 0.0f)
             {
                 m_isTimerActive = false;
+
+                if (m_isTutorialFinished)
+                {
+                    Destroy();
+                    return;
+                }
 
                 switch (m_stepIndex)
                 {
@@ -313,6 +318,18 @@ namespace game
         // ─────────────────────────────────────────────
         case 5:
             m_outlineWidth = 4.0f;
+            SetActiveButton("UI_EnterPlay", false, false);
+            SetActiveButton("UI_OpenOption", false, false);
+            SetActiveButton("UI_BackToMain", false, false);
+            SetActiveButton("Btn_Attack", false, false);
+            SetActiveButton("Btn_Survive", false, false);
+            SetActiveButton("Btn_Move", false, false);
+            SetActiveButton("Btn_Upgrade", false, false);
+            SetActiveButton("UI_CloseButton_Upgrade", false, false);
+            SetupSkillNodesUI("AttackNodes", false, false);
+            SetupSkillNodesUI("SkillNodes", false, false);
+            SetupSkillNodesUI("SurviveNodes", false, false);
+            SetupSkillNodesUI("MoveNodes", false, false);
             BindButton("UI_OpenUpgrade", [this]() {
                 Next();
             });
@@ -332,7 +349,7 @@ namespace game
         // ─────────────────────────────────────────────
         case 7:
             m_outlineWidth = 6.0f;
-            SetupSkillNodesUI("SkillNodes");
+            SetupSkillNodesUI("SkillNodes", true);
             break;
         // ─────────────────────────────────────────────
         // step 8 : 재화가 들어간다는 설명과 함께 강화 유도
@@ -361,10 +378,10 @@ namespace game
         case 9:
             m_outlineWidth = 8.0f;
             BindButton("UI_CloseButton_Upgrade", [this]() {
-                SetupSkillNodesUI("AttackNodes", true);
-                SetupSkillNodesUI("SkillNodes", true);
-                SetupSkillNodesUI("SurviveNodes", true);
-                SetupSkillNodesUI("MoveNodes", true);
+                SetupSkillNodesUI("AttackNodes", false, true);
+                SetupSkillNodesUI("SkillNodes", false, true);
+                SetupSkillNodesUI("SurviveNodes", false, true);
+                SetupSkillNodesUI("MoveNodes", false, true);
                 SetActiveButton("UI_CloseButton_Upgrade", true, false);
 				SetActiveButton("UI_EnterPlay", true, false);
                 SetActiveButton("UI_OpenUpgrade", true, false);
@@ -374,6 +391,7 @@ namespace game
                 SetActiveButton("Btn_Skill", true, false);
                 SetActiveButton("Btn_Survive", true, false);
                 SetActiveButton("Btn_Move", true, false);
+                SetActiveButton("Btn_Upgrade", true, false);
                 Next();
                 TutorialFinish();
             });
@@ -412,7 +430,8 @@ namespace game
             if (auto* btn = go->GetComponent<engine::UIButton>())
             {
 				btn->SetActive(true);
-                btn->AddOnClick(std::move(callback));
+                btn->AddOnClick(this, std::move(callback));
+				m_bindButtonNames.insert(goName);
             }
         }
 
@@ -421,6 +440,32 @@ namespace game
         {
             upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
         }
+    }
+
+    void TutorialController::UnBindAllButtons()
+    {
+        // UIButton
+        for (const std::string& btnName : m_bindButtonNames)
+        {
+            if (auto* go = engine::GameObject::Find(btnName))
+            {
+                if (auto* btn = go->GetComponent<engine::UIButton>())
+                {
+                    btn->UnbindOnClick(this);
+                }
+            }
+        }
+        m_bindButtonNames.clear();
+
+        // UIClickArea
+        for (auto area : m_bindClickAreaNames)
+        {
+            if(area)
+            {
+                area->UnbindOnClick(this);
+            }
+        }
+        m_bindClickAreaNames.clear();
     }
 
     void TutorialController::SetActiveButton(const std::string& goName, bool active, bool outline)
@@ -440,7 +485,7 @@ namespace game
         }
     }
 
-    void TutorialController::SetupSkillNodesUI(const std::string& goName, bool isChildSetup)
+    void TutorialController::SetupSkillNodesUI(const std::string& goName, bool isChildSetup, bool isActive)
     {
         engine::GameObject* parentGo = engine::GameObject::Find(goName);
         if (!parentGo) return;
@@ -450,18 +495,17 @@ namespace game
 
         const std::vector<engine::Transform*>& children = parentRT->GetChildren();
 
-        if (isChildSetup)
+        if(isChildSetup)
         {
-            for (size_t i = 0; i < children.size(); ++i)
+            for (size_t i = 1; i < children.size(); ++i)
             {
                 if (children[i] && children[i]->GetGameObject())
                 {
-                    children[i]->GetGameObject()->SetActive(true);
+                    auto button = children[i]->GetGameObject()->GetComponent<engine::UIClickArea>();
+                    button->SetActive(false);
                 }
             }
-        }
-        else
-        {
+
             if (!children.empty())
             {
                 engine::GameObject* firstNode = children[0]->GetGameObject();
@@ -470,12 +514,25 @@ namespace game
                     auto button = firstNode->GetComponent<engine::UIClickArea>();
 
                     button->SetActive(true);
-                    button->AddOnClick([this, button](int buttonIndex) {
+                    button->AddOnClick(this, [this, button](int buttonIndex) {
                         button->SetActive(false);
                         this->Next();
                         });
+                    
+                    m_bindClickAreaNames.insert(button);
 
                     firstNode->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
+                }
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < children.size(); ++i)
+            {
+                if (children[i] && children[i]->GetGameObject())
+                {
+                    auto button = children[i]->GetGameObject()->GetComponent<engine::UIClickArea>();
+                    button->SetActive(isActive);
                 }
             }
         }
@@ -565,8 +622,10 @@ namespace game
 
     void TutorialController::TutorialFinish()
     {
-
-
+        UnBindAllButtons();
+        m_isTutorialFinished = true;
+        m_isTimerActive = true;
+        m_stepTimer = 2.0f;
     }
 
     PlayerControllerScript* TutorialController::GetPlayer()

@@ -42,6 +42,7 @@ namespace engine
 		
 		void MarkDirty();
 		void SetDebugThreshold(float pixels);
+		void ResetPointerState(bool sendCancel = true);
 
 	private:
 		MouseState BuildMouseStateFromInput();

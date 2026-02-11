@@ -7,6 +7,7 @@ namespace engine
 	class UIClickArea : public UIElement, public UIInteractable
 	{
 		REGISTER_COMPONENT(UIClickArea, UIElement)
+
 	public:
 		using ClickCallback = std::function<void(int)>;
 		using HoverCallback = std::function<void(bool)>;
@@ -20,7 +21,11 @@ namespace engine
 		void DrawUI() const override {}
 
 		void AddOnClick(ClickCallback&& cb);
+		void AddOnClick(void* owner, ClickCallback&& cb);
 		void AddOnHover(HoverCallback&& cb);
+
+		void UnbindOnClick(void* owner);
+		std::vector<std::pair<void*, size_t>> m_ownerTracker;
 
 		void AddOnBeginDrag(BeginDragCallback&& cb);
 		void AddOnDrag(DragCallback&& cb);
