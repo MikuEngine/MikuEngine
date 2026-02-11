@@ -186,6 +186,12 @@ namespace game
                         Next();
                     }
                     break;
+                // ─────────────────────────────────────────────
+                // step 6
+                // ─────────────────────────────────────────────
+                case 6:
+                    m_outline1->SetActive(true);
+                    break;
                 }
             }
         }
@@ -331,6 +337,7 @@ namespace game
             SetupSkillNodesUI("SurviveNodes", false, false);
             SetupSkillNodesUI("MoveNodes", false, false);
             BindButton("UI_OpenUpgrade", [this]() {
+                SetActiveButton("UI_OpenUpgrade", false, false);
                 HighlightButton("UI_OpenUpgrade", false);
                 Next();
             });
@@ -349,8 +356,11 @@ namespace game
             if (auto* go = engine::GameObject::Find("Outline3"))
                 m_outline3 = go->GetComponent<engine::UIImage>();
 
-            m_outline1->SetActive(true);
+            m_isTimerActive = true;
+            m_stepTimer = 0.5f;
+
             BindButton("Btn_Skill", [this]() {
+                SetActiveButton("Btn_Skill", false, false);
                 m_outline1->SetActive(false);
                 Next();
             });
@@ -373,10 +383,12 @@ namespace game
             {
                 upgradeUI->GetComponent<engine::UIImage>()->SetOutline(true, m_outlineWidth, { 1.0f, 0.0f, 0.0f, 1.0f });
             }
-
             m_outline2->SetActive(true);
+
             BindButton("Btn_Upgrade", [this] () {
                 m_outline2->SetActive(false);
+                SetActiveButton("Btn_Upgrade", false, false);
+                HighlightButton("Desc_Panel", false);
                 Next();
             });
             break;
@@ -442,18 +454,7 @@ namespace game
             {
 				btn->SetActive(true);
 
-
                 btn->AddOnClick(this, std::move(callback));
-
-                /*/
-                btn->AddOnHover([](bool isHovered)
-                    {
-                        if (isHovered)
-                        {
-                            engine::SoundSystem::Get().PlayUI("UI_Hover");
-                        }
-                    });
-                //*/
 
 				m_bindButtonNames.insert(goName);
             }
