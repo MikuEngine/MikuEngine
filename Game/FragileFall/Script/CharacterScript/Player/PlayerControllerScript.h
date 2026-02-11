@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -185,6 +185,7 @@ namespace game
         float m_fragileRegenOnClear = 20.0f;
         float m_fragileGainRate = 1.0f; // 배율
         float m_invincibleTime = 0.5f;
+        float m_invincibleRemainTime = 0.0f;
 
         // 대시 관련
         float m_dashInvincibleTime = 0.1f;
@@ -516,7 +517,11 @@ namespace game
 
         void SetMaxHp(float v) { m_temperFinal.maxHp = v; }
         void SetCurrentHp(float v) { m_PlayerCurrentHP = v; }
-        void SetInvincibleTime(float v) { m_temperFinal.invincibleTime = v; }
+        void SetInvincibleTime(float v)
+        {
+            m_temperFinal.invincibleTime = v;
+            m_invincibleTime = v;
+        }
         void SetMoveSpeed(float v) { m_temperFinal.moveSpeed = v; }
         void SetDashDistance(float v) { m_temperFinal.dashDistance = v; }
         void SetDashCooldown(float v) { m_temperFinal.dashCooldown = v; }
