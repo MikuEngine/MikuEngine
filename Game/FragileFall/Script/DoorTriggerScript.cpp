@@ -7,7 +7,7 @@
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Object/Component/BoxCollider.h>
 
-#include <Framework/Object/Component/Renderer/DebugRenderer.h>
+// #include <Framework/Object/Component/Renderer/DebugRenderer.h>
 
 namespace game
 {
@@ -23,6 +23,7 @@ namespace game
 
     void DoorTriggerScript::Update()
     {
+        /*/ 빨간 원 표시
 #ifdef _DEBUG
         if (m_isActive)
         {
@@ -35,6 +36,7 @@ namespace game
             );
         }
 #endif
+        //*/
     }
 
     void DoorTriggerScript::SetActivateDoor(bool active)
@@ -50,7 +52,7 @@ namespace game
                 auto* newCollider = GetGameObject()->AddComponent<engine::BoxCollider>();
 
                 newCollider->SetCenter(engine::Vector3(0.0f, 3.0f, 0.0f));
-                newCollider->SetSize(engine::Vector3(7.0f, 8.0f, 2.0f));
+                newCollider->SetSize(engine::Vector3(7.0f, 8.0f, 3.0f));
             }
         }
         else

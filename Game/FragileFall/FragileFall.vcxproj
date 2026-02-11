@@ -216,6 +216,7 @@
     <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Tutorial.cpp" />
     <ClCompile Include="Script\Scene\TutorialController.cpp" />
+    <ClCompile Include="Script\SoundTrigger.cpp" />
     <ClCompile Include="Script\StateTextRenderer.cpp" />
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
     <ClCompile Include="Script\TimeScalerTest.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Script\Scene\SceneController_Main.h" />
     <ClInclude Include="Script\Scene\SceneController_Tutorial.h" />
     <ClInclude Include="Script\Scene\TutorialController.h" />
+    <ClInclude Include="Script\SoundTrigger.h" />
     <ClInclude Include="Script\StateTextRenderer.h" />
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />
     <ClInclude Include="Script\TimeScalerTest.h" />

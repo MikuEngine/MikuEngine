@@ -1,0 +1,39 @@
+{
+    "Name": "SoundTrigger",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "SoundTrigger",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SoundTrigger",
+                    "Active": true,
+                    "SoundKey": "Door_NextStage",
+                    "SoundOption": "SFX/Door"
+                }
+            ]
+        }
+    ]
+}

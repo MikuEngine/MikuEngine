@@ -32,7 +32,6 @@ namespace game
         void SetEventCallBack(engine::EventCallBack callback) { m_onTriggered = callback; }
 
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
-        //void OnLevelLoaded() override;
 
     public:
         void OnGui() override;
