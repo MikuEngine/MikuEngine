@@ -78,7 +78,7 @@ namespace game
 		std::shared_ptr<engine::SpriteAnimationData> g_sceneLoadAnimData;
 		float g_sceneLoadAnimTime = 0.0f;
 		std::shared_ptr<engine::Texture> g_loadingTextTexture;
-		constexpr float SCENE_LOAD_ANIM_Y_RATIO = 0.435f;
+		constexpr float SCENE_LOAD_ANIM_Y_RATIO = 0.40f;
 		constexpr float SCENE_LOAD_BAR_Y_RATIO = 0.52f;
 		constexpr float SCENE_LOAD_TEXT_Y_RATIO = 0.72f;
 		constexpr float SCENE_LOAD_ANIM_SIZE_PX = 200.0f;
@@ -208,6 +208,8 @@ namespace game
 			fd.atlasHeight = 1024;
 			fd.maxPages = 1;
 			fd.atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+			fd.syntheticBold = true;
 
 			g_loadingFont = std::make_shared<engine::FontData>();
 			g_loadingFont->Initialize(engine::GraphicsDevice::Get().GetDevice().Get(), fd);
