@@ -1,6 +1,6 @@
 {
     "Name": "90_DEV_Stage",
-    "NumGameObjects": 99,
+    "NumGameObjects": 101,
     "GameObjects": [
         {
             "ID": 0,
@@ -18844,6 +18844,7 @@
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.30000001192092896,
+                    "DashMaxDurationLimit": 0.6000000238418579,
                     "BaseDashDistance": 6.0,
                     "DashDecayRate": 2.0,
                     "DashDecayDuration": 0.5,
@@ -18855,6 +18856,7 @@
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
                     "FragileGaugeRisePerSecond": 1.0,
+                    "PlayerMaxHP": 100.0,
                     "IsInvincible": false,
                     "EED_Enable": false,
                     "EED_DamageScale": 5.0,
@@ -19304,7 +19306,7 @@
                 }
             ]
         },
-		{
+        {
             "ID": 99,
             "Name": "SoundObject",
             "Active": true,
@@ -19342,6 +19344,39 @@
                     "UseRandom": false,
                     "RandomClips": [],
                     "Bus": "BGM"
+                }
+            ]
+        },
+        {
+            "ID": 100,
+            "Name": "MonsterUpdateSwitch",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MonsterUpdateActivationSwitch",
+                    "Active": true,
+                    "ActivationDelay": 3.0,
+                    "WaitAfterIdle": true
                 }
             ]
         }
