@@ -61,6 +61,20 @@ namespace engine
         UpdateLocalPose();
     }
 
+    void CapsuleCollider::ApplyScaleRatio(const Vector3& scaleRatio)
+    {
+        // 캡슐은 Y축이 높이, XZ가 반지름으로 취급한다.
+        const float sx = std::max(0.0001f, std::abs(scaleRatio.x));
+        const float sy = std::max(0.0001f, std::abs(scaleRatio.y));
+        const float sz = std::max(0.0001f, std::abs(scaleRatio.z));
+
+        const float radiusScale = (sx + sz) * 0.5f;
+        const float heightScale = sy;
+
+        m_radius = std::max(0.001f, m_radius * radiusScale);
+        m_height = std::max(m_radius * 2.0f, m_height * heightScale);
+    }
+
     void CapsuleCollider::UpdateLocalPose()
     {
         if (!m_shape)

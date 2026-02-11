@@ -121,8 +121,8 @@
             ]
         },
         {
-            "ID": 3,
-            "ParentID": 1,
+            "ID": 2,
+            "ParentID": 0,
             "Name": "Ground",
             "Active": true,
             "Components": [
@@ -184,8 +184,243 @@
             ]
         },
         {
+            "ID": 3,
+            "ParentID": 0,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 23.95810890197754,
+                        "y": 8.989282608032227,
+                        "z": -11.174949645996094
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 20.0,
+                    "Range": 25.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
             "ID": 4,
-            "ParentID": 1,
+            "ParentID": 0,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 24.059947967529297,
+                        "y": 9.649354934692383,
+                        "z": 11.455806732177734
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 20.0,
+                    "Range": 20.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "ParentID": 0,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -1.2029683589935303,
+                        "y": 4.773013114929199,
+                        "z": 16.98331642150879
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 20.0,
+                    "Range": 20.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 0,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -24.47818946838379,
+                        "y": 5.563657283782959,
+                        "z": 3.9666662216186523
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 20.0,
+                    "Range": 20.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 0,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -20.93054962158203,
+                        "y": 8.21684741973877,
+                        "z": -14.93397331237793
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 20.0,
+                    "Range": 12.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "ParentID": 0,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -201,7 +436,7 @@
                         "x": -0.0,
                         "y": -0.39504536986351013,
                         "z": -0.0,
-                        "w": 0.9186616539955139
+                        "w": 0.9186615943908691
                     },
                     "Scale": {
                         "x": 2.929999589920044,
@@ -247,8 +482,8 @@
             ]
         },
         {
-            "ID": 5,
-            "ParentID": 1,
+            "ID": 9,
+            "ParentID": 0,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -310,8 +545,8 @@
             ]
         },
         {
-            "ID": 6,
-            "ParentID": 1,
+            "ID": 10,
+            "ParentID": 0,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -332,7 +567,7 @@
                     "Scale": {
                         "x": 2.480069160461426,
                         "y": 2.480001926422119,
-                        "z": 2.4801549911499023
+                        "z": 2.480154514312744
                     }
                 },
                 {
@@ -373,8 +608,8 @@
             ]
         },
         {
-            "ID": 7,
-            "ParentID": 1,
+            "ID": 11,
+            "ParentID": 0,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -436,8 +671,8 @@
             ]
         },
         {
-            "ID": 8,
-            "ParentID": 1,
+            "ID": 12,
+            "ParentID": 0,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -450,9 +685,9 @@
                         "z": 20.163599014282227
                     },
                     "Rotation": {
-                        "x": -0.013805963099002838,
-                        "y": -0.11113079637289047,
-                        "z": 0.12250874191522598,
+                        "x": -0.013805962167680264,
+                        "y": -0.11113078892230988,
+                        "z": 0.12250872701406479,
                         "w": 0.9861292839050293
                     },
                     "Scale": {
@@ -499,8 +734,8 @@
             ]
         },
         {
-            "ID": 9,
-            "ParentID": 1,
+            "ID": 13,
+            "ParentID": 0,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -562,8 +797,8 @@
             ]
         },
         {
-            "ID": 10,
-            "ParentID": 1,
+            "ID": 14,
+            "ParentID": 0,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -625,8 +860,8 @@
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 1,
+            "ID": 15,
+            "ParentID": 0,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -639,9 +874,9 @@
                         "z": 23.251651763916016
                     },
                     "Rotation": {
-                        "x": -0.0797543153166771,
-                        "y": -0.00406396109610796,
-                        "z": 0.050727471709251404,
+                        "x": -0.0797543078660965,
+                        "y": -0.004063960164785385,
+                        "z": 0.050727467983961105,
                         "w": 0.9955146908760071
                     },
                     "Scale": {
@@ -688,8 +923,8 @@
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 1,
+            "ID": 16,
+            "ParentID": 0,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -751,8 +986,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 1,
+            "ID": 17,
+            "ParentID": 0,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -814,8 +1049,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 1,
+            "ID": 18,
+            "ParentID": 0,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -877,8 +1112,8 @@
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 1,
+            "ID": 19,
+            "ParentID": 0,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -940,8 +1175,8 @@
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 1,
+            "ID": 20,
+            "ParentID": 0,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -1003,8 +1238,8 @@
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 1,
+            "ID": 21,
+            "ParentID": 0,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -1066,7 +1301,7 @@
             ]
         },
         {
-            "ID": 18,
+            "ID": 22,
             "ParentID": 0,
             "Name": "Collider_setting_V1.00",
             "Active": true,
@@ -1094,8 +1329,8 @@
             ]
         },
         {
-            "ID": 19,
-            "ParentID": 18,
+            "ID": 23,
+            "ParentID": 22,
             "Name": "Collider_Wall_Front",
             "Active": true,
             "Components": [
@@ -1145,8 +1380,8 @@
             ]
         },
         {
-            "ID": 20,
-            "ParentID": 18,
+            "ID": 24,
+            "ParentID": 22,
             "Name": "Collider_Wall_Left",
             "Active": true,
             "Components": [
@@ -1196,8 +1431,8 @@
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 18,
+            "ID": 25,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Left_2",
             "Active": true,
             "Components": [
@@ -1244,8 +1479,8 @@
             ]
         },
         {
-            "ID": 22,
-            "ParentID": 18,
+            "ID": 26,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Left_1",
             "Active": true,
             "Components": [
@@ -1292,8 +1527,8 @@
             ]
         },
         {
-            "ID": 23,
-            "ParentID": 18,
+            "ID": 27,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Left_3",
             "Active": true,
             "Components": [
@@ -1340,8 +1575,8 @@
             ]
         },
         {
-            "ID": 24,
-            "ParentID": 18,
+            "ID": 28,
+            "ParentID": 22,
             "Name": "Collider_Wall_Back",
             "Active": true,
             "Components": [
@@ -1391,8 +1626,8 @@
             ]
         },
         {
-            "ID": 25,
-            "ParentID": 18,
+            "ID": 29,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_1",
             "Active": true,
             "Components": [
@@ -1439,8 +1674,8 @@
             ]
         },
         {
-            "ID": 26,
-            "ParentID": 18,
+            "ID": 30,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_2",
             "Active": true,
             "Components": [
@@ -1487,8 +1722,8 @@
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 18,
+            "ID": 31,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_3",
             "Active": true,
             "Components": [
@@ -1535,8 +1770,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 18,
+            "ID": 32,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_4",
             "Active": true,
             "Components": [
@@ -1583,8 +1818,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 18,
+            "ID": 33,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_5",
             "Active": true,
             "Components": [
@@ -1634,8 +1869,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 18,
+            "ID": 34,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_6",
             "Active": true,
             "Components": [
@@ -1682,8 +1917,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 18,
+            "ID": 35,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_7",
             "Active": true,
             "Components": [
@@ -1730,8 +1965,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 18,
+            "ID": 36,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_8",
             "Active": true,
             "Components": [
@@ -1778,8 +2013,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 18,
+            "ID": 37,
+            "ParentID": 22,
             "Name": "Collider_Crystal_Right_9",
             "Active": true,
             "Components": [
@@ -1826,8 +2061,8 @@
             ]
         },
         {
-            "ID": 34,
-            "ParentID": 18,
+            "ID": 38,
+            "ParentID": 22,
             "Name": "Collider_Door_1",
             "Active": true,
             "Components": [
@@ -1877,8 +2112,8 @@
             ]
         },
         {
-            "ID": 35,
-            "ParentID": 18,
+            "ID": 39,
+            "ParentID": 22,
             "Name": "Collider_Door_2",
             "Active": true,
             "Components": [
@@ -1928,8 +2163,8 @@
             ]
         },
         {
-            "ID": 36,
-            "ParentID": 18,
+            "ID": 40,
+            "ParentID": 22,
             "Name": "Collider_Door_3",
             "Active": true,
             "Components": [
@@ -1979,7 +2214,7 @@
             ]
         },
         {
-            "ID": 37,
+            "ID": 41,
             "ParentID": 0,
             "Name": "GridMap_White_1",
             "Active": true,
@@ -11041,7 +11276,7 @@
             ]
         },
         {
-            "ID": 38,
+            "ID": 42,
             "ParentID": 0,
             "Name": "Obstacle_setting_V1.00",
             "Active": true,
@@ -11069,8 +11304,8 @@
             ]
         },
         {
-            "ID": 39,
-            "ParentID": 38,
+            "ID": 43,
+            "ParentID": 42,
             "Name": "obstacle_1",
             "Active": true,
             "Components": [
@@ -11152,8 +11387,8 @@
             ]
         },
         {
-            "ID": 40,
-            "ParentID": 38,
+            "ID": 44,
+            "ParentID": 42,
             "Name": "obstacle_2",
             "Active": true,
             "Components": [
@@ -11235,8 +11470,8 @@
             ]
         },
         {
-            "ID": 41,
-            "ParentID": 38,
+            "ID": 45,
+            "ParentID": 42,
             "Name": "obstacle_3",
             "Active": true,
             "Components": [
@@ -11318,8 +11553,8 @@
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 38,
+            "ID": 46,
+            "ParentID": 42,
             "Name": "obstacle_4",
             "Active": true,
             "Components": [
