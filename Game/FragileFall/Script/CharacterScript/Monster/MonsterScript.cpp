@@ -129,7 +129,7 @@ namespace game
 	}
 
 	// 업데이트 중지 체크 포함
-	inline void MonsterScript::FixedUpdate()
+	void MonsterScript::FixedUpdate()
 	{
 		if (!m_isActive)
 		{
