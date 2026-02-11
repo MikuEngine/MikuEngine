@@ -7,6 +7,7 @@
 #include "Script/AimModeController.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
+#include "Script/CharacterScript/Common/ExecutionExitDamageTrigger.h"
 #include "Manager/PlayerTemperManager.h"
 #include "Manager/StageManager.h"
 #include "Manager/BuffManager.h"
@@ -792,6 +793,14 @@ namespace game
 		{
 			m_aimPointer->m_postExecutionTimer = m_aimPointer->m_postExecutionDuration;
 		}
+		
+		// ═══════════════════════════════════════════════════════════════
+		// 처형 종료 데미지 (범위 공격)
+		// ═══════════════════════════════════════════════════════════════
+		if (m_EED_enable)
+		{
+			SpawnExecutionExitDamage();
+		}
 	}
 	}
 
@@ -805,6 +814,37 @@ namespace game
 		engine::SkeletalAnimator* animator = meshGO->GetComponent<engine::SkeletalAnimator>();
 		if (!animator) return -1.0f;
 		return animator->GetNormalizedTime(0);
+	}
+
+	// ═══════════════════════════════════════════════════════════════
+	// 처형 종료 데미지 생성
+	// ═══════════════════════════════════════════════════════════════
+	void PlayerControllerScript::SpawnExecutionExitDamage()
+	{
+		auto* scene = engine::SceneManager::Get().GetScene();		
+
+		// ExecutionExitDamageTrigger 프리팹 로드 및 인스턴시에이트
+		auto triggerGO = engine::Prefab::Instantiate("ExecutionExitDamageTrigger");
+		
+
+		// 위치 설정: 플레이어 XZ 좌표 사용, Y는 프리팹 자체 높이 유지
+		engine::Vector3 playerPos = GetTransform()->GetWorldPosition();
+		engine::Vector3 currentPos = triggerGO->GetTransform()->GetLocalPosition();
+		engine::Vector3 spawnPos(playerPos.x, currentPos.y, playerPos.z);  // Y는 프리팹 값 유지
+		triggerGO->GetTransform()->SetLocalPosition(spawnPos);
+		
+
+		// ExecutionExitDamageTrigger 스크립트 설정
+		if (auto* triggerScript = triggerGO->GetComponent<ExecutionExitDamageTrigger>())
+		{
+			// damage, radiusScale, lifetime 전달
+			triggerScript->Setup(m_EED_damage, m_EED_damageScale, m_EED_duration);
+			
+		}
+		else
+		{
+			LOG_ERROR("[PCS] SpawnExecutionExitDamage: ExecutionExitDamageTrigger script not found on prefab!");
+		}
 	}
 
 	void PlayerControllerScript::StartExecution(engine::GameObject* targetMonster)
@@ -1737,12 +1777,37 @@ namespace game
 		if (ImGui::IsItemHovered())
 			ImGui::SetTooltip("Offset along firing direction (forward from player)");
 
-		// 처형 설정
-		ImGui::Separator();
-		ImGui::Text("Execution:");
-		ImGui::DragFloat("Execution Range", &m_executionRange, 0.5f, 1.0f, 50.0f);
+	// 처형 설정
+	ImGui::Separator();
+	ImGui::Text("Execution:");
+	ImGui::DragFloat("Execution Range", &m_executionRange, 0.5f, 1.0f, 50.0f);
+	
+	// 처형 종료 데미지
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Execution Exit Damage:");
+	ImGui::Checkbox("EED_Enable", &m_EED_enable);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("처형 종료 시 주변 적에게 범위 데미지");
+	
+	if (m_EED_enable)
+	{
+		ImGui::Indent();
+		ImGui::DragFloat("EED_Damage Scale (Radius)", &m_EED_damageScale, 0.5f, 1.0f, 20.0f);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("데미지 범위 (반지름)");
+		
+		ImGui::DragFloat("EED_Damage", &m_EED_damage, 1.0f, 0.0f, 200.0f);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("적에게 입히는 데미지");
+		
+		ImGui::DragFloat("EED_Duration (sec)", &m_EED_duration, 0.1f, 0.1f, 5.0f);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("트리거 지속 시간");
+		
+		ImGui::Unindent();
+	}
 
-		// 참조 설정
+	// 참조 설정
 		ImGui::Separator();
 		ImGui::Text("References:");
 		ImGui::InputText("AimPointer Object", &m_aimPointerObjectName);
@@ -1831,6 +1896,12 @@ namespace game
 	
 	// 무적 상태
 	j["IsInvincible"] = m_isInvincible;
+	
+	// 처형 종료 데미지
+	j["EED_Enable"] = m_EED_enable;
+	j["EED_DamageScale"] = m_EED_damageScale;
+	j["EED_Damage"] = m_EED_damage;
+	j["EED_Duration"] = m_EED_duration;
 }
 
 	void PlayerControllerScript::Load(const engine::json& j)
@@ -1921,6 +1992,16 @@ namespace game
 	// 무적 상태
 	if (j.contains("IsInvincible"))
 		m_isInvincible = j["IsInvincible"].get<bool>();
+	
+	// 처형 종료 데미지
+	if (j.contains("EED_Enable"))
+		m_EED_enable = j["EED_Enable"].get<bool>();
+	if (j.contains("EED_DamageScale"))
+		m_EED_damageScale = j["EED_DamageScale"].get<float>();
+	if (j.contains("EED_Damage"))
+		m_EED_damage = j["EED_Damage"].get<float>();
+	if (j.contains("EED_Duration"))
+		m_EED_duration = j["EED_Duration"].get<float>();
 	
 	// ═══════════════════════════════════════════════════════════════
 	// Base값 로드 완료 후 강화 적용하여 실제값 계산

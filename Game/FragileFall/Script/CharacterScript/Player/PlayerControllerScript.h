@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -166,6 +166,15 @@ namespace game
         float m_exeSplashRange = 5.0f;
         int   m_exeDashChargeRegen = 1;
         float m_exeHpRegen = 5.0f;
+        
+        // ─────────────────────────────────────────────
+        // 처형 종료 데미지 (ExecutionExitDamageTrigger)
+        // - 인스펙터 노출, Save/Load 포함
+        // ─────────────────────────────────────────────
+        bool  m_EED_enable = false;           // 기능 온/오프
+        float m_EED_damageScale = 5.0f;       // 범위 스케일 (반지름)
+        float m_EED_damage = 15.0f;           // 데미지
+        float m_EED_duration = 1.0f;          // 지속시간
 
         // 체력/생존 관련
         float m_hpRegenOnClear = 10.0f;
@@ -527,6 +536,9 @@ namespace game
 
         // 처형 시작 (ExecutionIndicatorManager에서 호출)
         void StartExecution(engine::GameObject* targetMonster);
+        
+        // 처형 종료 데미지 생성 (OnStateExited에서 호출)
+        void SpawnExecutionExitDamage();
 
     public:
         void OnGui() override;

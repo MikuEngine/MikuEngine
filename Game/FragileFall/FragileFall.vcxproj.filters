@@ -85,6 +85,7 @@
     <ClCompile Include="Script\Scene\SceneController_Tutorial.cpp" />
     <ClCompile Include="Script\PlayerPreviewScript.cpp" />
     <ClCompile Include="Manager\UpgradeDatabase.cpp" />
+    <ClCompile Include="Script\CharacterScript\Common\ExecutionExitDamageTrigger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -178,5 +179,6 @@
     <ClInclude Include="Script\Scene\SceneController_Tutorial.h" />
     <ClInclude Include="Script\PlayerPreviewScript.h" />
     <ClInclude Include="Manager\UpgradeDatabase.h" />
+    <ClInclude Include="Script\CharacterScript\Common\ExecutionExitDamageTrigger.h" />
   </ItemGroup>
 </Project>

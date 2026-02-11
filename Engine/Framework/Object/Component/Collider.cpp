@@ -364,7 +364,7 @@ namespace engine
         }
 
         // Physics Layer 콤보박스 (PhysicsLayer.h에서 자동으로 레이어 이름 가져오기)
-        constexpr int displayLayerCount = 20;  // 인스펙터에 표시할 레이어 수 (0~19)
+        constexpr int displayLayerCount = 21;  // 인스펙터에 표시할 레이어 수 (0~20)
         static const char* layerNames[displayLayerCount];
         
         // PhysicsLayer::GetLayerName()을 사용하여 동적으로 레이어 이름 가져오기

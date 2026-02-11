@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "CharacterController.h"
 
 #include "Framework/Object/Component/Transform.h"
@@ -269,8 +269,10 @@ namespace engine
         // 레이어 선택
         static const char* layerNames[] = {
             "Default", "Player", "Enemy", "Projectile", "Environment", "Trigger",
-            "Layer6", "Layer7", "Layer8", "Layer9", "Layer10", "Layer11", "Layer12", "Layer13", "Layer14", "Layer15",
-            "Layer16", "Layer17", "Layer18", "Layer19", "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
+            "EnemyProjectile", "Picking", "Field", "Wall", "EnemyParabolicProjectile", "ExplosionTrigger",
+            "JumpingEnemy", "RadiusChecker", "SplittingEnemy", "BossBulletProjectile",
+            "BossBigProjectile", "Boss", "BBP_Reflected", "SubWall", "EE_DamageTrigger",
+            "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
             "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
         };
         

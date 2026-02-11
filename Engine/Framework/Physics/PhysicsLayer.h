@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -36,6 +36,7 @@ namespace engine
             Boss = 17,                      // 보스 본체 (적 총알에 맞으면 총알만 사라짐)
             BBP_Reflected = 18,             // 반사된 빅탄 (Boss와만 충돌)
             SubWall = 19,                   // 보조 벽 (몬스터 방향 전환용, Enemy와만 충돌)
+            EE_DamageTrigger = 20,          // 처형 종료 데미지 트리거 (Enemy, JumpingEnemy, SplittingEnemy, BossBigProjectile, Boss와 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -65,6 +66,7 @@ namespace engine
             BossMask = (1u << Boss),
             BBP_ReflectedMask = (1u << BBP_Reflected),
             SubWallMask = (1u << SubWall),
+            EE_DamageTriggerMask = (1u << EE_DamageTrigger),
 
             All = 0xFFFFFFFF
         };
@@ -99,8 +101,9 @@ namespace engine
                 "Boss", // 17
                 "BBP_Reflected", // 18
                 "SubWall", // 19
+                "EE_DamageTrigger", // 20
                 
-                "Layer20", "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
+                "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
             };
             
@@ -401,6 +404,32 @@ namespace engine
             SetCollision(SubWall, SubWall, false);
             // SubWall ↔ Enemy: 충돌함 (기본값)
             // SubWall ↔ SplittingEnemy: 충돌함 (기본값)
+            
+            // ═══════════════════════════════════════
+            // EE_DamageTrigger 충돌 규칙
+            // Enemy, JumpingEnemy, SplittingEnemy, BossBigProjectile, Boss와 충돌
+            // ═══════════════════════════════════════
+            SetCollision(EE_DamageTrigger, Default, false);
+            SetCollision(EE_DamageTrigger, Player, false);
+            SetCollision(EE_DamageTrigger, Projectile, false);
+            SetCollision(EE_DamageTrigger, Environment, false);
+            SetCollision(EE_DamageTrigger, Trigger, false);
+            SetCollision(EE_DamageTrigger, EnemyProjectile, false);
+            SetCollision(EE_DamageTrigger, Picking, false);
+            SetCollision(EE_DamageTrigger, Field, false);
+            SetCollision(EE_DamageTrigger, Wall, false);
+            SetCollision(EE_DamageTrigger, EnemyParabolicProjectile, false);
+            SetCollision(EE_DamageTrigger, ExplosionTrigger, false);
+            SetCollision(EE_DamageTrigger, RadiusChecker, false);
+            SetCollision(EE_DamageTrigger, BossBulletProjectile, false);
+            SetCollision(EE_DamageTrigger, BBP_Reflected, false);
+            SetCollision(EE_DamageTrigger, SubWall, false);
+            SetCollision(EE_DamageTrigger, EE_DamageTrigger, false);
+            // EE_DamageTrigger ↔ Enemy: 충돌함 (기본값)
+            // EE_DamageTrigger ↔ JumpingEnemy: 충돌함 (기본값)
+            // EE_DamageTrigger ↔ SplittingEnemy: 충돌함 (기본값)
+            // EE_DamageTrigger ↔ BossBigProjectile: 충돌함 (기본값)
+            // EE_DamageTrigger ↔ Boss: 충돌함 (기본값)
   
         }
 
