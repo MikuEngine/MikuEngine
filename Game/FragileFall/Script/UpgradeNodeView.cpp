@@ -374,6 +374,14 @@ namespace game
         {
         case NodeState::Purchased:
             // [강화됨]
+            m_image->SetEffect(engine::UIEffectType::PressedSink);
+            m_image->SetEffectParam(0, { 0.8f, 0.15f, 0.005f, 0.0f });
+            outline = { 1.0f, 0.9f, 0.1f, 1.0f }; // 황금색
+            outlineOn = true;
+            break;
+
+        case NodeState::Selected:
+            // [선택됨]
             m_image->SetEffect(engine::UIEffectType::SelectOrbit);
             speed = 2.0f;
             intensity = 0.1f;
@@ -386,14 +394,6 @@ namespace game
             m_image->SetEffectParam(2, { 0.5f, 1.0f, 0.7f, 1.0f });
 
             outline = { 1.0f, 1.0f, 1.0f, 1.0f };
-            outlineOn = true;
-            break;
-
-        case NodeState::Selected:
-            // [선택됨]
-            m_image->SetEffect(engine::UIEffectType::PressedSink);
-            m_image->SetEffectParam(0, { 0.8f, 0.15f, 0.005f, 0.0f });
-            outline = { 1.0f, 0.9f, 0.1f, 1.0f }; // 황금색
             outlineOn = true;
             break;
 
