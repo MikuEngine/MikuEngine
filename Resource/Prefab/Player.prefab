@@ -37,9 +37,8 @@
                     "KinematicDeceleration": 70.0,
                     "MoveSpeed": 8.0,
                     "RotationSpeed": 20.0,
-                    "BaseAtkDmg": 10.0,
+                    "BaseAtkDmg": 82.5,
                     "BaseAtkSpeed": 1.399999976158142,
-                    "BaseBulletLifetime": 3.0,
                     "BaseBulletRange": 10.0,
                     "BaseBulletSizeScale": 1.0,
                     "BaseBulletSpeed": 15.0,
@@ -53,7 +52,7 @@
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.25,
-                    "DashImpulseMultiplier": 3.0,
+                    "BaseDashDistance": 3.0,
                     "DashDecayRate": 1.5,
                     "DashDecayDuration": 0.4000000059604645,
                     "DashAfterimageCutoffRatio": 0.3499999940395355,
@@ -63,7 +62,12 @@
                     "PostDashQuickFireDuration": 0.4000000059604645,
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
-                    "FragileGaugeRisePerSecond": 15.0
+                    "FragileGaugeRisePerSecond": 15.0,
+                    "IsInvincible": true,
+                    "EED_Enable": true,
+                    "EED_DamageScale": 5.0,
+                    "EED_Damage": 200.0,
+                    "EED_Duration": 3.0
                 },
                 {
                     "Type": "LogicFSM",
@@ -110,11 +114,12 @@
                     "Active": true,
                     "CanvasObjectName": "AimPointerCanvas",
                     "CursorSize": {
-                        "x": 30.0,
-                        "y": 30.0
+                        "x": 50.0,
+                        "y": 50.0
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
+                    "PostExecutionDuration": 0.5,
                     "CursorTexturesByState": [
                         "",
                         "",
