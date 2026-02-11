@@ -389,9 +389,9 @@ namespace game
             m_image->SetEffectParam(0, { speed, intensity, 0.46f, 3.0f });
 
             // Param 1 (Base): 진한 에메랄드
-            m_image->SetEffectParam(1, { 0.1f, 0.8f, 0.4f, 1.0f });
+            m_image->SetEffectParam(1, { 0.1f, 0.8f, 0.4f, 0.2f });
             // Param 2 (Orbit): 밝은 민트색
-            m_image->SetEffectParam(2, { 0.5f, 1.0f, 0.7f, 1.0f });
+            m_image->SetEffectParam(2, { 0.5f, 1.0f, 0.7f, 0.2f });
 
             outline = { 1.0f, 1.0f, 1.0f, 1.0f };
             outlineOn = true;
