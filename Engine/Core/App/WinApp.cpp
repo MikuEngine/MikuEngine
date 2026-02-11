@@ -523,6 +523,8 @@ namespace engine
 
         SystemManager::Get().GetScriptSystem().CallStart();
 
+        SceneManager::Get().CallOnSceneStartFinished();
+
         for (auto& callback : m_onGameplayUpdateCallbacks)
         {
             std::invoke(callback);

@@ -101,6 +101,7 @@ namespace game
 
         //치트-무적
         bool m_isInvincible = false;
+        bool m_isControlLocked = false;
         
         // 대쉬 기준 속도. 이 값은 상수로 쓰인다.
         const float m_dashInitSpeed = 8.0f;
@@ -454,6 +455,8 @@ namespace game
         // 데미지 처리
         void SetOnDamaged(DamageCallback callback) { m_onDamaged = std::move(callback); }
         void TakeDamage(float damage);
+        void SetControlLocked(bool locked);
+        bool IsControlLocked() const { return m_isControlLocked; }
 
         // 프레자일 게이지 (몬스터 있을 때 상승, UI/직렬화용)
         float GetFragileGaugeCurrent() const { return m_fragileGaugeCurrent; }

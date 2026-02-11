@@ -276,6 +276,11 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	bool PlayerControllerScript::CanMove() const
 	{
+		if (m_isControlLocked)
+		{
+			return false;
+		}
+
 		// 처형 중에는 이동 불가
 		if (IsInState("Execution"))
 		{
@@ -291,6 +296,11 @@ namespace game
 
 	bool PlayerControllerScript::CanAttack() const
 	{
+		if (m_isControlLocked)
+		{
+			return false;
+		}
+
 		// 처형 중에는 공격 불가
 		if (IsInState("Execution"))
 		{
@@ -319,6 +329,15 @@ namespace game
 	void PlayerControllerScript::ProcessInput()
 	{
 		if (!m_logicFSM) return;
+
+		if (m_isControlLocked)
+		{
+			engine::Vector3 zero = engine::Vector3::Zero;
+			m_inputMoveDir = zero;
+			UpdateLogicalMoveExistence(zero);
+			m_logicFSM->SetParameter("IsShooting", false);
+			return;
+		}
 
 		// Dash 진입 프레임에서 감지된 비정상 케이스는 다음 프레임 입력 단계에서 탈출 트리거를 건다.
 		// (같은 프레임 UpdateFSM의 Trigger reset에 먹히는 문제 회피)
@@ -592,6 +611,13 @@ namespace game
 				m_fragileGaugeCurrent = m_fragileGaugeMax;
 		}
 
+		if (m_isControlLocked)
+		{
+			m_isMoving = false;
+			m_currentLogicalMoveVector = engine::Vector3::Zero;
+			return;
+		}
+
 		// Execution 상태에서는 이후 로직 스킵
 		if (IsInState("Execution"))
 		{
@@ -635,6 +661,17 @@ namespace game
 		// Dead 상태에서는 물리 로직 스킵
 		if (IsInState("Dead"))
 		{
+			m_frameCollisionNormals.clear();
+			return;
+		}
+
+		if (m_isControlLocked)
+		{
+			if (m_rigidbody && m_rigidbody->IsDynamic())
+			{
+				m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
+				m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+			}
 			m_frameCollisionNormals.clear();
 			return;
 		}
@@ -2108,5 +2145,38 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		if (m_onDamaged) m_onDamaged();
 
 		// 사망 전이는 UpdateGameLogic에서 HP 조건으로 Dead 상태 전이 후, SceneController_Play에서 Fail() 호출
+	}
+
+	void PlayerControllerScript::SetControlLocked(bool locked)
+	{
+		m_isControlLocked = locked;
+
+		if (!locked)
+		{
+			return;
+		}
+
+		m_inputMoveDir = engine::Vector3::Zero;
+		m_currentLogicalMoveVector = engine::Vector3::Zero;
+		m_isMoving = false;
+		m_fireTimer = 0.0f;
+		m_hasFiredThisSession = false;
+		m_postDashQuickFireTimer = 0.0f;
+
+		if (m_logicFSM)
+		{
+			m_logicFSM->SetParameter("IsShooting", false);
+		}
+
+		if (m_isDashing)
+		{
+			EndDash();
+		}
+
+		if (m_rigidbody && m_rigidbody->IsDynamic())
+		{
+			m_rigidbody->SetLinearVelocity(engine::Vector3::Zero);
+			m_rigidbody->SetAngularVelocity(engine::Vector3::Zero);
+		}
 	}
 }

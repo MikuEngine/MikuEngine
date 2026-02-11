@@ -1,10 +1,14 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "BossScript.h"
 
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
+#include <Framework/Object/Component/Camera.h>
+#include <Framework/Object/Component/Transform.h>
 #include <Framework/Scene/Scene.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Common/Math/MathUtility.h>
+#include <algorithm>
+#include <cmath>
 
 #include "Script/Boss/BossPattern/BossPatternManager.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -15,9 +19,50 @@
 #include "Script/Boss/BossPattern/Patterns/BossPattern_SphereProjectile.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
+#include "Script/Boss/BossSubPartsController.h"
+#include "Script/AimModeController.h"
 
 namespace game
 {
+    namespace
+    {
+        engine::Vector3 ToLocalPosition(engine::Transform* transform, const engine::Vector3& worldPosition)
+        {
+            if (!transform)
+            {
+                return worldPosition;
+            }
+
+            engine::Transform* parent = transform->GetParent();
+            if (!parent)
+            {
+                return worldPosition;
+            }
+
+            const engine::Matrix parentWorldInv = parent->GetWorld().Invert();
+            return engine::Vector3::Transform(worldPosition, parentWorldInv);
+        }
+
+        engine::Quaternion ToLocalRotation(engine::Transform* transform, const engine::Quaternion& worldRotation)
+        {
+            if (!transform)
+            {
+                return worldRotation;
+            }
+
+            engine::Transform* parent = transform->GetParent();
+            if (!parent)
+            {
+                return worldRotation;
+            }
+
+            const engine::Quaternion parentWorldRot = parent->GetWorldRotation();
+            engine::Quaternion invParentWorldRot;
+            parentWorldRot.Inverse(invParentWorldRot);
+            return invParentWorldRot * worldRotation;
+        }
+    }
+
     BossScript::BossScript() = default;
     BossScript::~BossScript() = default;
 
@@ -30,8 +75,7 @@ namespace game
     void BossScript::Start()
     {
         m_hpText->SetText(std::format("HP: {}", m_currentHp));
-
-        InitializePatterns();
+        m_patternsInitialized = false;
 
         auto playerGo = engine::GameObject::Find("Player");
         if (playerGo != nullptr)
@@ -45,14 +89,45 @@ namespace game
         {
             LOG_PRINT("[BossScript] WARNING: BulletFactory not found on Boss GameObject!");
         }
+
+        CacheIntroReferences();
+        if (m_cameraTransform)
+        {
+            m_hasSceneStartCameraPose = true;
+            m_sceneStartCameraWorldPosition = m_cameraTransform->GetWorldPosition();
+            m_sceneStartCameraWorldRotation = m_cameraTransform->GetWorldRotation();
+        }
+
+        if (m_enableIntroSequence)
+        {
+            BeginIntroSequence();
+        }
+        else
+        {
+            m_isBattleStarted = true;
+        }
+
+        if (m_isBattleStarted && !m_patternsInitialized)
+        {
+            InitializePatterns();
+            m_patternsInitialized = true;
+        }
     }
 
     void BossScript::Update()
     {
         float deltaTime = engine::Time::DeltaTime();
 
+        if (m_isIntroRunning)
+        {
+            UpdateIntroSequence(deltaTime);
+        }
+
         UpdateShieldStatus();
-        UpdatePatternSystem(deltaTime);
+        if (m_isBattleStarted)
+        {
+            UpdatePatternSystem(deltaTime);
+        }
         CheckHealth();
     }
 
@@ -207,6 +282,257 @@ namespace game
         TakeDamage(damage, m_isShieldPierce);
     }
 
+    float BossScript::EaseInOutSine(float t)
+    {
+        t = std::clamp(t, 0.0f, 1.0f);
+        return -(std::cos(DirectX::XM_PI * t) - 1.0f) * 0.5f;
+    }
+
+    void BossScript::CacheIntroReferences()
+    {
+        m_subPartsController = nullptr;
+        m_subPartsRoot = nullptr;
+        m_targetAimController = nullptr;
+        m_mainCamera = nullptr;
+        m_cameraTransform = nullptr;
+
+        if (auto* cameraGO = engine::GameObject::Find("MainCamera"))
+        {
+            m_mainCamera = cameraGO->GetComponent<engine::Camera>();
+            m_cameraTransform = cameraGO->GetTransform();
+        }
+
+        if (m_targetPlayer)
+        {
+            m_targetAimController = m_targetPlayer->GetGameObject()->GetComponent<AimModeController>();
+        }
+
+        // BossSubParts root (can be disabled in editor).
+        if (auto* bossSubPartsObject = GetTransform()->FindChildByNameRecursive("BossSubParts"))
+        {
+            m_subPartsRoot = bossSubPartsObject;
+        }
+
+        // BossSubPartsController is usually attached to the same Boss object.
+        m_subPartsController = GetGameObject()->GetComponent<BossSubPartsController>();
+        if (!m_subPartsController)
+        {
+            auto* bossSubPartsObject = m_subPartsRoot.Get();
+            if (bossSubPartsObject)
+            {
+                m_subPartsController = bossSubPartsObject->GetComponent<BossSubPartsController>();
+            }
+        }
+    }
+
+    void BossScript::BeginIntroSequence()
+    {
+        if (!m_targetPlayer || !m_cameraTransform)
+        {
+            m_isBattleStarted = true;
+            m_isIntroRunning = false;
+            m_introPhase = IntroPhase::Complete;
+            return;
+        }
+
+        m_isBattleStarted = false;
+        m_isIntroRunning = true;
+        m_introPhase = IntroPhase::MoveToBoss;
+        m_introPhaseElapsed = 0.0f;
+        m_introAssembleTriggered = false;
+
+        m_targetPlayer->SetControlLocked(true);
+        if (m_targetAimController)
+        {
+            m_targetAimController->SetPaused(true);
+        }
+
+        const engine::Vector3 playerPos = m_targetPlayer->GetTransform()->GetWorldPosition();
+        const engine::Vector3 bossPos = GetTransform()->GetWorldPosition();
+
+        if (!m_hasSceneStartCameraPose)
+        {
+            m_hasSceneStartCameraPose = true;
+            m_sceneStartCameraWorldPosition = m_cameraTransform->GetWorldPosition();
+            m_sceneStartCameraWorldRotation = m_cameraTransform->GetWorldRotation();
+        }
+
+        // Keep local backup for fallback, but intro return target is scene-start world pose.
+        m_introCameraOriginalPosition = ToLocalPosition(m_cameraTransform, m_sceneStartCameraWorldPosition);
+        m_introCameraOriginalRotation = ToLocalRotation(m_cameraTransform, m_sceneStartCameraWorldRotation);
+        m_introCameraStartPosition = playerPos + engine::Vector3(
+            m_introCameraPlayerOffsetX,
+            m_introCameraPlayerOffsetY,
+            m_introCameraPlayerOffsetZ
+        );
+
+        engine::Vector3 toBoss = bossPos - playerPos;
+        toBoss.y = 0.0f;
+        if (toBoss.LengthSquared() < 0.0001f)
+        {
+            toBoss = engine::Vector3(0.0f, 0.0f, 1.0f);
+        }
+        else
+        {
+            toBoss.Normalize();
+        }
+
+        m_introCameraBossTargetPosition = bossPos - (toBoss * m_introCameraBossDistance);
+        m_introCameraBossTargetPosition.y = m_introCameraBossHeight;
+        m_cameraTransform->SetLocalPosition(ToLocalPosition(m_cameraTransform, m_introCameraStartPosition));
+        UpdateIntroCameraLookAtBoss();
+    }
+
+    void BossScript::UpdateIntroSequence(float deltaTime)
+    {
+        m_introPhaseElapsed += deltaTime;
+
+        switch (m_introPhase)
+        {
+        case IntroPhase::MoveToBoss:
+        {
+            const float duration = std::max(0.01f, m_introMoveToBossDuration);
+            const float t = EaseInOutSine(m_introPhaseElapsed / duration);
+            const engine::Vector3 pos = m_introCameraStartPosition + ((m_introCameraBossTargetPosition - m_introCameraStartPosition) * t);
+            m_cameraTransform->SetLocalPosition(ToLocalPosition(m_cameraTransform, pos));
+            UpdateIntroCameraLookAtBoss();
+
+            if (m_introPhaseElapsed >= duration)
+            {
+                m_introPhase = IntroPhase::HoldAtBoss;
+                m_introPhaseElapsed = 0.0f;
+                m_cameraTransform->SetLocalPosition(ToLocalPosition(m_cameraTransform, m_introCameraBossTargetPosition));
+                UpdateIntroCameraLookAtBoss();
+            }
+            break;
+        }
+        case IntroPhase::HoldAtBoss:
+        {
+            UpdateIntroCameraLookAtBoss();
+            if (m_introPhaseElapsed >= std::max(0.0f, m_introHoldDuration))
+            {
+                m_introPhase = IntroPhase::AssembleParts;
+                m_introPhaseElapsed = 0.0f;
+            }
+            break;
+        }
+        case IntroPhase::AssembleParts:
+        {
+            UpdateIntroCameraLookAtBoss();
+            if (!m_introAssembleTriggered && m_subPartsController)
+            {
+                if (m_subPartsRoot)
+                {
+                    m_subPartsRoot->SetActive(true);
+                }
+                m_subPartsController->SetIntroAssembleDuration(m_introAssembleDuration);
+                m_subPartsController->PrepareIntroAssembly();
+                m_introAssembleTriggered = true;
+            }
+
+            const bool assembled = (!m_subPartsController) ? true : m_subPartsController->IsIntroAssemblyComplete();
+            if (assembled || m_introPhaseElapsed >= std::max(0.01f, m_introAssembleDuration))
+            {
+                m_introCameraBossTargetPosition = m_cameraTransform->GetWorldPosition();
+                m_introCameraBossTargetRotation = m_cameraTransform->GetWorldRotation();
+                m_introPhase = IntroPhase::ReturnToPlayer;
+                m_introPhaseElapsed = 0.0f;
+            }
+            break;
+        }
+        case IntroPhase::ReturnToPlayer:
+        {
+            const float duration = std::max(0.01f, m_introReturnDuration);
+            const float t = EaseInOutSine(m_introPhaseElapsed / duration);
+            const engine::Vector3 returnTargetPos = m_hasSceneStartCameraPose ? m_sceneStartCameraWorldPosition : m_cameraTransform->GetWorldPosition();
+            const engine::Quaternion returnTargetRot = m_hasSceneStartCameraPose ? m_sceneStartCameraWorldRotation : m_cameraTransform->GetWorldRotation();
+            const engine::Vector3 pos = m_introCameraBossTargetPosition + ((returnTargetPos - m_introCameraBossTargetPosition) * t);
+            const engine::Quaternion rot = engine::Quaternion::Slerp(m_introCameraBossTargetRotation, returnTargetRot, t);
+            m_cameraTransform->SetLocalPosition(ToLocalPosition(m_cameraTransform, pos));
+            m_cameraTransform->SetLocalRotation(ToLocalRotation(m_cameraTransform, rot));
+
+            if (m_introPhaseElapsed >= duration)
+            {
+                EndIntroSequence(true);
+            }
+            break;
+        }
+        case IntroPhase::Complete:
+        case IntroPhase::None:
+        default:
+            break;
+        }
+    }
+
+    void BossScript::EndIntroSequence(bool forceComplete)
+    {
+        if (forceComplete && m_cameraTransform)
+        {
+            if (m_hasSceneStartCameraPose)
+            {
+                m_cameraTransform->SetLocalPosition(ToLocalPosition(m_cameraTransform, m_sceneStartCameraWorldPosition));
+                m_cameraTransform->SetLocalRotation(ToLocalRotation(m_cameraTransform, m_sceneStartCameraWorldRotation));
+            }
+            else
+            {
+                m_cameraTransform->SetLocalPosition(m_introCameraOriginalPosition);
+                m_cameraTransform->SetLocalRotation(m_introCameraOriginalRotation);
+            }
+        }
+
+        m_isIntroRunning = false;
+        m_introPhase = IntroPhase::Complete;
+        m_introPhaseElapsed = 0.0f;
+        m_isBattleStarted = true;
+
+        if (!m_patternsInitialized)
+        {
+            InitializePatterns();
+            m_patternsInitialized = true;
+        }
+
+        if (m_targetPlayer)
+        {
+            m_targetPlayer->SetControlLocked(false);
+        }
+        if (m_targetAimController)
+        {
+            m_targetAimController->SetPaused(false);
+        }
+    }
+
+    void BossScript::StartIntroSequence()
+    {
+        BeginIntroSequence();
+    }
+
+    void BossScript::SkipIntroSequence()
+    {
+        EndIntroSequence(true);
+    }
+
+    void BossScript::UpdateIntroCameraLookAtBoss()
+    {
+        if (!m_cameraTransform)
+        {
+            return;
+        }
+
+        const engine::Vector3 cameraPos = m_cameraTransform->GetWorldPosition();
+        const engine::Vector3 bossCorePos = GetTransform()->GetWorldPosition() + m_introLookTargetOffset;
+        engine::Vector3 toTarget = bossCorePos - cameraPos;
+        if (toTarget.LengthSquared() < 0.0001f)
+        {
+            return;
+        }
+
+        const float yaw = std::atan2(toTarget.x, toTarget.z);
+        const float horizontal = std::sqrt((toTarget.x * toTarget.x) + (toTarget.z * toTarget.z));
+        const float pitch = -std::atan2(toTarget.y, horizontal);
+        const engine::Quaternion worldLookRot = engine::Quaternion::CreateFromYawPitchRoll(yaw, pitch, 0.0f);
+        m_cameraTransform->SetLocalRotation(ToLocalRotation(m_cameraTransform, worldLookRot));
+    }
+
     float BossScript::GetBulletFireInterval() const
     {
         if (m_bulletFireUseFixedInterval)
@@ -306,6 +632,32 @@ namespace game
         }
         
         ImGui::Text("Current HP: %.1f", m_currentHp);
+        ImGui::Spacing();
+
+        ImGui::SeparatorText("=== Boss Intro Sequence ===");
+        ImGui::Checkbox("Enable Intro Sequence", &m_enableIntroSequence);
+        ImGui::Text("Battle Started: %s", m_isBattleStarted ? "true" : "false");
+        ImGui::Text("Intro Running: %s", m_isIntroRunning ? "true" : "false");
+        ImGui::DragFloat("Move To Boss Duration", &m_introMoveToBossDuration, 0.05f, 0.1f, 10.0f);
+        ImGui::DragFloat("Hold Duration", &m_introHoldDuration, 0.05f, 0.0f, 5.0f);
+        ImGui::DragFloat("Assemble Duration", &m_introAssembleDuration, 0.05f, 0.1f, 10.0f);
+        ImGui::DragFloat("Return Duration", &m_introReturnDuration, 0.05f, 0.1f, 10.0f);
+        ImGui::Separator();
+        ImGui::DragFloat("Camera Start Offset X", &m_introCameraPlayerOffsetX, 0.1f, -50.0f, 50.0f);
+        ImGui::DragFloat("Camera Start Offset Y", &m_introCameraPlayerOffsetY, 0.1f, 0.0f, 80.0f);
+        ImGui::DragFloat("Camera Start Offset Z", &m_introCameraPlayerOffsetZ, 0.1f, -80.0f, 80.0f);
+        ImGui::DragFloat("Camera Boss Distance", &m_introCameraBossDistance, 0.1f, 0.0f, 50.0f);
+        ImGui::DragFloat("Camera Boss Height", &m_introCameraBossHeight, 0.1f, 0.0f, 80.0f);
+        if (ImGui::Button("Start Intro Sequence"))
+        {
+            StartIntroSequence();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Skip Intro Sequence"))
+        {
+            SkipIntroSequence();
+        }
+
         ImGui::Spacing();
 
         // ═════════════════════════════════════════════
@@ -711,6 +1063,16 @@ namespace game
         // 보스 기본 설정 저장
         // ─────────────────────────────────────────────
         j["MaxHP"] = m_maxHp;
+        j["EnableIntroSequence"] = m_enableIntroSequence;
+        j["IntroMoveToBossDuration"] = m_introMoveToBossDuration;
+        j["IntroHoldDuration"] = m_introHoldDuration;
+        j["IntroAssembleDuration"] = m_introAssembleDuration;
+        j["IntroReturnDuration"] = m_introReturnDuration;
+        j["IntroCameraPlayerOffsetX"] = m_introCameraPlayerOffsetX;
+        j["IntroCameraPlayerOffsetY"] = m_introCameraPlayerOffsetY;
+        j["IntroCameraPlayerOffsetZ"] = m_introCameraPlayerOffsetZ;
+        j["IntroCameraBossDistance"] = m_introCameraBossDistance;
+        j["IntroCameraBossHeight"] = m_introCameraBossHeight;
 
         // ─────────────────────────────────────────────
         // BulletFire 설정 저장
@@ -813,6 +1175,26 @@ namespace game
                 m_currentHp = m_maxHp;
             }
         }
+        if (j.contains("EnableIntroSequence"))
+            m_enableIntroSequence = j["EnableIntroSequence"].get<bool>();
+        if (j.contains("IntroMoveToBossDuration"))
+            m_introMoveToBossDuration = j["IntroMoveToBossDuration"].get<float>();
+        if (j.contains("IntroHoldDuration"))
+            m_introHoldDuration = j["IntroHoldDuration"].get<float>();
+        if (j.contains("IntroAssembleDuration"))
+            m_introAssembleDuration = j["IntroAssembleDuration"].get<float>();
+        if (j.contains("IntroReturnDuration"))
+            m_introReturnDuration = j["IntroReturnDuration"].get<float>();
+        if (j.contains("IntroCameraPlayerOffsetX"))
+            m_introCameraPlayerOffsetX = j["IntroCameraPlayerOffsetX"].get<float>();
+        if (j.contains("IntroCameraPlayerOffsetY"))
+            m_introCameraPlayerOffsetY = j["IntroCameraPlayerOffsetY"].get<float>();
+        if (j.contains("IntroCameraPlayerOffsetZ"))
+            m_introCameraPlayerOffsetZ = j["IntroCameraPlayerOffsetZ"].get<float>();
+        if (j.contains("IntroCameraBossDistance"))
+            m_introCameraBossDistance = j["IntroCameraBossDistance"].get<float>();
+        if (j.contains("IntroCameraBossHeight"))
+            m_introCameraBossHeight = j["IntroCameraBossHeight"].get<float>();
 
         // ─────────────────────────────────────────────
         // BulletFire 설정 로드 (클램핑 적용)

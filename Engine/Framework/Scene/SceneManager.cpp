@@ -112,6 +112,7 @@ namespace engine
                 m_sceneState = SceneState::Active;
 
                 m_isSceneStarted = false;
+                m_isSceneStartFinished = false;
 
                 CallOnSceneLoaded();
             }
@@ -181,13 +182,29 @@ namespace engine
             m_onSceneStartCallbacks.clear();
                         
             // 추가적으로 하고싶은 작업
-            Time::Reset();
 
-            Time::Update();
 
             Input::Reset();
 
             m_isSceneStarted = true;
         }
+    }
+
+    void SceneManager::CallOnSceneStartFinished()
+    {
+        if (!m_isSceneStartFinished)
+        {
+            Time::Reset();
+
+            Time::Update();
+
+            m_isSceneStartFinished = true;
+        }
+    }
+
+    void SceneManager::SetSceneStartFlag(bool flag)
+    {
+        m_isSceneStarted = flag;
+        m_isSceneStartFinished = flag;
     }
 }
