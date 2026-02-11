@@ -1,6 +1,6 @@
 {
     "Name": "90_DEV_Stage",
-    "NumGameObjects": 97,
+    "NumGameObjects": 99,
     "GameObjects": [
         {
             "ID": 0,
@@ -339,6 +339,40 @@
         },
         {
             "ID": 7,
+            "Name": "SoundTrigger_Next",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 17.80500030517578
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SoundTrigger",
+                    "Active": true,
+                    "Radius": 8.0,
+                    "SoundKey": "Door_NextStage",
+                    "SoundOption": "SFX/Door"
+                }
+            ]
+        },
+        {
+            "ID": 8,
             "Name": "StageDoor_Exit",
             "Active": true,
             "Components": [
@@ -371,7 +405,41 @@
             ]
         },
         {
-            "ID": 8,
+            "ID": 9,
+            "Name": "SoundTrigger_Exit",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -18.364999771118164
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "SoundTrigger",
+                    "Active": true,
+                    "Radius": 5.0,
+                    "SoundKey": "Door_BackLobby",
+                    "SoundOption": "SFX/Door"
+                }
+            ]
+        },
+        {
+            "ID": 10,
             "Name": "DoorTorchLeft",
             "Active": true,
             "Components": [
@@ -433,8 +501,8 @@
             ]
         },
         {
-            "ID": 9,
-            "ParentID": 8,
+            "ID": 11,
+            "ParentID": 10,
             "Name": "TorchLight",
             "Active": true,
             "Components": [
@@ -499,7 +567,7 @@
             ]
         },
         {
-            "ID": 10,
+            "ID": 12,
             "Name": "DoorTorchRight",
             "Active": true,
             "Components": [
@@ -561,8 +629,8 @@
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 10,
+            "ID": 13,
+            "ParentID": 12,
             "Name": "TorchLight",
             "Active": true,
             "Components": [
@@ -627,7 +695,7 @@
             ]
         },
         {
-            "ID": 12,
+            "ID": 14,
             "Name": "UI_Play",
             "Active": true,
             "Components": [
@@ -654,8 +722,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 12,
+            "ID": 15,
+            "ParentID": 14,
             "Name": "Canvas_Message",
             "Active": true,
             "Components": [
@@ -711,8 +779,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 12,
+            "ID": 16,
+            "ParentID": 14,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -768,8 +836,8 @@
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 14,
+            "ID": 17,
+            "ParentID": 16,
             "Name": "Panel_Menu",
             "Active": false,
             "Components": [
@@ -888,8 +956,8 @@
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 15,
+            "ID": 18,
+            "ParentID": 17,
             "Name": "UI_OpenOption",
             "Active": true,
             "Components": [
@@ -919,230 +987,6 @@
                     "AnchoredPosition": {
                         "x": 0.0,
                         "y": 0.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/Button_02.png",
-                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
-                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
-                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 2,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/Button_02.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                },
-                {
-                    "Type": "UIHoverScale",
-                    "Active": true,
-                    "HoverScale": 1.100000023841858,
-                    "Speed": 12.0,
-                    "Bold": false,
-                    "AlwaysBold": false
-                }
-            ]
-        },
-        {
-            "ID": 17,
-            "ParentID": 16,
-            "Name": "Label",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 3,
-                    "RaycastTarget": false,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 18,
-            "ParentID": 15,
-            "Name": "UI_BackToPlay",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -130.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -1317,7 +1161,7 @@
                     "Layer": 1,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "Text": "계속하기",
+                    "Text": "설정",
                     "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 32,
                     "Color": {
@@ -1337,8 +1181,8 @@
         },
         {
             "ID": 20,
-            "ParentID": 15,
-            "Name": "UI_BackToMain",
+            "ParentID": 17,
+            "Name": "UI_BackToPlay",
             "Active": true,
             "Components": [
                 {
@@ -1366,7 +1210,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 130.0
+                        "y": -130.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -1541,7 +1385,7 @@
                     "Layer": 1,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "Text": "포기",
+                    "Text": "계속하기",
                     "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 32,
                     "Color": {
@@ -1561,7 +1405,231 @@
         },
         {
             "ID": 22,
-            "ParentID": 15,
+            "ParentID": 17,
+            "Name": "UI_BackToMain",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 130.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/Button_02.png",
+                    "SpriteHover": "Resource/Texture/UI/Button/BigButton_Hovered.png",
+                    "SpritePressed": "Resource/Texture/UI/Button/BigButton_Pressed.png",
+                    "SpriteDisabled": "Resource/Texture/UI/Button/BigButton_Normal.png",
+                    "TintOnly": true,
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/Button_02.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                },
+                {
+                    "Type": "UIHoverScale",
+                    "Active": true,
+                    "HoverScale": 1.100000023841858,
+                    "Speed": 12.0,
+                    "Bold": false,
+                    "AlwaysBold": false
+                }
+            ]
+        },
+        {
+            "ID": 23,
+            "ParentID": 22,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "Text": "포기",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 32,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 24,
+            "ParentID": 17,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -1633,8 +1701,8 @@
             ]
         },
         {
-            "ID": 23,
-            "ParentID": 14,
+            "ID": 25,
+            "ParentID": 16,
             "Name": "UI_RealGiveupPopUp",
             "Active": false,
             "Components": [
@@ -1747,8 +1815,8 @@
             ]
         },
         {
-            "ID": 24,
-            "ParentID": 23,
+            "ID": 26,
+            "ParentID": 25,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -1820,8 +1888,8 @@
             ]
         },
         {
-            "ID": 25,
-            "ParentID": 23,
+            "ID": 27,
+            "ParentID": 25,
             "Name": "Notice",
             "Active": true,
             "Components": [
@@ -1893,8 +1961,8 @@
             ]
         },
         {
-            "ID": 26,
-            "ParentID": 23,
+            "ID": 28,
+            "ParentID": 25,
             "Name": "Notice_2",
             "Active": true,
             "Components": [
@@ -1966,8 +2034,8 @@
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 23,
+            "ID": 29,
+            "ParentID": 25,
             "Name": "Notice_3",
             "Active": true,
             "Components": [
@@ -2039,8 +2107,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 23,
+            "ID": 30,
+            "ParentID": 25,
             "Name": "OK_Button",
             "Active": true,
             "Components": [
@@ -2182,8 +2250,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 28,
+            "ID": 31,
+            "ParentID": 30,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -2255,8 +2323,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 23,
+            "ID": 32,
+            "ParentID": 25,
             "Name": "Cancel_Button",
             "Active": true,
             "Components": [
@@ -2398,8 +2466,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 30,
+            "ID": 33,
+            "ParentID": 32,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -2471,8 +2539,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 14,
+            "ID": 34,
+            "ParentID": 16,
             "Name": "Panel_Fail",
             "Active": false,
             "Components": [
@@ -2585,8 +2653,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 32,
+            "ID": 35,
+            "ParentID": 34,
             "Name": "ToLobby_Button",
             "Active": true,
             "Components": [
@@ -2615,222 +2683,6 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": -200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/Button_01.png",
-                    "SpriteHover": "",
-                    "SpritePressed": "",
-                    "SpriteDisabled": "",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/Button_01.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 34,
-            "ParentID": 33,
-            "Name": "Label",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "로비로",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 50,
-                    "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 35,
-            "ParentID": 32,
-            "Name": "Restart_Button",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 200.0,
                         "y": 150.0
                     },
                     "Width": 200.0,
@@ -2998,7 +2850,7 @@
                     "Layer": 1,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "재도전",
+                    "Text": "로비로",
                     "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
                     "FontPx": 50,
                     "Color": {
@@ -3018,7 +2870,223 @@
         },
         {
             "ID": 37,
-            "ParentID": 32,
+            "ParentID": 34,
+            "Name": "Restart_Button",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 200.0,
+                        "y": 150.0
+                    },
+                    "Width": 200.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIButton",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "SpriteNormal": "Resource/Texture/UI/Button/Button_01.png",
+                    "SpriteHover": "",
+                    "SpritePressed": "",
+                    "SpriteDisabled": "",
+                    "TintOnly": true,
+                    "TintNormal": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "TintHover": {
+                        "x": 0.837837815284729,
+                        "y": 0.837837815284729,
+                        "z": 0.837837815284729,
+                        "w": 1.0
+                    },
+                    "TintPressed": {
+                        "x": 0.6679536700248718,
+                        "y": 0.6679536700248718,
+                        "z": 0.6679536700248718,
+                        "w": 1.0
+                    },
+                    "TintDisabled": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/Button/Button_01.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 0,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 38,
+            "ParentID": 37,
+            "Name": "Label",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 1,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "Text": "재도전",
+                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPx": 50,
+                    "Color": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
+                }
+            ]
+        },
+        {
+            "ID": 39,
+            "ParentID": 34,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -3131,8 +3199,8 @@
             ]
         },
         {
-            "ID": 38,
-            "ParentID": 37,
+            "ID": 40,
+            "ParentID": 39,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -3204,8 +3272,8 @@
             ]
         },
         {
-            "ID": 39,
-            "ParentID": 14,
+            "ID": 41,
+            "ParentID": 16,
             "Name": "UI_OptionPopUp",
             "Active": false,
             "Components": [
@@ -3328,8 +3396,8 @@
             ]
         },
         {
-            "ID": 40,
-            "ParentID": 39,
+            "ID": 42,
+            "ParentID": 41,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -3479,8 +3547,8 @@
             ]
         },
         {
-            "ID": 41,
-            "ParentID": 40,
+            "ID": 43,
+            "ParentID": 42,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -3552,8 +3620,8 @@
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 39,
+            "ID": 44,
+            "ParentID": 41,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -3625,8 +3693,8 @@
             ]
         },
         {
-            "ID": 43,
-            "ParentID": 39,
+            "ID": 45,
+            "ParentID": 41,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -3676,8 +3744,8 @@
             ]
         },
         {
-            "ID": 44,
-            "ParentID": 43,
+            "ID": 46,
+            "ParentID": 45,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -3759,8 +3827,8 @@
             ]
         },
         {
-            "ID": 45,
-            "ParentID": 44,
+            "ID": 47,
+            "ParentID": 46,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -3866,8 +3934,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 44,
+            "ID": 48,
+            "ParentID": 46,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -3973,8 +4041,8 @@
             ]
         },
         {
-            "ID": 47,
-            "ParentID": 44,
+            "ID": 49,
+            "ParentID": 46,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -4080,8 +4148,8 @@
             ]
         },
         {
-            "ID": 48,
-            "ParentID": 47,
+            "ID": 50,
+            "ParentID": 49,
             "Name": "Text_VolumeVal",
             "Active": true,
             "Components": [
@@ -4153,8 +4221,8 @@
             ]
         },
         {
-            "ID": 49,
-            "ParentID": 43,
+            "ID": 51,
+            "ParentID": 45,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -4236,8 +4304,8 @@
             ]
         },
         {
-            "ID": 50,
-            "ParentID": 49,
+            "ID": 52,
+            "ParentID": 51,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -4343,8 +4411,8 @@
             ]
         },
         {
-            "ID": 51,
-            "ParentID": 49,
+            "ID": 53,
+            "ParentID": 51,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -4450,8 +4518,8 @@
             ]
         },
         {
-            "ID": 52,
-            "ParentID": 49,
+            "ID": 54,
+            "ParentID": 51,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -4557,8 +4625,8 @@
             ]
         },
         {
-            "ID": 53,
-            "ParentID": 52,
+            "ID": 55,
+            "ParentID": 54,
             "Name": "Text_SFXVal",
             "Active": true,
             "Components": [
@@ -4630,8 +4698,8 @@
             ]
         },
         {
-            "ID": 54,
-            "ParentID": 43,
+            "ID": 56,
+            "ParentID": 45,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -4688,7 +4756,7 @@
                     "Direction": 0,
                     "FillMode": 0,
                     "TrackSprite": "Resource/Texture/UI/Slider/Slider_01_1.png",
-                    "FillSprite": "Resource/Texture/UI/Slider/Fill.png",
+                    "FillSprite": "None",
                     "HandleSprite": "Resource/Texture/UI/Slider/Rough_Scroll_bar.png",
                     "TrackColor": {
                         "x": 1.0,
@@ -4713,8 +4781,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 54,
+            "ID": 57,
+            "ParentID": 56,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -4820,8 +4888,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 54,
+            "ID": 58,
+            "ParentID": 56,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -4927,8 +4995,8 @@
             ]
         },
         {
-            "ID": 57,
-            "ParentID": 54,
+            "ID": 59,
+            "ParentID": 56,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -5034,8 +5102,8 @@
             ]
         },
         {
-            "ID": 58,
-            "ParentID": 57,
+            "ID": 60,
+            "ParentID": 59,
             "Name": "Text_SensiVal",
             "Active": true,
             "Components": [
@@ -5107,8 +5175,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 43,
+            "ID": 61,
+            "ParentID": 45,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -5180,8 +5248,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 43,
+            "ID": 62,
+            "ParentID": 45,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -5253,8 +5321,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 43,
+            "ID": 63,
+            "ParentID": 45,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -5326,8 +5394,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 12,
+            "ID": 64,
+            "ParentID": 14,
             "Name": "Canvas_HUD",
             "Active": true,
             "Components": [
@@ -5383,8 +5451,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 62,
+            "ID": 65,
+            "ParentID": 64,
             "Name": "Currency",
             "Active": true,
             "Components": [
@@ -5440,8 +5508,8 @@
             ]
         },
         {
-            "ID": 64,
-            "ParentID": 63,
+            "ID": 66,
+            "ParentID": 65,
             "Name": "Ruby",
             "Active": true,
             "Components": [
@@ -5513,8 +5581,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 64,
+            "ID": 67,
+            "ParentID": 66,
             "Name": "Ruby Count",
             "Active": true,
             "Components": [
@@ -5586,8 +5654,8 @@
             ]
         },
         {
-            "ID": 66,
-            "ParentID": 63,
+            "ID": 68,
+            "ParentID": 65,
             "Name": "Sapphire",
             "Active": true,
             "Components": [
@@ -5659,8 +5727,8 @@
             ]
         },
         {
-            "ID": 67,
-            "ParentID": 66,
+            "ID": 69,
+            "ParentID": 68,
             "Name": "Sapphire Count",
             "Active": true,
             "Components": [
@@ -5732,8 +5800,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 63,
+            "ID": 70,
+            "ParentID": 65,
             "Name": "Emerald",
             "Active": true,
             "Components": [
@@ -5805,8 +5873,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 68,
+            "ID": 71,
+            "ParentID": 70,
             "Name": "Emerald Count",
             "Active": true,
             "Components": [
@@ -5878,8 +5946,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 62,
+            "ID": 72,
+            "ParentID": 64,
             "Name": "HPBar",
             "Active": true,
             "Components": [
@@ -5929,8 +5997,8 @@
             ]
         },
         {
-            "ID": 71,
-            "ParentID": 70,
+            "ID": 73,
+            "ParentID": 72,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -6036,8 +6104,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 71,
+            "ID": 74,
+            "ParentID": 73,
             "Name": "Heart(0)",
             "Active": true,
             "Components": [
@@ -6143,8 +6211,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 70,
+            "ID": 75,
+            "ParentID": 72,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -6250,8 +6318,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 73,
+            "ID": 76,
+            "ParentID": 75,
             "Name": "Heart(1)",
             "Active": true,
             "Components": [
@@ -6357,8 +6425,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 70,
+            "ID": 77,
+            "ParentID": 72,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -6464,8 +6532,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 75,
+            "ID": 78,
+            "ParentID": 77,
             "Name": "Heart(2)",
             "Active": true,
             "Components": [
@@ -6571,8 +6639,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 70,
+            "ID": 79,
+            "ParentID": 72,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -6678,8 +6746,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 77,
+            "ID": 80,
+            "ParentID": 79,
             "Name": "Heart(3)",
             "Active": true,
             "Components": [
@@ -6785,8 +6853,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 70,
+            "ID": 81,
+            "ParentID": 72,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -6892,8 +6960,8 @@
             ]
         },
         {
-            "ID": 80,
-            "ParentID": 79,
+            "ID": 82,
+            "ParentID": 81,
             "Name": "Heart(4)",
             "Active": true,
             "Components": [
@@ -6999,8 +7067,8 @@
             ]
         },
         {
-            "ID": 81,
-            "ParentID": 62,
+            "ID": 83,
+            "ParentID": 64,
             "Name": "Fragile Gauge Progress",
             "Active": true,
             "Components": [
@@ -7078,8 +7146,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 81,
+            "ID": 84,
+            "ParentID": 83,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -7185,8 +7253,8 @@
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 81,
+            "ID": 85,
+            "ParentID": 83,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -7292,8 +7360,8 @@
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 62,
+            "ID": 86,
+            "ParentID": 64,
             "Name": "HitImage",
             "Active": true,
             "Components": [
@@ -7399,8 +7467,8 @@
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 62,
+            "ID": 87,
+            "ParentID": 64,
             "Name": "FragileImage",
             "Active": true,
             "Components": [
@@ -7506,8 +7574,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 12,
+            "ID": 88,
+            "ParentID": 14,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -7563,8 +7631,8 @@
             ]
         },
         {
-            "ID": 87,
-            "ParentID": 86,
+            "ID": 89,
+            "ParentID": 88,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -7677,8 +7745,8 @@
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 12,
+            "ID": 90,
+            "ParentID": 14,
             "Name": "Canvas_KillPopUp",
             "Active": true,
             "Components": [
@@ -7734,8 +7802,8 @@
             ]
         },
         {
-            "ID": 89,
-            "ParentID": 12,
+            "ID": 91,
+            "ParentID": 14,
             "Name": "Script_Controller",
             "Active": true,
             "Components": [
@@ -7770,8 +7838,8 @@
             ]
         },
         {
-            "ID": 90,
-            "ParentID": 12,
+            "ID": 92,
+            "ParentID": 14,
             "Name": "AimPointerCanvas",
             "Active": true,
             "Components": [
@@ -7827,8 +7895,8 @@
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 90,
+            "ID": 93,
+            "ParentID": 92,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -7934,7 +8002,7 @@
             ]
         },
         {
-            "ID": 92,
+            "ID": 94,
             "Name": "TempGridMap",
             "Active": true,
             "Components": [
@@ -18727,7 +18795,7 @@
             ]
         },
         {
-            "ID": 93,
+            "ID": 95,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -18787,7 +18855,11 @@
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
                     "FragileGaugeRisePerSecond": 1.0,
-                    "IsInvincible": false
+                    "IsInvincible": false,
+                    "EED_Enable": false,
+                    "EED_DamageScale": 5.0,
+                    "EED_Damage": 15.0,
+                    "EED_Duration": 1.0
                 },
                 {
                     "Type": "LogicFSM",
@@ -18874,7 +18946,7 @@
             ]
         },
         {
-            "ID": 94,
+            "ID": 96,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -19094,7 +19166,7 @@
             ]
         },
         {
-            "ID": 95,
+            "ID": 97,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -19162,7 +19234,7 @@
             ]
         },
         {
-            "ID": 96,
+            "ID": 98,
             "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [

@@ -54,6 +54,17 @@
 	},
 	{ 
 		"Type": "SoundQue",
+		"Name": "Monster_Shot_Random",
+		"Paths": [
+			"Resource/Sound/SFX/Monster/Monster_shot_1.mp3",
+			"Resource/Sound/SFX/Monster/Monster_shot_2.mp3",
+			"Resource/Sound/SFX/Monster/Monster_shot_3.mp3",
+			"Resource/Sound/SFX/Monster/Monster_shot_4.mp3"
+		],
+		"Option": "SFX/Monster"
+	},
+	{ 
+		"Type": "SoundQue",
 		"Name": "Monster_Damaged_Random",
 		"Paths": [
 			"Resource/Sound/SFX/Monster/Monster_Damaged_1.mp3",
