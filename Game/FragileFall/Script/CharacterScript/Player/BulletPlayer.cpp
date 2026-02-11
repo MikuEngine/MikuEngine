@@ -1,9 +1,10 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BulletPlayer.h"
 
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Asset/Prefab.h>
+#include <Framework/System/SoundSystem.h>
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
 #include "Script/Boss/BossPattern/Components/BossBigProjectile.h"
@@ -160,6 +161,16 @@ namespace game
             {
                 rb->SetLinearVelocity(engine::Vector3::Zero);
             }
+
+            // sound
+            if (auto* monsterScript = info.gameObject->GetComponent<MonsterScript>())
+            {
+                if (monsterScript->IsFragile())
+                {
+                    engine::SoundSystem::Get().Play("Player_Shot_Fragile", "SFX/Player");
+                }
+            }
+
             return;
         }
 
