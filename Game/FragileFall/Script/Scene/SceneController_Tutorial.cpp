@@ -147,16 +147,20 @@ namespace game
             if (auto* slider = go->GetComponent<engine::UISlider>())
                 slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
 
-        // HUD: Currency counts (Canvas_HUD > Currency > Ruby/Sapphire/Emerald > * Count)
+        /*/ HUD: Currency counts (Canvas_HUD > Currency > Ruby/Sapphire/Emerald > * Count)
         if (auto* go = engine::GameObject::Find("Ruby Count"))
             m_currencyRubyText = go->GetComponent<engine::UIText>();
         if (auto* go = engine::GameObject::Find("Sapphire Count"))
             m_currencySapphireText = go->GetComponent<engine::UIText>();
         if (auto* go = engine::GameObject::Find("Emerald Count"))
             m_currencyEmeraldText = go->GetComponent<engine::UIText>();
+        //*/
         // Fragile Gauge (Canvas_HUD > Fragile Gauge > Fragile Gauge Progress)
         if (auto* go = engine::GameObject::Find("Fragile Gauge Progress"))
             m_fragileGaugeProgress = go->GetComponent<engine::UIProgressBar>();
+
+        // bgm sound
+        engine::SoundSystem::Get().PlayBGM("Combat_1");
     }
 
     void SceneController_Tutorial::Update()

@@ -206,7 +206,7 @@ namespace game
                     m_keepMonsterOnNext = true;
                     Next();
                     m_isTimerActive = true;
-                    m_stepTimer = 3.0f;
+                    m_stepTimer = 5.0f;
                 }
             }
 

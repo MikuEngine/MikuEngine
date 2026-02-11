@@ -71,6 +71,9 @@ namespace engine
         std::map<std::string, std::vector<Sound*>> m_SoundQues;
 		std::set<AudioSource*> m_registeredAudioSources;            // 씬에 활성화 된 AudioSource 컴포넌트들
 
+        FMOD::Channel* m_bgmChannel = nullptr;
+        std::string m_currentBgmKey = "";
+
         GameObject* m_listenerTarget = nullptr;
 
         // FMOD 리스너(듣는 사람) 정보
@@ -114,6 +117,7 @@ namespace engine
 
         void Play(const std::string& key, const std::string& option, bool randomPitch = false, float volume = 1.0f, float pitch = 1.0f, LifeScope scope = LifeScope::Scene);
         void PlayUI(const std::string name);
+        void PlayBGM(const std::string& key, float fadeDuration = 1.0f);
 
         // FMOD Listener 설정 (CameraSystem에서 Main Camera 정보를 받아와서 호출해줘야 함)
         void SetListenerAttributes(const Vector3& pos, const Vector3& forward, const Vector3& up);

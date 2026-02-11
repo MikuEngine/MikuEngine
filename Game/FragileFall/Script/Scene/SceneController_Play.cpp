@@ -146,6 +146,9 @@ namespace game
         if (auto* go = engine::GameObject::Find("UI_SensitivitySlider"))
             if (auto* slider = go->GetComponent<engine::UISlider>())
                 slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
+
+        // bgm sound
+        engine::SoundSystem::Get().PlayBGM("Combat_1");
     }
 
     void SceneController_Play::Update()

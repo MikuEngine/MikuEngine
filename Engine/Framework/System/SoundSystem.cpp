@@ -235,12 +235,6 @@ namespace engine
 
     void SoundSystem::StopSceneSounds()
     {
-        auto bgmIt = m_channelGroups.find("BGM");
-        if (bgmIt != m_channelGroups.end() && bgmIt->second)
-        {
-            bgmIt->second->stop();
-        }
-
         auto sfxIt = m_channelGroups.find("SFX");
         if (sfxIt != m_channelGroups.end() && sfxIt->second)
         {
@@ -721,6 +715,41 @@ namespace engine
             channel->setPitch(finalPitch);
             channel->setPaused(false);
         }
+    }
+
+    void SoundSystem::PlayBGM(const std::string& key, float fadeDuration)
+    {
+        if (m_currentBgmKey == key)
+        {
+            bool isPlaying = false;
+            if (m_bgmChannel) m_bgmChannel->isPlaying(&isPlaying);
+            if (isPlaying) return;
+        }
+
+        if (m_bgmChannel)
+        {
+            m_bgmChannel->stop();
+        }
+
+        auto soundData = AssetManager::Get().GetOrCreateSoundData(key, key, "BGM", LifeScope::Global);
+        if (!soundData) return;
+
+        Sound* sound = soundData->GetSound();
+        if (!sound) return;
+
+
+        FMOD::ChannelGroup* bgmGroup = m_channelGroups["BGM"];
+        m_pSystem->playSound(sound->m_pSound, bgmGroup, true, &m_bgmChannel);
+
+        if (m_bgmChannel)
+        {
+            m_bgmChannel->setMode(FMOD_LOOP_NORMAL);
+            m_bgmChannel->setVolume(m_bgm);
+            m_bgmChannel->setPaused(false);
+        }
+
+        m_currentBgmKey = key;
+
     }
 
     void SoundSystem::PlayUI(const std::string name) { Play(name, "SFX", false, 1.0f, 1.0f, LifeScope::Global); }

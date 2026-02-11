@@ -182,6 +182,9 @@ namespace game
         if (!uc) return;
 
         game::UpgradeProgressManager::LoadProgress(*uc);
+
+        // bgm sound
+        engine::SoundSystem::Get().PlayBGM("Lobby_BGM");
     }
 
     void SceneController_Lobby::Update()

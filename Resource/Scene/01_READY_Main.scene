@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Main",
-    "NumGameObjects": 80,
+    "NumGameObjects": 79,
     "GameObjects": [
         {
             "ID": 0,
@@ -5642,47 +5642,6 @@
         },
         {
             "ID": 61,
-            "Name": "SoundObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "AudioSource",
-                    "Active": true,
-                    "ClipName": "BGM/Tilte_BGM.wav",
-                    "IsLoop": true,
-                    "Is3D": false,
-                    "PlayOnAwake": true,
-                    "Volume": 1.0,
-                    "MinDist": 1.0,
-                    "MaxDist": 500.0,
-                    "UseRandom": false,
-                    "RandomClips": [],
-                    "Bus": "BGM"
-                }
-            ]
-        },
-        {
-            "ID": 62,
             "Name": "AimPointerCanvas",
             "Active": true,
             "Components": [
@@ -5757,8 +5716,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 62,
+            "ID": 62,
+            "ParentID": 61,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -5864,8 +5823,8 @@
             ]
         },
         {
-            "ID": 64,
-            "ParentID": 63,
+            "ID": 63,
+            "ParentID": 62,
             "Name": "AimIdle_N",
             "Active": true,
             "Components": [
@@ -5971,8 +5930,8 @@
             ]
         },
         {
-            "ID": 65,
-            "ParentID": 63,
+            "ID": 64,
+            "ParentID": 62,
             "Name": "AimIdle_W",
             "Active": true,
             "Components": [
@@ -6078,8 +6037,8 @@
             ]
         },
         {
-            "ID": 66,
-            "ParentID": 63,
+            "ID": 65,
+            "ParentID": 62,
             "Name": "AimIdle_S",
             "Active": true,
             "Components": [
@@ -6185,8 +6144,8 @@
             ]
         },
         {
-            "ID": 67,
-            "ParentID": 63,
+            "ID": 66,
+            "ParentID": 62,
             "Name": "AimIdle_E",
             "Active": true,
             "Components": [
@@ -6292,8 +6251,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 62,
+            "ID": 67,
+            "ParentID": 61,
             "Name": "AimCursor_OnEnemy",
             "Active": false,
             "Components": [
@@ -6399,8 +6358,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 68,
+            "ID": 68,
+            "ParentID": 67,
             "Name": "AimIdle_N",
             "Active": true,
             "Components": [
@@ -6506,8 +6465,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 68,
+            "ID": 69,
+            "ParentID": 67,
             "Name": "AimIdle_W",
             "Active": true,
             "Components": [
@@ -6613,8 +6572,8 @@
             ]
         },
         {
-            "ID": 71,
-            "ParentID": 68,
+            "ID": 70,
+            "ParentID": 67,
             "Name": "AimIdle_S",
             "Active": true,
             "Components": [
@@ -6720,8 +6679,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 68,
+            "ID": 71,
+            "ParentID": 67,
             "Name": "AimIdle_E",
             "Active": true,
             "Components": [
@@ -6827,8 +6786,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 62,
+            "ID": 72,
+            "ParentID": 61,
             "Name": "AimCursor_Execution",
             "Active": false,
             "Components": [
@@ -6934,8 +6893,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 73,
+            "ID": 73,
+            "ParentID": 72,
             "Name": "AimIdle_NW",
             "Active": true,
             "Components": [
@@ -7041,8 +7000,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 73,
+            "ID": 74,
+            "ParentID": 72,
             "Name": "AimIdle_NE",
             "Active": true,
             "Components": [
@@ -7148,8 +7107,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 73,
+            "ID": 75,
+            "ParentID": 72,
             "Name": "AimIdle_SE",
             "Active": true,
             "Components": [
@@ -7255,8 +7214,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 73,
+            "ID": 76,
+            "ParentID": 72,
             "Name": "AimIdle_SW",
             "Active": true,
             "Components": [
@@ -7362,8 +7321,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 62,
+            "ID": 77,
+            "ParentID": 61,
             "Name": "AimCursor_Click",
             "Active": false,
             "Components": [
@@ -7469,8 +7428,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 62,
+            "ID": 78,
+            "ParentID": 61,
             "Name": "AimCursor_Default",
             "Active": false,
             "Components": [

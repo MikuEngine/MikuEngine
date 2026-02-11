@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Lobby",
-    "NumGameObjects": 190,
+    "NumGameObjects": 189,
     "GameObjects": [
         {
             "ID": 0,
@@ -19006,47 +19006,6 @@
                         "z": 0.0,
                         "w": 0.0
                     }
-                }
-            ]
-        },
-        {
-            "ID": 189,
-            "Name": "SoundObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "AudioSource",
-                    "Active": true,
-                    "ClipName": "BGM/Lobby_BGM.wav",
-                    "IsLoop": true,
-                    "Is3D": false,
-                    "PlayOnAwake": true,
-                    "Volume": 1.0,
-                    "MinDist": 1.0,
-                    "MaxDist": 500.0,
-                    "UseRandom": false,
-                    "RandomClips": [],
-                    "Bus": "BGM"
                 }
             ]
         }
