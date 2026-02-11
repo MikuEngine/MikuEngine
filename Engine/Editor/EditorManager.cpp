@@ -127,7 +127,7 @@ namespace engine
         }
 
         // 단축키 'h' : 에디터 숨김 
-        if (!ImGui::GetIO().WantCaptureKeyboard && Input::IsKeyReleased(Keys::H))
+        if (Input::IsKeyReleased(Keys::F1))
         {
             m_showEditorUI = !m_showEditorUI;
 
@@ -214,9 +214,9 @@ namespace engine
     {
         auto& graphics = GraphicsDevice::Get();
 
-        if (m_showEditorUI)
+        graphics.BeginDrawGUIPass();
         {
-            graphics.BeginDrawGUIPass();
+            if (m_showEditorUI)
             {
                 DrawPlayController();
                 DrawEditorController();
@@ -226,8 +226,8 @@ namespace engine
                 DrawGizmoToolbar();
                 DrawDebugInfo();
             }
-            graphics.EndDrawGUIPass();
         }
+        graphics.EndDrawGUIPass();
     }
 
     void EditorManager::Shutdown()

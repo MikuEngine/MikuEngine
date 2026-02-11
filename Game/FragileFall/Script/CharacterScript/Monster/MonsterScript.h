@@ -371,7 +371,7 @@ namespace game
         // 업데이트 중지 시스템 (MonsterUpdateSwitch 연동)
         // - Update/FixedUpdate에서 자동 호출
         // ─────────────────────────────────────────────
-        void CheckAndApplyUpdateSwitch();
+        //void CheckAndApplyUpdateSwitch();
         
         // ─────────────────────────────────────────────
         // 접근자 (Getters)
