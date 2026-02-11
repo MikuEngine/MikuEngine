@@ -385,6 +385,10 @@ namespace game
                     m_skeletalAnimator->Play(m_animName_EngageAttack, false, 0, 1.0f);
                 }
 
+                // 사운드
+                m_remainShotSoundCount = 1;
+                m_shotSoundTimer = 0.0f;
+
                 // 연발 모드일 때만 타이머 리셋 (단발 모드는 타이머 무시)
                 if (!m_isDoSingleShot && m_fireRate > 0.0f)
                 {

@@ -372,6 +372,8 @@ namespace game
         case MonsterTier::Gray:
         {
             m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+            m_remainShotSoundCount = 1;
+            m_shotSoundTimer = 0.0f;
             break;
         }
         // ─────────────────────────────────────────────
@@ -409,6 +411,8 @@ namespace game
             // 실제 발사
             m_bulletFactory->ParabolicFireMonster(bulletStartPos, direction, m_bulletParams);
             
+            m_remainShotSoundCount = 1;
+            m_shotSoundTimer = 0.0f;
             break;
         }
         // ─────────────────────────────────────────────
@@ -420,6 +424,9 @@ namespace game
         case MonsterTier::Blue:
         {
             m_bulletFactory->ThreewayFireMonster(firePosition, direction, m_spreadAngle, m_bulletParams);
+
+            m_remainShotSoundCount = 3;
+            m_shotSoundTimer = 0.0f;
             break;
         }
         // ─────────────────────────────────────────────
@@ -436,6 +443,9 @@ namespace game
             curvedFirePos.y = 2.2f;  // Y 오프셋
             
             m_bulletFactory->CurvedFireMonster(curvedFirePos, m_curvedAngularSpeed, m_curvedRadiusGrowth, m_bulletParams);
+
+            m_remainShotSoundCount = 3;
+            m_shotSoundTimer = 0.0f;
             break;
 		}
         // ─────────────────────────────────────────────
@@ -444,12 +454,11 @@ namespace game
         // 다른 몬스터 모두 처치하기 전까지 무적으로 다른 몬스터 처치시 자동으로 사망하며 그전 까지는 둔탁 회색패턴으로 계속해서 공격
         // ─────────────────────────────────────────────
         case MonsterTier::Purple:
-        {
-            m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-            break;
-		}
         default:
             m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+
+            m_remainShotSoundCount = 1;
+            m_shotSoundTimer = 0.0f;
             break;
         }
 

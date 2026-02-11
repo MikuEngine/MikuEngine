@@ -100,7 +100,6 @@ namespace game
     public:
         void Awake() override;
         void Start() override;
-        void Update() override;
         void UpdateGameLogic() override;
 
     protected:

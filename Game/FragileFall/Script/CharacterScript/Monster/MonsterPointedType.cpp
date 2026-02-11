@@ -54,11 +54,6 @@ namespace game
         m_gridMap = pathfindingSystem.GetGridMap();
     }
 
-    void MonsterPointedType::Update()
-    {
-        MonsterScript::Update();
-    }
-
     // ═══════════════════════════════════════════════════════════════
     // FSM 초기화
     // ═══════════════════════════════════════════════════════════════
@@ -1023,6 +1018,9 @@ namespace game
                 case MonsterTier::Gray:
                 {
                     m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+
+                    m_remainShotSoundCount = 1;
+                    m_shotSoundTimer = 0.0f;
                     break;
                 }
                 // ─────────────────────────────────────────────
@@ -1059,6 +1057,9 @@ namespace game
                     
                     // 실제 발사
                     m_bulletFactory->ParabolicFireMonster(bulletStartPos, direction, m_bulletParams);
+
+                    m_remainShotSoundCount = 1;
+                    m_shotSoundTimer = 0.0f;
                     break;
                 }
                 // ─────────────────────────────────────────────
@@ -1070,6 +1071,9 @@ namespace game
                 case MonsterTier::Blue:
                 {
                     m_bulletFactory->ThreewayFireMonster(firePosition, direction, m_spreadAngle, m_bulletParams);
+
+                    m_remainShotSoundCount = 3;
+                    m_shotSoundTimer = 0.0f;
                     break;
 				}
                 // ─────────────────────────────────────────────
@@ -1093,6 +1097,9 @@ namespace game
                         1.0f,                // speedModMax (0.6 + 0.4)
                         m_bulletParams
                     );
+
+                    m_remainShotSoundCount = projectileCount - 4;
+                    m_shotSoundTimer = 0.0f;
                     break;
 				}
                 // ─────────────────────────────────────────────
@@ -1101,12 +1108,11 @@ namespace game
                 // 플레이어에게 멀어지려고 하며 가까이 오면 도망, 긴 사거리에서 플레이어를 조준, 공격
                 // ─────────────────────────────────────────────
                 case MonsterTier::Purple:
-                {
-                    m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
-                    break;
-                }
                 default:
                     m_bulletFactory->LinearFireMonster(firePosition, direction, m_bulletParams);
+
+                    m_remainShotSoundCount = 1;
+                    m_shotSoundTimer = 0.0f;
                     break;
                 }
 

@@ -1076,6 +1076,10 @@ namespace game
                 
                 // 3방향 발사 (spreadAngle은 부모의 m_spreadAngle 사용)
                 m_bulletFactory->ThreewayFireMonster(firePosition, direction, m_spreadAngle, m_bulletParams);
+
+                // 사운드
+                m_remainShotSoundCount = 3;
+                m_shotSoundTimer = 0.0f;
             }
         }
         else if (state == "IdleMove")
