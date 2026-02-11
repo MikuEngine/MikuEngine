@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "CollisionSystem.h"
 
 #include "Framework/Object/Component/Collider.h"
@@ -246,13 +246,24 @@ namespace engine
     {
         if (!go) return;
 
+        std::vector<ScriptBase*> scripts;
         const auto& components = go->GetComponents();
+        scripts.reserve(components.size());
         for (const auto& comp : components)
         {
             if (ScriptBase* script = comp->As<ScriptBase>())
             {
-                if (!script->IsActive()) continue;
+                if (script->IsActive())
+                {
+                    scripts.push_back(script);
+                }
+            }
+        }
 
+        for (ScriptBase* script : scripts)
+        {
+            if (script->IsActive())
+            {
                 switch (eventType)
                 {
                 case CollisionEventType::Enter:
@@ -273,14 +284,25 @@ namespace engine
         GameObject* go, const CollisionInfo& info, TriggerEventType eventType)
     {
         if (!go) return;
-
+        
+        std::vector<ScriptBase*> scripts;
         const auto& components = go->GetComponents();
+        scripts.reserve(components.size());
         for (const auto& comp : components)
         {
             if (ScriptBase* script = comp->As<ScriptBase>())
             {
-                if (!script->IsActive()) continue;
+                if (script->IsActive())
+                {
+                    scripts.push_back(script);
+                }
+            }
+        }
 
+        for (ScriptBase* script : scripts)
+        {
+            if (script->IsActive())
+            {
                 switch (eventType)
                 {
                 case TriggerEventType::Enter:
