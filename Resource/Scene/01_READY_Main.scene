@@ -5668,7 +5668,7 @@
                 {
                     "Type": "AudioSource",
                     "Active": true,
-                    "ClipName": "Suki_Yuki_Maji_Magic.mp3",
+                    "ClipName": "BGM/Tilte_BGM.wav",
                     "IsLoop": true,
                     "Is3D": false,
                     "PlayOnAwake": true,
