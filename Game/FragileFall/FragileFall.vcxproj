@@ -221,6 +221,7 @@
     <ClCompile Include="Script\ExecutionIndicatorManager.cpp" />
     <ClCompile Include="Script\TimeScalerTest.cpp" />
     <ClCompile Include="Script\TrailDashTest.cpp" />
+    <ClCompile Include="Script\UI\UICurrencyAnimator.cpp" />
     <ClCompile Include="Script\UI\UISliderValueTextBinder.cpp" />
     <ClCompile Include="Script\UI\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UI\UIHoverScale.cpp" />
@@ -313,6 +314,7 @@
     <ClInclude Include="Script\ExecutionIndicatorManager.h" />
     <ClInclude Include="Script\TimeScalerTest.h" />
     <ClInclude Include="Script\TrailDashTest.h" />
+    <ClInclude Include="Script\UI\UICurrencyAnimator.h" />
     <ClInclude Include="Script\UI\UISliderValueTextBinder.h" />
     <ClInclude Include="Script\UI\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UI\UIHoverScale.h" />
