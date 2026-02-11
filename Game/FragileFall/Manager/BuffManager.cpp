@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BuffManager.h"
 
 namespace game
@@ -9,10 +9,14 @@ namespace game
 		// 버프 설정값 (익명 네임스페이스)
 		// ═══════════════════════════════════════════════════════════════
 		
-		// 대시 버프 설정
+		// 대시 이속 버프 설정
 		float g_dashBuffDuration = 5.0f;            // 지속 시간 (초)
 		float g_dashBuffMoveSpeedBonus = 0.1f;      // 이동속도 보너스 (10% = 0.1)
 		
+		// 대시 공격력 버프 설정
+		float g_dashAtkDmgBuffDuration = 5.0f;       // 지속 시간 (초)
+		float g_dashAtkDmgBuffBonus = 0.1f;          // 공격력 보너스 (10% = 0.1)
+
 		// 처형 버프 설정
 		float g_executionBuffDuration = 10.0f;      // 지속 시간 (초)
 		float g_executionBuffAtkSpeedBonus = 0.1f;  // 공격속도 보너스 (스택당 10% = 0.1)
@@ -24,6 +28,7 @@ namespace game
 		bool g_isDashBuffActive = false;
 		float g_dashBuffTimer = 0.0f;
 		float g_buffMoveSpeedMultiplier = 1.0f;     // 이동속도 배율
+		float g_buffAtkDmgMultiplier = 1.0f;         // 공격력 배율
 
 		// ═══════════════════════════════════════════════════════════════
 		// 처형 버프 런타임 상태
@@ -64,6 +69,7 @@ namespace game
 				g_isDashBuffActive = false;
 				g_dashBuffTimer = 0.0f;
 				g_buffMoveSpeedMultiplier = 1.0f;
+				g_buffAtkDmgMultiplier = 1.0f;
 
 				// 콜백 호출
 				if (g_onDashBuffRemoved)
@@ -98,6 +104,7 @@ namespace game
 		g_isDashBuffActive = false;
 		g_dashBuffTimer = 0.0f;
 		g_buffMoveSpeedMultiplier = 1.0f;
+		g_buffAtkDmgMultiplier = 1.0f;
 
 		g_isExecutionBuffActive = false;
 		g_executionBuffTimer = 0.0f;
@@ -120,6 +127,9 @@ namespace game
 		if (g_isDashBuffActive)
 		{
 			g_dashBuffTimer = g_dashBuffDuration;
+
+			g_buffMoveSpeedMultiplier = 1.0f + g_dashBuffMoveSpeedBonus;
+			g_buffAtkDmgMultiplier = 1.0f + g_dashAtkDmgBuffBonus;
 			return;
 		}
 
@@ -127,6 +137,7 @@ namespace game
 		g_isDashBuffActive = true;
 		g_dashBuffTimer = g_dashBuffDuration;
 		g_buffMoveSpeedMultiplier = 1.0f + g_dashBuffMoveSpeedBonus;  // 1.1 = 10% 증가
+		g_buffAtkDmgMultiplier = 1.0f + g_dashAtkDmgBuffBonus;
 
 		// 콜백 호출
 		if (g_onDashBuffApplied)
@@ -178,6 +189,11 @@ namespace game
 		return g_buffAtkSpeedMultiplier;
 	}
 
+	float BuffManager::GetAtkDmgMultiplier()
+	{
+		return g_buffAtkDmgMultiplier;
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 버프 상태 조회
 	// ═══════════════════════════════════════════════════════════════
@@ -227,6 +243,26 @@ namespace game
 	float BuffManager::GetDashBuffMoveSpeedBonus()
 	{
 		return g_dashBuffMoveSpeedBonus;
+	}
+
+	void BuffManager::SetDashAtkDmgBuffDuration(float value)
+	{
+		g_dashAtkDmgBuffDuration = value;
+	}
+
+	float BuffManager::GetDashAtkDmgBuffDuration()
+	{
+		return g_dashAtkDmgBuffDuration;
+	}
+
+	void BuffManager::SetDashAtkDmgBuffBonus(float value)
+	{
+		g_dashAtkDmgBuffBonus = value;
+	}
+
+	float BuffManager::GetDashAtkDmgBuffBonus()
+	{
+		return g_dashAtkDmgBuffBonus;
 	}
 
 	// ═══════════════════════════════════════════════════════════════

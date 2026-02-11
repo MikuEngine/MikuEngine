@@ -237,6 +237,7 @@
     <ClCompile Include="Script\CharacterScript\Player\PlayerControllerScript.cpp" />
     <ClCompile Include="Script\CheckRotateScript.cpp" />
     <ClCompile Include="Manager\UpgradeProgressManager.cpp" />
+    <ClCompile Include="Manager\UpgradeDatabase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -329,6 +330,7 @@
     <ClInclude Include="Script\UpgradeTypes.h" />
     <ClInclude Include="Script\CheckRotateScript.h" />
     <ClInclude Include="Manager\UpgradeProgressManager.h" />
+    <ClInclude Include="Manager\UpgradeDatabase.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.vcxproj">

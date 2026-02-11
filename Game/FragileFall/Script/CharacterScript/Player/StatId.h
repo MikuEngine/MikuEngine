@@ -29,14 +29,20 @@ namespace game
 		Dash_Cooldown,         // 대시 충전시간
 		Dash_InvincibleTime,   // 대시 무적시간 증가
 
-		Buff_MoveSpeedAfterDash, // 대시 후 n초간 이속 증가량
-		Buff_AtkDmgAfterDash,    // 대시 후 n초간 공격력 증가량
-		Buff_DurationAfterDash,  // 위 버프들이 유지되는 시간(n)
-
 		// --- 특수 (Special) ---
 		BulletDouble,
 
 		Count
+	};
+
+	// 버프 종류
+	enum class BuffId
+	{
+		Dash_MoveSpeed,     // 대시 후 n초간 이속 증가: (Duration + Bonus)
+		Dash_AtkDmg,        // 대시 후 n초간 공격력 증가: (Duration + Bonus)
+		Execution_AtkSpeed, // 처형 후 공속 증가(스택형 가능): (Duration + Bonus + MaxStacks) ← 확장
+
+		Count,
 	};
 
 	enum class CalcType

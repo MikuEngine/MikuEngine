@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -1343,6 +1343,14 @@ namespace game
 			ImGui::SetTooltip("Base: %.2f x Buff: %.2fx = %.2f\nFire Rate: 0.7 / %.2f = %.3f sec", 
 				m_temperFinal.atkSpeed, atkSpeedMultiplier, finalAtkSpeed, finalAtkSpeed, finalFireRate);
 		
+		float atkDamageMultiplier = BuffManager::GetAtkDmgMultiplier();
+		float finalAtkDamage = m_temperFinal.atkDmg * atkDamageMultiplier;
+		ImGui::BeginDisabled();
+		ImGui::DragFloat("Final Atk Damage", &finalAtkDamage, 0.0f);
+		ImGui::EndDisabled();
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Base: %.2f x Buff: %.2fx = %.2f", m_temperBase.atkDmg, atkDamageMultiplier, finalAtkDamage);
+
 		ImGui::Unindent();
 		ImGui::Spacing();
 		

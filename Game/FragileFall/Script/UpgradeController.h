@@ -10,6 +10,7 @@
 
 #include <unordered_set>
 #include <cstdint>
+#include "Manager/UpgradeDatabase.h"
 
 namespace game
 {
@@ -80,10 +81,16 @@ namespace game
         void RebuildTemperFromPurchased();
 
     private:
+        void LoadDefsFromCsv();
+        void ApplyDefsToViews();
+
         void BuildNodeTree();
 
         void AutoRegisterNodesFromContent(const std::string& contentRootName);
         
+        // Content안에 있는 노드들 모으기
+        void AssignNodeIdsFromHierarchy();
+
         void BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb);
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
 
@@ -124,6 +131,9 @@ namespace game
         float m_costGapX = 100.0f;
 
         std::string m_texturePath[3] = {};
+
+        UpgradeDatabase m_db;
+        std::string m_dbPath = "Resource/Data/UpgradeNodes.csv";
 
     private:
         // GameObject
