@@ -202,9 +202,9 @@
                 {
                     "Type": "EnvironmentSettings",
                     "Active": true,
-                    "SkyboxTexturePath": "Resource/Texture/Sunset_-4.5EnvHDR.dds",
-                    "IBLIrradiancePath": "Resource/Texture/Sunset_-4.5DiffuseHDR.dds",
-                    "IBLSpecularPath": "Resource/Texture/Sunset_-4.5SpecularHDR.dds",
+                    "SkyboxTexturePath": "Resource/Texture/PlainsSunsetEnvHDR.dds",
+                    "IBLIrradiancePath": "Resource/Texture/PlainsSunsetDiffuseHDR.dds",
+                    "IBLSpecularPath": "Resource/Texture/PlainsSunsetSpecularHDR.dds",
                     "IBLBrdfLutPath": "Resource/Texture/Sunset_-4.5Brdf.dds",
                     "SkyboxColor": {
                         "x": -1.0,

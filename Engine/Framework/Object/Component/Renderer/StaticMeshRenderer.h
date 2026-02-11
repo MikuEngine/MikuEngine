@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cstddef>
 #include <cstdint>
@@ -85,6 +85,9 @@ namespace engine
         float m_obstacleAlpha = 1.0f;
         float m_subsurfaceStrength = 0.0f;  // SSS strength for whole mesh (0 = off), GBuffer ORM.a. Later: texture modulates.
         Vector3 m_subsurfaceColor = Vector3(1.0f, 1.0f, 1.0f);  // SSS tint per renderer (RGB). (0,0,0) = use global CbFrame subsurfaceColor.
+
+        mutable std::vector<ID3D11RasterizerState*> m_cachedPasses;
+        mutable bool m_isPassDirty = true; // 상태 변경 확인용 플래그
 
     public:
         ~StaticMeshRenderer();

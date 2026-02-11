@@ -1,5 +1,4 @@
-﻿#include "UpgradeDatabase.h"
-#pragma once
+﻿#pragma once
 
 #include <Engine/EnginePCH.h>
 
@@ -11,11 +10,6 @@ namespace game
     // csv reader game namespace에서 특수화를 위한 기본 템플릿
     template <typename T>
     bool FromFields(const std::vector<std::string>& fields, T& out)
-    {
-        return false;
-    }
-    template<>
-    bool game::FromFields(const std::vector<std::string>& fields, UpgradeNodeRow& out)
     {
         return false;
     }
