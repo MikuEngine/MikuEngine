@@ -313,6 +313,14 @@ namespace engine
         //accumulator += Time::DeltaTime();  
         // TimeScale 적용된 FixedDeltaTime 계산
         float scaledFixedTimeStep = m_settings.fixedTimeStep * Time::GetTimeScale(0);
+
+        // 월드 정지(TimeScale <= 0) 상태에서는 물리 시뮬레이션을 완전히 멈춘다.
+        // 또한 pause 중 누적된 시간은 버려서 재개 시 catch-up 스텝이 발생하지 않게 한다.
+        if (scaledFixedTimeStep <= 0.0f)
+        {
+            accumulator = 0.0f;
+            return;
+        }
         
         uint32_t steps = 0;
         while (accumulator >= m_settings.fixedTimeStep && 
@@ -916,6 +924,7 @@ namespace engine
         
         physx::PxScene* pxScene = scene->GetPxScene();
         if (!pxScene) return;
+        if (timeStep <= 0.0f) return;
 
         scene->SetSimulating(true);
         pxScene->simulate(timeStep);
