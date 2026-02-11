@@ -84,6 +84,7 @@
     <ClCompile Include="Script\HUDController.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Tutorial.cpp" />
     <ClCompile Include="Script\PlayerPreviewScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Common\ExecutionExitDamageTrigger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -176,5 +177,6 @@
     <ClInclude Include="Script\HUDController.h" />
     <ClInclude Include="Script\Scene\SceneController_Tutorial.h" />
     <ClInclude Include="Script\PlayerPreviewScript.h" />
+    <ClInclude Include="Script\CharacterScript\Common\ExecutionExitDamageTrigger.h" />
   </ItemGroup>
 </Project>

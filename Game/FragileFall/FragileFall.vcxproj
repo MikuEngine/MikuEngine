@@ -184,6 +184,7 @@
     <ClCompile Include="Script\Boss\BossScript.cpp" />
     <ClCompile Include="Script\Boss\BossSubPartsController.cpp" />
     <ClCompile Include="Script\CameraEffectScript.cpp" />
+    <ClCompile Include="Script\CharacterScript\Common\ExecutionExitDamageTrigger.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\ExplosionDamageTrigger.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundBlue.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="Script\Boss\BossScript.h" />
     <ClInclude Include="Script\Boss\BossSubPartsController.h" />
     <ClInclude Include="Script\CameraEffectScript.h" />
+    <ClInclude Include="Script\CharacterScript\Common\ExecutionExitDamageTrigger.h" />
     <ClInclude Include="Script\CharacterScript\Common\ExplosionDamageTrigger.h" />
     <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
     <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundBlue.h" />
