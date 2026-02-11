@@ -4,6 +4,7 @@
 #include <fstream>
 #include <algorithm>
 #include <map>
+#include <thread>
 
 #include <imgui_internal.h>
 
@@ -1543,11 +1544,11 @@ namespace engine
 
     void EditorManager::TogglePlayStop()
     {
-        auto scene = SceneManager::Get().GetScene();
-        if (!scene) return;
-
         if (m_editorState == EditorState::Edit)
         {
+            auto scene = SceneManager::Get().GetScene();
+            if (!scene) return;
+
             // Play
             g_tempScene.clear();
             scene->SaveToJson(g_tempScene);
@@ -1561,6 +1562,16 @@ namespace engine
         }
         else
         {
+            // WinApp 종료 처리와 동일하게, Loading 중이면 로딩을 끝까지 진행한 뒤 Stop 처리한다.
+            while (SceneManager::Get().GetSceneState() == SceneState::Loading)
+            {
+                SceneManager::Get().ProcessResourceLoading();
+                std::this_thread::yield();
+            }
+
+            auto scene = SceneManager::Get().GetScene();
+            if (!scene) return;
+
             // Stop
             // 물리 씬 정리
             scene->StopPhysics();
