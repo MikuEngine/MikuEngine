@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -2167,6 +2167,9 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		StageManager::Get().SetRunHP(m_PlayerCurrentHP);
 
 		if (m_onDamaged) m_onDamaged();
+
+		// sound
+		engine::SoundSystem::Get().Play("Player_Damaged_Random", "SFX/Player");
 
 		// 사망 전이는 UpdateGameLogic에서 HP 조건으로 Dead 상태 전이 후, SceneController_Play에서 Fail() 호출
 	}

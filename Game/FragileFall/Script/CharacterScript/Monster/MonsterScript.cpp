@@ -896,6 +896,10 @@ namespace game
 			m_Hp = 0;
 		}
 
+		// 사운드
+		engine::SoundSystem::Get().Play("Monster_Damaged_Random", "SFX/Monster");
+
+		
 		// 피격 효과 시작
 		//StartHitFlash();
 
