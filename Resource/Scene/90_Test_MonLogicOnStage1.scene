@@ -1,6 +1,6 @@
 {
     "Name": "90_Test_MonLogicOnStage1",
-    "NumGameObjects": 86,
+    "NumGameObjects": 91,
     "GameObjects": [
         {
             "ID": 0,
@@ -13910,197 +13910,6 @@
         },
         {
             "ID": 80,
-            "Name": "Monster_DullType_Red",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 7.34126615524292,
-                        "y": -9.84041548690584e-07,
-                        "z": 0.43821239471435547
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 5.0,
-                    "linearDamping": 15.0,
-                    "angularDamping": 30.0,
-                    "useGravity": false,
-                    "constraints": 47
-                },
-                {
-                    "Type": "BulletFactory",
-                    "Active": true
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        1.350000023841858,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 1,
-                    "radius": 1.1100000143051147,
-                    "height": 2.799999952316284
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "MonsterDullType",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 3,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 0.0,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 15.0,
-                    "AttackRange": 200.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 3.0,
-                    "BulletSpeed": 15.0,
-                    "BulletLifetime": 5.0,
-                    "BulletScale": 1.0,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 9.800000190734863,
-                    "MinLaunchAngle": 20.0,
-                    "MaxLaunchAngle": 70.0,
-                    "ExplosionRadius": 3.0,
-                    "IsDoSingleShot": false
-                }
-            ]
-        },
-        {
-            "ID": 81,
-            "ParentID": 80,
-            "Name": "PickingBoundaryCol",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 2.200000047683716,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 66.66667175292969,
-                        "y": 66.66667175292969,
-                        "z": 66.66667175292969
-                    }
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 7,
-                    "materialType": 1,
-                    "radius": 2.299999952316284
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 1,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 58
-                }
-            ]
-        },
-        {
-            "ID": 82,
             "Name": "Monster_PointedType_Gray",
             "Active": true,
             "Components": [
@@ -14340,8 +14149,8 @@
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 82,
+            "ID": 81,
+            "ParentID": 80,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
@@ -14397,17 +14206,397 @@
             ]
         },
         {
-            "ID": 84,
-            "Name": "Monster_DullType_Gray",
+            "ID": 82,
+            "Name": "Rock",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 7.060944557189941,
-                        "y": 1.0214694157184567e-06,
-                        "z": -3.0205540657043457
+                        "x": -4.726192474365234,
+                        "y": 1.1999990940093994,
+                        "z": -7.723613739013672
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 2.299999952316284,
+                        "y": 2.0,
+                        "z": 1.7999999523162842
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.3899613618850708,
+                        "y": 0.3899613618850708,
+                        "z": 0.3899613618850708,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        -0.03999999910593033,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 1,
+                    "size": [
+                        2.4200000762939453,
+                        1.9299999475479126,
+                        1.909999966621399
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 83,
+            "Name": "Rock",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 4.760462284088135,
+                        "y": 1.1999999284744263,
+                        "z": -7.655466556549072
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 2.299999952316284,
+                        "y": 2.0,
+                        "z": 1.7999999523162842
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.3899613618850708,
+                        "y": 0.3899613618850708,
+                        "z": 0.3899613618850708,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        -0.03999999910593033,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 1,
+                    "size": [
+                        2.4200000762939453,
+                        1.9299999475479126,
+                        1.909999966621399
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 84,
+            "Name": "Rock",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -6.620553016662598,
+                        "y": 1.2000000476837158,
+                        "z": -2.953618049621582
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 2.299999952316284,
+                        "y": 2.0,
+                        "z": 1.7999999523162842
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.3899613618850708,
+                        "y": 0.3899613618850708,
+                        "z": 0.3899613618850708,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        -0.03999999910593033,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 1,
+                    "size": [
+                        2.4200000762939453,
+                        1.9299999475479126,
+                        1.909999966621399
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 85,
+            "Name": "Rock",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 2.385892152786255,
+                        "y": 1.1999999284744263,
+                        "z": -12.23090934753418
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 2.299999952316284,
+                        "y": 2.0,
+                        "z": 1.7999999523162842
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Cube.fbx",
+                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.3899613618850708,
+                        "y": 0.3899613618850708,
+                        "z": 0.3899613618850708,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 2,
+                    "mass": 1.0,
+                    "linearDamping": 100.0,
+                    "angularDamping": 100.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        -0.03999999910593033,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 4,
+                    "materialType": 1,
+                    "size": [
+                        2.4200000762939453,
+                        1.9299999475479126,
+                        1.909999966621399
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 86,
+            "Name": "Monster_DullType_Red",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -7.45357608795166,
+                        "y": -9.595139545126585e-07,
+                        "z": -9.399717330932617
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -14464,7 +14653,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/white/crystal_white.fbx",
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
@@ -14505,7 +14694,7 @@
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
                     "AttackType": 0,
-                    "MonsterTier": 0,
+                    "MonsterTier": 3,
                     "Hp": 100.0,
                     "MaxHp": 100.0,
                     "MoveSpeed": 0.0,
@@ -14513,11 +14702,11 @@
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 15.0,
-                    "AttackRange": 15.0,
+                    "AttackRange": 200.0,
                     "RotationSpeed": 2.0,
-                    "FireRate": 2.0,
-                    "BulletSpeed": 12.0,
-                    "BulletLifetime": 3.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 15.0,
+                    "BulletLifetime": 5.0,
                     "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
@@ -14531,8 +14720,8 @@
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 84,
+            "ID": 87,
+            "ParentID": 86,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
@@ -14584,6 +14773,292 @@
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 88,
+            "Name": "Monster_DullType_Red",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.29711270332336426,
+                        "y": -9.5367431640625e-07,
+                        "z": -14.365208625793457
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 5.0,
+                    "linearDamping": 15.0,
+                    "angularDamping": 30.0,
+                    "useGravity": false,
+                    "constraints": 47
+                },
+                {
+                    "Type": "BulletFactory",
+                    "Active": true
+                },
+                {
+                    "Type": "LogicFSM",
+                    "Active": true,
+                    "CurrentState": "",
+                    "States": []
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.350000023841858,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 2,
+                    "materialType": 1,
+                    "radius": 1.1100000143051147,
+                    "height": 2.799999952316284
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "MonsterDullType",
+                    "Active": true,
+                    "MovementAcceleration": 80.0,
+                    "MovementDeceleration": 100.0,
+                    "MaxSpeedBrakeFactor": 15.0,
+                    "KinematicAcceleration": 50.0,
+                    "KinematicDeceleration": 70.0,
+                    "AttackType": 0,
+                    "MonsterTier": 3,
+                    "Hp": 100.0,
+                    "MaxHp": 100.0,
+                    "MoveSpeed": 0.0,
+                    "AttackDamage": 10.0,
+                    "FragileTime": 5.0,
+                    "Difficulty": 1,
+                    "DetectionRange": 15.0,
+                    "AttackRange": 200.0,
+                    "RotationSpeed": 2.0,
+                    "FireRate": 3.0,
+                    "BulletSpeed": 15.0,
+                    "BulletLifetime": 5.0,
+                    "BulletScale": 1.0,
+                    "SpreadAngle": 0.20000000298023224,
+                    "CurvedAngularSpeed": 2.0,
+                    "CurvedRadiusGrowth": 3.0,
+                    "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false
+                }
+            ]
+        },
+        {
+            "ID": 89,
+            "ParentID": 88,
+            "Name": "PickingBoundaryCol",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.200000047683716,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 66.66667175292969,
+                        "y": 66.66667175292969,
+                        "z": 66.66667175292969
+                    }
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 7,
+                    "materialType": 1,
+                    "radius": 2.299999952316284
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 1.0,
+                    "angularDamping": 1.0,
+                    "useGravity": false,
+                    "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 90,
+            "Name": "BulletCurvedMonster",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
+                    }
+                },
+                {
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 1,
+                    "mass": 1.0,
+                    "linearDamping": 0.0,
+                    "angularDamping": 0.0,
+                    "useGravity": false,
+                    "constraints": 0
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": true,
+                    "layer": 21,
+                    "materialType": 0,
+                    "radius": 0.5
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.7953662872314453,
+                        "y": 0.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 0.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0,
+                    "OverrideMaterial": true,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Type": "BulletMonster",
+                    "Active": true
                 }
             ]
         }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdint>
 #include <string>
@@ -37,6 +37,7 @@ namespace engine
             BBP_Reflected = 18,             // 반사된 빅탄 (Boss와만 충돌)
             SubWall = 19,                   // 보조 벽 (몬스터 방향 전환용, Enemy와만 충돌)
             EE_DamageTrigger = 20,          // 처형 종료 데미지 트리거 (Enemy, JumpingEnemy, SplittingEnemy, BossBigProjectile, Boss와 충돌)
+            EnemyProjectileCurve = 21,      // 곡선 적 투사체 (Player, Wall, SubWall만 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -67,6 +68,7 @@ namespace engine
             BBP_ReflectedMask = (1u << BBP_Reflected),
             SubWallMask = (1u << SubWall),
             EE_DamageTriggerMask = (1u << EE_DamageTrigger),
+            EnemyProjectileCurveMask = (1u << EnemyProjectileCurve),
 
             All = 0xFFFFFFFF
         };
@@ -102,8 +104,9 @@ namespace engine
                 "BBP_Reflected", // 18
                 "SubWall", // 19
                 "EE_DamageTrigger", // 20
+                "EnemyProjectileCurve", // 21
                 
-                "Layer21", "Layer22", "Layer23", "Layer24", "Layer25",
+                "Layer22", "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
             };
             
@@ -430,6 +433,34 @@ namespace engine
             // EE_DamageTrigger ↔ SplittingEnemy: 충돌함 (기본값)
             // EE_DamageTrigger ↔ BossBigProjectile: 충돌함 (기본값)
             // EE_DamageTrigger ↔ Boss: 충돌함 (기본값)
+            
+            // ═══════════════════════════════════════
+            // EnemyProjectileCurve 충돌 규칙
+            // Player, Wall, SubWall만 충돌
+            // ═══════════════════════════════════════
+            SetCollision(EnemyProjectileCurve, Default, false);
+            SetCollision(EnemyProjectileCurve, Enemy, false);
+            SetCollision(EnemyProjectileCurve, Projectile, false);
+            SetCollision(EnemyProjectileCurve, Environment, false);
+            SetCollision(EnemyProjectileCurve, Trigger, false);
+            SetCollision(EnemyProjectileCurve, EnemyProjectile, false);
+            SetCollision(EnemyProjectileCurve, Picking, false);
+            SetCollision(EnemyProjectileCurve, Field, false);
+            SetCollision(EnemyProjectileCurve, EnemyParabolicProjectile, false);
+            SetCollision(EnemyProjectileCurve, ExplosionTrigger, false);
+            SetCollision(EnemyProjectileCurve, JumpingEnemy, false);
+            SetCollision(EnemyProjectileCurve, RadiusChecker, false);
+            SetCollision(EnemyProjectileCurve, SplittingEnemy, false);
+            SetCollision(EnemyProjectileCurve, BossBulletProjectile, false);
+            SetCollision(EnemyProjectileCurve, BossBigProjectile, false);
+            SetCollision(EnemyProjectileCurve, Boss, false);
+            SetCollision(EnemyProjectileCurve, BBP_Reflected, false);
+            SetCollision(EnemyProjectileCurve, EE_DamageTrigger, false);
+            SetCollision(EnemyProjectileCurve, EnemyProjectileCurve, false);
+            SetCollision(EnemyProjectileCurve, SubWall, false);
+            // EnemyProjectileCurve ↔ Player: 충돌함 (기본값)
+            // EnemyProjectileCurve ↔ Wall: 충돌함 (기본값)
+            // EnemyProjectileCurve ↔ SubWall: 충돌함 (기본값)
   
         }
 
