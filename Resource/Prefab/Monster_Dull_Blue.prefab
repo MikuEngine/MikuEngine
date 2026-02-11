@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 20.43718719482422,
-                        "y": -9.834766387939453e-07,
-                        "z": -13.987442970275879
+                        "x": 5.274350166320801,
+                        "y": -8.953824135460309e-07,
+                        "z": 2.728773832321167
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -35,7 +35,7 @@
                     "linearDamping": 15.0,
                     "angularDamping": 30.0,
                     "useGravity": false,
-                    "constraints": 47
+                    "constraints": 63
                 },
                 {
                     "Type": "BulletFactory",
@@ -73,6 +73,7 @@
                     "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
@@ -123,68 +124,15 @@
                     "FireRate": 2.0,
                     "BulletSpeed": 20.0,
                     "BulletLifetime": 3.0,
+                    "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
-                    "ParabolicSpeed": 15.0,
-                    "OwnGravity": 9.800000190734863
-                }
-            ]
-        },
-        {
-            "ID": 1,
-            "ParentID": 0,
-            "Name": "PickingBoundaryCol",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 2.200000047683716,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 66.66667175292969,
-                        "y": 66.66667175292969,
-                        "z": 66.66667175292969
-                    }
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 7,
-                    "materialType": 1,
-                    "radius": 2.299999952316284
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 1,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 58
+                    "OwnGravity": 9.800000190734863,
+                    "MinLaunchAngle": 20.0,
+                    "MaxLaunchAngle": 70.0,
+                    "ExplosionRadius": 3.0,
+                    "IsDoSingleShot": false
                 }
             ]
         }
