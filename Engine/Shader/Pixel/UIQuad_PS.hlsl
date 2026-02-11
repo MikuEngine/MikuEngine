@@ -19,6 +19,7 @@ static const uint UI_FX_GLOW_PULSE = 11u;
 static const uint UI_FX_STATIC_NOISE = 12u;
 static const uint UI_FX_PRESSED_SINK = 13u;
 static const uint UI_FX_SCREEN_HIT = 14u;
+static const uint UI_FX_SCREEN_CURSE = 15u;
 
 // [Group 2] UV 변형 (UV Distort FX) - 샘플링 전에 실행
 static const uint UI_FX_PIXELATE = 20u;
@@ -395,6 +396,48 @@ void ApplyFx_ScreenHit(float2 uv, inout float4 col)
     col.a = max(col.a, vignette * intensity); // 투명도를 강제로 올려서 보이게 함
 }
 
+void ApplyFx_PurpleCorruption(float2 uv, inout float4 col)
+{
+    float intensity = g_effect0.x;
+    if (intensity <= 0.0)
+        return;
+
+    float2 center = uv - 0.5;
+    
+    // 타원형 거리 계산
+    float ellipseDist = sqrt(dot(center * float2(1.0, 1.2), center * float2(1.0, 1.2)));
+
+    // --- [수정 1] 노이즈 입자 키우기 (Tiling 4.0 -> 1.5~2.0) ---
+    // 숫자가 작아질수록 노이즈 덩어리가 커집니다.
+    float n = Noise01(uv, float2(1.8, 1.8), float2(0.1, 0.05), g_time * 0.2);
+    
+    // 노이즈 대비 (타들어가는 경계를 더 덩어리감 있게)
+    float burnNoise = smoothstep(0.3, 0.7, n);
+
+    // --- [수정 2] 잠식 공식 보정 (더 스멀스멀 들어오게) ---
+    // intensity가 낮을 때 더 외곽에 머물도록 threshold 범위를 살짝 조정
+    float threshold = 1.1 - (intensity * 1.2);
+    
+    // 마스크 생성 (경계면을 조금 더 부드럽게: 0.3 -> 0.4)
+    float mask = smoothstep(threshold, threshold + 0.4, ellipseDist + burnNoise * 0.25);
+
+    // 4. 색상 설정
+    float3 deepPurple = float3(0.05, 0.0, 0.15); // 더 깊은 심연색
+    float3 edgePurple = float3(0.7, 0.2, 1.0); // 더 밝은 경계선
+
+    // 경계선 추출
+    float edge = smoothstep(0.12, 0.0, abs((ellipseDist + burnNoise * 0.25) - threshold)) * intensity;
+
+    // 5. 최종 합성
+    col.rgb = lerp(col.rgb, deepPurple, mask);
+    col.rgb += edge * edgePurple * 2.5; // 경계선 광채 강화
+
+    // --- [수정 3] 알파 제어 ---
+    // 이미지 기본 알파가 0이어도 mask 영역만큼은 보라색이 그려짐
+    // intensity를 곱해줘서 게이지가 낮을 땐 외곽 안개도 투명하게 시작함
+    col.a = max(col.a, mask * saturate(intensity * 1.5));
+}
+
 //////////////////////////////////////////////////////////////////////////
 // 
 //  Masking
@@ -563,8 +606,12 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             ApplyFx_PressedSink(uv, finalColor);
             break;
         
+        // 화면 효과
         case UI_FX_SCREEN_HIT:
             ApplyFx_ScreenHit(uv, finalColor);
+            break;
+        case UI_FX_SCREEN_CURSE:
+            ApplyFx_PurpleCorruption(uv, finalColor);
             break;
     }
     
