@@ -47,7 +47,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -55,9 +56,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
-                    "RampPath": "Resource/Texture/Ramp.png",
-                    "NoisePath": "Resource/Texture/Noise.png",
+                    "TexturePath": "Resource/Texture/UI/Panel/UI_Popup.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -129,7 +128,7 @@
             "ID": 1,
             "ParentID": 0,
             "Name": "Icon",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -171,7 +170,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIImage",
@@ -180,8 +180,6 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "None",
-                    "RampPath": "Resource/Texture/Ramp.png",
-                    "NoisePath": "Resource/Texture/Noise.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -205,10 +203,10 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 0.7861961126327515,
-                        "y": 0.7915058135986328,
-                        "z": 0.5164651870727539,
-                        "w": 1.0
+                        "x": 0.7843137383460999,
+                        "y": 0.7921568751335144,
+                        "z": 0.5176470875740051,
+                        "w": 0.0
                     },
                     "AlphaBlend": true,
                     "ClipRect": {
@@ -279,7 +277,8 @@
                     "AnchorMax": {
                         "x": 0.5,
                         "y": 0.5
-                    }
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
                     "Type": "UIText",

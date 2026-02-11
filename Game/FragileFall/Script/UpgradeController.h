@@ -93,6 +93,7 @@ namespace game
 
         void BindClickArea(const std::string& name, engine::UIClickArea::ClickCallback cb);
         void BindButton(const std::string& name, engine::UIButton::ClickCallback cb);
+        void BindButton(const std::string& name, engine::UIButton::HoverCallback cb);
 
         // Category
         void SetCategory(UpgradeCategory c);

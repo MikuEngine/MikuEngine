@@ -4,6 +4,8 @@
 #include <directxtk/WICTextureLoader.h>
 #include <directxtk/DDSTextureLoader.h>
 #include <DirectXTex.h>
+#include <algorithm>
+#include <cctype>
 #include <filesystem>
 
 #include "Core/Graphics/Device/GraphicsDevice.h"
@@ -30,6 +32,11 @@ namespace engine
 
         auto path = fs::path(filePath);
         auto extension = path.extension();
+        std::string normalizedPath = filePath;
+        std::replace(normalizedPath.begin(), normalizedPath.end(), '\\', '/');
+        std::transform(normalizedPath.begin(), normalizedPath.end(), normalizedPath.begin(),
+            [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+        const bool forceLinearForUI = (normalizedPath.find("/ui/") != std::string::npos);
 
         const auto& device = GraphicsDevice::Get().GetDevice();
         auto& vfs = VirtualFileSystem::Get();
@@ -123,12 +130,30 @@ namespace engine
         }
         else
         {
-            HR_CHECK(DirectX::CreateWICTextureFromMemory(
-                device.Get(),
-                fileData.data(),
-                fileData.size(),
-                nullptr,
-                &m_srv));
+            if (forceLinearForUI)
+            {
+                HR_CHECK(DirectX::CreateWICTextureFromMemoryEx(
+                    device.Get(),
+                    fileData.data(),
+                    fileData.size(),
+                    0,
+                    D3D11_USAGE_DEFAULT,
+                    D3D11_BIND_SHADER_RESOURCE,
+                    0,
+                    0,
+                    DirectX::WIC_LOADER_FORCE_SRGB,
+                    nullptr,
+                    &m_srv));
+            }
+            else
+            {
+                HR_CHECK(DirectX::CreateWICTextureFromMemory(
+                    device.Get(),
+                    fileData.data(),
+                    fileData.size(),
+                    nullptr,
+                    &m_srv));
+            }
         }
 
         m_desc = GetTextureDescFromSRV(m_srv.Get());
@@ -280,6 +305,21 @@ namespace engine
         srvDesc.Texture2D.MostDetailedMip = 0;
 
         HR_CHECK(device->CreateShaderResourceView(m_texture.Get(), &srvDesc, &m_srv));
+    }
+
+    bool Texture::ReloadFromFile(const std::string& filePath)
+    {
+        Texture reloaded;
+        reloaded.Create(filePath);
+
+        if (reloaded.GetRawSRV() == nullptr)
+        {
+            LOG_ERROR("텍스처 리로드 실패. 기존 텍스처 유지: {}", filePath);
+            return false;
+        }
+
+        *this = std::move(reloaded);
+        return true;
     }
 
     const Microsoft::WRL::ComPtr<ID3D11Texture2D>& Texture::GetTexture() const

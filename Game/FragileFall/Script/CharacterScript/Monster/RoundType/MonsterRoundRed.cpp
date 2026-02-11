@@ -50,7 +50,7 @@ namespace game
         // 초기 Y 위치 보정 (지면 + 오프셋)
         CorrectYPosition();
     }
-    
+
     // ═══════════════════════════════════════════════════════════════
     // FSM 초기화 (Red 전용 - 점프 상태 추가)
     // ═══════════════════════════════════════════════════════════════
@@ -1074,6 +1074,10 @@ namespace game
             m_bulletParams.radiusGrowthRate,      // m_bulletSpeed (직선 발사)
             m_bulletParams                        // 모든 파라미터 전달
         );
+
+        // 사운드
+        m_remainShotSoundCount = 3;
+        m_shotSoundTimer = 0.0f;
     }
 
     // ═══════════════════════════════════════════════════════════════

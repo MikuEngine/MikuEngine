@@ -75,6 +75,14 @@ namespace engine
 	{
 		MouseState mouse = BuildMouseStateFromInput();
 
+		auto IsInvalid = [](UIElement* e)
+			{
+				return (e == nullptr) || (!e->IsActive()) || (!e->m_raycastTarget) || (e->GetRectTransform() == nullptr);
+			};
+
+		if (IsInvalid(m_hovered))  m_hovered = nullptr;
+		if (IsInvalid(m_pressed)) { m_pressed = nullptr; m_phase = PointerPhase::None; }
+
 		RebuildCacheIfDirty();
 
 		UIElement* newHover = HitTestTopmost(mouse.position);
@@ -97,6 +105,28 @@ namespace engine
 	void UIEventSystem::SetDebugThreshold(float pixels)
 	{
 		m_dragThresholdPixels = std::max(0.0f, pixels);
+	}
+
+	void UIEventSystem::ResetPointerState(bool sendCancel)
+	{
+		if (m_hovered)
+		{
+			if (UIInteractable* it = AsInteractable(m_hovered))
+				it->OnMouseExit(m_prevMousePos);
+			m_hovered = nullptr;
+		}
+
+		if (m_pressed)
+		{
+			if (sendCancel)
+			{
+				if (UIInteractable* it = AsInteractable(m_pressed))
+					it->OnMouseCancel(m_prevMousePos, 0);
+			}
+			m_pressed = nullptr;
+		}
+
+		m_phase = PointerPhase::None;
 	}
 
 	MouseState UIEventSystem::BuildMouseStateFromInput()

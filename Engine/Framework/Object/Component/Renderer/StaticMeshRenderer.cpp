@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "StaticMeshRenderer.h"
 
 #include <cstring>
@@ -305,6 +305,16 @@ namespace engine
         if (DrawFileSelector("Select Mesh (.fbx)", "Resource/Model", ".fbx", selectedMesh))
         {
             SetMesh(selectedMesh);
+        }
+        if (ImGui::Button("Reload Mesh + Textures"))
+        {
+            ResourceManager::Get().ReloadAllFileTextures();
+            if (!m_meshFilePath.empty())
+            {
+                AssetManager::Get().InvalidateModelCache(m_meshFilePath);
+                ResourceManager::Get().InvalidateMeshBuffers(m_meshFilePath);
+            }
+            Refresh();
         }
 
         ImGui::Checkbox("Cast Shadow", &m_castShadow);

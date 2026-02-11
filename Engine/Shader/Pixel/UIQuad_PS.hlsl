@@ -19,6 +19,7 @@ static const uint UI_FX_GLOW_PULSE = 11u;
 static const uint UI_FX_STATIC_NOISE = 12u;
 static const uint UI_FX_PRESSED_SINK = 13u;
 static const uint UI_FX_SCREEN_HIT = 14u;
+static const uint UI_FX_SCREEN_CURSE = 15u;
 
 // [Group 2] UV 변형 (UV Distort FX) - 샘플링 전에 실행
 static const uint UI_FX_PIXELATE = 20u;
@@ -395,6 +396,44 @@ void ApplyFx_ScreenHit(float2 uv, inout float4 col)
     col.a = max(col.a, vignette * intensity); // 투명도를 강제로 올려서 보이게 함
 }
 
+void ApplyFx_PurpleCorruption(float2 uv, inout float4 col)
+{
+    float intensity = g_effect0.x;
+    if (intensity <= 0.0)
+        return;
+
+    float2 center = uv - 0.5;
+    float ellipseDist = length(center * float2(1.0, 1.2)); // 타원 거리
+    
+    // --- [추가] 중앙으로 흐르는 방향 벡터 계산 ---
+    // 방향(dir)은 중앙(center)을 향하고, 시간(g_time)에 따라 흐름
+    float2 dir = normalize(center);
+    float flowSpeed = 0.08;
+    // uv에 dir * g_time을 더해주면 노이즈가 중앙으로 빨려 들어가는 느낌이 남
+    float2 flowUV = uv + dir * g_time * flowSpeed;
+
+    // 노이즈 입자는 크게 유지
+    float n = Noise01(flowUV, float2(1.5, 1.5), float2(0.0, 0.0), 0.0);
+    float burnNoise = smoothstep(0.2, 0.8, n);
+
+    // 잠식 범위 제어 (C++에서 intensity가 최대 0.4이므로 이에 맞춰 조정)
+    // 0.4일 때 40% 정도 들어오게 하려면 threshold 조절이 필요
+    float threshold = 1.2 - (intensity * 1.8);
+    float mask = smoothstep(threshold, threshold + 0.5, ellipseDist + burnNoise * 0.3);
+
+    // 색상 설정
+    float3 deepPurple = float3(0.08, 0.0, 0.15);
+    float3 edgePurple = float3(0.6, 0.2, 1.0);
+
+    // 경계선 글로우
+    float edge = smoothstep(0.15, 0.0, abs((ellipseDist + burnNoise * 0.3) - threshold)) * (intensity * 2.5);
+
+    col.rgb = lerp(col.rgb, deepPurple, mask);
+    col.rgb += edge * edgePurple;
+
+    // 알파 제어
+    col.a = max(col.a, mask * saturate(intensity * 2.0 + 0.2));
+}
 //////////////////////////////////////////////////////////////////////////
 // 
 //  Masking
@@ -509,7 +548,6 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
     
     // 3. 메인 텍스처 샘플링
     float4 tex = g_texBlit.Sample(g_samLinear, uv);
-    tex.rgb = SRGBToLinear(tex.rgb);
     finalColor *= tex;
 
     // 4. 색상/알파 기반 이펙트 (텍스처 샘플링 후)
@@ -564,8 +602,12 @@ float4 main(PS_INPUT_TEXCOORD input) : SV_Target
             ApplyFx_PressedSink(uv, finalColor);
             break;
         
+        // 화면 효과
         case UI_FX_SCREEN_HIT:
             ApplyFx_ScreenHit(uv, finalColor);
+            break;
+        case UI_FX_SCREEN_CURSE:
+            ApplyFx_PurpleCorruption(uv, finalColor);
             break;
     }
     

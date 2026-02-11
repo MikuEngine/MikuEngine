@@ -105,6 +105,31 @@ namespace game
         // 처형 애니메이션 재생 비율 대기 (제자리 애니 → 비율 도달 시 순간이동). 최소 재생 시간도 만족해야 발동
         if (m_isWaitingForExecutionAnim)
         {
+            // 처형 애니 대기 중 대상이 더 이상 처형 가능하지 않으면 즉시 취소한다.
+            // (예: Fragile 해제, 사망/삭제 상태 변경)
+            bool isTargetStillExecutable = false;
+            if (m_executingGameObject)
+            {
+                if (auto* monster = m_executingGameObject->GetComponent<MonsterScript>())
+                {
+                    isTargetStillExecutable = (monster->m_isFragile && !monster->m_isDead);
+                }
+                else if (auto* pillar = m_executingGameObject->GetComponent<BossPillar>())
+                {
+                    isTargetStillExecutable = (pillar->IsCrystalized() && !pillar->IsPendingKill());
+                }
+                else if (auto* projectile = m_executingGameObject->GetComponent<BossBigProjectile>())
+                {
+                    isTargetStillExecutable = projectile->IsCrystallized();
+                }
+            }
+
+            if (!isTargetStillExecutable)
+            {
+                CancelExecution();
+                return;
+            }
+
             float normTime = m_player ? m_player->GetExecutionAnimNormalizedTime() : -1.0f;
             float elapsed = engine::Time::UnscaledTime() - m_executionAnimWaitStartTime;
             if (normTime >= m_executionTeleportAtNormalizedTime && elapsed >= m_executionMinDuration)
@@ -784,11 +809,26 @@ namespace game
             SetMonsterColliderTrigger(m_executingGameObject.Get(), false);
         }
 
-        // 상태 초기화 (플레이어/몬스터 상태 유지)
+        // 상태 초기화
         m_isWaitingForTrigger = false;
         m_isWaitingForExecutionAnim = false;
+        m_isWaitingForIdle = false;
+        m_isWaitingForDeath = false;
         m_executionAnimWaitStartTime = 0.0f;
+        m_idleWaitFrames = 0;
+        m_deathTimer = 0.0f;
         m_triggerWaitFrames = 0;
+
+        // 처형 도중 취소된 경우 플레이어를 Execution 상태에서 정상 복귀시킨다.
+        if (m_player)
+        {
+            engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
+            if (playerFSM && playerFSM->GetCurrentState() == "Execution")
+            {
+                playerFSM->SetTrigger("ExecutionComplete");
+            }
+        }
+
         m_executingGameObject = nullptr;
 
         if (m_aimController)

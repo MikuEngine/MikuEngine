@@ -2,6 +2,12 @@
 
 #include <Framework/Object/Component/Script.h>
 #include <Script/CharacterScript/Player/PlayerControllerScript.h>
+#include <Framework/Object/Component/UI/UIClickArea.h>
+
+namespace engine
+{
+    class UIImage;
+}
 
 namespace game
 {
@@ -26,6 +32,10 @@ namespace game
         bool m_isTimerActive = false;
         float m_stepTimer = 0.0f;
         
+        std::set<std::string> m_bindButtonNames;
+		std::set<engine::UIClickArea*> m_bindClickAreaNames;
+
+		bool m_isTutorialFinished = false;
 
         // ─────────────────────────────────────────────
         // step 0
@@ -38,7 +48,6 @@ namespace game
         float m_timer = 0.0f;
         int m_gaugePhase = 0; // 0: 40->70, 1: 70->40, 2: 종료
 
-
         // ─────────────────────────────────────────────
         // step 2
         // ─────────────────────────────────────────────
@@ -48,11 +57,13 @@ namespace game
         engine::Ptr<engine::GameObject> m_spawnedMonster = nullptr;
 
         // ─────────────────────────────────────────────
-        // step 0
+        // step 4
         // ─────────────────────────────────────────────
         engine::Ptr<engine::GameObject> m_exitDoorObject = nullptr;
 
-
+        // ─────────────────────────────────────────────
+        // step 5 ~ 9
+        // ─────────────────────────────────────────────
 		float m_outlineWidth = 4.0f;
 
     public:
@@ -66,8 +77,10 @@ namespace game
         void OnSceneLoaded();
 
         void BindButton(const std::string& goName, std::function<void()> callback);
+        void HighlightButton(const std::string& goName, bool enable);
+        void UnBindAllButtons();
 		void SetActiveButton(const std::string& goName, bool active, bool outline);
-        void SetupSkillNodesUI(const std::string& goName, bool isChildSetup = false);
+        void SetupSkillNodesUI(const std::string& goName, bool isChildSetup = false, bool isActive = false);
 
         void SetIndex(int step, int page)
         {
@@ -80,6 +93,10 @@ namespace game
     private:
         PlayerControllerScript* GetPlayer();
         void UpdateGaugeAnimation();
+
+        engine::UIImage* m_outline1 = nullptr;
+        engine::UIImage* m_outline2 = nullptr;
+        engine::UIImage* m_outline3 = nullptr;
 
     public:
         // void OnGui() override;

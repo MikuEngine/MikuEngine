@@ -4,6 +4,11 @@
 #include <Framework/Object/Component/UI/UIButton.h>
 #include <Framework/Object/Component/UI/UISlider.h>
 
+namespace engine
+{
+    class UIScrollView;
+}
+
 namespace game
 {
     class LobbyInteraction;
@@ -35,6 +40,7 @@ namespace game
         void BackToHub();
 
         void Back();
+        
 
         // OnHover
         void ShowEffect(const std::string& targetName, bool hovered);
@@ -72,6 +78,10 @@ namespace game
         engine::Quaternion m_moveStartRot = engine::Quaternion::Identity;
         engine::Quaternion m_moveTargetRot = engine::Quaternion::Identity;
 
+        bool m_upgradeTransition = false;
+        bool m_optionTransition = false;
+        float m_uiTransitionTimer = 0.0f;
+
     private:
         // GameObject
         engine::GameObject* m_optionPopUp = nullptr;
@@ -79,6 +89,8 @@ namespace game
         engine::GameObject* m_groupSelect = nullptr;
         engine::GameObject* m_upgradePopUp = nullptr;
         engine::GameObject* m_playerPreview = nullptr;
+
+        engine::UIScrollView* m_upgradeScroll = nullptr;
 
         LobbyInteraction* m_interaction;
     };

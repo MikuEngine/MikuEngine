@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "AssetManager.h"
 
 #include "Framework/Asset/FBXData.h"
@@ -252,6 +252,14 @@ namespace engine
         CacheData(socketData, scope);
 
         return socketData;
+    }
+
+    void AssetManager::InvalidateModelCache(const std::string& filePath)
+    {
+        m_staticMeshDatas.erase(filePath);
+        m_materialDatas.erase(filePath);
+        m_skeletonDatas.erase(filePath);
+        m_skeletalMeshDatas.erase(filePath);
     }
 
     std::shared_ptr<SpriteAnimationData> AssetManager::GetOrCreateSpriteAnimationData(const std::string& filePath, LifeScope scope)

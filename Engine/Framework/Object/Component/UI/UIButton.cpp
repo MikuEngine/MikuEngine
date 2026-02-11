@@ -39,14 +39,83 @@ namespace engine
 
 	void UIButton::AddOnClick(ClickCallback&& cb)
 	{
+		AddOnClick(nullptr, std::move(cb));
+	}
+
+	void UIButton::AddOnClick(void* owner, ClickCallback&& cb)
+	{
 		if (!cb) return;
 		m_onClick.push_back(std::move(cb));
+		m_clickOwnerTracker.push_back({ owner, m_onClick.size() - 1 });
 	}
 
 	void UIButton::AddOnHover(HoverCallback&& cb)
 	{
+		AddOnHover(nullptr, std::move(cb));
+	}
+
+	void UIButton::AddOnHover(void* owner, HoverCallback&& cb)
+	{
 		if (!cb) return;
 		m_onHover.push_back(std::move(cb));
+		m_hoverOwnerTracker.push_back({ owner, m_onHover.size() - 1 });	
+	}
+
+	void UIButton::UnbindCallback(void* owner)
+	{
+		if (!owner) return;
+
+		for (auto it = m_clickOwnerTracker.begin(); it != m_clickOwnerTracker.end(); )
+		{
+			if (it->first == owner)
+			{
+				size_t targetIdx = it->second;
+
+				if (targetIdx < m_onClick.size())
+				{
+					m_onClick.erase(m_onClick.begin() + targetIdx);
+
+					for (auto& entry : m_clickOwnerTracker)
+					{
+						if (entry.second > targetIdx)
+						{
+							entry.second--;
+						}
+					}
+				}
+				it = m_clickOwnerTracker.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
+		for (auto it = m_hoverOwnerTracker.begin(); it != m_hoverOwnerTracker.end(); )
+		{
+			if (it->first == owner)
+			{
+				size_t targetIdx = it->second;
+
+				if (targetIdx < m_onHover.size())
+				{
+					m_onHover.erase(m_onHover.begin() + targetIdx);
+
+					for (auto& entry : m_hoverOwnerTracker)
+					{
+						if (entry.second > targetIdx)
+						{
+							entry.second--;
+						}
+					}
+				}
+				it = m_hoverOwnerTracker.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
 	}
 
 	void UIButton::SetSprites(const std::string& normal, const std::string& hover, const std::string& pressed, const std::string& disabled)

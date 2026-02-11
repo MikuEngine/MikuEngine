@@ -55,7 +55,13 @@ namespace engine
 	public:
 		// Callback
 		void AddOnClick(ClickCallback&& cb);
+		void AddOnClick(void* owner, ClickCallback&& cb);
 		void AddOnHover(HoverCallback&& cb);
+		void AddOnHover(void* owner, HoverCallback&& cb);
+
+		void UnbindCallback(void* owner);
+		std::vector<std::pair<void*, size_t>> m_clickOwnerTracker;
+		std::vector<std::pair<void*, size_t>> m_hoverOwnerTracker;
 
 	public:
 		void SetSprites(const std::string& normal,

@@ -36,6 +36,7 @@ namespace engine
 		StaticNoise = 12,
 		PressedSink = 13,
 		ScreenHit = 14,
+		PurpleCorruption = 15,
 
 		// [Group 2] UV FX
 		Pixelate = 20,

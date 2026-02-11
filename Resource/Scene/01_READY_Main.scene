@@ -5246,7 +5246,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -5462,7 +5462,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,

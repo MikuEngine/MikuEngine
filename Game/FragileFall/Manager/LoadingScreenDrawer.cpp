@@ -78,7 +78,7 @@ namespace game
 		std::shared_ptr<engine::SpriteAnimationData> g_sceneLoadAnimData;
 		float g_sceneLoadAnimTime = 0.0f;
 		std::shared_ptr<engine::Texture> g_loadingTextTexture;
-		constexpr float SCENE_LOAD_ANIM_Y_RATIO = 0.34f;
+		constexpr float SCENE_LOAD_ANIM_Y_RATIO = 0.435f;
 		constexpr float SCENE_LOAD_BAR_Y_RATIO = 0.52f;
 		constexpr float SCENE_LOAD_TEXT_Y_RATIO = 0.72f;
 		constexpr float SCENE_LOAD_ANIM_SIZE_PX = 200.0f;
@@ -99,10 +99,19 @@ namespace game
 
 		static const std::vector<std::string> g_randomMessages =
 		{
-			"(대충 겁나 쩌는 세계관 설명)",
-			"ㅁㄴㅇㄹ",
-			"TMI 쓰기",
-			"잠시만 기다려 주세요",
+			"수정의 중앙 부분은 몬스터의 약점입니다.",
+			"몬스터의 관절 부위에는 수정이 자라지 않아서 상대적으로 약합니다.",
+			"강화를 하면 더 깊은 던전을 탐험할 용기가 생깁니다.",
+			"가만히 있는 보라 수정은 무적입니다(?)",
+			"강화는 영구적으로 미타한테 영향을 줍니다.",
+			"쉬운 일은 아니지만, 강화 없이도 올클리어할 수 있습니다.",
+			"가끔은 로비로 돌아가서 정비를 하는건 어떨까요?",
+			"던전은 수정으로 잠식되기 전 유명한 광산이였습니다.",
+			"수정에 잠식된 사람은 죽기 전까지 잠식이 풀리지 않습니다.",
+			"미타의 나이는 21살입니다.",
+			"무기 \"CR - 116\"은 수정을 제련해 만든 무기로, 강력한 수정의 힘을 사용합니다.",
+			"미타가 가지고 다니는 무기의 이름은 \"CR - 116\"입니다.",
+			"미타는 잠식된 대원들에게 안식을 주기 위해 들어왔습니다.",
 			"미타는 미쿠와 리타를 모티브로 만들어진 이름입니다."
 		};
 	}
@@ -274,7 +283,8 @@ namespace game
 	{
 		if (!font || text.empty()) return;
 
-		const float fontScale = scale; // 폰트 생성 시 pixelSize를 이미 맞췄다면 scale만 적용
+		const float basePx = (float)font->GetDesc().pixelSize; // 여기서 40
+		const float fontScale = (fontSizePx / basePx) * scale; // 폰트 생성 시 pixelSize를 이미 맞췄다면 scale만 적용
 		const float asc = font->GetAscenderPx() * fontScale;
 		const float lineH = font->GetLineHeightPx() * fontScale;
 
@@ -411,7 +421,7 @@ namespace game
 		const float sTextH = SCENE_LOAD_TEXT_HEIGHT_PX * scale;
 
 		const engine::Vector4 barBgColor(0.2f, 0.2f, 0.2f, 0.9f);
-		const engine::Vector4 barFillColor(0.4f, 0.7f, 1.0f, 1.0f);
+		const engine::Vector4 barFillColor(1.0f, 228 / 255.0f, 120 / 255.0f, 1.0f);
 
 		// IA
 		dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -512,19 +522,23 @@ namespace game
 			}
 
 			// 중앙 정렬을 위한 가로 폭 사전 계산
+			const float fontSize = 30.0f;
+			const float basePx = (float)g_loadingFont->GetDesc().pixelSize;
+			const float fontScale = (fontSize / basePx) * scale;
+
 			float totalWidth = 0.0f;
 			const char* p = loadingStr.data();
 			const char* end = p + loadingStr.size();
 			uint32_t cp;
 
 			while (NextUtf8Codepoint(p, end, cp)) {
-				totalWidth += g_loadingFont->EnsureGlyph(dc, cp).advance * scale;
+				totalWidth += g_loadingFont->EnsureGlyph(dc, cp).advance * fontScale;
 			}
 
 			const float textStartX = centerX - (totalWidth * 0.5f);
-			const float textStartY = textCenterY + 70.0f;
+			const float textStartY = textCenterY + 70.0f * scale;
 
-			DrawTextQuad(dc, g_loadingFont, loadingStr, textStartX, textStartY, 40, vp, engine::Vector4(1, 1, 1, 1), scale);
+			DrawTextQuad(dc, g_loadingFont, loadingStr, textStartX, textStartY, fontSize, vp, engine::Vector4(1, 1, 1, 1), scale);
 		}
 
 		if (g_randomMessage && !g_pickedRandomMessage.empty())
@@ -532,18 +546,22 @@ namespace game
 			const float msgCenterY = textCenterY;
 
 			// 중앙 정렬 폭 계산 (scale 반영)
+			const float fontSize = 40.0f;
+			const float basePx = (float)g_loadingFont->GetDesc().pixelSize; // 40
+			const float fontScale = (fontSize / basePx) * scale;
+
 			float msgW = 0.0f;
 			const char* p2 = g_pickedRandomMessage.data();
 			const char* e2 = p2 + g_pickedRandomMessage.size();
 			uint32_t cp2 = 0;
 
 			while (NextUtf8Codepoint(p2, e2, cp2))
-				msgW += g_randomMessage->EnsureGlyph(dc, cp2).advance * scale;
+				msgW += g_randomMessage->EnsureGlyph(dc, cp2).advance * fontScale;
 
 			const float msgStartX = centerX - (msgW * 0.5f);
 			const float msgStartY = msgCenterY - (40.0f * scale * 0.5f);
 
-			DrawTextQuad(dc, g_randomMessage, g_pickedRandomMessage, msgStartX, msgStartY, 40, vp,
+			DrawTextQuad(dc, g_randomMessage, g_pickedRandomMessage, msgStartX, msgStartY, fontSize, vp,
 				engine::Vector4(1, 1, 1, 1), scale);
 		}
 

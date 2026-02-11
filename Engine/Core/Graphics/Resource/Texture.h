@@ -24,6 +24,7 @@ namespace engine
             DXGI_FORMAT rtvFormat = DXGI_FORMAT_UNKNOWN,
             DXGI_FORMAT dsvFormat = DXGI_FORMAT_UNKNOWN);
         void Create(const std::array<unsigned char, 4>& color);
+        bool ReloadFromFile(const std::string& filePath);
 
     public:
         const Microsoft::WRL::ComPtr<ID3D11Texture2D>& GetTexture() const;

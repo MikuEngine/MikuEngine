@@ -394,6 +394,7 @@ namespace engine
 		case UIEffectType::AbyssalDecay:
 		case UIEffectType::PurpleCurse:
 		case UIEffectType::FlameBar:
+		case UIEffectType::PurpleCorruption:
 			if (!m_noiseTex) SetNoiseTexture(m_noisePath);
 			if (!m_rampTex)  SetRampTexture(m_rampPath);
 			break;

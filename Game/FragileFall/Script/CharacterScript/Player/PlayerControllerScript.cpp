@@ -422,6 +422,16 @@ namespace game
 	void PlayerControllerScript::UpdateGameLogic()
 	{
 		float deltaTime = engine::Time::DeltaTime();
+
+		// 피격 무적 타이머 갱신
+		if (m_invincibleRemainTime > 0.0f)
+		{
+			m_invincibleRemainTime -= deltaTime;
+			if (m_invincibleRemainTime < 0.0f)
+			{
+				m_invincibleRemainTime = 0.0f;
+			}
+		}
 		
 		// ─────────────────────────────────────────────
 		// 버프 타이머 업데이트 (BuffManager가 관리, 타임스케일 영향 받음)
@@ -1902,6 +1912,12 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	ImGui::Checkbox("Is Invincible", &m_isInvincible);
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("무적 상태 (데미지 무시)");
+	if (ImGui::DragFloat("Invincible Time On Hit (sec)", &m_temperBase.invincibleTime, 0.05f, 0.0f, 10.0f))
+		PlayerTemperManager::ApplyTemper(this);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("피격 후 데미지를 무시하는 무적 시간");
+	ImGui::Text("Invincible Time (Applied): %.2f sec", m_invincibleTime);
+	ImGui::Text("Invincible Timer Left: %.2f sec", m_invincibleRemainTime);
 
 	ImGui::Separator();
 	ImGui::Text("Runtime Info:");
@@ -1966,6 +1982,7 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	j["FragileGaugeMax"] = m_fragileGaugeMax;
 	j["FragileGaugeRisePerSecond"] = m_fragileGaugeRisePerSecond;
 	j["PlayerMaxHP"] = m_PlayerMaxHP;
+	j["InvincibleTime"] = m_temperBase.invincibleTime;
 	
 	// 무적 상태
 	j["IsInvincible"] = m_isInvincible;
@@ -2065,6 +2082,8 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		m_fragileGaugeRisePerSecond = j["FragileGaugeRisePerSecond"].get<float>();
 	if (j.contains("PlayerMaxHP"))
 		m_PlayerMaxHP = j["PlayerMaxHP"].get<float>();
+	if (j.contains("InvincibleTime"))
+		m_temperBase.invincibleTime = j["InvincibleTime"].get<float>();
 	
 	// 무적 상태
 	if (j.contains("IsInvincible"))
@@ -2095,10 +2114,15 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		{
 			return;
 		}
+		if (m_invincibleRemainTime > 0.0f)
+		{
+			return;
+		}
 		if (damage <= 0.0f) return;
 
 		m_PlayerCurrentHP -= damage;
 		if (m_PlayerCurrentHP < 0.0f) m_PlayerCurrentHP = 0.0f;
+		m_invincibleRemainTime = std::max(0.0f, m_invincibleTime);
 
 		StageManager::Get().SetRunHP(m_PlayerCurrentHP);
 

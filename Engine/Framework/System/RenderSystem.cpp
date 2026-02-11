@@ -1,4 +1,4 @@
-﻿#include "EnginePCH.h"
+#include "EnginePCH.h"
 #include "RenderSystem.h"
 
 #include "Core/Graphics/Resource/ResourceManager.h"

@@ -140,6 +140,21 @@ namespace game
 			}
 		}
 
+		// 사운드
+		if (m_remainShotSoundCount > 0)
+		{
+			m_shotSoundTimer -= engine::Time::FixedDeltaTime();
+
+			if (m_shotSoundTimer <= 0.0f)
+			{
+				engine::SoundSystem::Get().Play("Monster_Shot_Random", "SFX/Monster", true);
+
+				m_remainShotSoundCount--;
+
+				float randomDelay = 0.08f + (static_cast<float>(rand()) / RAND_MAX) * 0.08f;
+				m_shotSoundTimer = randomDelay;
+			}
+		}
 
 		// 부모 클래스 Update 호출
 		BaseControllerScript::Update();
