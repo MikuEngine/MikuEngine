@@ -81,13 +81,18 @@ namespace game
 		Apply(StatType::Exe_HpRegen,         player->GetBaseExeHpRegen(),         &PlayerControllerScript::SetExeHpRegen);
 
 		// --- 체력/생존 (Vitality) ---
-		// HP는 하트 1칸=20 규칙에 맞춰 20 단위로 스냅한다.
+		// HP는 기본 MaxHP의 20% 단위(하트 1칸)로 스냅한다.
 		{
 			const float add = GetStat(StatType::Hp_Max, CalcType::Add);
 			const float mul = GetStat(StatType::Hp_Max, CalcType::Mul);
 			const float rawMaxHp = (player->GetBaseMaxHp() + add) * mul;
-			const float snappedMaxHp = std::round(rawMaxHp / 20.0f) * 20.0f;
-			player->SetMaxHp(std::max(20.0f, snappedMaxHp));
+			const float baseMaxHp = std::max(1.0f, player->GetBaseMaxHp());
+			constexpr float kHpStepRatio = 0.2f;
+			constexpr float kStepMarginScale = 1.005f;
+			const float hpPerHeart = std::max(1.0f, std::round(baseMaxHp * kHpStepRatio));
+			const float snappedStepCount = std::floor((rawMaxHp / hpPerHeart) * kStepMarginScale);
+			const float snappedMaxHp = std::max(hpPerHeart, snappedStepCount * hpPerHeart);
+			player->SetMaxHp(std::round(snappedMaxHp));
 		}
 		Apply(StatType::Hp_RegenOnClear, player->GetBaseHpRegenOnClear(), &PlayerControllerScript::SetHpRegenOnClear);
 		Apply(StatType::Fragile_Max, player->GetBaseFragileMax(), &PlayerControllerScript::SetFragileMax);

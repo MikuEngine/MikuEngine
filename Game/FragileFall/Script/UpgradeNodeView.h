@@ -75,9 +75,9 @@ namespace game
         std::string m_name = "None";
         std::string m_desc = "Node";
 
-        int m_costRuby = 100;
-        int m_costSapphire = 100;
-        int m_costEmerald = 100;
+        int m_costRuby = 0;
+        int m_costSapphire = 0;
+        int m_costEmerald = 0;
 
         engine::Vector4 m_nodeColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 

@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -66,10 +66,25 @@ namespace game
 			m_fragileGaugeCurrent = savedFragileGauge;
 		}
 
-		// 플레이 씬 시작 시 현재 플레이어의 MaxHP 기준으로 RunHP를 초기화한다.
-		StageManager::Get().ResetRunHp(m_PlayerMaxHP);
-		m_PlayerCurrentHP = StageManager::Get().GetRunHP();
-		m_PlayerCurrentHP = std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP);
+		// 스테이지 전환 시에는 이전 CurrentHP를 유지하고, MaxHP가 증가한 만큼만 추가 회복한다.
+		auto& stageManager = StageManager::Get();
+		if (stageManager.GetCurrentStage() <= 1)
+		{
+			stageManager.ResetRunHp(m_PlayerMaxHP);
+		}
+		else
+		{
+			const float prevRunHp = stageManager.GetRunHP();
+			const float prevRunHpMax = stageManager.GetRunHPMax();
+			float nextRunHp = prevRunHp;
+			if (m_PlayerMaxHP > prevRunHpMax)
+			{
+				nextRunHp += (m_PlayerMaxHP - prevRunHpMax);
+			}
+			stageManager.SetRunHpState(nextRunHp, m_PlayerMaxHP);
+		}
+		m_PlayerCurrentHP = stageManager.GetRunHP();
+		m_PlayerCurrentHP = std::round(std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP));
 
 
 		// sound notify 바인딩
@@ -444,7 +459,7 @@ namespace game
 	{
 		if (engine::Input::IsKeyPressed(engine::Keys::F3))
 		{
-			m_PlayerCurrentHP = 100.0f;
+			m_PlayerCurrentHP = m_PlayerMaxHP;
 			m_fragileGaugeCurrent = 0.0f;
 		}
 
@@ -2168,6 +2183,7 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 
 		m_PlayerCurrentHP -= damage;
 		if (m_PlayerCurrentHP < 0.0f) m_PlayerCurrentHP = 0.0f;
+		m_PlayerCurrentHP = std::round(m_PlayerCurrentHP);
 		m_invincibleRemainTime = std::max(0.0f, m_invincibleTime);
 
 		StageManager::Get().SetRunHP(m_PlayerCurrentHP);

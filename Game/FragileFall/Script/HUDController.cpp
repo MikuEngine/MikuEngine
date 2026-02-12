@@ -1,6 +1,7 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "HUDController.h"
 #include <algorithm>
+#include <cmath>
 
 #include <Manager/StageManager.h>
 
@@ -180,8 +181,9 @@ namespace game
     {
         if (!m_playerScript) return 0;
 
-        const int hp = static_cast<int>(m_playerScript->GetCurrentHp());
-        int half = hp / kHpPerHalfHeart;
+        const int hpPerHalfHeart = CalcHpPerHalfHeart();
+        const int hp = static_cast<int>(std::round(m_playerScript->GetCurrentHp()));
+        int half = hp / hpPerHalfHeart;
 
         const int maxHalfHp = m_visibleHeartCount * 2;
         if (half < 0) half = 0;
@@ -192,12 +194,28 @@ namespace game
 
     int HUDController::CalcVisibleHeartCountFromPlayer() const
     {
-        if (!m_playerScript) return 5;
+        if (!m_playerScript) return kBaseHeartCount;
 
+        const int hpPerHeart = CalcHpPerHeart();
         const float maxHp = m_playerScript->GetMaxHp();
-        int hearts = static_cast<int>(maxHp / static_cast<float>(kHpPerHeart));
+        int hearts = static_cast<int>(std::round(maxHp / static_cast<float>(hpPerHeart)));
         hearts = std::clamp(hearts, 1, kHeartCount);
         return hearts;
+    }
+
+    int HUDController::CalcHpPerHeart() const
+    {
+        if (!m_playerScript)
+            return 20;
+
+        const float baseMaxHp = std::max(1.0f, m_playerScript->GetBaseMaxHp());
+        return std::max(1, static_cast<int>(std::round(baseMaxHp / static_cast<float>(kBaseHeartCount))));
+    }
+
+    int HUDController::CalcHpPerHalfHeart() const
+    {
+        const int hpPerHeart = CalcHpPerHeart();
+        return std::max(1, hpPerHeart / 2);
     }
 
     void HUDController::ApplyHearts()
