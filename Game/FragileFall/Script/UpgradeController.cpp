@@ -275,9 +275,9 @@ namespace game
     {
         Object::Save(j);
 
-        //j["Ruby"] = m_ruby;
-        //j["Sapphire"] = m_sapphire;
-        //j["Emerald"] = m_emerald;
+        j["Ruby"] = m_ruby;
+        j["Sapphire"] = m_sapphire;
+        j["Emerald"] = m_emerald;
 
         engine::json purchased = engine::json::array();
         for (const auto& [id, isBought] : m_purchased)
@@ -292,9 +292,9 @@ namespace game
     {
         Object::Load(j);
 
-        //engine::JsonGet(j, "Ruby", m_ruby);
-        //engine::JsonGet(j, "Sapphire", m_sapphire);
-        //engine::JsonGet(j, "Emerald", m_emerald);
+        engine::JsonGet(j, "Ruby", m_ruby);
+        engine::JsonGet(j, "Sapphire", m_sapphire);
+        engine::JsonGet(j, "Emerald", m_emerald);
 
         m_purchased.clear();
         m_unlocked.clear();
