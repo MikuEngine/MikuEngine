@@ -35,7 +35,7 @@
 	},
 	{ 
 		"Type": "SoundQue",
-		"Name": "Player_Break",
+		"Name": "Player_Break_Random",
 		"Paths": [
 			"Resource/Sound/SFX/Player/Player_Break.wav",
 			"Resource/Sound/SFX/Player/Player_Break_2.wav"

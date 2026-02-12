@@ -1,0 +1,706 @@
+{
+    "Name": "Effect_Break_V1.01_big_Blue",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "Effect_Break_V1.01_big_Blue",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 1.7079148292541504,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true,
+                    "IsPlaying": true,
+                    "AutoDestroy": true,
+                    "Duration": 0.0,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/smash.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 6.079999923706055,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 8.0,
+                            "SizeEnd": 8.0,
+                            "SizeVariation": 1.0,
+                            "LifeTime": 0.10000000149011612,
+                            "RotationMin": 0.0,
+                            "RotationMax": 0.0,
+                            "RotationSpeedMin": 0.0,
+                            "RotationSpeedMax": 0.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 1,
+                                    "Cycles": 100,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/Effect_crystal1.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 5.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.16234104335308075,
+                                "y": 0.6370656490325928,
+                                "z": 0.6095719933509827,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.019607843831181526,
+                                "y": 0.027450980618596077,
+                                "z": 0.658823549747467,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 4.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 1.0,
+                            "SizeEnd": 1.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 1,
+                            "Radius": 1.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 10,
+                                    "Cycles": 60,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/Effect_crystal2.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 2.9000000953674316,
+                                "y": 6.099999904632568,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 4.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 1.5,
+                            "SizeEnd": 1.5,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 3,
+                                    "Cycles": 100,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/Effect_crystal3.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 5.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 4.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 1.399999976158142,
+                            "SizeEnd": 1.399999976158142,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 1,
+                            "Radius": 1.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 2,
+                                    "Cycles": 100,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/Effect_crystal4.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 5.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 4.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 0.18000000715255737,
+                            "SizeEnd": 0.18000000715255737,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 1,
+                            "Radius": 1.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 146,
+                                    "Cycles": 100,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/Effect_crystal5.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 5.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 4.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 0.4000000059604645,
+                            "SizeEnd": 0.4000000059604645,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 1,
+                            "Radius": 1.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 27,
+                                    "Cycles": 100,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/Effect_crystal6.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 5.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": -9.800000190734863,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 4.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 0.6299999952316284,
+                            "SizeEnd": 0.6299999952316284,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 13,
+                                    "Cycles": 100,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        },
+                        {
+                            "TexturePath": "Resource/Texture/dust_2.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.16078431904315948,
+                                "y": 0.6352941393852234,
+                                "z": 0.6078431606292725,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0,
+                                "w": 0.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 4.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 2.0,
+                            "SizeEnd": 8.0,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 0.4000000059604645,
+                            "RotationMin": 0.0,
+                            "RotationMax": 0.0,
+                            "RotationSpeedMin": 0.0,
+                            "RotationSpeedMax": 0.0,
+                            "EmissionRate": 0.0,
+                            "MaxParticles": 1000,
+                            "Shape": 0,
+                            "Radius": 0.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": true,
+                            "TextureTilesX": 1,
+                            "TextureTilesY": 1,
+                            "TextureTileCount": 1,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 1,
+                                    "Cycles": 100,
+                                    "Interval": 2.0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
