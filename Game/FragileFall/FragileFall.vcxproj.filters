@@ -22,6 +22,7 @@
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp" />
     <ClCompile Include="Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Script\Boss\BossMapCrystalDestructible.cpp" />
     <ClCompile Include="Script\CameraEffectScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundBlue.cpp" />
@@ -92,6 +93,7 @@
     <ClCompile Include="Script\StageClearExecutionTarget.cpp" />
     <ClCompile Include="Script\UI\UICurrencyAnimator.cpp" />
     <ClCompile Include="Script\UI\UICurrentStageTitle.cpp" />
+    <ClCompile Include="Script\Scene\SceneController_Boss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -115,6 +117,7 @@
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.h" />
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h" />
     <ClInclude Include="Script\Boss\BossScript.h" />
+    <ClInclude Include="Script\Boss\BossMapCrystalDestructible.h" />
     <ClInclude Include="Script\CameraEffectScript.h" />
     <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
     <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundBlue.h" />
@@ -192,5 +195,6 @@
     <ClInclude Include="Script\StageClearExecutionTarget.h" />
     <ClInclude Include="Script\UI\UICurrencyAnimator.h" />
     <ClInclude Include="Script\UI\UICurrentStageTitle.h" />
+    <ClInclude Include="Script\Scene\SceneController_Boss.h" />
   </ItemGroup>
 </Project>

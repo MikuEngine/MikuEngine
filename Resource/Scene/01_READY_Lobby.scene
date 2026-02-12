@@ -228,7 +228,7 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false,
+                    "CastShadow": true,
                     "CullMode": 1,
                     "SubsurfaceStrength": 0.0,
                     "SubsurfaceColor": [

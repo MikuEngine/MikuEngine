@@ -9,6 +9,7 @@
 
 #include <Framework/System/SoundSystem.h>
 #include <Framework/Scene/SceneManager.h>
+#include <Engine/Framework/Scene/Scene.h>
 #include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Framework/Object/Component/RectTransform.h>
@@ -558,6 +559,10 @@ namespace game
     void SceneController_Lobby::HandleEscape()
     {
         if (m_upgradeTransition || m_optionTransition)
+            return;
+
+        engine::Scene* scene = engine::SceneManager::Get().GetScene();
+        if (scene->GetName() == "10_PROTO_TutorialLobby")
             return;
 
         if (m_isOptionOpen)

@@ -1,19 +1,19 @@
 {
-    "Name": "1_Monster_PointedType_Purple",
+    "Name": "2_Monster_PointedType_Green",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "1_Monster_PointedType_Purple",
+            "Name": "2_Monster_PointedType_Green",
             "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 11.142187118530273,
-                        "y": 1.1233778423047625e-06,
-                        "z": -9.869368553161621
+                        "x": -3.9064865112304688,
+                        "y": 1.3001628076381166e-06,
+                        "z": -9.655129432678223
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -64,7 +64,7 @@
                     "syncWithTransform": false,
                     "layer": 2,
                     "materialType": 1,
-                    "radius": 1.0299999713897705,
+                    "radius": 1.2000000476837158,
                     "height": 4.329999923706055
                 },
                 {
@@ -76,21 +76,21 @@
                     "KinematicAcceleration": 50.0,
                     "KinematicDeceleration": 70.0,
                     "AttackType": 0,
-                    "MonsterTier": 4,
-                    "Hp": 40.0,
-                    "MaxHp": 40.0,
-                    "MoveSpeed": 8.0,
-                    "AttackDamage": 1.0,
+                    "MonsterTier": 1,
+                    "Hp": 50.0,
+                    "MaxHp": 50.0,
+                    "MoveSpeed": 8.5,
+                    "AttackDamage": 0.5,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 300.0,
-                    "AttackRange": 25.0,
+                    "AttackRange": 10.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
-                    "BulletSpeed": 10.0,
+                    "BulletSpeed": 15.0,
                     "BulletLifetime": 3.0,
                     "BulletScale": 1.0,
-                    "SpreadAngle": 0.9399999976158142,
+                    "SpreadAngle": 0.20000000298023224,
                     "CurvedAngularSpeed": 2.0,
                     "CurvedRadiusGrowth": 3.0,
                     "OwnGravity": 9.800000190734863,
@@ -99,29 +99,29 @@
                     "ExplosionRadius": 3.0,
                     "IsDoSingleShot": false,
                     "AttackAnimationDuration": 1.100000023841858,
-                    "FleeRange": 15.0,
-                    "SafeRange": 21.0,
-                    "FleeSpeedMultiplier": 1.2000000476837158,
-                    "FleeDistanceMin": 4.0,
-                    "FleeDistanceMax": 8.0,
-                    "FleeSafetyMargin": 2,
+                    "FleeRange": 10.0,
+                    "SafeRange": 14.0,
+                    "FleeSpeedMultiplier": 1.7000000476837158,
+                    "FleeDistanceMin": 20.0,
+                    "FleeDistanceMax": 70.0,
+                    "FleeSafetyMargin": 1,
                     "WallCollisionInfoTimeout": 3.0,
-                    "FleeStuckCheckInterval": 1.0,
+                    "FleeStuckCheckInterval": 2.0,
                     "FleeStuckDistanceThreshold": 0.5,
-                    "RedemptionSpeedMultiplier": 1.7000000476837158,
-                    "RedemptionTargetDistance": 7.0
+                    "RedemptionSpeedMultiplier": 1.5,
+                    "RedemptionTargetDistance": 5.0
                 },
                 {
                     "Type": "PathfindingAgent",
                     "Active": true,
-                    "PathUpdateInterval": 0.5,
-                    "WaypointReachDistance": 1.0,
-                    "TargetMoveThreshold": 0.30000001192092896
+                    "PathUpdateInterval": 1.0,
+                    "WaypointReachDistance": 0.5,
+                    "TargetMoveThreshold": 1.0
                 },
                 {
                     "Type": "SkeletalMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/player/Final/monster/purple_monster/crystal_monster_purple_final.fbx",
+                    "MeshFilePath": "Resource/Model/player/Final/monster/green_monster/crystal_monster_green_final.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
