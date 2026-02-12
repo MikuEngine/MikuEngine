@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Stage",
-    "NumGameObjects": 125,
+    "NumGameObjects": 127,
     "GameObjects": [
         {
             "ID": 0,
@@ -805,6 +805,7 @@
                     "FragileGaugeMax": 300.0,
                     "FragileGaugeRisePerSecond": 1.0,
                     "PlayerMaxHP": 100.0,
+                    "BasicHpDoNotTouch": 100.0,
                     "InvincibleTime": 0.5,
                     "IsInvincible": false,
                     "EED_Enable": false,
@@ -8546,7 +8547,12 @@
                     "DeathCinematicDuration": 4.0,
                     "DeathCameraApproachRatio": 0.5299999713897705,
                     "DeathCameraTargetYOffset": 2.5,
-                    "DeathCameraMoveSpeed": 2.200000047683716
+                    "DeathCameraMoveSpeed": 2.200000047683716,
+                    "DeathCameraLookAtOffset": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
                 },
                 {
                     "Type": "HUDController",
@@ -11363,6 +11369,141 @@
                         "z": 0.0,
                         "w": 0.0
                     }
+                }
+            ]
+        },
+        {
+            "ID": 125,
+            "Name": "Canvas_StageInfo",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                },
+                {
+                    "Type": "UICurrentStageTitle",
+                    "Active": true,
+                    "FadeDelay": 1.0,
+                    "FadeDuration": 3.0
+                }
+            ]
+        },
+        {
+            "ID": 126,
+            "ParentID": 125,
+            "Name": "TitleText",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -300.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIText",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Text": "\"스테이지 텍스트\"",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPx": 60,
+                    "Color": {
+                        "x": 0.9266409277915955,
+                        "y": 0.0,
+                        "z": 0.49373170733451843,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "Bold": false,
+                    "AlignH": 1,
+                    "AlignV": 1,
+                    "LetterSpacingPx": 0.0,
+                    "LineSpacingMul": 1.0
                 }
             ]
         }

@@ -16,9 +16,6 @@ namespace game
 
         static std::string BuildStageLabel(int stageNumber)
         {
-            if (stageNumber == 10)
-                return "Boss";
-
             return "심도 " + std::to_string(stageNumber);
         }
     }
@@ -33,6 +30,9 @@ namespace game
         if (auto* go = engine::GameObject::Find("TitleText"))
             m_titleText = go->GetComponent<engine::UIText>();
 
+        // 색깔 설정해두면 설정해둔 색깔로 반영
+        m_color = m_titleText->GetColor();
+
         m_stageNumber = StageManager::Get().GetCurrentStage();
 
         m_elapsed = 0.0f;
@@ -45,7 +45,7 @@ namespace game
 
         // 시작 알파 1
         if (m_titleText)
-            m_titleText->SetColor(engine::Vector4(1, 1, 1, 1));
+            m_titleText->SetColor({ m_color.x, m_color.y, m_color.z, 1.0f });
     }
 
     void UICurrentStageTitle::Update()
@@ -55,19 +55,22 @@ namespace game
 
     void UICurrentStageTitle::OnGui()
     {
-        ImGui::DragFloat("Delay", &m_fadeDelay);
+        ImGui::DragFloat("FadeDelay", &m_fadeDelay, 0.01f, 0.0f, 10.0f);
+        ImGui::DragFloat("FadeDuration", &m_fadeDuration, 0.01f, 0.01f, 10.0f);
     }
 
     void UICurrentStageTitle::Save(engine::json& j) const
     {
         Object::Save(j);
         j["FadeDelay"] = m_fadeDelay;
+        j["FadeDuration"] = m_fadeDuration;
     }
 
     void UICurrentStageTitle::Load(const engine::json& j)
     {
         Object::Load(j);
         engine::JsonGet(j, "FadeDelay", m_fadeDelay);
+        engine::JsonGet(j, "FadeDuration", m_fadeDuration);
     }
 
     void UICurrentStageTitle::TimeCheck()
@@ -80,7 +83,7 @@ namespace game
 
         if (m_elapsed < m_fadeDelay)
         {
-            m_titleText->SetColor(engine::Vector4(1, 1, 1, 1));
+            m_titleText->SetColor(engine::Vector4(m_color.x, m_color.y, m_color.z, 1.0f));
             return;
         }
 
@@ -90,11 +93,12 @@ namespace game
         const float t = Clamp01(fadeElapsed / dur);
         const float a = 1.0f - t;
 
-        m_titleText->SetColor(engine::Vector4(1, 1, 1, a));
+        m_titleText->SetColor(engine::Vector4(m_color.x, m_color.y, m_color.z, a));
 
         if (t >= 1.0f)
         {
             m_done = true;
+            m_titleText->SetActive(false);
         }
     }
 }
