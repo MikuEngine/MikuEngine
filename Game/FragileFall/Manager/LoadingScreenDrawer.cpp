@@ -202,14 +202,14 @@ namespace game
 
 			// 폰트생성
 			engine::FontData::Desc fd{};
-			fd.ttfPath = "Resource/Font/Chilgok_lws_Font.ttf";
+			fd.ttfPath = "Resource/Font/GG_Font.ttf";
 			fd.pixelSize = 40; // 생성할 텍스처의 퀄리티 기준
 			fd.atlasWidth = 1024;
 			fd.atlasHeight = 1024;
 			fd.maxPages = 1;
 			fd.atlasFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-			fd.syntheticBold = true;
+			fd.syntheticBold = false;
 
 			g_loadingFont = std::make_shared<engine::FontData>();
 			g_loadingFont->Initialize(engine::GraphicsDevice::Get().GetDevice().Get(), fd);
