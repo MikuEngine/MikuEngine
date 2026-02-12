@@ -3,11 +3,12 @@
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Monster/RoundType/MonsterRoundType.h"
-#include "Script/CharacterScript/Monster/RoundType/MonsterRoundGreen.h"
 #include "Script/Boss/BossPattern/Components/BossBulletThreeway.h"
 #include "Script/Boss/BossPattern/Components/BossBulletEightway.h"
 #include "Script/ParticleAttachment.h"
 
+
+#include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
 #include <Framework/Asset/Prefab.h>
 #include <Framework/System/SoundSystem.h>
 
@@ -73,6 +74,9 @@ namespace game
 		auto* bullet = go->GetComponent<BulletMonster>();
 
 		bullet->Setup(std::move(movement), params, this);
+
+		// 색상별 투사체 메쉬변경
+		SetBulletMeshByTier(go, params.tier);
 
 		// effect
 		auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
@@ -410,6 +414,32 @@ namespace game
 		// 추후 구현:
 		// case BulletType::Homing:
 		//     return std::make_unique<HomingMovement>(params.target, params.turnSpeed);
+		}
+	}
+
+	void BulletFactory::SetBulletMeshByTier(engine::Ptr<engine::GameObject> bulletGO, MonsterTier tier)
+	{
+		auto staticRenderer = bulletGO->GetComponent<engine::StaticMeshRenderer>();
+		if (staticRenderer)
+		{
+			switch (tier)
+			{
+			case MonsterTier::Green:
+				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/green/crystal_sharp_single_green.fbx");
+				break;
+			case MonsterTier::Blue:
+				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/blue/crystal_sharp_single_blue.fbx");
+				break;
+			case MonsterTier::Red:
+				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/red/crystal_sharp_single_red.fbx");
+				break;
+			case MonsterTier::Purple:
+				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/purple/crystal_sharp_single_purple.fbx");
+				break;
+			default:
+				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/white/crystal_sharp_single_white.fbx");
+				break;
+			}
 		}
 	}
 
