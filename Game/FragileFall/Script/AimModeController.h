@@ -51,7 +51,7 @@ namespace game
 
     public:
         void SetCombatAimEnabled(bool enabled); // 전투모드 on/off
-        void SetPaused(bool paused);            // 퍼즈상태
+        void SetPaused(bool paused);            // 퍼즈상태 (Primary만 반영)
 
         AimMode GetEffectiveMode() const { return ComputeEffectiveMode(); }
 
@@ -60,11 +60,11 @@ namespace game
         void SetMoving(bool moving) { m_isMoving = moving; }
         
         /** 처형 대상 위에 커서가 있는지 설정 (ExecutionIndicatorManager에서 호출) */
-        void SetOnExecutionTarget(bool isOnTarget) { m_isOnExecutionTarget = isOnTarget; }
+        void SetOnExecutionTarget(bool isOnTarget);
         /** 일반 적 대상 위에 커서가 있는지 설정 */
         void SetOnEnemyTarget(bool isOnEnemy) { m_isOnEnemyTarget = isOnEnemy; }
         /** 처형 진행 중 커서를 강제로 Execute로 유지 (처형 시작~상태 종료) */
-        void SetExecutionInProgress(bool inProgress) { m_isExecutionInProgress = inProgress; }
+        void SetExecutionInProgress(bool inProgress);
 
         // 플레이어에서 에임포인터 방향을 얻는 함수
         engine::Vector3 GetDirectionFrom(const engine::Vector3& fromPosition) const;
@@ -73,6 +73,12 @@ namespace game
         const engine::Vector3& GetWorldPosition() const { return m_worldPosition; }
         // 현재 마우스 레이를 임의의 Y 평면에 투영한 교점
         bool TryGetMouseRayPlaneIntersection(float planeY, engine::Vector3& outWorldPos) const;
+
+    private:
+        static AimModeController* s_primaryController;
+        bool IsOnPlayerObject() const;
+        bool RefreshPrimaryAuthority();
+        bool IsPrimaryController() const { return s_primaryController == this; }
 
     private:
         AimMode m_baseMode = AimMode::Pointer;

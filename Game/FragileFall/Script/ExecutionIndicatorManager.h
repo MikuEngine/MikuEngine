@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Ptr.h>
@@ -159,6 +159,12 @@ namespace game
         bool m_wasPlayerDead = false;
         std::string m_lastSceneName;
 
+        // 커서 처형 판정 래치(히스테리시스)
+        // - true -> false 전환만 지연하여 1~2프레임 판정 흔들림을 흡수
+        int m_executionTargetOffLatchFrames = 2;
+        int m_executionTargetLostFrames = 0;
+        bool m_executionTargetLatched = false;
+
     public:
         void Awake() override;
         void Start() override;
@@ -221,5 +227,6 @@ namespace game
         void ResetKillMessageStats();
         std::string BuildBalancedKillMessageKey();
         void PushRandomKillMessage();
+        void UpdateExecutionTargetLatch(bool isOnExecutionTargetRaw);
     };
 }

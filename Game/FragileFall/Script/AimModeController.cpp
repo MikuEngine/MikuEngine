@@ -26,6 +26,42 @@
 
 namespace game
 {
+    AimModeController* AimModeController::s_primaryController = nullptr;
+
+    bool AimModeController::IsOnPlayerObject() const
+    {
+        const auto* go = GetGameObject();
+        return go && go->GetName() == "Player";
+    }
+
+    bool AimModeController::RefreshPrimaryAuthority()
+    {
+        if (!GetGameObject())
+        {
+            return false;
+        }
+
+        if (!s_primaryController || !s_primaryController->GetGameObject())
+        {
+            s_primaryController = this;
+            return true;
+        }
+
+        if (s_primaryController == this)
+        {
+            return true;
+        }
+
+        // Player에 붙은 컨트롤러를 최우선 Primary로 사용한다.
+        if (IsOnPlayerObject() && !s_primaryController->IsOnPlayerObject())
+        {
+            s_primaryController = this;
+            return true;
+        }
+
+        return false;
+    }
+
     void AimModeController::Awake()
     {
     }
@@ -33,6 +69,11 @@ namespace game
     void AimModeController::Start()
     {       
         LOG_PRINT("[AimPointer] Started");
+        RefreshPrimaryAuthority();
+        if (!IsPrimaryController())
+        {
+            return;
+        }
 
         std::string sceneName = engine::SceneManager::Get().GetScene()->GetName();
 
@@ -70,6 +111,12 @@ namespace game
 
     void AimModeController::Update()
     {
+        RefreshPrimaryAuthority();
+        if (!IsPrimaryController())
+        {
+            return;
+        }
+
         // 클라이언트 상의 마우스 위치
         engine::Vector2 mousePx = engine::Input::GetMousePosition();
         const AimMode mode = ComputeEffectiveMode();
@@ -116,8 +163,57 @@ namespace game
 
     void AimModeController::SetPaused(bool paused)
     {
+        RefreshPrimaryAuthority();
+        if (!IsPrimaryController())
+        {
+            if (s_primaryController && s_primaryController != this)
+            {
+                s_primaryController->SetPaused(paused);
+            }
+            return;
+        }
+
         m_paused = paused;
 
+    }
+
+    void AimModeController::SetOnExecutionTarget(bool isOnTarget)
+    {
+        RefreshPrimaryAuthority();
+        if (!IsPrimaryController())
+        {
+            if (s_primaryController && s_primaryController != this)
+            {
+                s_primaryController->SetOnExecutionTarget(isOnTarget);
+            }
+            return;
+        }
+
+        m_isOnExecutionTarget = isOnTarget;
+
+        // ExecutionIndicatorManager가 판정한 결과를 즉시 커서에 반영한다.
+        // (업데이트 순서 차이로 한 프레임 늦게 일반 커서가 보이는 현상 방지)
+        const AimMode mode = ComputeEffectiveMode();
+        const AimCursorState desired = ComputeDesiredCursorState(mode);
+        if (desired != m_cursor)
+        {
+            ApplyCursorState(desired);
+        }
+    }
+
+    void AimModeController::SetExecutionInProgress(bool inProgress)
+    {
+        RefreshPrimaryAuthority();
+        if (!IsPrimaryController())
+        {
+            if (s_primaryController && s_primaryController != this)
+            {
+                s_primaryController->SetExecutionInProgress(inProgress);
+            }
+            return;
+        }
+
+        m_isExecutionInProgress = inProgress;
     }
 
     AimModeController::AimCursorState AimModeController::ComputeDesiredCursorState(AimMode mode) const

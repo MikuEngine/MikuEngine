@@ -104,6 +104,9 @@ namespace game
         {
             m_lastSceneName = scene->GetName();
         }
+
+        m_executionTargetLostFrames = 0;
+        m_executionTargetLatched = false;
     }
 
     void ExecutionIndicatorManager::Update()
@@ -220,11 +223,8 @@ namespace game
             // AimModeController에 처형 대상 위에 마우스가 있는지 즉시 알림
             // - 사거리 내 + 처형 중이 아님
             // ═══════════════════════════════════════════════════════════════
-            bool isOnExecutionTarget = isInRange && !isCurrentlyExecuting;
-            if (m_aimController)
-            {
-                m_aimController->SetOnExecutionTarget(isOnExecutionTarget);
-            }
+            const bool isOnExecutionTarget = isInRange && !isCurrentlyExecuting;
+            UpdateExecutionTargetLatch(isOnExecutionTarget);
             
             // 라인: 사거리 내이고 현재 처형 중이 아닌 경우에만 표시
             if (m_player && m_lineInstance && fragileMonster->GetTransform() && !isCurrentlyExecuting && isInRange)
@@ -284,10 +284,39 @@ namespace game
             // ═══════════════════════════════════════════════════════════════
             // 마우스가 처형 대상 위에 없음을 AimModeController에 알림
             // ═══════════════════════════════════════════════════════════════
-            if (m_aimController)
+            UpdateExecutionTargetLatch(false);
+        }
+    }
+
+    void ExecutionIndicatorManager::UpdateExecutionTargetLatch(bool isOnExecutionTargetRaw)
+    {
+        const int offLatchFrames = std::max(0, m_executionTargetOffLatchFrames);
+
+        if (isOnExecutionTargetRaw)
+        {
+            m_executionTargetLatched = true;
+            m_executionTargetLostFrames = 0;
+        }
+        else if (m_executionTargetLatched)
+        {
+            if (m_executionTargetLostFrames < offLatchFrames)
             {
-                m_aimController->SetOnExecutionTarget(false);
+                ++m_executionTargetLostFrames;
             }
+
+            if (m_executionTargetLostFrames >= offLatchFrames)
+            {
+                m_executionTargetLatched = false;
+            }
+        }
+        else
+        {
+            m_executionTargetLostFrames = 0;
+        }
+
+        if (m_aimController)
+        {
+            m_aimController->SetOnExecutionTarget(m_executionTargetLatched);
         }
     }
 
@@ -1371,6 +1400,12 @@ namespace game
             ImGui::SetTooltip("Frames to wait after collider trigger change before teleport");
         }
 
+        ImGui::DragInt("Execution Target Off Latch Frames", &m_executionTargetOffLatchFrames, 1, 0, 5);
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("처형 대상 판정이 사라져도 false로 내리기 전 대기 프레임 수");
+        }
+
         ImGui::Separator();
         ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "=== DEBUG: Execution Cursor ===");
         
@@ -1418,6 +1453,8 @@ namespace game
         ImGui::Text("Waiting for Execution Anim: %s", m_isWaitingForExecutionAnim ? "Yes" : "No");
         ImGui::Text("Waiting for Idle: %s", m_isWaitingForIdle ? "Yes" : "No");
         ImGui::Text("Waiting for Death: %s", m_isWaitingForDeath ? "Yes" : "No");
+        ImGui::Text("Execution Target Latched: %s", m_executionTargetLatched ? "Yes" : "No");
+        ImGui::Text("Execution Target Lost Frames: %d / %d", m_executionTargetLostFrames, std::max(0, m_executionTargetOffLatchFrames));
         
         if (m_isWaitingForTrigger)
         {
@@ -1466,6 +1503,7 @@ namespace game
         j["TeleportAfterimageUseDefaultGradient"] = m_teleportAfterimageUseDefaultGradient;
         j["TeleportAfterimageTrailGradient"] = m_teleportAfterimageTrailGradient;
         j["TriggerWaitFramesRequired"] = m_triggerWaitFramesRequired;
+        j["ExecutionTargetOffLatchFrames"] = m_executionTargetOffLatchFrames;
     }
 
     void ExecutionIndicatorManager::Load(const engine::json& j)
@@ -1513,5 +1551,7 @@ namespace game
             m_teleportAfterimageNumSlices = static_cast<size_t>(std::max(0, n));
         }
         engine::JsonGet(j, "TriggerWaitFramesRequired", m_triggerWaitFramesRequired);
+        engine::JsonGet(j, "ExecutionTargetOffLatchFrames", m_executionTargetOffLatchFrames);
+        m_executionTargetOffLatchFrames = std::max(0, m_executionTargetOffLatchFrames);
     }
 }
