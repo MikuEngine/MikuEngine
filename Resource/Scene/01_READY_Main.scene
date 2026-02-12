@@ -392,8 +392,8 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 40.0
+                        "x": -110.0,
+                        "y": 100.0
                     },
                     "Width": 0.0,
                     "Height": 0.0,
@@ -507,7 +507,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": -600.0,
-                        "y": 0.0
+                        "y": 10.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -693,7 +693,7 @@
                     },
                     "AlphaBlend": true,
                     "Bold": true,
-                    "AlignH": 1,
+                    "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
@@ -731,7 +731,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": -600.0,
-                        "y": 130.0
+                        "y": 110.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -917,7 +917,7 @@
                     },
                     "AlphaBlend": true,
                     "Bold": true,
-                    "AlignH": 1,
+                    "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
@@ -955,7 +955,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": -600.0,
-                        "y": 260.0
+                        "y": 210.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -1141,7 +1141,7 @@
                     },
                     "AlphaBlend": true,
                     "Bold": true,
-                    "AlignH": 1,
+                    "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
@@ -1179,7 +1179,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": -600.0,
-                        "y": 390.0
+                        "y": 310.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -1365,7 +1365,7 @@
                     },
                     "AlphaBlend": true,
                     "Bold": true,
-                    "AlignH": 1,
+                    "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0

@@ -1,0 +1,74 @@
+{
+    "Name": "StageClearExecutionTarget",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "StageClearExecutionTarget",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": -1.1920928955078125e-07,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 2.0,
+                        "y": 2.0,
+                        "z": 2.0
+                    }
+                },
+                {
+                    "Type": "SpriteRenderer",
+                    "Active": true,
+                    "TextureFilePath": "Resource/Texture/temp_ExecutionExitDamageBoundary.png",
+                    "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl",
+                    "RenderType": 0,
+                    "BillboardType": 4,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "CullMode": 0
+                },
+                {
+                    "Type": "SphereCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": true,
+                    "layer": 7,
+                    "materialType": 0,
+                    "radius": 1.600000023841858
+                },
+                {
+                    "Type": "StageClearExecutionTarget",
+                    "Active": true
+                }
+            ]
+        }
+    ]
+}
