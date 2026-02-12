@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -2223,6 +2223,12 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::TakeDamage(float damage)
 	{
+		// Fail/연출 등으로 조작이 잠긴 상태에서는 추가 피격을 무시한다.
+		if (m_isControlLocked || IsInState("Dead"))
+		{
+			return;
+		}
+
 		if (m_isInvincible)
 		{
 			return;
