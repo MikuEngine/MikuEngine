@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "SceneController_Play.h"
 
 #include <Core/App/AppContext.h>
@@ -330,7 +330,7 @@ namespace game
         }
 
         // Debug
-        if (engine::Input::IsKeyPressed(engine::Keys::F4))
+        if (engine::Input::IsKeyPressed(engine::Keys::F3) && engine::Input::IsKeyPressed(engine::Keys::Z))
         {
             Fail();
         }

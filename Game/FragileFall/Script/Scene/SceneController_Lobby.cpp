@@ -203,7 +203,7 @@ namespace game
 
         m_isOptionOpen = false;
         m_isUpgradeOpen = false;
-
+  
         auto& app = engine::AppContext::GetApp();
         const auto& s = app.GetUserSettings();
 

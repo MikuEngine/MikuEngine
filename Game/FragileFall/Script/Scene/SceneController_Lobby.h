@@ -40,7 +40,6 @@ namespace game
         void BackToHub();
 
         void Back();
-        
 
         // OnHover
         void ShowEffect(const std::string& targetName, bool hovered);

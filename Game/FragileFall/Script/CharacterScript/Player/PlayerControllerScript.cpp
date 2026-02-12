@@ -558,7 +558,7 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::UpdateGameLogic()
 	{
-		if (engine::Input::IsKeyPressed(engine::Keys::F3))
+		if (engine::Input::IsKeyPressed(engine::Keys::F3) && engine::Input::IsKeyPressed(engine::Keys::Q))
 		{
 			m_PlayerCurrentHP = m_PlayerMaxHP;
 			m_fragileGaugeCurrent = 0.0f;
