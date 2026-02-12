@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "StageClearExecutionTarget.h"
 
 #include <Framework/Asset/Prefab.h>
@@ -53,6 +53,8 @@ namespace game
             fill->SetDuration(0.4f);
             fill->SetStepCount(20);
         }
+
+        engine::SoundSystem::Get().Play("Stage_Clear", "SFX/Monster");
     }
 
     void StageClearExecutionTarget::Execute()
