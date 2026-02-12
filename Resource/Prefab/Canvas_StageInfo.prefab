@@ -59,7 +59,8 @@
                 {
                     "Type": "UICurrentStageTitle",
                     "Active": true,
-                    "FadeDelay": 1.0
+                    "FadeDelay": 1.0,
+                    "FadeDuration": 3.0
                 }
             ]
         },
@@ -122,9 +123,9 @@
                     "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 60,
                     "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
+                        "x": 0.3636816143989563,
+                        "y": 0.03837151825428009,
+                        "z": 0.5521235466003418,
                         "w": 1.0
                     },
                     "AlphaBlend": true,

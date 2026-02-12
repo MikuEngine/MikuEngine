@@ -31,6 +31,8 @@ namespace game
         // GameObject
         engine::UIText* m_titleText = nullptr;
 
+        engine::Vector4 m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
         int m_stageNumber = 1;
         float m_elapsed = 0.0f;
         float m_fadeDuration = 3.0f;

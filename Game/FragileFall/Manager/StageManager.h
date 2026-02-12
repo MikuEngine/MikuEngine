@@ -42,6 +42,7 @@ namespace game
         bool m_cleared = false;
         bool m_waitingForStageClearExecution = false;
         engine::Ptr<engine::GameObject> m_currentMapEnvRoot;  // 맵 환경(장애물·스폰 포인트 포함) 루트
+        std::string m_currentMapPrefabName;  // 현재 스테이지의 맵 프리팹 이름 (BeginStage에서 설정)
         engine::Ptr<engine::GameObject> m_stageClearExecutionTarget;
 
         /// 스테이지 간 유지되는 프레자일 게이지 값
@@ -109,6 +110,13 @@ namespace game
 
         /// 현재 스테이지 번호 (1부터, 10·20·30… = 보스).
         int GetCurrentStage() const { return m_currentStage; }
+
+        /// 현재 스테이지의 맵 프리팹 이름 (CSV MapPrefabName). BeginStage() 이후 유효.
+        const std::string& GetCurrentMapPrefabName() const { return m_currentMapPrefabName; }
+
+        /// 맵 프리팹 이름 접두어에서 색상 키워드 반환
+        /// ("Gray","Blue","Red","Green","Purple","White"). 매칭 없으면 "Gray".
+        static std::string GetMapColorFromPrefabName(const std::string& prefabName);
 
         /// 이번 플레이 런에서 번 재화 추가. (스테이지 클리어 보상은 내부에서 자동 지급, 추가 보상용)
         void AddRunCurrency(int ruby, int sapphire, int emerald);

@@ -13,6 +13,7 @@ namespace game
         bool m_executed = false;
 
     public:
+        void Start() override;
         bool IsExecutable() const { return !m_executed; }
         void Execute();
     };
