@@ -1,6 +1,8 @@
 ﻿#include "EnginePCH.h"
 #include "Prefab.h"
 
+#include <unordered_set>
+
 #include "Framework/Asset/AssetManager.h"
 #include "Framework/Asset/PrefabData.h"
 #include "Framework/Object/GameObject/GameObject.h"
@@ -18,17 +20,38 @@ namespace engine
 		}
 
 		std::vector<GameObject*> flatList;
-		static std::function<void(Transform*)> traverse =
-			[&](Transform* tr)
-			{
-				flatList.push_back(tr->GetGameObject());
-				for (auto child : tr->GetChildren())
-				{
-					traverse(child);
-				}
-			};
+		flatList.reserve(128);
 
-		traverse(target->GetTransform());
+		std::vector<Transform*> stack;
+		stack.push_back(target->GetTransform());
+
+		std::unordered_set<Transform*> visited;
+		visited.reserve(128);
+
+		while (!stack.empty())
+		{
+			Transform* tr = stack.back();
+			stack.pop_back();
+
+			if (tr == nullptr)
+			{
+				continue;
+			}
+
+			if (!visited.insert(tr).second)
+			{
+				continue;
+			}
+
+			flatList.push_back(tr->GetGameObject());
+
+			const auto& children = tr->GetChildren();
+			// 기존 DFS(재귀) 순서를 유지하려고 역순 push
+			for (int i = static_cast<int>(children.size()) - 1; i >= 0; --i)
+			{
+				stack.push_back(children[i]);
+			}
+		}
 
 		std::unordered_map<GameObject*, int> ptrToId;
 		for (int i = 0; i < flatList.size(); ++i)
@@ -92,8 +115,13 @@ namespace engine
 			GameObject* go = scene->CreateGameObject(name);
 
 			int id = goJson.value("ID", -1);
+
 			if (id != -1)
 			{
+				if (idToObj.find(id) != idToObj.end())
+				{
+					LOG_ERROR("[Prefab] Duplicate ID({}) found while instantiating '{}'. Later entry overrides earlier entry.", id, name);
+				}
 				idToObj[id] = go;
 			}
 
@@ -112,11 +140,20 @@ namespace engine
 				continue;
 			}
 
-			GameObject* current = idToObj[id];
-			if (parentId != -1 && idToObj.find(parentId) != idToObj.end())
+			auto currentIter = idToObj.find(id);
+			if (currentIter == idToObj.end() || currentIter->second == nullptr)
 			{
-				GameObject* p = idToObj[parentId];
-				current->GetTransform()->SetParent(p->GetTransform(), false);
+				continue;
+			}
+
+			GameObject* current = currentIter->second;
+			if (parentId != -1)
+			{
+				auto parentIter = idToObj.find(parentId);
+				if (parentIter != idToObj.end() && parentIter->second != nullptr)
+				{
+					current->GetTransform()->SetParent(parentIter->second->GetTransform(), false);
+				}
 			}
 			else
 			{

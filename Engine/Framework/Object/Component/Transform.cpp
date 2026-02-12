@@ -182,6 +182,25 @@ namespace engine
 
     void Transform::SetParent(Transform* parent, bool worldPositionStays)
     {
+        // 자기 자신을 부모로 설정하거나, 자신의 자손을 부모로 설정하면 순환 계층이 된다.
+        if (parent == this)
+        {
+            LOG_INFO("[Transform] SetParent rejected: self-parenting is not allowed");
+            return;
+        }
+
+        if (parent != nullptr && IsAncestorOf(parent))
+        {
+            LOG_INFO("[Transform] SetParent rejected: cyclic hierarchy is not allowed");
+            return;
+        }
+
+        // 이미 같은 부모라면 불필요한 detach/attach를 하지 않는다.
+        if (m_parent == parent)
+        {
+            return;
+        }
+
         // World 좌표 저장 (부모 변경 전)
         Vector3 savedWorldPosition;
         Quaternion savedWorldRotation;
@@ -581,6 +600,16 @@ namespace engine
 
     void Transform::AddChild(Transform* child)
     {
+        if (child == nullptr || child == this)
+        {
+            return;
+        }
+
+        if (std::find(m_children.begin(), m_children.end(), child) != m_children.end())
+        {
+            return;
+        }
+
         // 자식 추가 시 비균등 스케일이면 균등 스케일로 강제 변환 (Shearing 방지)
         bool isNonUniformScale = 
             std::abs(m_localScale.x - m_localScale.y) > 0.0001f ||
