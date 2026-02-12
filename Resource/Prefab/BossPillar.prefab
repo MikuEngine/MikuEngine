@@ -11,27 +11,27 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -1.1920928955078125e-07,
+                        "x": 0.0,
                         "y": 0.0,
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": -0.0,
-                        "y": 0.3826834559440613,
-                        "z": -0.0,
-                        "w": 0.9238795042037964
+                        "x": 0.0,
+                        "y": 0.9667921662330627,
+                        "z": 0.0,
+                        "w": -0.25556403398513794
                     },
                     "Scale": {
-                        "x": 2.0,
-                        "y": 2.0,
-                        "z": 2.0
+                        "x": 1.5000067949295044,
+                        "y": 1.5,
+                        "z": 1.5000067949295044
                     }
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
                     "MeshFilePath": "Resource/Model/boss_core/boss_weakness.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
+                    "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
@@ -51,9 +51,9 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 2.809999942779541,
+                    "MaterialEmissiveIntensity": 3.0,
                     "OverrideMaterial": false,
-                    "CastShadow": true,
+                    "CastShadow": false,
                     "CullMode": 1,
                     "SubsurfaceStrength": 0.0,
                     "SubsurfaceColor": [
@@ -61,33 +61,6 @@
                         1.0,
                         1.0
                     ]
-                },
-                {
-                    "Type": "BoxCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 1,
-                    "size": [
-                        1.5,
-                        5.75,
-                        1.5
-                    ]
-                },
-                {
-                    "Type": "BossPillar",
-                    "Active": true
                 }
             ]
         },
@@ -101,7 +74,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
+                        "x": -3.671931743621826,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -112,9 +85,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 1.3333333730697632,
+                        "y": 1.3333333730697632,
+                        "z": 1.3333333730697632
                     }
                 },
                 {
@@ -152,20 +125,20 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.18202467262744904,
-                        "y": 2.2378547191619873,
-                        "z": 0.17960572242736816
+                        "x": 0.22414255142211914,
+                        "y": 2.223998546600342,
+                        "z": 0.013651828281581402
                     },
                     "Rotation": {
-                        "x": -0.12844659388065338,
-                        "y": -0.525063157081604,
-                        "z": -0.16061054170131683,
-                        "w": 0.8258416652679443
+                        "x": 0.04503970220685005,
+                        "y": 0.9732191562652588,
+                        "z": -0.15676845610141754,
+                        "w": 0.16198620200157166
                     },
                     "Scale": {
-                        "x": 0.21399976313114166,
-                        "y": 0.17647717893123627,
-                        "z": 0.21399910748004913
+                        "x": 0.21843864023685455,
+                        "y": 0.1990734487771988,
+                        "z": 0.21843735873699188
                     }
                 },
                 {
@@ -185,14 +158,14 @@
                         "w": 1.0
                     },
                     "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.18532848358154297
+                        "x": 0.9884169697761536,
+                        "y": 0.06487677246332169,
+                        "z": 0.2360350787639618
                     },
                     "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 1.0,
+                    "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 16.0,
+                    "MaterialEmissiveIntensity": 20.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
@@ -208,53 +181,6 @@
         {
             "ID": 3,
             "ParentID": 0,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 1.4131405353546143,
-                        "y": 0.19200000166893005,
-                        "z": -1.1959564685821533
-                    },
-                    "Rotation": {
-                        "x": -0.27347955107688904,
-                        "y": -0.3843495845794678,
-                        "z": -0.12033296376466751,
-                        "w": 0.873501181602478
-                    },
-                    "Scale": {
-                        "x": 0.49999240040779114,
-                        "y": 0.49999967217445374,
-                        "z": 0.4999941289424896
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 2,
-                    "Color": {
-                        "x": 0.92277991771698,
-                        "y": 0.515500009059906,
-                        "z": 0.16389146447181702
-                    },
-                    "Intensity": 11.0,
-                    "Range": 5.900000095367432,
-                    "Angle": 57.97999954223633,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": true
-                }
-            ]
-        },
-        {
-            "ID": 4,
-            "ParentID": 0,
             "Name": "Monster_RoundType_FloorLight",
             "Active": true,
             "Components": [
@@ -262,20 +188,20 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": 3.794115697075724e-14,
+                        "y": -6.208817349140361e-10,
+                        "z": -4.33996319770813e-07
                     },
                     "Rotation": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": 1.0,
                         "z": 0.0,
-                        "w": 1.0
+                        "w": 4.3711374075883214e-08
                     },
                     "Scale": {
-                        "x": 2.0,
-                        "y": 2.0,
-                        "z": 2.0
+                        "x": 2.1066668033599854,
+                        "y": 2.1066668033599854,
+                        "z": 2.1066668033599854
                     }
                 },
                 {
@@ -312,6 +238,53 @@
                         1.0,
                         1.0
                     ]
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 0,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -0.6585609912872314,
+                        "y": 0.17311087250709534,
+                        "z": 1.2690678834915161
+                    },
+                    "Rotation": {
+                        "x": -0.046347737312316895,
+                        "y": 0.9504307508468628,
+                        "z": 0.173579603433609,
+                        "w": 0.25377827882766724
+                    },
+                    "Scale": {
+                        "x": 0.6666573882102966,
+                        "y": 0.6666651964187622,
+                        "z": 0.666658878326416
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.92277991771698,
+                        "y": 0.515500009059906,
+                        "z": 0.16389146447181702
+                    },
+                    "Intensity": 11.0,
+                    "Range": 5.900000095367432,
+                    "Angle": 57.97999954223633,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": true
                 }
             ]
         }
