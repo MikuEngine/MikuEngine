@@ -211,7 +211,7 @@ namespace game
         void UpdateIdleWait();                 // Idle 전이 대기
         void UpdateDeathTimer(float deltaTime);// 몬스터 Death 타이머
         void TriggerMonsterDeath();            // 몬스터 Death 처리
-        void SpawnExecutionEffect(const engine::Vector3& position);  // 처형 이펙트 생성
+        //void SpawnExecutionEffect(const engine::Vector3& position);  // 처형 이펙트 생성
         
         // 충돌 검사 (향후 확장용)
         void SetMonsterColliderTrigger(engine::GameObject* monster, bool isTrigger);
