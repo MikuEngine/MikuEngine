@@ -205,6 +205,9 @@ namespace engine
                 masterGroup->stop();
             }
         }
+
+        m_bgmChannel = nullptr;
+        m_currentBgmKey = "";
     }
 
     void SoundSystem::ApplyVolumes()
