@@ -44,7 +44,7 @@
                     "syncWithTransform": true,
                     "layer": 7,
                     "materialType": 0,
-                    "radius": 1.7899999618530273
+                    "radius": 8.270000457763672
                 },
                 {
                     "Type": "StageClearExecutionTarget",
@@ -151,7 +151,7 @@
                 {
                     "Type": "CrystalIceFillControllerScript",
                     "Active": true,
-                    "Duration": 0.4000000059604645,
+                    "Duration": 1.0,
                     "StepCount": 20,
                     "DrainDuration": 5.0
                 }
