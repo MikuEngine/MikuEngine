@@ -4,6 +4,7 @@
 #include "Script/CharacterScript/Common/BulletParams.h"
 #include <Framework/Object/Ptr.h>
 #include <algorithm>
+#include <cmath>
 #include <functional>
 #include <vector>
 
@@ -527,11 +528,12 @@ namespace game
 
         void SetMaxHp(float v)
         {
-            m_temperFinal.maxHp = v;
-            m_PlayerMaxHP = std::max(1.0f, v);
-            m_PlayerCurrentHP = std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP);
+            const float snappedMaxHp = std::max(1.0f, std::round(v));
+            m_temperFinal.maxHp = snappedMaxHp;
+            m_PlayerMaxHP = snappedMaxHp;
+            m_PlayerCurrentHP = std::round(std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP));
         }
-        void SetCurrentHp(float v) { m_PlayerCurrentHP = std::clamp(v, 0.0f, m_PlayerMaxHP); }
+        void SetCurrentHp(float v) { m_PlayerCurrentHP = std::round(std::clamp(v, 0.0f, m_PlayerMaxHP)); }
         void SetInvincibleTime(float v)
         {
             m_temperFinal.invincibleTime = v;

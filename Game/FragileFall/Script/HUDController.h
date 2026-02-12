@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -36,6 +36,8 @@ namespace game
 
         int CalcHalfHPFromPlayer() const;
         int CalcVisibleHeartCountFromPlayer() const;
+        int CalcHpPerHeart() const;
+        int CalcHpPerHalfHeart() const;
 
         void ApplyHearts();
 
@@ -55,8 +57,7 @@ namespace game
         engine::UIImage* m_fragileImage = nullptr;
 
         static constexpr int kHeartCount = 8;
-        static constexpr int kHpPerHalfHeart = 10;
-        static constexpr int kHpPerHeart = 20;
+        static constexpr int kBaseHeartCount = 5;
         engine::Ptr<engine::UIImage> m_hearts[kHeartCount];
         engine::Ptr<engine::GameObject> m_heartGO[kHeartCount];
         engine::Ptr<engine::RectTransform> m_heartRT[kHeartCount];

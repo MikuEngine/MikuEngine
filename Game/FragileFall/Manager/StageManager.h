@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <cmath>
 
 namespace engine
 {
@@ -52,7 +53,18 @@ namespace game
             m_runHp = m_runHpMax;
         }
         float GetRunHP() const { return m_runHp; }
-        void SetRunHP(float hp) { m_runHp = std::clamp(hp, 0.0f, m_runHpMax); }
+        float GetRunHPMax() const { return m_runHpMax; }
+        void SetRunHP(float hp)
+        {
+            const float clamped = std::clamp(hp, 0.0f, m_runHpMax);
+            m_runHp = std::round(clamped);
+        }
+        void SetRunHpState(float hp, float hpMax)
+        {
+            m_runHpMax = std::max(1.0f, std::round(hpMax));
+            const float clamped = std::clamp(hp, 0.0f, m_runHpMax);
+            m_runHp = std::round(clamped);
+        }
 
         /// 로비에서 플레이 진입 시 호출. m_currentStage = 1 후 씬 전환은 호출 측에서.
         void ResetToStage1()
