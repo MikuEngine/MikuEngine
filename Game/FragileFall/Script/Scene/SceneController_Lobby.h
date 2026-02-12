@@ -66,11 +66,17 @@ namespace game
         bool m_isPlayerMove = false;
         bool m_walkStarted = false;
 
+        //float m_moveElapsed = 0.0f;
+        //float m_moveDuration = 0.9f;
+
+        float m_rotElapsed = 0.0f;
         float m_moveElapsed = 0.0f;
-        float m_moveDuration = 0.9f;
+        float m_rotDuration = 0.6f;   // 회전 0.6초
+        float m_moveDuration = 2.5f; // 이동 2.5초
+        bool  m_rotDone = false;
 
         engine::Vector3 m_moveStartPos = { 0,0,0 };
-        engine::Vector3 m_moveTargetPos = { 0,0,18 };
+        engine::Vector3 m_moveTargetPos = { 10.382f, 0.270f, 29.869f };
 
         float m_moveStartYaw = 0.0f;
         float m_moveTargetYaw = 0.0f;
@@ -81,6 +87,13 @@ namespace game
         bool m_upgradeTransition = false;
         bool m_optionTransition = false;
         float m_uiTransitionTimer = 0.0f;
+
+        engine::Vector3 m_curveP0 = { 0,0,0 };
+        engine::Vector3 m_curveP1 = { 0,0,0 };
+        engine::Vector3 m_curveP2 = { 0,0,0 };
+
+        // 휘는 정도
+        float m_curve01 = 0.95f;
 
     private:
         // GameObject

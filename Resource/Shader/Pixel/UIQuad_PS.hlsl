@@ -372,8 +372,8 @@ void ApplyFx_PressedSink(float2 uv, inout float4 col)
     // 추가 Tint
     float3 tintColor = g_effect1.rgb;
     
-    col.rgb += tintColor * 0.15;
-    //col.rgb = lerp(col.rgb, col.rgb * tintColor, 0.15);
+    //col.rgb += tintColor * 0.15;
+    col.rgb = lerp(col.rgb, col.rgb * tintColor, 0.15);
 }
 
 void ApplyFx_ScreenHit(float2 uv, inout float4 col)

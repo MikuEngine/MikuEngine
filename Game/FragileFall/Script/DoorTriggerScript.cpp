@@ -6,6 +6,9 @@
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/Collider.h>
 #include <Framework/Object/Component/BoxCollider.h>
+#include <Framework/Asset/Prefab.h>
+
+#include "SoundTrigger.h"
 
 // #include <Framework/Object/Component/Renderer/DebugRenderer.h>
 
@@ -54,6 +57,21 @@ namespace game
                 newCollider->SetCenter(engine::Vector3(0.0f, 3.0f, 0.0f));
                 newCollider->SetSize(engine::Vector3(7.0f, 8.0f, 3.0f));
             }
+
+            if (!m_soundTriggerName.empty())
+            if(auto* soundTrigger = engine::GameObject::Find(m_soundTriggerName))
+            {
+				soundTrigger->GetComponent<SoundTrigger>()->SetActivateSound(true);
+			}
+
+            if (!m_effectPrefabName.empty())
+            {
+                auto effect = engine::Prefab::Instantiate(m_effectPrefabName);
+                if (effect && effect->GetTransform())
+                {
+                    effect->GetTransform()->SetLocalScale(engine::Vector3(1.0f, 1.0f, 1.0f));
+                }
+            }
         }
         else
         {
@@ -61,6 +79,27 @@ namespace game
             if (collider)
             {
                 collider->Destroy();
+            }
+
+            auto* soundTrigger = engine::GameObject::Find(m_soundTriggerName);
+            if (soundTrigger)
+            {
+                soundTrigger->GetComponent<SoundTrigger>()->SetActivateSound(false);
+            }
+
+            if (!m_soundTriggerName.empty())
+            if (auto* soundTrigger = engine::GameObject::Find(m_soundTriggerName))
+            {
+                soundTrigger->GetComponent<SoundTrigger>()->SetActivateSound(false);
+            }
+
+            if (!m_effectPrefabName.empty())
+            {
+                auto effect = engine::GameObject::Find(m_effectPrefabName);
+                if (effect)
+                {
+	                effect->Destroy();
+                }
             }
         }
     }
@@ -86,12 +125,21 @@ namespace game
     {
         ImGui::Checkbox("isDoorActive", &m_isActive);
 
-        char sceneNameBuffer[256];
-        strcpy_s(sceneNameBuffer, m_nextSceneName.c_str());
-
-        if (ImGui::InputText("Next Scene Name", sceneNameBuffer, sizeof(sceneNameBuffer)))
+        char nameBuffer[256];
+        strcpy_s(nameBuffer, m_nextSceneName.c_str());
+        if (ImGui::InputText("Next Scene Name", nameBuffer, sizeof(nameBuffer)))
         {
-            m_nextSceneName = sceneNameBuffer;
+            m_nextSceneName = nameBuffer;
+        }
+        strcpy_s(nameBuffer, m_soundTriggerName.c_str());
+        if (ImGui::InputText("Sound Trigger Name", nameBuffer, sizeof(nameBuffer)))
+        {
+            m_soundTriggerName = nameBuffer;
+        }
+		strcpy_s(nameBuffer, m_effectPrefabName.c_str());
+        if (ImGui::InputText("Effect Prefab Name", nameBuffer, sizeof(nameBuffer)))
+        {
+            m_effectPrefabName = nameBuffer;
         }
     }
 
@@ -101,6 +149,8 @@ namespace game
 
         j["isDoorActive"] = m_isActive;
         j["NextSceneName"] = m_nextSceneName;
+        j["SoundTriggerName"] = m_soundTriggerName;
+        j["EffectPrefabName"] = m_effectPrefabName;
     }
 
     void DoorTriggerScript::Load(const engine::json& j)
@@ -109,5 +159,7 @@ namespace game
 
         engine::JsonGet(j, "isDoorActive", m_isActive);
         engine::JsonGet(j, "NextSceneName", m_nextSceneName);
+        engine::JsonGet(j, "SoundTriggerName", m_soundTriggerName);
+        engine::JsonGet(j, "EffectPrefabName", m_effectPrefabName);
     }
 }

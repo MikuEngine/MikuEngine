@@ -1,0 +1,52 @@
+{
+    "Name": "PlayerFloorLight",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "PlayerFloorLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.9112271070480347,
+                        "z": -0.08460107445716858
+                    },
+                    "Rotation": {
+                        "x": 0.7071068286895752,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071068286895752
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0011287927627563,
+                        "z": 1.0011287927627563
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.8880308866500854,
+                        "y": 0.8517186641693115,
+                        "z": 0.1645771563053131
+                    },
+                    "Intensity": 100.0,
+                    "Range": 1.5,
+                    "Angle": 120.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        }
+    ]
+}

@@ -235,8 +235,10 @@
                 {
                     "Type": "DoorTriggerScript",
                     "Active": true,
-                    "isDoorActive": true,
-                    "NextSceneName": ""
+                    "isDoorActive": false,
+                    "NextSceneName": "",
+                    "SoundTriggerName": "SoundTrigger_Next",
+                    "EffectPrefabName": "Effect_Door_Next"
                 }
             ]
         },
@@ -268,7 +270,8 @@
                 {
                     "Type": "SoundTrigger",
                     "Active": true,
-                    "Radius": 8.0,
+                    "isTriggerActive": false,
+                    "Radius": 12.0,
                     "SoundKey": "Door_NextStage",
                     "SoundOption": "SFX/Door"
                 }
@@ -285,7 +288,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -14.365092277526855
+                        "z": -14.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -302,8 +305,10 @@
                 {
                     "Type": "DoorTriggerScript",
                     "Active": true,
-                    "isDoorActive": true,
-                    "NextSceneName": ""
+                    "isDoorActive": false,
+                    "NextSceneName": "",
+                    "SoundTriggerName": "SoundTrigger_Exit",
+                    "EffectPrefabName": "Effect_Door_Lobby"
                 }
             ]
         },
@@ -318,7 +323,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -12.078619956970215
+                        "z": -14.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -335,7 +340,8 @@
                 {
                     "Type": "SoundTrigger",
                     "Active": true,
-                    "Radius": 5.0,
+                    "isTriggerActive": false,
+                    "Radius": 7.0,
                     "SoundKey": "Door_BackLobby",
                     "SoundOption": "SFX/Door"
                 }
@@ -853,6 +859,16 @@
                         "x": 50.0,
                         "y": 50.0
                     },
+                    "CursorDefaultOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "CursorClickOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "UseDefaultCursor": true,
+                    "UseClickCursor": true,
                     "TargetPlaneY": 1.7000000476837158,
                     "AimYOffsetWhenMoving": -0.4000000059604645,
                     "OnEnemyRayMaxDistance": 1000.0,

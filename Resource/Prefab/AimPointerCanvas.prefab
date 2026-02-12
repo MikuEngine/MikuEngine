@@ -64,12 +64,12 @@
                         "y": 50.0
                     },
                     "CursorDefaultOffset": {
-                        "x": 16.100000381469727,
-                        "y": 21.0
+                        "x": 17.0,
+                        "y": 24.0
                     },
                     "CursorClickOffset": {
-                        "x": 16.100000381469727,
-                        "y": 21.0
+                        "x": 17.0,
+                        "y": 24.0
                     },
                     "UseDefaultCursor": true,
                     "UseClickCursor": true,
