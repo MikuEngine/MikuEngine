@@ -38,6 +38,7 @@ namespace engine
             SubWall = 19,                   // 보조 벽 (몬스터 방향 전환용, Enemy와만 충돌)
             EE_DamageTrigger = 20,          // 처형 종료 데미지 트리거 (Enemy, JumpingEnemy, SplittingEnemy, BossBigProjectile, Boss와 충돌)
             EnemyProjectileCurve = 21,      // 곡선 적 투사체 (Player, Wall, SubWall만 충돌)
+            EnemyNonPath = 22,              // 비경로 적 (Enemy와 동일하되 Wall과 비충돌, SubWall과 충돌)
             // 확장 시 여기에 추가 (최대 31까지)
             
             Count = 32  // 최대 레이어 수
@@ -69,6 +70,7 @@ namespace engine
             SubWallMask = (1u << SubWall),
             EE_DamageTriggerMask = (1u << EE_DamageTrigger),
             EnemyProjectileCurveMask = (1u << EnemyProjectileCurve),
+            EnemyNonPathMask = (1u << EnemyNonPath),
 
             All = 0xFFFFFFFF
         };
@@ -105,8 +107,9 @@ namespace engine
                 "SubWall", // 19
                 "EE_DamageTrigger", // 20
                 "EnemyProjectileCurve", // 21
+                "EnemyNonPath", // 22
                 
-                "Layer22", "Layer23", "Layer24", "Layer25",
+                "Layer23", "Layer24", "Layer25",
                 "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
             };
             
@@ -289,6 +292,7 @@ namespace engine
             // Enemy와 동일하지만, 자기 자신(SplittingEnemy)끼리는 충돌 안 함
             // ═══════════════════════════════════════
             SetCollision(SplittingEnemy, SplittingEnemy, false);  // 분열 몬스터끼리 충돌 안 함
+            SetCollision(SplittingEnemy, Wall, false);            // 분열 몬스터는 Wall과 충돌 안 함
             // 나머지는 기본값 All에 의해 Enemy와 동일하게 충돌함
             SetCollision(RadiusChecker, RadiusChecker, false);
             
@@ -399,14 +403,13 @@ namespace engine
             SetCollision(SubWall, ExplosionTrigger, false);
             SetCollision(SubWall, JumpingEnemy, false);
             SetCollision(SubWall, RadiusChecker, false);
-            // SetCollision(SubWall, SplittingEnemy, false);  // 제거: SplittingEnemy도 Enemy처럼 SubWall과 충돌
+            SetCollision(SubWall, SplittingEnemy, true);  // SplittingEnemy는 SubWall과 충돌
             SetCollision(SubWall, BossBulletProjectile, false);
             SetCollision(SubWall, BossBigProjectile, false);
             SetCollision(SubWall, Boss, false);
             SetCollision(SubWall, BBP_Reflected, false);
             SetCollision(SubWall, SubWall, false);
-            // SubWall ↔ Enemy: 충돌함 (기본값)
-            // SubWall ↔ SplittingEnemy: 충돌함 (기본값)
+            SetCollision(SubWall, Enemy, false);  // 일반 Enemy는 SubWall과 충돌 안 함
             
             // ═══════════════════════════════════════
             // EE_DamageTrigger 충돌 규칙
@@ -461,6 +464,17 @@ namespace engine
             // EnemyProjectileCurve ↔ Player: 충돌함 (기본값)
             // EnemyProjectileCurve ↔ Wall: 충돌함 (기본값)
             // EnemyProjectileCurve ↔ SubWall: 충돌함 (기본값)
+
+            // ═══════════════════════════════════════
+            // EnemyNonPath 충돌 규칙
+            // Enemy와 동일하되 Wall은 비충돌, SubWall은 충돌
+            // ═══════════════════════════════════════
+            for (uint32_t layer = 0; layer < PhysicsLayer::Count; ++layer)
+            {
+                SetCollision(EnemyNonPath, layer, ShouldCollide(Enemy, layer));
+            }
+            SetCollision(EnemyNonPath, Wall, false);
+            SetCollision(EnemyNonPath, SubWall, true);
   
         }
 

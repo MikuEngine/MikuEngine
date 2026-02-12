@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "Collider.h"
 
 #include "Framework/Object/Component/Rigidbody.h"
@@ -364,7 +364,7 @@ namespace engine
         }
 
         // Physics Layer 콤보박스 (PhysicsLayer.h에서 자동으로 레이어 이름 가져오기)
-        constexpr int displayLayerCount = 22;  // 인스펙터에 표시할 레이어 수 (0~21)
+        constexpr int displayLayerCount = 23;  // 인스펙터에 표시할 레이어 수 (0~22)
         static const char* layerNames[displayLayerCount];
         
         // PhysicsLayer::GetLayerName()을 사용하여 동적으로 레이어 이름 가져오기

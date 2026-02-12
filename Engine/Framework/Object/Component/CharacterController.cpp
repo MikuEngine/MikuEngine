@@ -1,4 +1,4 @@
-#include "EnginePCH.h"
+﻿#include "EnginePCH.h"
 #include "CharacterController.h"
 
 #include "Framework/Object/Component/Transform.h"
@@ -272,7 +272,7 @@ namespace engine
             "EnemyProjectile", "Picking", "Field", "Wall", "EnemyParabolicProjectile", "ExplosionTrigger",
             "JumpingEnemy", "RadiusChecker", "SplittingEnemy", "BossBulletProjectile",
             "BossBigProjectile", "Boss", "BBP_Reflected", "SubWall", "EE_DamageTrigger",
-            "EnemyProjectileCurve", "Layer22", "Layer23", "Layer24", "Layer25",
+            "EnemyProjectileCurve", "EnemyNonPath", "Layer23", "Layer24", "Layer25",
             "Layer26", "Layer27", "Layer28", "Layer29", "Layer30", "Layer31"
         };
         

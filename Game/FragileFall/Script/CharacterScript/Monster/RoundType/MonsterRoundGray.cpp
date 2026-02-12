@@ -1,8 +1,9 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundGray.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/CornerTrigger.h"
+#include "Script/Interface/IDamageable.h"
 
 #include <Framework/Object/Component/Renderer/SkeletalMeshRenderer.h>
 #include <Framework/Object/Component/Rigidbody.h>
@@ -28,6 +29,11 @@ namespace game
     {
         MonsterRoundType::Start();
 
+        if (auto* collider = GetGameObject()->GetComponent<engine::Collider>())
+        {
+            collider->SetLayer(engine::PhysicsLayer::Index::EnemyNonPath);
+        }
+
         // Gray 등급 색상 설정 (회색)
         // SkeletalMeshRenderer만 SetBaseColor 지원
         if (m_meshType == RoundMeshType::Skeletal)
@@ -46,25 +52,13 @@ namespace game
     void MonsterRoundGray::OnCollisionEnter(const engine::CollisionInfo& info)
     {
         if (!info.gameObject) return;
-        
-        // ─────────────────────────────────────────────
-        // 레이어 확인
-        // ─────────────────────────────────────────────
+
         auto* collider = info.collider.Get();
         if (!collider) return;
-        
-        uint32_t layer = collider->GetLayer();
-        if (layer != engine::PhysicsLayer::Index::Wall &&
-            layer != engine::PhysicsLayer::Index::Environment &&
-            layer != engine::PhysicsLayer::Index::Enemy &&
-            layer != engine::PhysicsLayer::Index::Player)
-        {
-            return;  // 방향 전환 불필요한 레이어는 무시
-        }
-        
-        // ─────────────────────────────────────────────
-        // 플레이어 충돌 시 데미지 처리 (즉시, 쿨다운 무관)
-        // ─────────────────────────────────────────────
+
+        const uint32_t layer = collider->GetLayer();
+
+        // 플레이어 충돌 데미지는 유지
         if (layer == engine::PhysicsLayer::Index::Player)
         {
             auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
@@ -78,225 +72,102 @@ namespace game
                 }
             }
         }
-        
-        // ─────────────────────────────────────────────
-        // Wall 중복 오브젝트 체크 (쿨다운보다 먼저, 안전장치)
-        // ─────────────────────────────────────────────
-        if (layer == engine::PhysicsLayer::Index::Wall)
+
+        const std::string currentState = GetCurrentState();
+        if (currentState != "IdleMove" && currentState != "EngageMove")
         {
-            std::string objectName = info.gameObject->GetName();
-            if (!m_lastCollisionWallName.empty() && objectName == m_lastCollisionWallName)
-            {
-                return;  // 같은 Wall 오브젝트 연속 충돌 → 방향전환 무시
-            }
+            return;
         }
-        
-        // ─────────────────────────────────────────────
-        // Wall 쿨다운 체크
-        // ─────────────────────────────────────────────
-        if (layer == engine::PhysicsLayer::Index::Wall)
+
+        if (layer == engine::PhysicsLayer::Index::Environment)
         {
-            float elapsed = engine::Time::GetElapsedSeconds(m_lastWallCollisionTime);
-            bool isInCooldown = (elapsed < m_wallCollisionCooldown);
-            
-            if (isInCooldown)
+            if (!m_lastCollisionWallName.empty() && info.gameObject->GetName() == m_lastCollisionWallName)
             {
-                return;  // Wall 쿨다운 중 무시
+                return;
             }
-        }
-        
-        // ─────────────────────────────────────────────
-        // 상태별 처리
-        // ─────────────────────────────────────────────
-        std::string currentState = GetCurrentState();
-        
-        if (currentState == "IdleMove")
-        {
-            // ── Wall: SubWall 트리거 체크 후 방향 결정 ──
-            if (layer == engine::PhysicsLayer::Index::Wall)
+
+            // Environment 충돌 시 기존 90도 회전 로직 복구
+            engine::Vector3 normal = engine::Vector3::Zero;
+            for (const auto& contact : info.contacts)
             {
-                std::string wallName = info.gameObject->GetName();
-                
-                // SubWall 트리거가 활성화되어 있으면 SubWall 방향 사용
-                if (m_hasTriggeredSubWall)
+                normal = contact.normal;
+                normal.y = 0.0f;
+                if (normal.LengthSquared() > 0.0001f)
                 {
-                    MoveDirection determinedDir = DetermineDirectionFromSubWall(m_currentTriggeredSubWall);
-                    
-                    if (determinedDir != m_currentDirection)
-                    {
-                        m_currentDirection = determinedDir;
-                    }
-                    m_lastCollisionWallName = m_currentTriggeredSubWall;
+                    normal.Normalize();
+                    break;
                 }
-                // 트리거 없으면 일반 Wall 처리 (±90도 회전)
+            }
+
+            if (normal.LengthSquared() < 0.0001f)
+            {
+                engine::Vector3 myPos = GetTransform()->GetWorldPosition();
+                engine::Vector3 otherPos = info.gameObject->GetTransform()->GetWorldPosition();
+                normal = myPos - otherPos;
+                normal.y = 0.0f;
+                if (normal.LengthSquared() > 0.0001f)
+                {
+                    normal.Normalize();
+                }
                 else
                 {
-                    ChangeDirectionOnCollision();
-                    m_lastCollisionWallName = wallName;
+                    normal = GetDirectionVector();
                 }
-                
-                ResetMoveDuration();
-                OnDirectionChanged();
-                m_lastWallCollisionTime = engine::Time::GetTimestamp();
             }
-            // ── Environment, Enemy, Player: 노말 스냅핑 기반 ──
+
+            float absX = std::abs(normal.x);
+            float absZ = std::abs(normal.z);
+            MoveDirection collisionBaseDir = m_currentDirection;
+            if (absX >= absZ)
+            {
+                collisionBaseDir = (normal.x > 0.0f) ? MoveDirection::PlusX : MoveDirection::MinusX;
+            }
             else
             {
-                // 충돌 노말 벡터 가져오기
-                engine::Vector3 normal = engine::Vector3::Zero;
-                for (const auto& contact : info.contacts)
-                {
-                    normal = contact.normal;
-                    normal.y = 0.0f;
-                    if (normal.LengthSquared() > 0.0001f)
-                    {
-                        normal.Normalize();
-                        break;
-                    }
-                }
-                
-                // 노말이 없으면 위치 기반 계산
-                if (normal.LengthSquared() < 0.0001f)
-                {
-                    engine::Vector3 myPos = GetTransform()->GetWorldPosition();
-                    engine::Vector3 otherPos = info.gameObject->GetTransform()->GetWorldPosition();
-                    normal = myPos - otherPos;  // 상대에서 나를 향하는 방향
-                    normal.y = 0.0f;
-                    if (normal.LengthSquared() > 0.0001f)
-                        normal.Normalize();
-                    else
-                        normal = GetDirectionVector();
-                }
-                
-                // Player: 반사 계산 → 4방향 스냅핑
-                if (layer == engine::PhysicsLayer::Index::Player)
-                {
-                    engine::Vector3 moveDir = GetDirectionVector();
-                    float dotDN = moveDir.Dot(normal);
-                    
-                    if (std::abs(dotDN) < 0.01f)
-                    {
-                        // 완전 측면 충돌 → 방향 유지 (방향전환 안 함)
-                        return;
-                    }
-                    
-                    // 정면 충돌 체크 (노말과 이동방향이 거의 반대)
-                    if (dotDN < -0.7f)
-                    {
-                        // 정면 충돌 → 이동방향 기준 ±90도 랜덤 (即시)
-                        ChangeDirectionOnCollision();
-                        ResetMoveDuration();
-                        OnDirectionChanged();
-                        return;
-                    }
-                    
-                    // 대각선 충돌 → 반사 계산
-                    engine::Vector3 reflected = moveDir - normal * (2.0f * dotDN);
-                    reflected.y = 0.0f;
-                    
-                    // 반사 벡터를 4방향 스냅핑
-                    float absX = std::abs(reflected.x);
-                    float absZ = std::abs(reflected.z);
-                    
-                    MoveDirection reflectedDir;
-                    if (absX >= absZ)
-                        reflectedDir = (reflected.x > 0) ? MoveDirection::PlusX : MoveDirection::MinusX;
-                    else
-                        reflectedDir = (reflected.z > 0) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
-                    
-                    // 반사 방향을 직접 설정
-                    m_currentDirection = reflectedDir;
-                    // collisionOccurred 불필요 (이미 방향 직접 설정)
-                    return;
-                }
-                
-                // Environment, Enemy: 노말 4방향 스냅핑 기반 90도 회전
-                float absX = std::abs(normal.x);
-                float absZ = std::abs(normal.z);
-                
-                MoveDirection collisionBaseDir;
-                if (absX >= absZ)
-                    collisionBaseDir = (normal.x > 0) ? MoveDirection::PlusX : MoveDirection::MinusX;
-                else
-                    collisionBaseDir = (normal.z > 0) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
-                
-                m_currentDirection = collisionBaseDir;
-                ChangeDirectionOnCollision();
-                ResetMoveDuration();
-                OnDirectionChanged();
+                collisionBaseDir = (normal.z > 0.0f) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
             }
-        }
-        else if (currentState == "EngageMove")
-        {
-            // EngageMove 상태에서 충돌 → IdleMove로 복귀 + 플레이어 무시
-            StartPlayerIgnore();
-            
-            // Wall 충돌 시
-            if (layer == engine::PhysicsLayer::Index::Wall)
+
+            m_currentDirection = collisionBaseDir;
+            ChangeDirectionOnCollision();
+            ResetMoveDuration();
+            OnDirectionChanged();
+            m_lastCollisionWallName = info.gameObject->GetName();
+
+            if (currentState == "EngageMove")
             {
-                // SubWall 트리거가 활성화되어 있으면 SubWall 방향 사용
-                if (m_hasTriggeredSubWall)
+                StartPlayerIgnore();
+                m_fromEngageCollision = true;
+                if (m_logicFSM)
                 {
-                    MoveDirection determinedDir = DetermineDirectionFromSubWall(m_currentTriggeredSubWall);
-                    if (determinedDir != m_currentDirection)
-                    {
-                        m_currentDirection = determinedDir;
-                    }
-                    m_lastCollisionWallName = m_currentTriggeredSubWall;
+                    m_logicFSM->SetParameter("ReturnToIdleMove", true);
                 }
-                else
-                {
-                    // 일반 Wall: 이동방향 유지 (IdleMove 진입 시 90도 회전)
-                    m_lastCollisionWallName = info.gameObject->GetName();
-                }
-                
-                m_lastWallCollisionTime = engine::Time::GetTimestamp();
             }
-            
+            return;
+        }
+
+        if (layer != engine::PhysicsLayer::Index::SubWall)
+        {
+            return;
+        }
+
+        const std::string subWallName = info.gameObject->GetName();
+        if (!m_lastCollisionWallName.empty() && subWallName == m_lastCollisionWallName)
+        {
+            return;
+        }
+
+        m_currentDirection = DetermineDirectionFromSubWall(subWallName);
+        ResetMoveDuration();
+        OnDirectionChanged();
+        m_lastCollisionWallName = subWallName;
+
+        if (currentState == "EngageMove")
+        {
+            StartPlayerIgnore();
             m_fromEngageCollision = true;
-            
             if (m_logicFSM)
             {
                 m_logicFSM->SetParameter("ReturnToIdleMove", true);
-            }
-        }
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // 트리거 콜백 - SubWall 트리거 감지
-    // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundGray::OnTriggerEnter(const engine::CollisionInfo& info)
-    {
-        if (!info.gameObject) return;
-        
-        auto* collider = info.collider.Get();
-        if (!collider) return;
-        
-        // SubWall 트리거 감지
-        if (collider->GetLayer() == engine::PhysicsLayer::Index::SubWall)
-        {
-            m_currentTriggeredSubWall = info.gameObject->GetName();
-            m_hasTriggeredSubWall = true;
-        }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════
-    // 트리거 콜백 - SubWall 트리거 해제
-    // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundGray::OnTriggerExit(const engine::CollisionInfo& info)
-    {
-        if (!info.gameObject) return;
-        
-        auto* collider = info.collider.Get();
-        if (!collider) return;
-        
-        // SubWall 트리거 해제
-        if (collider->GetLayer() == engine::PhysicsLayer::Index::SubWall)
-        {
-            if (info.gameObject->GetName() == m_currentTriggeredSubWall)
-            {
-                m_currentTriggeredSubWall.clear();
-                m_hasTriggeredSubWall = false;
             }
         }
     }
@@ -443,8 +314,8 @@ namespace game
     {
         if (!m_rigidbody) return;
 
-        // 감지된 방향으로 직진
-        MoveInDirection(m_engageDirection, m_moveSpeed);
+        // EngageMove도 현재 방향 벡터 기반으로 이동
+        MoveInDirection(GetDirectionVector(), m_moveSpeed);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -556,7 +427,7 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     // 4방향 레이캐스트로 플레이어 감지
     // RaycastAll 사용 - 자기 자신을 제외
-    // 장애물(Wall, Environment, Enemy)이 플레이어보다 가까우면 감지 실패
+    // 장애물(SubWall, Environment, Enemy)이 플레이어보다 가까우면 감지 실패
     // 감지 성공 시 m_engageDirection에 방향 저장
     // ═══════════════════════════════════════════════════════════════
     bool MonsterRoundGray::DetectPlayerWithRaycast()
@@ -609,9 +480,9 @@ namespace game
                     m_engageDirection = dir;
                     return true;
                 }
-                else if (hitLayer == engine::PhysicsLayer::Index::Wall ||
+                else if (hitLayer == engine::PhysicsLayer::Index::SubWall ||
                          hitLayer == engine::PhysicsLayer::Index::Environment ||
-                         hitLayer == engine::PhysicsLayer::Index::Enemy)
+                         h.gameObject->GetInterface<IDamageable>() != nullptr)
                 {
                     // 장애물이 가려서 이 방향 실패 → 다음 방향 확인
                     break;
@@ -664,37 +535,58 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     MonsterRoundGray::MoveDirection MonsterRoundGray::DetermineDirectionFromSubWall(const std::string& subWallName)
     {
-        bool isLeftFront  = (subWallName.find("Left_Front")  != std::string::npos);
-        bool isRightFront = (subWallName.find("Right_Front") != std::string::npos);
-        bool isLeftBack   = (subWallName.find("Left_Back")   != std::string::npos);
-        bool isRightBack  = (subWallName.find("Right_Back")  != std::string::npos);
-        
-        if (isLeftFront)
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> turnDist(0, 1);
+        const bool choosePlusX = (turnDist(gen) == 0);
+
+        // Front/Back은 정면 충돌 시 ±X 랜덤
+        if (subWallName == "Collider_SubWall_Front")
         {
-            // 좌상단: -X → -Z, +Z → +X
+            return choosePlusX ? MoveDirection::PlusX : MoveDirection::MinusX;
+        }
+
+        if (subWallName == "Collider_SubWall_Back")
+        {
+            return choosePlusX ? MoveDirection::PlusX : MoveDirection::MinusX;
+        }
+
+        // 좌상단 대각 경계: -X 진행 충돌이면 -Z, +Z 진행 충돌이면 +X
+        if (subWallName == "Collider_SubWall_FrontLeft")
+        {
             if (m_currentDirection == MoveDirection::MinusX) return MoveDirection::MinusZ;
             if (m_currentDirection == MoveDirection::PlusZ)  return MoveDirection::PlusX;
+            // 이레귤러 충돌 안전장치(현재 방향 유지)는 일단 제외
+            // return m_currentDirection;
         }
-        else if (isRightFront)
+
+        // 우상단 대각 경계: +X 진행 충돌이면 -Z, +Z 진행 충돌이면 -X
+        if (subWallName == "Collider_SubWall_FrontRight")
         {
-            // 우상단: +X → -Z, +Z → -X
             if (m_currentDirection == MoveDirection::PlusX)  return MoveDirection::MinusZ;
             if (m_currentDirection == MoveDirection::PlusZ)  return MoveDirection::MinusX;
+            // 이레귤러 충돌 안전장치(현재 방향 유지)는 일단 제외
+            // return m_currentDirection;
         }
-        else if (isLeftBack)
+
+        // 좌하단 대각 경계: -X 진행 충돌이면 +Z, -Z 진행 충돌이면 +X
+        if (subWallName == "Collider_SubWall_BackLeft")
         {
-            // 좌하단: -X → +Z, -Z → +X
             if (m_currentDirection == MoveDirection::MinusX) return MoveDirection::PlusZ;
             if (m_currentDirection == MoveDirection::MinusZ) return MoveDirection::PlusX;
+            // 이레귤러 충돌 안전장치(현재 방향 유지)는 일단 제외
+            // return m_currentDirection;
         }
-        else if (isRightBack)
+
+        // 우하단 대각 경계: +X 진행 충돌이면 +Z, -Z 진행 충돌이면 -X
+        if (subWallName == "Collider_SubWall_BackRight")
         {
-            // 우하단: +X → +Z, -Z → -X
             if (m_currentDirection == MoveDirection::PlusX)  return MoveDirection::PlusZ;
             if (m_currentDirection == MoveDirection::MinusZ) return MoveDirection::MinusX;
+            // 이레귤러 충돌 안전장치(현재 방향 유지)는 일단 제외
+            // return m_currentDirection;
         }
-        
-        // 해당하지 않는 진행방향 → 현재 방향 유지
+
         return m_currentDirection;
     }
 
@@ -710,16 +602,27 @@ namespace game
         {
             if (m_fromEngageCollision)
             {
-                // EngageMove에서 충돌로 전이한 경우 → 진행 방향의 90도 좌/우로 전환
-                ChangeDirectionOnCollision();
+                // EngageMove 충돌에서 넘어온 경우:
+                // 충돌 시점에 이미 방향 전환이 끝났으므로 유지하고 타이머만 재설정
                 ResetMoveDuration();
-                OnDirectionChanged();  // 플레이어 무시 카운트 감소
                 m_fromEngageCollision = false;
             }
             else
             {
                 // 일반 IdleMove 진입 (Idle에서 전이 등) → 랜덤 방향
                 InitializeIdleMove();
+            }
+        }
+        else if (state == "EngageMove")
+        {
+            // 플레이어 감지 방향을 축 이동 방향으로 동기화
+            if (std::abs(m_engageDirection.x) > std::abs(m_engageDirection.z))
+            {
+                m_currentDirection = (m_engageDirection.x >= 0.0f) ? MoveDirection::PlusX : MoveDirection::MinusX;
+            }
+            else
+            {
+                m_currentDirection = (m_engageDirection.z >= 0.0f) ? MoveDirection::PlusZ : MoveDirection::MinusZ;
             }
         }
         else if (state == "Repositioning")
@@ -759,15 +662,7 @@ namespace game
         
         ImGui::Separator();
         ImGui::Text("=== Wall/SubWall Collision ===");
-        ImGui::DragFloat("Wall Cooldown", &m_wallCollisionCooldown, 0.01f, 0.0f, 0.5f);
-        {
-            float elapsed = engine::Time::GetElapsedSeconds(m_lastWallCollisionTime);
-            bool inCooldown = (elapsed < m_wallCollisionCooldown);
-            if (inCooldown)
-                ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.0f, 1.0f), "Cooldown: %.3fs", m_wallCollisionCooldown - elapsed);
-            else
-                ImGui::Text("Cooldown: Ready");
-        }
+        ImGui::Text("Last Collision Object: %s", m_lastCollisionWallName.empty() ? "None" : m_lastCollisionWallName.c_str());
         
         ImGui::Separator();
         ImGui::Text("=== Boundary & Repositioning ===");
@@ -802,7 +697,6 @@ namespace game
         j["RaycastDetectionRange"] = m_raycastDetectionRange;
         j["PlayerIgnoreCountMin"] = m_playerIgnoreCountMin;
         j["PlayerIgnoreCountMax"] = m_playerIgnoreCountMax;
-        j["WallCollisionCooldown"] = m_wallCollisionCooldown;
         
         // 맵 경계 및 복원 시스템
         j["BoundaryMinX"] = m_boundaryMinX;
@@ -824,7 +718,6 @@ namespace game
         m_raycastDetectionRange = j.value("RaycastDetectionRange", 20.0f);
         m_playerIgnoreCountMin = j.value("PlayerIgnoreCountMin", 1);
         m_playerIgnoreCountMax = j.value("PlayerIgnoreCountMax", 4);
-        m_wallCollisionCooldown = j.value("WallCollisionCooldown", 0.1f);
         
         // 맵 경계 및 복원 시스템
         m_boundaryMinX = j.value("BoundaryMinX", -50.0f);
@@ -858,9 +751,9 @@ namespace game
             if (h.hasHit && h.gameObject.Get() && h.gameObject.Get() != selfGO && h.collider.Get())
             {
                 uint32_t hitLayer = h.collider.Get()->GetLayer();
-                if (hitLayer == engine::PhysicsLayer::Index::Wall ||
+                if (hitLayer == engine::PhysicsLayer::Index::SubWall ||
                     hitLayer == engine::PhysicsLayer::Index::Environment ||
-                    hitLayer == engine::PhysicsLayer::Index::Enemy)
+                    h.gameObject->GetInterface<IDamageable>() != nullptr)
                 {
                     return true;  // 장애물 발견!
                 }

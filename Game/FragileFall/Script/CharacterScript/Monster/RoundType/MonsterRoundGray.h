@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterRoundType.h"
 
@@ -69,17 +69,9 @@ namespace game
         bool m_collisionOccurred = false;         // 충돌 발생 플래그
         
         // ─────────────────────────────────────────────
-        // Wall 충돌 쿨다운
+        // SubWall 충돌 중복 방지
         // ─────────────────────────────────────────────
-        float m_wallCollisionCooldown = 0.1f;              // Wall 충돌 쿨다운 시간 (직렬화)
-        engine::TimePoint m_lastWallCollisionTime;         // 마지막 Wall 충돌 시간
-        std::string m_lastCollisionWallName;               // 마지막으로 충돌한 Wall 오브젝트 이름
-        
-        // ─────────────────────────────────────────────
-        // SubWall 트리거 (방향 정보 제공)
-        // ─────────────────────────────────────────────
-        std::string m_currentTriggeredSubWall;              // 현재 트리거된 SubWall 이름
-        bool m_hasTriggeredSubWall = false;                 // SubWall 트리거 활성화 여부
+        std::string m_lastCollisionWallName;               // 마지막으로 충돌한 SubWall 오브젝트 이름
         
         // ─────────────────────────────────────────────
         // EngageMove용 - 감지된 방향 저장
@@ -115,8 +107,6 @@ namespace game
         // 충돌/트리거 콜백 (Script.h의 가상 함수 오버라이드)
         // ─────────────────────────────────────────────
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
-        void OnTriggerEnter(const engine::CollisionInfo& info) override;
-        void OnTriggerExit(const engine::CollisionInfo& info) override;
         
         // ─────────────────────────────────────────────
         // 오버라이드 (Gray 전용 로직)
