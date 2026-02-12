@@ -8540,7 +8540,13 @@
                 },
                 {
                     "Type": "SceneController_Play",
-                    "Active": true
+                    "Active": true,
+                    "AutoReturnToLobbyOnFail": true,
+                    "FailAutoReturnDelaySec": 3.0,
+                    "DeathCinematicDuration": 4.0,
+                    "DeathCameraApproachRatio": 0.5299999713897705,
+                    "DeathCameraTargetYOffset": 2.5,
+                    "DeathCameraMoveSpeed": 2.200000047683716
                 },
                 {
                     "Type": "HUDController",

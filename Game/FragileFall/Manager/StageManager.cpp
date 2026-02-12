@@ -20,6 +20,7 @@
 #include "Script/StageClearExecutionTarget.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Scene/GameScene.h"
+#include <cstring>
 
 namespace game
 {
@@ -145,6 +146,7 @@ namespace game
         m_currentMapEnvRoot = engine::Ptr<engine::GameObject>();
         m_stageClearExecutionTarget = engine::Ptr<engine::GameObject>();
         m_stageClearRewardRuby = m_stageClearRewardSapphire = m_stageClearRewardEmerald = 0;
+        m_currentMapPrefabName.clear();
     }
 
     void StageManager::AddRunCurrency(int ruby, int sapphire, int emerald)
@@ -175,6 +177,7 @@ namespace game
         const bool hasStageData = GetStageDataFromCsv(m_currentStage, stageRow);
 
         std::string mapPrefabName = hasStageData ? stageRow.mapEnvPrefab : "";
+        m_currentMapPrefabName = mapPrefabName;
         engine::GameObject* mapRoot = nullptr;
         if (!mapPrefabName.empty())
         {
@@ -279,7 +282,18 @@ namespace game
             return true;
         }
 
-        engine::GameObject* target = engine::Prefab::Instantiate("StageClearExecutionTarget");
+        std::string targetColor = GetMapColorFromPrefabName(m_currentMapPrefabName);
+        // White 맵은 StageClear 타겟을 Gray로 운용
+        if (targetColor == "White")
+            targetColor = "Gray";
+
+        std::string prefabName = std::string("StageClearExecutionTarget_") + targetColor;
+        engine::GameObject* target = engine::Prefab::Instantiate(prefabName);
+        if (!target)
+        {
+            // 하위 호환 fallback
+            target = engine::Prefab::Instantiate("StageClearExecutionTarget");
+        }
         if (!target)
         {
             return false;
@@ -342,5 +356,34 @@ namespace game
 
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
         GameScene::Change(SceneID::Play);
+    }
+
+    std::string StageManager::GetMapColorFromPrefabName(const std::string& prefabName)
+    {
+        // 맵 프리팹 이름 접두어 기준으로 색상 분기
+        // 예: "Blue_1", "Gray_2", "White_1"
+        auto startsWith = [&prefabName](const char* prefix) -> bool
+        {
+            const size_t n = std::strlen(prefix);
+            return prefabName.size() >= n && prefabName.compare(0, n, prefix) == 0;
+        };
+
+        if (startsWith("Gray")) return "Gray";
+        if (startsWith("Blue")) return "Blue";
+        if (startsWith("Red")) return "Red";
+        if (startsWith("Green")) return "Green";
+        if (startsWith("Purple")) return "Purple";
+        if (startsWith("White")) return "White";
+
+        // 하위 호환: 기존 데이터가 접두어 규칙을 안 지켜도 최소한 동작
+        if (prefabName.find("Gray") != std::string::npos) return "Gray";
+        if (prefabName.find("Blue") != std::string::npos) return "Blue";
+        if (prefabName.find("Red") != std::string::npos) return "Red";
+        if (prefabName.find("Green") != std::string::npos) return "Green";
+        if (prefabName.find("Purple") != std::string::npos) return "Purple";
+        if (prefabName.find("White") != std::string::npos) return "White";
+
+        // 기본값: Gray
+        return "Gray";
     }
 }
