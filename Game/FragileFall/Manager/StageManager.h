@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <algorithm>
 #include <cmath>
 
@@ -34,6 +34,7 @@ namespace game
         engine::Vector3 m_doorExitPosition{ 0, 0, -15 };  // (0,0,0)이면 탈출구 미생성
 
         // 런타임 상태
+        bool m_tutorialCompleted = false;   // 튜토리얼 완료 여부, 클라이언트 종료후 재실행하면 초기화
         int m_currentStage = 1;
         std::vector<engine::Ptr<engine::GameObject>> m_spawnedMonsters;
         int m_runRuby = 0;
@@ -80,6 +81,10 @@ namespace game
             const float clamped = std::clamp(hp, 0.0f, m_runHpMax);
             m_runHp = QuantizeHpToHalf(clamped);
         }
+
+        // 튜토리얼 진입여부 호출 함수
+        bool IsTutorialCompleted() const { return m_tutorialCompleted; }
+        void SetTutorialCompleted(bool v) { m_tutorialCompleted = v; }
 
         /// 로비에서 플레이 진입 시 호출. m_currentStage = 1 후 씬 전환은 호출 측에서.
         void ResetToStage1()
@@ -130,6 +135,9 @@ namespace game
 
         /// 다음 맵 문 접촉 시. m_currentStage++ 후 보스면 보스 씬, 아니면 같은 플레이 씬에서 다음 스테이지 생성.
         void RequestNextStage();
+        
+        /// 디버그 치트: 현재 스테이지와 무관하게 10스테이지(보스)로 즉시 이동.
+        void RequestWarpToBossStageCheat();
 
         /// 스테이지 클리어 후 중앙 처형 오브젝트가 처형되었을 때 호출.
         void OnStageClearExecutionTargetExecuted();
