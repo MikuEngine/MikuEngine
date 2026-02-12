@@ -12,14 +12,14 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.4534291494783247e-06,
-                        "z": -9.819660186767578
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "Rotation": {
-                        "x": -0.0,
+                        "x": 0.0008726645028218627,
                         "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
+                        "z": 0.0,
+                        "w": 0.9999996423721313
                     },
                     "Scale": {
                         "x": 1.0,
@@ -296,6 +296,163 @@
                     "angularDamping": 1.0,
                     "useGravity": false,
                     "constraints": 58
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 0,
+            "Name": "Monster_PointedType_BaseLight1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -0.030318498611450195,
+                        "y": 3.958183526992798,
+                        "z": 2.9558706283569336
+                    },
+                    "Rotation": {
+                        "x": 0.9804553985595703,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.19674162566661835
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0001481771469116,
+                        "z": 1.0001481771469116
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.8666666746139526,
+                        "y": 0.49803921580314636,
+                        "z": 0.15294118225574493
+                    },
+                    "Intensity": 30.100000381469727,
+                    "Range": 3.0,
+                    "Angle": 38.970001220703125,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 0,
+            "Name": "Monster_PointedType_BaseLight2",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 4.59567928314209,
+                        "z": -2.4790282249450684
+                    },
+                    "Rotation": {
+                        "x": 1.634145974094281e-07,
+                        "y": -0.3772912919521332,
+                        "z": 0.926094651222229,
+                        "w": 4.011154430827446e-07
+                    },
+                    "Scale": {
+                        "x": 1.0002657175064087,
+                        "y": 1.0002962350845337,
+                        "z": 1.0001201629638672
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.8666666746139526,
+                        "y": 0.49803921580314636,
+                        "z": 0.15294118225574493
+                    },
+                    "Intensity": 3.5999999046325684,
+                    "Range": 2.4000000953674316,
+                    "Angle": 44.34000015258789,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 0,
+            "Name": "Monster_PointedType_FloorLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": -1.1920911902052467e-06,
+                        "z": 2.0805939193735412e-09
+                    },
+                    "Rotation": {
+                        "x": -0.0008726645610295236,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 0.9999996423721313
+                    },
+                    "Scale": {
+                        "x": 1.2999999523162842,
+                        "y": 1.3000000715255737,
+                        "z": 1.3000000715255737
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Floor_light.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.84555983543396,
+                        "y": 0.1729917973279953,
+                        "z": 0.08488243818283081,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 0.5752896070480347,
+                        "y": 0.09106902033090591,
+                        "z": 0.09106902033090591
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 7.869999885559082,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }

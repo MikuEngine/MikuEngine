@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 16.66951560974121,
+                        "x": 0.0,
                         "y": -8.642699640404317e-07,
-                        "z": 1.461942434310913
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -133,6 +133,116 @@
                     "MaxLaunchAngle": 70.0,
                     "ExplosionRadius": 3.0,
                     "IsDoSingleShot": false
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "Monster_DullType_BaseLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.627397298812866,
+                        "z": -0.052577316761016846
+                    },
+                    "Rotation": {
+                        "x": 0.7071068286895752,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071068286895752
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.001490831375122,
+                        "z": 1.001490831375122
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.6586188673973083,
+                        "y": 0.2755773067474365,
+                        "z": 0.9034749269485474
+                    },
+                    "Intensity": 25.0,
+                    "Range": 1.5,
+                    "Angle": 65.66999816894531,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 0,
+            "Name": "Monster_DullType_FloorLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 8.642699640404317e-07,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.5,
+                        "y": 1.5,
+                        "z": 1.5
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Floor_light.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.8470588326454163,
+                        "y": 0.1725490242242813,
+                        "z": 0.08627451211214066,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 0.5764706134796143,
+                        "y": 0.09019608050584793,
+                        "z": 0.09019608050584793
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }

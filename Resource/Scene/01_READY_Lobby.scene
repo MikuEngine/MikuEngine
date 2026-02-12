@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Lobby",
-    "NumGameObjects": 165,
+    "NumGameObjects": 198,
     "GameObjects": [
         {
             "ID": 0,
@@ -50,10 +50,10 @@
                         "z": -27.347314834594727
                     },
                     "Rotation": {
-                        "x": -0.20262393355369568,
-                        "y": 0.03929796442389488,
-                        "z": 0.008138217963278294,
-                        "w": 0.9784339666366577
+                        "x": -0.20915481448173523,
+                        "y": 0.046303316950798035,
+                        "z": 0.014805689454078674,
+                        "w": 0.9766734838485718
                     },
                     "Scale": {
                         "x": 1.0000017881393433,
@@ -66,11 +66,11 @@
                     "Active": true,
                     "LightType": 0,
                     "Color": {
-                        "x": 0.9034749269485474,
-                        "y": 0.7897744178771973,
-                        "z": 0.4639465808868408
+                        "x": 0.9111968874931335,
+                        "y": 0.768178403377533,
+                        "z": 0.35884973406791687
                     },
-                    "Intensity": 3.0,
+                    "Intensity": 1.5,
                     "Range": 10.0,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -164,8 +164,8 @@
                 {
                     "Type": "PostProcessingSettings",
                     "Active": true,
-                    "BloomStrength": 0.30000001192092896,
-                    "BloomThreshold": 1.600000023841858,
+                    "BloomStrength": 0.03999999910593033,
+                    "BloomThreshold": 3.0,
                     "BloomSoftKnee": 1.7000000476837158,
                     "EnableBloom": 1,
                     "Exposure": -2.5,
@@ -584,7 +584,7 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false,
+                    "CastShadow": true,
                     "CullMode": 0,
                     "SubsurfaceStrength": 0.0,
                     "SubsurfaceColor": [
@@ -2016,7 +2016,7 @@
             "ID": 24,
             "ParentID": 23,
             "Name": "UI_UpgradePopUp",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -17699,7 +17699,7 @@
         {
             "ID": 168,
             "Name": "Light",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -17730,7 +17730,7 @@
                         "y": 0.886274516582489,
                         "z": 0.6627451181411743
                     },
-                    "Intensity": 9.100000381469727,
+                    "Intensity": 6.0,
                     "Range": 11.699999809265137,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -17745,15 +17745,15 @@
         {
             "ID": 169,
             "Name": "Light",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 20.470827102661133,
-                        "y": 6.405315399169922,
-                        "z": 14.326131820678711
+                        "x": 21.237274169921875,
+                        "y": 5.188693046569824,
+                        "z": 14.231576919555664
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -17772,11 +17772,11 @@
                     "Active": true,
                     "LightType": 1,
                     "Color": {
-                        "x": 0.9137254953384399,
-                        "y": 0.886274516582489,
-                        "z": 0.6627451181411743
+                        "x": 0.6486486196517944,
+                        "y": 0.6278305053710938,
+                        "z": 0.4583115875720978
                     },
-                    "Intensity": 6.199999809265137,
+                    "Intensity": 11.0,
                     "Range": 12.199999809265137,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -17791,14 +17791,14 @@
         {
             "ID": 170,
             "Name": "Light",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 6.423859596252441,
-                        "y": 10.245695114135742,
+                        "x": 6.800843238830566,
+                        "y": 8.409236907958984,
                         "z": 15.729206085205078
                     },
                     "Rotation": {
@@ -17818,12 +17818,12 @@
                     "Active": true,
                     "LightType": 1,
                     "Color": {
-                        "x": 0.9137254953384399,
-                        "y": 0.886274516582489,
-                        "z": 0.6627451181411743
+                        "x": 0.31274133920669556,
+                        "y": 0.30877387523651123,
+                        "z": 0.28496894240379333
                     },
-                    "Intensity": 9.199999809265137,
-                    "Range": 14.800000190734863,
+                    "Intensity": 15.0,
+                    "Range": 15.699999809265137,
                     "Angle": 45.0,
                     "Near": 90000.0,
                     "Far": 100000.0,
@@ -17837,15 +17837,15 @@
         {
             "ID": 171,
             "Name": "Light",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -0.9819942712783813,
+                        "x": -0.13968181610107422,
                         "y": 5.534490585327148,
-                        "z": 18.72502326965332
+                        "z": 19.04155731201172
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -17864,12 +17864,12 @@
                     "Active": true,
                     "LightType": 1,
                     "Color": {
-                        "x": 0.9137254953384399,
-                        "y": 0.886274516582489,
-                        "z": 0.6627451181411743
+                        "x": 0.24324321746826172,
+                        "y": 0.24034233391284943,
+                        "z": 0.2131899893283844
                     },
-                    "Intensity": 8.5,
-                    "Range": 13.100000381469727,
+                    "Intensity": 19.899999618530273,
+                    "Range": 6.400000095367432,
                     "Angle": 45.0,
                     "Near": 90000.0,
                     "Far": 100000.0,
@@ -18110,7 +18110,7 @@
                 }
             ]
         },
-		{
+        {
             "ID": 177,
             "Name": "CrystalChunk",
             "Active": true,
@@ -18174,7 +18174,7 @@
         {
             "ID": 178,
             "Name": "Crystal",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -18220,7 +18220,7 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 2.049999952316284,
+                    "MaterialEmissiveIntensity": 0.5,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
@@ -18282,7 +18282,7 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 2.059999942779541,
+                    "MaterialEmissiveIntensity": 0.5,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
@@ -18298,7 +18298,7 @@
         {
             "ID": 180,
             "Name": "CrystalChunk",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -18343,7 +18343,7 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.350000023841858,
+                    "MaterialEmissiveIntensity": 0.5,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
@@ -18421,7 +18421,7 @@
         {
             "ID": 182,
             "Name": "CrystalPiece002",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -18467,7 +18467,7 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 2.0,
+                    "MaterialEmissiveIntensity": 0.5,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
@@ -18917,7 +18917,7 @@
         {
             "ID": 190,
             "Name": "Crystal",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -18963,7 +18963,7 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 2.0,
+                    "MaterialEmissiveIntensity": 0.5,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
@@ -19035,6 +19035,356 @@
                         1.0,
                         1.0
                     ]
+                }
+            ]
+        },
+        {
+            "ID": 192,
+            "Name": "CharacterLobbyBaseLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 1.8111554384231567,
+                        "y": 4.123022556304932,
+                        "z": 6.6905622482299805
+                    },
+                    "Rotation": {
+                        "x": 0.05021757632493973,
+                        "y": 0.2891654074192047,
+                        "z": -0.08969103544950485,
+                        "w": 0.9517442584037781
+                    },
+                    "Scale": {
+                        "x": 1.0182207822799683,
+                        "y": 0.9999997615814209,
+                        "z": 1.0000125169754028
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.1428571343421936,
+                        "y": 0.12694023549556732,
+                        "z": 0.03143959864974022
+                    },
+                    "Intensity": 10.5,
+                    "Range": 34.400001525878906,
+                    "Angle": 70.16000366210938,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 193,
+            "Name": "CharacterLobbyhighlight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.9256711602210999,
+                        "y": 4.368070125579834,
+                        "z": 4.851897239685059
+                    },
+                    "Rotation": {
+                        "x": 0.15167830884456635,
+                        "y": 0.3093482553958893,
+                        "z": -0.1211719885468483,
+                        "w": 0.9309214353561401
+                    },
+                    "Scale": {
+                        "x": 0.9999992847442627,
+                        "y": 0.9999995827674866,
+                        "z": 0.9999998211860657
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.4324324131011963,
+                        "y": 0.4166322350502014,
+                        "z": 0.21705099940299988
+                    },
+                    "Intensity": 79.4000015258789,
+                    "Range": 6.0,
+                    "Angle": 34.709999084472656,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 194,
+            "Name": "CharacterLobbyreflectedlight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 7.512756824493408,
+                        "y": 2.013256549835205,
+                        "z": 8.958619117736816
+                    },
+                    "Rotation": {
+                        "x": -0.030301623046398163,
+                        "y": -0.7006964683532715,
+                        "z": -0.030271505936980247,
+                        "w": 0.7121727466583252
+                    },
+                    "Scale": {
+                        "x": 1.0000017881393433,
+                        "y": 1.0,
+                        "z": 1.0000026226043701
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.15431532263755798,
+                        "y": 0.027280455455183983,
+                        "z": 0.23552125692367554
+                    },
+                    "Intensity": 50.400001525878906,
+                    "Range": 2.200000047683716,
+                    "Angle": 71.93000030517578,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 195,
+            "Name": "SubLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 4.656978130340576,
+                        "y": 2.522731304168701,
+                        "z": 9.045675277709961
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.9806950092315674,
+                        "y": 0.9386637806892395,
+                        "z": 0.5452512502670288
+                    },
+                    "Intensity": 21.100000381469727,
+                    "Range": 1.2999999523162842,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 196,
+            "Name": "Effect_Door_Next",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 11.506204605102539,
+                        "y": 3.319077253341675,
+                        "z": 26.350109100341797
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "ParticleEffect",
+                    "Active": true,
+                    "IsPlaying": true,
+                    "AutoDestroy": false,
+                    "Duration": 0.0,
+                    "Emitters": [
+                        {
+                            "TexturePath": "Resource/Texture/T_Smoke.png",
+                            "PositionOffset": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "Velocity": {
+                                "x": 0.0,
+                                "y": 1.0,
+                                "z": 0.0
+                            },
+                            "VelocityVariation": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "Gravity": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "StartColor": {
+                                "x": 0.21973492205142975,
+                                "y": 0.0955263003706932,
+                                "z": 0.27799224853515625,
+                                "w": 1.0
+                            },
+                            "EndColor": {
+                                "x": 0.15057915449142456,
+                                "y": 0.041859839111566544,
+                                "z": 0.1476408839225769,
+                                "w": 1.0
+                            },
+                            "StartEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "EndEmissive": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "StartEmissiveIntensity": 1.0,
+                            "EndEmissiveIntensity": 1.0,
+                            "Blend": 0,
+                            "UseDistanceEmission": false,
+                            "EmitSpacing": 0.019999999552965164,
+                            "SizeBegin": 15.880000114440918,
+                            "SizeEnd": 17.530000686645508,
+                            "SizeVariation": 0.10000000149011612,
+                            "LifeTime": 2.0,
+                            "RotationMin": 0.0,
+                            "RotationMax": 360.0,
+                            "RotationSpeedMin": -45.0,
+                            "RotationSpeedMax": 45.0,
+                            "EmissionRate": 31.100000381469727,
+                            "MaxParticles": 1437,
+                            "Shape": 0,
+                            "Radius": 1.0,
+                            "Angle": 25.0,
+                            "BoxSize": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "RandomDirection": false,
+                            "UseShapeDirection": false,
+                            "TextureTilesX": 8,
+                            "TextureTilesY": 8,
+                            "TextureTileCount": 64,
+                            "AnimationSpeed": 1.0,
+                            "IsRandomFrame": false,
+                            "Bursts": [
+                                {
+                                    "Time": 0.0,
+                                    "Count": 10,
+                                    "Cycles": 1,
+                                    "Interval": 0.0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 197,
+            "ParentID": 196,
+            "Name": "Light_Door_Next",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.22654151916503906,
+                        "y": 6.797880172729492,
+                        "z": 2.4642868041992188
+                    },
+                    "Rotation": {
+                        "x": -0.0877363309264183,
+                        "y": 0.9029495120048523,
+                        "z": -0.35766440629959106,
+                        "w": 0.22149664163589478
+                    },
+                    "Scale": {
+                        "x": 1.0004205703735352,
+                        "y": 1.000157117843628,
+                        "z": 1.0004197359085083
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 21.799999237060547,
+                    "Range": 21.799999237060547,
+                    "Angle": 48.099998474121094,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.0,
+                    "CastShadows": true
                 }
             ]
         }

@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -0.537873387336731,
-                        "y": 1.500000238418579,
-                        "z": -7.605747222900391
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -39,20 +39,20 @@
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
                         "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
                         "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 1.0,
+                        "z": 1.0
                     },
-                    "MaterialRoughness": 0.0,
+                    "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.949999809265137,
-                    "OverrideMaterial": true,
+                    "MaterialEmissiveIntensity": 20.0,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
                     "SubsurfaceStrength": 0.0,
@@ -161,6 +161,116 @@
                 {
                     "Type": "BulletFactory",
                     "Active": true
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "Monster_RoundType_BaseLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 1.7640000581741333,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.7071068286895752,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 0.7071068286895752
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0013442039489746,
+                        "z": 1.0013442039489746
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.9034749269485474,
+                        "y": 0.5186283588409424,
+                        "z": 0.2686006426811218
+                    },
+                    "Intensity": 20.0,
+                    "Range": 1.5,
+                    "Angle": 70.5199966430664,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 0,
+            "Name": "Monster_RoundType_FloorLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": -1.0,
+                        "z": 7.450580596923828e-09
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 2.200000047683716,
+                        "y": 2.200000047683716,
+                        "z": 2.200000047683716
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Floor_light.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.8470588326454163,
+                        "y": 0.1725490242242813,
+                        "z": 0.08627451211214066,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 0.5764706134796143,
+                        "y": 0.09019608050584793,
+                        "z": 0.09019608050584793
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }
