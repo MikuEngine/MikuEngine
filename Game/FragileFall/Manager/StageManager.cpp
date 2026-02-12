@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -121,7 +121,7 @@ namespace game
             return nullptr;
         }
 
-        void SetActiveDoor(const char* name, bool isNextStage)
+        void SetActiveDoor(const char* name, bool isNextStage, bool isTutorial)
         {
             auto go = engine::GameObject::Find(name);
             if (!go) return;
@@ -132,7 +132,10 @@ namespace game
                     ? []() { game::StageManager::Get().RequestNextStage(); }
                 : []() { game::StageManager::Get().RequestGoToLobby(); });
 
-                door->SetActivateDoor(true);
+                if (!isTutorial)
+                {
+                    door->SetActivateDoor(true);
+                }
             }
         }
     }
@@ -255,14 +258,19 @@ namespace game
                     {
                         // 처형 타겟 생성 실패 시 보상/문 활성화를 즉시 처리한다.
                         GrantPendingStageClearReward();
-                        SetActiveDoor("StageDoor_Next", true);
-                        SetActiveDoor("StageDoor_Exit", false);
                     }
                 }
                 else
                 {
                     // 튜토리얼 씬은 처형 오브젝트를 사용하지 않으므로 즉시 지급.
                     GrantPendingStageClearReward();
+                }
+
+                if (!m_waitingForStageClearExecution)
+                {
+                    bool isTutorial = scene->GetName() == "10_PROTO_Tutorial";
+                    SetActiveDoor("StageDoor_Next", true, isTutorial);
+                    SetActiveDoor("StageDoor_Exit", false, isTutorial);
                 }
             }
             else
@@ -308,8 +316,8 @@ namespace game
         m_stageClearExecutionTarget = engine::Ptr<engine::GameObject>();
 
         GrantPendingStageClearReward();
-        SetActiveDoor("StageDoor_Next", true);
-        SetActiveDoor("StageDoor_Exit", false);
+        SetActiveDoor("StageDoor_Next", true, false);
+        SetActiveDoor("StageDoor_Exit", false, false);
     }
 
     bool StageManager::ShouldFragileGaugeRise() const

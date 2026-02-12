@@ -12815,7 +12815,7 @@
         },
         {
             "ID": 27,
-            "Name": "Canvas",
+            "Name": "Canvas_StageInfo",
             "Active": true,
             "Components": [
                 {
@@ -12866,13 +12866,18 @@
                     "Active": true,
                     "LockRectTransform": true,
                     "SortingOrder": 0
+                },
+                {
+                    "Type": "UICurrentStageTitle",
+                    "Active": true,
+                    "FadeDelay": 1.0
                 }
             ]
         },
         {
             "ID": 28,
             "ParentID": 27,
-            "Name": "Text_MapInfo",
+            "Name": "TitleText",
             "Active": true,
             "Components": [
                 {
@@ -12900,7 +12905,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 400.0
+                        "y": -300.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -12924,9 +12929,9 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "심연 1",
+                    "Text": "\"스테이지 텍스트\"",
                     "FontPath": "Resource/Font/GG_Font.ttf",
-                    "FontPx": 40,
+                    "FontPx": 60,
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,

@@ -91,6 +91,7 @@
     <ClCompile Include="Script\SoundTrigger.cpp" />
     <ClCompile Include="Script\StageClearExecutionTarget.cpp" />
     <ClCompile Include="Script\UI\UICurrencyAnimator.cpp" />
+    <ClCompile Include="Script\UI\UICurrentStageTitle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -190,5 +191,6 @@
     <ClInclude Include="Script\SoundTrigger.h" />
     <ClInclude Include="Script\StageClearExecutionTarget.h" />
     <ClInclude Include="Script\UI\UICurrencyAnimator.h" />
+    <ClInclude Include="Script\UI\UICurrentStageTitle.h" />
   </ItemGroup>
 </Project>
