@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundGreen.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -31,6 +31,11 @@ namespace game
     {
         MonsterRoundType::Start();
 
+        if (auto* collider = GetGameObject()->GetComponent<engine::Collider>())
+        {
+            collider->SetLayer(engine::PhysicsLayer::Index::EnemyNonPath);
+        }
+
         // Green 등급 색상 설정 (녹색)
         // SkeletalMeshRenderer만 SetBaseColor 지원
         if (m_meshType == RoundMeshType::Skeletal)
@@ -53,25 +58,12 @@ namespace game
     void MonsterRoundGreen::OnCollisionEnter(const engine::CollisionInfo& info)
     {
         if (!info.gameObject) return;
-        
-        // ─────────────────────────────────────────────
-        // 방향 전환이 필요한 레이어에만 반응
-        // ─────────────────────────────────────────────
+
         auto* collider = info.collider.Get();
         if (!collider) return;
-        
-        uint32_t layer = collider->GetLayer();
-        if (layer != engine::PhysicsLayer::Index::Wall &&
-            layer != engine::PhysicsLayer::Index::Environment &&
-            layer != engine::PhysicsLayer::Index::Enemy &&
-            layer != engine::PhysicsLayer::Index::Player)
-        {
-            return;  // 방향 전환 불필요한 레이어는 무시
-        }
-        
-        // ─────────────────────────────────────────────
-        // 플레이어 충돌 시 데미지 처리 (주석 처리)
-        // ─────────────────────────────────────────────
+        const uint32_t layer = collider->GetLayer();
+
+        // 플레이어 충돌 시 데미지 처리 (기존 정책 유지)
         auto* player = info.gameObject->GetComponent<PlayerControllerScript>();
         if (player)
         {
@@ -83,25 +75,45 @@ namespace game
                 m_lastDamageTime = engine::Time::GetTimestamp();
             }
         }
-        
-        // ─────────────────────────────────────────────
-        // 현재 상태가 EngageMove 또는 EngageAttack이 아니면 반사 처리 안함
-        // ─────────────────────────────────────────────
-        std::string currentState = GetCurrentState();
+
+        const std::string currentState = GetCurrentState();
         if (currentState != "EngageMove" && currentState != "EngageAttack")
         {
             return;
         }
-        
-        // ─────────────────────────────────────────────
-        // Wall/Environment/Enemy/Player: 노말 추출
-        // ─────────────────────────────────────────────
+
+        if (layer == engine::PhysicsLayer::Index::SubWall)
+        {
+            const std::string subWallName = info.gameObject->GetName();
+            if (!m_lastCollisionWallName.empty() && subWallName == m_lastCollisionWallName)
+            {
+                return;
+            }
+
+            m_currentDiagonalDirection = DetermineDirectionFromSubWall(subWallName);
+            m_moveDirectionVector = GetDiagonalDirectionVector(m_currentDiagonalDirection);
+            m_moveDirectionVector.Normalize();
+            m_lastCollisionWallName = subWallName;
+            return;
+        }
+
+        if (layer != engine::PhysicsLayer::Index::Environment)
+        {
+            return;
+        }
+
+        const std::string collisionObjectName = info.gameObject->GetName();
+        if (!m_lastCollisionWallName.empty() && collisionObjectName == m_lastCollisionWallName)
+        {
+            return;
+        }
+
+        // Environment는 기존 반사 계산 유지
         engine::Vector3 collisionNormal = engine::Vector3::Zero;
         for (const auto& contact : info.contacts)
         {
-            // 노말 반전: A→B 방향이므로, 몬스터 입장에서는 반대 방향
             engine::Vector3 normal = -contact.normal;
-            normal.y = 0.0f;  // 수평 성분만
+            normal.y = 0.0f;
             if (normal.LengthSquared() > 0.0001f)
             {
                 collisionNormal = normal;
@@ -109,8 +121,7 @@ namespace game
                 break;
             }
         }
-        
-        // 노말이 없으면 위치 기반으로 계산
+
         if (collisionNormal.LengthSquared() < 0.0001f)
         {
             engine::Vector3 myPos = GetTransform()->GetWorldPosition();
@@ -126,61 +137,12 @@ namespace game
                 return;  // 유효한 노말 없음
             }
         }
-        
-        // ─────────────────────────────────────────────
-        // 노말을 X축 또는 Z축으로 스냅
-        // ─────────────────────────────────────────────
+
         engine::Vector3 snappedNormal = SnapNormalToAxis(collisionNormal);
-        
-        // ─────────────────────────────────────────────
-        // 정반사 계산: R = V - 2(V·N)N
-        // ─────────────────────────────────────────────
         m_moveDirectionVector = ReflectDirection(m_moveDirectionVector, snappedNormal);
         m_moveDirectionVector.Normalize();
-        
-        // ─────────────────────────────────────────────
-        // 열거형 동기화
-        // ─────────────────────────────────────────────
         UpdateDiagonalDirectionFromVector();
-    }
-    
-    // ═══════════════════════════════════════════════════════════════
-    // 트리거 콜백 - SubWall 트리거 감지
-    // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundGreen::OnTriggerEnter(const engine::CollisionInfo& info)
-    {
-        if (!info.gameObject) return;
-        
-        auto* collider = info.collider.Get();
-        if (!collider) return;
-        
-        // SubWall 트리거 감지
-        if (collider->GetLayer() == engine::PhysicsLayer::Index::SubWall)
-        {
-            m_currentTriggeredSubWall = info.gameObject->GetName();
-            m_hasTriggeredSubWall = true;
-        }
-    }
-    
-    // ═══════════════════════════════════════════════════════════════
-    // 트리거 콜백 - SubWall 트리거 해제
-    // ═══════════════════════════════════════════════════════════════
-    void MonsterRoundGreen::OnTriggerExit(const engine::CollisionInfo& info)
-    {
-        if (!info.gameObject) return;
-        
-        auto* collider = info.collider.Get();
-        if (!collider) return;
-        
-        // SubWall 트리거 해제
-        if (collider->GetLayer() == engine::PhysicsLayer::Index::SubWall)
-        {
-            if (info.gameObject->GetName() == m_currentTriggeredSubWall)
-            {
-                m_currentTriggeredSubWall.clear();
-                m_hasTriggeredSubWall = false;
-            }
-        }
+        m_lastCollisionWallName = collisionObjectName;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -485,6 +447,7 @@ namespace game
         m_currentDiagonalDirection = static_cast<DiagonalDirection>(dist(gen));
         m_moveDirectionVector = GetDiagonalDirectionVector(m_currentDiagonalDirection);
         m_moveDirectionVector.Normalize();
+        m_lastCollisionWallName.clear();
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -505,6 +468,53 @@ namespace game
         default:
             return engine::Vector3(1.0f, 0.0f, 1.0f);
         }
+    }
+
+    MonsterRoundGreen::DiagonalDirection MonsterRoundGreen::DetermineDirectionFromSubWall(const std::string& subWallName) const
+    {
+        const bool plusX =
+            (m_currentDiagonalDirection == DiagonalDirection::PlusXPlusZ ||
+             m_currentDiagonalDirection == DiagonalDirection::PlusXMinusZ);
+        const bool plusZ =
+            (m_currentDiagonalDirection == DiagonalDirection::PlusXPlusZ ||
+             m_currentDiagonalDirection == DiagonalDirection::MinusXPlusZ);
+
+        auto buildDirection = [](bool newPlusX, bool newPlusZ) -> DiagonalDirection
+        {
+            if (newPlusX && newPlusZ) return DiagonalDirection::PlusXPlusZ;
+            if (newPlusX && !newPlusZ) return DiagonalDirection::PlusXMinusZ;
+            if (!newPlusX && newPlusZ) return DiagonalDirection::MinusXPlusZ;
+            return DiagonalDirection::MinusXMinusZ;
+        };
+
+        if (subWallName == "Collider_SubWall_Front")
+        {
+            if (plusZ) return buildDirection(plusX, false);  // Z축 반전
+            return m_currentDiagonalDirection;
+        }
+
+        if (subWallName == "Collider_SubWall_Back")
+        {
+            if (!plusZ) return buildDirection(plusX, true);  // Z축 반전
+            return m_currentDiagonalDirection;
+        }
+
+        if (subWallName == "Collider_SubWall_FrontLeft" || subWallName == "Collider_SubWall_BackLeft")
+        {
+            if (!plusX) return buildDirection(true, plusZ);  // X축 반전
+
+            // Left 계열 이레귤러 충돌 방어코드(요청으로 일단 비활성화)
+            // return plusZ ? DiagonalDirection::PlusXPlusZ : DiagonalDirection::PlusXMinusZ;
+            return m_currentDiagonalDirection;
+        }
+
+        if (subWallName == "Collider_SubWall_FrontRight" || subWallName == "Collider_SubWall_BackRight")
+        {
+            if (plusX) return buildDirection(false, plusZ);  // X축 반전
+            return m_currentDiagonalDirection;
+        }
+
+        return m_currentDiagonalDirection;
     }
 
     // ═══════════════════════════════════════════════════════════════
