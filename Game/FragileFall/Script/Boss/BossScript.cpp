@@ -5,7 +5,7 @@
 #include <Framework/Object/Component/Camera.h>
 #include <Framework/Object/Component/Transform.h>
 #include <Framework/Scene/Scene.h>
-#include <Framework/Object/Component/UI/UIText.h>
+#include <Framework/Object/Component/UI/UIProgressBar.h>
 #include <Common/Math/MathUtility.h>
 #include <algorithm>
 #include <cmath>
@@ -68,14 +68,26 @@ namespace game
 
     void BossScript::Awake()
     {
-        auto go = engine::GameObject::Find("UI_BossHP");
-        m_hpText = go->GetComponent<engine::UIText>();
+        auto* hpBarObject = engine::GameObject::Find("BossHPBar");
+        if (!hpBarObject)
+        {
+            LOG_PRINT("[BossScript] WARNING: BossHPBar GameObject not found.");
+            return;
+        }
+
+        m_bossHpBarObject = hpBarObject;
+        m_bossHpBar = hpBarObject->GetComponent<engine::UIProgressBar>();
+        if (!m_bossHpBar)
+        {
+            LOG_PRINT("[BossScript] WARNING: UIProgressBar not found on BossHPBar.");
+        }
     }
 
     void BossScript::Start()
     {
-        m_hpText->SetText(std::format("HP: {}", m_currentHp));
         m_patternsInitialized = false;
+        UpdateBossHpBarValue();
+        SetBossHpBarVisible(false);
 
         auto playerGo = engine::GameObject::Find("Player");
         if (playerGo != nullptr)
@@ -111,6 +123,11 @@ namespace game
         {
             InitializePatterns();
             m_patternsInitialized = true;
+        }
+
+        if (m_isBattleStarted)
+        {
+            SetBossHpBarVisible(true);
         }
     }
 
@@ -184,8 +201,7 @@ namespace game
         {
             m_currentHp = 0;
         }
-
-        m_hpText->SetText(std::format("HP: {}", m_currentHp));
+        UpdateBossHpBarValue();
     }
 
     void BossScript::CheckHealth()
@@ -198,6 +214,7 @@ namespace game
 
     void BossScript::OnDeath()
     {
+        SetBossHpBarVisible(false);
         // TODO: 보스 사망 처리
     }
 
@@ -323,6 +340,26 @@ namespace game
                 m_subPartsController = bossSubPartsObject->GetComponent<BossSubPartsController>();
             }
         }
+    }
+
+    void BossScript::SetBossHpBarVisible(bool visible)
+    {
+        if (m_bossHpBarObject)
+        {
+            m_bossHpBarObject->SetActive(visible);
+        }
+    }
+
+    void BossScript::UpdateBossHpBarValue()
+    {
+        if (!m_bossHpBar)
+        {
+            return;
+        }
+
+        const float maxHp = std::max(0.01f, m_maxHp);
+        const float ratio = std::clamp(m_currentHp / maxHp, 0.0f, 1.0f);
+        m_bossHpBar->SetValue(ratio);
     }
 
     void BossScript::BeginIntroSequence()
@@ -484,6 +521,8 @@ namespace game
         m_introPhase = IntroPhase::Complete;
         m_introPhaseElapsed = 0.0f;
         m_isBattleStarted = true;
+        SetBossHpBarVisible(true);
+        UpdateBossHpBarValue();
 
         if (!m_patternsInitialized)
         {

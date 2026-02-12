@@ -8,7 +8,7 @@ namespace engine
     class GameObject;
     class StaticMeshRenderer;
     class Transform;
-    class UIText;
+    class UIProgressBar;
     class Camera;
 }
 
@@ -179,7 +179,8 @@ namespace game
         // player
         engine::Ptr<PlayerControllerScript> m_targetPlayer = nullptr;
 
-        engine::Ptr<engine::UIText> m_hpText = nullptr;
+        engine::Ptr<engine::GameObject> m_bossHpBarObject = nullptr;
+        engine::Ptr<engine::UIProgressBar> m_bossHpBar = nullptr;
 
         bool m_canBeCrystallized = true;  // 구체 패턴의 투사체 결정화 가능 여부
 
@@ -348,6 +349,8 @@ namespace game
 
     private:
         void CacheIntroReferences();
+        void SetBossHpBarVisible(bool visible);
+        void UpdateBossHpBarValue();
         void BeginIntroSequence();
         void UpdateIntroSequence(float deltaTime);
         void EndIntroSequence(bool forceComplete);

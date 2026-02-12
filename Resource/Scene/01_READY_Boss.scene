@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Boss",
-    "NumGameObjects": 90,
+    "NumGameObjects": 92,
     "GameObjects": [
         {
             "ID": 0,
@@ -179,6 +179,355 @@
         },
         {
             "ID": 4,
+            "Name": "Canvas_BossHPBar",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "ParentID": 4,
+            "Name": "BossHPBar",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": -400.0
+                    },
+                    "Width": 600.0,
+                    "Height": 20.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIProgressBar",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Value": 0.5,
+                    "Shape": 0,
+                    "Direction": 0,
+                    "FillMode": 0,
+                    "StartAngleRad": -1.5707963705062866,
+                    "Clockwise": true,
+                    "InnerRadius01": 0.6000000238418579,
+                    "BgSprite": "",
+                    "FillSprite": "",
+                    "BgColor": {
+                        "x": 0.027027010917663574,
+                        "y": 0.027027010917663574,
+                        "z": 0.027027010917663574,
+                        "w": 1.0
+                    },
+                    "FillColor": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 5,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 0.027027010917663574,
+                        "y": 0.027027010917663574,
+                        "z": 0.027027010917663574,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 5,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "TexturePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 660.0,
+                        "y": 130.0,
+                        "z": 960.0,
+                        "w": 150.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
             "Name": "Wall",
             "Active": true,
             "Components": [
@@ -240,7 +589,7 @@
             ]
         },
         {
-            "ID": 5,
+            "ID": 9,
             "Name": "Ground",
             "Active": true,
             "Components": [
@@ -302,7 +651,7 @@
             ]
         },
         {
-            "ID": 6,
+            "ID": 10,
             "Name": "MonsterUpdateSwitch",
             "Active": true,
             "Components": [
@@ -335,7 +684,7 @@
             ]
         },
         {
-            "ID": 7,
+            "ID": 11,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -476,7 +825,7 @@
             ]
         },
         {
-            "ID": 8,
+            "ID": 12,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -696,7 +1045,7 @@
             ]
         },
         {
-            "ID": 9,
+            "ID": 13,
             "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [
@@ -767,7 +1116,7 @@
             ]
         },
         {
-            "ID": 10,
+            "ID": 14,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -838,7 +1187,7 @@
             ]
         },
         {
-            "ID": 11,
+            "ID": 15,
             "Name": "Scene_spawn_system_data_Test",
             "Active": true,
             "Components": [
@@ -865,8 +1214,8 @@
             ]
         },
         {
-            "ID": 12,
-            "ParentID": 11,
+            "ID": 16,
+            "ParentID": 15,
             "Name": "Collier_Wall_Front",
             "Active": true,
             "Components": [
@@ -916,8 +1265,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 11,
+            "ID": 17,
+            "ParentID": 15,
             "Name": "Collier_Wall_Back",
             "Active": true,
             "Components": [
@@ -967,8 +1316,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 11,
+            "ID": 18,
+            "ParentID": 15,
             "Name": "Collier_Wall_Left",
             "Active": true,
             "Components": [
@@ -1018,8 +1367,8 @@
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 11,
+            "ID": 19,
+            "ParentID": 15,
             "Name": "Collier_Wall_Right",
             "Active": true,
             "Components": [
@@ -1069,8 +1418,8 @@
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 11,
+            "ID": 20,
+            "ParentID": 15,
             "Name": "Collier_Crystal_Right_Front_1",
             "Active": true,
             "Components": [
@@ -1116,8 +1465,8 @@
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 11,
+            "ID": 21,
+            "ParentID": 15,
             "Name": "Collier_Crystal_Right_Front_2",
             "Active": true,
             "Components": [
@@ -1163,8 +1512,8 @@
             ]
         },
         {
-            "ID": 18,
-            "ParentID": 11,
+            "ID": 22,
+            "ParentID": 15,
             "Name": "Collier_Crystal_Right_Front_3",
             "Active": true,
             "Components": [
@@ -1210,8 +1559,8 @@
             ]
         },
         {
-            "ID": 19,
-            "ParentID": 11,
+            "ID": 23,
+            "ParentID": 15,
             "Name": "Collier_Crystal_Left_Front",
             "Active": true,
             "Components": [
@@ -1261,8 +1610,8 @@
             ]
         },
         {
-            "ID": 20,
-            "ParentID": 11,
+            "ID": 24,
+            "ParentID": 15,
             "Name": "Collier_Crystal_Left_Back",
             "Active": true,
             "Components": [
@@ -1312,8 +1661,8 @@
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 11,
+            "ID": 25,
+            "ParentID": 15,
             "Name": "Collier_Crystal_Right_Back",
             "Active": true,
             "Components": [
@@ -1363,8 +1712,8 @@
             ]
         },
         {
-            "ID": 22,
-            "ParentID": 11,
+            "ID": 26,
+            "ParentID": 15,
             "Name": "Stage1Test_Shin_GridMap",
             "Active": true,
             "Components": [
@@ -10425,7 +10774,7 @@
             ]
         },
         {
-            "ID": 23,
+            "ID": 27,
             "Name": "AimPointerCanvas",
             "Active": true,
             "Components": [
@@ -10481,8 +10830,8 @@
             ]
         },
         {
-            "ID": 24,
-            "ParentID": 23,
+            "ID": 28,
+            "ParentID": 27,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -10532,7 +10881,7 @@
             ]
         },
         {
-            "ID": 25,
+            "ID": 29,
             "Name": "z_Dev_Boss",
             "Active": true,
             "Components": [
@@ -10743,8 +11092,8 @@
             ]
         },
         {
-            "ID": 26,
-            "ParentID": 25,
+            "ID": 30,
+            "ParentID": 29,
             "Name": "BossSubParts",
             "Active": true,
             "Components": [
@@ -10771,8 +11120,8 @@
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 26,
+            "ID": 31,
+            "ParentID": 30,
             "Name": "RotatingParts",
             "Active": true,
             "Components": [
@@ -10799,8 +11148,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 26,
+            "ID": 32,
+            "ParentID": 30,
             "Name": "FloatingParts",
             "Active": true,
             "Components": [
@@ -10827,8 +11176,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 28,
+            "ID": 33,
+            "ParentID": 32,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -10890,8 +11239,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 28,
+            "ID": 34,
+            "ParentID": 32,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -10953,8 +11302,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 28,
+            "ID": 35,
+            "ParentID": 32,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11016,8 +11365,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 28,
+            "ID": 36,
+            "ParentID": 32,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11079,8 +11428,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 26,
+            "ID": 37,
+            "ParentID": 30,
             "Name": "NestParts",
             "Active": true,
             "Components": [
@@ -11107,8 +11456,8 @@
             ]
         },
         {
-            "ID": 34,
-            "ParentID": 33,
+            "ID": 38,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11170,8 +11519,8 @@
             ]
         },
         {
-            "ID": 35,
-            "ParentID": 33,
+            "ID": 39,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11233,8 +11582,8 @@
             ]
         },
         {
-            "ID": 36,
-            "ParentID": 33,
+            "ID": 40,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11296,8 +11645,8 @@
             ]
         },
         {
-            "ID": 37,
-            "ParentID": 33,
+            "ID": 41,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11359,8 +11708,8 @@
             ]
         },
         {
-            "ID": 38,
-            "ParentID": 33,
+            "ID": 42,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11422,8 +11771,8 @@
             ]
         },
         {
-            "ID": 39,
-            "ParentID": 33,
+            "ID": 43,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11485,8 +11834,8 @@
             ]
         },
         {
-            "ID": 40,
-            "ParentID": 33,
+            "ID": 44,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11548,8 +11897,8 @@
             ]
         },
         {
-            "ID": 41,
-            "ParentID": 33,
+            "ID": 45,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11611,8 +11960,8 @@
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 33,
+            "ID": 46,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11674,8 +12023,8 @@
             ]
         },
         {
-            "ID": 43,
-            "ParentID": 33,
+            "ID": 47,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11737,8 +12086,8 @@
             ]
         },
         {
-            "ID": 44,
-            "ParentID": 33,
+            "ID": 48,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11800,8 +12149,8 @@
             ]
         },
         {
-            "ID": 45,
-            "ParentID": 33,
+            "ID": 49,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11863,8 +12212,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 33,
+            "ID": 50,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11926,8 +12275,8 @@
             ]
         },
         {
-            "ID": 47,
-            "ParentID": 33,
+            "ID": 51,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11989,8 +12338,8 @@
             ]
         },
         {
-            "ID": 48,
-            "ParentID": 33,
+            "ID": 52,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -12052,8 +12401,8 @@
             ]
         },
         {
-            "ID": 49,
-            "ParentID": 33,
+            "ID": 53,
+            "ParentID": 37,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -12115,136 +12464,7 @@
             ]
         },
         {
-            "ID": 50,
-            "Name": "z_Dev_Boss_HP_Text",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
-                }
-            ]
-        },
-        {
-            "ID": 51,
-            "ParentID": 50,
-            "Name": "UI_BossHP",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": -141.8000030517578
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "Dev_Boss_HP_Text",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 52,
+            "ID": 54,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12305,7 +12525,7 @@
             ]
         },
         {
-            "ID": 53,
+            "ID": 55,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12367,7 +12587,7 @@
             ]
         },
         {
-            "ID": 54,
+            "ID": 56,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -12429,7 +12649,7 @@
             ]
         },
         {
-            "ID": 55,
+            "ID": 57,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -12491,7 +12711,7 @@
             ]
         },
         {
-            "ID": 56,
+            "ID": 58,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -12553,7 +12773,7 @@
             ]
         },
         {
-            "ID": 57,
+            "ID": 59,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12615,7 +12835,7 @@
             ]
         },
         {
-            "ID": 58,
+            "ID": 60,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12677,7 +12897,7 @@
             ]
         },
         {
-            "ID": 59,
+            "ID": 61,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12739,7 +12959,7 @@
             ]
         },
         {
-            "ID": 60,
+            "ID": 62,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12801,7 +13021,7 @@
             ]
         },
         {
-            "ID": 61,
+            "ID": 63,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -12847,7 +13067,7 @@
             ]
         },
         {
-            "ID": 62,
+            "ID": 64,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -12893,7 +13113,7 @@
             ]
         },
         {
-            "ID": 63,
+            "ID": 65,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -12939,7 +13159,7 @@
             ]
         },
         {
-            "ID": 64,
+            "ID": 66,
             "Name": "RockLeft",
             "Active": true,
             "Components": [
@@ -13000,7 +13220,7 @@
             ]
         },
         {
-            "ID": 65,
+            "ID": 67,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13062,7 +13282,7 @@
             ]
         },
         {
-            "ID": 66,
+            "ID": 68,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13124,7 +13344,7 @@
             ]
         },
         {
-            "ID": 67,
+            "ID": 69,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -13186,7 +13406,7 @@
             ]
         },
         {
-            "ID": 68,
+            "ID": 70,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -13248,7 +13468,7 @@
             ]
         },
         {
-            "ID": 69,
+            "ID": 71,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -13310,7 +13530,7 @@
             ]
         },
         {
-            "ID": 70,
+            "ID": 72,
             "Name": "CrystalPiece002",
             "Active": true,
             "Components": [
@@ -13372,7 +13592,7 @@
             ]
         },
         {
-            "ID": 71,
+            "ID": 73,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13434,7 +13654,7 @@
             ]
         },
         {
-            "ID": 72,
+            "ID": 74,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13496,7 +13716,7 @@
             ]
         },
         {
-            "ID": 73,
+            "ID": 75,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13558,7 +13778,7 @@
             ]
         },
         {
-            "ID": 74,
+            "ID": 76,
             "Name": "CrystalPiece006",
             "Active": true,
             "Components": [
@@ -13620,7 +13840,7 @@
             ]
         },
         {
-            "ID": 75,
+            "ID": 77,
             "Name": "CrystalSharpSinglePurple",
             "Active": true,
             "Components": [
@@ -13682,7 +13902,7 @@
             ]
         },
         {
-            "ID": 76,
+            "ID": 78,
             "Name": "CrystalSharpSinglePurple",
             "Active": true,
             "Components": [
@@ -13744,7 +13964,7 @@
             ]
         },
         {
-            "ID": 77,
+            "ID": 79,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -13806,7 +14026,7 @@
             ]
         },
         {
-            "ID": 78,
+            "ID": 80,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -13868,7 +14088,7 @@
             ]
         },
         {
-            "ID": 79,
+            "ID": 81,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -13914,7 +14134,7 @@
             ]
         },
         {
-            "ID": 80,
+            "ID": 82,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -13960,7 +14180,7 @@
             ]
         },
         {
-            "ID": 81,
+            "ID": 83,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14006,7 +14226,7 @@
             ]
         },
         {
-            "ID": 82,
+            "ID": 84,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14052,7 +14272,7 @@
             ]
         },
         {
-            "ID": 83,
+            "ID": 85,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14098,7 +14318,7 @@
             ]
         },
         {
-            "ID": 84,
+            "ID": 86,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14144,7 +14364,7 @@
             ]
         },
         {
-            "ID": 85,
+            "ID": 87,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14190,7 +14410,7 @@
             ]
         },
         {
-            "ID": 86,
+            "ID": 88,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14236,7 +14456,7 @@
             ]
         },
         {
-            "ID": 87,
+            "ID": 89,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14282,7 +14502,7 @@
             ]
         },
         {
-            "ID": 88,
+            "ID": 90,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -14344,7 +14564,7 @@
             ]
         },
         {
-            "ID": 89,
+            "ID": 91,
             "Name": "Stone",
             "Active": true,
             "Components": [
