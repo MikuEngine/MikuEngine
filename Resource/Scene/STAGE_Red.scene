@@ -1,6 +1,6 @@
 {
     "Name": "STAGE_Red",
-    "NumGameObjects": 51,
+    "NumGameObjects": 73,
     "GameObjects": [
         {
             "ID": 0,
@@ -66,11 +66,11 @@
                     "Active": true,
                     "LightType": 0,
                     "Color": {
-                        "x": 0.8666666746139526,
-                        "y": 0.49803921580314636,
-                        "z": 0.15294118225574493
+                        "x": 0.8918918967247009,
+                        "y": 0.44738858938217163,
+                        "z": 0.31336745619773865
                     },
-                    "Intensity": 1.0,
+                    "Intensity": 2.0,
                     "Range": 10.0,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -132,7 +132,7 @@
                     "UseSkyboxTexture": 1,
                     "UseIBLTexture": 1,
                     "UseIBL": 1,
-                    "IBLIntensity": 0.05000000074505806
+                    "IBLIntensity": 0.05999999865889549
                 }
             ]
         },
@@ -327,6 +327,16 @@
                         "x": 30.0,
                         "y": 30.0
                     },
+                    "CursorDefaultOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "CursorClickOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "UseDefaultCursor": true,
+                    "UseClickCursor": true,
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
                     "OnEnemyRayMaxDistance": 1000.0,
@@ -11129,9 +11139,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 21.03806495666504,
-                        "y": 5.760367393493652,
-                        "z": -9.167847633361816
+                        "x": 19.559629440307617,
+                        "y": 1.0660103559494019,
+                        "z": -13.868738174438477
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -11154,7 +11164,7 @@
                         "y": 0.49803921580314636,
                         "z": 0.15294118225574493
                     },
-                    "Intensity": 18.600000381469727,
+                    "Intensity": 11.899999618530273,
                     "Range": 12.399999618530273,
                     "Angle": 45.0,
                     "Near": 90000.0,
@@ -11221,8 +11231,8 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 22.670944213867188,
-                        "y": 7.656311988830566,
+                        "x": 21.344680786132813,
+                        "y": 6.882021903991699,
                         "z": 10.275442123413086
                     },
                     "Rotation": {
@@ -11637,7 +11647,7 @@
                     "Position": {
                         "x": 24.55463409423828,
                         "y": 12.282736778259277,
-                        "z": 20.18287467956543
+                        "z": 14.763238906860352
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -11761,6 +11771,1367 @@
                     "HeightRatio": 0.8999999761581421,
                     "ShadowBias": 9.999999747378752e-05,
                     "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 51,
+            "Name": "CrystalChunk",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -27.322622299194336,
+                        "y": 2.0623257160186768,
+                        "z": 5.4803385734558105
+                    },
+                    "Rotation": {
+                        "x": -0.31922677159309387,
+                        "y": 0.6440352201461792,
+                        "z": -0.5569592714309692,
+                        "w": -0.4160641133785248
+                    },
+                    "Scale": {
+                        "x": 0.7654739022254944,
+                        "y": 0.7654679417610168,
+                        "z": 0.7654833793640137
+                    }
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_chunk_001.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Rigid_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 5.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 52,
+            "Name": "CrystalChunk",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 29.292726516723633,
+                        "y": 7.072296142578125,
+                        "z": 16.905046463012695
+                    },
+                    "Rotation": {
+                        "x": -0.1396130621433258,
+                        "y": -0.056240350008010864,
+                        "z": 0.05657022446393967,
+                        "w": 0.9869878888130188
+                    },
+                    "Scale": {
+                        "x": 0.8699979782104492,
+                        "y": 0.869999349117279,
+                        "z": 0.869999349117279
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_chunk_002.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.8700000047683716,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 53,
+            "Name": "Crystal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 2.134612798690796,
+                        "y": -0.3703958988189697,
+                        "z": 19.878646850585938
+                    },
+                    "Rotation": {
+                        "x": 0.016027769073843956,
+                        "y": 0.9483945965766907,
+                        "z": -0.00535119092091918,
+                        "w": 0.31664207577705383
+                    },
+                    "Scale": {
+                        "x": 2.4897117614746094,
+                        "y": 2.4895646572113037,
+                        "z": 2.4896533489227295
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.690000057220459,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 54,
+            "Name": "Crystal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -2.072948932647705,
+                        "y": 2.2785770893096924,
+                        "z": 21.983612060546875
+                    },
+                    "Rotation": {
+                        "x": -0.19193552434444427,
+                        "y": 0.69344162940979,
+                        "z": -0.13770931959152222,
+                        "w": 0.6806876063346863
+                    },
+                    "Scale": {
+                        "x": 3.3456897735595703,
+                        "y": 3.3455958366394043,
+                        "z": 3.3456871509552
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 2.7300000190734863,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 55,
+            "Name": "Crystal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 23.91507339477539,
+                        "y": -0.0001316070556640625,
+                        "z": 15.308758735656738
+                    },
+                    "Rotation": {
+                        "x": -0.04353928565979004,
+                        "y": -0.26642274856567383,
+                        "z": 0.15529386699199677,
+                        "w": 0.9502668380737305
+                    },
+                    "Scale": {
+                        "x": 4.099743366241455,
+                        "y": 4.5,
+                        "z": 4.499998092651367
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 56,
+            "Name": "CrystalChunk",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -8.110909461975098,
+                        "y": 1.6348124742507935,
+                        "z": 23.077774047851563
+                    },
+                    "Rotation": {
+                        "x": -0.017549123615026474,
+                        "y": -0.3058677017688751,
+                        "z": -0.054526787251234055,
+                        "w": 0.9503493309020996
+                    },
+                    "Scale": {
+                        "x": 0.8399984240531921,
+                        "y": 0.8399987816810608,
+                        "z": 0.840000569820404
+                    }
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_chunk_002.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Rigid_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 57,
+            "Name": "CrystalChunk",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 33.10769271850586,
+                        "y": -1.2629237174987793,
+                        "z": 2.492807149887085
+                    },
+                    "Rotation": {
+                        "x": 0.6038679480552673,
+                        "y": 0.36789530515670776,
+                        "z": -0.36789461970329285,
+                        "w": 0.6038627624511719
+                    },
+                    "Scale": {
+                        "x": 1.0000154972076416,
+                        "y": 1.0000104904174805,
+                        "z": 1.0000176429748535
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_chunk_001.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 5.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 58,
+            "Name": "CrystalPiece002",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 18.74925422668457,
+                        "y": -0.8200526833534241,
+                        "z": 16.049055099487305
+                    },
+                    "Rotation": {
+                        "x": -0.11271736025810242,
+                        "y": -0.030824929475784302,
+                        "z": 0.003747152630239725,
+                        "w": 0.993141770362854
+                    },
+                    "Scale": {
+                        "x": 5.1100029945373535,
+                        "y": 5.1100029945373535,
+                        "z": 5.110001564025879
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal_pieces/red/crystal_piece_002.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 59,
+            "Name": "CrystalChunk001",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -20.525218963623047,
+                        "y": -0.7185328006744385,
+                        "z": 21.920364379882813
+                    },
+                    "Rotation": {
+                        "x": 0.5227504372596741,
+                        "y": 0.476163387298584,
+                        "z": -0.4761672914028168,
+                        "w": 0.5227476954460144
+                    },
+                    "Scale": {
+                        "x": 1.0000433921813965,
+                        "y": 1.0000747442245483,
+                        "z": 1.0000885725021362
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_chunk_001.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.5,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 60,
+            "Name": "CrystalPiece002",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 20.348068237304688,
+                        "y": -0.5491793751716614,
+                        "z": -14.644935607910156
+                    },
+                    "Rotation": {
+                        "x": 0.16699908673763275,
+                        "y": -0.026447808369994164,
+                        "z": 0.15416988730430603,
+                        "w": 0.9734697937965393
+                    },
+                    "Scale": {
+                        "x": 2.8199992179870605,
+                        "y": 2.819999933242798,
+                        "z": 2.8199996948242188
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_piece_002.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.170000076293945,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 61,
+            "Name": "CrystalPiece006",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 21.04043197631836,
+                        "y": -0.8500424027442932,
+                        "z": -13.00368595123291
+                    },
+                    "Rotation": {
+                        "x": 0.2707670331001282,
+                        "y": -0.061687976121902466,
+                        "z": 0.21339839696884155,
+                        "w": 0.9366648197174072
+                    },
+                    "Scale": {
+                        "x": 2.3280022144317627,
+                        "y": 2.328000783920288,
+                        "z": 2.3279993534088135
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_piece_006.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 62,
+            "Name": "CrystalPiece001",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 20.045974731445313,
+                        "y": -0.4404360055923462,
+                        "z": -14.919051170349121
+                    },
+                    "Rotation": {
+                        "x": 0.10668791830539703,
+                        "y": -0.022517023608088493,
+                        "z": 0.3248409032821655,
+                        "w": 0.9394621253013611
+                    },
+                    "Scale": {
+                        "x": 0.9999995827674866,
+                        "y": 0.9999991655349731,
+                        "z": 0.9999986886978149
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_piece_001.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.019999980926514,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 63,
+            "Name": "CrystalSharpSingle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 29.310617446899414,
+                        "y": -1.6535738706588745,
+                        "z": 9.613322257995605
+                    },
+                    "Rotation": {
+                        "x": -0.22663064301013947,
+                        "y": 0.032827362418174744,
+                        "z": 0.13954472541809082,
+                        "w": 0.9633733630180359
+                    },
+                    "Scale": {
+                        "x": 5.3403778076171875,
+                        "y": 5.340378761291504,
+                        "z": 5.3403825759887695
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_sharp_single_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 64,
+            "Name": "CrystalSharpSingle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -24.2318058013916,
+                        "y": -1.4386367797851563,
+                        "z": -11.38984489440918
+                    },
+                    "Rotation": {
+                        "x": 0.24476362764835358,
+                        "y": 0.3097921907901764,
+                        "z": -0.20003624260425568,
+                        "w": 0.8967190384864807
+                    },
+                    "Scale": {
+                        "x": 5.22001314163208,
+                        "y": 5.220000743865967,
+                        "z": 5.220003604888916
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_sharp_single_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 5.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 65,
+            "Name": "CrystalSharpSingle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 1.725319504737854,
+                        "y": -1.701959252357483,
+                        "z": 21.720916748046875
+                    },
+                    "Rotation": {
+                        "x": -0.13651126623153687,
+                        "y": 0.03188035264611244,
+                        "z": 0.10671678185462952,
+                        "w": 0.9843575954437256
+                    },
+                    "Scale": {
+                        "x": 6.259998798370361,
+                        "y": 6.2600016593933105,
+                        "z": 6.2600016593933105
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_sharp_single_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 66,
+            "Name": "CrystalSharpSingle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.9671172499656677,
+                        "y": -0.811672031879425,
+                        "z": 19.911392211914063
+                    },
+                    "Rotation": {
+                        "x": -0.3145199716091156,
+                        "y": 0.04222027212381363,
+                        "z": 0.1261672079563141,
+                        "w": 0.9398810863494873
+                    },
+                    "Scale": {
+                        "x": 3.5625009536743164,
+                        "y": 3.5625014305114746,
+                        "z": 3.562499761581421
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_sharp_single_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 67,
+            "Name": "CrystalSharpSingle",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 30.869821548461914,
+                        "y": -2.605771780014038,
+                        "z": -1.4614993333816528
+                    },
+                    "Rotation": {
+                        "x": -0.15697085857391357,
+                        "y": -0.034551188349723816,
+                        "z": 0.31679216027259827,
+                        "w": 0.934777557849884
+                    },
+                    "Scale": {
+                        "x": 9.005707740783691,
+                        "y": 9.005694389343262,
+                        "z": 9.005694389343262
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_sharp_single_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 68,
+            "Name": "Crystal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -20.155311584472656,
+                        "y": 2.1322154998779297,
+                        "z": -15.74337387084961
+                    },
+                    "Rotation": {
+                        "x": 0.058174051344394684,
+                        "y": 0.3302081525325775,
+                        "z": 0.05769021809101105,
+                        "w": 0.9403457641601563
+                    },
+                    "Scale": {
+                        "x": 3.8675615787506104,
+                        "y": 3.8675119876861572,
+                        "z": 3.867553472518921
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 5.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 69,
+            "Name": "CrystalPiece006",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -17.607975006103516,
+                        "y": -1.0629351139068604,
+                        "z": -13.845575332641602
+                    },
+                    "Rotation": {
+                        "x": -0.4713374078273773,
+                        "y": -0.053127359598875046,
+                        "z": -0.028459075838327408,
+                        "w": 0.8798912763595581
+                    },
+                    "Scale": {
+                        "x": 7.4217095375061035,
+                        "y": 7.421753406524658,
+                        "z": 7.421755790710449
+                    }
+                },
+                {
+                    "Type": "SkeletalMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_piece_006.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Rigid_VS.hlsl",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.990000009536743,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 70,
+            "Name": "Crystal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -24.646530151367188,
+                        "y": -1.3309112787246704,
+                        "z": -7.511957168579102
+                    },
+                    "Rotation": {
+                        "x": 0.024005692452192307,
+                        "y": -0.6187081336975098,
+                        "z": 0.17190535366535187,
+                        "w": 0.7662066221237183
+                    },
+                    "Scale": {
+                        "x": 4.810091972351074,
+                        "y": 4.810009002685547,
+                        "z": 4.810081481933594
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 2.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 71,
+            "Name": "CrystalPiece006",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.833986282348633,
+                        "y": -1.5641733407974243,
+                        "z": 10.64293384552002
+                    },
+                    "Rotation": {
+                        "x": 0.08729288727045059,
+                        "y": -0.19463203847408295,
+                        "z": 0.07847073674201965,
+                        "w": 0.9738278985023499
+                    },
+                    "Scale": {
+                        "x": 7.85748291015625,
+                        "y": 7.85703706741333,
+                        "z": 7.857643127441406
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_piece_006.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 4.739999771118164,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 72,
+            "Name": "Crystal",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 6.58978796005249,
+                        "y": 7.255129814147949,
+                        "z": 18.699058532714844
+                    },
+                    "Rotation": {
+                        "x": -0.25340816378593445,
+                        "y": -0.43266454339027405,
+                        "z": -0.13563475012779236,
+                        "w": 0.8545109629631042
+                    },
+                    "Scale": {
+                        "x": 2.0200016498565674,
+                        "y": 2.0200016498565674,
+                        "z": 2.0200016498565674
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/red/crystal_red.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 2.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }

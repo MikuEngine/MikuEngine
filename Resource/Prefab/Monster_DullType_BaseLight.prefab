@@ -1,0 +1,52 @@
+{
+    "Name": "Monster_DullType_BaseLight",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "Monster_DullType_BaseLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 2.62739634513855,
+                        "z": -0.052577316761016846
+                    },
+                    "Rotation": {
+                        "x": 0.7071068286895752,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071068286895752
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0014907121658325,
+                        "z": 1.0014907121658325
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.8996139168739319,
+                        "y": 0.8996139168739319,
+                        "z": 0.8996139168739319
+                    },
+                    "Intensity": 85.0,
+                    "Range": 1.2999999523162842,
+                    "Angle": 85.72000122070313,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        }
+    ]
+}

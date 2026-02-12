@@ -63,7 +63,7 @@
 				fmodL_vc.lib;
 				freetype.lib;
 				liblz4_static.lib;
-				imguizmo.lib
+				imguizmo.lib;
 				%(AdditionalDependencies)
 			</AdditionalDependencies>
         </Link>
@@ -111,7 +111,7 @@
 				fmod_vc.lib;
 				freetype.lib;
 				liblz4_static.lib;
-				imguizmo.lib
+				imguizmo.lib;
 				%(AdditionalDependencies)
 			</AdditionalDependencies>
         </Link>
