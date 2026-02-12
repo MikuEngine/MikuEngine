@@ -516,15 +516,15 @@ namespace game
 				{
 				case 0: loadingStr = "로"; break;
 				case 1: loadingStr = "로딩"; break;
-				case 2: loadingStr = "로딩중"; break;
-				case 3: loadingStr = "로딩중."; break;
-				case 4: loadingStr = "로딩중.."; break;
-				default: loadingStr = "로딩중..."; break;
+				case 2: loadingStr = "로딩 중"; break;
+				case 3: loadingStr = "로딩 중."; break;
+				case 4: loadingStr = "로딩 중.."; break;
+				default: loadingStr = "로딩 중..."; break;
 				}
 			}
 
 			// 중앙 정렬을 위한 가로 폭 사전 계산
-			const float fontSize = 30.0f;
+			const float fontSize = 25.0f;
 			const float basePx = (float)g_loadingFont->GetDesc().pixelSize;
 			const float fontScale = (fontSize / basePx) * scale;
 
@@ -543,12 +543,13 @@ namespace game
 			DrawTextQuad(dc, g_loadingFont, loadingStr, textStartX, textStartY, fontSize, vp, engine::Vector4(1, 1, 1, 1), scale);
 		}
 
+		// 4) 랜덤 텍스트(프로그레스바 - 로딩중 사이)
 		if (g_randomMessage && !g_pickedRandomMessage.empty())
 		{
 			const float msgCenterY = textCenterY;
 
 			// 중앙 정렬 폭 계산 (scale 반영)
-			const float fontSize = 40.0f;
+			const float fontSize = 30.0f;
 			const float basePx = (float)g_loadingFont->GetDesc().pixelSize; // 40
 			const float fontScale = (fontSize / basePx) * scale;
 
