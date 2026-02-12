@@ -81,7 +81,6 @@ namespace game
 
         // If Dead
         BindButton("ToLobby_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->BackToLobby(); });
-        BindButton("Restart_Button", [self = engine::Ptr<SceneController_Play>(this)] {if (self) self->BackToRestart(); });
 
 
         BindButton("UI_OpenOption", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
@@ -91,7 +90,6 @@ namespace game
         BindButton("OK_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
         BindButton("Cancel_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
         BindButton("ToLobby_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
-        BindButton("Restart_Button", [self = engine::Ptr<SceneController_Play>(this)](bool hovered) {});
 
         // Sliders
         BindSlider("UI_BGMSlider", [self = engine::Ptr<SceneController_Play>(this)](float v) {if (self) self->OnBGMChanged(v); });

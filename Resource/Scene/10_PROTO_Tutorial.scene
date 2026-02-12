@@ -12416,7 +12416,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": 50.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -12573,7 +12573,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.6000000238418579
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -12592,7 +12592,7 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "Text": "설정",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -12640,7 +12640,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -130.0
+                        "y": -60.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -12797,7 +12797,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.6000000238418579
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -12816,7 +12816,7 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "Text": "계속하기",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -12864,7 +12864,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 130.0
+                        "y": 160.0
                     },
                     "Width": 200.0,
                     "Height": 100.0,
@@ -13021,7 +13021,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.6000000238418579
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -13040,7 +13040,7 @@
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
                     "Text": "건너뛰기",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -13088,7 +13088,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -230.0
+                        "y": -180.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -13113,7 +13113,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "일시정지됨",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -13442,7 +13442,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.6000000238418579
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -13461,8 +13461,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "Text": "뒤로",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPx": 35,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -13509,7 +13509,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -230.0
+                        "y": -205.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -13534,7 +13534,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "설정",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -14062,7 +14062,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "0",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 35,
                     "Color": {
                         "x": 1.0,
@@ -14071,7 +14071,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 2,
                     "LetterSpacingPx": 0.0,
@@ -14539,7 +14539,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "0",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 35,
                     "Color": {
                         "x": 1.0,
@@ -14548,7 +14548,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 2,
                     "LetterSpacingPx": 0.0,
@@ -15016,7 +15016,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "0",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 35,
                     "Color": {
                         "x": 1.0,
@@ -15025,7 +15025,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 2,
                     "LetterSpacingPx": 0.0,
@@ -15089,7 +15089,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "사운드",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -15162,7 +15162,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "효과음",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -15235,7 +15235,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "마우스 감도",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
