@@ -21,6 +21,8 @@
 
 #include "Script/DoorTriggerScript.h"
 
+#include "Scene/GameScene.h"
+
 namespace game
 {
     static engine::Ptr<engine::GameObject> s_tutorialController = nullptr;
@@ -706,7 +708,9 @@ namespace game
         //m_isTimerActive = true;
         //m_stepTimer = 2.0f;
         Destroy();
-        engine::SceneManager::Get().ChangeScene("01_READY_Lobby");
+
+        StageManager::Get().SetTutorialCompleted(true);
+        GameScene::Change(SceneID::Lobby);
     }
 
     PlayerControllerScript* TutorialController::GetPlayer()

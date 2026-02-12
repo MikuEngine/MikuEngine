@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <algorithm>
 #include <cmath>
 
@@ -34,6 +34,7 @@ namespace game
         engine::Vector3 m_doorExitPosition{ 0, 0, -15 };  // (0,0,0)이면 탈출구 미생성
 
         // 런타임 상태
+        bool m_tutorialCompleted = false;   // 튜토리얼 완료 여부, 클라이언트 종료후 재실행하면 초기화
         int m_currentStage = 1;
         std::vector<engine::Ptr<engine::GameObject>> m_spawnedMonsters;
         int m_runRuby = 0;
@@ -80,6 +81,10 @@ namespace game
             const float clamped = std::clamp(hp, 0.0f, m_runHpMax);
             m_runHp = QuantizeHpToHalf(clamped);
         }
+
+        // 튜토리얼 진입여부 호출 함수
+        bool IsTutorialCompleted() const { return m_tutorialCompleted; }
+        void SetTutorialCompleted(bool v) { m_tutorialCompleted = v; }
 
         /// 로비에서 플레이 진입 시 호출. m_currentStage = 1 후 씬 전환은 호출 측에서.
         void ResetToStage1()
