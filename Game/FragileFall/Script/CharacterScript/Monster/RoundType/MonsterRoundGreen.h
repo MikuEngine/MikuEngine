@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterRoundType.h"
 
@@ -54,10 +54,9 @@ namespace game
         engine::Vector3 m_moveDirectionVector = engine::Vector3(1.0f, 0.0f, 1.0f);  // 정규화는 Start에서
         
         // ─────────────────────────────────────────────
-        // SubWall 트리거 (방향 정보 제공)
+        // SubWall 충돌 중복 방지
         // ─────────────────────────────────────────────
-        std::string m_currentTriggeredSubWall;      // 현재 트리거된 SubWall 이름
-        bool m_hasTriggeredSubWall = false;         // SubWall 트리거 활성화 여부
+        std::string m_lastCollisionWallName;        // 마지막으로 충돌 처리한 오브젝트 이름
         
         // ─────────────────────────────────────────────
         // 플레이어 데미지 쿨다운
@@ -78,11 +77,9 @@ namespace game
 
     protected:
         // ─────────────────────────────────────────────
-        // 충돌/트리거 콜백 (Script.h의 가상 함수 오버라이드)
+        // 충돌 콜백 (Script.h의 가상 함수 오버라이드)
         // ─────────────────────────────────────────────
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
-        void OnTriggerEnter(const engine::CollisionInfo& info) override;
-        void OnTriggerExit(const engine::CollisionInfo& info) override;
         
         // ─────────────────────────────────────────────
         // 오버라이드 (Green 전용 로직)
@@ -120,6 +117,7 @@ namespace game
         void SetRandomDiagonalDirection();                      // 랜덤 대각선 방향 설정
         engine::Vector3 GetDiagonalDirectionVector(DiagonalDirection dir) const;  // 열거형 → 방향벡터
         void UpdateDiagonalDirectionFromVector();               // 방향벡터 → 열거형 동기화
+        DiagonalDirection DetermineDirectionFromSubWall(const std::string& subWallName) const;
         
         // ─────────────────────────────────────────────
         // 반사 계산
