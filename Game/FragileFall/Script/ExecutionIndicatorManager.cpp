@@ -1077,7 +1077,14 @@ namespace game
 
     void ExecutionIndicatorManager::UpdateTriggerWait()
     {
-        if (!m_isWaitingForTrigger || !m_executingGameObject) return;
+        if (!m_isWaitingForTrigger) return;
+
+        // 대상이 대기 중에 파괴/무효화되면 즉시 취소하여 상태 고착을 방지한다.
+        if (!m_executingGameObject)
+        {
+            CancelExecution();
+            return;
+        }
 
         m_triggerWaitFrames++;
 

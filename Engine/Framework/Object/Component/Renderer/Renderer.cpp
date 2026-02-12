@@ -139,7 +139,38 @@ namespace engine
 						
 						ImGui::Separator();
 
-						changed |= ImGui::DragFloat3("Pos", &socket.localPosition.x, 0.05f);
+						Matrix boneWorld = Matrix::Identity;
+						Quaternion boneWorldRot = Quaternion::Identity;
+						auto animator = GetGameObject()->GetComponent<SkeletalAnimator>();
+
+						if (animator && !socket.parentBoneName.empty())
+						{
+							boneWorld = animator->GetBoneWorldMatrix(socket.parentBoneName);
+							Vector3 bPos, bScale;
+							boneWorld.Decompose(bScale, boneWorldRot, bPos);
+						}
+
+						Vector3 currentWorldPos = socket.localPosition;
+						if (animator)
+						{
+							currentWorldPos = Vector3::Transform(socket.localPosition, boneWorld);
+						}
+
+						Vector3 tempWorldPos = currentWorldPos;
+						if (ImGui::DragFloat3("World Pos", &tempWorldPos.x, 0.05f))
+						{
+							if (animator)
+							{
+								Matrix invBoneWorld = boneWorld.Invert();
+								socket.localPosition = Vector3::Transform(tempWorldPos, invBoneWorld);
+							}
+							else
+							{
+								socket.localPosition = tempWorldPos;
+							}
+							changed = true;
+						}
+
 						ImGui::SameLine();
 						if (ImGui::Button("Reset##Pos"))
 						{
@@ -147,26 +178,34 @@ namespace engine
 							changed = true;
 						}
 
+						Quaternion currentWorldRot = socket.localRotation * boneWorldRot;
+
 						if (s_editingIndex != static_cast<int>(i))
 						{
-							s_tempEuler = socket.localRotation.ToEuler() * (180.0f / DirectX::XM_PI);
+							s_tempEuler = currentWorldRot.ToEuler() * (180.0f / DirectX::XM_PI);
 							s_editingIndex = static_cast<int>(i);
 						}
 
-						if (ImGui::DragFloat3("Rot", &s_tempEuler.x, 0.5f))
+						if (ImGui::DragFloat3("World Rot", &s_tempEuler.x, 0.5f))
 						{
-							socket.localRotation = Quaternion::CreateFromYawPitchRoll(
+							Quaternion newWorldRot = Quaternion::CreateFromYawPitchRoll(
 								ToRadian(s_tempEuler.y),
 								ToRadian(s_tempEuler.x),
 								ToRadian(s_tempEuler.z)
 							);
+
+							Quaternion invBoneRot = boneWorldRot;
+							invBoneRot.Conjugate();
+
+							socket.localRotation = newWorldRot * invBoneRot;
 							changed = true;
 						}
+
 						ImGui::SameLine();
 						if (ImGui::Button("Reset##Rot"))
 						{
 							socket.localRotation = Quaternion::Identity;
-							s_tempEuler = Vector3::Zero;
+							s_tempEuler = (Quaternion::Identity * boneWorldRot).ToEuler() * (180.0f / DirectX::XM_PI);
 							changed = true;
 						}
 
@@ -182,12 +221,12 @@ namespace engine
 						{
 							socket.UpdateLocalMatrix();
 							UpdateSockets();
-
 							auto renderer = GetGameObject()->GetComponent<Renderer>();
 							if (renderer)
 							{
 								renderer->Update();
 							}
+						
 						}
 					}
 

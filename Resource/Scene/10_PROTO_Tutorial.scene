@@ -12137,7 +12137,7 @@
             "ID": 41,
             "ParentID": 35,
             "Name": "StateTextCanvas",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
@@ -17475,7 +17475,8 @@
                 },
                 {
                     "Type": "UIMessageQueue",
-                    "Active": true
+                    "Active": true,
+                    "KillPrefabKey": "UIToastPopUp"
                 }
             ]
         },
@@ -17514,7 +17515,7 @@
                     "KinematicDeceleration": 70.0,
                     "MoveSpeed": 13.0,
                     "RotationSpeed": 20.0,
-                    "BaseAtkDmg": 10.0,
+                    "BaseAtkDmg": 50.0,
                     "BaseAtkSpeed": 1.399999976158142,
                     "BaseBulletRange": 10.0,
                     "BaseBulletSizeScale": 1.0,

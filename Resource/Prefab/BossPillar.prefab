@@ -61,6 +61,30 @@
                         1.0,
                         1.0
                     ]
+                },
+                {
+                    "Type": "BossPillar",
+                    "Active": true
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        1.440000057220459,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 1.6799999475479126,
+                    "height": 7.360000133514404
                 }
             ]
         },
