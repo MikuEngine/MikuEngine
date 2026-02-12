@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -268,36 +268,12 @@ namespace game
             return;
         }
 
-        engine::Scene* scene = engine::SceneManager::Get().GetScene();
-        if (!scene)
-        {
-            return;
-        }
-
-        engine::GameObject* target = scene->CreateGameObject("StageClearExecutionTarget");
+        engine::GameObject* target = engine::Prefab::Instantiate("StageClearExecutionTarget");
         if (!target)
         {
             return;
         }
 
-        target->GetTransform()->SetLocalPosition(engine::Vector3::Zero);
-        target->GetTransform()->SetLocalScale(engine::Vector3(2.0f, 2.0f, 2.0f));
-
-        if (engine::SpriteRenderer* sprite = target->AddComponent<engine::SpriteRenderer>())
-        {
-            sprite->SetTexture("Resource/Texture/temp_ExecutionExitDamageBoundary.png");
-            sprite->SetTransparentPixelShader("Resource/Shader/Pixel/Sprite_Unlit_Transparent_PS.hlsl");
-            sprite->SetBillboardType(engine::BillboardType::ViewPlaneVertical);
-        }
-
-        if (engine::SphereCollider* collider = target->AddComponent<engine::SphereCollider>())
-        {
-            collider->SetRadius(0.8f);
-            collider->SetLayer(engine::PhysicsLayer::Picking);
-            collider->SetSyncWithTransform(true);
-        }
-
-        target->AddComponent<StageClearExecutionTarget>();
         m_stageClearExecutionTarget = engine::Ptr<engine::GameObject>(target);
     }
 
