@@ -5,6 +5,7 @@
 namespace engine
 {
     class UIClickArea;
+    class UIText;
 }
 
 namespace game
@@ -41,6 +42,7 @@ namespace game
         engine::GameObject* m_camera = nullptr;
         engine::GameObject* m_player = nullptr;
         engine::UIClickArea* m_clickArea = nullptr;
+        engine::UIText* m_guideText = nullptr;
 
         engine::Vector3 m_cameraPos = {};
         engine::Vector3 m_dirFromTarget = {};

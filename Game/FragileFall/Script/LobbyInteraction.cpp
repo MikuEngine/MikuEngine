@@ -1,6 +1,8 @@
 ﻿#include "GamePCH.h"
 #include "LobbyInteraction.h"
 #include <Framework/Object/Component/UI/UIClickArea.h>
+#include <Framework/Object/Component/UI/UIText.h>
+#include <Core/System/MyTime.h>
 
 namespace game
 {
@@ -14,6 +16,9 @@ namespace game
     void LobbyInteraction::Start()
     {
         if (!m_clickArea || !m_player) return;
+
+        if (auto* go = engine::GameObject::Find("Text_Guide"))
+            m_guideText = go->GetComponent<engine::UIText>();
 
         const auto& rot = m_player->GetTransform()->GetLocalEulerAngles();
         m_yawDeg = rot.y;
@@ -102,6 +107,8 @@ namespace game
 
         m_yawDeg -= delta.x * degPerPixel;
 
+        m_guideText->SetActive(false);
+
         m_player->GetTransform()->SetLocalRotation({ 0.0f, m_yawDeg, 0.0f });
     }
 
@@ -116,5 +123,12 @@ namespace game
 
         // 3. 최소/최대 거리 제한 (Clamp)
         m_currentDistance = std::clamp(m_currentDistance, minDistance, maxDistance);
+
+        if (m_currentDistance <= minDistance)
+        {
+            m_guideText->SetActive(false);
+        }
+        else
+            m_guideText->SetActive(true);
     }
 }

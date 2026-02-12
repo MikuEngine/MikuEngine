@@ -257,18 +257,18 @@ namespace game
 
     void UpgradeController::OnGui()
     {
-        //if (ImGui::InputInt3("Currency", &m_ruby))
-        //{
-        //    m_ruby = std::max(0, m_ruby);
-        //    m_sapphire = std::max(0, m_sapphire);
-        //    m_emerald = std::max(0, m_emerald);
+        if (ImGui::InputInt3("Currency", &m_ruby))
+        {
+            m_ruby = std::max(0, m_ruby);
+            m_sapphire = std::max(0, m_sapphire);
+            m_emerald = std::max(0, m_emerald);
 
-        //    RecomputeUnlocked();
-        //    RefreshNodeVisuals();
-        //    game::UpgradeProgressManager::SaveProgress(*this);
-        //}
+            RecomputeUnlocked();
+            RefreshNodeVisuals();
+            game::UpgradeProgressManager::SaveProgress(*this);
+        }
 
-        //ImGui::Text("Wallet: Ruby=%d Sapphire=%d Emerald=%d", m_ruby, m_sapphire, m_emerald);
+        ImGui::Text("Wallet: Ruby=%d Sapphire=%d Emerald=%d", m_ruby, m_sapphire, m_emerald);
     }
 
     void UpgradeController::Save(engine::json& j) const
