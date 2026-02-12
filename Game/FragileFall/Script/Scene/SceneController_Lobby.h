@@ -76,7 +76,7 @@ namespace game
         bool  m_rotDone = false;
 
         engine::Vector3 m_moveStartPos = { 0,0,0 };
-        engine::Vector3 m_moveTargetPos = { 10.382, 0.270, 29.869 };
+        engine::Vector3 m_moveTargetPos = { 10.382f, 0.270f, 29.869f };
 
         float m_moveStartYaw = 0.0f;
         float m_moveTargetYaw = 0.0f;
