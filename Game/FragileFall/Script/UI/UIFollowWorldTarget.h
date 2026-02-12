@@ -5,7 +5,6 @@
 
 namespace engine
 {
-    class UIImage;
     class Camera;
 }
 
@@ -29,12 +28,11 @@ namespace game
     private:
         std::string                 m_targetName;
         engine::Vector3             m_offset{ -5.0f, 0.0f, 0.0f };
-        bool                        m_hideWhenOffscreen = true;
+        //bool                        m_hideWhenOffscreen = true;
         bool                        m_visible = true;
 
         engine::GameObject*         m_target = nullptr;
         engine::RectTransform*      m_rt = nullptr;
-        engine::UIImage*            m_img = nullptr;
         engine::Camera*             m_camera = nullptr;
 
         engine::RectTransform*      m_parentRT = nullptr;

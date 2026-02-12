@@ -9,6 +9,9 @@
 #include "Framework/Object/Component/UI/UIImage.h"
 #include "Framework/Object/Component/Canvas.h"
 
+#include "Framework/System/SystemManager.h"
+#include "Framework/System/RenderSystem.h"
+
 namespace engine
 {
 	namespace
@@ -36,6 +39,7 @@ namespace engine
 	void UIProgressBar::Initialize()
 	{
 		UIElement::Initialize();
+		SystemManager::Get().GetRenderSystem().Register(this);
 		CreateVisuals();
 		UpdateVisuals();
 		m_dirty = true;
@@ -56,7 +60,10 @@ namespace engine
 
 	void UIProgressBar::DrawUI() const
 	{
-		//
+		UIProgressBar* self = const_cast<UIProgressBar*>(this);
+
+		self->UpdateVisuals();
+		self->m_dirty = false;
 	}
 
 	float UIProgressBar::GetValue() const
