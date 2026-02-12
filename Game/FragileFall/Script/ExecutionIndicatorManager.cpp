@@ -5,6 +5,7 @@
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
 #include "Script/Boss/BossPattern/Components/BossBigProjectile.h"
+#include "Script/StageClearExecutionTarget.h"
 #include "Script/ExecutionSlowScript.h"
 #include "Script/ExecutionEffectScript.h"
 #include "Script/CameraEffectScript.h"
@@ -121,6 +122,10 @@ namespace game
                 else if (auto* projectile = m_executingGameObject->GetComponent<BossBigProjectile>())
                 {
                     isTargetStillExecutable = projectile->IsCrystallized();
+                }
+                else if (auto* stageTarget = m_executingGameObject->GetComponent<StageClearExecutionTarget>())
+                {
+                    isTargetStillExecutable = stageTarget->IsExecutable();
                 }
             }
 
@@ -676,6 +681,25 @@ namespace game
                 }
                 transform = transform->GetParent();
             }
+
+            transform = hit.gameObject->GetTransform();
+            while (transform)
+            {
+                engine::GameObject* go = transform->GetGameObject();
+                if (go)
+                {
+                    StageClearExecutionTarget* stageTarget = go->GetComponent<StageClearExecutionTarget>();
+                    if (stageTarget)
+                    {
+                        if (stageTarget->IsExecutable())
+                        {
+                            return go;
+                        }
+                        break;
+                    }
+                }
+                transform = transform->GetParent();
+            }
         }
 
         return nullptr;
@@ -891,6 +915,10 @@ namespace game
             comp->TriggerDeath();
         }
         else if (auto comp = m_executingGameObject->GetComponent<BossPillar>())
+        {
+            comp->Execute();
+        }
+        else if (auto comp = m_executingGameObject->GetComponent<StageClearExecutionTarget>())
         {
             comp->Execute();
         }

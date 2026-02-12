@@ -25,7 +25,9 @@ namespace game
         int m_runSapphire = 0;
         int m_runEmerald = 0;
         bool m_cleared = false;
+        bool m_waitingForStageClearExecution = false;
         engine::Ptr<engine::GameObject> m_currentMapEnvRoot;  // 맵 환경(장애물·스폰 포인트 포함) 루트
+        engine::Ptr<engine::GameObject> m_stageClearExecutionTarget;
 
         /// 스테이지 간 유지되는 프레자일 게이지 값
         float m_savedFragileGaugeCurrent = 0.0f;
@@ -95,6 +97,9 @@ namespace game
         /// 다음 맵 문 접촉 시. m_currentStage++ 후 보스면 보스 씬, 아니면 같은 플레이 씬에서 다음 스테이지 생성.
         void RequestNextStage();
 
+        /// 스테이지 클리어 후 중앙 처형 오브젝트가 처형되었을 때 호출.
+        void OnStageClearExecutionTargetExecuted();
+
         /// 클리어 시 생성할 "다음 스테이지 문" 위치. (0,0,0)이면 생성 안 함.
         void SetDoorNextPosition(const engine::Vector3& pos) { m_doorNextPosition = pos; }
         /// 클리어 시 생성할 "탈출구" 위치. (0,0,0)이면 생성 안 함.
@@ -111,5 +116,6 @@ namespace game
 
         void ClearStageState();
         bool GetMapEnvPrefabNameForStage(int stageIndex, std::string& outName) const;
+        void SpawnStageClearExecutionTarget();
     };
 }
