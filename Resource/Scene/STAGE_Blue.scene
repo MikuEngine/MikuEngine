@@ -1,6 +1,6 @@
 {
     "Name": "STAGE_Blue",
-    "NumGameObjects": 65,
+    "NumGameObjects": 38,
     "GameObjects": [
         {
             "ID": 0,
@@ -179,68 +179,6 @@
         },
         {
             "ID": 4,
-            "Name": "CrystalEffect",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 1.4552080631256104,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_effect/white/crystal_effect_white.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.349999904632568,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 5,
             "Name": "MonsterUpdateSwitch",
             "Active": true,
             "Components": [
@@ -268,12 +206,12 @@
                     "Type": "MonsterUpdateActivationSwitch",
                     "Active": true,
                     "ActivationDelay": 0.10000000149011612,
-                    "IsUpdateAllowed": false
+                    "WaitAfterIdle": true
                 }
             ]
         },
         {
-            "ID": 6,
+            "ID": 5,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -322,6 +260,7 @@
                     "CollisionPushBackForce": 0.5,
                     "SlidingSpeedMultiplier": 0.699999988079071,
                     "DashDuration": 0.30000001192092896,
+                    "DashMaxDurationLimit": 0.6000000238418579,
                     "BaseDashDistance": 6.0,
                     "DashDecayRate": 2.0,
                     "DashDecayDuration": 0.5,
@@ -332,7 +271,14 @@
                     "PostDashQuickFireDuration": 0.30000001192092896,
                     "FragileGaugeCurrent": 0.0,
                     "FragileGaugeMax": 100.0,
-                    "FragileGaugeRisePerSecond": 15.0
+                    "FragileGaugeRisePerSecond": 15.0,
+                    "PlayerMaxHP": 100.0,
+                    "InvincibleTime": 0.5,
+                    "IsInvincible": false,
+                    "EED_Enable": false,
+                    "EED_DamageScale": 5.0,
+                    "EED_Damage": 15.0,
+                    "EED_Duration": 1.0
                 },
                 {
                     "Type": "LogicFSM",
@@ -377,48 +323,26 @@
                 {
                     "Type": "AimModeController",
                     "Active": true,
-                    "CanvasObjectName": "AimPointerCanvas",
                     "CursorSize": {
                         "x": 30.0,
                         "y": 30.0
                     },
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
-                    "CursorTexturesByState": [
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "CursorPivotsByState": [
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        },
-                        {
-                            "x": 0.0,
-                            "y": 0.0
-                        }
-                    ],
-                    "CursorState": 0
+                    "OnEnemyRayMaxDistance": 1000.0,
+                    "EnableCursorPulse": true,
+                    "PulseMaxDistance": 10.0,
+                    "PulsePeakTimeScale": 0.5,
+                    "PulseDurationPerFR": 1.0,
+                    "ExecutionIntroScale": 1.5,
+                    "ExecutionIntroDistancePx": 10.0,
+                    "ExecutionIntroDuration": 0.5,
+                    "PostExecutionDuration": 0.5
                 }
             ]
         },
         {
-            "ID": 7,
+            "ID": 6,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -638,7 +562,7 @@
             ]
         },
         {
-            "ID": 8,
+            "ID": 7,
             "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [
@@ -709,7 +633,7 @@
             ]
         },
         {
-            "ID": 9,
+            "ID": 8,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -772,12 +696,15 @@
                     "Type": "AimPointerMeshScript",
                     "Active": true,
                     "AimPointerObjectName": "Player",
-                    "FixedY": 2.200000047683716
+                    "FixedY": 2.200000047683716,
+                    "ScaleAtNearest": 0.800000011920929,
+                    "ScaleMin": 0.05000000074505806,
+                    "ScaleMax": 5.0
                 }
             ]
         },
         {
-            "ID": 10,
+            "ID": 9,
             "Name": "AimPointerCanvas",
             "Active": true,
             "Components": [
@@ -833,8 +760,8 @@
             ]
         },
         {
-            "ID": 11,
-            "ParentID": 10,
+            "ID": 10,
+            "ParentID": 9,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -884,7 +811,7 @@
             ]
         },
         {
-            "ID": 12,
+            "ID": 11,
             "Name": "Scene_spawn_system_data_Test_mdfy",
             "Active": true,
             "Components": [
@@ -911,8 +838,8 @@
             ]
         },
         {
-            "ID": 13,
-            "ParentID": 12,
+            "ID": 12,
+            "ParentID": 11,
             "Name": "Collier_Wall_Front",
             "Active": true,
             "Components": [
@@ -962,8 +889,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 12,
+            "ID": 13,
+            "ParentID": 11,
             "Name": "Collier_Wall_Back",
             "Active": true,
             "Components": [
@@ -1013,8 +940,8 @@
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 12,
+            "ID": 14,
+            "ParentID": 11,
             "Name": "Collier_Wall_Left",
             "Active": true,
             "Components": [
@@ -1064,8 +991,8 @@
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 12,
+            "ID": 15,
+            "ParentID": 11,
             "Name": "Collier_Wall_Right",
             "Active": true,
             "Components": [
@@ -1115,8 +1042,8 @@
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 12,
+            "ID": 16,
+            "ParentID": 11,
             "Name": "Collier_Crystal_Right_Front_1",
             "Active": true,
             "Components": [
@@ -1162,8 +1089,8 @@
             ]
         },
         {
-            "ID": 18,
-            "ParentID": 12,
+            "ID": 17,
+            "ParentID": 11,
             "Name": "Collier_Crystal_Right_Front_2",
             "Active": true,
             "Components": [
@@ -1209,8 +1136,8 @@
             ]
         },
         {
-            "ID": 19,
-            "ParentID": 12,
+            "ID": 18,
+            "ParentID": 11,
             "Name": "Collier_Crystal_Right_Front_3",
             "Active": true,
             "Components": [
@@ -1256,8 +1183,8 @@
             ]
         },
         {
-            "ID": 20,
-            "ParentID": 12,
+            "ID": 19,
+            "ParentID": 11,
             "Name": "Collier_Crystal_Left_Front",
             "Active": true,
             "Components": [
@@ -1307,8 +1234,8 @@
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 12,
+            "ID": 20,
+            "ParentID": 11,
             "Name": "Collier_Crystal_Left_Back",
             "Active": true,
             "Components": [
@@ -1358,8 +1285,8 @@
             ]
         },
         {
-            "ID": 22,
-            "ParentID": 12,
+            "ID": 21,
+            "ParentID": 11,
             "Name": "Collier_Crystal_Right_Back",
             "Active": true,
             "Components": [
@@ -1409,8 +1336,8 @@
             ]
         },
         {
-            "ID": 23,
-            "ParentID": 12,
+            "ID": 22,
+            "ParentID": 11,
             "Name": "Stage1Test_Shin_GridMap",
             "Active": true,
             "Components": [
@@ -10471,7 +10398,7 @@
             ]
         },
         {
-            "ID": 24,
+            "ID": 23,
             "Name": "SubWall",
             "Active": true,
             "Components": [
@@ -10498,8 +10425,8 @@
             ]
         },
         {
-            "ID": 25,
-            "ParentID": 24,
+            "ID": 24,
+            "ParentID": 23,
             "Name": "Col_Left_Back_SubWall",
             "Active": true,
             "Components": [
@@ -10549,8 +10476,8 @@
             ]
         },
         {
-            "ID": 26,
-            "ParentID": 24,
+            "ID": 25,
+            "ParentID": 23,
             "Name": "Col_Right_Back_SubWall",
             "Active": true,
             "Components": [
@@ -10600,8 +10527,8 @@
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 24,
+            "ID": 26,
+            "ParentID": 23,
             "Name": "Col_Left_Front_SubWall",
             "Active": true,
             "Components": [
@@ -10651,8 +10578,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 24,
+            "ID": 27,
+            "ParentID": 23,
             "Name": "Col_Right_Front_1_SubWall",
             "Active": true,
             "Components": [
@@ -10698,8 +10625,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 24,
+            "ID": 28,
+            "ParentID": 23,
             "Name": "Col_Right_Front_2_SubWall",
             "Active": true,
             "Components": [
@@ -10745,8 +10672,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 24,
+            "ID": 29,
+            "ParentID": 23,
             "Name": "Col_Right_Front_3_SubWall",
             "Active": true,
             "Components": [
@@ -10792,8 +10719,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 24,
+            "ID": 30,
+            "ParentID": 23,
             "Name": "Col_Right_Front_4_SubWall",
             "Active": true,
             "Components": [
@@ -10843,8 +10770,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 24,
+            "ID": 31,
+            "ParentID": 23,
             "Name": "Col_Right_Front_5_SubWall",
             "Active": true,
             "Components": [
@@ -10894,8 +10821,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 24,
+            "ID": 32,
+            "ParentID": 23,
             "Name": "Col_Right_Front_6_SubWall",
             "Active": true,
             "Components": [
@@ -10945,8 +10872,8 @@
             ]
         },
         {
-            "ID": 34,
-            "ParentID": 24,
+            "ID": 33,
+            "ParentID": 23,
             "Name": "Col_Right_Front_7_SubWall",
             "Active": true,
             "Components": [
@@ -10996,7 +10923,7 @@
             ]
         },
         {
-            "ID": 35,
+            "ID": 34,
             "Name": "StateTextRendererCanvas",
             "Active": true,
             "Components": [
@@ -11070,7 +10997,7 @@
             ]
         },
         {
-            "ID": 36,
+            "ID": 35,
             "Name": "Wall",
             "Active": true,
             "Components": [
@@ -11079,7 +11006,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 3.5,
+                        "y": 4.699999809265137,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -11132,7 +11059,7 @@
             ]
         },
         {
-            "ID": 37,
+            "ID": 36,
             "Name": "Ground",
             "Active": true,
             "Components": [
@@ -11141,7 +11068,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": -0.5,
+                        "y": -1.7000000476837158,
                         "z": 3.0
                     },
                     "Rotation": {
@@ -11194,7 +11121,7 @@
             ]
         },
         {
-            "ID": 38,
+            "ID": 37,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -11236,1474 +11163,6 @@
                     "HeightRatio": 0.8999999761581421,
                     "ShadowBias": 9.999999747378752e-05,
                     "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 39,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 22.213184356689453,
-                        "y": 2.809607982635498,
-                        "z": 10.7274169921875
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 39.099998474121094,
-                    "Range": 10.899999618530273,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 40,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -0.4031331539154053,
-                        "y": 2.45798659324646,
-                        "z": 16.98331642150879
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 44.79999923706055,
-                    "Range": 9.399999618530273,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 41,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -26.003690719604492,
-                        "y": 5.563657283782959,
-                        "z": 3.9666662216186523
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 37.29999923706055,
-                    "Range": 15.699999809265137,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 42,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -19.90420913696289,
-                        "y": 7.349082946777344,
-                        "z": -15.195453643798828
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 47.20000076293945,
-                    "Range": 10.100000381469727,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 43,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 28.8121280670166,
-                        "y": 7.237125396728516,
-                        "z": -0.2923445701599121
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 10.0,
-                    "Range": 16.899999618530273,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 44,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -22.75642204284668,
-                        "y": 9.028475761413574,
-                        "z": 15.811361312866211
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 10.199999809265137,
-                    "Range": 17.799999237060547,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 45,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -23.270950317382813,
-                        "y": 3.93117618560791,
-                        "z": -8.68185043334961
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 10.199999809265137,
-                    "Range": 9.300000190734863,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 46,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 11.073427200317383,
-                        "y": 3.647045612335205,
-                        "z": 20.079051971435547
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 8.0,
-                    "Range": 19.799999237060547,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 47,
-            "Name": "Light",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 26.7633113861084,
-                        "y": 9.440102577209473,
-                        "z": 12.822330474853516
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 0.23529411852359772,
-                        "y": 0.9098039269447327,
-                        "z": 0.8705882430076599
-                    },
-                    "Intensity": 7.0,
-                    "Range": 6.900000095367432,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 48,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -21.755380630493164,
-                        "y": 0.0,
-                        "z": -11.8475980758667
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.9811810255050659,
-                        "z": 0.0,
-                        "w": -0.19309023022651672
-                    },
-                    "Scale": {
-                        "x": 2.2700307369232178,
-                        "y": 2.2699999809265137,
-                        "z": 2.2700307369232178
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 4.760000228881836,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 49,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -19.77199935913086,
-                        "y": 1.418200135231018,
-                        "z": -14.91612720489502
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.7451381087303162,
-                        "z": 0.0,
-                        "w": -0.6669101715087891
-                    },
-                    "Scale": {
-                        "x": 2.8700125217437744,
-                        "y": 2.869999885559082,
-                        "z": 2.8700125217437744
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 4.829999923706055,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 50,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 24.004106521606445,
-                        "y": -0.501678466796875,
-                        "z": 10.638604164123535
-                    },
-                    "Rotation": {
-                        "x": 0.0614774264395237,
-                        "y": 0.7561692595481873,
-                        "z": -0.1054038479924202,
-                        "w": -0.642898678779602
-                    },
-                    "Scale": {
-                        "x": 3.640011787414551,
-                        "y": 3.640000343322754,
-                        "z": 3.640014171600342
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 4.800000190734863,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 51,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 22.163663864135742,
-                        "y": 0.0,
-                        "z": -8.322489738464355
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.6364831924438477,
-                        "z": -0.0,
-                        "w": 0.7712905406951904
-                    },
-                    "Scale": {
-                        "x": 3.40000581741333,
-                        "y": 3.3999998569488525,
-                        "z": 3.40000581741333
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 52,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.3948725461959839,
-                        "z": 19.11008644104004
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.9008094072341919,
-                        "z": 0.0,
-                        "w": -0.4342147409915924
-                    },
-                    "Scale": {
-                        "x": 2.5500435829162598,
-                        "y": 2.549999952316284,
-                        "z": 2.5500435829162598
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 2.4200000762939453,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 53,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -26.453710556030273,
-                        "y": 2.8046393394470215,
-                        "z": 3.6319923400878906
-                    },
-                    "Rotation": {
-                        "x": -0.10661647468805313,
-                        "y": -0.5618674755096436,
-                        "z": -0.07331828027963638,
-                        "w": 0.8170448541641235
-                    },
-                    "Scale": {
-                        "x": 3.1100502014160156,
-                        "y": 3.109999895095825,
-                        "z": 3.110051155090332
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 4.510000228881836,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 54,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 18.644329071044922,
-                        "y": 0.17910432815551758,
-                        "z": 25.365018844604492
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 2.069999933242798,
-                        "y": 2.069999933242798,
-                        "z": 2.069999933242798
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 2.25,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 55,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -12.816719055175781,
-                        "y": 0.07677197456359863,
-                        "z": 22.43148422241211
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.21065758168697357,
-                        "z": -0.0,
-                        "w": 0.9775599241256714
-                    },
-                    "Scale": {
-                        "x": 4.698003768920898,
-                        "y": 4.697999477386475,
-                        "z": 4.698003768920898
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 56,
-            "Name": "CrystalSharpBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -28.45598793029785,
-                        "y": 2.2681381702423096,
-                        "z": -0.7445829510688782
-                    },
-                    "Rotation": {
-                        "x": -0.11693218350410461,
-                        "y": 0.0316801518201828,
-                        "z": -0.25957441329956055,
-                        "w": 0.9580941200256348
-                    },
-                    "Scale": {
-                        "x": 2.3530004024505615,
-                        "y": 2.353001117706299,
-                        "z": 2.3530008792877197
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp/blue/crystal_sharp_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 57,
-            "Name": "CrystalSharpBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -26.141862869262695,
-                        "y": -0.3292134702205658,
-                        "z": -5.5709452629089355
-                    },
-                    "Rotation": {
-                        "x": -0.04244418442249298,
-                        "y": 0.0070388708263635635,
-                        "z": -0.16345271468162537,
-                        "w": 0.9856125712394714
-                    },
-                    "Scale": {
-                        "x": 2.689999580383301,
-                        "y": 2.689997673034668,
-                        "z": 2.6899988651275635
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp/blue/crystal_sharp_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 58,
-            "Name": "CrystalSharpBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -28.098207473754883,
-                        "y": 0.4153071641921997,
-                        "z": 13.380807876586914
-                    },
-                    "Rotation": {
-                        "x": -0.08121762424707413,
-                        "y": 0.012131106108427048,
-                        "z": -0.1472279131412506,
-                        "w": 0.985687792301178
-                    },
-                    "Scale": {
-                        "x": 3.3972010612487793,
-                        "y": 3.3972010612487793,
-                        "z": 3.3971989154815674
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp/blue/crystal_sharp_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 2.190000057220459,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 59,
-            "Name": "CrystalSharpBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 25.164127349853516,
-                        "y": -0.5992318391799927,
-                        "z": -4.179166793823242
-                    },
-                    "Rotation": {
-                        "x": -0.06043904274702072,
-                        "y": -0.010084294714033604,
-                        "z": 0.1642664521932602,
-                        "w": 0.9845110177993774
-                    },
-                    "Scale": {
-                        "x": 5.016002178192139,
-                        "y": 5.01600456237793,
-                        "z": 5.016000747680664
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp/blue/crystal_sharp_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 60,
-            "Name": "CrystalSharpBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 26.298080444335938,
-                        "y": -0.8486551642417908,
-                        "z": 5.828145503997803
-                    },
-                    "Rotation": {
-                        "x": -0.10879144817590714,
-                        "y": -0.022075973451137543,
-                        "z": 0.19763797521591187,
-                        "w": 0.9739693999290466
-                    },
-                    "Scale": {
-                        "x": 3.5999999046325684,
-                        "y": 3.6000006198883057,
-                        "z": 3.6000003814697266
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp/blue/crystal_sharp_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 61,
-            "Name": "CrystalSharpBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -3.6197128295898438,
-                        "y": 0.8881294131278992,
-                        "z": 21.038772583007813
-                    },
-                    "Rotation": {
-                        "x": -0.17766256630420685,
-                        "y": -0.008748197928071022,
-                        "z": -0.02988024801015854,
-                        "w": 0.9835988283157349
-                    },
-                    "Scale": {
-                        "x": 2.390007972717285,
-                        "y": 2.3899991512298584,
-                        "z": 2.3899989128112793
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp/blue/crystal_sharp_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 62,
-            "Name": "CrystalSharpBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -24.749210357666016,
-                        "y": 1.1354540586471558,
-                        "z": 18.4384708404541
-                    },
-                    "Rotation": {
-                        "x": -0.1437818557024002,
-                        "y": -0.008811148814857006,
-                        "z": -0.06052868813276291,
-                        "w": 0.9877172708511353
-                    },
-                    "Scale": {
-                        "x": 3.099998950958252,
-                        "y": 3.1000001430511475,
-                        "z": 3.1000001430511475
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp/blue/crystal_sharp_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.350000023841858,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 63,
-            "Name": "CrystalSharpBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -23.545621871948242,
-                        "y": 3.3726325035095215,
-                        "z": 26.54872703552246
-                    },
-                    "Rotation": {
-                        "x": -0.20124730467796326,
-                        "y": -0.012473111040890217,
-                        "z": -0.06058977544307709,
-                        "w": 0.9775852560997009
-                    },
-                    "Scale": {
-                        "x": 2.2699997425079346,
-                        "y": 2.270000696182251,
-                        "z": 2.2699999809265137
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp/blue/crystal_sharp_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 0.4099999964237213,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 64,
-            "Name": "CrystalBlue",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 28.856651306152344,
-                        "y": 0.0,
-                        "z": 0.8423798680305481
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": -0.5298691987991333,
-                        "z": -0.0,
-                        "w": 0.8480793833732605
-                    },
-                    "Scale": {
-                        "x": 5.180033206939697,
-                        "y": 5.179999828338623,
-                        "z": 5.180033206939697
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/blue/crystal_blue.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.2699999809265137,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
                 }
             ]
         }
