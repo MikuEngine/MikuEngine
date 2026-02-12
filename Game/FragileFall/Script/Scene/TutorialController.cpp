@@ -176,6 +176,7 @@ namespace game
                     {
                         m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
                         m_exitDoorObject->GetComponent<DoorTriggerScript>()->SetActivateDoor(true);
+                        m_nextDoorObject->GetComponent<DoorTriggerScript>()->SetNextSceneName("");
 
                         m_isStateCheck = true;
 
