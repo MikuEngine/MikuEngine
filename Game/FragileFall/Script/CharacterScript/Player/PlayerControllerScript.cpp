@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -473,6 +473,22 @@ namespace game
 				m_invincibleRemainTime = 0.0f;
 			}
 		}
+		if (m_dashInvincibleRemainTime > 0.0f)
+		{
+			m_dashInvincibleRemainTime -= deltaTime;
+			if (m_dashInvincibleRemainTime < 0.0f)
+			{
+				m_dashInvincibleRemainTime = 0.0f;
+			}
+		}
+		if (m_executionInvincibleRemainTime > 0.0f)
+		{
+			m_executionInvincibleRemainTime -= deltaTime;
+			if (m_executionInvincibleRemainTime < 0.0f)
+			{
+				m_executionInvincibleRemainTime = 0.0f;
+			}
+		}
 		
 		// ─────────────────────────────────────────────
 		// 버프 타이머 업데이트 (BuffManager가 관리, 타임스케일 영향 받음)
@@ -822,6 +838,7 @@ namespace game
 		{
 			// 처형 상태 진입 시 속도 초기화
 			m_currentVelocity = engine::Vector3::Zero;
+			StartExecutionInvincibility();
 			
 			// Dynamic Rigidbody 속도도 초기화
 			if (m_rigidbody && m_rigidbody->IsDynamic())
@@ -959,6 +976,16 @@ namespace game
 		m_logicFSM->SetTrigger("ExecuteMonster");
 	}
 
+	void PlayerControllerScript::StartExecutionInvincibility()
+	{
+		m_executionInvincibleRemainTime = std::max(0.0f, m_executionInvincibleTime);
+	}
+
+	void PlayerControllerScript::EndExecutionInvincibility()
+	{
+		m_executionInvincibleRemainTime = 0.0f;
+	}
+
 
 	// ═══════════════════════════════════════════════════════════════
 	// FSM 초기화
@@ -1084,6 +1111,7 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		m_dashElapsedTime = 0.0f;
 		m_dashStateElapsedTime = 0.0f;
 		m_dashForceExitPending = false;
+		m_dashInvincibleRemainTime = std::max(0.0f, m_temperFinal.dashInvincibleTime);
 
 		
 		// ═══════════════════════════════════════════════════════════════
@@ -1980,8 +2008,18 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		PlayerTemperManager::ApplyTemper(this);
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("피격 후 데미지를 무시하는 무적 시간");
+	if (ImGui::DragFloat("Invincible Time On Dash (sec)", &m_temperBase.dashInvincibleTime, 0.05f, 0.0f, 10.0f))
+		PlayerTemperManager::ApplyTemper(this);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("대쉬 시작 직후 데미지를 무시하는 무적 시간 (강화 적용)");
+	ImGui::DragFloat("Invincible Time On Execution (sec)", &m_executionInvincibleTime, 0.05f, 0.0f, 10.0f);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("처형 상태 진입 직후 데미지를 무시하는 고정 무적 시간");
 	ImGui::Text("Invincible Time (Applied): %.2f sec", m_invincibleTime);
 	ImGui::Text("Invincible Timer Left: %.2f sec", m_invincibleRemainTime);
+	ImGui::Text("Dash Invincible Time (Applied): %.2f sec", m_temperFinal.dashInvincibleTime);
+	ImGui::Text("Dash Invincible Timer Left: %.2f sec", m_dashInvincibleRemainTime);
+	ImGui::Text("Execution Invincible Timer Left: %.2f sec", m_executionInvincibleRemainTime);
 
 	ImGui::Separator();
 	ImGui::Text("Runtime Info:");
@@ -2037,6 +2075,7 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		j["DashDecayDuration"] = m_dashDecayDuration;
 		j["DashAfterimageCutoffRatio"] = m_dashAfterimageCutoffRatio;
 		j["DashCooldown"] = m_temperBase.dashCooldown;
+		j["DashInvincibleTime"] = m_temperBase.dashInvincibleTime;
 		j["MaxDashCount"] = m_MaxDashCount;
 		j["DashRechargeTime"] = m_dashRechargeTime;
 		j["PostDashQuickFireDuration"] = m_postDashQuickFireDuration;
@@ -2048,6 +2087,7 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	j["PlayerMaxHP"] = m_playerRealBaseHp; // 하위 호환 저장 키 유지
 	j["BasicHpDoNotTouch"] = m_playerRealBaseHp;
 	j["InvincibleTime"] = m_temperBase.invincibleTime;
+	j["ExecutionInvincibleTime"] = m_executionInvincibleTime;
 	
 	// 무적 상태
 	j["IsInvincible"] = m_isInvincible;
@@ -2131,6 +2171,8 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 			m_dashAfterimageCutoffRatio = j["DashAfterimageCutoffRatio"].get<float>();
 		if (j.contains("DashCooldown"))
 			m_temperBase.dashCooldown = j["DashCooldown"].get<float>();
+		if (j.contains("DashInvincibleTime"))
+			m_temperBase.dashInvincibleTime = j["DashInvincibleTime"].get<float>();
 		if (j.contains("MaxDashCount"))
 			m_MaxDashCount = j["MaxDashCount"].get<int>();
 		if (j.contains("DashRechargeTime"))
@@ -2151,6 +2193,8 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		m_playerRealBaseHp = j["PlayerMaxHP"].get<float>(); // 하위 호환
 	if (j.contains("InvincibleTime"))
 		m_temperBase.invincibleTime = j["InvincibleTime"].get<float>();
+	if (j.contains("ExecutionInvincibleTime"))
+		m_executionInvincibleTime = j["ExecutionInvincibleTime"].get<float>();
 	
 	// 무적 상태
 	if (j.contains("IsInvincible"))
@@ -2184,6 +2228,14 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 			return;
 		}
 		if (m_invincibleRemainTime > 0.0f)
+		{
+			return;
+		}
+		if (m_dashInvincibleRemainTime > 0.0f)
+		{
+			return;
+		}
+		if (m_executionInvincibleRemainTime > 0.0f)
 		{
 			return;
 		}

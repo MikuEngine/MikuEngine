@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "ExecutionIndicatorManager.h"
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
@@ -7,7 +7,6 @@
 #include "Script/Boss/BossPattern/Components/BossBigProjectile.h"
 #include "Script/StageClearExecutionTarget.h"
 #include "Script/ExecutionSlowScript.h"
-#include "Script/ExecutionEffectScript.h"
 #include "Script/CameraEffectScript.h"
 #include "Script/AimModeController.h"
 
@@ -262,19 +261,18 @@ namespace game
         // 기존 인스턴스가 있으면 제거
         DestroyIndicatorInstance();
 
-        // 프리팹 인스턴스화
-        engine::GameObject* indicator = engine::Prefab::Instantiate(m_indicatorPrefabName);
-        if (!indicator)
-        {
-            LOG_PRINT("[ExecutionIndicatorManager] ERROR: Failed to instantiate prefab '{}'", m_indicatorPrefabName);
-            return;
-        }
-
-        m_indicatorInstance = indicator;
-        m_indicatorTransform = indicator->GetTransform();
-
-        // 초기에는 숨김
-        indicator->SetActive(false);
+        // 디버그 스프라이트 비활성화:
+        // - ExcutionIndicator 프리팹은 더 이상 생성하지 않는다.
+        // - 판정/처형 로직은 m_indicatorInstance 없이도 유지된다.
+        // engine::GameObject* indicator = engine::Prefab::Instantiate(m_indicatorPrefabName);
+        // if (!indicator)
+        // {
+        //     LOG_PRINT("[ExecutionIndicatorManager] ERROR: Failed to instantiate prefab '{}'", m_indicatorPrefabName);
+        //     return;
+        // }
+        // m_indicatorInstance = indicator;
+        // m_indicatorTransform = indicator->GetTransform();
+        // indicator->SetActive(false);
 
         // 라인도 생성
         CreateLineInstance();
@@ -734,6 +732,9 @@ namespace game
     {
         if (!target || m_isWaitingForTrigger || !m_player) return;
 
+        // 우클릭 처형 요청 시점부터 즉시 처형 무적 시작
+        m_player->StartExecutionInvincibility();
+
         // 처형 요청이 시작되는 즉시 Execute 커서를 고정한다.
         if (m_aimController)
         {
@@ -846,6 +847,9 @@ namespace game
         // 처형 도중 취소된 경우 플레이어를 Execution 상태에서 정상 복귀시킨다.
         if (m_player)
         {
+            // 처형 취소(예: Fragile 해제 포함) 시 처형 무적도 즉시 종료
+            m_player->EndExecutionInvincibility();
+
             engine::LogicFSM* playerFSM = m_player->GetGameObject()->GetComponent<engine::LogicFSM>();
             if (playerFSM && playerFSM->GetCurrentState() == "Execution")
             {
@@ -1031,22 +1035,24 @@ namespace game
         if (monsterTransform)
         {
             // 이펙트 프리팹 생성
-            engine::GameObject* effect = engine::Prefab::Instantiate(m_effectPrefabName);
-            if (effect)
-            {
-                // 몬스터 위치 + 인디케이터 오프셋에 배치
-                if (auto* effectTransform = effect->GetTransform())
-                {
-                    effectTransform->SetLocalPosition(monsterPos + m_indicatorOffset);
-                }
-                
-                // 이펙트 설정 전달
-                if (auto* effectScript = effect->GetComponent<ExecutionEffectScript>())
-                {
-                    effectScript->SetDuration(m_effectDuration);
-                    effectScript->SetScaleMultiplier(m_effectScaleMultiplier);
-                }
-            }
+            // 디버그 스프라이트 비활성화:
+            // - ExcutionEffectSprite 프리팹은 더 이상 생성하지 않는다.
+            // engine::GameObject* effect = engine::Prefab::Instantiate(m_effectPrefabName);
+            // if (effect)
+            // {
+            //     // 몬스터 위치 + 인디케이터 오프셋에 배치
+            //     if (auto* effectTransform = effect->GetTransform())
+            //     {
+            //         effectTransform->SetLocalPosition(monsterPos + m_indicatorOffset);
+            //     }
+            //     
+            //     // 이펙트 설정 전달
+            //     if (auto* effectScript = effect->GetComponent<ExecutionEffectScript>())
+            //     {
+            //         effectScript->SetDuration(m_effectDuration);
+            //         effectScript->SetScaleMultiplier(m_effectScaleMultiplier);
+            //     }
+            // }
             
             // 플레이어 순간이동 (Y=0 강제)
             engine::Vector3 teleportPos = monsterPos;
@@ -1087,9 +1093,8 @@ namespace game
 
     void ExecutionIndicatorManager::OnGui()
     {
-        ImGui::InputText("Indicator Prefab", &m_indicatorPrefabName);
+        ImGui::TextDisabled("Debug sprite indicator/effect prefab is disabled.");
         ImGui::DragFloat("Raycast Distance", &m_raycastMaxDistance, 10.0f, 100.0f, 10000.0f);
-        ImGui::DragFloat3("Indicator Offset", &m_indicatorOffset.x, 0.1f);
 
         ImGui::Separator();
         ImGui::Text("Line Settings:");
@@ -1170,17 +1175,7 @@ namespace game
 
         ImGui::Separator();
         ImGui::Text("Execution Effect Settings:");
-        ImGui::InputText("Effect Prefab", &m_effectPrefabName);
-        ImGui::DragFloat("Effect Duration", &m_effectDuration, 0.05f, 0.05f, 2.0f);
-        if (ImGui::IsItemHovered())
-        {
-            ImGui::SetTooltip("Duration of execution effect animation");
-        }
-        ImGui::DragFloat("Effect Scale Multiplier", &m_effectScaleMultiplier, 0.1f, 1.0f, 3.0f);
-        if (ImGui::IsItemHovered())
-        {
-            ImGui::SetTooltip("Final scale of effect (1.5 = 150%%)");
-        }
+        ImGui::TextDisabled("Execution debug sprite effect is disabled.");
         ImGui::DragFloat("Monster Death Delay", &m_monsterDeathDelay, 0.01f, 0.0f, 1.0f);
         if (ImGui::IsItemHovered())
         {
