@@ -1,7 +1,8 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BossPillar.h"
 
 #include <Framework/Asset/Prefab.h>
+#include <Framework/System/SoundSystem.h>
 
 #include "Script/Boss/BossScript.h"
 
@@ -28,6 +29,15 @@ namespace game
 
     void BossPillar::Execute()
     {
+        std::string effectPrefab = "Effect_Break_V1.01_big_Purple";
+        auto effect = engine::Prefab::Instantiate(effectPrefab);
+        if (effect && effect->GetTransform())
+        {
+            effect->GetTransform()->SetWorldMatrix(GetTransform()->GetWorld());
+            effect->GetTransform()->SetLocalScale(engine::Vector3(1.2f, 1.2f, 1.2f));
+        }
+        engine::SoundSystem::Get().Play("Player_Break_Random", "SFX/Player");
+
         for (auto& e : m_pillarCrystalizedPieces)
         {
             e->Destroy();

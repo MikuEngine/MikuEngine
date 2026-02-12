@@ -30,7 +30,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sphere/purple/crystal_sphere_purple.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
@@ -38,21 +38,21 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.6662988662719727,
-                        "y": 0.5328185558319092,
+                        "x": 1.0,
+                        "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
-                        "x": 0.7560262680053711,
-                        "y": 0.6216216087341309,
+                        "x": 1.0,
+                        "y": 1.0,
                         "z": 1.0
                     },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 1.0,
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 3.8299999237060547,
-                    "OverrideMaterial": true,
+                    "MaterialEmissiveIntensity": 11.920000076293945,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
                     "SubsurfaceStrength": 0.0,

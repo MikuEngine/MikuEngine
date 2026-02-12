@@ -170,6 +170,14 @@ namespace game
                     engine::SoundSystem::Get().Play("Player_Shot_Fragile", "SFX/Player");
                 }
             }
+            else if (auto* monsterScript = info.gameObject->GetComponent<BossPillar>())
+            {
+                engine::SoundSystem::Get().Play("Monster_Damaged_Random", "SFX/Monster");
+            }
+            else if (auto* monsterScript = info.gameObject->GetComponent<BossBigProjectile>())
+            {
+                engine::SoundSystem::Get().Play("Monster_Damaged_Random", "SFX/Monster");
+            }
 
             return;
         }
