@@ -72,7 +72,6 @@ namespace game
         return true;
     }
 
-
 	const MessageRow* MessageCatalog::Find(const std::string& key) const
 	{
         auto it = m_map.find(key);
@@ -80,16 +79,27 @@ namespace game
             return nullptr;
         return &it->second;
 	}
+
 	bool MessageCatalog::TryGet(const std::string& key, UIMessageChannel& outCh, std::string& outText, std::string& outIcon) const
 	{
         const MessageRow* row = Find(key);
         if (!row) return false;
 
         outCh = row->ch;
-        outText = row->text;
         outIcon = row->iconKey;
+
+        std::string formattedText = row->text;
+        size_t pos = 0;
+        while ((pos = formattedText.find("\\n", pos)) != std::string::npos)
+        {
+            formattedText.replace(pos, 2, "\n");
+            pos += 1;
+        }
+        outText = formattedText;
+
         return true;
 	}
+
 	void MessageCatalog::Clear()
 	{
         m_map.clear();

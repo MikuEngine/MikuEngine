@@ -54,19 +54,22 @@ namespace game
             return (sens - kSensMin) / (kSensMax - kSensMin);
         }
 
-        static game::MessageCatalog g_msg;
     }
+
+    game::MessageCatalog g_msg;
 
     void SceneController_Tutorial::Awake()
     {
         if (m_bound) return;
         m_bound = true;
 
-        g_msg.Load("Resource/Data/Message/MessageTable.csv");
+        g_msg.Load(msgPath);
 
         if (auto* go = engine::GameObject::Find("UIMessageQueue"))
             if (auto* q = go->GetComponent<game::UIMessageQueue>())
                 q->SetCatalog(&g_msg);
+
+
 
         // Buttons
         BindButton("UI_OpenMenu", [self = engine::Ptr<SceneController_Tutorial>(this)]() {if (self) self->OpenMenu(); });
