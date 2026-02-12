@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Boss",
-    "NumGameObjects": 206,
+    "NumGameObjects": 202,
     "GameObjects": [
         {
             "ID": 0,
@@ -16682,7 +16682,7 @@
             "ID": 112,
             "ParentID": 94,
             "Name": "Panel_Fail",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -16794,438 +16794,6 @@
         },
         {
             "ID": 113,
-            "ParentID": 112,
-            "Name": "ToLobby_Button",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/Button_01.png",
-                    "SpriteHover": "",
-                    "SpritePressed": "",
-                    "SpriteDisabled": "",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/Button_01.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 114,
-            "ParentID": 113,
-            "Name": "Label",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "로비로",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 50,
-                    "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 115,
-            "ParentID": 112,
-            "Name": "Restart_Button",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 200.0,
-                        "y": 150.0
-                    },
-                    "Width": 200.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIButton",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "SpriteNormal": "Resource/Texture/UI/Button/Button_01.png",
-                    "SpriteHover": "",
-                    "SpritePressed": "",
-                    "SpriteDisabled": "",
-                    "TintOnly": true,
-                    "TintNormal": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "TintHover": {
-                        "x": 0.837837815284729,
-                        "y": 0.837837815284729,
-                        "z": 0.837837815284729,
-                        "w": 1.0
-                    },
-                    "TintPressed": {
-                        "x": 0.6679536700248718,
-                        "y": 0.6679536700248718,
-                        "z": 0.6679536700248718,
-                        "w": 1.0
-                    },
-                    "TintDisabled": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    }
-                },
-                {
-                    "Type": "UIImage",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "TexturePath": "Resource/Texture/UI/Button/Button_01.png",
-                    "EffectMode": 0,
-                    "Effect0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Effect2": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
-                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
-                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "ClipRect": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "MaskMode": 0,
-                    "Mask0": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    },
-                    "Mask1": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 116,
-            "ParentID": 115,
-            "Name": "Label",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 0.0,
-                    "Height": 0.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "AnchorMax": {
-                        "x": 1.0,
-                        "y": 1.0
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 1,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": false,
-                    "Text": "재도전",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 50,
-                    "Color": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 1,
-                    "AlignV": 1,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 117,
             "ParentID": 112,
             "Name": "UIObject",
             "Active": true,
@@ -17339,8 +16907,8 @@
             ]
         },
         {
-            "ID": 118,
-            "ParentID": 117,
+            "ID": 114,
+            "ParentID": 113,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -17412,7 +16980,7 @@
             ]
         },
         {
-            "ID": 119,
+            "ID": 115,
             "ParentID": 94,
             "Name": "UI_OptionPopUp",
             "Active": false,
@@ -17536,8 +17104,8 @@
             ]
         },
         {
-            "ID": 120,
-            "ParentID": 119,
+            "ID": 116,
+            "ParentID": 115,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -17687,8 +17255,8 @@
             ]
         },
         {
-            "ID": 121,
-            "ParentID": 120,
+            "ID": 117,
+            "ParentID": 116,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -17760,8 +17328,8 @@
             ]
         },
         {
-            "ID": 122,
-            "ParentID": 119,
+            "ID": 118,
+            "ParentID": 115,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -17833,8 +17401,8 @@
             ]
         },
         {
-            "ID": 123,
-            "ParentID": 119,
+            "ID": 119,
+            "ParentID": 115,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -17884,8 +17452,8 @@
             ]
         },
         {
-            "ID": 124,
-            "ParentID": 123,
+            "ID": 120,
+            "ParentID": 119,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -17967,8 +17535,8 @@
             ]
         },
         {
-            "ID": 125,
-            "ParentID": 124,
+            "ID": 121,
+            "ParentID": 120,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -18074,8 +17642,8 @@
             ]
         },
         {
-            "ID": 126,
-            "ParentID": 124,
+            "ID": 122,
+            "ParentID": 120,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -18181,8 +17749,8 @@
             ]
         },
         {
-            "ID": 127,
-            "ParentID": 124,
+            "ID": 123,
+            "ParentID": 120,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -18288,8 +17856,8 @@
             ]
         },
         {
-            "ID": 128,
-            "ParentID": 127,
+            "ID": 124,
+            "ParentID": 123,
             "Name": "Text_VolumeVal",
             "Active": true,
             "Components": [
@@ -18361,8 +17929,8 @@
             ]
         },
         {
-            "ID": 129,
-            "ParentID": 123,
+            "ID": 125,
+            "ParentID": 119,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -18444,8 +18012,8 @@
             ]
         },
         {
-            "ID": 130,
-            "ParentID": 129,
+            "ID": 126,
+            "ParentID": 125,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -18551,8 +18119,8 @@
             ]
         },
         {
-            "ID": 131,
-            "ParentID": 129,
+            "ID": 127,
+            "ParentID": 125,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -18658,8 +18226,8 @@
             ]
         },
         {
-            "ID": 132,
-            "ParentID": 129,
+            "ID": 128,
+            "ParentID": 125,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -18765,8 +18333,8 @@
             ]
         },
         {
-            "ID": 133,
-            "ParentID": 132,
+            "ID": 129,
+            "ParentID": 128,
             "Name": "Text_SFXVal",
             "Active": true,
             "Components": [
@@ -18838,8 +18406,8 @@
             ]
         },
         {
-            "ID": 134,
-            "ParentID": 123,
+            "ID": 130,
+            "ParentID": 119,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -18921,8 +18489,8 @@
             ]
         },
         {
-            "ID": 135,
-            "ParentID": 134,
+            "ID": 131,
+            "ParentID": 130,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -19028,8 +18596,8 @@
             ]
         },
         {
-            "ID": 136,
-            "ParentID": 134,
+            "ID": 132,
+            "ParentID": 130,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -19135,8 +18703,8 @@
             ]
         },
         {
-            "ID": 137,
-            "ParentID": 134,
+            "ID": 133,
+            "ParentID": 130,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -19242,8 +18810,8 @@
             ]
         },
         {
-            "ID": 138,
-            "ParentID": 137,
+            "ID": 134,
+            "ParentID": 133,
             "Name": "Text_SensiVal",
             "Active": true,
             "Components": [
@@ -19315,8 +18883,8 @@
             ]
         },
         {
-            "ID": 139,
-            "ParentID": 123,
+            "ID": 135,
+            "ParentID": 119,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -19388,8 +18956,8 @@
             ]
         },
         {
-            "ID": 140,
-            "ParentID": 123,
+            "ID": 136,
+            "ParentID": 119,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -19461,8 +19029,8 @@
             ]
         },
         {
-            "ID": 141,
-            "ParentID": 123,
+            "ID": 137,
+            "ParentID": 119,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -19534,7 +19102,7 @@
             ]
         },
         {
-            "ID": 142,
+            "ID": 138,
             "ParentID": 89,
             "Name": "Canvas_HUD",
             "Active": true,
@@ -19591,8 +19159,8 @@
             ]
         },
         {
-            "ID": 143,
-            "ParentID": 142,
+            "ID": 139,
+            "ParentID": 138,
             "Name": "Currency",
             "Active": true,
             "Components": [
@@ -19648,8 +19216,8 @@
             ]
         },
         {
-            "ID": 144,
-            "ParentID": 143,
+            "ID": 140,
+            "ParentID": 139,
             "Name": "Book",
             "Active": true,
             "Components": [
@@ -19699,8 +19267,8 @@
             ]
         },
         {
-            "ID": 145,
-            "ParentID": 144,
+            "ID": 141,
+            "ParentID": 140,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -19806,8 +19374,8 @@
             ]
         },
         {
-            "ID": 146,
-            "ParentID": 144,
+            "ID": 142,
+            "ParentID": 140,
             "Name": "RubyCount",
             "Active": true,
             "Components": [
@@ -19879,8 +19447,8 @@
             ]
         },
         {
-            "ID": 147,
-            "ParentID": 143,
+            "ID": 143,
+            "ParentID": 139,
             "Name": "Crystal1",
             "Active": true,
             "Components": [
@@ -19930,8 +19498,8 @@
             ]
         },
         {
-            "ID": 148,
-            "ParentID": 147,
+            "ID": 144,
+            "ParentID": 143,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -20037,8 +19605,8 @@
             ]
         },
         {
-            "ID": 149,
-            "ParentID": 147,
+            "ID": 145,
+            "ParentID": 143,
             "Name": "SapphireCount",
             "Active": true,
             "Components": [
@@ -20110,8 +19678,8 @@
             ]
         },
         {
-            "ID": 150,
-            "ParentID": 143,
+            "ID": 146,
+            "ParentID": 139,
             "Name": "Crystal2",
             "Active": true,
             "Components": [
@@ -20161,8 +19729,8 @@
             ]
         },
         {
-            "ID": 151,
-            "ParentID": 150,
+            "ID": 147,
+            "ParentID": 146,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -20268,8 +19836,8 @@
             ]
         },
         {
-            "ID": 152,
-            "ParentID": 150,
+            "ID": 148,
+            "ParentID": 146,
             "Name": "EmeraldCount",
             "Active": true,
             "Components": [
@@ -20341,8 +19909,8 @@
             ]
         },
         {
-            "ID": 153,
-            "ParentID": 142,
+            "ID": 149,
+            "ParentID": 138,
             "Name": "Fragile Gauge Progress",
             "Active": true,
             "Components": [
@@ -20420,8 +19988,8 @@
             ]
         },
         {
-            "ID": 154,
-            "ParentID": 153,
+            "ID": 150,
+            "ParentID": 149,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -20527,8 +20095,8 @@
             ]
         },
         {
-            "ID": 155,
-            "ParentID": 153,
+            "ID": 151,
+            "ParentID": 149,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -20634,8 +20202,8 @@
             ]
         },
         {
-            "ID": 156,
-            "ParentID": 142,
+            "ID": 152,
+            "ParentID": 138,
             "Name": "HPBar",
             "Active": true,
             "Components": [
@@ -20685,8 +20253,8 @@
             ]
         },
         {
-            "ID": 157,
-            "ParentID": 156,
+            "ID": 153,
+            "ParentID": 152,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -20792,8 +20360,8 @@
             ]
         },
         {
-            "ID": 158,
-            "ParentID": 157,
+            "ID": 154,
+            "ParentID": 153,
             "Name": "Heart(0)",
             "Active": true,
             "Components": [
@@ -20899,8 +20467,8 @@
             ]
         },
         {
-            "ID": 159,
-            "ParentID": 156,
+            "ID": 155,
+            "ParentID": 152,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -21006,8 +20574,8 @@
             ]
         },
         {
-            "ID": 160,
-            "ParentID": 159,
+            "ID": 156,
+            "ParentID": 155,
             "Name": "Heart(1)",
             "Active": true,
             "Components": [
@@ -21113,8 +20681,8 @@
             ]
         },
         {
-            "ID": 161,
-            "ParentID": 156,
+            "ID": 157,
+            "ParentID": 152,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -21220,8 +20788,8 @@
             ]
         },
         {
-            "ID": 162,
-            "ParentID": 161,
+            "ID": 158,
+            "ParentID": 157,
             "Name": "Heart(2)",
             "Active": true,
             "Components": [
@@ -21327,8 +20895,8 @@
             ]
         },
         {
-            "ID": 163,
-            "ParentID": 156,
+            "ID": 159,
+            "ParentID": 152,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -21434,8 +21002,8 @@
             ]
         },
         {
-            "ID": 164,
-            "ParentID": 163,
+            "ID": 160,
+            "ParentID": 159,
             "Name": "Heart(3)",
             "Active": true,
             "Components": [
@@ -21541,8 +21109,8 @@
             ]
         },
         {
-            "ID": 165,
-            "ParentID": 156,
+            "ID": 161,
+            "ParentID": 152,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -21648,8 +21216,8 @@
             ]
         },
         {
-            "ID": 166,
-            "ParentID": 165,
+            "ID": 162,
+            "ParentID": 161,
             "Name": "Heart(4)",
             "Active": true,
             "Components": [
@@ -21755,8 +21323,8 @@
             ]
         },
         {
-            "ID": 167,
-            "ParentID": 156,
+            "ID": 163,
+            "ParentID": 152,
             "Name": "Heart_Case",
             "Active": false,
             "Components": [
@@ -21862,8 +21430,8 @@
             ]
         },
         {
-            "ID": 168,
-            "ParentID": 167,
+            "ID": 164,
+            "ParentID": 163,
             "Name": "Heart(5)",
             "Active": true,
             "Components": [
@@ -21969,8 +21537,8 @@
             ]
         },
         {
-            "ID": 169,
-            "ParentID": 156,
+            "ID": 165,
+            "ParentID": 152,
             "Name": "Heart_Case",
             "Active": false,
             "Components": [
@@ -22076,8 +21644,8 @@
             ]
         },
         {
-            "ID": 170,
-            "ParentID": 169,
+            "ID": 166,
+            "ParentID": 165,
             "Name": "Heart(6)",
             "Active": true,
             "Components": [
@@ -22183,8 +21751,8 @@
             ]
         },
         {
-            "ID": 171,
-            "ParentID": 156,
+            "ID": 167,
+            "ParentID": 152,
             "Name": "Heart_Case",
             "Active": false,
             "Components": [
@@ -22290,8 +21858,8 @@
             ]
         },
         {
-            "ID": 172,
-            "ParentID": 171,
+            "ID": 168,
+            "ParentID": 167,
             "Name": "Heart(7)",
             "Active": true,
             "Components": [
@@ -22397,7 +21965,7 @@
             ]
         },
         {
-            "ID": 173,
+            "ID": 169,
             "ParentID": 89,
             "Name": "Canvas",
             "Active": true,
@@ -22454,8 +22022,8 @@
             ]
         },
         {
-            "ID": 174,
-            "ParentID": 173,
+            "ID": 170,
+            "ParentID": 169,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -22568,7 +22136,7 @@
             ]
         },
         {
-            "ID": 175,
+            "ID": 171,
             "ParentID": 89,
             "Name": "Canvas_KillPopUp",
             "Active": true,
@@ -22625,7 +22193,7 @@
             ]
         },
         {
-            "ID": 176,
+            "ID": 172,
             "ParentID": 89,
             "Name": "Script_Controller",
             "Active": true,
@@ -22676,7 +22244,7 @@
             ]
         },
         {
-            "ID": 177,
+            "ID": 173,
             "ParentID": 89,
             "Name": "AimPointerCanvas",
             "Active": true,
@@ -22762,8 +22330,8 @@
             ]
         },
         {
-            "ID": 178,
-            "ParentID": 177,
+            "ID": 174,
+            "ParentID": 173,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -22869,8 +22437,8 @@
             ]
         },
         {
-            "ID": 179,
-            "ParentID": 178,
+            "ID": 175,
+            "ParentID": 174,
             "Name": "AimIdle_N",
             "Active": true,
             "Components": [
@@ -22976,8 +22544,8 @@
             ]
         },
         {
-            "ID": 180,
-            "ParentID": 178,
+            "ID": 176,
+            "ParentID": 174,
             "Name": "AimIdle_W",
             "Active": true,
             "Components": [
@@ -23083,8 +22651,8 @@
             ]
         },
         {
-            "ID": 181,
-            "ParentID": 178,
+            "ID": 177,
+            "ParentID": 174,
             "Name": "AimIdle_S",
             "Active": true,
             "Components": [
@@ -23190,8 +22758,8 @@
             ]
         },
         {
-            "ID": 182,
-            "ParentID": 178,
+            "ID": 178,
+            "ParentID": 174,
             "Name": "AimIdle_E",
             "Active": true,
             "Components": [
@@ -23297,8 +22865,8 @@
             ]
         },
         {
-            "ID": 183,
-            "ParentID": 177,
+            "ID": 179,
+            "ParentID": 173,
             "Name": "AimCursor_OnEnemy",
             "Active": false,
             "Components": [
@@ -23404,8 +22972,8 @@
             ]
         },
         {
-            "ID": 184,
-            "ParentID": 183,
+            "ID": 180,
+            "ParentID": 179,
             "Name": "AimIdle_N",
             "Active": true,
             "Components": [
@@ -23511,8 +23079,8 @@
             ]
         },
         {
-            "ID": 185,
-            "ParentID": 183,
+            "ID": 181,
+            "ParentID": 179,
             "Name": "AimIdle_W",
             "Active": true,
             "Components": [
@@ -23618,8 +23186,8 @@
             ]
         },
         {
-            "ID": 186,
-            "ParentID": 183,
+            "ID": 182,
+            "ParentID": 179,
             "Name": "AimIdle_S",
             "Active": true,
             "Components": [
@@ -23725,8 +23293,8 @@
             ]
         },
         {
-            "ID": 187,
-            "ParentID": 183,
+            "ID": 183,
+            "ParentID": 179,
             "Name": "AimIdle_E",
             "Active": true,
             "Components": [
@@ -23832,8 +23400,8 @@
             ]
         },
         {
-            "ID": 188,
-            "ParentID": 177,
+            "ID": 184,
+            "ParentID": 173,
             "Name": "AimCursor_Execution",
             "Active": false,
             "Components": [
@@ -23939,8 +23507,8 @@
             ]
         },
         {
-            "ID": 189,
-            "ParentID": 188,
+            "ID": 185,
+            "ParentID": 184,
             "Name": "AimIdle_NW",
             "Active": true,
             "Components": [
@@ -24046,8 +23614,8 @@
             ]
         },
         {
-            "ID": 190,
-            "ParentID": 188,
+            "ID": 186,
+            "ParentID": 184,
             "Name": "AimIdle_NE",
             "Active": true,
             "Components": [
@@ -24153,8 +23721,8 @@
             ]
         },
         {
-            "ID": 191,
-            "ParentID": 188,
+            "ID": 187,
+            "ParentID": 184,
             "Name": "AimIdle_SE",
             "Active": true,
             "Components": [
@@ -24260,8 +23828,8 @@
             ]
         },
         {
-            "ID": 192,
-            "ParentID": 188,
+            "ID": 188,
+            "ParentID": 184,
             "Name": "AimIdle_SW",
             "Active": true,
             "Components": [
@@ -24367,8 +23935,8 @@
             ]
         },
         {
-            "ID": 193,
-            "ParentID": 177,
+            "ID": 189,
+            "ParentID": 173,
             "Name": "AimCursor_Click",
             "Active": false,
             "Components": [
@@ -24474,8 +24042,8 @@
             ]
         },
         {
-            "ID": 194,
-            "ParentID": 177,
+            "ID": 190,
+            "ParentID": 173,
             "Name": "AimCursor_Default",
             "Active": false,
             "Components": [
@@ -24581,7 +24149,7 @@
             ]
         },
         {
-            "ID": 195,
+            "ID": 191,
             "ParentID": 89,
             "Name": "Canvas_DashCool",
             "Active": true,
@@ -24638,8 +24206,8 @@
             ]
         },
         {
-            "ID": 196,
-            "ParentID": 195,
+            "ID": 192,
+            "ParentID": 191,
             "Name": "DashCool",
             "Active": true,
             "Components": [
@@ -24764,8 +24332,8 @@
             ]
         },
         {
-            "ID": 197,
-            "ParentID": 196,
+            "ID": 193,
+            "ParentID": 192,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -24871,8 +24439,8 @@
             ]
         },
         {
-            "ID": 198,
-            "ParentID": 196,
+            "ID": 194,
+            "ParentID": 192,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -24978,8 +24546,8 @@
             ]
         },
         {
-            "ID": 199,
-            "ParentID": 196,
+            "ID": 195,
+            "ParentID": 192,
             "Name": "BG_Case",
             "Active": false,
             "Components": [
@@ -25085,8 +24653,8 @@
             ]
         },
         {
-            "ID": 200,
-            "ParentID": 196,
+            "ID": 196,
+            "ParentID": 192,
             "Name": "RingGauge_1",
             "Active": true,
             "Components": [
@@ -25192,8 +24760,8 @@
             ]
         },
         {
-            "ID": 201,
-            "ParentID": 196,
+            "ID": 197,
+            "ParentID": 192,
             "Name": "RingGauge_2",
             "Active": true,
             "Components": [
@@ -25299,8 +24867,8 @@
             ]
         },
         {
-            "ID": 202,
-            "ParentID": 196,
+            "ID": 198,
+            "ParentID": 192,
             "Name": "RingGauge_3",
             "Active": true,
             "Components": [
@@ -25406,8 +24974,8 @@
             ]
         },
         {
-            "ID": 203,
-            "ParentID": 196,
+            "ID": 199,
+            "ParentID": 192,
             "Name": "BG_Dash_Btn",
             "Active": true,
             "Components": [
@@ -25513,7 +25081,7 @@
             ]
         },
         {
-            "ID": 204,
+            "ID": 200,
             "ParentID": 89,
             "Name": "Canvas_StageInfo",
             "Active": true,
@@ -25576,8 +25144,8 @@
             ]
         },
         {
-            "ID": 205,
-            "ParentID": 204,
+            "ID": 201,
+            "ParentID": 200,
             "Name": "TitleText",
             "Active": true,
             "Components": [
