@@ -37,7 +37,7 @@ namespace game
         int CalcHalfHPFromPlayer() const;
         int CalcVisibleHeartCountFromPlayer() const;
         int CalcHpPerHeart() const;
-        int CalcHpPerHalfHeart() const;
+        float CalcHpPerHalfHeart() const;
 
         void ApplyHearts();
 

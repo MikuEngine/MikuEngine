@@ -112,7 +112,8 @@ namespace game
         float m_PlayerMaxHP = 100.0f;
         float m_PlayerCurrentHP = 100.0f;
 
-        float m_PlayerBaseMaxHP = 100.0f; // 강화 시, 스케일 1.0일 때의 기본값
+        // 강화 계산/하트 환산의 절대 기준이 되는 기본 HP 값(인스펙터 설정용)
+        float m_playerRealBaseHp = 5.0f;
 
         // ─────────────────────────────────────────────
         // 프레자일 게이지 (몬스터가 있을 때만 상승, StageManager 연동)
@@ -439,6 +440,20 @@ namespace game
         DamageCallback m_onDamaged = nullptr;   // 피격 콜백 저장용
 
     public:
+        static float QuantizeHpToHalf(float value)
+        {
+            constexpr float kStep = 0.5f;
+            const float sign = (value < 0.0f) ? -1.0f : 1.0f;
+            float absValue = std::abs(value);
+            float remainder = std::fmod(absValue, kStep);
+            absValue -= remainder;
+            if (remainder >= (kStep * 0.5f))
+            {
+                absValue += kStep;
+            }
+            return absValue * sign;
+        }
+
         // ─────────────────────────────────────────────
         // 처형 시스템 접근자
         // ─────────────────────────────────────────────
@@ -459,6 +474,7 @@ namespace game
         // ─────────────────────────────────────────────
         float GetMaxHp() const { return m_PlayerMaxHP; }
         float GetCurrentHp() const { return m_PlayerCurrentHP; }
+        float GetPlayerRealBaseHp() const { return m_playerRealBaseHp; }
         
         // 데미지 처리
         void SetOnDamaged(DamageCallback callback) { m_onDamaged = std::move(callback); }
@@ -531,9 +547,14 @@ namespace game
             const float snappedMaxHp = std::max(1.0f, std::round(v));
             m_temperFinal.maxHp = snappedMaxHp;
             m_PlayerMaxHP = snappedMaxHp;
-            m_PlayerCurrentHP = std::round(std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP));
+            const float clamped = std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP);
+            m_PlayerCurrentHP = std::min(m_PlayerMaxHP, QuantizeHpToHalf(clamped));
         }
-        void SetCurrentHp(float v) { m_PlayerCurrentHP = std::round(std::clamp(v, 0.0f, m_PlayerMaxHP)); }
+        void SetCurrentHp(float v)
+        {
+            const float clamped = std::clamp(v, 0.0f, m_PlayerMaxHP);
+            m_PlayerCurrentHP = std::min(m_PlayerMaxHP, QuantizeHpToHalf(clamped));
+        }
         void SetInvincibleTime(float v)
         {
             m_temperFinal.invincibleTime = v;

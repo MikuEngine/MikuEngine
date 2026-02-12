@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "HUDController.h"
 #include <algorithm>
 #include <cmath>
@@ -22,7 +22,6 @@ namespace game
     void HUDController::Start()
     {
         CacheHearts();
-        ApplyHearts();
 
         if (auto* go = engine::GameObject::Find("HitImage"))
             m_hitImage = go->GetComponent<engine::UIImage>();
@@ -43,6 +42,7 @@ namespace game
         {
             m_visibleHeartCount = CalcVisibleHeartCountFromPlayer();
             m_halfHp = CalcHalfHPFromPlayer();
+            ApplyHearts();
             m_playerScript->SetOnDamaged([self = engine::Ptr<HUDController>(this)] {
                 if (!self) return;
 
@@ -181,9 +181,9 @@ namespace game
     {
         if (!m_playerScript) return 0;
 
-        const int hpPerHalfHeart = CalcHpPerHalfHeart();
-        const int hp = static_cast<int>(std::round(m_playerScript->GetCurrentHp()));
-        int half = hp / hpPerHalfHeart;
+        const float hpPerHalfHeart = CalcHpPerHalfHeart();
+        const float currentHp = std::max(0.0f, m_playerScript->GetCurrentHp());
+        int half = static_cast<int>(std::floor((currentHp + 0.0001f) / hpPerHalfHeart));
 
         const int maxHalfHp = m_visibleHeartCount * 2;
         if (half < 0) half = 0;
@@ -212,10 +212,10 @@ namespace game
         return std::max(1, static_cast<int>(std::round(baseMaxHp / static_cast<float>(kBaseHeartCount))));
     }
 
-    int HUDController::CalcHpPerHalfHeart() const
+    float HUDController::CalcHpPerHalfHeart() const
     {
-        const int hpPerHeart = CalcHpPerHeart();
-        return std::max(1, hpPerHeart / 2);
+        const float hpPerHeart = static_cast<float>(CalcHpPerHeart());
+        return std::max(0.5f, hpPerHeart * 0.5f);
     }
 
     void HUDController::ApplyHearts()
