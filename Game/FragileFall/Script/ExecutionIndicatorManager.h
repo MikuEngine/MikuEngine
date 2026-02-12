@@ -2,6 +2,9 @@
 
 #include <Framework/Object/Component/Script.h>
 #include <Framework/Object/Ptr.h>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
 namespace engine
 {
@@ -18,6 +21,7 @@ namespace game
     class ExecutionSlowScript;
     class CameraEffectScript;
     class AimModeController;
+    class UIMessageQueue;
 
     // ═══════════════════════════════════════════════════════════════
     // ExecutionIndicatorManager - Fragile 몬스터 처형 인디케이터 관리
@@ -147,6 +151,14 @@ namespace game
         // ─────────────────────────────────────────────
         engine::Ptr<CameraEffectScript> m_cameraEffectScript;
 
+        // 처형 킬 메시지 출력용
+        engine::Ptr<UIMessageQueue> m_uiMessageQueue;
+        std::vector<std::string> m_killMessageKeys;
+        std::unordered_map<std::string, int> m_killMessageUseCount;
+        std::string m_lastKillMessageKey;
+        bool m_wasPlayerDead = false;
+        std::string m_lastSceneName;
+
     public:
         void Awake() override;
         void Start() override;
@@ -204,5 +216,10 @@ namespace game
         // 거리 계산 헬퍼
         float GetDistanceToMonster(engine::GameObject* target) const;
         bool IsMonsterInExecutionRange(engine::GameObject* target) const;
+
+        void RefreshKillMessageKeys();
+        void ResetKillMessageStats();
+        std::string BuildBalancedKillMessageKey();
+        void PushRandomKillMessage();
     };
 }

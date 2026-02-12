@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "ExecutionIndicatorManager.h"
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
@@ -9,9 +9,13 @@
 #include "Script/ExecutionSlowScript.h"
 #include "Script/CameraEffectScript.h"
 #include "Script/AimModeController.h"
+#include "Script/UI/UIMessageQueue.h"
 
 #include <Core/System/Input.h>
 #include <Core/System/MyTime.h>
+#include <Common/Math/MathUtility.h>
+#include <algorithm>
+#include <limits>
 #include <optional>
 #include <Common/Utility/MousePicking.h>
 
@@ -87,11 +91,41 @@ namespace game
         {
             m_cameraEffectScript = camGO->GetComponent<CameraEffectScript>();
         }
+
+        if (auto* queueGO = engine::GameObject::Find("UIMessageQueue"))
+        {
+            m_uiMessageQueue = queueGO->GetComponent<UIMessageQueue>();
+        }
+
+        RefreshKillMessageKeys();
+
+        if (auto* scene = engine::SceneManager::Get().GetScene())
+        {
+            m_lastSceneName = scene->GetName();
+        }
     }
 
     void ExecutionIndicatorManager::Update()
     {
         if (!m_mainCamera) return;
+
+        std::string currentSceneName;
+        if (auto* scene = engine::SceneManager::Get().GetScene())
+        {
+            currentSceneName = scene->GetName();
+        }
+        if (!m_lastSceneName.empty() && currentSceneName != m_lastSceneName)
+        {
+            ResetKillMessageStats();
+        }
+        m_lastSceneName = currentSceneName;
+
+        const bool isPlayerDead = (m_player && m_player->GetCurrentState() == "Dead");
+        if (isPlayerDead && !m_wasPlayerDead)
+        {
+            ResetKillMessageStats();
+        }
+        m_wasPlayerDead = isPlayerDead;
 
         float deltaTime = engine::Time::DeltaTime();
 
@@ -728,12 +762,116 @@ namespace game
         return GetDistanceToMonster(target) <= m_player->GetExecutionRange();
     }
 
+    void ExecutionIndicatorManager::RefreshKillMessageKeys()
+    {
+        if (!m_uiMessageQueue)
+        {
+            if (auto* queueGO = engine::GameObject::Find("UIMessageQueue"))
+            {
+                m_uiMessageQueue = queueGO->GetComponent<UIMessageQueue>();
+            }
+        }
+        if (!m_uiMessageQueue)
+        {
+            m_killMessageKeys.clear();
+            return;
+        }
+
+        std::vector<std::string> keys;
+        m_uiMessageQueue->CollectCatalogKeys(UIMessageChannel::Kill, "Kill_", keys);
+        m_killMessageKeys = std::move(keys);
+
+        for (const auto& key : m_killMessageKeys)
+        {
+            if (m_killMessageUseCount.find(key) == m_killMessageUseCount.end())
+            {
+                m_killMessageUseCount[key] = 0;
+            }
+        }
+
+        for (auto it = m_killMessageUseCount.begin(); it != m_killMessageUseCount.end(); )
+        {
+            if (std::find(m_killMessageKeys.begin(), m_killMessageKeys.end(), it->first) == m_killMessageKeys.end())
+            {
+                it = m_killMessageUseCount.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
+    }
+
+    void ExecutionIndicatorManager::ResetKillMessageStats()
+    {
+        m_killMessageUseCount.clear();
+        m_lastKillMessageKey.clear();
+        RefreshKillMessageKeys();
+    }
+
+    std::string ExecutionIndicatorManager::BuildBalancedKillMessageKey()
+    {
+        RefreshKillMessageKeys();
+        if (m_killMessageKeys.empty())
+        {
+            return "";
+        }
+
+        int minCount = std::numeric_limits<int>::max();
+        for (const auto& key : m_killMessageKeys)
+        {
+            const int count = m_killMessageUseCount[key];
+            if (count < minCount)
+            {
+                minCount = count;
+            }
+        }
+
+        std::vector<std::string> candidates;
+        for (const auto& key : m_killMessageKeys)
+        {
+            if (m_killMessageUseCount[key] == minCount)
+            {
+                candidates.push_back(key);
+            }
+        }
+
+        if (candidates.size() > 1 && !m_lastKillMessageKey.empty())
+        {
+            candidates.erase(
+                std::remove(candidates.begin(), candidates.end(), m_lastKillMessageKey),
+                candidates.end());
+        }
+        if (candidates.empty())
+        {
+            candidates = m_killMessageKeys;
+        }
+
+        const size_t idx = engine::Random::Int<size_t>(0, candidates.size() - 1);
+        const std::string selectedKey = candidates[idx];
+        ++m_killMessageUseCount[selectedKey];
+        m_lastKillMessageKey = selectedKey;
+        return selectedKey;
+    }
+
+    void ExecutionIndicatorManager::PushRandomKillMessage()
+    {
+        const std::string key = BuildBalancedKillMessageKey();
+        if (key.empty() || !m_uiMessageQueue)
+        {
+            return;
+        }
+
+        m_uiMessageQueue->PushMessageKey(key);
+    }
+
     void ExecutionIndicatorManager::StartExecution(engine::GameObject* target)
     {
         if (!target || m_isWaitingForTrigger || !m_player) return;
 
         // 우클릭 처형 요청 시점부터 즉시 처형 무적 시작
         m_player->StartExecutionInvincibility();
+        PushRandomKillMessage();
 
         // 처형 요청이 시작되는 즉시 Execute 커서를 고정한다.
         if (m_aimController)
