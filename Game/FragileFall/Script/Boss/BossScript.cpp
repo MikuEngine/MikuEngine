@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BossScript.h"
 
 #include <Framework/Object/Component/Renderer/StaticMeshRenderer.h>
@@ -7,6 +7,7 @@
 #include <Framework/Scene/Scene.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIProgressBar.h>
+#include <Framework/Object/Component/UI/UIImage.h>
 #include <Framework/Object/Component/Particle/ParticleEffect.h>
 #include <Common/Math/MathUtility.h>
 #include <Framework/Asset/Prefab.h>
@@ -68,6 +69,26 @@ namespace game
             parentWorldRot.Inverse(invParentWorldRot);
             return invParentWorldRot * worldRotation;
         }
+
+        static engine::GameObject* FindChildByNameRecursive(engine::GameObject* root, const char* name)
+        {
+            if (!root) return nullptr;
+            if (root->GetName() == name) return root;
+
+            auto* tr = root->GetTransform();
+            if (!tr) return nullptr;
+
+            for (auto* c : tr->GetChildren())
+            {
+                if (!c) continue;
+                auto* go = c->GetGameObject();
+                if (!go) continue;
+
+                if (auto* found = FindChildByNameRecursive(go, name))
+                    return found;
+            }
+            return nullptr;
+        }
     }
 
     BossScript::BossScript() = default;
@@ -117,6 +138,10 @@ namespace game
             m_sceneStartCameraWorldRotation = m_cameraTransform->GetWorldRotation();
         }
 
+        CacheBossHpBarFillImage();
+        m_prevShieldActive = m_isShieldActive;   // 초기 동기화
+        ApplyBossHpBarFillByShieldState();
+
         if (m_enableIntroSequence)
         {
             BeginIntroSequence();
@@ -154,6 +179,13 @@ namespace game
         }
 
         UpdateShieldStatus();
+
+        if (m_prevShieldActive != m_isShieldActive)
+        {
+            m_prevShieldActive = m_isShieldActive;
+            OnShieldStateChanged(m_isShieldActive);
+        }
+
         if (m_isBattleStarted)
         {
             UpdatePatternSystem(deltaTime);
@@ -357,6 +389,39 @@ namespace game
     {
         t = std::clamp(t, 0.0f, 1.0f);
         return -(std::cos(DirectX::XM_PI * t) - 1.0f) * 0.5f;
+    }
+
+    void BossScript::CacheBossHpBarFillImage()
+    {
+        m_bossHpFillImage = nullptr;
+
+        if (!m_bossHpBarObject)
+            return;
+
+        engine::GameObject* fillGO = FindChildByNameRecursive(m_bossHpBarObject.Get(), "Fill");
+        if (!fillGO)
+            return;
+
+        m_bossHpFillImage = fillGO->GetComponent<engine::UIImage>();
+    }
+
+    void BossScript::ApplyBossHpBarFillByShieldState()
+    {
+        if (!m_bossHpFillImage)
+            return;
+
+        const std::string& tex = m_isShieldActive ? m_hpFillTex_Shield : m_hpFillTex_Normal;
+        if (tex.empty())
+            return;
+
+        // UIImage.cpp에 존재: SetTexture(const std::string&)
+        m_bossHpFillImage->SetTexture(tex);
+    }
+
+    void BossScript::OnShieldStateChanged(bool newShieldActive)
+    {
+        (void)newShieldActive;
+        ApplyBossHpBarFillByShieldState();
     }
 
     void BossScript::CacheIntroReferences()
@@ -1189,6 +1254,67 @@ namespace game
         ImGui::Text("Current HP: %.1f", m_currentHp);
         ImGui::Spacing();
 
+        ImGui::SeparatorText("=== Boss HP Bar Fill (Shield) ===");
+        ImGui::Text("Shield Active: %s", m_isShieldActive ? "true" : "false");
+
+        static std::vector<std::string> texExtensions{ ".png", ".jpg", ".tga" };
+
+        // -------------------------
+        // Shield ON 텍스처
+        // -------------------------
+        ImGui::Text("HP Fill Tex (Shield ON): %s",
+            std::filesystem::path(m_hpFillTex_Shield).filename().string().c_str());
+
+        ImGui::SameLine();
+        if (ImGui::Button("None##ShieldOn"))
+        {
+            m_hpFillTex_Shield.clear(); // 또는 "None"을 엔진 규약으로 쓰시면 그걸로
+            if (m_isShieldActive)
+                ApplyBossHpBarFillByShieldState();
+        }
+
+        std::string selectedShieldOn;
+        if (engine::DrawFileSelector("Select Texture##ShieldOn", "Resource/Texture", texExtensions, selectedShieldOn))
+        {
+            m_hpFillTex_Shield = selectedShieldOn;
+            if (m_isShieldActive)
+                ApplyBossHpBarFillByShieldState();
+        }
+
+        ImGui::Spacing();
+
+        // -------------------------
+        // Shield OFF 텍스처
+        // -------------------------
+        ImGui::Text("HP Fill Tex (Shield OFF): %s",
+            std::filesystem::path(m_hpFillTex_Normal).filename().string().c_str());
+
+        ImGui::SameLine();
+        if (ImGui::Button("None##ShieldOff"))
+        {
+            m_hpFillTex_Normal.clear();
+            if (!m_isShieldActive)
+                ApplyBossHpBarFillByShieldState();
+        }
+
+        std::string selectedShieldOff;
+        if (engine::DrawFileSelector("Select Texture##ShieldOff", "Resource/Texture", texExtensions, selectedShieldOff))
+        {
+            m_hpFillTex_Normal = selectedShieldOff;
+            if (!m_isShieldActive)
+                ApplyBossHpBarFillByShieldState();
+        }
+
+        ImGui::Spacing();
+
+        if (ImGui::Button("Apply Fill Now##BossHpFill"))
+        {
+            CacheBossHpBarFillImage();
+            ApplyBossHpBarFillByShieldState();
+        }
+        
+        ImGui::Separator();
+
         ImGui::SeparatorText("=== Boss Intro Sequence ===");
         ImGui::Checkbox("Enable Intro Sequence", &m_enableIntroSequence);
         ImGui::Text("Battle Started: %s", m_isBattleStarted ? "true" : "false");
@@ -1618,6 +1744,8 @@ namespace game
         // 보스 기본 설정 저장
         // ─────────────────────────────────────────────
         j["MaxHP"] = m_maxHp;
+        j["HPFillTex_Shield"] = m_hpFillTex_Shield;
+        j["HPFillTex_Normal"] = m_hpFillTex_Normal;
         j["EnableIntroSequence"] = m_enableIntroSequence;
         j["IntroMoveToBossDuration"] = m_introMoveToBossDuration;
         j["IntroHoldDuration"] = m_introHoldDuration;
@@ -1759,6 +1887,10 @@ namespace game
                 m_currentHp = m_maxHp;
             }
         }
+        if (j.contains("HPFillTex_Shield"))
+            m_hpFillTex_Shield = j["HPFillTex_Shield"].get<std::string>();
+        if (j.contains("HPFillTex_Normal"))
+            m_hpFillTex_Normal = j["HPFillTex_Normal"].get<std::string>();
         if (j.contains("EnableIntroSequence"))
             m_enableIntroSequence = j["EnableIntroSequence"].get<bool>();
         if (j.contains("IntroMoveToBossDuration"))
@@ -2023,5 +2155,8 @@ namespace game
             m_pillarMaxRespawnDelay = m_pillarMinRespawnDelay;
         if (m_pillarMinCount > m_pillarMaxCount)
             m_pillarMaxCount = m_pillarMinCount;
+
+        CacheBossHpBarFillImage();
+        ApplyBossHpBarFillByShieldState();
     }
 }

@@ -16,6 +16,11 @@ namespace game
 
         static std::string BuildStageLabel(int stageNumber)
         {
+            if (stageNumber == 10)
+            {
+                return "Boss";
+            }
+
             return "심도 " + std::to_string(stageNumber);
         }
     }
