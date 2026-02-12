@@ -210,7 +210,9 @@ namespace game
                 slider->SetValue(SensitivityToSlider(s.controls.mouseSensitivity), false);
 
         // bgm sound
-        engine::SoundSystem::Get().PlayBGM("Combat_1");
+        engine::Scene* scene = engine::SceneManager::Get().GetScene();
+        std::string bgm = scene->GetName() == "01_READY_Boss" ? "Boss_Combat" : "Combat_1";
+        engine::SoundSystem::Get().PlayBGM(bgm);
     }
 
     void SceneController_Play::Update()
