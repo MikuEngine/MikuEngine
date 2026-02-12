@@ -8,6 +8,7 @@
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Common/ExecutionExitDamageTrigger.h"
+#include "Script/MonsterUpdateActivationSwitch.h"
 #include "Manager/PlayerTemperManager.h"
 #include "Manager/StageManager.h"
 #include "Manager/BuffManager.h"
@@ -29,6 +30,47 @@
 
 namespace game
 {
+	bool PlayerControllerScript::TryBindUpdateSwitch()
+	{
+		if (m_updateSwitch)
+		{
+			return false;
+		}
+
+		auto* scene = engine::SceneManager::Get().GetScene();
+		if (!scene)
+		{
+			return false;
+		}
+
+		auto* switchObj = scene->FindGameObject("MonsterUpdateSwitch");
+		if (!switchObj)
+		{
+			return false;
+		}
+
+		auto* updateSwitch = switchObj->GetComponent<MonsterUpdateActivationSwitch>();
+		if (!updateSwitch)
+		{
+			return false;
+		}
+
+		m_updateSwitch = updateSwitch;
+		if (m_updateSwitch->HasActivated())
+		{
+			m_updateGateActive = true;
+			m_updateAllowed = true;
+		}
+		else
+		{
+			m_updateGateActive = false;
+			m_updateAllowed = m_updateSwitch->GetIsUpdateAllowed();
+			m_updateReadyAndWait = false;
+		}
+
+		return true;
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 초기화
 	// ═══════════════════════════════════════════════════════════════
@@ -40,6 +82,10 @@ namespace game
 	void PlayerControllerScript::Start()
 	{
 		BaseControllerScript::Start();
+
+		m_updateAllowed = true;
+		m_updateReadyAndWait = false;
+		m_updateGateActive = false;
 
 		// ═══════════════════════════════════════════════════════════════
 		// Dynamic Rigidbody 설정 (회전 제약)
@@ -85,6 +131,13 @@ namespace game
 		}
 		SetCurrentHp(stageManager.GetRunHP());
 
+		TryBindUpdateSwitch();
+		if (!m_updateSwitch)
+		{
+			m_updateAllowed = true;
+			m_updateGateActive = true;
+		}
+
 
 		// sound notify 바인딩
 		auto animMesh = engine::GameObject::Find("PlayerAnimMesh");
@@ -101,6 +154,55 @@ namespace game
 			{
 				engine::SoundSystem::Get().Play("Player_FootStep_Right_Random", "SFX/Player", true);
 			});
+	}
+
+	void PlayerControllerScript::Update()
+	{
+		TryBindUpdateSwitch();
+
+		if (m_updateSwitch)
+		{
+			if (!m_updateGateActive && !m_updateReadyAndWait && m_updateSwitch->ShouldWaitAfterIdle())
+			{
+				if (GetCurrentState() == "Idle")
+				{
+					if (m_animFSM)
+					{
+						m_animFSM->SetAnimState("Idle");
+					}
+					m_updateReadyAndWait = true;
+					m_updateSwitch->BeginDelayAfterIdle();
+				}
+			}
+
+			m_updateAllowed = m_updateSwitch->GetIsUpdateAllowed();
+			if (!m_updateAllowed)
+			{
+				return;
+			}
+
+			if (m_updateSwitch->HasActivated())
+			{
+				m_updateGateActive = true;
+			}
+		}
+
+		if (!m_updateGateActive)
+		{
+			return;
+		}
+
+		BaseControllerScript::Update();
+	}
+
+	void PlayerControllerScript::FixedUpdate()
+	{
+		if (!m_updateGateActive || !m_updateAllowed)
+		{
+			return;
+		}
+
+		BaseControllerScript::FixedUpdate();
 	}
 
 	// ═══════════════════════════════════════════════════════════════

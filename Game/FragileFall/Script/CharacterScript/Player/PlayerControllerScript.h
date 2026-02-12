@@ -19,6 +19,7 @@ namespace game
 {
     class AimModeController;
     class BulletFactory;
+    class MonsterUpdateActivationSwitch;
     
     // 발사 이벤트 콜백 타입
     using FireCallback = std::function<void()>;
@@ -355,6 +356,8 @@ namespace game
     public:
         void Awake() override;
         void Start() override;
+        void Update() override;
+        void FixedUpdate() override;
 
     protected:
         // ─────────────────────────────────────────────
@@ -379,6 +382,15 @@ namespace game
         // ─────────────────────────────────────────────
         bool CanMove() const override;
         bool CanAttack() const override;
+
+    private:
+        bool TryBindUpdateSwitch();
+
+    private:
+        engine::Ptr<MonsterUpdateActivationSwitch> m_updateSwitch;
+        bool m_updateGateActive = false;
+        bool m_updateReadyAndWait = false;
+        bool m_updateAllowed = true;
 
     private:
         // ─────────────────────────────────────────────
