@@ -91,8 +91,8 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "Width": 50.0,
-                    "Height": 50.0,
+                    "Width": 28.0,
+                    "Height": 28.0,
                     "Pivot": {
                         "x": 0.5,
                         "y": 0.5
@@ -112,14 +112,14 @@
                     "Active": true,
                     "Layer": 0,
                     "OrderInLayer": 0,
-                    "RaycastTarget": true,
+                    "RaycastTarget": false,
                     "Value": 0.36800000071525574,
                     "Shape": 1,
                     "Direction": 0,
                     "FillMode": 0,
                     "StartAngleRad": -1.5707963705062866,
                     "Clockwise": true,
-                    "InnerRadius01": 0.5210000276565552,
+                    "InnerRadius01": 0.3330000042915344,
                     "BgSprite": "",
                     "FillSprite": "",
                     "BgColor": {
@@ -129,9 +129,9 @@
                         "w": 0.0
                     },
                     "FillColor": {
-                        "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 0.8550558090209961,
+                        "y": 0.8915489912033081,
+                        "z": 0.9189189076423645,
                         "w": 1.0
                     }
                 },
@@ -140,10 +140,47 @@
                     "Active": true,
                     "TargetName": "Player",
                     "Offset": {
-                        "x": -3.0,
-                        "y": 0.0,
+                        "x": -1.5,
+                        "y": 0.5,
                         "z": 0.0
                     }
+                },
+                {
+                    "Type": "UIDashCoolController",
+                    "Active": true,
+                    "ChildUniformScale": 1.0,
+                    "FullDashFadeDelay": 2.0,
+                    "FadeOutDuration": 1.0,
+                    "FadeInDuration": 0.4000000059604645,
+                    "PlayerDeathFadeOutDuration": 2.0,
+                    "EnableFillFlash": false,
+                    "FillFlashDuration": 0.800000011920929,
+                    "FillFlashColorDash1": {
+                        "x": 1.0,
+                        "y": 0.20000000298023224,
+                        "z": 0.20000000298023224,
+                        "w": 1.0
+                    },
+                    "FillFlashColorDash2": {
+                        "x": 1.0,
+                        "y": 0.8999999761581421,
+                        "z": 0.20000000298023224,
+                        "w": 1.0
+                    },
+                    "FillFlashColorDash3": {
+                        "x": 0.44999998807907104,
+                        "y": 0.8500000238418579,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "PlayerObjectName": "Player",
+                    "DashCoolObjectName": "DashCool",
+                    "FillObjectName": "Fill",
+                    "BGCaseName": "BG_Case",
+                    "BGDashBtnName": "BG_Dash_Btn",
+                    "RingGauge1Name": "RingGauge_1",
+                    "RingGauge2Name": "RingGauge_2",
+                    "RingGauge3Name": "RingGauge_3"
                 }
             ]
         },
@@ -307,7 +344,7 @@
                     "Type": "UIImage",
                     "Active": true,
                     "Layer": 0,
-                    "OrderInLayer": 0,
+                    "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "TexturePath": "None",
                     "EffectMode": 0,
@@ -333,9 +370,9 @@
                     "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
                     "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
                     "Color": {
-                        "x": 1.0,
-                        "y": 0.0,
-                        "z": 0.0,
+                        "x": 0.8550558090209961,
+                        "y": 0.8915489912033081,
+                        "z": 0.9189189076423645,
                         "w": 1.0
                     },
                     "AlphaBlend": true,
@@ -349,13 +386,548 @@
                     "Mask0": {
                         "x": 960.0,
                         "y": 540.0,
-                        "z": 13.02500057220459,
-                        "w": 25.0
+                        "z": 4.6620001792907715,
+                        "w": 14.0
                     },
                     "Mask1": {
                         "x": -1.5707963705062866,
                         "y": 0.36800000071525574,
                         "z": 1.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 1,
+            "Name": "BG_Case",
+            "Active": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 57.0,
+                    "Height": 57.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/ProgressBar/Dash_charge_Ring_Case.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "ParentID": 1,
+            "Name": "RingGauge_1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 60.0,
+                    "Height": 60.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 2,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/ProgressBar/Dash_charge_Ring_Gauge_1.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 1,
+            "Name": "RingGauge_2",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 60.0,
+                    "Height": 60.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 3,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/ProgressBar/Dash_charge_Ring_Gauge_2.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 1,
+            "Name": "RingGauge_3",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 60.0,
+                    "Height": 60.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 4,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/ProgressBar/Dash_charge_Ring_Gauge_3.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "ParentID": 1,
+            "Name": "BG_Dash_Btn",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 30.0,
+                    "Height": 30.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 5,
+                    "RaycastTarget": false,
+                    "TexturePath": "Resource/Texture/UI/ProgressBar/Dash_charge_Ring_Button.png",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
                         "w": 0.0
                     }
                 }

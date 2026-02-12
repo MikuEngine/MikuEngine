@@ -48,6 +48,7 @@
     <ClCompile Include="Script\TimeScalerTest.cpp" />
     <ClCompile Include="Script\UI\UIFollowWorldTarget.cpp" />
     <ClCompile Include="Script\UI\UIHoverScale.cpp" />
+    <ClCompile Include="Script\UI\UIDashCoolController.cpp" />
     <ClCompile Include="Script\UI\UIKillPopupQueue.cpp" />
     <ClCompile Include="Script\UI\UIMessageQueue.cpp" />
     <ClCompile Include="Script\UI\UIPopUpAnimator.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Script\TimeScalerTest.h" />
     <ClInclude Include="Script\UI\UIFollowWorldTarget.h" />
     <ClInclude Include="Script\UI\UIHoverScale.h" />
+    <ClInclude Include="Script\UI\UIDashCoolController.h" />
     <ClInclude Include="Script\UI\UIKillPopupQueue.h" />
     <ClInclude Include="Script\UI\UIMessageQueue.h" />
     <ClInclude Include="Script\UI\UIPopUpAnimator.h" />
