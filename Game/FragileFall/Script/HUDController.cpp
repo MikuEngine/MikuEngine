@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "HUDController.h"
 #include <algorithm>
 
@@ -29,13 +29,6 @@ namespace game
         if (auto* go = engine::GameObject::Find("FragileImage"))
             m_fragileImage = go->GetComponent<engine::UIImage>();
 
-        // HUD: Currency counts (Canvas_HUD > Currency > Ruby/Sapphire/Emerald > * Count)
-        if (auto* go = engine::GameObject::Find("Ruby Count"))
-            m_currencyRubyText = go->GetComponent<engine::UIText>();
-        if (auto* go = engine::GameObject::Find("Sapphire Count"))
-            m_currencySapphireText = go->GetComponent<engine::UIText>();
-        if (auto* go = engine::GameObject::Find("Emerald Count"))
-            m_currencyEmeraldText = go->GetComponent<engine::UIText>();
         // Fragile Gauge (Canvas_HUD > Fragile Gauge > Fragile Gauge Progress)
         if (auto* go = engine::GameObject::Find("Fragile Gauge Progress"))
             m_fragileGaugeProgress = go->GetComponent<engine::UIProgressBar>();
@@ -80,13 +73,6 @@ namespace game
             }
         }
 
-        // HUD: 런 재화 개수, 프레자일 게이지
-        if (m_currencyRubyText)
-            m_currencyRubyText->SetText(std::to_string(StageManager::Get().GetRunRuby()));
-        if (m_currencySapphireText)
-            m_currencySapphireText->SetText(std::to_string(StageManager::Get().GetRunSapphire()));
-        if (m_currencyEmeraldText)
-            m_currencyEmeraldText->SetText(std::to_string(StageManager::Get().GetRunEmerald()));
         if (m_fragileGaugeProgress && m_playerScript)
         {
             float maxVal = m_playerScript->GetFragileGaugeMax();

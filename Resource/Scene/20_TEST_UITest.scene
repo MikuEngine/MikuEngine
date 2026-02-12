@@ -17971,7 +17971,7 @@
         {
             "ID": 83,
             "ParentID": 81,
-            "Name": "Count",
+            "Name": "RubyCount",
             "Active": true,
             "Components": [
                 {
@@ -18202,7 +18202,7 @@
         {
             "ID": 86,
             "ParentID": 84,
-            "Name": "Count",
+            "Name": "SapphireCount",
             "Active": true,
             "Components": [
                 {
@@ -18433,7 +18433,7 @@
         {
             "ID": 89,
             "ParentID": 87,
-            "Name": "Count",
+            "Name": "EmeraldCount",
             "Active": true,
             "Components": [
                 {
@@ -20181,8 +20181,7 @@
                 },
                 {
                     "Type": "UICurrencyAnimator",
-                    "Active": true,
-                    "countSpeed": 50.0
+                    "Active": true
                 }
             ]
         },

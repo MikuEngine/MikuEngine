@@ -27,10 +27,10 @@ namespace game
         void Update() override;
 
     public:
-        void SetTargetValue(int v);
-        void AddDelta(int delta);
+        void SetTargetValue(engine::UIText* text, int v);
+        void AddDelta(engine::UIText* text, int delta);
 
-        float m_countSpeed = 50.0f;
+        float m_countSpeed = 10.0f;
 
         // 스케일 펄스
         bool  m_enablePulse = true;
@@ -46,7 +46,6 @@ namespace game
         RunCurrencyType m_type = RunCurrencyType::Ruby;
 
     private:
-        void ApplyText(int v);
         void ApplyText(engine::UIText* text, int v);
 
         void TriggerPulse();
@@ -80,6 +79,10 @@ namespace game
         int m_displaySapphire = 0;
         int m_displayEmerald = 0;
 
+        // 카운트 누적용
+        float m_accRuby = 0.0f;
+        float m_accSapphire = 0.0f;
+        float m_accEmerald = 0.0f;
 
         engine::Vector2 m_baseScale = engine::Vector2(1.0f, 1.0f);
         engine::Vector4 m_baseColor = engine::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
