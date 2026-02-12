@@ -11511,9 +11511,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 17.372278213500977
+                        "x": 13.0,
+                        "y": -2.2116837499197572e-06,
+                        "z": 28.0
                     },
                     "Rotation": {
                         "x": 0.0,
@@ -11528,45 +11528,12 @@
                     }
                 },
                 {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
                     "Type": "DoorTriggerScript",
                     "Active": true,
                     "isDoorActive": false,
-                    "NextSceneName": "10_PROTO_Tutorial"
+                    "NextSceneName": "10_PROTO_Tutorial",
+                    "SoundTriggerName": "SoundTrigger_Next",
+                    "EffectPrefabName": "Effect_Door_Next"
                 }
             ]
         },
@@ -11582,7 +11549,7 @@
                     "Position": {
                         "x": -3.1261761250789277e-06,
                         "y": 0.0,
-                        "z": -15.405820846557617
+                        "z": -14.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -11597,45 +11564,12 @@
                     }
                 },
                 {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/Cube.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
                     "Type": "DoorTriggerScript",
                     "Active": true,
                     "isDoorActive": false,
-                    "NextSceneName": "10_PROTO_TutorialLobby"
+                    "NextSceneName": "10_PROTO_TutorialLobby",
+                    "SoundTriggerName": "SoundTrigger_Exit",
+                    "EffectPrefabName": "Effect_Door_Lobby"
                 }
             ]
         },
@@ -11649,9 +11583,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 17.371999740600586
+                        "x": 12.0,
+                        "y": 1.9001763575943187e-06,
+                        "z": 24.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -11668,7 +11602,8 @@
                 {
                     "Type": "SoundTrigger",
                     "Active": true,
-                    "Radius": 8.0,
+                    "isTriggerActive": false,
+                    "Radius": 12.0,
                     "SoundKey": "Door_NextStage",
                     "SoundOption": "SFX/Door"
                 }
@@ -11686,7 +11621,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 1.9073486328125e-06,
-                        "z": -15.406000137329102
+                        "z": -14.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -11703,7 +11638,8 @@
                 {
                     "Type": "SoundTrigger",
                     "Active": true,
-                    "Radius": 8.0,
+                    "isTriggerActive": false,
+                    "Radius": 7.0,
                     "SoundKey": "Door_BackLobby",
                     "SoundOption": "SFX/Door"
                 }
@@ -18126,6 +18062,16 @@
                         "x": 30.0,
                         "y": 30.0
                     },
+                    "CursorDefaultOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "CursorClickOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "UseDefaultCursor": true,
+                    "UseClickCursor": true,
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
                     "OnEnemyRayMaxDistance": 1000.0,
