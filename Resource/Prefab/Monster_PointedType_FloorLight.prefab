@@ -12,7 +12,7 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": -1.1920928955078125e-06,
                         "z": 0.0
                     },
                     "Rotation": {
@@ -38,20 +38,20 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.9961389899253845,
-                        "y": 0.13578647375106812,
-                        "z": 0.023076556622982025,
+                        "x": 0.84555983543396,
+                        "y": 0.1729917973279953,
+                        "z": 0.08488243818283081,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
-                        "x": 0.9845559597015381,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": 0.5752896070480347,
+                        "y": 0.09106902033090591,
+                        "z": 0.09106902033090591
                     },
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 3.0,
+                    "MaterialEmissiveIntensity": 7.869999885559082,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
