@@ -1,10 +1,10 @@
 {
-    "Name": "1_Monster_PointedType_Purple",
+    "Name": "2_Monster_PointedType_Purple",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "1_Monster_PointedType_Purple",
+            "Name": "2_Monster_PointedType_Purple",
             "Active": true,
             "Components": [
                 {
@@ -79,15 +79,15 @@
                     "MonsterTier": 4,
                     "Hp": 40.0,
                     "MaxHp": 40.0,
-                    "MoveSpeed": 8.0,
+                    "MoveSpeed": 12.0,
                     "AttackDamage": 1.0,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 300.0,
                     "AttackRange": 25.0,
                     "RotationSpeed": 2.0,
-                    "FireRate": 3.0,
-                    "BulletSpeed": 10.0,
+                    "FireRate": 2.0,
+                    "BulletSpeed": 12.0,
                     "BulletLifetime": 3.0,
                     "BulletScale": 1.0,
                     "SpreadAngle": 0.9399999976158142,
@@ -101,7 +101,7 @@
                     "AttackAnimationDuration": 1.100000023841858,
                     "FleeRange": 15.0,
                     "SafeRange": 21.0,
-                    "FleeSpeedMultiplier": 1.2000000476837158,
+                    "FleeSpeedMultiplier": 1.399999976158142,
                     "FleeDistanceMin": 4.0,
                     "FleeDistanceMax": 8.0,
                     "FleeSafetyMargin": 2,

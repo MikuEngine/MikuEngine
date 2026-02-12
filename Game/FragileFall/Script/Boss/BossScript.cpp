@@ -5,10 +5,14 @@
 #include <Framework/Object/Component/Camera.h>
 #include <Framework/Object/Component/Transform.h>
 #include <Framework/Scene/Scene.h>
+#include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIProgressBar.h>
 #include <Common/Math/MathUtility.h>
+#include <Framework/Asset/Prefab.h>
 #include <algorithm>
+#include <cctype>
 #include <cmath>
+#include <unordered_set>
 
 #include "Script/Boss/BossPattern/BossPatternManager.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -18,9 +22,11 @@
 #include "Script/Boss/BossPattern/Patterns/BossPattern_Summon.h"
 #include "Script/Boss/BossPattern/Patterns/BossPattern_SphereProjectile.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
+#include "Script/Boss/BossPattern/Components/BossShieldEffect.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossSubPartsController.h"
 #include "Script/AimModeController.h"
+#include "Scene/GameScene.h"
 
 namespace game
 {
@@ -135,6 +141,12 @@ namespace game
     {
         float deltaTime = engine::Time::DeltaTime();
 
+        if (m_deathSequenceActive)
+        {
+            UpdateDeathSequence(deltaTime);
+            return;
+        }
+
         if (m_isIntroRunning)
         {
             UpdateIntroSequence(deltaTime);
@@ -206,7 +218,12 @@ namespace game
 
     void BossScript::CheckHealth()
     {
-        if (m_currentHp <= 0)
+        if (!m_isDead && m_currentHp <= 0)
+        {
+            OnDeath();
+        }
+
+        if (engine::Input::IsKeyPressed(engine::Keys::D6))
         {
             OnDeath();
         }
@@ -214,8 +231,44 @@ namespace game
 
     void BossScript::OnDeath()
     {
-        SetBossHpBarVisible(false);
-        // TODO: 보스 사망 처리
+        if (m_isDead)
+            return;
+
+        m_isDead = true;
+        BeginDeathSequence();
+    }
+
+    void BossScript::RegisterMapCrystalForDeath(engine::GameObject* crystal)
+    {
+        if (!crystal)
+            return;
+
+        for (auto& item : m_registeredMapCrystals)
+        {
+            if (item.object.Get() == crystal)
+                return;
+        }
+
+        RegisteredMapCrystal item;
+        item.object = crystal;
+        item.burst = false;
+        if (crystal->GetTransform())
+            item.zSort = crystal->GetTransform()->GetWorldPosition().z;
+        m_registeredMapCrystals.push_back(item);
+    }
+
+    void BossScript::UnregisterMapCrystalForDeath(engine::GameObject* crystal)
+    {
+        if (!crystal)
+            return;
+
+        m_registeredMapCrystals.erase(
+            std::remove_if(m_registeredMapCrystals.begin(), m_registeredMapCrystals.end(),
+                [crystal](const RegisteredMapCrystal& item)
+                {
+                    return item.object.Get() == crystal;
+                }),
+            m_registeredMapCrystals.end());
     }
 
     void BossScript::UpdateShieldStatus()
@@ -572,6 +625,383 @@ namespace game
         m_cameraTransform->SetLocalRotation(ToLocalRotation(m_cameraTransform, worldLookRot));
     }
 
+    void BossScript::BeginDeathSequence()
+    {
+        m_deathSequenceActive = true;
+        m_deathPhase = DeathPhase::CameraMoveToBoss;
+        m_deathPhaseElapsed = 0.0f;
+        m_deathPartDustSpawned = false;
+        m_isBattleStarted = false;
+
+        // 보스 클리어 연출 중 플레이어 조작 차단
+        if (m_targetPlayer)
+        {
+            m_targetPlayer->SetControlLocked(true);
+        }
+        if (m_targetAimController)
+        {
+            m_targetAimController->SetPaused(true);
+        }
+
+        SetBossHpBarVisible(false);
+        if (m_patternManager)
+            m_patternManager.reset();
+
+        // 보스 사망 시 남아있는 기둥 정리
+        for (auto& pillar : m_activePillars)
+        {
+            if (pillar && pillar->GetGameObject())
+            {
+                pillar->GetGameObject()->Destroy();
+            }
+        }
+        m_activePillars.clear();
+        m_isShieldActive = false;
+
+        // 보스 하위 트리 + 씬 전체에서 실드 형태 오브젝트 제거
+        auto isShieldName = [](const std::string& name) -> bool
+        {
+            std::string lower = name;
+            for (char& c : lower)
+                c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+            return lower.find("shield") != std::string::npos;
+        };
+
+        if (auto* rootTr = GetTransform())
+        {
+            std::vector<engine::Transform*> stack;
+            stack.push_back(rootTr);
+            while (!stack.empty())
+            {
+                engine::Transform* cur = stack.back();
+                stack.pop_back();
+                if (!cur) continue;
+
+                const auto& children = cur->GetChildren();
+                for (auto* child : children)
+                {
+                    if (!child) continue;
+                    stack.push_back(child);
+
+                    auto* childGO = child->GetGameObject();
+                    if (!childGO) continue;
+
+                    if (childGO->GetComponent<BossShieldEffect>() || isShieldName(childGO->GetName()))
+                    {
+                        childGO->Destroy();
+                    }
+                }
+            }
+        }
+
+        if (auto* scene = engine::SceneManager::Get().GetScene())
+        {
+            for (const auto& go : scene->GetGameObjects())
+            {
+                if (!go) continue;
+                if (go->GetComponent<BossShieldEffect>() || isShieldName(go->GetName()))
+                {
+                    go->Destroy();
+                }
+            }
+        }
+
+        if (m_subPartsController)
+            m_subPartsController->SetActive(false);
+
+        if (m_cameraTransform)
+        {
+            m_deathCamStartPos = m_cameraTransform->GetWorldPosition();
+        }
+
+        const engine::Vector3 bossPos = GetTransform()->GetWorldPosition();
+
+        // 카메라는 항상 보스 기준 월드 -Z 쪽으로 이동
+        const engine::Vector3 minusZ(0.0f, 0.0f, -1.0f);
+        m_deathCamBossPos = bossPos + (minusZ * m_deathCamBossDistance);
+        m_deathCamBossPos.y = m_deathCamBossHeight;
+
+        // 카메라는 연출 끝에 기존 시작 위치로 복귀
+        m_deathCamEndPos = m_deathCamStartPos;
+
+        CollectDeathPartsFromHierarchy();
+        PrepareRegisteredMapCrystalSort();
+    }
+
+    void BossScript::UpdateDeathCameraLookAtBoss()
+    {
+        if (!m_cameraTransform)
+            return;
+
+        const engine::Vector3 cameraPos = m_cameraTransform->GetWorldPosition();
+        const engine::Vector3 lookTarget = GetTransform()->GetWorldPosition() + m_deathCamLookAtOffset;
+        engine::Vector3 toTarget = lookTarget - cameraPos;
+        if (toTarget.LengthSquared() < 0.0001f)
+            return;
+
+        const float yaw = std::atan2(toTarget.x, toTarget.z);
+        const float horizontal = std::sqrt((toTarget.x * toTarget.x) + (toTarget.z * toTarget.z));
+        const float pitch = -std::atan2(toTarget.y, horizontal);
+        const engine::Quaternion worldLookRot = engine::Quaternion::CreateFromYawPitchRoll(yaw, pitch, 0.0f);
+        m_cameraTransform->SetLocalRotation(ToLocalRotation(m_cameraTransform, worldLookRot));
+    }
+
+    void BossScript::CollectDeathPartsFromHierarchy()
+    {
+        m_rotatingPartsForDeath.clear();
+        m_remainingPartsForDeath.clear();
+
+        std::unordered_set<engine::Transform*> visited;
+
+        auto pushPartsRecursive = [this, &visited](engine::Transform* rootTr, std::vector<DeathPartRuntime>& outParts, float startOffset)
+        {
+            if (!rootTr) return;
+
+            std::vector<engine::Transform*> stack;
+            stack.push_back(rootTr);
+
+            size_t pushedCount = 0;
+            while (!stack.empty())
+            {
+                engine::Transform* cur = stack.back();
+                stack.pop_back();
+                if (!cur) continue;
+
+                const auto& children = cur->GetChildren();
+                for (auto* child : children)
+                {
+                    if (!child) continue;
+                    if (!visited.insert(child).second) continue;
+
+                    DeathPartRuntime p;
+                    p.transform = child;
+                    p.baseLocalPos = child->GetLocalPosition();
+                    p.startDelay = startOffset + (static_cast<float>(pushedCount) * m_deathPartDelayStep);
+                    p.started = false;
+                    outParts.push_back(p);
+                    ++pushedCount;
+
+                    stack.push_back(child);
+                }
+            }
+        };
+
+        if (auto* rotatingRoot = GetTransform()->FindChildByNameRecursive("RotatingParts"))
+        {
+            pushPartsRecursive(rotatingRoot->GetTransform(), m_rotatingPartsForDeath, 0.0f);
+        }
+        if (auto* floatingRoot = GetTransform()->FindChildByNameRecursive("FloatingParts"))
+        {
+            pushPartsRecursive(floatingRoot->GetTransform(), m_remainingPartsForDeath, 0.0f);
+        }
+        if (auto* nestRoot = GetTransform()->FindChildByNameRecursive("NestParts"))
+        {
+            pushPartsRecursive(nestRoot->GetTransform(), m_remainingPartsForDeath,
+                static_cast<float>(m_remainingPartsForDeath.size()) * m_deathPartDelayStep);
+        }
+    }
+
+    void BossScript::UpdateDeathPartDrops(std::vector<DeathPartRuntime>& parts, float deltaTime)
+    {
+        for (auto& p : parts)
+        {
+            if (!p.transform) continue;
+            if (m_deathPhaseElapsed < p.startDelay) continue;
+
+            p.started = true;
+            engine::Vector3 pos = p.transform->GetLocalPosition();
+
+            // 부들부들 떨림
+            const float shakeX = std::sin((m_deathPhaseElapsed + p.startDelay) * m_deathShakeSpeed) * m_deathShakeAmount;
+            const float shakeZ = std::cos((m_deathPhaseElapsed + p.startDelay) * (m_deathShakeSpeed * 1.1f)) * m_deathShakeAmount;
+            pos.x = p.baseLocalPos.x + shakeX;
+            pos.z = p.baseLocalPos.z + shakeZ;
+
+            // Y축 아래로 드롭
+            pos.y -= (m_deathPartDropSpeed * deltaTime);
+            p.transform->SetLocalPosition(pos);
+        }
+    }
+
+    void BossScript::SpawnPartDropDustIfNeeded()
+    {
+        if (m_deathPartDustSpawned || m_deathPartDropDustParticlePrefab.empty())
+            return;
+
+        auto effect = engine::Prefab::Instantiate(m_deathPartDropDustParticlePrefab);
+        if (!effect || !effect->GetTransform())
+            return;
+
+        engine::Vector3 dustPos = GetTransform()->GetWorldPosition();
+        dustPos.y = m_deathPartDustGroundY;
+        dustPos.z += m_deathPartDustOffsetZ;
+        effect->GetTransform()->SetLocalPosition(ToLocalPosition(effect->GetTransform(), dustPos));
+        m_deathPartDustSpawned = true;
+    }
+
+    void BossScript::StopAndHideBossRenderers()
+    {
+        if (auto* renderer = GetGameObject()->GetComponent<engine::StaticMeshRenderer>())
+        {
+            renderer->SetActive(false);
+        }
+    }
+
+    void BossScript::BurstBossCore()
+    {
+        StopAndHideBossRenderers();
+
+        if (!m_deathCoreBurstParticlePrefab.empty())
+        {
+            auto effect = engine::Prefab::Instantiate(m_deathCoreBurstParticlePrefab);
+            if (effect && effect->GetTransform())
+            {
+                engine::Vector3 basePos = GetTransform()->GetWorldPosition();
+                basePos.y += m_deathCoreBurstOffsetY;
+                effect->GetTransform()->SetLocalPosition(ToLocalPosition(effect->GetTransform(), basePos));
+            }
+
+            engine::Vector3 center = GetTransform()->GetWorldPosition();
+            center.y += m_deathCoreBurstOffsetY;
+            for (int i = 0; i < m_deathCoreExtraBurstCount; ++i)
+            {
+                auto extra = engine::Prefab::Instantiate(m_deathCoreBurstParticlePrefab);
+                if (!extra || !extra->GetTransform())
+                    continue;
+
+                const float angle = engine::Random::Float(0.0f, DirectX::XM_2PI);
+                const float radius = engine::Random::Float(0.2f, std::max(0.21f, m_deathCoreExtraBurstRadius));
+                const engine::Vector3 offset(
+                    std::cos(angle) * radius,
+                    engine::Random::Float(0.2f, 1.8f),
+                    std::sin(angle) * radius);
+                const engine::Vector3 spawnPos = center + offset;
+                extra->GetTransform()->SetLocalPosition(ToLocalPosition(extra->GetTransform(), spawnPos));
+            }
+        }
+    }
+
+    void BossScript::BurstMapCrystal(RegisteredMapCrystal& crystal)
+    {
+        engine::GameObject* go = crystal.object.Get();
+        if (!go || crystal.burst)
+            return;
+
+        crystal.burst = true;
+        if (auto* smr = go->GetComponent<engine::StaticMeshRenderer>())
+            smr->SetActive(false);
+
+        if (!m_deathMapCrystalBurstParticlePrefab.empty())
+        {
+            auto effect = engine::Prefab::Instantiate(m_deathMapCrystalBurstParticlePrefab);
+            if (effect && effect->GetTransform() && go->GetTransform())
+            {
+                effect->GetTransform()->SetWorldMatrix(go->GetTransform()->GetWorld());
+            }
+        }
+    }
+
+    void BossScript::PrepareRegisteredMapCrystalSort()
+    {
+        for (auto& item : m_registeredMapCrystals)
+        {
+            if (item.object && item.object->GetTransform())
+                item.zSort = item.object->GetTransform()->GetWorldPosition().z;
+        }
+        std::sort(m_registeredMapCrystals.begin(), m_registeredMapCrystals.end(),
+            [](const RegisteredMapCrystal& a, const RegisteredMapCrystal& b)
+            {
+                return a.zSort > b.zSort;
+            });
+    }
+
+    void BossScript::UpdateDeathSequence(float deltaTime)
+    {
+        if (!m_cameraTransform)
+        {
+            m_deathSequenceActive = false;
+            m_deathPhase = DeathPhase::Finished;
+            return;
+        }
+
+        m_deathPhaseElapsed += deltaTime;
+
+        switch (m_deathPhase)
+        {
+        case DeathPhase::CameraMoveToBoss:
+        {
+            const float t = EaseInOutSine(m_deathPhaseElapsed / std::max(0.01f, m_deathCamMoveDuration));
+            const engine::Vector3 pos = m_deathCamStartPos + ((m_deathCamBossPos - m_deathCamStartPos) * t);
+            m_cameraTransform->SetLocalPosition(ToLocalPosition(m_cameraTransform, pos));
+            UpdateDeathCameraLookAtBoss();
+
+            if (m_deathPhaseElapsed >= m_deathCamMoveDuration)
+            {
+                m_deathPhase = DeathPhase::CoreBurst;
+                m_deathPhaseElapsed = 0.0f;
+            }
+            break;
+        }
+        case DeathPhase::CoreBurst:
+            BurstBossCore();
+            SpawnPartDropDustIfNeeded();
+            m_deathPhase = DeathPhase::RotatingPartsDrop;
+            m_deathPhaseElapsed = 0.0f;
+            break;
+        case DeathPhase::RotatingPartsDrop:
+            UpdateDeathPartDrops(m_rotatingPartsForDeath, deltaTime);
+            if (m_deathPhaseElapsed >= m_deathRotatingDropDuration)
+            {
+                m_deathPhase = DeathPhase::RemainingPartsDrop;
+                m_deathPhaseElapsed = 0.0f;
+            }
+            break;
+        case DeathPhase::RemainingPartsDrop:
+            UpdateDeathPartDrops(m_remainingPartsForDeath, deltaTime);
+            if (m_deathPhaseElapsed >= m_deathRemainingDropDuration)
+            {
+                m_deathPhase = DeathPhase::CameraRetreatAndMapCrystalBurst;
+                m_deathPhaseElapsed = 0.0f;
+            }
+            break;
+        case DeathPhase::CameraRetreatAndMapCrystalBurst:
+        {
+            const float t = EaseInOutSine(m_deathPhaseElapsed / std::max(0.01f, m_deathCamRetreatDuration));
+            const engine::Vector3 pos = m_deathCamBossPos + ((m_deathCamEndPos - m_deathCamBossPos) * t);
+            m_cameraTransform->SetLocalPosition(ToLocalPosition(m_cameraTransform, pos));
+            UpdateDeathCameraLookAtBoss();
+
+            const int total = static_cast<int>(m_registeredMapCrystals.size());
+            const int burstCount = static_cast<int>(std::floor(t * static_cast<float>(total)));
+            for (int i = 0; i < burstCount; ++i)
+                BurstMapCrystal(m_registeredMapCrystals[static_cast<size_t>(i)]);
+
+            if (m_deathPhaseElapsed >= m_deathCamRetreatDuration)
+            {
+                for (auto& c : m_registeredMapCrystals)
+                    BurstMapCrystal(c);
+                m_deathPhase = DeathPhase::EndHold;
+                m_deathPhaseElapsed = 0.0f;
+            }
+            break;
+        }
+        case DeathPhase::EndHold:
+            if (m_deathPhaseElapsed >= m_deathEndHoldDuration)
+            {
+                m_deathPhase = DeathPhase::Finished;
+                m_deathPhaseElapsed = 0.0f;
+                m_deathSequenceActive = false;
+                GameScene::Change(SceneID::Lobby);
+                return;
+            }
+            break;
+        case DeathPhase::Finished:
+        case DeathPhase::None:
+        default:
+            break;
+        }
+    }
+
     float BossScript::GetBulletFireInterval() const
     {
         if (m_bulletFireUseFixedInterval)
@@ -654,6 +1084,31 @@ namespace game
 
     void BossScript::OnGui()
     {
+        ImGui::SeparatorText("=== 보스 클리어 연출 설정 ===");
+        ImGui::Text("현재 페이즈: %d, 진행중: %s", static_cast<int>(m_deathPhase), m_deathSequenceActive ? "true" : "false");
+        ImGui::DragFloat("카메라 접근 시간", &m_deathCamMoveDuration, 0.05f, 0.1f, 10.0f);
+        ImGui::DragFloat("회전 파츠 낙하 시간", &m_deathRotatingDropDuration, 0.05f, 0.1f, 10.0f);
+        ImGui::DragFloat("주변 파츠 낙하 시간", &m_deathRemainingDropDuration, 0.05f, 0.1f, 10.0f);
+        ImGui::DragFloat("카메라 후진 시간", &m_deathCamRetreatDuration, 0.05f, 0.1f, 10.0f);
+        ImGui::DragFloat("엔딩 대기 시간", &m_deathEndHoldDuration, 0.05f, 0.1f, 10.0f);
+        ImGui::DragFloat("파츠 낙하 속도", &m_deathPartDropSpeed, 0.1f, 0.1f, 40.0f);
+        ImGui::DragFloat("파츠 시차(초)", &m_deathPartDelayStep, 0.005f, 0.0f, 1.0f);
+        ImGui::DragFloat("파츠 떨림 강도", &m_deathShakeAmount, 0.001f, 0.0f, 1.0f);
+        ImGui::DragFloat("파츠 떨림 속도", &m_deathShakeSpeed, 0.1f, 0.1f, 80.0f);
+        ImGui::DragFloat("카메라-보스 거리", &m_deathCamBossDistance, 0.1f, 1.0f, 50.0f);
+        ImGui::DragFloat("카메라-보스 높이", &m_deathCamBossHeight, 0.1f, 1.0f, 50.0f);
+        ImGui::DragFloat("카메라 후진 거리", &m_deathCamRetreatDistance, 0.1f, 1.0f, 80.0f);
+        ImGui::DragFloat3("카메라 바라보기 오프셋", &m_deathCamLookAtOffset.x, 0.05f, -20.0f, 20.0f);
+        ImGui::DragInt("코어 추가 폭발 개수", &m_deathCoreExtraBurstCount, 1, 0, 30);
+        ImGui::DragFloat("코어 추가 폭발 반경", &m_deathCoreExtraBurstRadius, 0.05f, 0.1f, 8.0f);
+        ImGui::DragFloat("코어 파괴 파티클 Y 오프셋", &m_deathCoreBurstOffsetY, 0.05f, -10.0f, 10.0f);
+        ImGui::DragFloat("파츠 먼지 이펙트 Y", &m_deathPartDustGroundY, 0.05f, -10.0f, 10.0f);
+        ImGui::DragFloat("파츠 먼지 이펙트 Z 오프셋", &m_deathPartDustOffsetZ, 0.05f, -20.0f, 20.0f);
+        ImGui::InputText("코어 파괴 파티클", &m_deathCoreBurstParticlePrefab);
+        ImGui::InputText("맵 수정 파괴 파티클", &m_deathMapCrystalBurstParticlePrefab);
+        ImGui::InputText("파츠 낙하 먼지 파티클", &m_deathPartDropDustParticlePrefab);
+        ImGui::Separator();
+
         // ═════════════════════════════════════════════
         // 보스 기본 설정
         // ═════════════════════════════════════════════
@@ -1113,6 +1568,28 @@ namespace game
         j["IntroCameraBossDistance"] = m_introCameraBossDistance;
         j["IntroCameraBossHeight"] = m_introCameraBossHeight;
 
+        j["DeathCamMoveDuration"] = m_deathCamMoveDuration;
+        j["DeathCamRetreatDuration"] = m_deathCamRetreatDuration;
+        j["DeathRotatingDropDuration"] = m_deathRotatingDropDuration;
+        j["DeathRemainingDropDuration"] = m_deathRemainingDropDuration;
+        j["DeathEndHoldDuration"] = m_deathEndHoldDuration;
+        j["DeathPartDropSpeed"] = m_deathPartDropSpeed;
+        j["DeathPartDelayStep"] = m_deathPartDelayStep;
+        j["DeathShakeAmount"] = m_deathShakeAmount;
+        j["DeathShakeSpeed"] = m_deathShakeSpeed;
+        j["DeathCamBossDistance"] = m_deathCamBossDistance;
+        j["DeathCamBossHeight"] = m_deathCamBossHeight;
+        j["DeathCamRetreatDistance"] = m_deathCamRetreatDistance;
+        j["DeathCamLookAtOffset"] = { m_deathCamLookAtOffset.x, m_deathCamLookAtOffset.y, m_deathCamLookAtOffset.z };
+        j["DeathCoreExtraBurstCount"] = m_deathCoreExtraBurstCount;
+        j["DeathCoreExtraBurstRadius"] = m_deathCoreExtraBurstRadius;
+        j["DeathCoreBurstOffsetY"] = m_deathCoreBurstOffsetY;
+        j["DeathPartDustGroundY"] = m_deathPartDustGroundY;
+        j["DeathPartDustOffsetZ"] = m_deathPartDustOffsetZ;
+        j["DeathCoreBurstParticlePrefab"] = m_deathCoreBurstParticlePrefab;
+        j["DeathMapCrystalBurstParticlePrefab"] = m_deathMapCrystalBurstParticlePrefab;
+        j["DeathPartDropDustParticlePrefab"] = m_deathPartDropDustParticlePrefab;
+
         // ─────────────────────────────────────────────
         // BulletFire 설정 저장
         // ─────────────────────────────────────────────
@@ -1234,6 +1711,52 @@ namespace game
             m_introCameraBossDistance = j["IntroCameraBossDistance"].get<float>();
         if (j.contains("IntroCameraBossHeight"))
             m_introCameraBossHeight = j["IntroCameraBossHeight"].get<float>();
+        if (j.contains("DeathCamMoveDuration"))
+            m_deathCamMoveDuration = std::clamp(j["DeathCamMoveDuration"].get<float>(), 0.1f, 10.0f);
+        if (j.contains("DeathCamRetreatDuration"))
+            m_deathCamRetreatDuration = std::clamp(j["DeathCamRetreatDuration"].get<float>(), 0.1f, 10.0f);
+        if (j.contains("DeathRotatingDropDuration"))
+            m_deathRotatingDropDuration = std::clamp(j["DeathRotatingDropDuration"].get<float>(), 0.1f, 10.0f);
+        if (j.contains("DeathRemainingDropDuration"))
+            m_deathRemainingDropDuration = std::clamp(j["DeathRemainingDropDuration"].get<float>(), 0.1f, 10.0f);
+        if (j.contains("DeathEndHoldDuration"))
+            m_deathEndHoldDuration = std::clamp(j["DeathEndHoldDuration"].get<float>(), 0.1f, 10.0f);
+        if (j.contains("DeathPartDropSpeed"))
+            m_deathPartDropSpeed = std::clamp(j["DeathPartDropSpeed"].get<float>(), 0.1f, 40.0f);
+        if (j.contains("DeathPartDelayStep"))
+            m_deathPartDelayStep = std::clamp(j["DeathPartDelayStep"].get<float>(), 0.0f, 1.0f);
+        if (j.contains("DeathShakeAmount"))
+            m_deathShakeAmount = std::clamp(j["DeathShakeAmount"].get<float>(), 0.0f, 1.0f);
+        if (j.contains("DeathShakeSpeed"))
+            m_deathShakeSpeed = std::clamp(j["DeathShakeSpeed"].get<float>(), 0.1f, 80.0f);
+        if (j.contains("DeathCamBossDistance"))
+            m_deathCamBossDistance = std::clamp(j["DeathCamBossDistance"].get<float>(), 1.0f, 50.0f);
+        if (j.contains("DeathCamBossHeight"))
+            m_deathCamBossHeight = std::clamp(j["DeathCamBossHeight"].get<float>(), 1.0f, 50.0f);
+        if (j.contains("DeathCamRetreatDistance"))
+            m_deathCamRetreatDistance = std::clamp(j["DeathCamRetreatDistance"].get<float>(), 1.0f, 80.0f);
+        if (j.contains("DeathCamLookAtOffset") && j["DeathCamLookAtOffset"].is_array() && j["DeathCamLookAtOffset"].size() >= 3)
+        {
+            m_deathCamLookAtOffset.x = j["DeathCamLookAtOffset"][0].get<float>();
+            m_deathCamLookAtOffset.y = j["DeathCamLookAtOffset"][1].get<float>();
+            m_deathCamLookAtOffset.z = j["DeathCamLookAtOffset"][2].get<float>();
+        }
+        if (j.contains("DeathCoreExtraBurstCount"))
+            m_deathCoreExtraBurstCount = std::clamp(j["DeathCoreExtraBurstCount"].get<int>(), 0, 30);
+        if (j.contains("DeathCoreExtraBurstRadius"))
+            m_deathCoreExtraBurstRadius = std::clamp(j["DeathCoreExtraBurstRadius"].get<float>(), 0.1f, 8.0f);
+        if (j.contains("DeathCoreBurstOffsetY"))
+            m_deathCoreBurstOffsetY = std::clamp(j["DeathCoreBurstOffsetY"].get<float>(), -10.0f, 10.0f);
+        if (j.contains("DeathPartDustGroundY"))
+            m_deathPartDustGroundY = std::clamp(j["DeathPartDustGroundY"].get<float>(), -10.0f, 10.0f);
+        if (j.contains("DeathPartDustOffsetZ"))
+            m_deathPartDustOffsetZ = std::clamp(j["DeathPartDustOffsetZ"].get<float>(), -20.0f, 20.0f);
+        if (j.contains("DeathCoreBurstParticlePrefab"))
+            m_deathCoreBurstParticlePrefab = j["DeathCoreBurstParticlePrefab"].get<std::string>();
+        if (j.contains("DeathMapCrystalBurstParticlePrefab"))
+            m_deathMapCrystalBurstParticlePrefab = j["DeathMapCrystalBurstParticlePrefab"].get<std::string>();
+        if (j.contains("DeathPartDropDustParticlePrefab"))
+            m_deathPartDropDustParticlePrefab = j["DeathPartDropDustParticlePrefab"].get<std::string>();
 
         // ─────────────────────────────────────────────
         // BulletFire 설정 로드 (클램핑 적용)

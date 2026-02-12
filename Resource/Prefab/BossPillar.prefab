@@ -11,7 +11,7 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
+                        "x": -1.1920928955078125e-07,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -53,7 +53,7 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 2.809999942779541,
                     "OverrideMaterial": false,
-                    "CastShadow": false,
+                    "CastShadow": true,
                     "CullMode": 1,
                     "SubsurfaceStrength": 0.0,
                     "SubsurfaceColor": [
@@ -193,6 +193,116 @@
                     "MaterialMetalness": 1.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 16.0,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 0,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 1.4131405353546143,
+                        "y": 0.19200000166893005,
+                        "z": -1.1959564685821533
+                    },
+                    "Rotation": {
+                        "x": -0.27347955107688904,
+                        "y": -0.3843495845794678,
+                        "z": -0.12033296376466751,
+                        "w": 0.873501181602478
+                    },
+                    "Scale": {
+                        "x": 0.49999240040779114,
+                        "y": 0.49999967217445374,
+                        "z": 0.4999941289424896
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.92277991771698,
+                        "y": 0.515500009059906,
+                        "z": 0.16389146447181702
+                    },
+                    "Intensity": 11.0,
+                    "Range": 5.900000095367432,
+                    "Angle": 57.97999954223633,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": true
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 0,
+            "Name": "Monster_RoundType_FloorLight",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 2.0,
+                        "y": 2.0,
+                        "z": 2.0
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/player/Floor_light.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 0.8470588326454163,
+                        "y": 0.1725490242242813,
+                        "z": 0.08627451211214066,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 0.5764706134796143,
+                        "y": 0.09019608050584793,
+                        "z": 0.09019608050584793
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
