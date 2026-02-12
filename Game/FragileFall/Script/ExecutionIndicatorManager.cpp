@@ -638,6 +638,14 @@ namespace game
             return nullptr;
         }
 
+        // RaycastAll 반환 순서는 물리 엔진 상태에 따라 변동될 수 있으므로
+        // 거리 기준으로 정렬해 가장 가까운 처형 가능 대상을 안정적으로 우선 선택한다.
+        std::sort(allHits.begin(), allHits.end(),
+            [](const engine::RaycastHit& a, const engine::RaycastHit& b)
+            {
+                return a.distance < b.distance;
+            });
+
         // Picking 레이어(7)인 콜라이더만 필터링
         for (const auto& hit : allHits)
         {
