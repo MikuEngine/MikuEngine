@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -113,7 +113,7 @@ namespace game
         float m_curvedAngularSpeed = 2.0f;   // 회전 속도 (rad/s)
         float m_curvedRadiusGrowth = 3.0f;   // 반지름 증가율 (m/s)
 
-        engine::Vector3 m_fireOffset{ 0.0f, 1.5f, 0.0f };  // 발사 위치 오프셋
+        engine::Vector3 m_fireOffset{ -0.2f, 1.5f, 1.5f };  // 발사 위치 오프셋
 
         // ─────────────────────────────────────────────
         // 통합된 총알 파라미터

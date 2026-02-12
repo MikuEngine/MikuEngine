@@ -1016,7 +1016,10 @@ namespace game
             {
                 // 플레이어를 향해 발사
                 engine::Vector3 direction = CalculateDirectionToPlayer();
-                engine::Vector3 firePosition = GetTransform()->GetWorldPosition() + m_fireOffset;
+                engine::Vector3 firePosition = GetTransform()->GetWorldPosition()
+                    + (GetTransform()->GetRight() * m_fireOffset.x)     // 오른쪽 보정
+                    + (GetTransform()->GetUp() * m_fireOffset.y)        // 높이 보정
+                    + (GetTransform()->GetForward() * m_fireOffset.z);  // 전방 보정
 
                 switch (m_monsterTier)
                 {
