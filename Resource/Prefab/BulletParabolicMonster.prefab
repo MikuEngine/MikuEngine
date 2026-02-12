@@ -22,9 +22,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.20000000298023224,
+                        "y": 0.20000000298023224,
+                        "z": 0.20000000298023224
                     }
                 },
                 {
@@ -34,7 +34,7 @@
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp_single/green/crystal_sharp_single_green.fbx",
+                    "MeshFilePath": "Resource/Model/crystal/green/crystal_sphere_green.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
@@ -42,20 +42,20 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.0,
-                        "y": 0.3667953610420227,
-                        "z": 0.0651450976729393,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
                         "x": 0.0,
-                        "y": 0.4054054021835327,
-                        "z": 0.15652714669704437
+                        "y": 1.0,
+                        "z": 0.38610029220581055
                     },
                     "MaterialRoughness": 0.0,
                     "MaterialMetalness": 0.6060000061988831,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
+                    "MaterialEmissiveIntensity": 21.329999923706055,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,

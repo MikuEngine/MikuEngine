@@ -193,8 +193,10 @@ namespace game
         float m_invincibleTime = 0.5f;
         float m_invincibleRemainTime = 0.0f;
 
-        // 대시 관련
-        float m_dashInvincibleTime = 0.1f;
+        // 대쉬/처형 무적 (독립 타이머)
+        float m_dashInvincibleRemainTime = 0.0f;
+        float m_executionInvincibleTime = 0.5f;
+        float m_executionInvincibleRemainTime = 0.0f;
 
         // ─────────────────────────────────────────────
         // 총알 발사 위치 (소켓 사용 시 오프셋 무시)
@@ -297,7 +299,7 @@ namespace game
             float fragileMax = 100.0f;
             float fragileRegenOnClear = 20.0f;
             float fragileGainRate = 1.0f;
-            float dashInvincibleTime = 0.1f;
+            float dashInvincibleTime = 0.3f;
 
             // Vitality / Movement
             float maxHp = 100.0f;
@@ -335,7 +337,7 @@ namespace game
             float fragileMax = 100.0f;
             float fragileRegenOnClear = 20.0f;
             float fragileGainRate = 1.0f;
-            float dashInvincibleTime = 0.1f;
+            float dashInvincibleTime = 0.3f;
 
             // Vitality / Movement
             float maxHp = 100.0f;
@@ -587,6 +589,8 @@ namespace game
 
         // 처형 시작 (ExecutionIndicatorManager에서 호출)
         void StartExecution(engine::GameObject* targetMonster);
+        void StartExecutionInvincibility();
+        void EndExecutionInvincibility();
         
         // 처형 종료 데미지 생성 (OnStateExited에서 호출)
         void SpawnExecutionExitDamage();

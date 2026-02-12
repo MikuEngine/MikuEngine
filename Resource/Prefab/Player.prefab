@@ -58,6 +58,7 @@
                     "DashDecayDuration": 0.5,
                     "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224,
+                    "DashInvincibleTime": 0.30000001192092896,
                     "MaxDashCount": 3,
                     "DashRechargeTime": 1.0,
                     "PostDashQuickFireDuration": 0.30000001192092896,
@@ -65,8 +66,10 @@
                     "FragileGaugeMax": 300.0,
                     "FragileGaugeRisePerSecond": 1.0,
                     "PlayerMaxHP": 5.0,
+                    "BasicHpDoNotTouch": 5.0,
                     "InvincibleTime": 0.5,
-                    "IsInvincible": true,
+                    "ExecutionInvincibleTime": 0.5,
+                    "IsInvincible": false,
                     "EED_Enable": false,
                     "EED_DamageScale": 5.0,
                     "EED_Damage": 15.0,
@@ -120,12 +123,12 @@
                         "y": 50.0
                     },
                     "CursorDefaultOffset": {
-                        "x": 10.0,
-                        "y": 10.0
+                        "x": 17.0,
+                        "y": 24.0
                     },
                     "CursorClickOffset": {
-                        "x": 10.0,
-                        "y": 10.0
+                        "x": 17.0,
+                        "y": 24.0
                     },
                     "UseDefaultCursor": true,
                     "UseClickCursor": true,

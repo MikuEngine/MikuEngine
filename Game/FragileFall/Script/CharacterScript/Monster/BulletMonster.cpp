@@ -22,6 +22,14 @@ namespace game
 {
 	namespace
 	{
+		float ComputeVisualScale(const BulletParams& params)
+		{
+			// 파라볼릭 탄환은 구형 메쉬 교체에 맞춰 시각 스케일만 절반 적용한다.
+			// 콜라이더는 prefab 설정(syncWithTransform=false)으로 기존 크기를 유지한다.
+			const float visualScaleMultiplier = (params.type == BulletType::Parabolic) ? 0.5f : 1.0f;
+			return std::max(0.001f, params.scale * visualScaleMultiplier);
+		}
+
 		// BulletMonster 메쉬는 +Y 축이 정면이므로 X축 +90도 보정이 필요하다.
 		// 메쉬의 앞(+Y)이 실제 진행 방향 벡터를 바라보도록 회전값을 만든다.
 		engine::Quaternion BuildBulletRotationFromDirection(const engine::Vector3& position, const engine::Vector3& direction)
@@ -118,7 +126,8 @@ namespace game
 		// ─────────────────────────────────────────────
 		// 스케일 즉시 적용 (Start() 호출 전에 Prefab Scale 덮어쓰기)
 		// ─────────────────────────────────────────────
-		GetTransform()->SetLocalScale(engine::Vector3(m_params.scale, m_params.scale, m_params.scale));
+		const float visualScale = ComputeVisualScale(m_params);
+		GetTransform()->SetLocalScale(engine::Vector3(visualScale, visualScale, visualScale));
 	}
 
 	//void BulletMonster::SetupField(float radius, const BulletParams& params)
@@ -158,9 +167,10 @@ namespace game
 
 		// ─────────────────────────────────────────────
 		// 총알 스케일 적용 (균등 스케일)
-		// - BulletMonster Prefab들도 syncWithTransform=true이므로 Collider 자동 스케일
+		// - 파라볼릭은 시각 스케일만 0.5x 적용
 		// ─────────────────────────────────────────────
-		GetTransform()->SetLocalScale(engine::Vector3(m_params.scale, m_params.scale, m_params.scale));
+		const float visualScale = ComputeVisualScale(m_params);
+		GetTransform()->SetLocalScale(engine::Vector3(visualScale, visualScale, visualScale));
 
 		auto* rb = GetGameObject()->GetComponent<engine::Rigidbody>();
 		if (!rb) return;
