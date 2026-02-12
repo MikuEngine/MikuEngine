@@ -116,6 +116,7 @@ namespace game
 
         void ClearStageState();
         bool GetMapEnvPrefabNameForStage(int stageIndex, std::string& outName) const;
-        void SpawnStageClearExecutionTarget();
+        bool SpawnStageClearExecutionTarget();
+        void GrantPendingStageClearReward();
     };
 }

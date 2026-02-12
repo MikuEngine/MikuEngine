@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -233,10 +233,6 @@ namespace game
         if (!hasMonsters && !m_cleared)
         {
             m_cleared = true;
-            m_runRuby += m_stageClearRewardRuby;
-            m_runSapphire += m_stageClearRewardSapphire;
-            m_runEmerald += m_stageClearRewardEmerald;
-            m_stageClearRewardRuby = m_stageClearRewardSapphire = m_stageClearRewardEmerald = 0;
 
             // 스테이지 클리어 시 플레이어의 현재 프레자일 게이지를 저장
             engine::Scene* scene = engine::SceneManager::Get().GetScene();
@@ -254,27 +250,51 @@ namespace game
 
                 if (scene->GetName() != "10_PROTO_Tutorial")
                 {
-                    m_waitingForStageClearExecution = true;
-                    SpawnStageClearExecutionTarget();
+                    m_waitingForStageClearExecution = SpawnStageClearExecutionTarget();
+                    if (!m_waitingForStageClearExecution)
+                    {
+                        // 처형 타겟 생성 실패 시 보상/문 활성화를 즉시 처리한다.
+                        GrantPendingStageClearReward();
+                        SetActiveDoor("StageDoor_Next", true);
+                        SetActiveDoor("StageDoor_Exit", false);
+                    }
                 }
+                else
+                {
+                    // 튜토리얼 씬은 처형 오브젝트를 사용하지 않으므로 즉시 지급.
+                    GrantPendingStageClearReward();
+                }
+            }
+            else
+            {
+                GrantPendingStageClearReward();
             }
         }
     }
 
-    void StageManager::SpawnStageClearExecutionTarget()
+    bool StageManager::SpawnStageClearExecutionTarget()
     {
         if (m_stageClearExecutionTarget)
         {
-            return;
+            return true;
         }
 
         engine::GameObject* target = engine::Prefab::Instantiate("StageClearExecutionTarget");
         if (!target)
         {
-            return;
+            return false;
         }
 
         m_stageClearExecutionTarget = engine::Ptr<engine::GameObject>(target);
+        return true;
+    }
+
+    void StageManager::GrantPendingStageClearReward()
+    {
+        m_runRuby += m_stageClearRewardRuby;
+        m_runSapphire += m_stageClearRewardSapphire;
+        m_runEmerald += m_stageClearRewardEmerald;
+        m_stageClearRewardRuby = m_stageClearRewardSapphire = m_stageClearRewardEmerald = 0;
     }
 
     void StageManager::OnStageClearExecutionTargetExecuted()
@@ -287,6 +307,7 @@ namespace game
         m_waitingForStageClearExecution = false;
         m_stageClearExecutionTarget = engine::Ptr<engine::GameObject>();
 
+        GrantPendingStageClearReward();
         SetActiveDoor("StageDoor_Next", true);
         SetActiveDoor("StageDoor_Exit", false);
     }
