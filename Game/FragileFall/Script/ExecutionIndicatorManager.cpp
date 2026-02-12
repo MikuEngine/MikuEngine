@@ -1076,10 +1076,12 @@ namespace game
         m_idleWaitFrames = 0;
 
         // ─────────────────────────────────────────────
-        // 몬스터 Death 타이머 시작
+        // 처형 대상은 텔레포트 직후 즉시 처형 처리한다.
+        // (기존 딜레이로 인해 1프레임 튀어 보이는 현상 방지)
         // ─────────────────────────────────────────────
-        m_isWaitingForDeath = true;
+        m_isWaitingForDeath = false;
         m_deathTimer = 0.0f;
+        TriggerMonsterDeath();
     }
 
 
