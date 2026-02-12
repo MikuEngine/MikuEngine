@@ -11,10 +11,11 @@ namespace game
 
     enum class UIMessageChannel
     {
-        Kill = 0,
         Tutorial = 1,
-        System = 2,
-        TutorialLobby = 3,
+        TutorialLobby = 2,
+        System = 3,
+
+        Kill = 0,
     };
 
     class UIMessageQueue :
