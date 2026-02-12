@@ -2,6 +2,7 @@
 #include "ExecutionIndicatorManager.h"
 
 #include "Script/CharacterScript/Monster/MonsterScript.h"
+#include "Script/CharacterScript/Monster/MonsterPointedType.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Script/Boss/BossPattern/Components/BossPillar.h"
 #include "Script/Boss/BossPattern/Components/BossBigProjectile.h"
@@ -871,7 +872,6 @@ namespace game
 
         // 우클릭 처형 요청 시점부터 즉시 처형 무적 시작
         m_player->StartExecutionInvincibility();
-        PushRandomKillMessage();
 
         // 처형 요청이 시작되는 즉시 Execute 커서를 고정한다.
         if (m_aimController)
@@ -1054,7 +1054,12 @@ namespace game
 
         if (auto comp = m_executingGameObject->GetComponent<MonsterScript>())
         {
+            const bool isPointedType = (m_executingGameObject->GetComponent<MonsterPointedType>() != nullptr);
             comp->TriggerDeath();
+            if (isPointedType)
+            {
+                PushRandomKillMessage();
+            }
         }
         else if (auto comp = m_executingGameObject->GetComponent<BossPillar>())
         {

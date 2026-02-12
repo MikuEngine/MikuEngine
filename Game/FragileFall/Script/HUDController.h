@@ -29,14 +29,18 @@ namespace game
         void OnGui() override;
         void Save(engine::json& j) const override;
         void Load(const engine::json& j) override;
+        static void UpdateHpSnapshot(float baseMaxHp, float finalMaxHp, float currentHp);
+        static void ClearHpSnapshot();
 
     private:
         void CacheHearts();
         void OnDamagedHalf();
+        void TryBindPlayer();
+        void RefreshHpSnapshotFromPlayer();
+        void ValidateHeartsOnStageEntry();
 
-        int CalcHalfHPFromPlayer() const;
-        int CalcVisibleHeartCountFromPlayer() const;
-        int CalcHpPerHeart() const;
+        int CalcFilledHalfSlotsFromPlayer(int visibleHalfSlots) const;
+        int CalcVisibleHalfSlotsFromPlayer() const;
         float CalcHpPerHalfHeart() const;
 
         void ApplyHearts();
@@ -60,10 +64,18 @@ namespace game
         static constexpr int kBaseHeartCount = 5;
         engine::Ptr<engine::UIImage> m_hearts[kHeartCount];
         engine::Ptr<engine::GameObject> m_heartGO[kHeartCount];
+        engine::Ptr<engine::GameObject> m_heartCaseGO[kHeartCount];
         engine::Ptr<engine::RectTransform> m_heartRT[kHeartCount];
 
-        int m_halfHp = 10;
-        int m_visibleHeartCount = 5;
+        int m_filledHalfSlots = 10;
+        int m_visibleHalfSlots = 10;
+        bool m_forceApplyHearts = true;
+        bool m_damageCallbackBound = false;
         bool m_cached = false;
+
+        static bool s_hasHpSnapshot;
+        static float s_cachedBaseMaxHp;
+        static float s_cachedFinalMaxHp;
+        static float s_cachedCurrentHp;
     };
 }

@@ -9,14 +9,36 @@
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Framework/Object/Component/UI/UIProgressBar.h>
 #include <Framework/Object/Component/RectTransform.h>
+#include <Framework/Object/Component/Transform.h>
+#include <Framework/Object/Component/Canvas.h>
 
 #include "CharacterScript/Player/PlayerControllerScript.h"
 
 namespace game
 {
+    bool HUDController::s_hasHpSnapshot = false;
+    float HUDController::s_cachedBaseMaxHp = 0.0f;
+    float HUDController::s_cachedFinalMaxHp = 0.0f;
+    float HUDController::s_cachedCurrentHp = 0.0f;
+
+    void HUDController::UpdateHpSnapshot(float baseMaxHp, float finalMaxHp, float currentHp)
+    {
+        s_cachedBaseMaxHp = std::max(1.0f, baseMaxHp);
+        s_cachedFinalMaxHp = std::max(1.0f, finalMaxHp);
+        s_cachedCurrentHp = std::max(0.0f, currentHp);
+        s_hasHpSnapshot = true;
+    }
+
+    void HUDController::ClearHpSnapshot()
+    {
+        s_cachedBaseMaxHp = 0.0f;
+        s_cachedFinalMaxHp = 0.0f;
+        s_cachedCurrentHp = 0.0f;
+        s_hasHpSnapshot = false;
+    }
+
     void HUDController::Awake()
     {
-
     }
 
     void HUDController::Start()
@@ -33,31 +55,17 @@ namespace game
         if (auto* go = engine::GameObject::Find("Fragile Gauge Progress"))
             m_fragileGaugeProgress = go->GetComponent<engine::UIProgressBar>();
 
-        auto* go = engine::GameObject::Find("Player");
-        if (!go) return;
-
-        m_playerScript = go->GetComponent<PlayerControllerScript>();
-
-        if (m_playerScript)
-        {
-            m_visibleHeartCount = CalcVisibleHeartCountFromPlayer();
-            m_halfHp = CalcHalfHPFromPlayer();
-            ApplyHearts();
-            m_playerScript->SetOnDamaged([self = engine::Ptr<HUDController>(this)] {
-                if (!self) return;
-
-                if (self->m_hitImage)
-                {
-                    self->m_hitImage->SetEffect(engine::UIEffectType::ScreenHit);
-
-                    self->m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
-                }
-                });
-        }
+        TryBindPlayer();
+        m_visibleHalfSlots = CalcVisibleHalfSlotsFromPlayer();
+        m_filledHalfSlots = CalcFilledHalfSlotsFromPlayer(m_visibleHalfSlots);
+        ApplyHearts();
+        ValidateHeartsOnStageEntry();
     }
 
     void HUDController::Update()
     {
+        TryBindPlayer();
+
         if (m_hitImage)
         {
             auto params = m_hitImage->GetEffectParam(0);
@@ -118,16 +126,30 @@ namespace game
             }
         }
 
-        if (m_playerScript)
+        if (m_playerScript && !m_damageCallbackBound)
         {
-            int newVisibleHearts = CalcVisibleHeartCountFromPlayer();
-            int newHalfHp = CalcHalfHPFromPlayer();
-            if (newVisibleHearts != m_visibleHeartCount || newHalfHp != m_halfHp)
-            {
-                m_visibleHeartCount = newVisibleHearts;
-                m_halfHp = newHalfHp;
-                ApplyHearts();
-            }
+            m_playerScript->SetOnDamaged([self = engine::Ptr<HUDController>(this)] {
+                if (!self) return;
+
+                if (self->m_hitImage)
+                {
+                    self->m_hitImage->SetEffect(engine::UIEffectType::ScreenHit);
+                    self->m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
+                }
+                });
+            m_damageCallbackBound = true;
+        }
+
+        int newVisibleHalfSlots = CalcVisibleHalfSlotsFromPlayer();
+        int newFilledHalfSlots = CalcFilledHalfSlotsFromPlayer(newVisibleHalfSlots);
+        if (m_forceApplyHearts
+            || newVisibleHalfSlots != m_visibleHalfSlots
+            || newFilledHalfSlots != m_filledHalfSlots)
+        {
+            m_visibleHalfSlots = newVisibleHalfSlots;
+            m_filledHalfSlots = newFilledHalfSlots;
+            ApplyHearts();
+            m_forceApplyHearts = false;
         }
     }
 
@@ -159,6 +181,16 @@ namespace game
                 m_heartGO[i] = go;
                 m_hearts[i] = go->GetComponent<engine::UIImage>();
                 m_heartRT[i] = go->GetComponent<engine::RectTransform>();
+                if (i >= kBaseHeartCount)
+                {
+                    if (auto* tr = go->GetTransform())
+                    {
+                        if (auto* parent = tr->GetParent())
+                        {
+                            m_heartCaseGO[i] = parent->GetGameObject();
+                        }
+                    }
+                }
 
                 // 마스크 기본 모드(전체 표시)
                 if (m_hearts[i])
@@ -169,87 +201,149 @@ namespace game
         m_cached = true;
     }
 
+    void HUDController::TryBindPlayer()
+    {
+        PlayerControllerScript* nextPlayer = nullptr;
+        if (auto* go = engine::GameObject::Find("Player"))
+        {
+            nextPlayer = go->GetComponent<PlayerControllerScript>();
+        }
+
+        if (nextPlayer != m_playerScript)
+        {
+            m_playerScript = nextPlayer;
+            m_damageCallbackBound = false;
+            m_forceApplyHearts = true;
+
+            if (m_playerScript)
+            {
+                RefreshHpSnapshotFromPlayer();
+                ValidateHeartsOnStageEntry();
+            }
+        }
+    }
+
+    void HUDController::RefreshHpSnapshotFromPlayer()
+    {
+        if (!m_playerScript)
+            return;
+
+        UpdateHpSnapshot(
+            m_playerScript->GetBaseMaxHp(),
+            m_playerScript->GetMaxHp(),
+            m_playerScript->GetCurrentHp());
+    }
+
+    void HUDController::ValidateHeartsOnStageEntry()
+    {
+        const int expectedVisibleHalfSlots = CalcVisibleHalfSlotsFromPlayer();
+        const int expectedFilledHalfSlots = CalcFilledHalfSlotsFromPlayer(expectedVisibleHalfSlots);
+        if (expectedVisibleHalfSlots != m_visibleHalfSlots
+            || expectedFilledHalfSlots != m_filledHalfSlots)
+        {
+            m_visibleHalfSlots = expectedVisibleHalfSlots;
+            m_filledHalfSlots = expectedFilledHalfSlots;
+            ApplyHearts();
+        }
+    }
+
     void HUDController::OnDamagedHalf()
     {
-        m_halfHp -= 1;
-        if (m_halfHp < 0) m_halfHp = 0;
+        m_filledHalfSlots -= 1;
+        if (m_filledHalfSlots < 0) m_filledHalfSlots = 0;
 
         ApplyHearts();
     }
 
-    int HUDController::CalcHalfHPFromPlayer() const
+    int HUDController::CalcFilledHalfSlotsFromPlayer(int visibleHalfSlots) const
     {
-        if (!m_playerScript) return 0;
-
         const float hpPerHalfHeart = CalcHpPerHalfHeart();
-        const float currentHp = std::max(0.0f, m_playerScript->GetCurrentHp());
-        int half = static_cast<int>(std::floor((currentHp + 0.0001f) / hpPerHalfHeart));
-
-        const int maxHalfHp = m_visibleHeartCount * 2;
-        if (half < 0) half = 0;
-        if (half > maxHalfHp) half = maxHalfHp;
-
-        return half;
+        float currentHp = 0.0f;
+        if (m_playerScript)
+        {
+            currentHp = std::max(0.0f, m_playerScript->GetCurrentHp());
+        }
+        else
+        {
+            // 플레이어 바인딩 전 프레임은 스테이지 보존 HP를 사용해 하트 오표시를 방지한다.
+            currentHp = std::max(0.0f, StageManager::Get().GetRunHP());
+        }
+        int filledHalfSlots = static_cast<int>(std::floor((currentHp / hpPerHalfHeart) + 0.0001f));
+        filledHalfSlots = std::clamp(filledHalfSlots, 0, visibleHalfSlots);
+        return filledHalfSlots;
     }
 
-    int HUDController::CalcVisibleHeartCountFromPlayer() const
+    int HUDController::CalcVisibleHalfSlotsFromPlayer() const
     {
-        if (!m_playerScript) return kBaseHeartCount;
+        const float hpPerHalfHeart = CalcHpPerHalfHeart();
+        float maxHp = static_cast<float>(kBaseHeartCount);
+        if (m_playerScript)
+        {
+            maxHp = m_playerScript->GetMaxHp();
+        }
+        else if (s_hasHpSnapshot)
+        {
+            maxHp = s_cachedFinalMaxHp;
+        }
 
-        const int hpPerHeart = CalcHpPerHeart();
-        const float maxHp = m_playerScript->GetMaxHp();
-        int hearts = static_cast<int>(std::round(maxHp / static_cast<float>(hpPerHeart)));
-        hearts = std::clamp(hearts, 1, kHeartCount);
-        return hearts;
-    }
-
-    int HUDController::CalcHpPerHeart() const
-    {
-        if (!m_playerScript)
-            return 20;
-
-        const float baseMaxHp = std::max(1.0f, m_playerScript->GetBaseMaxHp());
-        return std::max(1, static_cast<int>(std::round(baseMaxHp / static_cast<float>(kBaseHeartCount))));
+        int maxHalfSlots = static_cast<int>(std::floor((maxHp / hpPerHalfHeart) + 0.0001f));
+        maxHalfSlots = std::clamp(maxHalfSlots, 1, kHeartCount * 2);
+        return maxHalfSlots;
     }
 
     float HUDController::CalcHpPerHalfHeart() const
     {
-        const float hpPerHeart = static_cast<float>(CalcHpPerHeart());
-        return std::max(0.5f, hpPerHeart * 0.5f);
+        // CurrentHP 표시는 반하트(0.5 HP) 단위로 고정한다.
+        return 0.5f;
     }
 
     void HUDController::ApplyHearts()
     {
+        const int visibleHeartCount = std::clamp((m_visibleHalfSlots + 1) / 2, 1, kHeartCount);
         for (int i = 0; i < kHeartCount; ++i)
         {
             if (m_heartGO[i])
             {
-                m_heartGO[i]->SetActive(i < m_visibleHeartCount);
+                m_heartGO[i]->SetActive(i < visibleHeartCount);
+            }
+            if (i >= kBaseHeartCount && m_heartCaseGO[i])
+            {
+                m_heartCaseGO[i]->SetActive(i < visibleHeartCount);
             }
 
-            if (i >= m_visibleHeartCount)
+            if (i >= visibleHeartCount)
                 continue;
 
-            const int filled = m_halfHp - i * 2; // 이 하트에 배정된 half(2/1/0)
+            const int filled = m_filledHalfSlots - i * 2; // 이 하트에 배정된 half(2/1/0)
             if (filled >= 2)      SetHeartFull(i);
-            else if (filled == 1) SetHeartHalf(i);
+            else if (filled >= 1) SetHeartHalf(i);
             else                  SetHeartEmpty(i);
         }
     }
 
     engine::Vector4 HUDController::GetHeartFullClip(int i) const
     {
-        if (!m_heartRT[i]) return { 0,0,0,0 };
+        if (!m_hearts[i] || !m_heartRT[i]) return { 0,0,0,0 };
 
-        const auto r = m_heartRT[i]->GetWorldRect();
+        engine::Canvas* canvas = m_hearts[i]->GetCanvasInParent();
+        if (!canvas) return { 0,0,0,0 };
+
+        const engine::Vector2 ref = canvas->GetReferenceResolution();
+        engine::UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+        const auto r = m_heartRT[i]->GetWorldRectResolved(rootRect);
         return { r.x, r.y, r.x + r.w, r.y + r.h };
     }
 
     engine::Vector4 HUDController::GetHeartHalfClip(int i) const
     {
-        if (!m_heartRT[i]) return { 0,0,0,0 };
+        if (!m_hearts[i] || !m_heartRT[i]) return { 0,0,0,0 };
 
-        const auto r = m_heartRT[i]->GetWorldRect();
+        engine::Canvas* canvas = m_hearts[i]->GetCanvasInParent();
+        if (!canvas) return { 0,0,0,0 };
+
+        const engine::Vector2 ref = canvas->GetReferenceResolution();
+        engine::UIRect rootRect{ 0.0f, 0.0f, ref.x, ref.y };
+        const auto r = m_heartRT[i]->GetWorldRectResolved(rootRect);
         return { r.x, r.y, r.x + r.w * 0.5f, r.y + r.h };
     }
 

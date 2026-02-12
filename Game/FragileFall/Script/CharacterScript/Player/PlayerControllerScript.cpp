@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -1994,6 +1994,9 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	}
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("강화 계산의 기준이 되는 절대 기본 HP");
+	ImGui::Text("Player Max HP (Applied, ReadOnly): %.1f", m_PlayerMaxHP);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("강화/스냅 반영이 완료된 최종 최대 체력 (읽기 전용)");
 	ImGui::Text("Player Current HP (ReadOnly): %.1f", m_PlayerCurrentHP);
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("런타임 현재 체력 (읽기 전용)");
