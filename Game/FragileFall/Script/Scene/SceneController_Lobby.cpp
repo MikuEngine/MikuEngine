@@ -92,6 +92,59 @@ namespace game
             t = Clamp(t, 0.f, 1.f);
             return t * t * (3.f - 2.f * t);
         }
+
+        static engine::Vector3 Bezier2(const engine::Vector3& p0,
+            const engine::Vector3& p1,
+            const engine::Vector3& p2,
+            float t)
+        {
+            float u = 1.0f - t;
+            float uu = u * u;
+            float tt = t * t;
+            return p0 * uu + p1 * (2.0f * u * t) + p2 * tt;
+        }
+
+        // p0->p2를 XZ 평면으로 보고, 수직방향(perp)으로 휘게 만드는 컨트롤 포인트 생성
+        static engine::Vector3 MakeBezierControlPointXZ(const engine::Vector3& p0,
+            const engine::Vector3& p2,
+            float curvature01,   // 0~1
+            float turnSign)      // +1 or -1
+        {
+            engine::Vector3 d = { p2.x - p0.x, 0.0f, p2.z - p0.z };
+            float len = sqrtf(d.x * d.x + d.z * d.z);
+            if (len < 1e-6f)
+                return (p0 + p2) * 0.5f;
+
+            d.x /= len; d.z /= len;
+
+            // perp: (-z, x)
+            engine::Vector3 perp = { -d.z, 0.0f, d.x };
+
+            engine::Vector3 mid = (p0 + p2) * 0.5f;
+
+            // 커브 세기: 거리 비례 (0.15~0.35 추천)
+            float offset = curvature01 * len * 0.5f;
+
+            engine::Vector3 p1 = mid + perp * (offset * turnSign);
+            p1.y = p0.y;
+            return p1;
+        }
+
+        static engine::Vector3 Bezier2Derivative(const engine::Vector3& p0,
+            const engine::Vector3& p1,
+            const engine::Vector3& p2,
+            float t)
+        {
+            // B'(t) = 2(1-t)(p1-p0) + 2t(p2-p1)
+            float u = 1.0f - t;
+            return (p1 - p0) * (2.0f * u) + (p2 - p1) * (2.0f * t);
+        }
+
+        static float YawDegFromDirXZ(const engine::Vector3& dir)
+        {
+            // 만약 좌/우가 반대로 돌면 atan2f(-dir.x, dir.z) 또는 atan2f(dir.x, -dir.z)로만 바꾸면 바로 맞습니다.
+            return engine::ToDegree(atan2f(dir.x, dir.z));
+        }
     }
 
     void SceneController_Lobby::Awake()
@@ -208,77 +261,107 @@ namespace game
                 HandleEscape();
         }
 
-        if (m_playerPreview && m_isPlayerMove)
+        if (!(m_playerPreview && m_isPlayerMove)) return;
+
+        auto* tr = m_playerPreview->GetTransform();
+        if (!tr) return;
+        
+        // 회전
+        if (!m_rotDone)
         {
-            m_moveElapsed += engine::Time::UnscaledDeltaTime();
+            m_rotElapsed += engine::Time::UnscaledDeltaTime();
 
-            float t = Clamp(m_moveElapsed / m_moveDuration, 0.f, 1.f);
-
-            constexpr float kRotEnd = 0.5f;   // 회전 완료
-            constexpr float kMoveStart = 0.35f; // 이동 시작
-
-            float tRot = Clamp(t / kRotEnd, 0.f, 1.f);
-            float tMove = Clamp((t - kMoveStart) / (1.f - kMoveStart), 0.f, 1.f);
-
+            float tRot = (m_rotDuration > 0.0f) ? Clamp(m_rotElapsed / m_rotDuration, 0.f, 1.f) : 1.f;
             float sRot = SmoothStep01(tRot);
-            float sMove = SmoothStep01(tMove);
 
-            auto* tr = m_playerPreview->GetTransform();
+            engine::Quaternion r;
+            engine::Quaternion::Slerp(m_moveStartRot, m_moveTargetRot, sRot, r);
 
-            // 1) 회전은 먼저 끝까지
-            engine::Quaternion currentRot;
-            engine::Quaternion::Slerp(m_moveStartRot, m_moveTargetRot, sRot, currentRot);
-            tr->SetLocalRotation(currentRot);
-
-            if (!m_walkStarted && tMove > 0.f)
+            // 끝 프레임엔 "정확히" 목표값 고정
+            if (tRot >= 1.0f)
             {
-                m_walkStarted = true;
+                r = m_moveTargetRot;
+                m_rotDone = true;
 
-                if (auto* anim = m_playerPreview->GetComponent<engine::SkeletalAnimator>())
-                    anim->PlayCrossFade("Walk", 0.3f, true, 0, 1);
-            }
-
-            if (!m_walkStarted && t > 0.3f)
-            {
-                m_walkStarted = true;
-                if (auto* anim = m_playerPreview->GetComponent<engine::SkeletalAnimator>())
+                // 회전 끝나는 순간부터 걷기 시작
+                if (!m_walkStarted)
                 {
-                    // CrossFade 시간을 0.3~0.5초 정도로 주어 부드럽게 연결
-                    anim->PlayCrossFade("Walk", 0.4f, true, 0, 1.7f);
+                    m_walkStarted = true;
+                    if (auto* anim = m_playerPreview->GetComponent<engine::SkeletalAnimator>())
+                        anim->PlayCrossFade("Walk", 0.3f, true, 0, 1);
                 }
             }
 
-            // 4. 위치 이동 적용
-            engine::Vector3 currentPos = LerpVec3(m_moveStartPos, m_moveTargetPos, sMove);
-            tr->SetLocalPosition(currentPos);
+            tr->SetLocalRotation(r);
+            return; // 회전 중에는 이동 로직 아예 실행 안 함
+        }
 
-            // 5. 완료 처리
-            if (t >= 1.0f)
+        // 이동
+        m_moveElapsed += engine::Time::UnscaledDeltaTime();
+
+        float tMove = (m_moveDuration > 0.0f) ? Clamp(m_moveElapsed / m_moveDuration, 0.f, 1.f) : 1.f;
+        float sMove = SmoothStep01(tMove);
+
+        // 위치
+        engine::Vector3 currentPos = Bezier2(m_curveP0, m_curveP1, m_curveP2, sMove);
+        tr->SetLocalPosition(currentPos);
+
+        // 진행방향으로 회전(원하신 "가는 방향대로 돌기")
+        {
+            engine::Vector3 tangent = Bezier2Derivative(m_curveP0, m_curveP1, m_curveP2, sMove);
+            tangent.y = 0.0f;
+
+            const float len2 = tangent.x * tangent.x + tangent.z * tangent.z;
+            if (len2 > 1e-6f)
             {
-                m_isPlayerMove = false;
-                game::StageManager::Get().ResetToStage1();
-                GameScene::Change(SceneID::Play);
+                const float invLen = 1.0f / sqrtf(len2);
+                engine::Vector3 dir = { tangent.x * invLen, 0.0f, tangent.z * invLen };
+
+                float yawDeg = YawDegFromDirXZ(dir);
+                engine::Quaternion lookRot =
+                    engine::Quaternion::CreateFromYawPitchRoll(engine::ToRadian(yawDeg), 0.f, 0.f);
+
+                // 너무 빡세게 고개가 튀면 스무딩(값 낮추면 더 느릿하게 따라감)
+                engine::Quaternion cur = tr->GetLocalRotation();
+                engine::Quaternion smoothed;
+                engine::Quaternion::Slerp(cur, lookRot, 0.2f, smoothed);
+                tr->SetLocalRotation(smoothed);
             }
+        }
+
+        // 완료
+        if (tMove >= 1.0f)
+        {
+            m_isPlayerMove = false;
+            game::StageManager::Get().ResetToStage1();
+            GameScene::Change(SceneID::Play);
         }
     }
 
     void SceneController_Lobby::OnGui()
     {
+        ImGui::DragFloat3("TargetPos", &m_moveTargetPos.x);
+        ImGui::DragFloat("Curve", &m_curve01);
 
+        ImGui::DragFloat("MoveSpeed", &m_moveDuration);
     }
 
     void SceneController_Lobby::Save(engine::json& j) const
     {
         Object::Save(j);
-        j["OptionOpen"] = m_isOptionOpen;
-        j["UpgradeOpen"] = m_isUpgradeOpen;
+        j["TargetPos"] = m_moveTargetPos;
+        j["Curve"] = m_curve01;
+
+        j["MoveSpeed"] = m_moveDuration;
     }
 
     void SceneController_Lobby::Load(const engine::json& j)
     {
         Object::Load(j);
-        engine::JsonGet(j, "OptionOpen", m_isOptionOpen);
-        engine::JsonGet(j, "UpgradeOpen", m_isUpgradeOpen);
+        engine::JsonGet(j, "TargetPos", m_moveTargetPos);
+        engine::JsonGet(j, "Curve", m_curve01);
+
+        engine::JsonGet(j, "MoveSpeed", m_moveDuration);
     }
 
     void SceneController_Lobby::BindButton(const std::string& name, engine::UIButton::ClickCallback cb)
@@ -345,16 +428,23 @@ namespace game
         m_moveStartPos = tr->GetLocalPosition();
         m_moveStartRot = tr->GetLocalRotation();
 
-        float targetYaw = -15.f;
+        float targetYawDeg = 43.272f;
+        m_moveTargetRot = engine::Quaternion::CreateFromYawPitchRoll(engine::ToRadian(targetYawDeg), 0.f, 0.f);
 
-        m_moveTargetPos = { 0, 0, 20 };
+        m_curveP0 = m_moveStartPos;
+        m_curveP2 = m_moveTargetPos;
 
-        m_moveTargetRot = engine::Quaternion::CreateFromYawPitchRoll(engine::ToRadian(targetYaw), 0.f, 0.f);
+        float startYawDeg = -159.925f;
+        float dyaw = DeltaAngleDeg(startYawDeg, targetYawDeg);
+        float turnSign = (dyaw >= 0.0f) ? +1.0f : -1.0f;
+        m_curveP1 = MakeBezierControlPointXZ(m_curveP0, m_curveP2, m_curve01, turnSign);
 
-        m_moveElapsed = 0.0f;
-        m_moveDuration = 1.5f;
-        m_isPlayerMove = true;
+        m_rotDone = false;
         m_walkStarted = false;
+        m_rotElapsed = 0.0f;
+        m_moveElapsed = 0.0f;
+
+        m_isPlayerMove = true;
     }
 
     void SceneController_Lobby::OpenUpgrade()

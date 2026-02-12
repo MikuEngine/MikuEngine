@@ -51,8 +51,6 @@ namespace game
 
                     self->m_hitImage->SetEffectParam(0, { 1.0f, 0.0f, 0.0f, 0.0f });
                 }
-
-                // TODO: 사운드 있다면 여기에 추가
                 });
         }
     }
