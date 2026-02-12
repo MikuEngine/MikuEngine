@@ -12864,6 +12864,16 @@
                         "x": 50.0,
                         "y": 50.0
                     },
+                    "CursorDefaultOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "CursorClickOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "UseDefaultCursor": true,
+                    "UseClickCursor": true,
                     "TargetPlaneY": 1.7000000476837158,
                     "AimYOffsetWhenMoving": -0.4000000059604645,
                     "OnEnemyRayMaxDistance": 1000.0,

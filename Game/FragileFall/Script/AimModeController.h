@@ -116,6 +116,10 @@ namespace game
         // 커서 설정
         AimCursorState m_cursor = AimCursorState::Default;
         engine::Vector2 m_cursorSize{ 50.0f, 50.0f };
+        engine::Vector2 m_cursorDefaultOffset{ 10.0f, 10.0f };
+        engine::Vector2 m_cursorClickOffset{ 10.0f, 10.0f };
+        bool m_useDefaultCursor = true;
+        bool m_useClickCursor = true;
 
         // 월드 좌표 계산 설정
         float m_targetPlaneY = 1.7f;  // 레이캐스트 대상 평면의 Y 높이 (총알 발사 높이 근사값)
