@@ -392,7 +392,7 @@
                     "Type": "RectTransform",
                     "Active": true,
                     "AnchoredPosition": {
-                        "x": -110.0,
+                        "x": -150.0,
                         "y": 100.0
                     },
                     "Width": 0.0,
@@ -623,7 +623,7 @@
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
                     "Bold": true,
-                    "AlwaysBold": true
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -683,7 +683,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "게임 시작",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -692,7 +692,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -847,7 +847,7 @@
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
                     "Bold": true,
-                    "AlwaysBold": true
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -907,7 +907,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "설정",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -916,7 +916,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1071,7 +1071,7 @@
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
                     "Bold": true,
-                    "AlwaysBold": true
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -1131,7 +1131,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "크레딧",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -1140,7 +1140,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1295,7 +1295,7 @@
                     "HoverScale": 1.100000023841858,
                     "Speed": 12.0,
                     "Bold": true,
-                    "AlwaysBold": true
+                    "AlwaysBold": false
                 }
             ]
         },
@@ -1355,7 +1355,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "게임 종료",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -1364,7 +1364,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 0,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -1771,7 +1771,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.6000000238418579
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -1790,8 +1790,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "Text": "뒤로",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPx": 35,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -1838,7 +1838,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -230.0
+                        "y": -205.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -1863,7 +1863,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "설정",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -2391,7 +2391,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "0",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 35,
                     "Color": {
                         "x": 1.0,
@@ -2400,7 +2400,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 2,
                     "LetterSpacingPx": 0.0,
@@ -2868,7 +2868,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "0",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 35,
                     "Color": {
                         "x": 1.0,
@@ -2877,7 +2877,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 2,
                     "LetterSpacingPx": 0.0,
@@ -3345,7 +3345,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "0",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 35,
                     "Color": {
                         "x": 1.0,
@@ -3354,7 +3354,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 2,
                     "LetterSpacingPx": 0.0,
@@ -3418,7 +3418,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "사운드",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -3491,7 +3491,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "효과음",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -3564,7 +3564,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "마우스 감도",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -3889,7 +3889,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.6000000238418579
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -3908,8 +3908,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "Text": "뒤로",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPx": 30,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -3956,7 +3956,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -230.0
+                        "y": -205.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -3981,7 +3981,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "크레딧\n",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -4168,7 +4168,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "기획",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -4177,7 +4177,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -4241,7 +4241,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "신윤석    이주연",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -4428,7 +4428,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "아트\n",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -4437,7 +4437,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -4501,7 +4501,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "오세훈    주영성",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -4688,7 +4688,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "프로그래밍",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -4697,7 +4697,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
@@ -4761,7 +4761,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "강신익    도옥현    정철    황태현",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -4923,7 +4923,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": -130.0
+                        "y": -110.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -4948,7 +4948,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "게임 종료",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -4996,7 +4996,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": 0.0,
-                        "y": 0.0
+                        "y": 32.0
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -5021,7 +5021,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "게임을 종료하시겠습니까?",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -5218,7 +5218,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.6000000238418579
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -5237,8 +5237,8 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "종료",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPx": 35,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -5434,7 +5434,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.5
+                        "y": 0.6000000238418579
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -5453,8 +5453,8 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
                     "Text": "취소",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
-                    "FontPx": 50,
+                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPx": 35,
                     "Color": {
                         "x": 1.0,
                         "y": 1.0,
@@ -5701,6 +5701,16 @@
                         "x": 50.0,
                         "y": 50.0
                     },
+                    "CursorDefaultOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "CursorClickOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "UseDefaultCursor": true,
+                    "UseClickCursor": true,
                     "TargetPlaneY": 1.7000000476837158,
                     "AimYOffsetWhenMoving": -0.4000000059604645,
                     "OnEnemyRayMaxDistance": 1000.0,

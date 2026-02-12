@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -6.092993259429932,
-                        "y": -9.831608167587547e-07,
-                        "z": -11.761911392211914
+                        "x": 11.34288215637207,
+                        "y": -4.7362505029013846e-07,
+                        "z": 3.0360023975372314
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -35,7 +35,7 @@
                     "linearDamping": 15.0,
                     "angularDamping": 30.0,
                     "useGravity": false,
-                    "constraints": 47
+                    "constraints": 63
                 },
                 {
                     "Type": "BulletFactory",
@@ -112,8 +112,8 @@
                     "KinematicDeceleration": 70.0,
                     "AttackType": 0,
                     "MonsterTier": 2,
-                    "Hp": 40.0,
-                    "MaxHp": 40.0,
+                    "Hp": 50.0,
+                    "MaxHp": 50.0,
                     "MoveSpeed": 0.0,
                     "AttackDamage": 0.5,
                     "FragileTime": 5.0,
@@ -122,7 +122,7 @@
                     "AttackRange": 30.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
-                    "BulletSpeed": 15.0,
+                    "BulletSpeed": 12.0,
                     "BulletLifetime": 3.0,
                     "BulletScale": 1.0,
                     "SpreadAngle": 0.20000000298023224,
@@ -133,63 +133,6 @@
                     "MaxLaunchAngle": 70.0,
                     "ExplosionRadius": 3.0,
                     "IsDoSingleShot": false
-                }
-            ]
-        },
-        {
-            "ID": 1,
-            "ParentID": 0,
-            "Name": "PickingBoundaryCol",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 2.200000047683716,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 66.66667175292969,
-                        "y": 66.66667175292969,
-                        "z": 66.66667175292969
-                    }
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 7,
-                    "materialType": 1,
-                    "radius": 2.299999952316284
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 1,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 58
                 }
             ]
         }

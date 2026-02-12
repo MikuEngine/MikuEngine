@@ -1,6 +1,6 @@
 {
     "Name": "01_READY_Boss",
-    "NumGameObjects": 94,
+    "NumGameObjects": 90,
     "GameObjects": [
         {
             "ID": 0,
@@ -451,6 +451,16 @@
                         "x": 30.0,
                         "y": 30.0
                     },
+                    "CursorDefaultOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "CursorClickOffset": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "UseDefaultCursor": true,
+                    "UseClickCursor": true,
                     "TargetPlaneY": 1.5,
                     "AimYOffsetWhenMoving": 0.0,
                     "OnEnemyRayMaxDistance": 1000.0,
@@ -10790,69 +10800,6 @@
         },
         {
             "ID": 28,
-            "ParentID": 27,
-            "Name": "RotatingPart",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp_single/purple/crystal_sharp_single_purple.fbx",
-                    "SocketFilePath": "Resource/Data/Socket/Cube.fbx.socketdata",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 4.289999961853027,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 29,
             "ParentID": 26,
             "Name": "FloatingParts",
             "Active": true,
@@ -10880,8 +10827,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 29,
+            "ID": 29,
+            "ParentID": 28,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -10943,8 +10890,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 29,
+            "ID": 30,
+            "ParentID": 28,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11006,8 +10953,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 29,
+            "ID": 31,
+            "ParentID": 28,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11069,8 +11016,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 29,
+            "ID": 32,
+            "ParentID": 28,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11132,7 +11079,7 @@
             ]
         },
         {
-            "ID": 34,
+            "ID": 33,
             "ParentID": 26,
             "Name": "NestParts",
             "Active": true,
@@ -11160,8 +11107,8 @@
             ]
         },
         {
-            "ID": 35,
-            "ParentID": 34,
+            "ID": 34,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11223,8 +11170,8 @@
             ]
         },
         {
-            "ID": 36,
-            "ParentID": 34,
+            "ID": 35,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11286,8 +11233,8 @@
             ]
         },
         {
-            "ID": 37,
-            "ParentID": 34,
+            "ID": 36,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11349,8 +11296,8 @@
             ]
         },
         {
-            "ID": 38,
-            "ParentID": 34,
+            "ID": 37,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11412,8 +11359,8 @@
             ]
         },
         {
-            "ID": 39,
-            "ParentID": 34,
+            "ID": 38,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11475,8 +11422,8 @@
             ]
         },
         {
-            "ID": 40,
-            "ParentID": 34,
+            "ID": 39,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11538,8 +11485,8 @@
             ]
         },
         {
-            "ID": 41,
-            "ParentID": 34,
+            "ID": 40,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11601,8 +11548,8 @@
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 34,
+            "ID": 41,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11664,8 +11611,8 @@
             ]
         },
         {
-            "ID": 43,
-            "ParentID": 34,
+            "ID": 42,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11727,8 +11674,8 @@
             ]
         },
         {
-            "ID": 44,
-            "ParentID": 34,
+            "ID": 43,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11790,8 +11737,8 @@
             ]
         },
         {
-            "ID": 45,
-            "ParentID": 34,
+            "ID": 44,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11853,8 +11800,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 34,
+            "ID": 45,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11916,8 +11863,8 @@
             ]
         },
         {
-            "ID": 47,
-            "ParentID": 34,
+            "ID": 46,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -11979,8 +11926,8 @@
             ]
         },
         {
-            "ID": 48,
-            "ParentID": 34,
+            "ID": 47,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -12042,8 +11989,8 @@
             ]
         },
         {
-            "ID": 49,
-            "ParentID": 34,
+            "ID": 48,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -12105,8 +12052,8 @@
             ]
         },
         {
-            "ID": 50,
-            "ParentID": 34,
+            "ID": 49,
+            "ParentID": 33,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -12168,7 +12115,7 @@
             ]
         },
         {
-            "ID": 51,
+            "ID": 50,
             "Name": "z_Dev_Boss_HP_Text",
             "Active": true,
             "Components": [
@@ -12224,8 +12171,8 @@
             ]
         },
         {
-            "ID": 52,
-            "ParentID": 51,
+            "ID": 51,
+            "ParentID": 50,
             "Name": "UI_BossHP",
             "Active": true,
             "Components": [
@@ -12297,7 +12244,7 @@
             ]
         },
         {
-            "ID": 53,
+            "ID": 52,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12358,7 +12305,7 @@
             ]
         },
         {
-            "ID": 54,
+            "ID": 53,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12420,7 +12367,7 @@
             ]
         },
         {
-            "ID": 55,
+            "ID": 54,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -12482,7 +12429,7 @@
             ]
         },
         {
-            "ID": 56,
+            "ID": 55,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -12544,7 +12491,7 @@
             ]
         },
         {
-            "ID": 57,
+            "ID": 56,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -12606,7 +12553,7 @@
             ]
         },
         {
-            "ID": 58,
+            "ID": 57,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12668,7 +12615,7 @@
             ]
         },
         {
-            "ID": 59,
+            "ID": 58,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12730,7 +12677,7 @@
             ]
         },
         {
-            "ID": 60,
+            "ID": 59,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12792,7 +12739,7 @@
             ]
         },
         {
-            "ID": 61,
+            "ID": 60,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -12854,7 +12801,7 @@
             ]
         },
         {
-            "ID": 62,
+            "ID": 61,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -12900,7 +12847,7 @@
             ]
         },
         {
-            "ID": 63,
+            "ID": 62,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -12946,7 +12893,7 @@
             ]
         },
         {
-            "ID": 64,
+            "ID": 63,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -12992,7 +12939,7 @@
             ]
         },
         {
-            "ID": 65,
+            "ID": 64,
             "Name": "RockLeft",
             "Active": true,
             "Components": [
@@ -13053,7 +13000,7 @@
             ]
         },
         {
-            "ID": 66,
+            "ID": 65,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13115,7 +13062,7 @@
             ]
         },
         {
-            "ID": 67,
+            "ID": 66,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13177,7 +13124,7 @@
             ]
         },
         {
-            "ID": 68,
+            "ID": 67,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -13239,7 +13186,7 @@
             ]
         },
         {
-            "ID": 69,
+            "ID": 68,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -13301,7 +13248,7 @@
             ]
         },
         {
-            "ID": 70,
+            "ID": 69,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -13363,7 +13310,7 @@
             ]
         },
         {
-            "ID": 71,
+            "ID": 70,
             "Name": "CrystalPiece002",
             "Active": true,
             "Components": [
@@ -13425,7 +13372,7 @@
             ]
         },
         {
-            "ID": 72,
+            "ID": 71,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13487,7 +13434,7 @@
             ]
         },
         {
-            "ID": 73,
+            "ID": 72,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13549,7 +13496,7 @@
             ]
         },
         {
-            "ID": 74,
+            "ID": 73,
             "Name": "CrystalPurple",
             "Active": true,
             "Components": [
@@ -13611,131 +13558,7 @@
             ]
         },
         {
-            "ID": 75,
-            "Name": "CrystalPurple",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 76,
-            "Name": "CrystalPurple",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/purple/crystal_purple.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 77,
+            "ID": 74,
             "Name": "CrystalPiece006",
             "Active": true,
             "Components": [
@@ -13797,7 +13620,7 @@
             ]
         },
         {
-            "ID": 78,
+            "ID": 75,
             "Name": "CrystalSharpSinglePurple",
             "Active": true,
             "Components": [
@@ -13859,7 +13682,7 @@
             ]
         },
         {
-            "ID": 79,
+            "ID": 76,
             "Name": "CrystalSharpSinglePurple",
             "Active": true,
             "Components": [
@@ -13921,69 +13744,7 @@
             ]
         },
         {
-            "ID": 80,
-            "Name": "CrystalSharpSinglePurple",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp_single/purple/crystal_sharp_single_purple.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 81,
+            "ID": 77,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -14045,7 +13806,7 @@
             ]
         },
         {
-            "ID": 82,
+            "ID": 78,
             "Name": "GameObject",
             "Active": true,
             "Components": [
@@ -14107,7 +13868,7 @@
             ]
         },
         {
-            "ID": 83,
+            "ID": 79,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14153,7 +13914,7 @@
             ]
         },
         {
-            "ID": 84,
+            "ID": 80,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14199,7 +13960,7 @@
             ]
         },
         {
-            "ID": 85,
+            "ID": 81,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14245,7 +14006,7 @@
             ]
         },
         {
-            "ID": 86,
+            "ID": 82,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14291,7 +14052,7 @@
             ]
         },
         {
-            "ID": 87,
+            "ID": 83,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14337,7 +14098,7 @@
             ]
         },
         {
-            "ID": 88,
+            "ID": 84,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14383,7 +14144,7 @@
             ]
         },
         {
-            "ID": 89,
+            "ID": 85,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14429,7 +14190,7 @@
             ]
         },
         {
-            "ID": 90,
+            "ID": 86,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14475,7 +14236,7 @@
             ]
         },
         {
-            "ID": 91,
+            "ID": 87,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -14521,7 +14282,7 @@
             ]
         },
         {
-            "ID": 92,
+            "ID": 88,
             "Name": "Stone",
             "Active": true,
             "Components": [
@@ -14583,7 +14344,7 @@
             ]
         },
         {
-            "ID": 93,
+            "ID": 89,
             "Name": "Stone",
             "Active": true,
             "Components": [

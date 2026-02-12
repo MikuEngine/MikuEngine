@@ -1577,6 +1577,9 @@ namespace engine
             // Stop
             // 물리 씬 정리
             scene->StopPhysics();
+
+            SoundSystem::Get().StopAll();
+
             if (!g_tempScene.empty())
             {
                 scene->Clear(false);

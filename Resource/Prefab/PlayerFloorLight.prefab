@@ -12,39 +12,55 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 0.9112271070480347,
-                        "z": -0.08460107445716858
+                        "y": 1.862645149230957e-09,
+                        "z": -1.862645149230957e-09
                     },
                     "Rotation": {
-                        "x": 0.7071068286895752,
+                        "x": -0.0,
                         "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.7071068286895752
+                        "z": -0.0,
+                        "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0011287927627563,
-                        "z": 1.0011287927627563
+                        "x": 1.9737000465393066,
+                        "y": 1.9737000465393066,
+                        "z": 1.9737000465393066
                     }
                 },
                 {
-                    "Type": "Light",
+                    "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "LightType": 2,
-                    "Color": {
-                        "x": 0.8880308866500854,
-                        "y": 0.8517186641693115,
-                        "z": 0.1645771563053131
+                    "MeshFilePath": "Resource/Model/player/Floor_light.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 0.8341854810714722,
+                        "z": 0.12355214357376099,
+                        "w": 1.0
                     },
-                    "Intensity": 100.0,
-                    "Range": 1.5,
-                    "Angle": 120.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
+                    "MaterialEmissive": {
+                        "x": 0.9845559597015381,
+                        "y": 0.5473979115486145,
+                        "z": 0.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 3.690000057220459,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 }
             ]
         }
