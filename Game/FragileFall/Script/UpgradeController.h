@@ -121,9 +121,9 @@ namespace game
 
         UpgradeCategory m_selected = UpgradeCategory::Attack;
 
-        int m_ruby = 100;
-        int m_sapphire = 100;
-        int m_emerald = 100;
+        int m_ruby = 1;
+        int m_sapphire = 1;
+        int m_emerald = 1;
 
         int m_selectedNodeId = 0;
 
