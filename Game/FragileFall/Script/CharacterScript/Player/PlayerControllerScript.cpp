@@ -442,6 +442,12 @@ namespace game
 	// ═══════════════════════════════════════════════════════════════
 	void PlayerControllerScript::UpdateGameLogic()
 	{
+		if (engine::Input::IsKeyPressed(engine::Keys::F3))
+		{
+			m_PlayerCurrentHP = 100.0f;
+			m_fragileGaugeCurrent = 0.0f;
+		}
+
 		float deltaTime = engine::Time::DeltaTime();
 
 		// 피격 무적 타이머 갱신
