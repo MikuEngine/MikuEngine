@@ -273,6 +273,7 @@
                     "FragileGaugeMax": 100.0,
                     "FragileGaugeRisePerSecond": 15.0,
                     "PlayerMaxHP": 100.0,
+                    "BasicHpDoNotTouch": 100.0,
                     "InvincibleTime": 0.5,
                     "IsInvincible": false,
                     "EED_Enable": false,
@@ -945,7 +946,7 @@
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
-                    "CastShadow": false,
+                    "CastShadow": true,
                     "CullMode": 1,
                     "SubsurfaceStrength": 0.0,
                     "SubsurfaceColor": [

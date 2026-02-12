@@ -22,6 +22,7 @@
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.cpp" />
     <ClCompile Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.cpp" />
     <ClCompile Include="Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Script\Boss\BossMapCrystalDestructible.cpp" />
     <ClCompile Include="Script\CameraEffectScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Common\KinematicHelperScript.cpp" />
     <ClCompile Include="Script\CharacterScript\Monster\RoundType\MonsterRoundBlue.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_SphereProjectile.h" />
     <ClInclude Include="Script\Boss\BossPattern\Patterns\BossPattern_Summon.h" />
     <ClInclude Include="Script\Boss\BossScript.h" />
+    <ClInclude Include="Script\Boss\BossMapCrystalDestructible.h" />
     <ClInclude Include="Script\CameraEffectScript.h" />
     <ClInclude Include="Script\CharacterScript\Common\KinematicHelperScript.h" />
     <ClInclude Include="Script\CharacterScript\Monster\RoundType\MonsterRoundBlue.h" />

@@ -417,13 +417,13 @@
                         1.0,
                         1.0
                     ],
-                    "SolidInitialAlpha": 0.6399999856948853,
-                    "SolidDecaySpeed": 7.599999904632568,
+                    "SolidInitialAlpha": 0.4000000059604645,
+                    "SolidDecaySpeed": 8.800000190734863,
                     "SolidDecayMode": 0,
                     "SolidDecayCurve": 1,
-                    "SolidEmissiveIntensity": 11.300000190734863,
-                    "SolidTrailGradient": 0.4099999964237213,
-                    "SolidMaxSlices": 24,
+                    "SolidEmissiveIntensity": 6.300000190734863,
+                    "SolidTrailGradient": 0.4000000059604645,
+                    "SolidMaxSlices": 16,
                     "SolidSampleInterval": 0.03500000014901161,
                     "DrawAlphaLayer": false,
                     "AlphaTint": [
@@ -711,39 +711,6 @@
         },
         {
             "ID": 12,
-            "Name": "MonsterUpdateSwitch",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "MonsterUpdateActivationSwitch",
-                    "Active": true,
-                    "ActivationDelay": 3.0,
-                    "WaitAfterIdle": true
-                }
-            ]
-        },
-        {
-            "ID": 13,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -798,6 +765,7 @@
                     "DashDecayDuration": 0.5,
                     "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224,
+                    "DashInvincibleTime": 0.30000001192092896,
                     "MaxDashCount": 3,
                     "DashRechargeTime": 1.0,
                     "PostDashQuickFireDuration": 0.30000001192092896,
@@ -807,6 +775,7 @@
                     "PlayerMaxHP": 5.0,
                     "BasicHpDoNotTouch": 5.0,
                     "InvincibleTime": 0.5,
+                    "ExecutionInvincibleTime": 0.5,
                     "IsInvincible": false,
                     "EED_Enable": false,
                     "EED_DamageScale": 5.0,
@@ -861,12 +830,12 @@
                         "y": 50.0
                     },
                     "CursorDefaultOffset": {
-                        "x": 10.0,
-                        "y": 10.0
+                        "x": 17.0,
+                        "y": 24.0
                     },
                     "CursorClickOffset": {
-                        "x": 10.0,
-                        "y": 10.0
+                        "x": 17.0,
+                        "y": 24.0
                     },
                     "UseDefaultCursor": true,
                     "UseClickCursor": true,
@@ -881,6 +850,39 @@
                     "ExecutionIntroDistancePx": 50.0,
                     "ExecutionIntroDuration": 0.5,
                     "PostExecutionDuration": 0.5
+                }
+            ]
+        },
+        {
+            "ID": 13,
+            "Name": "MonsterUpdateSwitch",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MonsterUpdateActivationSwitch",
+                    "Active": true,
+                    "ActivationDelay": 3.0,
+                    "WaitAfterIdle": true
                 }
             ]
         },

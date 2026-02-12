@@ -2,6 +2,7 @@
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/Interface/IDamageable.h"
+#include <vector>
 
 namespace engine
 {
@@ -229,6 +230,74 @@ namespace game
         engine::Quaternion m_introCameraBossTargetRotation = engine::Quaternion::Identity;
         engine::Vector3 m_introLookTargetOffset = engine::Vector3(0.0f, 2.5f, 0.0f);
 
+        // ─────────────────────────────────────────────
+        // 보스 사망 연출 (클리어 시네마틱)
+        // ─────────────────────────────────────────────
+        enum class DeathPhase
+        {
+            None,
+            CameraMoveToBoss,
+            RotatingPartsDrop,
+            CoreBurst,
+            RemainingPartsDrop,
+            CameraRetreatAndMapCrystalBurst,
+            EndHold,
+            Finished
+        };
+
+        struct DeathPartRuntime
+        {
+            engine::Transform* transform = nullptr;
+            engine::Vector3 baseLocalPos = engine::Vector3::Zero;
+            float startDelay = 0.0f;
+            bool started = false;
+        };
+
+        struct RegisteredMapCrystal
+        {
+            engine::Ptr<engine::GameObject> object;
+            bool burst = false;
+            float zSort = 0.0f;
+        };
+
+        bool m_isDead = false;
+        bool m_deathSequenceActive = false;
+        DeathPhase m_deathPhase = DeathPhase::None;
+        float m_deathPhaseElapsed = 0.0f;
+        bool m_deathPartDustSpawned = false;
+
+        engine::Vector3 m_deathCamStartPos = engine::Vector3::Zero;
+        engine::Vector3 m_deathCamBossPos = engine::Vector3::Zero;
+        engine::Vector3 m_deathCamEndPos = engine::Vector3::Zero;
+
+        std::vector<DeathPartRuntime> m_rotatingPartsForDeath;
+        std::vector<DeathPartRuntime> m_remainingPartsForDeath;
+        std::vector<RegisteredMapCrystal> m_registeredMapCrystals;
+
+        // 타이밍/연출 파라미터 (GUI + 직렬화)
+        float m_deathCamMoveDuration = 1.1f;
+        float m_deathCamRetreatDuration = 2.0f;
+        float m_deathRotatingDropDuration = 1.0f;
+        float m_deathRemainingDropDuration = 1.2f;
+        float m_deathEndHoldDuration = 1.0f;
+        float m_deathPartDropSpeed = 9.0f;
+        float m_deathPartDelayStep = 0.05f;
+        float m_deathShakeAmount = 0.08f;
+        float m_deathShakeSpeed = 30.0f;
+        float m_deathCamBossDistance = 7.0f;
+        float m_deathCamBossHeight = 12.0f;
+        float m_deathCamRetreatDistance = 26.0f;
+        engine::Vector3 m_deathCamLookAtOffset = engine::Vector3(0.0f, 2.5f, 0.0f);
+        int m_deathCoreExtraBurstCount = 6;
+        float m_deathCoreExtraBurstRadius = 2.2f;
+        float m_deathCoreBurstOffsetY = 0.0f;
+        float m_deathPartDustGroundY = 0.0f;
+        float m_deathPartDustOffsetZ = 0.0f;
+
+        std::string m_deathCoreBurstParticlePrefab = "Effect_Break_V1.01_big_Red";
+        std::string m_deathMapCrystalBurstParticlePrefab = "Effect_Break_V1.01_big_Blue";
+        std::string m_deathPartDropDustParticlePrefab = "Effect_Boss_dead_V1.00";
+
     public:
         BossScript();
         ~BossScript();
@@ -252,6 +321,8 @@ namespace game
         void TakeDamage(float damage, bool isShieldPierce = false) override;
         void CheckHealth();
         void OnDeath();
+        void RegisterMapCrystalForDeath(engine::GameObject* crystal);
+        void UnregisterMapCrystalForDeath(engine::GameObject* crystal);
 
         // shield
         void UpdateShieldStatus();  // 기둥 상태 체크하여 쉴드 활성화/비활성화
@@ -356,5 +427,15 @@ namespace game
         void EndIntroSequence(bool forceComplete);
         static float EaseInOutSine(float t);
         void UpdateIntroCameraLookAtBoss();
+        void BeginDeathSequence();
+        void UpdateDeathSequence(float deltaTime);
+        void UpdateDeathCameraLookAtBoss();
+        void CollectDeathPartsFromHierarchy();
+        void UpdateDeathPartDrops(std::vector<DeathPartRuntime>& parts, float deltaTime);
+        void SpawnPartDropDustIfNeeded();
+        void BurstBossCore();
+        void BurstMapCrystal(RegisteredMapCrystal& crystal);
+        void PrepareRegisteredMapCrystalSort();
+        void StopAndHideBossRenderers();
     };
 }
