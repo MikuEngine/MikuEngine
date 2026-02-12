@@ -12,6 +12,12 @@ namespace game
             local = std::clamp(local, 0, 99);
             return (int)cat + local; // cat = 100/200/...
         }
+
+        static engine::Vector4 Lerp(const engine::Vector4& a, const engine::Vector4& b, float t)
+        {
+            t = std::max(0.0f, std::min(t, 1.0f));
+            return a * (1.0f - t) + b * t;
+        }
     }
 
     void UpgradeNodeView::Awake()
@@ -366,6 +372,7 @@ namespace game
 
         float speed, intensity/*, width*/; // warning C4101: 'width' :참조되지 않은 지역 변수입니다.
         engine::Vector4 color = m_baseColor;
+        m_image->SetColor(color);
 
         engine::Vector4 outline = { 0,0,0,0 };
         bool outlineOn = false;
@@ -376,7 +383,8 @@ namespace game
             // [강화됨]
             m_image->SetEffect(engine::UIEffectType::PressedSink);
             m_image->SetEffectParam(0, { 0.8f, 0.15f, 0.005f, 0.0f });
-            outline = { 1.0f, 0.9f, 0.1f, 1.0f }; // 황금색
+            m_image->SetEffectParam(1, { 0.3f, 1.0f, 0.3f, 1.0f });
+            outline = { 0.1f, 1.0f, 0.2f, 1.0f }; // 초록 테투리
             outlineOn = true;
             break;
 
@@ -387,13 +395,10 @@ namespace game
             intensity = 0.1f;
             // z:궤도위치, w:궤도강도
             m_image->SetEffectParam(0, { speed, intensity, 0.46f, 3.0f });
+            m_image->SetEffectParam(1, { 1.0f, 1.0f, 1.0f, 0.0f });
+            m_image->SetEffectParam(2, { 1.0f, 1.0f, 1.0f, 0.0f });
 
-            // Param 1 (Base): 진한 에메랄드
-            m_image->SetEffectParam(1, { 0.1f, 0.8f, 0.4f, 0.2f });
-            // Param 2 (Orbit): 밝은 민트색
-            m_image->SetEffectParam(2, { 0.5f, 1.0f, 0.7f, 0.2f });
-
-            outline = { 1.0f, 1.0f, 1.0f, 1.0f };
+            outline = { 1.0f, 0.9f, 0.1f, 1.0f }; // 황금색
             outlineOn = true;
             break;
 
@@ -403,6 +408,9 @@ namespace game
             intensity = 0.5f;
             m_image->SetEffectParam(0, { speed, intensity, 0.0f, 0.0f });
             m_image->SetEffectParam(1, color);
+
+            outline = { 1.0f, 1.0f, 1.0f, 1.0f }; // 흰색 테두리
+            outlineOn = true;
             break;
 
         case NodeState::Disabled:

@@ -368,6 +368,12 @@ void ApplyFx_PressedSink(float2 uv, inout float4 col)
     // 2. 색상 적용 (Intensity 반영)
     col.rgb *= lerp(1.0, 0.8, intensity); // 기본적으로 약간 어둡게
     col.rgb *= lerp(0.5, 1.0, innerShadow); // 그림자 적용
+    
+    // 추가 Tint
+    float3 tintColor = g_effect1.rgb;
+    
+    col.rgb += tintColor * 0.15;
+    //col.rgb = lerp(col.rgb, col.rgb * tintColor, 0.15);
 }
 
 void ApplyFx_ScreenHit(float2 uv, inout float4 col)
