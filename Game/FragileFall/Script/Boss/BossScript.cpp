@@ -256,7 +256,7 @@ namespace game
             OnDeath();
         }
 
-        if (engine::Input::IsKeyPressed(engine::Keys::D6))
+        if (engine::Input::IsKeyPressed(engine::Keys::F3) && engine::Input::IsKeyPressed(engine::Keys::K))
         {
             OnDeath();
         }
