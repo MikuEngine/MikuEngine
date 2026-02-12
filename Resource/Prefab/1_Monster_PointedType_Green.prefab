@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 0.0,
+                        "x": -3.9064865112304688,
                         "y": 1.3001628076381166e-06,
-                        "z": 0.0
+                        "z": -9.655129432678223
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -79,12 +79,12 @@
                     "MonsterTier": 1,
                     "Hp": 50.0,
                     "MaxHp": 50.0,
-                    "MoveSpeed": 8.0,
-                    "AttackDamage": 10.0,
+                    "MoveSpeed": 8.5,
+                    "AttackDamage": 0.5,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 300.0,
-                    "AttackRange": 8.0,
+                    "AttackRange": 10.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 15.0,

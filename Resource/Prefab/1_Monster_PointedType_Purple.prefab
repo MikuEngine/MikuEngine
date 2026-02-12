@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": 1.5522593259811401,
+                        "x": 11.142187118530273,
                         "y": 1.1233778423047625e-06,
-                        "z": -4.8757829666137695
+                        "z": -9.869368553161621
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -79,7 +79,7 @@
                     "MonsterTier": 4,
                     "Hp": 40.0,
                     "MaxHp": 40.0,
-                    "MoveSpeed": 14.0,
+                    "MoveSpeed": 12.0,
                     "AttackDamage": 1.0,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
@@ -101,7 +101,7 @@
                     "AttackAnimationDuration": 1.100000023841858,
                     "FleeRange": 15.0,
                     "SafeRange": 21.0,
-                    "FleeSpeedMultiplier": 1.7999999523162842,
+                    "FleeSpeedMultiplier": 1.399999976158142,
                     "FleeDistanceMin": 4.0,
                     "FleeDistanceMax": 8.0,
                     "FleeSafetyMargin": 2,
