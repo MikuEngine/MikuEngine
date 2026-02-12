@@ -581,9 +581,17 @@ namespace game
                         // 드레인 비율: 0 (가득 참) → 1 (Fragile 시간 초과)
                         float drainRatio = elapsedSinceFull / remainingFragileTime;
                         if (drainRatio > 1.0f) drainRatio = 1.0f;
-                        
+
                         // 크리스탈 amount: 1 (가득) → 0 (비어있음)
                         float crystalAmount = 1.0f - drainRatio;
+
+                        // 0.1(1%) 이하로 떨어졌을 때 사운드 재생 (상태가 바뀌기 직전 마지막 프레임)
+                        if (crystalAmount <= 0.1f && !m_isReviveSoundPlayed)
+                        {
+                            engine::SoundSystem::Get().Play("Monster_Fragile_End", "SFX/Monster");
+                            m_isReviveSoundPlayed = true;
+                        }
+
                         fillScript->SetFillAmount(crystalAmount);
                     }
                 }
@@ -598,6 +606,8 @@ namespace game
 
         if (m_fragileCrystalInstance != nullptr)
             return;
+
+        m_isReviveSoundPlayed = false;
 
         const char* tierStr = GetMonsterTierStr(m_monsterTier);
         std::string prefabName = std::string("FragileCrystal_") + tierStr;

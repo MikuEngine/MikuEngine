@@ -97,6 +97,9 @@ namespace game
         bool m_crystalFullReached = false;              // 크리스탈이 가득 찬 시점을 감지했는지
         float m_fragileTimerWhenCrystalFull = -1.0f;   // 크리스탈이 가득 찬 시점의 Fragile 타이머 값
 
+		bool m_isReviveSoundPlayed = false;
+
+
     public:
         void Awake() override;
         void Start() override;
