@@ -229,6 +229,8 @@ namespace game
                 }
                 else if (m_monsterName == "Monster_PointedType_Gray")
                 {
+                    m_stepIndex = 3;
+                    m_pageIndex = 2;
                     Next();
                 }
             }
@@ -700,9 +702,11 @@ namespace game
     void TutorialController::TutorialFinish()
     {
         UnBindAllButtons();
-        m_isTutorialFinished = true;
-        m_isTimerActive = true;
-        m_stepTimer = 2.0f;
+        //m_isTutorialFinished = true;
+        //m_isTimerActive = true;
+        //m_stepTimer = 2.0f;
+        Destroy();
+        engine::SceneManager::Get().ChangeScene("01_READY_Lobby");
     }
 
     PlayerControllerScript* TutorialController::GetPlayer()
@@ -717,7 +721,7 @@ namespace game
         if (m_gaugePhase >= 3) return;
 
         m_timer += engine::Time::DeltaTime();
-        float duration = 0.5f;
+        float duration = 1.0f;
         float t = m_timer / duration;
         if (t > 1.0f) t = 1.0f;
 
@@ -725,11 +729,11 @@ namespace game
         if (!player) return;
 
         float maxVal = player->GetFragileGaugeMax();
-        float startVal = maxVal * 0.4f; // 40% 지점
-        float endVal = maxVal * 0.7f;   // 70% 지점
-        float range = maxVal * 0.3f;    // 30% 폭 (70% - 40%)
+        float startVal = maxVal * 0.2f; // 20% 지점
+        float endVal = maxVal * 0.8f;   // 80% 지점
+        float range = maxVal * 0.6f;    // 60% 폭 (80% - 20%)
 
-        if (m_gaugePhase == 0) // 40 -> 70 상승
+        if (m_gaugePhase == 0) // 20 -> 80 상승
         {
             float val = startVal + (range * t);
             player->SetCurrentFragile(val);
@@ -739,7 +743,7 @@ namespace game
                 m_gaugePhase = 1;
             }
         }
-        else if (m_gaugePhase == 1) // 70 -> 40 하락
+        else if (m_gaugePhase == 1) // 80 -> 20 하락
         {
             float val = endVal - (range * t);
             player->SetCurrentFragile(val);
@@ -758,7 +762,7 @@ namespace game
                 m_timer = 0.0f;
                 m_gaugePhase = 3;
                 m_isTimerActive = true;
-                m_stepTimer = 2.0f;
+                m_stepTimer = 3.0f;
             }
         }
     }
