@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -11.286678314208984,
-                        "y": 1.4999995231628418,
-                        "z": 6.069833755493164
+                        "x": -6.4756011962890625,
+                        "y": 1.4999996423721313,
+                        "z": -10.724480628967285
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -129,7 +129,7 @@
                     "OscillationSpeedMultiplier": 5.0,
                     "CollisionReflectDistance": 2.0,
                     "DamageCooldown": 1.0,
-                    "EngageMoveSpeed": 16.0,
+                    "EngageMoveSpeed": 22.0,
                     "PlayerIgnoreDuration": 1.0
                 },
                 {
@@ -149,7 +149,7 @@
                     "syncWithTransform": false,
                     "layer": 2,
                     "materialType": 0,
-                    "radius": 1.5,
+                    "radius": 1.0,
                     "height": 8.199999809265137
                 },
                 {

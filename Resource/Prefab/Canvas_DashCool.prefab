@@ -1,0 +1,365 @@
+{
+    "Name": "Canvas_DashCool",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "Canvas_DashCool",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "DashCool",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 50.0,
+                    "Height": 50.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIProgressBar",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": true,
+                    "Value": 0.36800000071525574,
+                    "Shape": 1,
+                    "Direction": 0,
+                    "FillMode": 0,
+                    "StartAngleRad": -1.5707963705062866,
+                    "Clockwise": true,
+                    "InnerRadius01": 0.5210000276565552,
+                    "BgSprite": "",
+                    "FillSprite": "",
+                    "BgColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 0.0
+                    },
+                    "FillColor": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "Type": "UIFollowWorldTarget",
+                    "Active": true,
+                    "TargetName": "Player",
+                    "Offset": {
+                        "x": -3.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 1,
+            "Name": "Background",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 0.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "MaskMode": 1,
+                    "Mask0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Mask1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 1,
+            "Name": "Fill",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 0.0,
+                    "Height": 0.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "AnchorMax": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "UIImage",
+                    "Active": true,
+                    "Layer": 0,
+                    "OrderInLayer": 0,
+                    "RaycastTarget": false,
+                    "TexturePath": "None",
+                    "EffectMode": 0,
+                    "Effect0": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect1": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "Effect2": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    },
+                    "VSFilePath": "Resource/Shader/Vertex/UIQuad_VS.hlsl",
+                    "PSFilePath": "Resource/Shader/Pixel/UIQuad_PS.hlsl",
+                    "OutlinePSFilePath": "Resource/Shader/Pixel/UIQuadOutline_PS.hlsl",
+                    "Color": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "AlphaBlend": true,
+                    "ClipRect": {
+                        "x": 910.0,
+                        "y": 490.0,
+                        "z": 960.0,
+                        "w": 590.0
+                    },
+                    "MaskMode": 5,
+                    "Mask0": {
+                        "x": 960.0,
+                        "y": 540.0,
+                        "z": 13.02500057220459,
+                        "w": 25.0
+                    },
+                    "Mask1": {
+                        "x": -1.5707963705062866,
+                        "y": 0.36800000071525574,
+                        "z": 1.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        }
+    ]
+}

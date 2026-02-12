@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterScript.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -19,6 +19,44 @@
 
 namespace game
 {
+	bool MonsterScript::TryBindUpdateSwitch()
+	{
+		if (m_updateSwitch)
+		{
+			return false;
+		}
+
+		auto* scene = engine::SceneManager::Get().GetScene();
+		if (!scene)
+		{
+			return false;
+		}
+
+		auto* switchObj = scene->FindGameObject("MonsterUpdateSwitch");
+		if (!switchObj)
+		{
+			return false;
+		}
+
+		auto* updateSwitch = switchObj->GetComponent<MonsterUpdateActivationSwitch>();
+		if (!updateSwitch)
+		{
+			return false;
+		}
+
+		m_updateSwitch = updateSwitch;
+
+		// 스위치가 아직 활성화 전이라면 공통 게이트 상태를 스위치 기준으로 재동기화한다.
+		if (!m_updateSwitch->HasActivated())
+		{
+			m_isActive = false;
+			m_isDoUpdate = m_updateSwitch->GetIsUpdateAllowed();
+			m_isReadyAndWait = false;
+		}
+
+		return true;
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 생명주기
 	// ═══════════════════════════════════════════════════════════════
@@ -86,18 +124,7 @@ namespace game
 		m_isActive = false;
 
 
-		// ─────────────────────────────────────────────
-		// MonsterUpdateSwitch 찾기 (한 번만 실행)
-		// ─────────────────────────────────────────────
-		auto* scene = engine::SceneManager::Get().GetScene();
-		if (scene)
-		{
-			auto* switchObj = scene->FindGameObject("MonsterUpdateSwitch");
-			if (switchObj)
-			{
-				m_updateSwitch = switchObj->GetComponent<MonsterUpdateActivationSwitch>();
-			}
-		}
+		TryBindUpdateSwitch();
 		if (!m_updateSwitch)
 		{
 			m_isDoUpdate = true;
@@ -107,6 +134,9 @@ namespace game
 
 	void MonsterScript::Update()
 	{
+		// 런타임 생성/지연 로드 케이스 대응: 스위치 바인딩을 공통부에서 지속 시도한다.
+		TryBindUpdateSwitch();
+
 		if (m_updateSwitch)
 		{
 			// 최초 활성화 전, Idle에 진입한 첫 순간에만 대기 카운트를 시작한다.
@@ -138,6 +168,13 @@ namespace game
 					m_isActive = true;
 				}
 			}
+		}
+
+		// UpdateSwitch 활성화 이전에는 몬스터 자체 Idle 대기/FSM 시간 진행을 막는다.
+		// (IdleWaitTime은 m_isActive == true 이후에만 적용)
+		if (!m_isActive)
+		{
+			return;
 		}
 
 		// 사운드
