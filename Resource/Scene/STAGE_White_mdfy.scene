@@ -1,6 +1,6 @@
 {
     "Name": "STAGE_White_mdfy",
-    "NumGameObjects": 182,
+    "NumGameObjects": 180,
     "GameObjects": [
         {
             "ID": 0,
@@ -494,77 +494,6 @@
         },
         {
             "ID": 7,
-            "Name": "ExcutionIndicatorManager",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "ExecutionIndicatorManager",
-                    "Active": true,
-                    "IndicatorPrefabName": "ExcutionIndicator",
-                    "RaycastMaxDistance": 1000.0,
-                    "IndicatorOffset": {
-                        "x": 0.0,
-                        "y": 1.5,
-                        "z": -0.5
-                    },
-                    "LinePrefabName": "IndicatorLine",
-                    "LinePlayerOffset": 1.0,
-                    "LineMonsterOffset": 1.5,
-                    "LineBaseLength": 0.5,
-                    "LineHeight": 0.6000000238418579,
-                    "LinePixelsPerMeter": 70.0,
-                    "LineMinPixels": 103.0,
-                    "LinePixelStep": 50.0,
-                    "ReflectIndicatorPrefabName": "Execution_Reflect_Indicator",
-                    "ReflectIndicatorHeight": 1.5,
-                    "ReflectIndicatorOffset": 1.5,
-                    "OffsetScaleZ": 1.0,
-                    "OffsetScaleX": 1.0,
-                    "EffectPrefabName": "ExcutionEffectSprite",
-                    "EffectDuration": 0.800000011920929,
-                    "EffectScaleMultiplier": 1.5,
-                    "MonsterDeathDelay": 0.05000000074505806,
-                    "ExecutionTeleportAtNormalizedTime": 0.5,
-                    "ExecutionMinDuration": 0.4000000059604645,
-                    "TeleportAfterimageNumSlices": 32,
-                    "TeleportAfterimageUseDefaultGradient": false,
-                    "TeleportAfterimageTrailGradient": 0.9700000286102295,
-                    "TriggerWaitFramesRequired": 1
-                },
-                {
-                    "Type": "ExecutionSlowScript",
-                    "Active": true,
-                    "SlowDuration": 1.5,
-                    "TargetTimeScale": 0.20000000298023224,
-                    "UseCrossfade": true,
-                    "FadeInRatio": 0.20000000298023224,
-                    "SustainRatio": 0.6000000238418579,
-                    "FadeOutRatio": 0.20000000298023224
-                }
-            ]
-        },
-        {
-            "ID": 8,
             "Name": "AimPointerMesh",
             "Active": true,
             "Components": [
@@ -635,7 +564,7 @@
             ]
         },
         {
-            "ID": 9,
+            "ID": 8,
             "Name": "StateTextRendererCanvas",
             "Active": true,
             "Components": [
@@ -709,7 +638,7 @@
             ]
         },
         {
-            "ID": 10,
+            "ID": 9,
             "Name": "White_1_mdfy",
             "Active": true,
             "Components": [
@@ -736,9 +665,37 @@
             ]
         },
         {
+            "ID": 10,
+            "ParentID": 9,
+            "Name": "Collider_setting_V1.00_mdfy",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
             "ID": 11,
             "ParentID": 10,
-            "Name": "Collider_setting_V1.00_mdfy",
+            "Name": "SubWall_White",
             "Active": true,
             "Components": [
                 {
@@ -766,34 +723,6 @@
         {
             "ID": 12,
             "ParentID": 11,
-            "Name": "SubWall_White",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "ID": 13,
-            "ParentID": 12,
             "Name": "Collider_SubWall_Front",
             "Active": true,
             "Components": [
@@ -853,8 +782,8 @@
             ]
         },
         {
-            "ID": 14,
-            "ParentID": 12,
+            "ID": 13,
+            "ParentID": 11,
             "Name": "Collider_SubWall_FrontLeft",
             "Active": true,
             "Components": [
@@ -914,8 +843,8 @@
             ]
         },
         {
-            "ID": 15,
-            "ParentID": 12,
+            "ID": 14,
+            "ParentID": 11,
             "Name": "Collider_SubWall_BackLeft",
             "Active": true,
             "Components": [
@@ -975,8 +904,8 @@
             ]
         },
         {
-            "ID": 16,
-            "ParentID": 12,
+            "ID": 15,
+            "ParentID": 11,
             "Name": "Collider_SubWall_FrontRight",
             "Active": true,
             "Components": [
@@ -1036,8 +965,8 @@
             ]
         },
         {
-            "ID": 17,
-            "ParentID": 12,
+            "ID": 16,
+            "ParentID": 11,
             "Name": "Collider_SubWall_BackRight",
             "Active": true,
             "Components": [
@@ -1097,8 +1026,8 @@
             ]
         },
         {
-            "ID": 18,
-            "ParentID": 12,
+            "ID": 17,
+            "ParentID": 11,
             "Name": "Collider_SubWall_Back",
             "Active": true,
             "Components": [
@@ -1158,8 +1087,8 @@
             ]
         },
         {
-            "ID": 19,
-            "ParentID": 11,
+            "ID": 18,
+            "ParentID": 10,
             "Name": "Collider_Wall_Front",
             "Active": true,
             "Components": [
@@ -1209,8 +1138,8 @@
             ]
         },
         {
-            "ID": 20,
-            "ParentID": 11,
+            "ID": 19,
+            "ParentID": 10,
             "Name": "Collider_Wall_Left",
             "Active": true,
             "Components": [
@@ -1260,8 +1189,8 @@
             ]
         },
         {
-            "ID": 21,
-            "ParentID": 11,
+            "ID": 20,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Left_2",
             "Active": true,
             "Components": [
@@ -1308,8 +1237,8 @@
             ]
         },
         {
-            "ID": 22,
-            "ParentID": 11,
+            "ID": 21,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Left_1",
             "Active": true,
             "Components": [
@@ -1356,8 +1285,8 @@
             ]
         },
         {
-            "ID": 23,
-            "ParentID": 11,
+            "ID": 22,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Left_3",
             "Active": true,
             "Components": [
@@ -1404,8 +1333,8 @@
             ]
         },
         {
-            "ID": 24,
-            "ParentID": 11,
+            "ID": 23,
+            "ParentID": 10,
             "Name": "Collider_Wall_Back",
             "Active": true,
             "Components": [
@@ -1455,8 +1384,8 @@
             ]
         },
         {
-            "ID": 25,
-            "ParentID": 11,
+            "ID": 24,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_1",
             "Active": true,
             "Components": [
@@ -1503,8 +1432,8 @@
             ]
         },
         {
-            "ID": 26,
-            "ParentID": 11,
+            "ID": 25,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_2",
             "Active": true,
             "Components": [
@@ -1551,8 +1480,8 @@
             ]
         },
         {
-            "ID": 27,
-            "ParentID": 11,
+            "ID": 26,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_3",
             "Active": true,
             "Components": [
@@ -1599,8 +1528,8 @@
             ]
         },
         {
-            "ID": 28,
-            "ParentID": 11,
+            "ID": 27,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_4",
             "Active": true,
             "Components": [
@@ -1647,8 +1576,8 @@
             ]
         },
         {
-            "ID": 29,
-            "ParentID": 11,
+            "ID": 28,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_5",
             "Active": true,
             "Components": [
@@ -1698,8 +1627,8 @@
             ]
         },
         {
-            "ID": 30,
-            "ParentID": 11,
+            "ID": 29,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_6",
             "Active": true,
             "Components": [
@@ -1746,8 +1675,8 @@
             ]
         },
         {
-            "ID": 31,
-            "ParentID": 11,
+            "ID": 30,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_7",
             "Active": true,
             "Components": [
@@ -1794,8 +1723,8 @@
             ]
         },
         {
-            "ID": 32,
-            "ParentID": 11,
+            "ID": 31,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_8",
             "Active": true,
             "Components": [
@@ -1842,8 +1771,8 @@
             ]
         },
         {
-            "ID": 33,
-            "ParentID": 11,
+            "ID": 32,
+            "ParentID": 10,
             "Name": "Collider_Crystal_Right_9",
             "Active": true,
             "Components": [
@@ -1890,8 +1819,8 @@
             ]
         },
         {
-            "ID": 34,
-            "ParentID": 11,
+            "ID": 33,
+            "ParentID": 10,
             "Name": "Collider_Door_1",
             "Active": true,
             "Components": [
@@ -1941,8 +1870,8 @@
             ]
         },
         {
-            "ID": 35,
-            "ParentID": 11,
+            "ID": 34,
+            "ParentID": 10,
             "Name": "Collider_Door_2",
             "Active": true,
             "Components": [
@@ -1992,8 +1921,8 @@
             ]
         },
         {
-            "ID": 36,
-            "ParentID": 11,
+            "ID": 35,
+            "ParentID": 10,
             "Name": "Collider_Door_3",
             "Active": true,
             "Components": [
@@ -2043,8 +1972,8 @@
             ]
         },
         {
-            "ID": 37,
-            "ParentID": 10,
+            "ID": 36,
+            "ParentID": 9,
             "Name": "Obstacle_setting_V1.00_mdfy",
             "Active": true,
             "Components": [
@@ -2071,8 +2000,8 @@
             ]
         },
         {
-            "ID": 38,
-            "ParentID": 37,
+            "ID": 37,
+            "ParentID": 36,
             "Name": "obstacle_1",
             "Active": true,
             "Components": [
@@ -2164,8 +2093,8 @@
             ]
         },
         {
-            "ID": 39,
-            "ParentID": 37,
+            "ID": 38,
+            "ParentID": 36,
             "Name": "obstacle_2",
             "Active": true,
             "Components": [
@@ -2257,8 +2186,8 @@
             ]
         },
         {
-            "ID": 40,
-            "ParentID": 37,
+            "ID": 39,
+            "ParentID": 36,
             "Name": "obstacle_3",
             "Active": true,
             "Components": [
@@ -2350,8 +2279,8 @@
             ]
         },
         {
-            "ID": 41,
-            "ParentID": 37,
+            "ID": 40,
+            "ParentID": 36,
             "Name": "obstacle_4",
             "Active": true,
             "Components": [
@@ -2443,8 +2372,8 @@
             ]
         },
         {
-            "ID": 42,
-            "ParentID": 10,
+            "ID": 41,
+            "ParentID": 9,
             "Name": "Wall",
             "Active": true,
             "Components": [
@@ -2506,8 +2435,8 @@
             ]
         },
         {
-            "ID": 43,
-            "ParentID": 10,
+            "ID": 42,
+            "ParentID": 9,
             "Name": "Ground",
             "Active": true,
             "Components": [
@@ -2569,8 +2498,8 @@
             ]
         },
         {
-            "ID": 44,
-            "ParentID": 10,
+            "ID": 43,
+            "ParentID": 9,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -2616,8 +2545,8 @@
             ]
         },
         {
-            "ID": 45,
-            "ParentID": 10,
+            "ID": 44,
+            "ParentID": 9,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -2663,8 +2592,8 @@
             ]
         },
         {
-            "ID": 46,
-            "ParentID": 10,
+            "ID": 45,
+            "ParentID": 9,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -2710,8 +2639,8 @@
             ]
         },
         {
-            "ID": 47,
-            "ParentID": 10,
+            "ID": 46,
+            "ParentID": 9,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -2757,8 +2686,8 @@
             ]
         },
         {
-            "ID": 48,
-            "ParentID": 10,
+            "ID": 47,
+            "ParentID": 9,
             "Name": "Light",
             "Active": true,
             "Components": [
@@ -2804,8 +2733,8 @@
             ]
         },
         {
-            "ID": 49,
-            "ParentID": 10,
+            "ID": 48,
+            "ParentID": 9,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -2867,8 +2796,8 @@
             ]
         },
         {
-            "ID": 50,
-            "ParentID": 10,
+            "ID": 49,
+            "ParentID": 9,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -2930,8 +2859,8 @@
             ]
         },
         {
-            "ID": 51,
-            "ParentID": 10,
+            "ID": 50,
+            "ParentID": 9,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -2993,8 +2922,8 @@
             ]
         },
         {
-            "ID": 52,
-            "ParentID": 10,
+            "ID": 51,
+            "ParentID": 9,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -3056,8 +2985,8 @@
             ]
         },
         {
-            "ID": 53,
-            "ParentID": 10,
+            "ID": 52,
+            "ParentID": 9,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -3119,8 +3048,8 @@
             ]
         },
         {
-            "ID": 54,
-            "ParentID": 10,
+            "ID": 53,
+            "ParentID": 9,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -3182,8 +3111,8 @@
             ]
         },
         {
-            "ID": 55,
-            "ParentID": 10,
+            "ID": 54,
+            "ParentID": 9,
             "Name": "CrystalWhite",
             "Active": true,
             "Components": [
@@ -3245,8 +3174,8 @@
             ]
         },
         {
-            "ID": 56,
-            "ParentID": 10,
+            "ID": 55,
+            "ParentID": 9,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -3308,8 +3237,8 @@
             ]
         },
         {
-            "ID": 57,
-            "ParentID": 10,
+            "ID": 56,
+            "ParentID": 9,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -3371,8 +3300,8 @@
             ]
         },
         {
-            "ID": 58,
-            "ParentID": 10,
+            "ID": 57,
+            "ParentID": 9,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -3434,8 +3363,8 @@
             ]
         },
         {
-            "ID": 59,
-            "ParentID": 10,
+            "ID": 58,
+            "ParentID": 9,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -3497,8 +3426,8 @@
             ]
         },
         {
-            "ID": 60,
-            "ParentID": 10,
+            "ID": 59,
+            "ParentID": 9,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -3560,8 +3489,8 @@
             ]
         },
         {
-            "ID": 61,
-            "ParentID": 10,
+            "ID": 60,
+            "ParentID": 9,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -3623,8 +3552,8 @@
             ]
         },
         {
-            "ID": 62,
-            "ParentID": 10,
+            "ID": 61,
+            "ParentID": 9,
             "Name": "CrystalSharpWhite",
             "Active": true,
             "Components": [
@@ -3686,8 +3615,8 @@
             ]
         },
         {
-            "ID": 63,
-            "ParentID": 10,
+            "ID": 62,
+            "ParentID": 9,
             "Name": "GridMap_White_1_mdfy",
             "Active": true,
             "Components": [
@@ -12748,7 +12677,7 @@
             ]
         },
         {
-            "ID": 64,
+            "ID": 63,
             "Name": "Monster_DullType_Purple",
             "Active": true,
             "Components": [
@@ -12882,7 +12811,7 @@
             ]
         },
         {
-            "ID": 65,
+            "ID": 64,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -12944,6 +12873,7 @@
                     "FragileGaugeMax": 100.0,
                     "FragileGaugeRisePerSecond": 1.0,
                     "PlayerMaxHP": 100.0,
+                    "BasicHpDoNotTouch": 100.0,
                     "InvincibleTime": 0.5,
                     "IsInvincible": false,
                     "EED_Enable": false,
@@ -13023,7 +12953,7 @@
             ]
         },
         {
-            "ID": 66,
+            "ID": 65,
             "Name": "UI_Play",
             "Active": true,
             "Components": [
@@ -13050,8 +12980,8 @@
             ]
         },
         {
-            "ID": 67,
-            "ParentID": 66,
+            "ID": 66,
+            "ParentID": 65,
             "Name": "AimPointerCanvas",
             "Active": true,
             "Components": [
@@ -13107,8 +13037,8 @@
             ]
         },
         {
-            "ID": 68,
-            "ParentID": 67,
+            "ID": 67,
+            "ParentID": 66,
             "Name": "AimCursor",
             "Active": true,
             "Components": [
@@ -13214,8 +13144,8 @@
             ]
         },
         {
-            "ID": 69,
-            "ParentID": 68,
+            "ID": 68,
+            "ParentID": 67,
             "Name": "AimIdle_N",
             "Active": true,
             "Components": [
@@ -13321,8 +13251,8 @@
             ]
         },
         {
-            "ID": 70,
-            "ParentID": 68,
+            "ID": 69,
+            "ParentID": 67,
             "Name": "AimIdle_W",
             "Active": true,
             "Components": [
@@ -13428,8 +13358,8 @@
             ]
         },
         {
-            "ID": 71,
-            "ParentID": 68,
+            "ID": 70,
+            "ParentID": 67,
             "Name": "AimIdle_S",
             "Active": true,
             "Components": [
@@ -13535,8 +13465,8 @@
             ]
         },
         {
-            "ID": 72,
-            "ParentID": 68,
+            "ID": 71,
+            "ParentID": 67,
             "Name": "AimIdle_E",
             "Active": true,
             "Components": [
@@ -13642,8 +13572,8 @@
             ]
         },
         {
-            "ID": 73,
-            "ParentID": 67,
+            "ID": 72,
+            "ParentID": 66,
             "Name": "AimCursor_OnEnemy",
             "Active": false,
             "Components": [
@@ -13749,8 +13679,8 @@
             ]
         },
         {
-            "ID": 74,
-            "ParentID": 73,
+            "ID": 73,
+            "ParentID": 72,
             "Name": "AimIdle_N",
             "Active": true,
             "Components": [
@@ -13856,8 +13786,8 @@
             ]
         },
         {
-            "ID": 75,
-            "ParentID": 73,
+            "ID": 74,
+            "ParentID": 72,
             "Name": "AimIdle_W",
             "Active": true,
             "Components": [
@@ -13963,8 +13893,8 @@
             ]
         },
         {
-            "ID": 76,
-            "ParentID": 73,
+            "ID": 75,
+            "ParentID": 72,
             "Name": "AimIdle_S",
             "Active": true,
             "Components": [
@@ -14070,8 +14000,8 @@
             ]
         },
         {
-            "ID": 77,
-            "ParentID": 73,
+            "ID": 76,
+            "ParentID": 72,
             "Name": "AimIdle_E",
             "Active": true,
             "Components": [
@@ -14177,8 +14107,8 @@
             ]
         },
         {
-            "ID": 78,
-            "ParentID": 67,
+            "ID": 77,
+            "ParentID": 66,
             "Name": "AimCursor_Execution",
             "Active": false,
             "Components": [
@@ -14284,8 +14214,8 @@
             ]
         },
         {
-            "ID": 79,
-            "ParentID": 78,
+            "ID": 78,
+            "ParentID": 77,
             "Name": "AimIdle_NW",
             "Active": true,
             "Components": [
@@ -14391,8 +14321,8 @@
             ]
         },
         {
-            "ID": 80,
-            "ParentID": 78,
+            "ID": 79,
+            "ParentID": 77,
             "Name": "AimIdle_NE",
             "Active": true,
             "Components": [
@@ -14498,8 +14428,8 @@
             ]
         },
         {
-            "ID": 81,
-            "ParentID": 78,
+            "ID": 80,
+            "ParentID": 77,
             "Name": "AimIdle_SE",
             "Active": true,
             "Components": [
@@ -14605,8 +14535,8 @@
             ]
         },
         {
-            "ID": 82,
-            "ParentID": 78,
+            "ID": 81,
+            "ParentID": 77,
             "Name": "AimIdle_SW",
             "Active": true,
             "Components": [
@@ -14712,8 +14642,8 @@
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 67,
+            "ID": 82,
+            "ParentID": 66,
             "Name": "AimCursor_Click",
             "Active": false,
             "Components": [
@@ -14819,8 +14749,8 @@
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 67,
+            "ID": 83,
+            "ParentID": 66,
             "Name": "AimCursor_Default",
             "Active": false,
             "Components": [
@@ -14926,8 +14856,8 @@
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 66,
+            "ID": 84,
+            "ParentID": 65,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -14983,8 +14913,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 85,
+            "ID": 85,
+            "ParentID": 84,
             "Name": "FragileImage",
             "Active": true,
             "Components": [
@@ -15090,8 +15020,8 @@
             ]
         },
         {
-            "ID": 87,
-            "ParentID": 85,
+            "ID": 86,
+            "ParentID": 84,
             "Name": "HitImage",
             "Active": true,
             "Components": [
@@ -15197,8 +15127,8 @@
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 66,
+            "ID": 87,
+            "ParentID": 65,
             "Name": "Canvas_Message",
             "Active": true,
             "Components": [
@@ -15254,8 +15184,8 @@
             ]
         },
         {
-            "ID": 89,
-            "ParentID": 66,
+            "ID": 88,
+            "ParentID": 65,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -15311,8 +15241,8 @@
             ]
         },
         {
-            "ID": 90,
-            "ParentID": 89,
+            "ID": 89,
+            "ParentID": 88,
             "Name": "Panel_Menu",
             "Active": false,
             "Components": [
@@ -15431,8 +15361,8 @@
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 90,
+            "ID": 90,
+            "ParentID": 89,
             "Name": "UI_OpenOption",
             "Active": true,
             "Components": [
@@ -15582,8 +15512,8 @@
             ]
         },
         {
-            "ID": 92,
-            "ParentID": 91,
+            "ID": 91,
+            "ParentID": 90,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -15655,8 +15585,8 @@
             ]
         },
         {
-            "ID": 93,
-            "ParentID": 90,
+            "ID": 92,
+            "ParentID": 89,
             "Name": "UI_BackToPlay",
             "Active": true,
             "Components": [
@@ -15806,8 +15736,8 @@
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 93,
+            "ID": 93,
+            "ParentID": 92,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -15879,8 +15809,8 @@
             ]
         },
         {
-            "ID": 95,
-            "ParentID": 90,
+            "ID": 94,
+            "ParentID": 89,
             "Name": "UI_BackToMain",
             "Active": true,
             "Components": [
@@ -16030,8 +15960,8 @@
             ]
         },
         {
-            "ID": 96,
-            "ParentID": 95,
+            "ID": 95,
+            "ParentID": 94,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16103,8 +16033,8 @@
             ]
         },
         {
-            "ID": 97,
-            "ParentID": 90,
+            "ID": 96,
+            "ParentID": 89,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -16176,8 +16106,8 @@
             ]
         },
         {
-            "ID": 98,
-            "ParentID": 89,
+            "ID": 97,
+            "ParentID": 88,
             "Name": "UI_RealGiveupPopUp",
             "Active": false,
             "Components": [
@@ -16290,8 +16220,8 @@
             ]
         },
         {
-            "ID": 99,
-            "ParentID": 98,
+            "ID": 98,
+            "ParentID": 97,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -16363,8 +16293,8 @@
             ]
         },
         {
-            "ID": 100,
-            "ParentID": 98,
+            "ID": 99,
+            "ParentID": 97,
             "Name": "Notice",
             "Active": true,
             "Components": [
@@ -16436,8 +16366,8 @@
             ]
         },
         {
-            "ID": 101,
-            "ParentID": 98,
+            "ID": 100,
+            "ParentID": 97,
             "Name": "Notice_2",
             "Active": true,
             "Components": [
@@ -16509,8 +16439,8 @@
             ]
         },
         {
-            "ID": 102,
-            "ParentID": 98,
+            "ID": 101,
+            "ParentID": 97,
             "Name": "Notice_3",
             "Active": true,
             "Components": [
@@ -16582,8 +16512,8 @@
             ]
         },
         {
-            "ID": 103,
-            "ParentID": 98,
+            "ID": 102,
+            "ParentID": 97,
             "Name": "OK_Button",
             "Active": true,
             "Components": [
@@ -16725,8 +16655,8 @@
             ]
         },
         {
-            "ID": 104,
-            "ParentID": 103,
+            "ID": 103,
+            "ParentID": 102,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -16798,8 +16728,8 @@
             ]
         },
         {
-            "ID": 105,
-            "ParentID": 98,
+            "ID": 104,
+            "ParentID": 97,
             "Name": "Cancel_Button",
             "Active": true,
             "Components": [
@@ -16941,8 +16871,8 @@
             ]
         },
         {
-            "ID": 106,
-            "ParentID": 105,
+            "ID": 105,
+            "ParentID": 104,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -17014,8 +16944,8 @@
             ]
         },
         {
-            "ID": 107,
-            "ParentID": 89,
+            "ID": 106,
+            "ParentID": 88,
             "Name": "Panel_Fail",
             "Active": false,
             "Components": [
@@ -17128,8 +17058,8 @@
             ]
         },
         {
-            "ID": 108,
-            "ParentID": 107,
+            "ID": 107,
+            "ParentID": 106,
             "Name": "ToLobby_Button",
             "Active": true,
             "Components": [
@@ -17271,8 +17201,8 @@
             ]
         },
         {
-            "ID": 109,
-            "ParentID": 108,
+            "ID": 108,
+            "ParentID": 107,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -17344,8 +17274,8 @@
             ]
         },
         {
-            "ID": 110,
-            "ParentID": 107,
+            "ID": 109,
+            "ParentID": 106,
             "Name": "Restart_Button",
             "Active": true,
             "Components": [
@@ -17487,8 +17417,8 @@
             ]
         },
         {
-            "ID": 111,
-            "ParentID": 110,
+            "ID": 110,
+            "ParentID": 109,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -17560,8 +17490,8 @@
             ]
         },
         {
-            "ID": 112,
-            "ParentID": 107,
+            "ID": 111,
+            "ParentID": 106,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -17674,8 +17604,8 @@
             ]
         },
         {
-            "ID": 113,
-            "ParentID": 112,
+            "ID": 112,
+            "ParentID": 111,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -17747,8 +17677,8 @@
             ]
         },
         {
-            "ID": 114,
-            "ParentID": 89,
+            "ID": 113,
+            "ParentID": 88,
             "Name": "UI_OptionPopUp",
             "Active": false,
             "Components": [
@@ -17871,8 +17801,8 @@
             ]
         },
         {
-            "ID": 115,
-            "ParentID": 114,
+            "ID": 114,
+            "ParentID": 113,
             "Name": "UI_CloseButton_Option",
             "Active": true,
             "Components": [
@@ -18022,8 +17952,8 @@
             ]
         },
         {
-            "ID": 116,
-            "ParentID": 115,
+            "ID": 115,
+            "ParentID": 114,
             "Name": "Label",
             "Active": true,
             "Components": [
@@ -18095,8 +18025,8 @@
             ]
         },
         {
-            "ID": 117,
-            "ParentID": 114,
+            "ID": 116,
+            "ParentID": 113,
             "Name": "Text",
             "Active": true,
             "Components": [
@@ -18168,8 +18098,8 @@
             ]
         },
         {
-            "ID": 118,
-            "ParentID": 114,
+            "ID": 117,
+            "ParentID": 113,
             "Name": "UIObject",
             "Active": true,
             "Components": [
@@ -18219,8 +18149,8 @@
             ]
         },
         {
-            "ID": 119,
-            "ParentID": 118,
+            "ID": 118,
+            "ParentID": 117,
             "Name": "UI_BGMSlider",
             "Active": true,
             "Components": [
@@ -18302,8 +18232,8 @@
             ]
         },
         {
-            "ID": 120,
-            "ParentID": 119,
+            "ID": 119,
+            "ParentID": 118,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -18409,8 +18339,8 @@
             ]
         },
         {
-            "ID": 121,
-            "ParentID": 119,
+            "ID": 120,
+            "ParentID": 118,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -18516,8 +18446,8 @@
             ]
         },
         {
-            "ID": 122,
-            "ParentID": 119,
+            "ID": 121,
+            "ParentID": 118,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -18623,8 +18553,8 @@
             ]
         },
         {
-            "ID": 123,
-            "ParentID": 122,
+            "ID": 122,
+            "ParentID": 121,
             "Name": "Text_VolumeVal",
             "Active": true,
             "Components": [
@@ -18696,8 +18626,8 @@
             ]
         },
         {
-            "ID": 124,
-            "ParentID": 118,
+            "ID": 123,
+            "ParentID": 117,
             "Name": "UI_SFXSlider",
             "Active": true,
             "Components": [
@@ -18779,8 +18709,8 @@
             ]
         },
         {
-            "ID": 125,
-            "ParentID": 124,
+            "ID": 124,
+            "ParentID": 123,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -18886,8 +18816,8 @@
             ]
         },
         {
-            "ID": 126,
-            "ParentID": 124,
+            "ID": 125,
+            "ParentID": 123,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -18993,8 +18923,8 @@
             ]
         },
         {
-            "ID": 127,
-            "ParentID": 124,
+            "ID": 126,
+            "ParentID": 123,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -19100,8 +19030,8 @@
             ]
         },
         {
-            "ID": 128,
-            "ParentID": 127,
+            "ID": 127,
+            "ParentID": 126,
             "Name": "Text_SFXVal",
             "Active": true,
             "Components": [
@@ -19173,8 +19103,8 @@
             ]
         },
         {
-            "ID": 129,
-            "ParentID": 118,
+            "ID": 128,
+            "ParentID": 117,
             "Name": "UI_SensitivitySlider",
             "Active": true,
             "Components": [
@@ -19256,8 +19186,8 @@
             ]
         },
         {
-            "ID": 130,
-            "ParentID": 129,
+            "ID": 129,
+            "ParentID": 128,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -19363,8 +19293,8 @@
             ]
         },
         {
-            "ID": 131,
-            "ParentID": 129,
+            "ID": 130,
+            "ParentID": 128,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -19470,8 +19400,8 @@
             ]
         },
         {
-            "ID": 132,
-            "ParentID": 129,
+            "ID": 131,
+            "ParentID": 128,
             "Name": "Handle",
             "Active": true,
             "Components": [
@@ -19577,8 +19507,8 @@
             ]
         },
         {
-            "ID": 133,
-            "ParentID": 132,
+            "ID": 132,
+            "ParentID": 131,
             "Name": "Text_SensiVal",
             "Active": true,
             "Components": [
@@ -19650,8 +19580,8 @@
             ]
         },
         {
-            "ID": 134,
-            "ParentID": 133,
+            "ID": 133,
+            "ParentID": 132,
             "Name": "Heart_Case",
             "Active": false,
             "Components": [
@@ -19757,8 +19687,8 @@
             ]
         },
         {
-            "ID": 135,
-            "ParentID": 133,
+            "ID": 134,
+            "ParentID": 132,
             "Name": "Heart_Case",
             "Active": false,
             "Components": [
@@ -19864,8 +19794,8 @@
             ]
         },
         {
-            "ID": 136,
-            "ParentID": 135,
+            "ID": 135,
+            "ParentID": 134,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -19971,8 +19901,8 @@
             ]
         },
         {
-            "ID": 137,
-            "ParentID": 136,
+            "ID": 136,
+            "ParentID": 135,
             "Name": "Heart(0)",
             "Active": true,
             "Components": [
@@ -20078,8 +20008,8 @@
             ]
         },
         {
-            "ID": 138,
-            "ParentID": 135,
+            "ID": 137,
+            "ParentID": 134,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -20185,8 +20115,8 @@
             ]
         },
         {
-            "ID": 139,
-            "ParentID": 138,
+            "ID": 138,
+            "ParentID": 137,
             "Name": "Heart(1)",
             "Active": true,
             "Components": [
@@ -20292,8 +20222,8 @@
             ]
         },
         {
-            "ID": 140,
-            "ParentID": 135,
+            "ID": 139,
+            "ParentID": 134,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -20399,8 +20329,8 @@
             ]
         },
         {
-            "ID": 141,
-            "ParentID": 140,
+            "ID": 140,
+            "ParentID": 139,
             "Name": "Heart(2)",
             "Active": true,
             "Components": [
@@ -20506,8 +20436,8 @@
             ]
         },
         {
-            "ID": 142,
-            "ParentID": 135,
+            "ID": 141,
+            "ParentID": 134,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -20613,8 +20543,8 @@
             ]
         },
         {
-            "ID": 143,
-            "ParentID": 142,
+            "ID": 142,
+            "ParentID": 141,
             "Name": "Heart(3)",
             "Active": true,
             "Components": [
@@ -20720,8 +20650,8 @@
             ]
         },
         {
-            "ID": 144,
-            "ParentID": 135,
+            "ID": 143,
+            "ParentID": 134,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -20827,8 +20757,8 @@
             ]
         },
         {
-            "ID": 145,
-            "ParentID": 144,
+            "ID": 144,
+            "ParentID": 143,
             "Name": "Heart(4)",
             "Active": true,
             "Components": [
@@ -20934,8 +20864,8 @@
             ]
         },
         {
-            "ID": 146,
-            "ParentID": 118,
+            "ID": 145,
+            "ParentID": 117,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -21007,8 +20937,8 @@
             ]
         },
         {
-            "ID": 147,
-            "ParentID": 118,
+            "ID": 146,
+            "ParentID": 117,
             "Name": "Text_Effect",
             "Active": true,
             "Components": [
@@ -21080,8 +21010,8 @@
             ]
         },
         {
-            "ID": 148,
-            "ParentID": 118,
+            "ID": 147,
+            "ParentID": 117,
             "Name": "Text_Sound",
             "Active": true,
             "Components": [
@@ -21153,8 +21083,8 @@
             ]
         },
         {
-            "ID": 149,
-            "ParentID": 66,
+            "ID": 148,
+            "ParentID": 65,
             "Name": "Canvas_HUD",
             "Active": true,
             "Components": [
@@ -21210,8 +21140,8 @@
             ]
         },
         {
-            "ID": 150,
-            "ParentID": 149,
+            "ID": 149,
+            "ParentID": 148,
             "Name": "Currency",
             "Active": true,
             "Components": [
@@ -21267,8 +21197,8 @@
             ]
         },
         {
-            "ID": 151,
-            "ParentID": 150,
+            "ID": 150,
+            "ParentID": 149,
             "Name": "Book",
             "Active": true,
             "Components": [
@@ -21318,8 +21248,8 @@
             ]
         },
         {
-            "ID": 152,
-            "ParentID": 151,
+            "ID": 151,
+            "ParentID": 150,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -21425,8 +21355,8 @@
             ]
         },
         {
-            "ID": 153,
-            "ParentID": 151,
+            "ID": 152,
+            "ParentID": 150,
             "Name": "RubyCount",
             "Active": true,
             "Components": [
@@ -21498,8 +21428,8 @@
             ]
         },
         {
-            "ID": 154,
-            "ParentID": 150,
+            "ID": 153,
+            "ParentID": 149,
             "Name": "Crystal1",
             "Active": true,
             "Components": [
@@ -21549,8 +21479,8 @@
             ]
         },
         {
-            "ID": 155,
-            "ParentID": 154,
+            "ID": 154,
+            "ParentID": 153,
             "Name": "Icon",
             "Active": true,
             "Components": [
@@ -21656,8 +21586,8 @@
             ]
         },
         {
-            "ID": 156,
-            "ParentID": 154,
+            "ID": 155,
+            "ParentID": 153,
             "Name": "SapphireCount",
             "Active": true,
             "Components": [
@@ -21729,8 +21659,8 @@
             ]
         },
         {
-            "ID": 157,
-            "ParentID": 150,
+            "ID": 156,
+            "ParentID": 149,
             "Name": "Crystal2",
             "Active": true,
             "Components": [
@@ -21780,8 +21710,8 @@
             ]
         },
         {
-            "ID": 158,
-            "ParentID": 157,
+            "ID": 157,
+            "ParentID": 156,
             "Name": "EmeraldCount",
             "Active": true,
             "Components": [
@@ -21853,8 +21783,8 @@
             ]
         },
         {
-            "ID": 159,
-            "ParentID": 149,
+            "ID": 158,
+            "ParentID": 148,
             "Name": "Fragile Gauge Progress",
             "Active": true,
             "Components": [
@@ -21960,8 +21890,8 @@
             ]
         },
         {
-            "ID": 160,
-            "ParentID": 159,
+            "ID": 159,
+            "ParentID": 158,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -22067,8 +21997,8 @@
             ]
         },
         {
-            "ID": 161,
-            "ParentID": 159,
+            "ID": 160,
+            "ParentID": 158,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -22174,8 +22104,8 @@
             ]
         },
         {
-            "ID": 162,
-            "ParentID": 66,
+            "ID": 161,
+            "ParentID": 65,
             "Name": "Canvas",
             "Active": true,
             "Components": [
@@ -22231,8 +22161,8 @@
             ]
         },
         {
-            "ID": 163,
-            "ParentID": 162,
+            "ID": 162,
+            "ParentID": 161,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -22345,8 +22275,8 @@
             ]
         },
         {
-            "ID": 164,
-            "ParentID": 66,
+            "ID": 163,
+            "ParentID": 65,
             "Name": "Canvas_KillPopUp",
             "Active": true,
             "Components": [
@@ -22402,8 +22332,8 @@
             ]
         },
         {
-            "ID": 165,
-            "ParentID": 66,
+            "ID": 164,
+            "ParentID": 65,
             "Name": "Script_Controller",
             "Active": true,
             "Components": [
@@ -22442,8 +22372,8 @@
             ]
         },
         {
-            "ID": 166,
-            "ParentID": 66,
+            "ID": 165,
+            "ParentID": 65,
             "Name": "Canvas_DashCool",
             "Active": true,
             "Components": [
@@ -22499,8 +22429,8 @@
             ]
         },
         {
-            "ID": 167,
-            "ParentID": 166,
+            "ID": 166,
+            "ParentID": 165,
             "Name": "DashCool",
             "Active": true,
             "Components": [
@@ -22625,8 +22555,8 @@
             ]
         },
         {
-            "ID": 168,
-            "ParentID": 167,
+            "ID": 167,
+            "ParentID": 166,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -22732,8 +22662,8 @@
             ]
         },
         {
-            "ID": 169,
-            "ParentID": 167,
+            "ID": 168,
+            "ParentID": 166,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -22839,8 +22769,8 @@
             ]
         },
         {
-            "ID": 170,
-            "ParentID": 167,
+            "ID": 169,
+            "ParentID": 166,
             "Name": "BG_Case",
             "Active": false,
             "Components": [
@@ -22946,8 +22876,8 @@
             ]
         },
         {
-            "ID": 171,
-            "ParentID": 167,
+            "ID": 170,
+            "ParentID": 166,
             "Name": "RingGauge_1",
             "Active": true,
             "Components": [
@@ -23053,8 +22983,8 @@
             ]
         },
         {
-            "ID": 172,
-            "ParentID": 167,
+            "ID": 171,
+            "ParentID": 166,
             "Name": "RingGauge_2",
             "Active": true,
             "Components": [
@@ -23160,8 +23090,8 @@
             ]
         },
         {
-            "ID": 173,
-            "ParentID": 167,
+            "ID": 172,
+            "ParentID": 166,
             "Name": "RingGauge_3",
             "Active": true,
             "Components": [
@@ -23267,8 +23197,8 @@
             ]
         },
         {
-            "ID": 174,
-            "ParentID": 167,
+            "ID": 173,
+            "ParentID": 166,
             "Name": "BG_Dash_Btn",
             "Active": true,
             "Components": [
@@ -23374,141 +23304,7 @@
             ]
         },
         {
-            "ID": 175,
-            "Name": "1_Monster_DullType_Green",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 12.899970054626465,
-                        "y": 1.1024773129975074e-06,
-                        "z": -4.057412147521973
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 5.0,
-                    "linearDamping": 15.0,
-                    "angularDamping": 30.0,
-                    "useGravity": false,
-                    "constraints": 63
-                },
-                {
-                    "Type": "BulletFactory",
-                    "Active": true
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        1.350000023841858,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 1,
-                    "radius": 1.1100000143051147,
-                    "height": 2.799999952316284
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/green/crystal_green.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "MonsterDullType",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 1,
-                    "Hp": 40.0,
-                    "MaxHp": 40.0,
-                    "MoveSpeed": 0.0,
-                    "AttackDamage": 0.5,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 15.0,
-                    "AttackRange": 30.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 3.0,
-                    "BulletSpeed": 1.0,
-                    "BulletLifetime": 3.0,
-                    "BulletScale": 1.0,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 9.800000190734863,
-                    "MinLaunchAngle": 20.0,
-                    "MaxLaunchAngle": 70.0,
-                    "ExplosionRadius": 3.0,
-                    "IsDoSingleShot": false
-                }
-            ]
-        },
-        {
-            "ID": 176,
+            "ID": 174,
             "Name": "1_Monster_PointedType_Green",
             "Active": true,
             "Components": [
@@ -23748,8 +23544,8 @@
             ]
         },
         {
-            "ID": 177,
-            "ParentID": 176,
+            "ID": 175,
+            "ParentID": 174,
             "Name": "PickingBoundaryCol",
             "Active": true,
             "Components": [
@@ -23805,7 +23601,7 @@
             ]
         },
         {
-            "ID": 178,
+            "ID": 176,
             "Name": "1_Monster_DullType_Red",
             "Active": true,
             "Components": [
@@ -23939,249 +23735,8 @@
             ]
         },
         {
-            "ID": 179,
-            "Name": "Monster_PointedType_Red",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 5.810482025146484,
-                        "y": 1.4441189932767884e-06,
-                        "z": -0.8919808864593506
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 5.0,
-                    "linearDamping": 15.0,
-                    "angularDamping": 30.0,
-                    "useGravity": false,
-                    "constraints": 42
-                },
-                {
-                    "Type": "BulletFactory",
-                    "Active": true
-                },
-                {
-                    "Type": "LogicFSM",
-                    "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        1.350000023841858,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 1,
-                    "radius": 1.2000000476837158,
-                    "height": 4.329999923706055
-                },
-                {
-                    "Type": "MonsterPointedType",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 3,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 12.100000381469727,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 300.0,
-                    "AttackRange": 8.399999618530273,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 3.0,
-                    "BulletSpeed": 11.899999618530273,
-                    "BulletLifetime": 3.0,
-                    "BulletScale": 1.0,
-                    "SpreadAngle": 0.9399999976158142,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 9.800000190734863,
-                    "MinLaunchAngle": 20.0,
-                    "MaxLaunchAngle": 70.0,
-                    "ExplosionRadius": 3.0,
-                    "IsDoSingleShot": false,
-                    "AttackAnimationDuration": 1.100000023841858,
-                    "FleeRange": 10.0,
-                    "SafeRange": 14.0,
-                    "FleeSpeedMultiplier": 1.7000000476837158,
-                    "FleeDistanceMin": 20.0,
-                    "FleeDistanceMax": 70.0,
-                    "FleeSafetyMargin": 1,
-                    "WallCollisionInfoTimeout": 3.0,
-                    "FleeStuckCheckInterval": 2.0,
-                    "FleeStuckDistanceThreshold": 0.5,
-                    "RedemptionSpeedMultiplier": 1.5,
-                    "RedemptionTargetDistance": 5.0
-                },
-                {
-                    "Type": "PathfindingAgent",
-                    "Active": true,
-                    "PathUpdateInterval": 1.0,
-                    "WaypointReachDistance": 0.5,
-                    "TargetMoveThreshold": 1.0
-                },
-                {
-                    "Type": "SkeletalMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/player/Final/monster/red_monster/crystal_monster_red_final.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Skinned_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                {
-                    "Type": "SkeletalAnimator",
-                    "Active": true,
-                    "Animations": [
-                        {
-                            "Name": "Fire",
-                            "Path": "Resource/Animation/main_character_animation_zombie_shooting.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "Idle",
-                            "Path": "Resource/Animation/main_character_animation_idle.fbx",
-                            "Notifies": []
-                        },
-                        {
-                            "Name": "WalkForward",
-                            "Path": "Resource/Animation/main_character_animation_zombie_running.fbx",
-                            "Notifies": []
-                        }
-                    ],
-                    "Layers": [
-                        {
-                            "Name": "New Layer",
-                            "Weight": 1.0,
-                            "BlendMode": 0,
-                            "MaskBones": [
-                                "Player_Rig",
-                                "Hips",
-                                "DEF-Weapon",
-                                "Ctrl-Weapon",
-                                "Spine",
-                                "UpLeg.Left",
-                                "UpLeg.Right",
-                                "Spine1",
-                                "Leg.Left",
-                                "Leg.Right",
-                                "Spine2",
-                                "Foot.Left",
-                                "Foot.Right",
-                                "Neck",
-                                "Shoulder.Left",
-                                "Shoulder.Right",
-                                "ToeBase.Left",
-                                "ToeBase.Right",
-                                "Head",
-                                "Arm.Left",
-                                "Arm.Right",
-                                "Toe_End.Left",
-                                "Toe_End.Right",
-                                "HeadTop_End",
-                                "ForeArm.Left",
-                                "ForeArm.Right",
-                                "Hand.Left",
-                                "Hand.Right",
-                                "HandThumb1.Left",
-                                "HandIndex1.Left",
-                                "HandThumb1.Right",
-                                "HandIndex1.Right",
-                                "HandThumb2.Left",
-                                "HandIndex2.Left",
-                                "Snap-Hand.L",
-                                "HandThumb2.Right",
-                                "HandIndex2.Right",
-                                "HandThumb3.Left",
-                                "HandIndex3.Left",
-                                "HandThumb3.Right",
-                                "HandIndex3.Right",
-                                "HandThumb4.Left",
-                                "HandIndex4.Left",
-                                "HandThumb4.Right",
-                                "HandIndex4.Right"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "Type": "AnimFSM",
-                    "Active": true,
-                    "LogicFSMObjectName": "",
-                    "BaseLayerIndex": 0,
-                    "UpperBodyLayerIndex": 1,
-                    "EnableProceduralAim": false,
-                    "MaxYaw": 70.0,
-                    "MaxPitch": 45.0,
-                    "AimLerpSpeed": 30.0,
-                    "SpineBoneName": "Spine",
-                    "AnimStates": []
-                }
-            ]
-        },
-        {
-            "ID": 180,
-            "ParentID": 179,
-            "Name": "PickingBoundaryCol",
+            "ID": 177,
+            "Name": "ExcutionIndicatorManager",
             "Active": true,
             "Components": [
                 {
@@ -24189,69 +23744,13 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 2.200000047683716,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": -0.0,
+                        "x": 0.0,
                         "y": 0.0,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 66.66667175292969,
-                        "y": 66.66667175292969,
-                        "z": 66.66667175292969
-                    }
-                },
-                {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": false,
-                    "layer": 7,
-                    "materialType": 1,
-                    "radius": 2.299999952316284
-                },
-                {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 1,
-                    "mass": 1.0,
-                    "linearDamping": 1.0,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 58
-                }
-            ]
-        },
-        {
-            "ID": 181,
-            "Name": "Monster_RoundType_Red",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -0.537873387336731,
-                        "y": 1.500000238418579,
-                        "z": -7.605747222900391
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 0.0,
-                        "z": -0.0,
+                        "z": 0.0,
                         "w": 1.0
                     },
                     "Scale": {
@@ -24261,139 +23760,163 @@
                     }
                 },
                 {
-                    "Type": "StaticMeshRenderer",
+                    "Type": "ExecutionIndicatorManager",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sphere/red/crystal_sphere_red.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
+                    "IndicatorPrefabName": "ExcutionIndicator",
+                    "RaycastMaxDistance": 1000.0,
+                    "IndicatorOffset": {
+                        "x": 0.0,
+                        "y": 1.5,
+                        "z": -0.5
+                    },
+                    "LinePrefabName": "ExecutionLine",
+                    "LinePlayerOffset": 0.699999988079071,
+                    "LineMonsterOffset": 1.7999999523162842,
+                    "LineBaseLength": 1.0,
+                    "LineHeight": 1.0,
+                    "LinePixelsPerMeter": 98.0,
+                    "LineMinPixels": 50.0,
+                    "LinePixelStep": 50.0,
+                    "ReflectIndicatorPrefabName": "Execution_Reflect_Indicator",
+                    "ReflectIndicatorHeight": 1.5,
+                    "ReflectIndicatorOffset": 4.0,
+                    "OffsetScaleZ": 0.8999999761581421,
+                    "OffsetScaleX": 1.100000023841858,
+                    "EffectPrefabName": "ExcutionEffectSprite",
+                    "EffectDuration": 0.800000011920929,
+                    "EffectScaleMultiplier": 1.5,
+                    "MonsterDeathDelay": 0.05000000074505806,
+                    "ExecutionTeleportAtNormalizedTime": 0.10000000149011612,
+                    "ExecutionMinDuration": 0.20000000298023224,
+                    "TeleportAfterimageNumSlices": 32,
+                    "TeleportAfterimageUseDefaultGradient": false,
+                    "TeleportAfterimageTrailGradient": 0.9700000286102295,
+                    "TriggerWaitFramesRequired": 1
+                },
+                {
+                    "Type": "ExecutionSlowScript",
+                    "Active": true,
+                    "SlowDuration": 1.5,
+                    "TargetTimeScale": 0.20000000298023224,
+                    "UseCrossfade": true,
+                    "FadeInRatio": 0.20000000298023224,
+                    "SustainRatio": 0.6000000238418579,
+                    "FadeOutRatio": 0.20000000298023224
+                }
+            ]
+        },
+        {
+            "ID": 178,
+            "Name": "Canvas",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
                         "y": 0.0,
                         "z": 0.0,
                         "w": 1.0
                     },
-                    "MaterialEmissive": {
+                    "Scale": {
                         "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "RectTransform",
+                    "Active": true,
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
+                },
+                {
+                    "Type": "Canvas",
+                    "Active": true,
+                    "LockRectTransform": true,
+                    "SortingOrder": 0
+                }
+            ]
+        },
+        {
+            "ID": 179,
+            "Name": "UIObject",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
                         "y": 0.0,
                         "z": 0.0
                     },
-                    "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 5.949999809265137,
-                    "OverrideMaterial": true,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 },
                 {
-                    "Type": "Rigidbody",
+                    "Type": "RectTransform",
                     "Active": true,
-                    "type": 0,
-                    "mass": 10.0,
-                    "linearDamping": 0.0010000000474974513,
-                    "angularDamping": 1.0,
-                    "useGravity": false,
-                    "constraints": 40
+                    "AnchoredPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "Width": 100.0,
+                    "Height": 100.0,
+                    "Pivot": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "AnchorMax": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "RotationZDeg": 0.0
                 },
                 {
-                    "Type": "LogicFSM",
+                    "Type": "UIToastAnimator",
                     "Active": true,
-                    "CurrentState": "",
-                    "States": []
-                },
-                {
-                    "Type": "CapsuleCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": false,
-                    "syncWithTransform": false,
-                    "layer": 2,
-                    "materialType": 0,
-                    "radius": 1.5,
-                    "height": 8.199999809265137
-                },
-                {
-                    "Type": "MonsterRoundRed",
-                    "Active": true,
-                    "MovementAcceleration": 80.0,
-                    "MovementDeceleration": 100.0,
-                    "MaxSpeedBrakeFactor": 15.0,
-                    "KinematicAcceleration": 50.0,
-                    "KinematicDeceleration": 70.0,
-                    "AttackType": 0,
-                    "MonsterTier": 0,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 10.0,
-                    "AttackDamage": 10.0,
-                    "FragileTime": 5.0,
-                    "Difficulty": 1,
-                    "DetectionRange": 15.0,
-                    "AttackRange": 12.0,
-                    "RotationSpeed": 2.0,
-                    "FireRate": 0.0,
-                    "BulletSpeed": 15.0,
-                    "BulletLifetime": 5.0,
-                    "BulletScale": 1.0,
-                    "SpreadAngle": 0.20000000298023224,
-                    "CurvedAngularSpeed": 2.0,
-                    "CurvedRadiusGrowth": 3.0,
-                    "OwnGravity": 25.0,
-                    "MinLaunchAngle": 20.0,
-                    "MaxLaunchAngle": 70.0,
-                    "ExplosionRadius": 3.0,
-                    "IsDoSingleShot": true,
-                    "IdleWaitTime": 1.0,
-                    "AttackAnimationDuration": 1.0,
-                    "AnimName_Idle": "Idle",
-                    "AnimName_IdleMove": "IdleMove",
-                    "AnimName_EngageMove": "EngageMove",
-                    "AnimName_EngageStop": "EngageStop",
-                    "AnimName_EngageAttack": "EngageAttack",
-                    "AnimName_Repositioning": "Repositioning",
-                    "AnimName_Fragile": "Fragile",
-                    "AnimName_Dead": "Dead",
-                    "MaxJumpStepDistance": 12.0,
-                    "JumpPrepareTime": 0.5,
-                    "LaunchAngle": 55.0,
-                    "LandingCheckRadius": 0.30000001192092896,
-                    "GroundY": 0.0,
-                    "GroundYOffset": 1.5,
-                    "JumpCheckDelay": 0.05000000074505806,
-                    "LandingYThreshold": 1.7000000476837158,
-                    "LandingThreshold": 0.004999999888241291,
-                    "FallAtkPrepareTime": 0.30000001192092896,
-                    "FallAtkLaunchAngle": 75.0,
-                    "FallAtkJumpSpeed": 50.0,
-                    "FallAtkLandingThreshold": 0.10000000149011612,
-                    "FallAtkPredictOffset": 3.0,
-                    "FallAtkMoveThreshold": 0.5,
-                    "FallAtkInitialFallSpeed": 40.0,
-                    "FallAtkTerminalFallSpeed": 80.0,
-                    "FallAtkLandDelay": 1.0
-                },
-                {
-                    "Type": "BulletFactory",
-                    "Active": true
+                    "EnterSlideOffsetX": 600.0,
+                    "EnterDuration": 1.0,
+                    "MoveDuration": 1.1200000047683716,
+                    "FadeInDuration": 0.5,
+                    "FadeOutDuration": 0.20000000298023224
                 }
             ]
         }

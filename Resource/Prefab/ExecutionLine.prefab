@@ -30,7 +30,7 @@
                 {
                     "Type": "SpriteRenderer",
                     "Active": true,
-                    "TextureFilePath": "Resource/Texture/Target_Line.png",
+                    "TextureFilePath": "Resource/Texture/Target_Line_Big_50.png",
                     "VSFilePath": "Resource/Shader/Vertex/Quad_VS.hlsl",
                     "OpaquePSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_PS.hlsl",
                     "CutoutPSFilePath": "Resource/Shader/Pixel/Sprite_Unlit_Cutout_PS.hlsl",
