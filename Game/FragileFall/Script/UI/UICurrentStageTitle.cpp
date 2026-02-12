@@ -78,7 +78,7 @@ namespace game
         if (m_done) return;
         if (!m_titleText) return;
 
-        const float dt = engine::Time::UnscaledDeltaTime();
+        const float dt = engine::Time::DeltaTime();
         m_elapsed += dt;
 
         if (m_elapsed < m_fadeDelay)
