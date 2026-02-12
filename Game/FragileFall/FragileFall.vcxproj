@@ -213,7 +213,6 @@
     <ClCompile Include="Script\PlayerAimDebugTextRenderer.cpp" />
     <ClCompile Include="Script\CharacterScript\Player\PlayerAimMeshController.cpp" />
     <ClCompile Include="Script\PlayerPreviewScript.cpp" />
-    <ClCompile Include="Script\Scene\SceneController_Boss.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Lobby.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Play.cpp" />
     <ClCompile Include="Script\Scene\SceneController_Main.cpp" />
@@ -312,7 +311,6 @@
     <ClInclude Include="Script\PlayerAimDebugTextRenderer.h" />
     <ClInclude Include="Script\CharacterScript\Player\PlayerAimMeshController.h" />
     <ClInclude Include="Script\PlayerPreviewScript.h" />
-    <ClInclude Include="Script\Scene\SceneController_Boss.h" />
     <ClInclude Include="Script\Scene\SceneController_Lobby.h" />
     <ClInclude Include="Script\Scene\SceneController_Play.h" />
     <ClInclude Include="Script\Scene\SceneController_Main.h" />
