@@ -9234,6 +9234,35 @@
                     "Active": true,
                     "LockRectTransform": true,
                     "SortingOrder": 10
+                },
+                {
+                    "Type": "AimModeController",
+                    "Active": true,
+                    "CursorSize": {
+                        "x": 50.0,
+                        "y": 50.0
+                    },
+                    "CursorDefaultOffset": {
+                        "x": 17.0,
+                        "y": 24.0
+                    },
+                    "CursorClickOffset": {
+                        "x": 17.0,
+                        "y": 24.0
+                    },
+                    "UseDefaultCursor": true,
+                    "UseClickCursor": true,
+                    "TargetPlaneY": 1.7000000476837158,
+                    "AimYOffsetWhenMoving": -0.4000000059604645,
+                    "OnEnemyRayMaxDistance": 1000.0,
+                    "EnableCursorPulse": true,
+                    "PulseMaxDistance": 10.0,
+                    "PulsePeakTimeScale": 0.5,
+                    "PulseDurationPerFR": 1.0,
+                    "ExecutionIntroScale": 1.5,
+                    "ExecutionIntroDistancePx": 10.0,
+                    "ExecutionIntroDuration": 0.5,
+                    "PostExecutionDuration": 0.5
                 }
             ]
         },

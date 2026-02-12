@@ -53,7 +53,7 @@
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "Layer": 0,
+                    "Layer": 3,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "TexturePath": "Resource/Texture/UI/Panel/UI_Popup2.png",
@@ -176,7 +176,7 @@
                 {
                     "Type": "UIImage",
                     "Active": true,
-                    "Layer": 0,
+                    "Layer": 3,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "TexturePath": "None",
@@ -283,7 +283,7 @@
                 {
                     "Type": "UIText",
                     "Active": true,
-                    "Layer": 0,
+                    "Layer": 3,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "글자",
