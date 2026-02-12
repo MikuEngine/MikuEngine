@@ -4,6 +4,7 @@
 
 namespace engine
 {
+    class RectTransform;
     class UIClickArea;
     class UIText;
 }
@@ -38,11 +39,15 @@ namespace game
         float m_wheelDelta = 0.0f;
 
         bool m_isActive = true;
+        bool m_isDragging = false;
 
         engine::GameObject* m_camera = nullptr;
         engine::GameObject* m_player = nullptr;
         engine::UIClickArea* m_clickArea = nullptr;
         engine::UIText* m_guideText = nullptr;
+        engine::RectTransform* m_guideRect = nullptr;
+        engine::Vector2 m_guideBasePos = { 0.0f, 0.0f };
+        float m_guideBobTime = 0.0f;
 
         engine::Vector3 m_cameraPos = {};
         engine::Vector3 m_dirFromTarget = {};
