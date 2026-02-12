@@ -1,0 +1,52 @@
+{
+    "Name": "Monster_PointedType_BaseLight2",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "Monster_PointedType_BaseLight2",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -0.030318498611450195,
+                        "y": 6.450225830078125,
+                        "z": -3.021313190460205
+                    },
+                    "Rotation": {
+                        "x": 8.998600264931156e-08,
+                        "y": -0.462198942899704,
+                        "z": 0.886776328086853,
+                        "w": 1.7265375618080725e-07
+                    },
+                    "Scale": {
+                        "x": 1.0001153945922852,
+                        "y": 1.0001881122589111,
+                        "z": 1.0001213550567627
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 100.0,
+                    "Range": 3.4000000953674316,
+                    "Angle": 37.709999084472656,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        }
+    ]
+}

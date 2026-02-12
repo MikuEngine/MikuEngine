@@ -1,10 +1,10 @@
 {
-    "Name": "PlayerFloorLight",
+    "Name": "MonsterFloorLight",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "PlayerFloorLight",
+            "Name": "MonsterFloorLight",
             "Active": true,
             "Components": [
                 {
@@ -12,8 +12,8 @@
                     "Active": true,
                     "Position": {
                         "x": 0.0,
-                        "y": 1.862645149230957e-09,
-                        "z": -1.862645149230957e-09
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -22,9 +22,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.9737000465393066,
-                        "y": 1.9737000465393066,
-                        "z": 1.9737000465393066
+                        "x": 1.2999999523162842,
+                        "y": 1.2999999523162842,
+                        "z": 1.2999999523162842
                     }
                 },
                 {
@@ -38,20 +38,20 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 0.8341854810714722,
-                        "z": 0.12355214357376099,
+                        "x": 0.9961389899253845,
+                        "y": 0.13578647375106812,
+                        "z": 0.023076556622982025,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
                         "x": 0.9845559597015381,
-                        "y": 0.5473979115486145,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 3.690000057220459,
+                    "MaterialEmissiveIntensity": 3.0,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,

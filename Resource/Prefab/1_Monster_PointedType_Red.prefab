@@ -13,7 +13,7 @@
                     "Position": {
                         "x": 0.0,
                         "y": 1.4534291494783247e-06,
-                        "z": 0.0
+                        "z": -9.819660186767578
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -77,14 +77,14 @@
                     "KinematicDeceleration": 70.0,
                     "AttackType": 0,
                     "MonsterTier": 3,
-                    "Hp": 100.0,
-                    "MaxHp": 100.0,
-                    "MoveSpeed": 12.0,
-                    "AttackDamage": 10.0,
+                    "Hp": 80.0,
+                    "MaxHp": 80.0,
+                    "MoveSpeed": 11.0,
+                    "AttackDamage": 1.0,
                     "FragileTime": 5.0,
                     "Difficulty": 1,
                     "DetectionRange": 300.0,
-                    "AttackRange": 11.699999809265137,
+                    "AttackRange": 12.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
                     "BulletSpeed": 12.0,
