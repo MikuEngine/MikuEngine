@@ -92,6 +92,7 @@
     <ClCompile Include="Script\StageClearExecutionTarget.cpp" />
     <ClCompile Include="Script\UI\UICurrencyAnimator.cpp" />
     <ClCompile Include="Script\UI\UICurrentStageTitle.cpp" />
+    <ClCompile Include="Script\Scene\SceneController_Boss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\ComponentRegistry.h" />
@@ -192,5 +193,6 @@
     <ClInclude Include="Script\StageClearExecutionTarget.h" />
     <ClInclude Include="Script\UI\UICurrencyAnimator.h" />
     <ClInclude Include="Script\UI\UICurrentStageTitle.h" />
+    <ClInclude Include="Script\Scene\SceneController_Boss.h" />
   </ItemGroup>
 </Project>
