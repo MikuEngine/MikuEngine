@@ -219,7 +219,7 @@
         {
             "ID": 3,
             "ParentID": 1,
-            "Name": "Count",
+            "Name": "RubyCount",
             "Active": true,
             "Components": [
                 {
@@ -286,10 +286,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true
                 }
             ]
         },
@@ -454,7 +450,7 @@
         {
             "ID": 6,
             "ParentID": 4,
-            "Name": "Count",
+            "Name": "SapphireCount",
             "Active": true,
             "Components": [
                 {
@@ -521,10 +517,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true
                 }
             ]
         },
@@ -689,7 +681,7 @@
         {
             "ID": 9,
             "ParentID": 7,
-            "Name": "Count",
+            "Name": "EmeraldCount",
             "Active": true,
             "Components": [
                 {
@@ -756,10 +748,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true
                 }
             ]
         }
