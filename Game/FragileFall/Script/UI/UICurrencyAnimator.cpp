@@ -6,6 +6,7 @@
 #include <Core/System/MyTime.h>
 
 #include <Manager/StageManager.h>
+#include <Core/System/Input.h>
 
 namespace game
 {
@@ -14,7 +15,7 @@ namespace game
         static int StepTowards(int cur, int target, int stepAbs)
         {
             if (cur == target) return cur;
-            if (stepAbs <= 0) return target;
+            if (stepAbs <= 0) return cur;
 
             const int diff = target - cur;
             const int ad = std::abs(diff);
@@ -60,75 +61,81 @@ namespace game
 
         auto& sm = StageManager::Get();
 
-        // 1) 타겟 갱신 (실제 값)
-        m_targetRuby = sm.GetRunRuby();
-        m_targetSapphire = sm.GetRunSapphire();
-        m_targetEmerald = sm.GetRunEmerald();
-
-        // 2) 이미 다 따라잡았으면 종료
-        const bool done =
-            (m_displayRuby == m_targetRuby) &&
-            (m_displaySapphire == m_targetSapphire) &&
-            (m_displayEmerald == m_targetEmerald);
-
-        if (done) return;
+        SetTargetValue(m_rubyCount, StageManager::Get().GetRunRuby());
+        SetTargetValue(m_sapphireCount, StageManager::Get().GetRunSapphire());
+        SetTargetValue(m_emeraldCount, StageManager::Get().GetRunEmerald());
 
         const float dt = engine::Time::DeltaTime();
+        const float speed = std::abs(m_countSpeed);
 
-        // 기존 주인님 로직 유지: dt 폭주 시 상한
-        const int rawStep = std::max(1, (int)std::floor(std::abs(m_countSpeed) * dt));
-        const int step = std::min(rawStep, 50);
-
-        // 3) 각 재화 display -> target 스텝 이동 + ApplyText
+        // Ruby
         {
-            const int prev = m_displayRuby;
-            m_displayRuby = StepTowards(m_displayRuby, m_targetRuby, step);
-            if (m_displayRuby != prev)
-                ApplyText(m_rubyCount, m_displayRuby);
+            m_accRuby += speed * dt;
+            const int step = (int)std::floor(m_accRuby);
+            if (step > 0)
+            {
+                m_accRuby -= (float)step;
+
+                const int prev = m_displayRuby;
+                m_displayRuby = StepTowards(m_displayRuby, m_targetRuby, step);
+                if (m_displayRuby != prev)
+                    ApplyText(m_rubyCount, m_displayRuby);
+            }
         }
 
+        // Sapphire
         {
-            const int prev = m_displaySapphire;
-            m_displaySapphire = StepTowards(m_displaySapphire, m_targetSapphire, step);
-            if (m_displaySapphire != prev)
-                ApplyText(m_sapphireCount, m_displaySapphire);
+            m_accSapphire += speed * dt;
+            const int step = (int)std::floor(m_accSapphire);
+            if (step > 0)
+            {
+                m_accSapphire -= (float)step;
+
+                const int prev = m_displaySapphire;
+                m_displaySapphire = StepTowards(m_displaySapphire, m_targetSapphire, step);
+                if (m_displaySapphire != prev)
+                    ApplyText(m_sapphireCount, m_displaySapphire);
+            }
         }
 
+        // Emerald
         {
-            const int prev = m_displayEmerald;
-            m_displayEmerald = StepTowards(m_displayEmerald, m_targetEmerald, step);
-            if (m_displayEmerald != prev)
-                ApplyText(m_emeraldCount, m_displayEmerald);
+            m_accEmerald += speed * dt;
+            const int step = (int)std::floor(m_accEmerald);
+            if (step > 0)
+            {
+                m_accEmerald -= (float)step;
+
+                const int prev = m_displayEmerald;
+                m_displayEmerald = StepTowards(m_displayEmerald, m_targetEmerald, step);
+                if (m_displayEmerald != prev)
+                    ApplyText(m_emeraldCount, m_displayEmerald);
+            }
         }
     }
 
-    void UICurrencyAnimator::SetTargetValue(int v)
+    void UICurrencyAnimator::SetTargetValue(engine::UIText* text, int v)
     {
-        m_targetValue = v;
+        if (!text) return;
 
-        if (m_rubyCount && !m_initialized)
-        {
-            m_displayValue = m_targetValue;
-            ApplyText(m_displayValue);
-            m_initialized = true;
-        }
+        if (text == m_rubyCount)          m_targetRuby = v;
+        else if (text == m_sapphireCount) m_targetSapphire = v;
+        else if (text == m_emeraldCount)  m_targetEmerald = v;
     }
 
-    void UICurrencyAnimator::AddDelta(int delta)
+    void UICurrencyAnimator::AddDelta(engine::UIText* text, int delta)
     {
-        SetTargetValue(m_targetValue + delta);
+        if (!text) return;
+
+        if (text == m_rubyCount)          m_targetRuby += delta;
+        else if (text == m_sapphireCount) m_targetSapphire += delta;
+        else if (text == m_emeraldCount)  m_targetEmerald += delta;
     }
 
     void UICurrencyAnimator::ApplyText(engine::UIText* text, int v)
     {
         if (!text) return;
         text->SetText(std::to_string(v));
-    }
-
-    void UICurrencyAnimator::ApplyText(int v)
-    {
-        // 기존 코드 호환: 루비에만 쓰는 기본 동작
-        ApplyText(m_rubyCount, v);
     }
 
     void UICurrencyAnimator::TriggerPulse()
@@ -165,12 +172,10 @@ namespace game
     void UICurrencyAnimator::Save(engine::json& j) const
     {
         Object::Save(j);
-        j["countSpeed"] = m_countSpeed;
     }
 
     void UICurrencyAnimator::Load(const engine::json& j)
     {
         Object::Load(j);
-        engine::JsonGet(j, "countSpeed", m_countSpeed);
     }
 }

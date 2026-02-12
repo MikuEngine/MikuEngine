@@ -13,6 +13,7 @@ namespace engine
 namespace game
 {
     class MonsterScript;
+    class StageClearExecutionTarget;
     class PlayerControllerScript;
     class ExecutionSlowScript;
     class CameraEffectScript;

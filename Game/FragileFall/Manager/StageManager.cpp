@@ -7,13 +7,17 @@
 #include <Engine/Framework/Object/GameObject/GameObject.h>
 #include <Engine/Framework/Object/Component/Transform.h>
 #include <Engine/Framework/Object/Component/BoxCollider.h>
+#include <Engine/Framework/Object/Component/SphereCollider.h>
+#include <Engine/Framework/Object/Component/Renderer/SpriteRenderer.h>
 #include <Engine/Framework/Object/Component/Light/Light.h>
+#include <Engine/Framework/Physics/PhysicsLayer.h>
 #include <Engine/Common/Utility/CSVReader.h>
 
 #include "LoadingScreenDrawer.h"
 #include "UpgradeProgressManager.h"
 #include "Script/MonsterGenerator/MonsterSpawner.h"
 #include "Script/DoorTriggerScript.h"
+#include "Script/StageClearExecutionTarget.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
 #include "Scene/GameScene.h"
 
@@ -137,7 +141,9 @@ namespace game
     {
         m_spawnedMonsters.clear();
         m_cleared = false;
+        m_waitingForStageClearExecution = false;
         m_currentMapEnvRoot = engine::Ptr<engine::GameObject>();
+        m_stageClearExecutionTarget = engine::Ptr<engine::GameObject>();
         m_stageClearRewardRuby = m_stageClearRewardSapphire = m_stageClearRewardEmerald = 0;
     }
 
@@ -248,11 +254,41 @@ namespace game
 
                 if (scene->GetName() != "10_PROTO_Tutorial")
                 {
-                    SetActiveDoor("StageDoor_Next", true);
-                    SetActiveDoor("StageDoor_Exit", false);
+                    m_waitingForStageClearExecution = true;
+                    SpawnStageClearExecutionTarget();
                 }
             }
         }
+    }
+
+    void StageManager::SpawnStageClearExecutionTarget()
+    {
+        if (m_stageClearExecutionTarget)
+        {
+            return;
+        }
+
+        engine::GameObject* target = engine::Prefab::Instantiate("StageClearExecutionTarget");
+        if (!target)
+        {
+            return;
+        }
+
+        m_stageClearExecutionTarget = engine::Ptr<engine::GameObject>(target);
+    }
+
+    void StageManager::OnStageClearExecutionTargetExecuted()
+    {
+        if (!m_waitingForStageClearExecution)
+        {
+            return;
+        }
+
+        m_waitingForStageClearExecution = false;
+        m_stageClearExecutionTarget = engine::Ptr<engine::GameObject>();
+
+        SetActiveDoor("StageDoor_Next", true);
+        SetActiveDoor("StageDoor_Exit", false);
     }
 
     bool StageManager::ShouldFragileGaugeRise() const

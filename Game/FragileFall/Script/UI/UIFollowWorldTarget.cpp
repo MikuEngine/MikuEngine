@@ -12,13 +12,35 @@
 
 namespace game
 {
+    namespace
+    {
+        static engine::Canvas* FindCanvasInParents(engine::GameObject* go)
+        {
+            if (!go) return nullptr;
+
+            engine::Transform* t = go->GetTransform();
+            while (t)
+            {
+                engine::GameObject* cur = t->GetGameObject();
+                if (cur)
+                {
+                    if (auto* c = cur->GetComponent<engine::Canvas>())
+                        return c;
+                }
+
+                t = t->GetParent();
+            }
+
+            return nullptr;
+        }
+    }
+
     void UIFollowWorldTarget::Awake()
     {
         auto* go = GetGameObject();
         if (!go) return;
 
         m_rt = go->GetComponent<engine::RectTransform>();
-        m_img = go->GetComponent<engine::UIImage>();
         
         PrepareAnchorOnce();
         RebindTarget();
@@ -51,7 +73,8 @@ namespace game
             return;
         }
 
-        engine::Canvas* c = (m_img) ? m_img->GetCanvasInParent() : nullptr;
+        engine::Canvas* c = FindCanvasInParents(GetGameObject());
+
         if (!c)
         {
             SetVisible(false);
@@ -80,13 +103,6 @@ namespace game
         const float ndcX = clip.x * invW;
         const float ndcY = clip.y * invW;
 
-        if (m_hideWhenOffscreen &&
-            (ndcX < -1.f || ndcX > 1.f || ndcY < -1.f || ndcY > 1.f))
-        {
-            SetVisible(false);
-            return;
-        }
-
         const auto& vp = engine::GraphicsDevice::Get().GetViewport();
         const float vpW = vp.Width;
         const float vpH = vp.Height;
@@ -107,19 +123,13 @@ namespace game
         const engine::Vector2 ref = c->GetReferenceResolution();
         const engine::UIRect refRoot{ 0.f, 0.f, ref.x, ref.y };
 
-        if (vpW != m_cachedVpW || vpH != m_cachedVpH)
-        {
-            m_cachedVpW = vpW;
-            m_cachedVpH = vpH;
-
-            m_cachedParentRect = (m_parentRT)
-                ? m_parentRT->GetWorldRectResolved(refRoot)
-                : refRoot;
-        }
+        const engine::UIRect parentRect = (m_parentRT)
+            ? m_parentRT->GetWorldRectResolved(refRoot)
+            : refRoot;
 
         const engine::Vector2 finalPos(
-            screenRef.x - m_cachedParentRect.x,
-            screenRef.y - m_cachedParentRect.y
+            screenRef.x - parentRect.x,
+            screenRef.y - parentRect.y
         );
 
         SetVisible(true);
@@ -135,7 +145,7 @@ namespace game
         }
 
         ImGui::DragFloat3("Offset", &m_offset.x);
-        ImGui::Checkbox("Hide When Offscreen", &m_hideWhenOffscreen);
+        //ImGui::Checkbox("Hide When Offscreen", &m_hideWhenOffscreen);
         ImGui::Checkbox("Visible", &m_visible);
     }
 
@@ -144,7 +154,7 @@ namespace game
         Object::Save(j);
         j["TargetName"] = m_targetName;
         j["Offset"] = m_offset;
-        j["HideWhenOffscreen"] = m_hideWhenOffscreen;
+        //j["HideWhenOffscreen"] = m_hideWhenOffscreen;
     }
 
     void UIFollowWorldTarget::Load(const engine::json& j)
@@ -152,7 +162,7 @@ namespace game
         Object::Load(j);
         engine::JsonGet(j, "TargetName", m_targetName);
         engine::JsonGet(j, "Offset", m_offset);
-        engine::JsonGet(j, "HideWhenOffscreen", m_hideWhenOffscreen);
+        //engine::JsonGet(j, "HideWhenOffscreen", m_hideWhenOffscreen);
 
         m_target = nullptr;
         m_lastBoundName.clear();
@@ -184,14 +194,13 @@ namespace game
 
     void UIFollowWorldTarget::SetVisible(bool v)
     {
-        if (!m_img) return;
+        auto* go = GetGameObject();
+        if (!go) return;
 
         if (m_cachedVisible == v) return;
 
         m_cachedVisible = v;
 
-        engine::Vector4 c = m_img->GetColor();
-        c.w = v ? 1.f : 0.f;
-        m_img->SetColor(c);
+        go->SetActive(v);
     }
 }

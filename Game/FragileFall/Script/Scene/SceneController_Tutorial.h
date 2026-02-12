@@ -68,7 +68,7 @@ namespace game
         //bool m_isDead = false;
 
     private:
-        std::string msgPath = "Resource/Data/Message/MessageTable.csv";
+        const std::string msgPath = "Resource/Data/Message/MessageTable.csv";
 
     private:
         // GameObject
