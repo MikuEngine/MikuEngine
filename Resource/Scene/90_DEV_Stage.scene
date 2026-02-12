@@ -10788,7 +10788,7 @@
                     "FragileGaugeRisePerSecond": 1.0,
                     "PlayerMaxHP": 100.0,
                     "InvincibleTime": 0.5,
-                    "IsInvincible": true,
+                    "IsInvincible": false,
                     "EED_Enable": false,
                     "EED_DamageScale": 5.0,
                     "EED_Damage": 15.0,
