@@ -3172,7 +3172,7 @@
             "ID": 40,
             "ParentID": 22,
             "Name": "Panel_Fail",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -3344,7 +3344,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "TexturePath": "None",
+                    "TexturePath": "Resource/Texture/UI/Panel/UI_Popup.png",
                     "EffectMode": 0,
                     "Effect0": {
                         "x": 0.0,
@@ -3461,7 +3461,7 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": true,
+                    "Bold": false,
                     "AlignH": 1,
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
