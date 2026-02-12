@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "SceneController_Main.h"
 
 #include <Core/App/AppContext.h>
@@ -204,7 +204,12 @@ namespace game
 
     void SceneController_Main::StartGame()
     {
-        GameScene::Change(SceneID::Lobby);
+        auto& sm = StageManager::Get();
+
+        if (sm.IsTutorialCompleted())
+            GameScene::Change(SceneID::Lobby);
+        else
+            GameScene::Change(SceneID::Tutorial);
     }
 
     void SceneController_Main::OpenOption()
