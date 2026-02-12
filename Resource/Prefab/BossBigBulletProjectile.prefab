@@ -22,9 +22,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
                     }
                 },
                 {
@@ -79,7 +79,7 @@
                     "syncWithTransform": false,
                     "layer": 16,
                     "materialType": 1,
-                    "radius": 0.5
+                    "radius": 1.0
                 },
                 {
                     "Type": "BossBigProjectile",
@@ -130,7 +130,7 @@
                     "syncWithTransform": false,
                     "layer": 7,
                     "materialType": 1,
-                    "radius": 0.5
+                    "radius": 1.0
                 }
             ]
         }
