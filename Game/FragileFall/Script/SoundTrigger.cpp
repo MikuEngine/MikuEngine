@@ -80,6 +80,7 @@ namespace game
     {
         Object::Save(j);
 
+        j["isTriggerActive"] = m_isActive;
         j["Radius"] = m_radius;
         j["SoundKey"] = m_soundKey;
         j["SoundOption"] = m_soundOption;
@@ -89,6 +90,7 @@ namespace game
     {
         Object::Load(j);
 
+		engine::JsonGet(j, "isTriggerActive", m_isActive);
 		engine::JsonGet(j, "Radius", m_radius);
         engine::JsonGet(j, "SoundKey", m_soundKey);
         engine::JsonGet(j, "SoundOption", m_soundOption);

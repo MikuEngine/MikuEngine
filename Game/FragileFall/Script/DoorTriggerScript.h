@@ -12,6 +12,8 @@ namespace game
     private:
         std::string m_doorObjectName;
         std::string m_nextSceneName;
+        std::string m_soundTriggerName;
+        std::string m_effectPrefabName;
         bool m_isActive = true;
 
         engine::Ptr<engine::GameObject> m_doorNextObject = nullptr;

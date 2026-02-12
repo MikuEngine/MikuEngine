@@ -1,0 +1,52 @@
+{
+    "Name": "Light_Door_lobby",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "Light_Door_lobby",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -0.8991552591323853,
+                        "y": 6.681666374206543,
+                        "z": -21.24911880493164
+                    },
+                    "Rotation": {
+                        "x": 0.4102531671524048,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 0.9119716882705688
+                    },
+                    "Scale": {
+                        "x": 1.0002373456954956,
+                        "y": 1.000146508216858,
+                        "z": 1.000345230102539
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 2,
+                    "Color": {
+                        "x": 0.9254902005195618,
+                        "y": 0.9411764740943909,
+                        "z": 0.572549045085907
+                    },
+                    "Intensity": 43.599998474121094,
+                    "Range": 11.300000190734863,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 0.0,
+                    "CastShadows": true
+                }
+            ]
+        }
+    ]
+}
