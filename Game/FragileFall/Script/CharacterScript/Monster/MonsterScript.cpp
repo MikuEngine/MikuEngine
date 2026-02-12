@@ -810,9 +810,6 @@ namespace game
 		// 부활 콜백
 		OnRevive();
 
-		// 사운드
-		engine::SoundSystem::Get().Play("Monster_Fragile_End", "SFX/Monster");
-
 		LOG_PRINT("[MonsterScript] Monster revived from Fragile state!");
 	}
 
