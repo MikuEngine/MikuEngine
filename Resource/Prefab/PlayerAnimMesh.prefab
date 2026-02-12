@@ -11,15 +11,15 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -8.27136516571045,
-                        "y": 0.009999999776482582,
-                        "z": 15.272040367126465
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -10.0
                     },
                     "Rotation": {
                         "x": 0.0,
-                        "y": -0.3261846899986267,
+                        "y": 0.0,
                         "z": 0.0,
-                        "w": -0.9453039765357971
+                        "w": 1.0
                     },
                     "Scale": {
                         "x": 1.0,
@@ -56,90 +56,12 @@
                     "LogicFSMObjectName": "Player",
                     "BaseLayerIndex": 0,
                     "UpperBodyLayerIndex": 1,
-                    "EnableProceduralAim": false,
+                    "EnableProceduralAim": true,
                     "MaxYaw": 70.0,
                     "MaxPitch": 45.0,
                     "AimLerpSpeed": 30.0,
                     "SpineBoneName": "Spine",
-                    "AnimStates": [
-                        {
-                            "StateName": "Idle",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "UseSplitAnimation": true,
-                            "LowerAnimation": "Idle",
-                            "LowerLoop": true,
-                            "UpperAnimation": "",
-                            "UpperLoop": false,
-                            "UpperBodyWeight": 0.0
-                        },
-                        {
-                            "StateName": "WalkForward",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "UseSplitAnimation": true,
-                            "LowerAnimation": "WalkForward",
-                            "LowerLoop": true,
-                            "UpperAnimation": "",
-                            "UpperLoop": false,
-                            "UpperBodyWeight": 0.0
-                        },
-                        {
-                            "StateName": "Dash",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "UseSplitAnimation": false,
-                            "AnimationName": "Dash",
-                            "Loop": false,
-                            "LayerIndex": 0,
-                            "Speed": 1.0
-                        },
-                        {
-                            "StateName": "Execution",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "UseSplitAnimation": false,
-                            "AnimationName": "Execution",
-                            "Loop": false,
-                            "LayerIndex": 0,
-                            "Speed": 1.0
-                        },
-                        {
-                            "StateName": "WalkBackward",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "UseSplitAnimation": true,
-                            "LowerAnimation": "WalkBackward",
-                            "LowerLoop": true,
-                            "UpperAnimation": "",
-                            "UpperLoop": false,
-                            "UpperBodyWeight": 0.0
-                        },
-                        {
-                            "StateName": "IdleShoot",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "UseSplitAnimation": false,
-                            "AnimationName": "Fire",
-                            "Loop": true,
-                            "LayerIndex": 0,
-                            "Speed": 1.0
-                        },
-                        {
-                            "StateName": "WalkForwardShoot",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "UseSplitAnimation": true,
-                            "LowerAnimation": "WalkForward",
-                            "LowerLoop": true,
-                            "UpperAnimation": "Fire",
-                            "UpperLoop": true,
-                            "UpperBodyWeight": 1.0
-                        },
-                        {
-                            "StateName": "WalkBackwardShoot",
-                            "CrossFadeDuration": 0.10000000149011612,
-                            "UseSplitAnimation": true,
-                            "LowerAnimation": "WalkBackward",
-                            "LowerLoop": true,
-                            "UpperAnimation": "Fire",
-                            "UpperLoop": true,
-                            "UpperBodyWeight": 1.0
-                        }
-                    ]
+                    "AnimStates": []
                 },
                 {
                     "Type": "AfterimageRenderer",
@@ -150,13 +72,13 @@
                         1.0,
                         1.0
                     ],
-                    "SolidInitialAlpha": 0.6399999856948853,
-                    "SolidDecaySpeed": 7.599999904632568,
+                    "SolidInitialAlpha": 0.4000000059604645,
+                    "SolidDecaySpeed": 8.800000190734863,
                     "SolidDecayMode": 0,
                     "SolidDecayCurve": 1,
-                    "SolidEmissiveIntensity": 11.300000190734863,
-                    "SolidTrailGradient": 0.4099999964237213,
-                    "SolidMaxSlices": 24,
+                    "SolidEmissiveIntensity": 6.300000190734863,
+                    "SolidTrailGradient": 0.4000000059604645,
+                    "SolidMaxSlices": 16,
                     "SolidSampleInterval": 0.03500000014901161,
                     "DrawAlphaLayer": false,
                     "AlphaTint": [
@@ -295,250 +217,8 @@
                                 "HandThumb4.Right",
                                 "HandIndex4.Right"
                             ]
-                        },
-                        {
-                            "Name": "Upper Body",
-                            "Weight": 0.0,
-                            "BlendMode": 0,
-                            "MaskBones": [
-                                "Spine",
-                                "Spine1",
-                                "Spine2",
-                                "Neck",
-                                "Shoulder.Left",
-                                "Shoulder.Right",
-                                "Head",
-                                "Arm.Left",
-                                "Arm.Right",
-                                "HeadTop_End",
-                                "ForeArm.Left",
-                                "ForeArm.Right",
-                                "Hand.Left",
-                                "Hand.Right",
-                                "HandThumb1.Left",
-                                "HandIndex1.Left",
-                                "HandThumb1.Right",
-                                "HandIndex1.Right",
-                                "HandThumb2.Left",
-                                "HandIndex2.Left",
-                                "Snap-Hand.L",
-                                "HandThumb2.Right",
-                                "HandIndex2.Right",
-                                "HandThumb3.Left",
-                                "HandIndex3.Left",
-                                "HandThumb3.Right",
-                                "HandIndex3.Right",
-                                "HandThumb4.Left",
-                                "HandIndex4.Left",
-                                "HandThumb4.Right",
-                                "HandIndex4.Right"
-                            ]
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "ID": 1,
-            "ParentID": 0,
-            "Name": "GameObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": -2.4100000858306885,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": 5.960464477539063e-08,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 0.75,
-                        "y": 1.0,
-                        "z": 0.75
-                    }
-                },
-                {
-                    "Type": "StaticMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/character_shadow.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
-                    "TransparentVSFilePath": "",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 0.8803088665008545,
-                        "y": 0.8719494938850403,
-                        "z": 0.713763952255249,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 3.109999895095825,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 2,
-            "ParentID": 0,
-            "Name": "GameObject",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 1.9431114196777344e-05,
-                        "y": 1.2169837951660156,
-                        "z": 2.0503997802734375e-05
-                    },
-                    "Rotation": {
-                        "x": 0.7071069478988647,
-                        "y": -7.026864068393479e-08,
-                        "z": 4.0388653133049957e-07,
-                        "w": 0.7071065902709961
-                    },
-                    "Scale": {
-                        "x": 1.000008463859558,
-                        "y": 0.9999783635139465,
-                        "z": 0.9998591542243958
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 2,
-                    "Color": {
-                        "x": 0.892453134059906,
-                        "y": 0.9189189076423645,
-                        "z": 0.6208911538124084
-                    },
-                    "Intensity": 23.399999618530273,
-                    "Range": 1.2000000476837158,
-                    "Angle": 49.060001373291016,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 3,
-            "ParentID": 0,
-            "Name": "char_light_1",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.29283249378204346,
-                        "y": 3.2642393112182617,
-                        "z": 0.9006624221801758
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": -0.587704062461853,
-                        "z": -0.0,
-                        "w": 0.8090759515762329
-                    },
-                    "Scale": {
-                        "x": 1.0000048875808716,
-                        "y": 1.0,
-                        "z": 1.0000048875808716
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "Intensity": 19.0,
-                    "Range": 2.200000047683716,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
-                }
-            ]
-        },
-        {
-            "ID": 4,
-            "ParentID": 0,
-            "Name": "char_light_2",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 1.8715858459472656e-05,
-                        "y": 3.2642393112182617,
-                        "z": -0.7636919021606445
-                    },
-                    "Rotation": {
-                        "x": -0.0,
-                        "y": -7.823061309863988e-08,
-                        "z": -0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0000061988830566,
-                        "y": 1.0,
-                        "z": 1.0000061988830566
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "Active": true,
-                    "LightType": 1,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "Intensity": 19.0,
-                    "Range": 2.200000047683716,
-                    "Angle": 45.0,
-                    "Near": 90000.0,
-                    "Far": 100000.0,
-                    "ForwardDistance": 1000.0,
-                    "HeightRatio": 0.8999999761581421,
-                    "ShadowBias": 9.999999747378752e-05,
-                    "CastShadows": false
                 }
             ]
         }
