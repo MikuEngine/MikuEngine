@@ -11,9 +11,9 @@
                     "Type": "Transform",
                     "Active": true,
                     "Position": {
-                        "x": -0.2692311406135559,
+                        "x": 0.0,
                         "y": 1.7079148292541504,
-                        "z": 6.45214319229126
+                        "z": 0.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -31,7 +31,7 @@
                     "Type": "ParticleEffect",
                     "Active": true,
                     "IsPlaying": true,
-                    "AutoDestroy": false,
+                    "AutoDestroy": true,
                     "Duration": 0.0,
                     "Emitters": [
                         {

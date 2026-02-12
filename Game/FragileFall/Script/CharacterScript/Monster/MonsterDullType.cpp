@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterDullType.h"
 
 #include "Script/CharacterScript/Common/BulletFactory.h"
@@ -38,6 +38,13 @@ namespace game
         }
         
         // 둔탁 타입은 StaticMesh를 사용하므로 애니메이션 관련 초기화 불필요
+        if (m_monsterTier == MonsterTier::Purple)
+        {
+            // 첫 Update에서 즉시 재평가되도록 타이머를 0으로 둔다.
+            // 초기 프레임 피격으로 인한 오판을 막기 위해 기본값은 "다른 몬스터 존재"로 시작한다.
+            m_purpleAliveCheckTimer = 0.0f;
+            m_hasOtherMonstersAlive = true;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -161,14 +168,25 @@ namespace game
         {
             if (!m_isDead)
             {
-                m_hasOtherMonstersAlive = CheckMonstersPurpleType();
-                m_logicFSM->SetParameter("HasMonsters", m_hasOtherMonstersAlive);
+                m_purpleAliveCheckTimer -= engine::Time::DeltaTime();
+                if (m_purpleAliveCheckTimer <= 0.0f)
+                {
+                    m_purpleAliveCheckTimer = m_purpleAliveCheckInterval;
+                    m_hasOtherMonstersAlive = CheckMonstersPurpleType();
+                    if (m_logicFSM)
+                    {
+                        m_logicFSM->SetParameter("HasMonsters", m_hasOtherMonstersAlive);
+                    }
+                }
 
                 if (!m_hasOtherMonstersAlive)
                 {
                     m_Hp = 0;
                     m_isDead = true;
-                    m_logicFSM->SetTrigger("Die");
+                    if (m_logicFSM)
+                    {
+                        m_logicFSM->SetTrigger("Die");
+                    }
                 }
             }
         }
@@ -267,10 +285,13 @@ namespace game
 
     bool MonsterDullType::CheckMonstersPurpleType()
     {
-        int monsterCount = 0;
-        int selfCount = 0;
+        auto* scene = engine::SceneManager::Get().GetScene();
+        if (!scene)
+        {
+            return false;
+        }
 
-        const auto& gameObjects = engine::SceneManager::Get().GetScene()->GetGameObjects();
+        const auto& gameObjects = scene->GetGameObjects();
 
         for (const auto& go : gameObjects)
         {
@@ -278,17 +299,41 @@ namespace game
             {
                 continue;
             }
-            else if (go.get() == GetGameObject())
+
+            // 자기 자신은 카운트 제외
+            if (go.get() == GetGameObject())
             {
-                selfCount++;
+                continue;
+            }
+
+            // 이미 파괴 예정인 오브젝트는 제외
+            if (go->IsPendingKill())
+            {
+                continue;
             }
 
             auto* monster = go->GetComponent<MonsterScript>();
-
-            if (monster && !monster->m_isDead)
+            if (!monster)
             {
-                return true;
+                continue;
             }
+
+            // Dead 상태거나 사망 플래그면 제외
+            if (monster->m_isDead || monster->GetCurrentState() == "Dead")
+            {
+                continue;
+            }
+
+            // 같은 둔탁보라(MonsterDullType + Purple)는 카운트 제외
+            if (auto* dullMonster = dynamic_cast<MonsterDullType*>(monster))
+            {
+                if (dullMonster->GetMonsterTier() == MonsterTier::Purple)
+                {
+                    continue;
+                }
+            }
+
+            return true;
         }
 
         return false; 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "MonsterScript.h"
 #include "Script/CharacterScript/Common/BulletParams.h"
@@ -24,6 +24,8 @@ namespace game
         // 둔탁 보라
         // ─────────────────────────────────────────────
         bool m_hasOtherMonstersAlive = false;
+        float m_purpleAliveCheckInterval = 1.0f;
+        float m_purpleAliveCheckTimer = 0.0f;
 
     public:
         void Awake() override;
