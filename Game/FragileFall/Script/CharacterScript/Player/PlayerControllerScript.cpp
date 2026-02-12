@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "PlayerControllerScript.h"
 
 #include <algorithm>  // std::remove_if
@@ -940,7 +940,7 @@ namespace game
 		{
 			// 처형 상태 진입 시 속도 초기화
 			m_currentVelocity = engine::Vector3::Zero;
-			StartExecutionInvincibility();
+			//StartExecutionInvincibility();
 			
 			// Dynamic Rigidbody 속도도 초기화
 			if (m_rigidbody && m_rigidbody->IsDynamic())
