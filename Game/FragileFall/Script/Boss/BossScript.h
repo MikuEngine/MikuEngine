@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/Interface/IDamageable.h"
@@ -11,6 +11,7 @@ namespace engine
     class Transform;
     class UIProgressBar;
     class Camera;
+    class UIImage;
 }
 
 namespace game
@@ -182,6 +183,12 @@ namespace game
 
         engine::Ptr<engine::GameObject> m_bossHpBarObject = nullptr;
         engine::Ptr<engine::UIProgressBar> m_bossHpBar = nullptr;
+
+        std::string m_hpFillTex_Shield = "None";  // 실드(무적) 상태 Fill 텍스처 경로/키
+        std::string m_hpFillTex_Normal = "None";  // 실드 해제 상태 Fill 텍스처 경로/키
+        
+        engine::Ptr<engine::UIImage> m_bossHpFillImage = nullptr; // Fill UIImage 캐시
+        bool m_prevShieldActive = false; // 상태 변화 감지용
 
         bool m_canBeCrystallized = true;  // 구체 패턴의 투사체 결정화 가능 여부
 
@@ -427,6 +434,9 @@ namespace game
         void Load(const engine::json& j) override;
 
     private:
+        void CacheBossHpBarFillImage();
+        void ApplyBossHpBarFillByShieldState();
+        void OnShieldStateChanged(bool newShieldActive);
         void CacheIntroReferences();
         void SetBossHpBarVisible(bool visible);
         void UpdateBossHpBarValue();

@@ -11578,7 +11578,7 @@
                     "Position": {
                         "x": -3.1261761250789277e-06,
                         "y": 0.0,
-                        "z": -14.0
+                        "z": -15.0
                     },
                     "Rotation": {
                         "x": -0.0,
@@ -11668,7 +11668,7 @@
                     "Type": "SoundTrigger",
                     "Active": true,
                     "isTriggerActive": false,
-                    "Radius": 7.0,
+                    "Radius": 10.0,
                     "SoundKey": "Door_BackLobby",
                     "SoundOption": "SFX/Door"
                 }
