@@ -1,7 +1,8 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "BossMapCrystalDestructible.h"
 
 #include <Framework/Object/GameObject/GameObject.h>
+#include <Framework/System/SoundSystem.h>
 
 #include "BossScript.h"
 

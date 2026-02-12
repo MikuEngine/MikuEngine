@@ -16,9 +16,9 @@
                         "z": 0.0
                     },
                     "Rotation": {
-                        "x": 0.0,
+                        "x": -0.0,
                         "y": 0.0,
-                        "z": 0.0,
+                        "z": -0.0,
                         "w": 1.0
                     },
                     "Scale": {
@@ -51,7 +51,7 @@
                     "MaterialRoughness": 1.0,
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 11.920000076293945,
+                    "MaterialEmissiveIntensity": 90.5,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
@@ -84,6 +84,25 @@
                 {
                     "Type": "BossBigProjectile",
                     "Active": true
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.702702522277832,
+                        "y": 0.0,
+                        "z": 1.0
+                    },
+                    "Intensity": 49.20000076293945,
+                    "Range": 3.5,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
                 }
             ]
         },

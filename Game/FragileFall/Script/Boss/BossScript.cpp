@@ -11,6 +11,7 @@
 #include <Framework/Object/Component/Particle/ParticleEffect.h>
 #include <Common/Math/MathUtility.h>
 #include <Framework/Asset/Prefab.h>
+#include <Framework/System/SoundSystem.h>
 #include <algorithm>
 #include <cctype>
 #include <cmath>
@@ -956,6 +957,8 @@ namespace game
     {
         StopAndHideBossRenderers();
 
+        engine::SoundSystem::Get().Play("Player_Break_Random", "SFX/Player");
+
         if (!m_deathCoreBurstParticlePrefab.empty())
         {
             const engine::Vector3 center = GetTransform()->GetWorldPosition() + engine::Vector3(0.0f, m_deathCoreBurstOffsetY, 0.0f);
@@ -1005,6 +1008,9 @@ namespace game
 
         if (!m_deathMapCrystalBurstParticlePrefab.empty())
         {
+            // 너무 시끄러움..
+            //engine::SoundSystem::Get().Play("Player_Break_Random", "SFX/Player");
+
             auto effect = engine::Prefab::Instantiate(m_deathMapCrystalBurstParticlePrefab);
             if (effect && effect->GetTransform() && go->GetTransform())
             {
