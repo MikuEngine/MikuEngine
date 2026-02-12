@@ -5981,7 +5981,7 @@
         {
             "ID": 70,
             "ParentID": 68,
-            "Name": "Count",
+            "Name": "RubyCount",
             "Active": true,
             "Components": [
                 {
@@ -6048,11 +6048,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true,
-                    "countSpeed": 50.0
                 }
             ]
         },
@@ -6217,7 +6212,7 @@
         {
             "ID": 73,
             "ParentID": 71,
-            "Name": "Count",
+            "Name": "SapphireCount",
             "Active": true,
             "Components": [
                 {
@@ -6284,11 +6279,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true,
-                    "countSpeed": 50.0
                 }
             ]
         },
@@ -6453,7 +6443,7 @@
         {
             "ID": 76,
             "ParentID": 74,
-            "Name": "Count",
+            "Name": "EmeraldCount",
             "Active": true,
             "Components": [
                 {
@@ -6520,11 +6510,6 @@
                     "AlignV": 1,
                     "LetterSpacingPx": 0.0,
                     "LineSpacingMul": 1.0
-                },
-                {
-                    "Type": "UICurrencyAnimator",
-                    "Active": true,
-                    "countSpeed": 50.0
                 }
             ]
         },
@@ -8844,6 +8829,10 @@
                 },
                 {
                     "Type": "HUDController",
+                    "Active": true
+                },
+                {
+                    "Type": "UICurrencyAnimator",
                     "Active": true
                 }
             ]

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
 
@@ -48,10 +48,6 @@ namespace game
 
     private:
         PlayerControllerScript* m_playerScript = nullptr;
-
-        engine::UIText* m_currencyRubyText = nullptr;
-        engine::UIText* m_currencySapphireText = nullptr;
-        engine::UIText* m_currencyEmeraldText = nullptr;
 
         engine::UIProgressBar* m_fragileGaugeProgress = nullptr;
 

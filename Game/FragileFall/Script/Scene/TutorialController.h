@@ -1,10 +1,11 @@
 ﻿#pragma once
 
 #include <Framework/Object/Component/Script.h>
-#include <Script/CharacterScript/Player/PlayerControllerScript.h>
 #include <Framework/Object/Component/UI/UIClickArea.h>
-
+#include <Script/CharacterScript/Player/PlayerControllerScript.h>
+#include <Manager/MessageCatalog.h>
 #include "Script/UI/UIMessageQueue.h"
+
 
 namespace engine
 {
@@ -13,6 +14,8 @@ namespace engine
 
 namespace game
 {
+    extern MessageCatalog g_msg;
+
     struct TutorialStep
     {
         std::vector<std::string> pages; // 동시에 보여줄 메시지들

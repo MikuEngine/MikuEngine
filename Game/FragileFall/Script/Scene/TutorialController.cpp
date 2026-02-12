@@ -15,6 +15,7 @@
 #include <Framework/Object/Component/RectTransform.h>
 
 #include <Framework/System/SoundSystem.h>
+
 #include "Manager/StageManager.h"
 #include "Script/CharacterScript/Monster/MonsterScript.h"
 
@@ -27,32 +28,32 @@ namespace game
     namespace
     {
         const std::vector<TutorialStep> g_steps = {
-            {{"WASD로 이동해보세요.\nShift로 대시가 가능합니다."}},
+            {{"Tutorial_001"}},
 
-            {{"왼쪽 하단 프레자일 게이지는\n전투중일 때 지속적으로 상승하며\n100 % 달성시 사망합니다."}},
+            {{"Tutorial_002"}},
 
-            {{"좌클릭을 눌러 사격하여\n몬스터를 쓰러트리세요."}},// 1
+            {{"Tutorial_003"}},// 1
 
             {{
-            "특정 몬스터는 즉시 사망하지 않고\n프레자일 상태가 됩니다.",// 1
-            "프레자일 상태가 된 몬스터에게\n가까이 다가가여 조준점을 올리면\nUI가 출력됩니다.",// 2
-            "UI가 나온다면 우클릭을 통해\n순간이동하며 몬스터를 완전히\n죽일 수 있습니다.",// 3
+            "Tutorial_004",// 1
+            "Tutorial_005",// 2
+            "Tutorial_006",// 3
             }},
 
             {{
-            "스테이지의 모든 몬스터를 처치하면\n프레자일 게이지 상승이 멈추고\n보상과 함께 탈출구와 진입로가 개방됩니다. ", //1
-            "현재 프레자일 게이지가\n위험한 상태니 복귀를 합시다.",//2
+            "Tutorial_007", //1
+            "Tutorial_008", //2
             }},
 
-            {{"해당 장소는 로비창으로\n게임을 시작하거나 캐릭터를 강화하여\n더 깊은 심연으로 갈 수 있습니다."}},// 1
+            {{"Tutorial_009"}},// 1
 
-            {{"상단의 강화 탭에서\n기술을 클릭해보세요."}},// 1
+            {{"Tutorial_010"}},// 1
 
-            {{"첫번째 스킬을 클릭해봅시다."}},// 1
+            {{"Tutorial_011"}},// 1
 
-            {{"스킬에는 다양한 재화가 필요하며\n전추 보상으로 획득이 가능합니다.\n강화를 눌러 강화해봅시다."}},// 1
+            {{"Tutorial_012"}},// 1
 
-            {{"닫기버튼을 눌러 로비로 돌아가\n게임을 시작해봅시다."}}// 1
+            {{"Tutorial_013"}}// 1
         };
     }
 
@@ -190,7 +191,10 @@ namespace game
                 // step 6
                 // ─────────────────────────────────────────────
                 case 6:
-                    m_outline1->SetActive(true);
+                    if (m_outline1)
+                    {
+                        m_outline1->SetActive(true);
+                    }
                     break;
                 }
             }
@@ -588,8 +592,25 @@ namespace game
         const auto& step = g_steps[m_stepIndex];
         if (m_pageIndex < 0 || m_pageIndex >= (int)step.pages.size()) return;
 
+        // 1. CSV 키값 가져오기 (예: "Tutorial_009")
+        std::string key = step.pages[m_pageIndex];
 
-        m_queue->PushMessage(m_messageChannel, step.pages[m_pageIndex]);
+        // 2. 카탈로그에서 데이터 조회
+        UIMessageChannel ch;
+        std::string text, icon;
+
+        // 전역 혹은 SceneController에 있는 g_msg를 참조합니다.
+        if (g_msg.TryGet(key, ch, text, icon))
+        {
+            // 3. 찾은 채널과 변환된 텍스트(줄바꿈 포함)를 큐에 전달
+            // 009~013은 CSV에 채널이 3으로 되어있으므로 자동으로 ch는 TutorialLobby가 됩니다.
+            m_queue->PushMessage(ch, text);
+        }
+        else
+        {
+            // 카탈로그에 키가 없을 경우 대비 (디버깅용)
+            m_queue->PushMessage(m_messageChannel, key);
+        }
 
         RefreshStepContext(m_stepIndex);
     }
@@ -603,13 +624,22 @@ namespace game
         }
         if (!m_queue) return;
 
+        if(m_stepIndex < 0 || m_stepIndex >= (int)g_steps.size()) return;
         const auto& step = g_steps[m_stepIndex];
+
 
         // 같은 스텝 내에서 페이지를 넘길 때 -> 아래에 누적(Push)
         if (m_pageIndex < (int)step.pages.size() - 1)
         {
             m_pageIndex++;
-            m_queue->PushMessage(m_messageChannel, step.pages[m_pageIndex]);
+            std::string key = step.pages[m_pageIndex];
+            UIMessageChannel ch;
+            std::string text, icon;
+
+            if (g_msg.TryGet(key, ch, text, icon))
+            {
+                m_queue->PushMessage(ch, text); // 찾은 채널과 텍스트 사용
+            }
             return;
         }
 
@@ -624,10 +654,19 @@ namespace game
 
             // 다음 스텝의 데이터를 가져옴
             const auto& nextStep = g_steps[m_stepIndex];
+            std::string key = nextStep.pages[0];
+
+            UIMessageChannel ch;
+            std::string text, icon;
 
             // 기존 튜토리얼 채널 메시지를 즉시 지우고 새 스텝의 첫 페이지를 세팅
-            m_queue->ClearChannel(m_messageChannel, 0.0f);
-            m_queue->SetSingle(m_messageChannel, nextStep.pages[0]);
+            if (g_msg.TryGet(key, ch, text, icon))
+            {
+                m_queue->ClearChannel(m_messageChannel, 0.0f);
+                m_queue->SetSingle(ch, text);
+
+                m_messageChannel = ch;
+            }
         }
         else
         {
