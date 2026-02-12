@@ -15716,12 +15716,12 @@
                         "y": 50.0
                     },
                     "CursorDefaultOffset": {
-                        "x": 10.0,
-                        "y": 10.0
+                        "x": 17.0,
+                        "y": 24.0
                     },
                     "CursorClickOffset": {
-                        "x": 10.0,
-                        "y": 10.0
+                        "x": 17.0,
+                        "y": 24.0
                     },
                     "UseDefaultCursor": true,
                     "UseClickCursor": true,
