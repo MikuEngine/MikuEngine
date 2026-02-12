@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -8,6 +8,7 @@
 #include <Framework/Object/GameObject/GameObject.h>
 #include <Framework/Object/Component/Rigidbody.h>
 #include <Framework/Object/Component/Collider.h>
+#include <Framework/Object/Component/CapsuleCollider.h>
 #include <Framework/Physics/PhysicsLayer.h>
 
 #include <Framework/Scene/SceneManager.h>
@@ -22,7 +23,7 @@ namespace game
 	namespace
 	{
 		// BulletMonster 메쉬는 +Y 축이 정면이므로 X축 +90도 보정이 필요하다.
-		// 방향은 사용자가 요청한 대로 "현재의 반대 방향"을 바라보게 한다.
+		// 메쉬의 앞(+Y)이 실제 진행 방향 벡터를 바라보도록 회전값을 만든다.
 		engine::Quaternion BuildBulletRotationFromDirection(const engine::Vector3& position, const engine::Vector3& direction)
 		{
 			(void)position;
@@ -34,12 +35,64 @@ namespace game
 			const float yawRad = std::atan2(normalizedDir.x, normalizedDir.z);
 			const float yawDeg = engine::ToDegree(yawRad);
 
-			// +Y 정면 메쉬 보정: pitch +90
-			const engine::Vector3 euler(90.0f, yawDeg, 0.0f);
+			// +Y 정면 메쉬 보정 + 고도각 반영:
+			// - 기본 pitch 90도에서 시작해, 진행 방향의 고도각(elevation)을 반영한다.
+			// - 이 값으로 포물선 탄환이 궤적 접선 방향을 바라보게 된다.
+			const float elevationRad = std::asin(std::clamp(normalizedDir.y, -1.0f, 1.0f));
+			const float elevationDeg = engine::ToDegree(elevationRad);
+			const engine::Vector3 euler(90.0f - elevationDeg, yawDeg, 0.0f);
 			return engine::Quaternion::CreateFromYawPitchRoll(
 				engine::ToRadian(euler.y),
 				engine::ToRadian(euler.x),
 				engine::ToRadian(euler.z));
+		}
+
+		void UpdateParabolicBulletRotation(engine::GameObject* bulletOwner)
+		{
+			if (!bulletOwner)
+				return;
+
+			auto* transform = bulletOwner->GetTransform();
+			auto* rb = bulletOwner->GetComponent<engine::Rigidbody>();
+			if (!transform || !rb)
+				return;
+
+			const engine::Vector3 velocity = rb->GetLinearVelocity();
+			if (velocity.LengthSquared() < 0.0001f)
+			{
+				// 속도가 거의 0인 프레임에서는 마지막 회전값을 유지한다.
+				return;
+			}
+
+			engine::Vector3 direction = velocity;
+			direction.Normalize();
+
+			engine::Quaternion bulletRot = BuildBulletRotationFromDirection(transform->GetWorldPosition(), direction);
+			transform->SetLocalRotation(bulletRot);
+			rb->ForceSetRotation(bulletRot, true);
+		}
+
+		void UpdateCurveBulletRotationFromPathDelta(engine::GameObject* bulletOwner, const engine::Vector3& previousPos, const engine::Vector3& currentPos)
+		{
+			if (!bulletOwner)
+				return;
+
+			auto* transform = bulletOwner->GetTransform();
+			auto* rb = bulletOwner->GetComponent<engine::Rigidbody>();
+			if (!transform || !rb)
+				return;
+
+			engine::Vector3 delta = currentPos - previousPos;
+			if (delta.LengthSquared() < 0.0001f)
+			{
+				// 이동량이 너무 작으면 기존 회전을 유지한다.
+				return;
+			}
+
+			delta.Normalize();
+			engine::Quaternion bulletRot = BuildBulletRotationFromDirection(currentPos, delta);
+			transform->SetLocalRotation(bulletRot);
+			rb->ForceSetRotation(bulletRot, true);
 		}
 	}
 
@@ -95,6 +148,13 @@ namespace game
 	void BulletMonster::Start()
 	{
 		m_elapsedTime = 0.0f;
+		m_lastWorldPos = GetTransform()->GetWorldPosition();
+		m_hasLastWorldPos = true;
+		if (auto* collider = GetGameObject()->GetComponent<engine::Collider>())
+		{
+			m_initialColliderCenter = collider->GetCenter();
+			m_hasInitialColliderCenter = true;
+		}
 
 		// ─────────────────────────────────────────────
 		// 총알 스케일 적용 (균등 스케일)
@@ -128,6 +188,7 @@ namespace game
 			GetTransform()->SetLocalRotation(bulletRot);
 
 			rb->ForceSetRotation(bulletRot, true);
+			ApplyColliderPivotAlignedRotation(bulletRot);
 		}
 
 		// Rigidbody에 초기 속도 설정
@@ -162,6 +223,24 @@ namespace game
 		if (m_movement && !m_isFieldType)
 		{
 			m_movement->Update(GetTransform(), dt);
+		}
+
+		// 포물선 탄환은 비행 중 계속해서 현재 진행 방향을 바라보게 한다.
+		if (m_params.type == BulletType::Parabolic)
+		{
+			UpdateParabolicBulletRotation(GetGameObject());
+			ApplyColliderPivotAlignedRotation(GetTransform()->GetLocalRotation());
+		}
+		else if (m_params.type == BulletType::Curve)
+		{
+			const engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+			if (m_hasLastWorldPos)
+			{
+				UpdateCurveBulletRotationFromPathDelta(GetGameObject(), m_lastWorldPos, currentPos);
+				ApplyColliderPivotAlignedRotation(GetTransform()->GetLocalRotation());
+			}
+			m_lastWorldPos = currentPos;
+			m_hasLastWorldPos = true;
 		}
 
 		// 수명 체크 (lifetime 만료 시 폭발 트리거 생성 안 함)
@@ -268,6 +347,46 @@ namespace game
 		{
 			m_movement->FixedUpdate();
 		}
+	}
+
+	void BulletMonster::ApplyColliderPivotAlignedRotation(const engine::Quaternion& bulletRot)
+	{
+		auto* collider = GetGameObject()->GetComponent<engine::Collider>();
+		if (!collider || !collider->IgnoresWorldRotation())
+		{
+			return;
+		}
+
+		if (!m_hasInitialColliderCenter)
+		{
+			m_initialColliderCenter = collider->GetCenter();
+			m_hasInitialColliderCenter = true;
+		}
+
+		const engine::Vector3 eulerRad = bulletRot.ToEuler();
+		const engine::Vector3 eulerDeg(
+			engine::ToDegree(eulerRad.x),
+			engine::ToDegree(eulerRad.y),
+			engine::ToDegree(eulerRad.z));
+		collider->SetRotation(eulerDeg);
+
+		auto* capsule = GetGameObject()->GetComponent<engine::CapsuleCollider>();
+		if (!capsule)
+		{
+			// 캡슐이 아니면 기존 center를 유지한다.
+			collider->SetCenter(m_initialColliderCenter);
+			return;
+		}
+
+		// 피봇을 캡슐의 바닥 끝점으로 고정한다.
+		const float halfHeight = std::max(0.001f, capsule->GetHeight() * 0.5f);
+		const engine::Vector3 localBottomPivot = m_initialColliderCenter + engine::Vector3(0.0f, -halfHeight, 0.0f);
+		const engine::Vector3 centerFromPivot(0.0f, halfHeight, 0.0f);
+
+		const auto rotMtx = DirectX::SimpleMath::Matrix::CreateFromQuaternion(
+			DirectX::SimpleMath::Quaternion(bulletRot.x, bulletRot.y, bulletRot.z, bulletRot.w));
+		const engine::Vector3 rotatedCenterFromPivot = engine::Vector3::TransformNormal(centerFromPivot, rotMtx);
+		collider->SetCenter(localBottomPivot + rotatedCenterFromPivot);
 	}
 
 	// ═══════════════════════════════════════════════════════════════

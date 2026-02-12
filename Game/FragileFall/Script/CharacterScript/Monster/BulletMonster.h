@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/CharacterScript/Common/BulletMovement.h"
@@ -70,6 +70,14 @@ namespace game
 		float m_tickInterval = 0.5f; // 0.5초마다 데미지 적용
         engine::Ptr<engine::GameObject> m_targetPlayer = nullptr;
 
+        // ─────────────────────────────────────────────
+        // 회전 동기화용 (Curved 접선 방향 계산)
+        // ─────────────────────────────────────────────
+        engine::Vector3 m_lastWorldPos = engine::Vector3::Zero;
+        bool m_hasLastWorldPos = false;
+        engine::Vector3 m_initialColliderCenter = engine::Vector3::Zero;
+        bool m_hasInitialColliderCenter = false;
+
     public:
         // ─────────────────────────────────────────────
         // 초기화 (Factory에서 호출)
@@ -91,6 +99,8 @@ namespace game
         void OnCollisionEnter(const engine::CollisionInfo& info) override;
         
     private:
+        void ApplyColliderPivotAlignedRotation(const engine::Quaternion& bulletRot);
+
         // ─────────────────────────────────────────────
         // 포물선 탄환 전용 헬퍼
         // ─────────────────────────────────────────────

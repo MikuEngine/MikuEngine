@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "SceneController_Main.h"
 
 #include <Core/App/AppContext.h>
@@ -12,6 +12,7 @@
 #include "Script/UI/UIPopUpAnimator.h"
 #include <Framework/Object/Component/UI/UIProgressBar.h>
 #include <Manager/LoadingScreenDrawer.h>
+#include <Manager/StageManager.h>
 
 #include "Scene/GameScene.h"
 
@@ -77,6 +78,10 @@ namespace game
 
     void SceneController_Main::Start()
     {
+        // 메인(01_READY_MAIN) 진입 시 플레이어 Run HP를 최대치로 회복한다.
+        auto& stageManager = StageManager::Get();
+        stageManager.SetRunHP(stageManager.GetRunHPMax());
+
         m_optionPopUp = engine::GameObject::Find("UI_OptionPopUp");
         if (m_optionPopUp) m_optionPopUp->SetActive(false);
 

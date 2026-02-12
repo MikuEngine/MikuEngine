@@ -16,6 +16,20 @@ namespace game
         public engine::Singleton<StageManager>
     {
     private:
+        static float QuantizeHpToHalf(float value)
+        {
+            constexpr float kStep = 0.5f;
+            const float sign = (value < 0.0f) ? -1.0f : 1.0f;
+            float absValue = std::abs(value);
+            float remainder = std::fmod(absValue, kStep);
+            absValue -= remainder;
+            if (remainder >= (kStep * 0.5f))
+            {
+                absValue += kStep;
+            }
+            return absValue * sign;
+        }
+
         engine::Vector3 m_doorNextPosition{ 0, 0, 15 };   // (0,0,0)이면 다음 스테이지 문 미생성
         engine::Vector3 m_doorExitPosition{ 0, 0, -15 };  // (0,0,0)이면 탈출구 미생성
 
@@ -58,13 +72,13 @@ namespace game
         void SetRunHP(float hp)
         {
             const float clamped = std::clamp(hp, 0.0f, m_runHpMax);
-            m_runHp = std::round(clamped);
+            m_runHp = QuantizeHpToHalf(clamped);
         }
         void SetRunHpState(float hp, float hpMax)
         {
             m_runHpMax = std::max(1.0f, std::round(hpMax));
             const float clamped = std::clamp(hp, 0.0f, m_runHpMax);
-            m_runHp = std::round(clamped);
+            m_runHp = QuantizeHpToHalf(clamped);
         }
 
         /// 로비에서 플레이 진입 시 호출. m_currentStage = 1 후 씬 전환은 호출 측에서.

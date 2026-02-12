@@ -55,8 +55,8 @@ namespace game
 			m_fsmInitialized = true;
 		}
 
-		// 인스펙터 직렬화 MaxHP를 강화 계산의 base로 동기화한다.
-		m_temperBase.maxHp = m_PlayerMaxHP;
+		// 인스펙터 기본 HP를 강화 계산의 base로 동기화한다.
+		m_temperBase.maxHp = m_playerRealBaseHp;
 		game::PlayerTemperManager::ApplyTemper(this);
 
 		// 스테이지 간 유지되는 프레자일 게이지 복원
@@ -83,8 +83,7 @@ namespace game
 			}
 			stageManager.SetRunHpState(nextRunHp, m_PlayerMaxHP);
 		}
-		m_PlayerCurrentHP = stageManager.GetRunHP();
-		m_PlayerCurrentHP = std::round(std::clamp(m_PlayerCurrentHP, 0.0f, m_PlayerMaxHP));
+		SetCurrentHp(stageManager.GetRunHP());
 
 
 		// sound notify 바인딩
@@ -1959,9 +1958,14 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	// HP (Max는 편집 가능, Current는 읽기 전용)
 	ImGui::Separator();
 	ImGui::Text("HP:");
-	ImGui::DragFloat("Player Max HP", &m_PlayerMaxHP, 1.0f, 1.0f, 10000.0f);
+	if (ImGui::DragFloat("Player Basic HP", &m_playerRealBaseHp, 0.5f, 0.5f, 10000.0f))
+	{
+		m_playerRealBaseHp = std::max(0.5f, m_playerRealBaseHp);
+		m_temperBase.maxHp = m_playerRealBaseHp;
+		PlayerTemperManager::ApplyTemper(this);
+	}
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("플레이어 최대 체력 (직렬화 저장)");
+		ImGui::SetTooltip("강화 계산의 기준이 되는 절대 기본 HP");
 	ImGui::Text("Player Current HP (ReadOnly): %.1f", m_PlayerCurrentHP);
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("런타임 현재 체력 (읽기 전용)");
@@ -2041,7 +2045,8 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	j["FragileGaugeCurrent"] = m_fragileGaugeCurrent;
 	j["FragileGaugeMax"] = m_fragileGaugeMax;
 	j["FragileGaugeRisePerSecond"] = m_fragileGaugeRisePerSecond;
-	j["PlayerMaxHP"] = m_PlayerMaxHP;
+	j["PlayerMaxHP"] = m_playerRealBaseHp; // 하위 호환 저장 키 유지
+	j["BasicHpDoNotTouch"] = m_playerRealBaseHp;
 	j["InvincibleTime"] = m_temperBase.invincibleTime;
 	
 	// 무적 상태
@@ -2140,8 +2145,10 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		m_fragileGaugeMax = j["FragileGaugeMax"].get<float>();
 	if (j.contains("FragileGaugeRisePerSecond"))
 		m_fragileGaugeRisePerSecond = j["FragileGaugeRisePerSecond"].get<float>();
-	if (j.contains("PlayerMaxHP"))
-		m_PlayerMaxHP = j["PlayerMaxHP"].get<float>();
+	if (j.contains("BasicHpDoNotTouch"))
+		m_playerRealBaseHp = j["BasicHpDoNotTouch"].get<float>();
+	else if (j.contains("PlayerMaxHP"))
+		m_playerRealBaseHp = j["PlayerMaxHP"].get<float>(); // 하위 호환
 	if (j.contains("InvincibleTime"))
 		m_temperBase.invincibleTime = j["InvincibleTime"].get<float>();
 	
@@ -2162,7 +2169,8 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 	// ═══════════════════════════════════════════════════════════════
 	// Base값 로드 완료 후 강화 적용하여 실제값 계산
 	// ═══════════════════════════════════════════════════════════════
-	m_temperBase.maxHp = m_PlayerMaxHP;
+	m_playerRealBaseHp = std::max(0.5f, m_playerRealBaseHp);
+	m_temperBase.maxHp = m_playerRealBaseHp;
 	PlayerTemperManager::ApplyTemper(this);
 }
 
@@ -2181,9 +2189,15 @@ void PlayerControllerScript::StartDash(const engine::Vector3& moveDirInput)
 		}
 		if (damage <= 0.0f) return;
 
+		// 강한 충돌/피격 데미지는 자동 완화 규칙 적용.
+		// 입력 데미지가 5 이상이면 20으로 나눈 값을 최종 데미지로 사용한다.
+		if (damage >= 5.0f)
+		{
+			damage /= 20.0f;
+		}
+
 		m_PlayerCurrentHP -= damage;
-		if (m_PlayerCurrentHP < 0.0f) m_PlayerCurrentHP = 0.0f;
-		m_PlayerCurrentHP = std::round(m_PlayerCurrentHP);
+		SetCurrentHp(m_PlayerCurrentHP);
 		m_invincibleRemainTime = std::max(0.0f, m_invincibleTime);
 
 		StageManager::Get().SetRunHP(m_PlayerCurrentHP);

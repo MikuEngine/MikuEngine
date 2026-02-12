@@ -22,9 +22,9 @@
                         "w": 1.0
                     },
                     "Scale": {
-                        "x": 0.5,
-                        "y": 0.5,
-                        "z": 0.5
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     }
                 },
                 {
@@ -38,28 +38,9 @@
                     "constraints": 0
                 },
                 {
-                    "Type": "SphereCollider",
-                    "Active": true,
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isTrigger": true,
-                    "syncWithTransform": true,
-                    "layer": 21,
-                    "materialType": 0,
-                    "radius": 0.5
-                },
-                {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/Sphere.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sharp_single/red/crystal_sharp_single_red.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
@@ -67,8 +48,8 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.7953662872314453,
-                        "y": 0.0,
+                        "x": 1.0,
+                        "y": 1.0,
                         "z": 1.0,
                         "w": 1.0
                     },
@@ -81,7 +62,7 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
-                    "OverrideMaterial": true,
+                    "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,
                     "SubsurfaceStrength": 0.0,
@@ -94,6 +75,26 @@
                 {
                     "Type": "BulletMonster",
                     "Active": true
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.7300000190734863,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": true,
+                    "syncWithTransform": false,
+                    "layer": 21,
+                    "materialType": 0,
+                    "radius": 0.17000000178813934,
+                    "height": 1.440000057220459
                 }
             ]
         }

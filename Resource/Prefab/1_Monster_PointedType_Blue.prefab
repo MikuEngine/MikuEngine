@@ -87,7 +87,7 @@
                     "AttackRange": 12.0,
                     "RotationSpeed": 2.0,
                     "FireRate": 3.0,
-                    "BulletSpeed": 12.0,
+                    "BulletSpeed": 8.0,
                     "BulletLifetime": 3.0,
                     "BulletScale": 1.0,
                     "SpreadAngle": 0.5699999928474426,

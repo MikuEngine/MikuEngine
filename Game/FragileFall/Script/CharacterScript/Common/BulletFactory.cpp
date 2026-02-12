@@ -1,7 +1,8 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "Script/CharacterScript/Common/BulletFactory.h"
 #include "Script/CharacterScript/Player/BulletPlayer.h"
 #include "Script/CharacterScript/Monster/BulletMonster.h"
+#include "Script/CharacterScript/Monster/MonsterScript.h"
 #include "Script/CharacterScript/Monster/RoundType/MonsterRoundType.h"
 #include "Script/Boss/BossPattern/Components/BossBulletThreeway.h"
 #include "Script/Boss/BossPattern/Components/BossBulletEightway.h"
@@ -14,6 +15,64 @@
 
 namespace game
 {
+	namespace
+	{
+		constexpr const char* kLinearPrefabWhite = "BulletLinearMonster_White";
+		constexpr const char* kLinearPrefabBlue = "BulletLinearMonster_Blue";
+		constexpr const char* kLinearPrefabRed = "BulletLinearMonster_Red";
+		constexpr const char* kLinearPrefabPurple = "BulletLinearMonster_Purple";
+
+		const char* GetLinearPrefabByTier(MonsterTier tier)
+		{
+			switch (tier)
+			{
+			case MonsterTier::Blue:   return kLinearPrefabBlue;
+			case MonsterTier::Red:    return kLinearPrefabRed;
+			case MonsterTier::Purple: return kLinearPrefabPurple;
+			case MonsterTier::Gray:
+			case MonsterTier::Green:
+			default:                  return kLinearPrefabWhite;
+			}
+		}
+
+		const char* ResolveLinearMonsterPrefab(engine::GameObject* owner)
+		{
+			if (!owner)
+				return kLinearPrefabWhite;
+
+			auto* monster = owner->GetComponent<MonsterScript>();
+			if (!monster)
+				return kLinearPrefabWhite;
+
+			const AttackType type = monster->GetAttackType();
+			const MonsterTier tier = monster->GetMonsterTier();
+
+			// Dull: Green/Red 제외 시 색상 선형탄 사용 (Gray는 White 대응)
+			if (type == AttackType::Dull)
+			{
+				if (tier == MonsterTier::Green || tier == MonsterTier::Red)
+					return kLinearPrefabWhite;
+				return GetLinearPrefabByTier(tier);
+			}
+
+			// Pointed: Green 제외, 나머지 색상 선형탄 사용
+			if (type == AttackType::Pointed)
+			{
+				if (tier == MonsterTier::Green)
+					return kLinearPrefabWhite;
+				return GetLinearPrefabByTier(tier);
+			}
+
+			// Round: Blue(사망 3way), Red(착지 4방향) 등 선형탄 경로에서 색상 대응
+			if (type == AttackType::Round)
+			{
+				return GetLinearPrefabByTier(tier);
+			}
+
+			return kLinearPrefabWhite;
+		}
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 플레이어 총알 발사
 	// ═══════════════════════════════════════════════════════════════
@@ -58,7 +117,7 @@ namespace game
 		const BulletParams& params)
 	{		
 		// 총알 발사 시, 프리팹 이름으로 찾아서 인스턴시에이트
-		auto go = engine::Prefab::Instantiate("BulletLinearMonster");
+		auto go = engine::Prefab::Instantiate(ResolveLinearMonsterPrefab(GetGameObject()));
 
 		go->GetTransform()->SetLocalPosition(position);
 
@@ -75,8 +134,8 @@ namespace game
 
 		bullet->Setup(std::move(movement), params, this);
 
-		// 색상별 투사체 메쉬변경
-		SetBulletMeshByTier(go, params.tier);
+		// 색상별 투사체 메쉬변경 (기존 팀원 로직 비활성화)
+		// SetBulletMeshByTier(go, params.tier);
 
 		// effect
 		auto effect = engine::Prefab::Instantiate("Effect_Bullet_Trail");
@@ -174,10 +233,10 @@ namespace game
 
 		for (int i = 0; i < 3; ++i)
 		{
-			auto go = engine::Prefab::Instantiate("BulletLinearMonster");
+			auto go = engine::Prefab::Instantiate(ResolveLinearMonsterPrefab(GetGameObject()));
 			if (!go)
 			{
-				LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'BulletLinearMonster' prefab!");
+				LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate linear monster bullet prefab!");
 				continue;
 			}
 
@@ -321,10 +380,10 @@ namespace game
 	{
 		for (int i = 0; i < count; ++i)
 		{
-			auto go = engine::Prefab::Instantiate("BulletLinearMonster");
+			auto go = engine::Prefab::Instantiate(ResolveLinearMonsterPrefab(GetGameObject()));
 			if (!go)
 			{
-				LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate 'BulletLinearMonster' prefab!");
+				LOG_PRINT("[BulletFactory] ERROR: Failed to instantiate linear monster bullet prefab!");
 				continue;
 			}
 
@@ -419,28 +478,31 @@ namespace game
 
 	void BulletFactory::SetBulletMeshByTier(engine::Ptr<engine::GameObject> bulletGO, MonsterTier tier)
 	{
-		auto staticRenderer = bulletGO->GetComponent<engine::StaticMeshRenderer>();
-		if (staticRenderer)
-		{
-			switch (tier)
-			{
-			case MonsterTier::Green:
-				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/green/crystal_sharp_single_green.fbx");
-				break;
-			case MonsterTier::Blue:
-				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/blue/crystal_sharp_single_blue.fbx");
-				break;
-			case MonsterTier::Red:
-				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/red/crystal_sharp_single_red.fbx");
-				break;
-			case MonsterTier::Purple:
-				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/purple/crystal_sharp_single_purple.fbx");
-				break;
-			default:
-				staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/white/crystal_sharp_single_white.fbx");
-				break;
-			}
-		}
+		// 팀원이 작성한 기존 메쉬 교체 로직은 프리팹 색상 분기 방식으로 대체되어 비활성화한다.
+		// auto staticRenderer = bulletGO->GetComponent<engine::StaticMeshRenderer>();
+		// if (staticRenderer)
+		// {
+		// 	switch (tier)
+		// 	{
+		// 	case MonsterTier::Green:
+		// 		staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/green/crystal_sharp_single_green.fbx");
+		// 		break;
+		// 	case MonsterTier::Blue:
+		// 		staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/blue/crystal_sharp_single_blue.fbx");
+		// 		break;
+		// 	case MonsterTier::Red:
+		// 		staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/red/crystal_sharp_single_red.fbx");
+		// 		break;
+		// 	case MonsterTier::Purple:
+		// 		staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/purple/crystal_sharp_single_purple.fbx");
+		// 		break;
+		// 	default:
+		// 		staticRenderer->SetMesh("Resource/Model/crystal_sharp_single/white/crystal_sharp_single_white.fbx");
+		// 		break;
+		// 	}
+		// }
+		(void)bulletGO;
+		(void)tier;
 	}
 
 	// ═══════════════════════════════════════════════════════════════
