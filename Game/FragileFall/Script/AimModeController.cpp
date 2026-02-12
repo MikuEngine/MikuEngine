@@ -1,4 +1,4 @@
-#include "GamePCH.h"
+﻿#include "GamePCH.h"
 #include "AimModeController.h"
 
 #include <Core/Graphics/Device/GraphicsDevice.h>
@@ -28,6 +28,33 @@ namespace game
 {
     AimModeController* AimModeController::s_primaryController = nullptr;
 
+    AimModeController* AimModeController::FindPreferredInScene()
+    {
+        auto* scene = engine::SceneManager::Get().GetScene();
+        if (!scene)
+        {
+            return nullptr;
+        }
+
+        if (auto* playerGO = scene->FindGameObject("Player"))
+        {
+            if (auto* controller = playerGO->GetComponent<AimModeController>())
+            {
+                return controller;
+            }
+        }
+
+        if (auto* canvasGO = scene->FindGameObject(kCanvasObjectName))
+        {
+            if (auto* controller = canvasGO->GetComponent<AimModeController>())
+            {
+                return controller;
+            }
+        }
+
+        return nullptr;
+    }
+
     bool AimModeController::IsOnPlayerObject() const
     {
         const auto* go = GetGameObject();
@@ -41,25 +68,21 @@ namespace game
             return false;
         }
 
-        if (!s_primaryController || !s_primaryController->GetGameObject())
+        // 씬 전환 시 stale static 포인터를 역참조하지 않기 위해
+        // 매번 현재 씬 기준 preferred 컨트롤러를 재선정한다.
+        if (AimModeController* preferred = FindPreferredInScene())
+        {
+            s_primaryController = preferred;
+            return (s_primaryController == this);
+        }
+
+        // 예외적으로 Player/AimPointerCanvas 이름 규칙이 없는 씬에서는
+        // 최초 도달 인스턴스를 Primary로 사용한다.
+        if (!s_primaryController)
         {
             s_primaryController = this;
-            return true;
         }
-
-        if (s_primaryController == this)
-        {
-            return true;
-        }
-
-        // Player에 붙은 컨트롤러를 최우선 Primary로 사용한다.
-        if (IsOnPlayerObject() && !s_primaryController->IsOnPlayerObject())
-        {
-            s_primaryController = this;
-            return true;
-        }
-
-        return false;
+        return (s_primaryController == this);
     }
 
     void AimModeController::Awake()

@@ -44,6 +44,7 @@ namespace game
         void Awake() override;
         void Start() override;
         void Update() override;
+        static AimModeController* FindPreferredInScene();
 
         void OnGui() override;
         void Save(engine::json& j) const override;
