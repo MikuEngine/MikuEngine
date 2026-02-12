@@ -21,7 +21,7 @@ namespace game
             effect->GetTransform()->SetWorldMatrix(GetTransform()->GetWorld());
             effect->GetTransform()->SetLocalScale(engine::Vector3(1.2f, 1.2f, 1.2f));
         }
-        engine::SoundSystem::Get().Play("Player_Break", "SFX/Player");
+        engine::SoundSystem::Get().Play("Player_Break_Random", "SFX/Player");
 
         m_executed = true;
         StageManager::Get().OnStageClearExecutionTargetExecuted();
