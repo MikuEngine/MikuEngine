@@ -1,6 +1,7 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MessageCatalog.h"
 #include <Common/Utility/CSVReader.h>
+#include <algorithm>
 
 namespace game
 {
@@ -99,6 +100,28 @@ namespace game
 
         return true;
 	}
+
+    void MessageCatalog::CollectKeys(UIMessageChannel ch, const std::string& prefix, std::vector<std::string>& outKeys) const
+    {
+        outKeys.clear();
+
+        for (const auto& [key, row] : m_map)
+        {
+            if (row.ch != ch)
+            {
+                continue;
+            }
+
+            if (!prefix.empty() && key.rfind(prefix, 0) != 0)
+            {
+                continue;
+            }
+
+            outKeys.push_back(key);
+        }
+
+        std::sort(outKeys.begin(), outKeys.end());
+    }
 
 	void MessageCatalog::Clear()
 	{

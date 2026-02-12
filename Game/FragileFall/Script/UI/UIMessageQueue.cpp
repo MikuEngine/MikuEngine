@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "UIMessageQueue.h"
 #include <Framework/Asset/Prefab.h>
 #include <Framework/Object/Component/RectTransform.h>
@@ -13,7 +13,7 @@ namespace game
         m_kill.spawnPos = { 660.0f, -400.0f };
         m_kill.maxVisible = 3;
         m_kill.lifeTime = 3.0f;
-        m_kill.prefabKey = "UIToastPopUp";
+        m_kill.prefabKey = m_killPrefabKey;
 
         m_tutorial.canvas = engine::GameObject::Find("Canvas_Message"); // 튜토리얼
         m_tutorial.spawnPos = { 510.0f, -300.0f };  // 원하는 위치
@@ -45,19 +45,19 @@ namespace game
 
     void UIMessageQueue::OnGui()
     {
-
+        ImGui::InputText("Kill Prefab Key", &m_killPrefabKey);
     }
 
     void UIMessageQueue::Save(engine::json& j) const
     {
         Object::Save(j);
-
+        j["KillPrefabKey"] = m_killPrefabKey;
     }
 
     void UIMessageQueue::Load(const engine::json& j)
     {
         Object::Load(j);
-
+        engine::JsonGet(j, "KillPrefabKey", m_killPrefabKey);
     }
 
     void UIMessageQueue::PushMessageKey(const std::string& key)
@@ -77,6 +77,17 @@ namespace game
         }
 
         PushMessage(ch, text, iconKey);
+    }
+
+    void UIMessageQueue::CollectCatalogKeys(UIMessageChannel ch, const std::string& prefix, std::vector<std::string>& outKeys) const
+    {
+        outKeys.clear();
+        if (!m_catalog)
+        {
+            return;
+        }
+
+        m_catalog->CollectKeys(ch, prefix, outKeys);
     }
 
     void UIMessageQueue::PushMessage(UIMessageChannel ch, const std::string& text, const std::string& iconKey)

@@ -1,8 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include <Framework/Object/Component/Script.h>
 #include "Script/UI/UIToastAnimator.h"
 #include <deque>
+#include <vector>
 
 namespace game
 {
@@ -47,6 +48,7 @@ namespace game
     public:
         void SetCatalog(MessageCatalog* catalog) { m_catalog = catalog; }
         void PushMessageKey(const std::string& key);
+        void CollectCatalogKeys(UIMessageChannel ch, const std::string& prefix, std::vector<std::string>& outKeys) const;
 
 
 
@@ -73,6 +75,9 @@ namespace game
         ChannelConfig m_kill;
         ChannelConfig m_tutorial;
         ChannelConfig m_tutorialLobby;
+
+        // 직렬화 대상: Kill 토스트 프리팹 이름만 인스펙터에서 수정 가능
+        std::string m_killPrefabKey = "UIToastPopUp";
 
         MessageCatalog* m_catalog = nullptr;
 

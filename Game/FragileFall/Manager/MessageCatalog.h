@@ -1,4 +1,8 @@
-﻿#pragma once
+#pragma once
+
+#include <string>
+#include <vector>
+#include <unordered_map>
 
 namespace engine
 {
@@ -32,6 +36,7 @@ namespace game
 
 		// Key로 접근
 		bool TryGet(const std::string& key, UIMessageChannel& outCh, std::string& outText, std::string& outIcon) const;
+		void CollectKeys(UIMessageChannel ch, const std::string& prefix, std::vector<std::string>& outKeys) const;
 
 		void Clear();
 
