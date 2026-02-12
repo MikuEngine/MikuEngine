@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MonsterRoundType.h"
 
@@ -58,6 +58,10 @@ namespace game
         float m_currentOscillationAmplitude = 0.0f;        // 현재 파장의 진폭
         float m_oscillationPhase = 0.0f;                   // 사인파 위상 (0~2π)
         engine::Vector3 m_currentWaypointTarget = engine::Vector3::Zero;  // 현재 waypoint
+        engine::Vector3 m_idleMoveLastPosition = engine::Vector3::Zero;   // 경로 정체 감지용 이전 위치
+        float m_idleMoveStuckTimer = 0.0f;                 // 이동 정체 누적 시간
+        float m_idleMoveStuckThreshold = 1.0f;             // 정체 판정 시간 (초)
+        float m_idleMoveMinMoveDistance = 0.05f;           // 정체 해제 최소 이동거리 (m)
         
         // 충돌 반사 이동
         float m_collisionReflectDistance = 2.0f;           // 충돌 시 반사 이동 거리 (직렬화)
@@ -73,9 +77,9 @@ namespace game
         // 충돌 처리용 플래그
         // ─────────────────────────────────────────────────
         bool m_collisionOccurred = false;         // IdleMove 충돌 발생 플래그
-        bool m_engageCollisionOccurred = false;   // EngageMove 충돌 발생 플래그 (Player/Wall)
+        bool m_engageCollisionOccurred = false;   // EngageMove 충돌 발생 플래그 (Player 포함 모든 충돌 대상)
         bool m_engageArrivalOccurred = false;     // EngageMove 목표 도달 플래그
-        bool m_transitionCollisionOccurred = false;  // EngageCollision/EngageArrival 중 Wall 충돌 플래그
+        bool m_transitionCollisionOccurred = false;  // EngageCollision/EngageArrival 중 충돌 플래그
         
         // ─────────────────────────────────────────────────
         // 충돌 방향 저장 (EngageCollision용)
@@ -101,18 +105,16 @@ namespace game
         engine::Vector3 m_engageTargetPosition = engine::Vector3::Zero;  // 돌진 목표 위치
         engine::Vector3 m_engageDirection = engine::Vector3::Zero;       // 돌진 방향 (정규화)
         bool m_hasEngageTarget = false;           // 유효한 목표가 있는지
+        float m_engageMoveSpeedScaled = 10.0f;    // 예상 충돌 거리 기반 EngageMove 속도
         
         // ─────────────────────────────────────────────────
         // EngageCollision / EngageArrival 설정
         // ─────────────────────────────────────────────────
-        float m_engageTransitionDuration = 0.8f;  // 전이 상태 지속 시간 (0.5초, 하드코딩)
+        float m_engageTransitionDuration = 2.0f;  // 전이 상태 감속 시간 (초)
         float m_engageTransitionTimer = 0.0f;     // 전이 상태 타이머
-        
-        // EngageCollision 전용
-        float m_collisionInitialAngleOffset = 45.0f;   // 충돌 반대방향에서 초기 꺾임 각도 (도, 하드코딩)
-        float m_collisionRotationAmount = 30.0f;       // 1초간 추가 회전 각도 (도, 하드코딩)
-        int m_collisionTurnDirection = 1;              // 회전 방향 (+1: 좌, -1: 우)
-        float m_collisionStartAngle = 0.0f;            // 상태 진입 시 초기 각도
+        engine::Vector3 m_transitionMoveDirection = engine::Vector3::Zero;  // 전이 상태 이동 방향
+        float m_transitionStartSpeed = 0.0f;           // 전이 시작 속도
+        float m_transitionCollisionBrakeMultiplier = 3.0f;  // 전이 중 충돌 시 감속 가속 배율
         
         // ─────────────────────────────────────────────────
         // 플레이어 무시 시스템 (Idle 진입 후)
@@ -177,6 +179,7 @@ namespace game
         // ─────────────────────────────────────────────────
         void InitializeEngageMove();                            // EngageMove 초기화 (목표 위치 계산)
         bool HasReachedEngageTarget() const;                    // 목표 도달 여부 확인
+        void UpdateEngageMoveSpeedScale(float engageMoveRange); // 예상 충돌 거리 기반 속도 스케일 계산
         
         // ─────────────────────────────────────────────────
         // EngageCollision / EngageArrival 헬퍼 함수
@@ -191,6 +194,7 @@ namespace game
         void StartPlayerIgnore();                               // 무시 시작 (Idle 진입 시)
         void UpdatePlayerIgnoreTimer(float deltaTime);          // 무시 타이머 업데이트
         bool CanDetectPlayer() const;                           // 플레이어 감지 가능 여부
+        bool CanEnterEngageByRaycast() const;                   // 플레이어 직선 시야(장애물 차단) 확인
         
         // ─────────────────────────────────────────────────
         // 상태 진입 콜백 오버라이드

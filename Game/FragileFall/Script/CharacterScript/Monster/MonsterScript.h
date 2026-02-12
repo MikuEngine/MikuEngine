@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Script/CharacterScript/Common/BaseControllerScript.h"
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -163,6 +163,7 @@ namespace game
         bool m_isDoUpdate = false;                   // 업데이트 실행 여부 (기본값:true -> 첫번째 Idle진입 확인 후 false)
         bool m_isReadyAndWait = false;
         bool m_isActive = false;
+        bool TryBindUpdateSwitch();
         
 
         // ─────────────────────────────────────────────

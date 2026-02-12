@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "MonsterRoundBlue.h"
 
 #include "Script/CharacterScript/Player/PlayerControllerScript.h"
@@ -12,12 +12,34 @@
 #include <Framework/System/SystemManager.h>
 #include <Framework/System/PathfindingSystem.h>
 #include <Framework/Physics/PhysicsLayer.h>
+#include <Framework/Physics/PhysicsSystem.h>
 #include <Engine/Core/System/MyTime.h>
 #include <random>
 
 
 namespace game
 {
+    namespace
+    {
+        engine::Vector3 SnapNormalToAxisForDiagonal(const engine::Vector3& normal)
+        {
+            const float absX = std::abs(normal.x);
+            const float absZ = std::abs(normal.z);
+
+            if (absX >= absZ)
+            {
+                return engine::Vector3((normal.x >= 0.0f) ? 1.0f : -1.0f, 0.0f, 0.0f);
+            }
+            return engine::Vector3(0.0f, 0.0f, (normal.z >= 0.0f) ? 1.0f : -1.0f);
+        }
+
+        engine::Vector3 ReflectDirectionByNormal(const engine::Vector3& direction, const engine::Vector3& normal)
+        {
+            const float dot = direction.Dot(normal);
+            return direction - 2.0f * dot * normal;
+        }
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // 생명주기
     // ═══════════════════════════════════════════════════════════════
@@ -32,6 +54,11 @@ namespace game
     void MonsterRoundBlue::Start()
     {
         MonsterRoundType::Start();
+
+        if (auto* collider = GetGameObject()->GetComponent<engine::Collider>())
+        {
+            collider->SetLayer(engine::PhysicsLayer::Index::EnemyNonPath);
+        }
 
         // Blue 등급 색상 설정 (파란색)
         if (m_meshType == RoundMeshType::Skeletal)
@@ -57,6 +84,12 @@ namespace game
         // 게임 시작 시 플레이어 무시 상태로 초기화
         // (InitializeCurrentState는 OnStateEntered를 호출하지 않으므로 수동 설정 필요)
         StartPlayerIgnore();
+
+        if (GetTransform())
+        {
+            m_idleMoveLastPosition = GetTransform()->GetWorldPosition();
+        }
+        m_idleMoveStuckTimer = 0.0f;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -67,21 +100,11 @@ namespace game
         if (!info.gameObject) return;
         
         // ─────────────────────────────────────────────
-        // 방향 전환이 필요한 레이어에만 반응 (Wall, Environment, Enemy)
-        // 총알은 트리거 타입이므로 OnTriggerEnter로 처리됨
-        // ─────────────────────────────────────────────
         auto* collider = info.collider.Get();
         uint32_t layer = 0;
         if (collider)
         {
             layer = collider->GetLayer();
-            if (layer != engine::PhysicsLayer::Index::Wall &&
-                layer != engine::PhysicsLayer::Index::Environment &&
-                layer != engine::PhysicsLayer::Index::Enemy &&
-                layer != engine::PhysicsLayer::Index::Player)
-            {
-                return;  // 방향 전환 불필요한 레이어는 무시
-            }
         }
         
         // ─────────────────────────────────────────────
@@ -132,15 +155,14 @@ namespace game
         
         // ─────────────────────────────────────────────
         // 상태별 충돌 처리
-        // Wall과 Environment는 동일하게 처리
         // ─────────────────────────────────────────────
         std::string currentState = GetCurrentState();
-        bool isObstacle = (layer == engine::PhysicsLayer::Index::Wall ||
+        bool isObstacle = (layer == engine::PhysicsLayer::Index::SubWall ||
                           layer == engine::PhysicsLayer::Index::Environment);
         
         if (currentState == "IdleMove")
         {
-            // Wall, Environment과의 충돌만 처리 (Enemy 제외)
+            // SubWall, Environment과의 충돌만 처리 (Enemy 제외)
             if (isObstacle)
             {
                 m_collisionOccurred = true;
@@ -149,7 +171,8 @@ namespace game
         }
         else if (currentState == "EngageMove")
         {
-            if (layer == engine::PhysicsLayer::Index::Player || isObstacle)
+            // EngageMove는 충돌 가능한 모든 오브젝트 충돌 시 종료
+            if (collider)
             {
                 m_engageCollisionOccurred = true;
                 m_lastCollisionNormal = collisionNormal;
@@ -157,8 +180,8 @@ namespace game
         }
         else if (currentState == "EngageCollision" || currentState == "EngageArrival")
         {
-            // 전이 상태에서 장애물 충돌 시 즉시 정지 (벽 관통 방지)
-            if (isObstacle)
+            // 전이 상태에서도 충돌 가능한 모든 오브젝트와의 충돌을 재바운드 트리거로 사용
+            if (collider)
             {
                 m_transitionCollisionOccurred = true;
                 m_lastCollisionNormal = collisionNormal;
@@ -258,7 +281,7 @@ namespace game
         {
             if (CanDetectPlayer())
             {
-                bool playerInRange = IsPlayerInDetectionRange();
+                bool playerInRange = CanEnterEngageByRaycast();
                 if (playerInRange)
                 {
                     // IdleMove 상태 초기화
@@ -337,7 +360,7 @@ namespace game
         // ─────────────────────────────────────────────
         // 플레이어 감지 체크 (매 프레임)
         // ─────────────────────────────────────────────
-        if (!m_isIgnoringPlayer && IsPlayerInDetectionRange())
+        if (!m_isIgnoringPlayer && CanEnterEngageByRaycast())
         {
             // IdleMove 상태 초기화
             m_hasIdleMoveTarget = false;
@@ -376,6 +399,7 @@ namespace game
         {
             HandleIdleMoveCollision(m_lastCollisionNormal);
             m_collisionOccurred = false;
+            m_idleMoveStuckTimer = 0.0f;
             return;
         }
         
@@ -388,6 +412,35 @@ namespace game
         
         // 이동 타이머 업데이트
         m_idleMoveTimer += deltaTime;
+
+        // 1초 이상 유의미한 이동이 없으면 경로를 즉시 재탐색한다.
+        // 횟수 제한 없이 계속 재시도 가능하다.
+        if (GetTransform())
+        {
+            const engine::Vector3 currentPos = GetTransform()->GetWorldPosition();
+            engine::Vector3 delta = currentPos - m_idleMoveLastPosition;
+            delta.y = 0.0f;
+
+            const float minMoveDistSq = m_idleMoveMinMoveDistance * m_idleMoveMinMoveDistance;
+            if (delta.LengthSquared() < minMoveDistSq)
+            {
+                m_idleMoveStuckTimer += deltaTime;
+            }
+            else
+            {
+                m_idleMoveStuckTimer = 0.0f;
+            }
+
+            m_idleMoveLastPosition = currentPos;
+
+            if (m_idleMoveStuckTimer >= m_idleMoveStuckThreshold)
+            {
+                m_idleMoveStuckTimer = 0.0f;
+                m_hasIdleMoveTarget = false;
+                TrySetIdleMoveTarget();
+                return;
+            }
+        }
         
         // waypoint 도달 체크
         if (HasReachedCurrentWaypoint())
@@ -534,7 +587,7 @@ namespace game
             return;
         }
         
-        MoveInDirection(m_engageDirection, m_engageMoveSpeed);
+        MoveInDirection(m_engageDirection, m_engageMoveSpeedScaled);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -563,32 +616,63 @@ namespace game
     void MonsterRoundBlue::ExecuteEngageCollisionBehaviorPhysics()
     {
         if (!m_rigidbody) return;
-        
-        // 전이 중 Wall 충돌 시 즉시 정지 (벽 관통 방지)
-        if (m_transitionCollisionOccurred)
+
+        // 전이 상태에서 재충돌이 나면 현재 전이 진행 방향을 다시 90도 바운드한다.
+        // 감속 타이머는 유지하여 정지까지 이어간다.
+        const bool hadTransitionCollision = m_transitionCollisionOccurred;
+        if (hadTransitionCollision)
+        {
+            engine::Vector3 baseDir = m_transitionMoveDirection;
+            baseDir.y = 0.0f;
+            if (baseDir.LengthSquared() > 0.0001f)
+            {
+                baseDir.Normalize();
+            }
+            else
+            {
+                baseDir = m_engageDirection;
+                baseDir.y = 0.0f;
+                if (baseDir.LengthSquared() > 0.0001f)
+                {
+                    baseDir.Normalize();
+                }
+                else
+                {
+                    baseDir = engine::Vector3(1.0f, 0.0f, 0.0f);
+                }
+            }
+
+            engine::Vector3 bouncedDir = baseDir;
+            if (m_lastCollisionNormal.LengthSquared() > 0.0001f)
+            {
+                const engine::Vector3 snappedNormal = SnapNormalToAxisForDiagonal(m_lastCollisionNormal);
+                bouncedDir = ReflectDirectionByNormal(baseDir, snappedNormal);
+                bouncedDir.y = 0.0f;
+            }
+
+            if (bouncedDir.LengthSquared() > 0.0001f)
+            {
+                bouncedDir.Normalize();
+            }
+            else
+            {
+                // 이레귤러 충돌 폴백(요청으로 일단 비활성화)
+                // bouncedDir = engine::Vector3(-baseDir.z, 0.0f, baseDir.x);
+                bouncedDir = baseDir;
+            }
+
+            m_transitionMoveDirection = bouncedDir;
+        }
+
+        const float currentSpeed = CalculateTransitionSpeed();
+        m_transitionCollisionOccurred = false;
+        if (currentSpeed <= 0.001f)
         {
             StopAllMovement();
             return;
         }
-        
-        float t = m_engageTransitionTimer / m_engageTransitionDuration;
-        t = std::min(t, 1.0f);
-        
-        // 각도 계산: 초기각도에서 30도 추가 회전
-        float rotationRad = (m_collisionRotationAmount * t) * 3.14159265f / 180.0f;
-        float currentAngle = m_collisionStartAngle + rotationRad * static_cast<float>(m_collisionTurnDirection);
-        
-        // 방향 벡터 계산
-        engine::Vector3 direction(
-            std::cos(currentAngle),
-            0.0f,
-            std::sin(currentAngle)
-        );
-        
-        // 속도 계산: 선형 감속
-        float currentSpeed = CalculateTransitionSpeed();
-        
-        MoveInDirection(direction, currentSpeed);
+
+        MoveInDirection(m_transitionMoveDirection, currentSpeed);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -616,17 +700,62 @@ namespace game
     void MonsterRoundBlue::ExecuteEngageArrivalBehaviorPhysics()
     {
         if (!m_rigidbody) return;
-        
-        // 전이 중 Wall 충돌 시 즉시 정지 (벽 관통 방지)
-        if (m_transitionCollisionOccurred)
+
+        // EngageArrival에서도 재충돌 시 동일하게 90도 바운드 후 감속을 계속한다.
+        const bool hadTransitionCollision = m_transitionCollisionOccurred;
+        if (hadTransitionCollision)
+        {
+            engine::Vector3 baseDir = m_transitionMoveDirection;
+            baseDir.y = 0.0f;
+            if (baseDir.LengthSquared() > 0.0001f)
+            {
+                baseDir.Normalize();
+            }
+            else
+            {
+                baseDir = m_engageDirection;
+                baseDir.y = 0.0f;
+                if (baseDir.LengthSquared() > 0.0001f)
+                {
+                    baseDir.Normalize();
+                }
+                else
+                {
+                    baseDir = engine::Vector3(1.0f, 0.0f, 0.0f);
+                }
+            }
+
+            engine::Vector3 bouncedDir = baseDir;
+            if (m_lastCollisionNormal.LengthSquared() > 0.0001f)
+            {
+                const engine::Vector3 snappedNormal = SnapNormalToAxisForDiagonal(m_lastCollisionNormal);
+                bouncedDir = ReflectDirectionByNormal(baseDir, snappedNormal);
+                bouncedDir.y = 0.0f;
+            }
+
+            if (bouncedDir.LengthSquared() > 0.0001f)
+            {
+                bouncedDir.Normalize();
+            }
+            else
+            {
+                // 이레귤러 충돌 폴백(요청으로 일단 비활성화)
+                // bouncedDir = engine::Vector3(-baseDir.z, 0.0f, baseDir.x);
+                bouncedDir = baseDir;
+            }
+
+            m_transitionMoveDirection = bouncedDir;
+        }
+
+        const float currentSpeed = CalculateTransitionSpeed();
+        m_transitionCollisionOccurred = false;
+        if (currentSpeed <= 0.001f)
         {
             StopAllMovement();
             return;
         }
-        
-        float currentSpeed = CalculateTransitionSpeed();
-        
-        MoveInDirection(m_engageDirection, currentSpeed);
+
+        MoveInDirection(m_transitionMoveDirection, currentSpeed);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -638,6 +767,11 @@ namespace game
         m_idleMoveTimer = 0.0f;
         m_collisionOccurred = false;
         m_isReflecting = false;
+        m_idleMoveStuckTimer = 0.0f;
+        if (GetTransform())
+        {
+            m_idleMoveLastPosition = GetTransform()->GetWorldPosition();
+        }
         
         // PA로 목표 설정 시도
         TrySetIdleMoveTarget();
@@ -897,6 +1031,7 @@ namespace game
         m_hasEngageTarget = false;
         m_engageCollisionOccurred = false;
         m_engageArrivalOccurred = false;
+        m_engageMoveSpeedScaled = m_engageMoveSpeed;
         
         // PA 경로 초기화 (EngageMove는 PA 사용 안 함)
         if (m_pathfindingAgent)
@@ -926,8 +1061,66 @@ namespace game
         
         float targetDistance = distance * m_engageTargetMultiplier;
         m_engageTargetPosition = myPos + direction * targetDistance;
+        UpdateEngageMoveSpeedScale(targetDistance);
         
         m_hasEngageTarget = true;
+    }
+
+    void MonsterRoundBlue::UpdateEngageMoveSpeedScale(float engageMoveRange)
+    {
+        m_engageMoveSpeedScaled = m_engageMoveSpeed;
+
+        if (!GetTransform() || !GetGameObject() || engageMoveRange <= 0.0001f)
+        {
+            return;
+        }
+
+        const float scanRange = engageMoveRange * 2.0f;
+        const float fullSpeedThreshold = engageMoveRange * 1.5f;
+        if (scanRange <= 0.0001f || fullSpeedThreshold <= 0.0001f)
+        {
+            return;
+        }
+
+        engine::Vector3 origin = GetTransform()->GetWorldPosition();
+        origin.y += 1.0f;
+
+        engine::PhysicsSystem& physicsSystem = engine::SystemManager::Get().GetPhysicsSystem();
+        std::vector<engine::RaycastHit> allHits;
+        physicsSystem.RaycastAll(origin, m_engageDirection, scanRange, allHits, engine::PhysicsLayer::Mask::All);
+
+        engine::GameObject* selfGO = GetGameObject();
+        float lastCollisionDistance = -1.0f;
+
+        for (const auto& h : allHits)
+        {
+            if (!h.hasHit || !h.collider.Get() || !h.gameObject.Get() || h.gameObject.Get() == selfGO)
+            {
+                continue;
+            }
+
+            const uint32_t hitLayer = h.collider.Get()->GetLayer();
+            if (hitLayer == engine::PhysicsLayer::Index::SubWall ||
+                hitLayer == engine::PhysicsLayer::Index::Environment ||
+                hitLayer == engine::PhysicsLayer::Index::Enemy ||
+                hitLayer == engine::PhysicsLayer::Index::Player ||
+                h.gameObject->GetInterface<IDamageable>() != nullptr)
+            {
+                if (h.distance > lastCollisionDistance)
+                {
+                    lastCollisionDistance = h.distance;
+                }
+            }
+        }
+
+        if (lastCollisionDistance < 0.0f)
+        {
+            lastCollisionDistance = scanRange;
+        }
+
+        const float d = std::max(0.0f, std::min(lastCollisionDistance, fullSpeedThreshold));
+        const float ratio = 0.5f + 0.5f * (d / fullSpeedThreshold);  // d=0 -> 0.5, d>=1.5R -> 1.0
+        m_engageMoveSpeedScaled = m_engageMoveSpeed * ratio;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -949,40 +1142,46 @@ namespace game
 
     // ═══════════════════════════════════════════════════════════════
     // EngageCollision 초기화
-    // - 충돌 반대방향에서 45도 꺾인 방향으로 시작
-    // - 좌/우 50% 랜덤
+    // - Green과 동일한 축 스냅 정반사 방향으로 전환
+    // - 현재 속도에서 시작해 2초 감속
     // ═══════════════════════════════════════════════════════════════
     void MonsterRoundBlue::InitializeEngageCollision()
     {
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-        
         m_engageTransitionTimer = 0.0f;
-        
-        // 충돌 반대방향 계산
-        engine::Vector3 oppositeDir = -m_lastCollisionNormal;
-        if (oppositeDir.LengthSquared() < 0.0001f)
+        m_transitionStartSpeed = m_engageMoveSpeedScaled;
+        m_transitionCollisionOccurred = false;
+
+        engine::Vector3 baseDir = m_engageDirection;
+        baseDir.y = 0.0f;
+        if (baseDir.LengthSquared() > 0.0001f)
         {
-            // 유효하지 않으면 현재 진행방향 반대
-            oppositeDir = -m_engageDirection;
+            baseDir.Normalize();
         }
-        oppositeDir.Normalize();
-        
-        // 반대방향의 각도 계산
-        float baseAngle = std::atan2(oppositeDir.z, oppositeDir.x);
-        
-        // 좌/우 50% 랜덤
-        std::uniform_int_distribution<int> dirDist(0, 1);
-        m_collisionTurnDirection = (dirDist(gen) == 0) ? 1 : -1;
-        
-        // 초기 45도 오프셋 적용
-        float offsetRad = m_collisionInitialAngleOffset * 3.14159265f / 180.0f;
-        m_collisionStartAngle = baseAngle + offsetRad * static_cast<float>(m_collisionTurnDirection);
-        
-        // 각도 정규화
-        const float TWO_PI = 2.0f * 3.14159265f;
-        while (m_collisionStartAngle < 0.0f) m_collisionStartAngle += TWO_PI;
-        while (m_collisionStartAngle >= TWO_PI) m_collisionStartAngle -= TWO_PI;
+        else
+        {
+            baseDir = engine::Vector3(1.0f, 0.0f, 0.0f);
+        }
+
+        engine::Vector3 reflectedDir = baseDir;
+        if (m_lastCollisionNormal.LengthSquared() > 0.0001f)
+        {
+            const engine::Vector3 snappedNormal = SnapNormalToAxisForDiagonal(m_lastCollisionNormal);
+            reflectedDir = ReflectDirectionByNormal(baseDir, snappedNormal);
+            reflectedDir.y = 0.0f;
+        }
+
+        if (reflectedDir.LengthSquared() > 0.0001f)
+        {
+            reflectedDir.Normalize();
+        }
+        else
+        {
+            // 이레귤러 충돌 폴백(요청으로 일단 비활성화)
+            // reflectedDir = engine::Vector3(-baseDir.z, 0.0f, baseDir.x);
+            reflectedDir = baseDir;
+        }
+
+        m_transitionMoveDirection = reflectedDir;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -991,7 +1190,19 @@ namespace game
     void MonsterRoundBlue::InitializeEngageArrival()
     {
         m_engageTransitionTimer = 0.0f;
-        // m_engageDirection은 이미 설정되어 있음
+        m_transitionStartSpeed = m_engageMoveSpeedScaled;
+        m_transitionCollisionOccurred = false;
+
+        m_transitionMoveDirection = m_engageDirection;
+        m_transitionMoveDirection.y = 0.0f;
+        if (m_transitionMoveDirection.LengthSquared() > 0.0001f)
+        {
+            m_transitionMoveDirection.Normalize();
+        }
+        else
+        {
+            m_transitionMoveDirection = engine::Vector3(1.0f, 0.0f, 0.0f);
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -999,11 +1210,20 @@ namespace game
     // ═══════════════════════════════════════════════════════════════
     float MonsterRoundBlue::CalculateTransitionSpeed() const
     {
+        if (m_engageTransitionDuration <= 0.0001f)
+        {
+            return 0.0f;
+        }
+
         float t = m_engageTransitionTimer / m_engageTransitionDuration;
         t = std::min(t, 1.0f);
-        
-        // 선형 감속: engageSpeed → moveSpeed
-        return m_engageMoveSpeed + (m_moveSpeed - m_engageMoveSpeed) * t;
+
+        if (m_transitionCollisionOccurred)
+        {
+            t = std::min(1.0f, t * m_transitionCollisionBrakeMultiplier);
+        }
+
+        return m_transitionStartSpeed * (1.0f - t);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1044,6 +1264,94 @@ namespace game
             return false;  // 항상 무시
         }
         return !m_isIgnoringPlayer;
+    }
+
+    bool MonsterRoundBlue::CanEnterEngageByRaycast() const
+    {
+        if (!m_targetPlayer || !m_targetPlayer->GetGameObject() || !GetTransform())
+        {
+            return false;
+        }
+
+        engine::GameObject* selfGO = GetGameObject();
+        engine::GameObject* playerGO = m_targetPlayer->GetGameObject();
+        if (!selfGO || !playerGO)
+        {
+            return false;
+        }
+
+        engine::Vector3 origin = GetTransform()->GetWorldPosition();
+        origin.y += 1.0f;
+
+        engine::Vector3 target = m_targetPlayer->GetTransform()->GetWorldPosition();
+        target.y += 1.0f;
+
+        engine::Vector3 toPlayer = target - origin;
+        toPlayer.y = 0.0f;
+
+        const float distanceToPlayer = toPlayer.Length();
+        if (distanceToPlayer < 0.0001f)
+        {
+            return true;
+        }
+
+        if (distanceToPlayer > m_detectionRange)
+        {
+            return false;
+        }
+
+        toPlayer.Normalize();
+
+        engine::PhysicsSystem& physicsSystem = engine::SystemManager::Get().GetPhysicsSystem();
+        std::vector<engine::RaycastHit> allHits;
+        physicsSystem.RaycastAll(origin, toPlayer, distanceToPlayer, allHits, engine::PhysicsLayer::Mask::All);
+
+        std::vector<engine::RaycastHit> validHits;
+        validHits.reserve(allHits.size());
+        for (const auto& h : allHits)
+        {
+            if (!h.hasHit || !h.gameObject.Get() || h.gameObject.Get() == selfGO || !h.collider.Get())
+            {
+                continue;
+            }
+            validHits.push_back(h);
+        }
+
+        std::sort(validHits.begin(), validHits.end(),
+            [](const engine::RaycastHit& a, const engine::RaycastHit& b)
+            {
+                return a.distance < b.distance;
+            });
+
+        for (const auto& h : validHits)
+        {
+            engine::GameObject* hitGO = h.gameObject.Get();
+            if (!hitGO)
+            {
+                continue;
+            }
+
+            if (hitGO == playerGO)
+            {
+                return true;
+            }
+
+            const uint32_t hitLayer = h.collider.Get()->GetLayer();
+            if (hitLayer == engine::PhysicsLayer::Index::Player)
+            {
+                return true;
+            }
+
+            if (hitLayer == engine::PhysicsLayer::Index::SubWall ||
+                hitLayer == engine::PhysicsLayer::Index::Environment ||
+                hitLayer == engine::PhysicsLayer::Index::Enemy ||
+                hitGO->GetInterface<IDamageable>() != nullptr)
+            {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1106,7 +1414,6 @@ namespace game
         else if (state == "EngageCollision")
         {
             InitializeEngageCollision();
-            m_transitionCollisionOccurred = false;  // 충돌 플래그 리셋
             
             if (m_logicFSM)
             {
@@ -1116,7 +1423,6 @@ namespace game
         else if (state == "EngageArrival")
         {
             InitializeEngageArrival();
-            m_transitionCollisionOccurred = false;  // 충돌 플래그 리셋
             
             if (m_logicFSM)
             {

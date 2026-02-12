@@ -176,10 +176,12 @@ namespace game
         switch (state)
         {
         case AimCursorState::Default:
-            target = m_cursorDefaultObject;
+            if (m_useDefaultCursor)
+                target = m_cursorDefaultObject;
             break;
         case AimCursorState::Clicked:
-            target = m_cursorClickObject;
+            if (m_useClickCursor)
+                target = m_cursorClickObject;
             break;
         case AimCursorState::AimIdle:
             target = m_cursorAimObject;
@@ -778,8 +780,8 @@ namespace game
 
         if (m_cursorAimRect) m_cursorAimRect->SetAnchoredPosition(mouseRefCenter);
         if (m_cursorExecutionRect) m_cursorExecutionRect->SetAnchoredPosition(mouseRefCenter);
-        if (m_cursorDefaultRect) m_cursorDefaultRect->SetAnchoredPosition(mouseRefCenter);
-        if (m_cursorClickRect) m_cursorClickRect->SetAnchoredPosition(mouseRefCenter);
+        if (m_cursorDefaultRect) m_cursorDefaultRect->SetAnchoredPosition(mouseRefCenter + m_cursorDefaultOffset);
+        if (m_cursorClickRect) m_cursorClickRect->SetAnchoredPosition(mouseRefCenter + m_cursorClickOffset);
         if (m_cursorOnEnemyRect) m_cursorOnEnemyRect->SetAnchoredPosition(mouseRefCenter);
 
         // 상태에 맞는 오브젝트 활성화
@@ -872,6 +874,10 @@ namespace game
             if (m_cursorClickRect) m_cursorClickRect->SetSize(m_cursorSize.x, m_cursorSize.y);
             if (m_cursorOnEnemyRect) m_cursorOnEnemyRect->SetSize(m_cursorSize.x, m_cursorSize.y);
         }
+        ImGui::DragFloat2("Default Cursor Offset (px)", &m_cursorDefaultOffset.x, 0.1f, -200.0f, 200.0f);
+        ImGui::DragFloat2("Click Cursor Offset (px)", &m_cursorClickOffset.x, 0.1f, -200.0f, 200.0f);
+        ImGui::Checkbox("Use Default Cursor", &m_useDefaultCursor);
+        ImGui::Checkbox("Use Click Cursor", &m_useClickCursor);
         ImGui::Text("Canvas (fixed): %s", kCanvasObjectName);
         ImGui::Text("Aim (fixed): %s [%s]", kCursorAimName, m_cursorAimObject ? "OK" : "MISSING");
         ImGui::Text("Execution (fixed): %s [%s]", kCursorExecutionName, m_cursorExecutionObject ? "OK" : "MISSING");
@@ -885,6 +891,10 @@ namespace game
         Object::Save(j);
 
         j["CursorSize"] = m_cursorSize;
+        j["CursorDefaultOffset"] = m_cursorDefaultOffset;
+        j["CursorClickOffset"] = m_cursorClickOffset;
+        j["UseDefaultCursor"] = m_useDefaultCursor;
+        j["UseClickCursor"] = m_useClickCursor;
         j["TargetPlaneY"] = m_targetPlaneY;
         j["AimYOffsetWhenMoving"] = m_aimYOffsetWhenMoving;
         j["OnEnemyRayMaxDistance"] = m_onEnemyRayMaxDistance;
@@ -904,6 +914,10 @@ namespace game
     {      
         Object::Load(j);
         engine::JsonGet(j, "CursorSize", m_cursorSize);
+        engine::JsonGet(j, "CursorDefaultOffset", m_cursorDefaultOffset);
+        engine::JsonGet(j, "CursorClickOffset", m_cursorClickOffset);
+        engine::JsonGet(j, "UseDefaultCursor", m_useDefaultCursor);
+        engine::JsonGet(j, "UseClickCursor", m_useClickCursor);
         engine::JsonGet(j, "TargetPlaneY", m_targetPlaneY);
         engine::JsonGet(j, "AimYOffsetWhenMoving", m_aimYOffsetWhenMoving);
         engine::JsonGet(j, "OnEnemyRayMaxDistance", m_onEnemyRayMaxDistance);
