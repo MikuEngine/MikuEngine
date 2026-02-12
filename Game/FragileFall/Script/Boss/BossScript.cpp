@@ -7,6 +7,7 @@
 #include <Framework/Scene/Scene.h>
 #include <Framework/Scene/SceneManager.h>
 #include <Framework/Object/Component/UI/UIProgressBar.h>
+#include <Framework/Object/Component/Particle/ParticleEffect.h>
 #include <Common/Math/MathUtility.h>
 #include <Framework/Asset/Prefab.h>
 #include <algorithm>
@@ -631,6 +632,11 @@ namespace game
         m_deathPhase = DeathPhase::CameraMoveToBoss;
         m_deathPhaseElapsed = 0.0f;
         m_deathPartDustSpawned = false;
+        if (m_deathPartDustInstance)
+        {
+            m_deathPartDustInstance->Destroy();
+            m_deathPartDustInstance = nullptr;
+        }
         m_isBattleStarted = false;
 
         // 보스 클리어 연출 중 플레이어 조작 차단
@@ -657,6 +663,22 @@ namespace game
         }
         m_activePillars.clear();
         m_isShieldActive = false;
+
+        // m_activePillars 누락 케이스 대비: 씬 전체에서 BossPillar를 강제 정리
+        if (auto* scene = engine::SceneManager::Get().GetScene())
+        {
+            for (const auto& go : scene->GetGameObjects())
+            {
+                if (!go) continue;
+                const std::string& n = go->GetName();
+                if (go->GetComponent<BossPillar>() ||
+                    n.find("BossPillar") != std::string::npos ||
+                    n.find("PillarCrystalizedPiece") != std::string::npos)
+                {
+                    go->Destroy();
+                }
+            }
+        }
 
         // 보스 하위 트리 + 씬 전체에서 실드 형태 오브젝트 제거
         auto isShieldName = [](const std::string& name) -> bool
@@ -836,7 +858,25 @@ namespace game
         dustPos.y = m_deathPartDustGroundY;
         dustPos.z += m_deathPartDustOffsetZ;
         effect->GetTransform()->SetLocalPosition(ToLocalPosition(effect->GetTransform(), dustPos));
+        m_deathPartDustInstance = effect;
         m_deathPartDustSpawned = true;
+    }
+
+    void BossScript::StopPartDropDustNaturally()
+    {
+        if (!m_deathPartDustInstance)
+            return;
+
+        if (auto* pe = m_deathPartDustInstance->GetComponent<engine::ParticleEffect>())
+        {
+            pe->SetAutoDestroy(true);
+            pe->Stop();
+        }
+        else
+        {
+            m_deathPartDustInstance->Destroy();
+        }
+        m_deathPartDustInstance = nullptr;
     }
 
     void BossScript::StopAndHideBossRenderers()
@@ -853,30 +893,37 @@ namespace game
 
         if (!m_deathCoreBurstParticlePrefab.empty())
         {
-            auto effect = engine::Prefab::Instantiate(m_deathCoreBurstParticlePrefab);
-            if (effect && effect->GetTransform())
-            {
-                engine::Vector3 basePos = GetTransform()->GetWorldPosition();
-                basePos.y += m_deathCoreBurstOffsetY;
-                effect->GetTransform()->SetLocalPosition(ToLocalPosition(effect->GetTransform(), basePos));
-            }
+            const engine::Vector3 center = GetTransform()->GetWorldPosition() + engine::Vector3(0.0f, m_deathCoreBurstOffsetY, 0.0f);
 
-            engine::Vector3 center = GetTransform()->GetWorldPosition();
-            center.y += m_deathCoreBurstOffsetY;
-            for (int i = 0; i < m_deathCoreExtraBurstCount; ++i)
+            auto spawnBurst = [this, &center](float yMin, float yMax)
             {
                 auto extra = engine::Prefab::Instantiate(m_deathCoreBurstParticlePrefab);
                 if (!extra || !extra->GetTransform())
-                    continue;
+                    return;
 
                 const float angle = engine::Random::Float(0.0f, DirectX::XM_2PI);
-                const float radius = engine::Random::Float(0.2f, std::max(0.21f, m_deathCoreExtraBurstRadius));
+                // 원형 면적에 고르게 퍼지도록 sqrt(rand) 사용
+                const float radius = std::sqrt(engine::Random::Float(0.0f, 1.0f)) * std::max(0.01f, m_deathCoreBurstRadius);
                 const engine::Vector3 offset(
                     std::cos(angle) * radius,
-                    engine::Random::Float(0.2f, 1.8f),
+                    engine::Random::Float(std::min(yMin, yMax), std::max(yMin, yMax)),
                     std::sin(angle) * radius);
                 const engine::Vector3 spawnPos = center + offset;
                 extra->GetTransform()->SetLocalPosition(ToLocalPosition(extra->GetTransform(), spawnPos));
+                extra->GetTransform()->SetLocalScale(engine::Vector3(
+                    m_deathDestroyParticleScale,
+                    m_deathDestroyParticleScale,
+                    m_deathDestroyParticleScale));
+            };
+
+            for (int i = 0; i < std::max(0, m_deathCoreBurstUpperCount); ++i)
+            {
+                spawnBurst(m_deathCoreBurstUpperYMin, m_deathCoreBurstUpperYMax);
+            }
+
+            for (int i = 0; i < std::max(0, m_deathCoreBurstLowerCount); ++i)
+            {
+                spawnBurst(m_deathCoreBurstLowerYMin, m_deathCoreBurstLowerYMax);
             }
         }
     }
@@ -896,7 +943,13 @@ namespace game
             auto effect = engine::Prefab::Instantiate(m_deathMapCrystalBurstParticlePrefab);
             if (effect && effect->GetTransform() && go->GetTransform())
             {
-                effect->GetTransform()->SetWorldMatrix(go->GetTransform()->GetWorld());
+                engine::Vector3 pos = go->GetTransform()->GetWorldPosition();
+                pos.y += m_deathMapCrystalBurstOffsetY;
+                effect->GetTransform()->SetLocalPosition(ToLocalPosition(effect->GetTransform(), pos));
+                effect->GetTransform()->SetLocalScale(engine::Vector3(
+                    m_deathDestroyParticleScale,
+                    m_deathDestroyParticleScale,
+                    m_deathDestroyParticleScale));
             }
         }
     }
@@ -960,6 +1013,7 @@ namespace game
             UpdateDeathPartDrops(m_remainingPartsForDeath, deltaTime);
             if (m_deathPhaseElapsed >= m_deathRemainingDropDuration)
             {
+                StopPartDropDustNaturally();
                 m_deathPhase = DeathPhase::CameraRetreatAndMapCrystalBurst;
                 m_deathPhaseElapsed = 0.0f;
             }
@@ -1099,11 +1153,18 @@ namespace game
         ImGui::DragFloat("카메라-보스 높이", &m_deathCamBossHeight, 0.1f, 1.0f, 50.0f);
         ImGui::DragFloat("카메라 후진 거리", &m_deathCamRetreatDistance, 0.1f, 1.0f, 80.0f);
         ImGui::DragFloat3("카메라 바라보기 오프셋", &m_deathCamLookAtOffset.x, 0.05f, -20.0f, 20.0f);
-        ImGui::DragInt("코어 추가 폭발 개수", &m_deathCoreExtraBurstCount, 1, 0, 30);
-        ImGui::DragFloat("코어 추가 폭발 반경", &m_deathCoreExtraBurstRadius, 0.05f, 0.1f, 8.0f);
+        ImGui::DragInt("코어 파괴 위쪽 개수", &m_deathCoreBurstUpperCount, 1, 0, 50);
+        ImGui::DragInt("코어 파괴 아래쪽 개수", &m_deathCoreBurstLowerCount, 1, 0, 50);
+        ImGui::DragFloat("코어 파괴 원형 반경", &m_deathCoreBurstRadius, 0.05f, 0.1f, 12.0f);
+        ImGui::DragFloat("코어 위쪽 Y 최소", &m_deathCoreBurstUpperYMin, 0.05f, -10.0f, 10.0f);
+        ImGui::DragFloat("코어 위쪽 Y 최대", &m_deathCoreBurstUpperYMax, 0.05f, -10.0f, 10.0f);
+        ImGui::DragFloat("코어 아래쪽 Y 최소", &m_deathCoreBurstLowerYMin, 0.05f, -10.0f, 10.0f);
+        ImGui::DragFloat("코어 아래쪽 Y 최대", &m_deathCoreBurstLowerYMax, 0.05f, -10.0f, 10.0f);
         ImGui::DragFloat("코어 파괴 파티클 Y 오프셋", &m_deathCoreBurstOffsetY, 0.05f, -10.0f, 10.0f);
+        ImGui::DragFloat("맵 수정 파괴 파티클 Y 오프셋", &m_deathMapCrystalBurstOffsetY, 0.05f, -10.0f, 10.0f);
         ImGui::DragFloat("파츠 먼지 이펙트 Y", &m_deathPartDustGroundY, 0.05f, -10.0f, 10.0f);
         ImGui::DragFloat("파츠 먼지 이펙트 Z 오프셋", &m_deathPartDustOffsetZ, 0.05f, -20.0f, 20.0f);
+        ImGui::DragFloat("파괴 파티클 공통 스케일", &m_deathDestroyParticleScale, 0.05f, 0.1f, 10.0f);
         ImGui::InputText("코어 파괴 파티클", &m_deathCoreBurstParticlePrefab);
         ImGui::InputText("맵 수정 파괴 파티클", &m_deathMapCrystalBurstParticlePrefab);
         ImGui::InputText("파츠 낙하 먼지 파티클", &m_deathPartDropDustParticlePrefab);
@@ -1581,11 +1642,18 @@ namespace game
         j["DeathCamBossHeight"] = m_deathCamBossHeight;
         j["DeathCamRetreatDistance"] = m_deathCamRetreatDistance;
         j["DeathCamLookAtOffset"] = { m_deathCamLookAtOffset.x, m_deathCamLookAtOffset.y, m_deathCamLookAtOffset.z };
-        j["DeathCoreExtraBurstCount"] = m_deathCoreExtraBurstCount;
-        j["DeathCoreExtraBurstRadius"] = m_deathCoreExtraBurstRadius;
+        j["DeathCoreBurstUpperCount"] = m_deathCoreBurstUpperCount;
+        j["DeathCoreBurstLowerCount"] = m_deathCoreBurstLowerCount;
+        j["DeathCoreBurstRadius"] = m_deathCoreBurstRadius;
+        j["DeathCoreBurstUpperYMin"] = m_deathCoreBurstUpperYMin;
+        j["DeathCoreBurstUpperYMax"] = m_deathCoreBurstUpperYMax;
+        j["DeathCoreBurstLowerYMin"] = m_deathCoreBurstLowerYMin;
+        j["DeathCoreBurstLowerYMax"] = m_deathCoreBurstLowerYMax;
         j["DeathCoreBurstOffsetY"] = m_deathCoreBurstOffsetY;
+        j["DeathMapCrystalBurstOffsetY"] = m_deathMapCrystalBurstOffsetY;
         j["DeathPartDustGroundY"] = m_deathPartDustGroundY;
         j["DeathPartDustOffsetZ"] = m_deathPartDustOffsetZ;
+        j["DeathDestroyParticleScale"] = m_deathDestroyParticleScale;
         j["DeathCoreBurstParticlePrefab"] = m_deathCoreBurstParticlePrefab;
         j["DeathMapCrystalBurstParticlePrefab"] = m_deathMapCrystalBurstParticlePrefab;
         j["DeathPartDropDustParticlePrefab"] = m_deathPartDropDustParticlePrefab;
@@ -1741,16 +1809,42 @@ namespace game
             m_deathCamLookAtOffset.y = j["DeathCamLookAtOffset"][1].get<float>();
             m_deathCamLookAtOffset.z = j["DeathCamLookAtOffset"][2].get<float>();
         }
+        if (j.contains("DeathCoreBurstUpperCount"))
+            m_deathCoreBurstUpperCount = std::clamp(j["DeathCoreBurstUpperCount"].get<int>(), 0, 50);
+        if (j.contains("DeathCoreBurstLowerCount"))
+            m_deathCoreBurstLowerCount = std::clamp(j["DeathCoreBurstLowerCount"].get<int>(), 0, 50);
+        if (j.contains("DeathCoreBurstRadius"))
+            m_deathCoreBurstRadius = std::clamp(j["DeathCoreBurstRadius"].get<float>(), 0.1f, 12.0f);
+        if (j.contains("DeathCoreBurstUpperYMin"))
+            m_deathCoreBurstUpperYMin = std::clamp(j["DeathCoreBurstUpperYMin"].get<float>(), -10.0f, 10.0f);
+        if (j.contains("DeathCoreBurstUpperYMax"))
+            m_deathCoreBurstUpperYMax = std::clamp(j["DeathCoreBurstUpperYMax"].get<float>(), -10.0f, 10.0f);
+        if (j.contains("DeathCoreBurstLowerYMin"))
+            m_deathCoreBurstLowerYMin = std::clamp(j["DeathCoreBurstLowerYMin"].get<float>(), -10.0f, 10.0f);
+        if (j.contains("DeathCoreBurstLowerYMax"))
+            m_deathCoreBurstLowerYMax = std::clamp(j["DeathCoreBurstLowerYMax"].get<float>(), -10.0f, 10.0f);
+        // 하위 호환(이전 저장값)
         if (j.contains("DeathCoreExtraBurstCount"))
-            m_deathCoreExtraBurstCount = std::clamp(j["DeathCoreExtraBurstCount"].get<int>(), 0, 30);
-        if (j.contains("DeathCoreExtraBurstRadius"))
-            m_deathCoreExtraBurstRadius = std::clamp(j["DeathCoreExtraBurstRadius"].get<float>(), 0.1f, 8.0f);
+        {
+            const int legacyCount = std::clamp(j["DeathCoreExtraBurstCount"].get<int>(), 0, 50);
+            if (!j.contains("DeathCoreBurstUpperCount") && !j.contains("DeathCoreBurstLowerCount"))
+            {
+                m_deathCoreBurstUpperCount = legacyCount;
+                m_deathCoreBurstLowerCount = legacyCount;
+            }
+        }
+        if (j.contains("DeathCoreExtraBurstRadius") && !j.contains("DeathCoreBurstRadius"))
+            m_deathCoreBurstRadius = std::clamp(j["DeathCoreExtraBurstRadius"].get<float>(), 0.1f, 12.0f);
         if (j.contains("DeathCoreBurstOffsetY"))
             m_deathCoreBurstOffsetY = std::clamp(j["DeathCoreBurstOffsetY"].get<float>(), -10.0f, 10.0f);
+        if (j.contains("DeathMapCrystalBurstOffsetY"))
+            m_deathMapCrystalBurstOffsetY = std::clamp(j["DeathMapCrystalBurstOffsetY"].get<float>(), -10.0f, 10.0f);
         if (j.contains("DeathPartDustGroundY"))
             m_deathPartDustGroundY = std::clamp(j["DeathPartDustGroundY"].get<float>(), -10.0f, 10.0f);
         if (j.contains("DeathPartDustOffsetZ"))
             m_deathPartDustOffsetZ = std::clamp(j["DeathPartDustOffsetZ"].get<float>(), -20.0f, 20.0f);
+        if (j.contains("DeathDestroyParticleScale"))
+            m_deathDestroyParticleScale = std::clamp(j["DeathDestroyParticleScale"].get<float>(), 0.1f, 10.0f);
         if (j.contains("DeathCoreBurstParticlePrefab"))
             m_deathCoreBurstParticlePrefab = j["DeathCoreBurstParticlePrefab"].get<std::string>();
         if (j.contains("DeathMapCrystalBurstParticlePrefab"))

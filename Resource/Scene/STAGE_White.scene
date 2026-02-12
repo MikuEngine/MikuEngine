@@ -1,6 +1,6 @@
 {
     "Name": "STAGE_White",
-    "NumGameObjects": 41,
+    "NumGameObjects": 40,
     "GameObjects": [
         {
             "ID": 0,
@@ -266,6 +266,7 @@
                     "DashDecayDuration": 0.5,
                     "DashAfterimageCutoffRatio": 0.4000000059604645,
                     "DashCooldown": 0.20000000298023224,
+                    "DashInvincibleTime": 0.30000001192092896,
                     "MaxDashCount": 3,
                     "DashRechargeTime": 1.0,
                     "PostDashQuickFireDuration": 0.30000001192092896,
@@ -275,6 +276,7 @@
                     "PlayerMaxHP": 100.0,
                     "BasicHpDoNotTouch": 100.0,
                     "InvincibleTime": 0.5,
+                    "ExecutionInvincibleTime": 0.5,
                     "IsInvincible": false,
                     "EED_Enable": false,
                     "EED_DamageScale": 5.0,
@@ -1573,67 +1575,6 @@
         },
         {
             "ID": 26,
-            "Name": "CrystalChunk",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -27.94649314880371,
-                        "y": 3.8291194438934326,
-                        "z": 6.593348979949951
-                    },
-                    "Rotation": {
-                        "x": -0.2537597119808197,
-                        "y": 0.715141773223877,
-                        "z": -0.4810278117656708,
-                        "w": -0.4390791654586792
-                    },
-                    "Scale": {
-                        "x": 0.3344440162181854,
-                        "y": 0.33443862199783325,
-                        "z": 0.334445983171463
-                    }
-                },
-                {
-                    "Type": "SkeletalMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/white/crystal_chunk_001.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Rigid_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.350000023841858,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 27,
             "Name": "Crystal",
             "Active": true,
             "Components": [
@@ -1695,7 +1636,7 @@
             ]
         },
         {
-            "ID": 28,
+            "ID": 27,
             "Name": "Crystal",
             "Active": true,
             "Components": [
@@ -1757,68 +1698,7 @@
             ]
         },
         {
-            "ID": 29,
-            "Name": "CrystalChunk",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": -1.9131321907043457,
-                        "y": 2.1682348251342773,
-                        "z": 22.090435028076172
-                    },
-                    "Rotation": {
-                        "x": 0.5665923953056335,
-                        "y": -0.21365417540073395,
-                        "z": 0.2611996829509735,
-                        "w": 0.7517311573028564
-                    },
-                    "Scale": {
-                        "x": 0.4305829107761383,
-                        "y": 0.43058598041534424,
-                        "z": 0.4305880069732666
-                    }
-                },
-                {
-                    "Type": "SkeletalMeshRenderer",
-                    "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal/white/crystal_chunk_002.fbx",
-                    "SocketFilePath": "",
-                    "VSFilePath": "Resource/Shader/Vertex/Rigid_VS.hlsl",
-                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
-                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
-                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
-                    "MaterialBaseColor": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "MaterialEmissive": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "MaterialRoughness": 1.0,
-                    "MaterialMetalness": 0.0,
-                    "MaterialAmbientOcclusion": 1.0,
-                    "MaterialEmissiveIntensity": 1.350000023841858,
-                    "OverrideMaterial": false,
-                    "CastShadow": false,
-                    "CullMode": 1,
-                    "SubsurfaceStrength": 0.0,
-                    "SubsurfaceColor": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "ID": 30,
+            "ID": 28,
             "Name": "CrystalChunk",
             "Active": true,
             "Components": [
@@ -1831,15 +1711,15 @@
                         "z": 2.492807149887085
                     },
                     "Rotation": {
-                        "x": 0.6038679480552673,
-                        "y": 0.36789530515670776,
-                        "z": -0.36789461970329285,
-                        "w": 0.6038627624511719
+                        "x": -0.10337717831134796,
+                        "y": 0.5164635181427002,
+                        "z": 0.0629802718758583,
+                        "w": 0.8477098941802979
                     },
                     "Scale": {
-                        "x": 1.0000154972076416,
-                        "y": 1.0000104904174805,
-                        "z": 1.0000176429748535
+                        "x": 1.000015139579773,
+                        "y": 1.0000032186508179,
+                        "z": 1.0000171661376953
                     }
                 },
                 {
@@ -1880,7 +1760,7 @@
             ]
         },
         {
-            "ID": 31,
+            "ID": 29,
             "Name": "CrystalPiece002",
             "Active": true,
             "Components": [
@@ -1942,7 +1822,7 @@
             ]
         },
         {
-            "ID": 32,
+            "ID": 30,
             "Name": "CrystalChunk001",
             "Active": true,
             "Components": [
@@ -1955,15 +1835,15 @@
                         "z": 20.52789306640625
                     },
                     "Rotation": {
-                        "x": 0.5227532982826233,
-                        "y": 0.4761624038219452,
-                        "z": -0.47616642713546753,
-                        "w": 0.5227465033531189
+                        "x": -0.14628814160823822,
+                        "y": 0.6573269367218018,
+                        "z": -0.14928323030471802,
+                        "w": 0.7240411639213562
                     },
                     "Scale": {
-                        "x": 0.2500108480453491,
-                        "y": 0.2500186562538147,
-                        "z": 0.25002211332321167
+                        "x": 0.2500120997428894,
+                        "y": 0.2500162124633789,
+                        "z": 0.2500227391719818
                     }
                 },
                 {
@@ -2004,7 +1884,7 @@
             ]
         },
         {
-            "ID": 33,
+            "ID": 31,
             "Name": "CrystalPiece002",
             "Active": true,
             "Components": [
@@ -2066,7 +1946,7 @@
             ]
         },
         {
-            "ID": 34,
+            "ID": 32,
             "Name": "CrystalPiece006",
             "Active": true,
             "Components": [
@@ -2128,7 +2008,7 @@
             ]
         },
         {
-            "ID": 35,
+            "ID": 33,
             "Name": "CrystalPiece001",
             "Active": true,
             "Components": [
@@ -2190,7 +2070,7 @@
             ]
         },
         {
-            "ID": 36,
+            "ID": 34,
             "Name": "Crystal",
             "Active": true,
             "Components": [
@@ -2252,7 +2132,7 @@
             ]
         },
         {
-            "ID": 37,
+            "ID": 35,
             "Name": "Crystal",
             "Active": true,
             "Components": [
@@ -2314,7 +2194,7 @@
             ]
         },
         {
-            "ID": 38,
+            "ID": 36,
             "Name": "CrystalPiece006",
             "Active": true,
             "Components": [
@@ -2376,7 +2256,7 @@
             ]
         },
         {
-            "ID": 39,
+            "ID": 37,
             "Name": "Crystal",
             "Active": true,
             "Components": [
@@ -2438,7 +2318,7 @@
             ]
         },
         {
-            "ID": 40,
+            "ID": 38,
             "Name": "Crystal",
             "Active": true,
             "Components": [
@@ -2487,6 +2367,68 @@
                     "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 0.2800000011920929,
+                    "OverrideMaterial": false,
+                    "CastShadow": false,
+                    "CullMode": 1,
+                    "SubsurfaceStrength": 0.0,
+                    "SubsurfaceColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 39,
+            "Name": "CrystalChunk",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -27.592281341552734,
+                        "y": 3.889263868331909,
+                        "z": 5.533905506134033
+                    },
+                    "Rotation": {
+                        "x": -0.07872194796800613,
+                        "y": -0.011775709688663483,
+                        "z": -0.2660778760910034,
+                        "w": 0.9606595635414124
+                    },
+                    "Scale": {
+                        "x": 0.33660560846328735,
+                        "y": 0.3366062045097351,
+                        "z": 0.3365965485572815
+                    }
+                },
+                {
+                    "Type": "StaticMeshRenderer",
+                    "Active": true,
+                    "MeshFilePath": "Resource/Model/crystal/white/crystal_chunk_001.fbx",
+                    "SocketFilePath": "",
+                    "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
+                    "TransparentVSFilePath": "",
+                    "OpaquePSFilePath": "Resource/Shader/Pixel/GBuffer_PS.hlsl",
+                    "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
+                    "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
+                    "MaterialBaseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "MaterialEmissive": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "MaterialRoughness": 1.0,
+                    "MaterialMetalness": 0.0,
+                    "MaterialAmbientOcclusion": 1.0,
+                    "MaterialEmissiveIntensity": 1.0099999904632568,
                     "OverrideMaterial": false,
                     "CastShadow": false,
                     "CullMode": 1,

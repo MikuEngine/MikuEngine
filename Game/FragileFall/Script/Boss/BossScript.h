@@ -265,6 +265,7 @@ namespace game
         DeathPhase m_deathPhase = DeathPhase::None;
         float m_deathPhaseElapsed = 0.0f;
         bool m_deathPartDustSpawned = false;
+        engine::Ptr<engine::GameObject> m_deathPartDustInstance = nullptr;
 
         engine::Vector3 m_deathCamStartPos = engine::Vector3::Zero;
         engine::Vector3 m_deathCamBossPos = engine::Vector3::Zero;
@@ -288,11 +289,18 @@ namespace game
         float m_deathCamBossHeight = 12.0f;
         float m_deathCamRetreatDistance = 26.0f;
         engine::Vector3 m_deathCamLookAtOffset = engine::Vector3(0.0f, 2.5f, 0.0f);
-        int m_deathCoreExtraBurstCount = 6;
-        float m_deathCoreExtraBurstRadius = 2.2f;
+        int m_deathCoreBurstUpperCount = 6;
+        int m_deathCoreBurstLowerCount = 6;
+        float m_deathCoreBurstRadius = 2.2f;
+        float m_deathCoreBurstUpperYMin = 0.2f;
+        float m_deathCoreBurstUpperYMax = 2.0f;
+        float m_deathCoreBurstLowerYMin = -1.8f;
+        float m_deathCoreBurstLowerYMax = -0.2f;
         float m_deathCoreBurstOffsetY = 0.0f;
+        float m_deathMapCrystalBurstOffsetY = 0.8f;
         float m_deathPartDustGroundY = 0.0f;
         float m_deathPartDustOffsetZ = 0.0f;
+        float m_deathDestroyParticleScale = 1.5f;
 
         std::string m_deathCoreBurstParticlePrefab = "Effect_Break_V1.01_big_Red";
         std::string m_deathMapCrystalBurstParticlePrefab = "Effect_Break_V1.01_big_Blue";
@@ -433,6 +441,7 @@ namespace game
         void CollectDeathPartsFromHierarchy();
         void UpdateDeathPartDrops(std::vector<DeathPartRuntime>& parts, float deltaTime);
         void SpawnPartDropDustIfNeeded();
+        void StopPartDropDustNaturally();
         void BurstBossCore();
         void BurstMapCrystal(RegisteredMapCrystal& crystal);
         void PrepareRegisteredMapCrystalSort();
