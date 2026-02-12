@@ -1,10 +1,10 @@
 {
-    "Name": "BulletParabolicMonster",
+    "Name": "BulletLinearMonster_Red",
     "GameObjects": [
         {
             "ID": 0,
             "ParentID": -1,
-            "Name": "BulletParabolicMonster",
+            "Name": "BulletLinearMonster_Red",
             "Active": true,
             "Components": [
                 {
@@ -28,13 +28,19 @@
                     }
                 },
                 {
-                    "Type": "BulletMonster",
-                    "Active": true
+                    "Type": "Rigidbody",
+                    "Active": true,
+                    "type": 0,
+                    "mass": 1.0,
+                    "linearDamping": 0.0,
+                    "angularDamping": 0.0,
+                    "useGravity": false,
+                    "constraints": 0
                 },
                 {
                     "Type": "StaticMeshRenderer",
                     "Active": true,
-                    "MeshFilePath": "Resource/Model/crystal_sharp_single/green/crystal_sharp_single_green.fbx",
+                    "MeshFilePath": "Resource/Model/crystal_sharp_single/red/crystal_sharp_single_red.fbx",
                     "SocketFilePath": "",
                     "VSFilePath": "Resource/Shader/Vertex/Static_VS.hlsl",
                     "TransparentVSFilePath": "",
@@ -42,18 +48,18 @@
                     "CutoutPSFilePath": "Resource/Shader/Pixel/GBuffer_Cutout_PS.hlsl",
                     "TransparentPSFilePath": "Resource/Shader/Pixel/LightTransparent_PS.hlsl",
                     "MaterialBaseColor": {
-                        "x": 0.0,
-                        "y": 0.3667953610420227,
-                        "z": 0.0651450976729393,
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
                         "w": 1.0
                     },
                     "MaterialEmissive": {
-                        "x": 0.0,
-                        "y": 0.4054054021835327,
-                        "z": 0.15652714669704437
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     },
                     "MaterialRoughness": 0.0,
-                    "MaterialMetalness": 0.6060000061988831,
+                    "MaterialMetalness": 0.0,
                     "MaterialAmbientOcclusion": 1.0,
                     "MaterialEmissiveIntensity": 1.0,
                     "OverrideMaterial": false,
@@ -67,21 +73,15 @@
                     ]
                 },
                 {
-                    "Type": "Rigidbody",
-                    "Active": true,
-                    "type": 0,
-                    "mass": 1.0,
-                    "linearDamping": 0.0,
-                    "angularDamping": 0.0,
-                    "useGravity": false,
-                    "constraints": 0
+                    "Type": "BulletMonster",
+                    "Active": true
                 },
                 {
                     "Type": "CapsuleCollider",
                     "Active": true,
                     "center": [
                         0.0,
-                        0.75,
+                        0.7200000286102295,
                         0.0
                     ],
                     "rotation": [
@@ -91,9 +91,9 @@
                     ],
                     "isTrigger": true,
                     "syncWithTransform": false,
-                    "layer": 10,
+                    "layer": 0,
                     "materialType": 0,
-                    "radius": 0.2199999988079071,
+                    "radius": 0.15000000596046448,
                     "height": 1.440000057220459
                 }
             ]
