@@ -1,8 +1,10 @@
 ﻿#include "GamePCH.h"
 #include "LobbyInteraction.h"
+#include <Framework/Object/Component/RectTransform.h>
 #include <Framework/Object/Component/UI/UIClickArea.h>
 #include <Framework/Object/Component/UI/UIText.h>
 #include <Core/System/MyTime.h>
+#include <cmath>
 
 namespace game
 {
@@ -18,7 +20,12 @@ namespace game
         if (!m_clickArea || !m_player) return;
 
         if (auto* go = engine::GameObject::Find("Text_Guide"))
+        {
             m_guideText = go->GetComponent<engine::UIText>();
+            m_guideRect = go->GetComponent<engine::RectTransform>();
+            if (m_guideRect)
+                m_guideBasePos = m_guideRect->GetAnchoredPosition();
+        }
 
         const auto& rot = m_player->GetTransform()->GetLocalEulerAngles();
         m_yawDeg = rot.y;
@@ -61,8 +68,34 @@ namespace game
     {
         if (!m_isActive) return;
 
-        m_wheelDelta = engine::Input::GetMouseWheelNotch();
+        if (m_isDragging && !engine::Input::IsMousePressed(engine::Buttons::LEFT))
+            m_isDragging = false;
 
+        const float minDistance = 2.0f;
+        const bool shouldShowGuide = (!m_isDragging) && (m_currentDistance > minDistance + 0.001f);
+
+        if (m_guideText)
+            m_guideText->SetActive(shouldShowGuide);
+
+        if (m_guideRect && shouldShowGuide)
+        {
+            constexpr float kAmpPx = 6.0f;
+            constexpr float kSpeed = 2.2f;
+
+            m_guideBobTime += engine::Time::UnscaledDeltaTime();
+
+            engine::Vector2 pos = m_guideBasePos;
+            pos.y += std::sinf(m_guideBobTime * kSpeed) * kAmpPx;
+
+            m_guideRect->SetAnchoredPosition(pos);
+        }
+        else if (m_guideRect)
+        {
+            // 숨길 때는 원위치로 복귀(선택)
+            m_guideRect->SetAnchoredPosition(m_guideBasePos);
+        }
+
+        m_wheelDelta = engine::Input::GetMouseWheelNotch();
         HandleZoom(m_wheelDelta);
 
         if (m_camera && m_player)
@@ -103,11 +136,12 @@ namespace game
     {
         if (!m_isActive) return;
 
-        float degPerPixel = 0.5f;
+        m_isDragging = true;
 
+        float degPerPixel = 0.5f;
         m_yawDeg -= delta.x * degPerPixel;
 
-        m_guideText->SetActive(false);
+        if (m_guideText) m_guideText->SetActive(false);
 
         m_player->GetTransform()->SetLocalRotation({ 0.0f, m_yawDeg, 0.0f });
     }
@@ -123,12 +157,5 @@ namespace game
 
         // 3. 최소/최대 거리 제한 (Clamp)
         m_currentDistance = std::clamp(m_currentDistance, minDistance, maxDistance);
-
-        if (m_currentDistance <= minDistance)
-        {
-            m_guideText->SetActive(false);
-        }
-        else
-            m_guideText->SetActive(true);
     }
 }
