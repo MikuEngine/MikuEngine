@@ -12137,7 +12137,7 @@
             "ID": 41,
             "ParentID": 35,
             "Name": "StateTextCanvas",
-            "Active": true,
+            "Active": false,
             "Components": [
                 {
                     "Type": "Transform",
