@@ -46,12 +46,8 @@ namespace game
         void OpenOption();
         void BackToPlay();
         void BackToMain();
-        //void BackToLobby();
-        //void BackToRestart();
 
         void Back();
-
-        //void Fail();
 
         void UpdateBlocker();
 
@@ -63,9 +59,7 @@ namespace game
         bool m_bound = false;
         bool m_isMenuOpen = false;
         bool m_isOptionOpen = false;
-        //bool m_isGiveupOpen = false;
 
-        //bool m_isDead = false;
 
     private:
         const std::string msgPath = "Resource/Data/Message/MessageTable.csv";
@@ -76,16 +70,10 @@ namespace game
         engine::GameObject* m_optionPopUp = nullptr;
         engine::GameObject* m_blocker = nullptr;
 
-        //engine::GameObject* m_realGiveupPopUp = nullptr;
-        //engine::GameObject* m_failPanel = nullptr;
-
         AimModeController* m_aimMode = nullptr;
         PlayerControllerScript* m_playerScript = nullptr;
 
-        // HUD: Canvas_HUD > Currency > Ruby/Sapphire/Emerald > * Count (UIText), Fragile Gauge > Fragile Gauge Progress (UIProgressBar)
-        engine::UIText* m_currencyRubyText = nullptr;
-        engine::UIText* m_currencySapphireText = nullptr;
-        engine::UIText* m_currencyEmeraldText = nullptr;
+        // HUD: Canvas_HUD > Fragile Gauge > Fragile Gauge Progress (UIProgressBar)
         engine::UIProgressBar* m_fragileGaugeProgress = nullptr;
         engine::UIImage* m_hitImage = nullptr;
     };

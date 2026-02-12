@@ -1,6 +1,6 @@
 {
     "Name": "10_PROTO_Tutorial",
-    "NumGameObjects": 107,
+    "NumGameObjects": 100,
     "GameObjects": [
         {
             "ID": 0,
@@ -15283,501 +15283,6 @@
         {
             "ID": 75,
             "ParentID": 74,
-            "Name": "Currency",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "Canvas",
-                    "Active": true,
-                    "LockRectTransform": true,
-                    "SortingOrder": 0
-                }
-            ]
-        },
-        {
-            "ID": 76,
-            "ParentID": 75,
-            "Name": "Ruby",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -885.0,
-                        "y": -475.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "Ruby : ",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 77,
-            "ParentID": 76,
-            "Name": "Ruby Count",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 115.0,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "000",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 78,
-            "ParentID": 75,
-            "Name": "Sapphire",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -885.0,
-                        "y": -431.70001220703125
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "Sapphire : ",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 79,
-            "ParentID": 78,
-            "Name": "Sapphire Count",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 169.89999389648438,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "000",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 80,
-            "ParentID": 75,
-            "Name": "Emerald",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": -885.0,
-                        "y": -386.8999938964844
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "Emerald : ",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 81,
-            "ParentID": 80,
-            "Name": "Emerald Count",
-            "Active": true,
-            "Components": [
-                {
-                    "Type": "Transform",
-                    "Active": true,
-                    "Position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "Scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "RectTransform",
-                    "Active": true,
-                    "AnchoredPosition": {
-                        "x": 156.6999969482422,
-                        "y": 0.0
-                    },
-                    "Width": 100.0,
-                    "Height": 100.0,
-                    "Pivot": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMin": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "AnchorMax": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
-                    "RotationZDeg": 0.0
-                },
-                {
-                    "Type": "UIText",
-                    "Active": true,
-                    "Layer": 0,
-                    "OrderInLayer": 0,
-                    "RaycastTarget": true,
-                    "Text": "000",
-                    "FontPath": "Resource/Font/malgun.ttf",
-                    "FontPx": 32,
-                    "Color": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0,
-                        "w": 1.0
-                    },
-                    "AlphaBlend": true,
-                    "Bold": false,
-                    "AlignH": 0,
-                    "AlignV": 0,
-                    "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.0
-                }
-            ]
-        },
-        {
-            "ID": 82,
-            "ParentID": 74,
             "Name": "HPBar",
             "Active": true,
             "Components": [
@@ -15827,8 +15332,8 @@
             ]
         },
         {
-            "ID": 83,
-            "ParentID": 82,
+            "ID": 76,
+            "ParentID": 75,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -15934,8 +15439,8 @@
             ]
         },
         {
-            "ID": 84,
-            "ParentID": 83,
+            "ID": 77,
+            "ParentID": 76,
             "Name": "Heart(0)",
             "Active": true,
             "Components": [
@@ -16041,8 +15546,8 @@
             ]
         },
         {
-            "ID": 85,
-            "ParentID": 82,
+            "ID": 78,
+            "ParentID": 75,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -16148,8 +15653,8 @@
             ]
         },
         {
-            "ID": 86,
-            "ParentID": 85,
+            "ID": 79,
+            "ParentID": 78,
             "Name": "Heart(1)",
             "Active": true,
             "Components": [
@@ -16255,8 +15760,8 @@
             ]
         },
         {
-            "ID": 87,
-            "ParentID": 82,
+            "ID": 80,
+            "ParentID": 75,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -16362,8 +15867,8 @@
             ]
         },
         {
-            "ID": 88,
-            "ParentID": 87,
+            "ID": 81,
+            "ParentID": 80,
             "Name": "Heart(2)",
             "Active": true,
             "Components": [
@@ -16469,8 +15974,8 @@
             ]
         },
         {
-            "ID": 89,
-            "ParentID": 82,
+            "ID": 82,
+            "ParentID": 75,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -16576,8 +16081,8 @@
             ]
         },
         {
-            "ID": 90,
-            "ParentID": 89,
+            "ID": 83,
+            "ParentID": 82,
             "Name": "Heart(3)",
             "Active": true,
             "Components": [
@@ -16683,8 +16188,8 @@
             ]
         },
         {
-            "ID": 91,
-            "ParentID": 82,
+            "ID": 84,
+            "ParentID": 75,
             "Name": "Heart_Case",
             "Active": true,
             "Components": [
@@ -16790,8 +16295,8 @@
             ]
         },
         {
-            "ID": 92,
-            "ParentID": 91,
+            "ID": 85,
+            "ParentID": 84,
             "Name": "Heart(4)",
             "Active": true,
             "Components": [
@@ -16897,7 +16402,7 @@
             ]
         },
         {
-            "ID": 93,
+            "ID": 86,
             "ParentID": 74,
             "Name": "Fragile Gauge Progress",
             "Active": true,
@@ -16976,8 +16481,8 @@
             ]
         },
         {
-            "ID": 94,
-            "ParentID": 93,
+            "ID": 87,
+            "ParentID": 86,
             "Name": "Background",
             "Active": true,
             "Components": [
@@ -17083,8 +16588,8 @@
             ]
         },
         {
-            "ID": 95,
-            "ParentID": 93,
+            "ID": 88,
+            "ParentID": 86,
             "Name": "Fill",
             "Active": true,
             "Components": [
@@ -17190,7 +16695,7 @@
             ]
         },
         {
-            "ID": 96,
+            "ID": 89,
             "ParentID": 35,
             "Name": "HUD",
             "Active": true,
@@ -17304,8 +16809,8 @@
             ]
         },
         {
-            "ID": 97,
-            "ParentID": 96,
+            "ID": 90,
+            "ParentID": 89,
             "Name": "Panel_Blocker",
             "Active": false,
             "Components": [
@@ -17418,8 +16923,8 @@
             ]
         },
         {
-            "ID": 98,
-            "ParentID": 96,
+            "ID": 91,
+            "ParentID": 89,
             "Name": "Profile",
             "Active": true,
             "Components": [
@@ -17525,7 +17030,7 @@
             ]
         },
         {
-            "ID": 99,
+            "ID": 92,
             "ParentID": 35,
             "Name": "Canvas_KillPopUp",
             "Active": true,
@@ -17582,7 +17087,7 @@
             ]
         },
         {
-            "ID": 100,
+            "ID": 93,
             "ParentID": 35,
             "Name": "Label",
             "Active": true,
@@ -17655,7 +17160,7 @@
             ]
         },
         {
-            "ID": 101,
+            "ID": 94,
             "ParentID": 35,
             "Name": "Icon",
             "Active": true,
@@ -17762,7 +17267,7 @@
             ]
         },
         {
-            "ID": 102,
+            "ID": 95,
             "ParentID": 35,
             "Name": "UIToastPopUp",
             "Active": true,
@@ -17885,7 +17390,7 @@
             ]
         },
         {
-            "ID": 103,
+            "ID": 96,
             "ParentID": 35,
             "Name": "Canvas_Message",
             "Active": true,
@@ -17946,7 +17451,7 @@
             ]
         },
         {
-            "ID": 104,
+            "ID": 97,
             "Name": "Player",
             "Active": true,
             "Components": [
@@ -18087,7 +17592,7 @@
             ]
         },
         {
-            "ID": 105,
+            "ID": 98,
             "Name": "PlayerAnimMesh",
             "Active": true,
             "Components": [
@@ -18325,7 +17830,7 @@
             ]
         },
         {
-            "ID": 106,
+            "ID": 99,
             "Name": "SceneController_Tutorial",
             "Active": true,
             "Components": [
@@ -18351,6 +17856,10 @@
                 },
                 {
                     "Type": "SceneController_Tutorial",
+                    "Active": true
+                },
+                {
+                    "Type": "HUDController",
                     "Active": true
                 }
             ]
