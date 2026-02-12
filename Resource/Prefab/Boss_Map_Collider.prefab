@@ -1,0 +1,519 @@
+{
+    "Name": "Boss_Map_Collider",
+    "GameObjects": [
+        {
+            "ID": 0,
+            "ParentID": -1,
+            "Name": "Boss_Map_Collider",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "ID": 1,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Left_1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -25.817686080932617,
+                        "y": 0.0,
+                        "z": -7.560737609863281
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 3.7300000190734863,
+                    "height": 8.699999809265137
+                }
+            ]
+        },
+        {
+            "ID": 2,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Left_2",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -25.58116340637207,
+                        "y": 0.0,
+                        "z": 2.6410484313964844
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 4.349999904632568,
+                    "height": 8.699999809265137
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Left_3",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -21.579378128051758,
+                        "y": 0.0,
+                        "z": -11.747605323791504
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 3.7300000190734863,
+                    "height": 8.699999809265137
+                }
+            ]
+        },
+        {
+            "ID": 4,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Left_4",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -27.155323028564453,
+                        "y": 0.0,
+                        "z": -4.483148574829102
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 4.349999904632568,
+                    "height": 8.699999809265137
+                }
+            ]
+        },
+        {
+            "ID": 5,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Right_1",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 19.200801849365234,
+                        "y": 0.0,
+                        "z": 4.781974792480469
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 4.349999904632568,
+                    "height": 8.699999809265137
+                }
+            ]
+        },
+        {
+            "ID": 6,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Right_2",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 21.73944091796875,
+                        "y": 0.0,
+                        "z": -2.4117393493652344
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 4.349999904632568,
+                    "height": 8.699999809265137
+                }
+            ]
+        },
+        {
+            "ID": 7,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Right_3",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.556720733642578,
+                        "y": 0.0,
+                        "z": -8.651285171508789
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 4.349999904632568,
+                    "height": 8.699999809265137
+                }
+            ]
+        },
+        {
+            "ID": 8,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Right_4",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 20.128755569458008,
+                        "y": 0.0,
+                        "z": -14.831466674804688
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "radius": 4.349999904632568,
+                    "height": 8.699999809265137
+                }
+            ]
+        },
+        {
+            "ID": 9,
+            "ParentID": 0,
+            "Name": "Collider_Wall_Back",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -1.5876615047454834,
+                        "y": 0.0,
+                        "z": -16.808000564575195
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "size": [
+                        50.0,
+                        20.0,
+                        3.0
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 10,
+            "ParentID": 0,
+            "Name": "Collider_Front",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 6.704109191894531
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "BoxCollider",
+                    "Active": true,
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isTrigger": false,
+                    "syncWithTransform": false,
+                    "layer": 0,
+                    "materialType": 0,
+                    "size": [
+                        60.0,
+                        40.0,
+                        3.0
+                    ]
+                }
+            ]
+        }
+    ]
+}

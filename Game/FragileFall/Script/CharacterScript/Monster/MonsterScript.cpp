@@ -801,13 +801,16 @@ namespace game
 		m_fragileTimerStarted = false;
 
 		// 추후 Death 애니메이션이나 이펙트 재생 가능
-		auto effect = engine::Prefab::Instantiate("Effect_Break_V1.01_big_white");
+
+		std::string prefix = "Effect_Break_V1.01_big_";
+		std::string monsterTierStr = prefix + GetMonsterTierStr(m_monsterTier);
+		auto effect = engine::Prefab::Instantiate(monsterTierStr);
 		if (effect && effect->GetTransform())
 		{
 			effect->GetTransform()->SetWorldMatrix(GetTransform()->GetWorld());
 			effect->GetTransform()->SetLocalScale(engine::Vector3(1.0f, 1.0f, 1.0f));
 		}
-		engine::SoundSystem::Get().Play("Player_Break", "SFX/Player");
+		engine::SoundSystem::Get().Play("Player_Break_Random", "SFX/Player");
 	}
 
 	// ═══════════════════════════════════════════════════════════════

@@ -1,6 +1,6 @@
 {
     "Name": "STAGE_Green",
-    "NumGameObjects": 38,
+    "NumGameObjects": 51,
     "GameObjects": [
         {
             "ID": 0,
@@ -11156,6 +11156,604 @@
                     },
                     "Intensity": 37.5,
                     "Range": 12.399999618530273,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 38,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.347885131835938,
+                        "y": 6.313608169555664,
+                        "z": -5.625416278839111
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 12.100000381469727,
+                    "Range": 9.600000381469727,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 39,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 22.670944213867188,
+                        "y": 7.656311988830566,
+                        "z": 10.275442123413086
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 10.899999618530273,
+                    "Range": 11.699999809265137,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 40,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 20.470827102661133,
+                        "y": 6.405315399169922,
+                        "z": 14.326131820678711
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 6.199999809265137,
+                    "Range": 12.199999809265137,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 41,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 6.423859596252441,
+                        "y": 10.245695114135742,
+                        "z": 15.729206085205078
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 17.200000762939453,
+                    "Range": 14.800000190734863,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 42,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -0.9819942712783813,
+                        "y": 5.534490585327148,
+                        "z": 18.72502326965332
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 10.0,
+                    "Range": 13.100000381469727,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 43,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -11.69983959197998,
+                        "y": 8.680511474609375,
+                        "z": 14.592033386230469
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 6.300000190734863,
+                    "Range": 21.799999237060547,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 44,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -25.150169372558594,
+                        "y": 7.3621416091918945,
+                        "z": 4.485430717468262
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 10.199999809265137,
+                    "Range": 16.100000381469727,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 45,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -18.437625885009766,
+                        "y": 6.545633316040039,
+                        "z": -14.944897651672363
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 12.0,
+                    "Range": 11.800000190734863,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 46,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 28.554931640625,
+                        "y": 6.408733367919922,
+                        "z": 0.833742618560791
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 5.5,
+                    "Range": 14.800000190734863,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 47,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -23.518226623535156,
+                        "y": 6.969010353088379,
+                        "z": -7.914966106414795
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 2.200000047683716,
+                    "Range": 15.800000190734863,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 48,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 24.55463409423828,
+                        "y": 12.282736778259277,
+                        "z": 20.18287467956543
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 16.5,
+                    "Range": 13.899999618530273,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 49,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": -27.81260108947754,
+                        "y": 7.989835739135742,
+                        "z": 27.487468719482422
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 25.700000762939453,
+                    "Range": 10.0,
+                    "Angle": 45.0,
+                    "Near": 90000.0,
+                    "Far": 100000.0,
+                    "ForwardDistance": 1000.0,
+                    "HeightRatio": 0.8999999761581421,
+                    "ShadowBias": 9.999999747378752e-05,
+                    "CastShadows": false
+                }
+            ]
+        },
+        {
+            "ID": 50,
+            "Name": "Light",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Active": true,
+                    "Position": {
+                        "x": 16.142221450805664,
+                        "y": 8.272684097290039,
+                        "z": 18.943838119506836
+                    },
+                    "Rotation": {
+                        "x": -0.0,
+                        "y": 0.0,
+                        "z": -0.0,
+                        "w": 1.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "Active": true,
+                    "LightType": 1,
+                    "Color": {
+                        "x": 0.7254902124404907,
+                        "y": 0.2823529541492462,
+                        "z": 0.9333333373069763
+                    },
+                    "Intensity": 2.0999999046325684,
+                    "Range": 10.199999809265137,
                     "Angle": 45.0,
                     "Near": 90000.0,
                     "Far": 100000.0,
