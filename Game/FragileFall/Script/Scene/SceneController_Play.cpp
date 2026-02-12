@@ -334,6 +334,13 @@ namespace game
         {
             Fail();
         }
+        
+        // Debug Cheat: F3 + B로 즉시 보스(10스테이지) 이동
+        if (engine::Input::IsKeyHeld(engine::Keys::F3) && engine::Input::IsKeyPressed(engine::Keys::B))
+        {
+            StageManager::Get().RequestWarpToBossStageCheat();
+            return;
+        }
 
         if (engine::Input::IsKeyPressed(engine::Keys::K))
         {

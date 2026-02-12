@@ -130,6 +130,9 @@ namespace game
 
         /// 다음 맵 문 접촉 시. m_currentStage++ 후 보스면 보스 씬, 아니면 같은 플레이 씬에서 다음 스테이지 생성.
         void RequestNextStage();
+        
+        /// 디버그 치트: 현재 스테이지와 무관하게 10스테이지(보스)로 즉시 이동.
+        void RequestWarpToBossStageCheat();
 
         /// 스테이지 클리어 후 중앙 처형 오브젝트가 처형되었을 때 호출.
         void OnStageClearExecutionTargetExecuted();

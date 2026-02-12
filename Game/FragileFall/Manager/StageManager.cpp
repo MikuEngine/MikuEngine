@@ -1,4 +1,4 @@
-﻿#include "GamePCH.h"
+#include "GamePCH.h"
 #include "StageManager.h"
 
 #include <Engine/Framework/Scene/SceneManager.h>
@@ -139,6 +139,12 @@ namespace game
                 }
             }
         }
+
+        bool IsBossSceneActive()
+        {
+            engine::Scene* scene = engine::SceneManager::Get().GetScene();
+            return scene && scene->GetName() == GameScene::Name(SceneID::Boss);
+        }
     }
 
     void StageManager::ClearStageState()
@@ -173,6 +179,14 @@ namespace game
 
     void StageManager::BeginStage()
     {
+        // 보스 씬은 전용 씬 구성을 사용하므로 Stage CSV/맵 프리팹 로딩을 하지 않는다.
+        if (IsBossSceneActive())
+        {
+            // 이전 스테이지의 몬스터/클리어 상태가 보스 씬에 영향을 주지 않도록 초기화만 수행.
+            ClearStageState();
+            return;
+        }
+
         ClearStageState();
         m_currentMapEnvRoot = engine::Ptr<engine::GameObject>();
 
@@ -233,6 +247,10 @@ namespace game
 
     void StageManager::Update()
     {
+        // 보스 씬에서는 일반 스테이지 클리어 루프(수정 생성/문 오픈)를 비활성화한다.
+        if (IsBossSceneActive())
+            return;
+
         bool hasMonsters = std::any_of(m_spawnedMonsters.begin(), m_spawnedMonsters.end(),
             [](const engine::Ptr<engine::GameObject>& p) { return static_cast<bool>(p); });
 
@@ -364,6 +382,13 @@ namespace game
 
         game::LoadingScreenDrawer::OnSceneTransitionBegin();
         GameScene::Change(SceneID::Play);
+    }
+
+    void StageManager::RequestWarpToBossStageCheat()
+    {
+        // RequestNextStage()가 선증가(++m_currentStage) 후 보스 분기하므로 9로 맞춘 뒤 호출.
+        m_currentStage = 9;
+        RequestNextStage();
     }
 
     std::string StageManager::GetMapColorFromPrefabName(const std::string& prefabName)
