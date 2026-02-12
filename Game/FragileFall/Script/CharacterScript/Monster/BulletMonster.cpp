@@ -19,6 +19,30 @@
 
 namespace game
 {
+	namespace
+	{
+		// BulletMonster 메쉬는 +Y 축이 정면이므로 X축 +90도 보정이 필요하다.
+		// 방향은 사용자가 요청한 대로 "현재의 반대 방향"을 바라보게 한다.
+		engine::Quaternion BuildBulletRotationFromDirection(const engine::Vector3& position, const engine::Vector3& direction)
+		{
+			(void)position;
+
+			engine::Vector3 normalizedDir = direction;
+			normalizedDir.Normalize();
+
+			// yaw는 XZ 평면 기준으로 계산.
+			const float yawRad = std::atan2(normalizedDir.x, normalizedDir.z);
+			const float yawDeg = engine::ToDegree(yawRad);
+
+			// +Y 정면 메쉬 보정: pitch +90
+			const engine::Vector3 euler(90.0f, yawDeg, 0.0f);
+			return engine::Quaternion::CreateFromYawPitchRoll(
+				engine::ToRadian(euler.y),
+				engine::ToRadian(euler.x),
+				engine::ToRadian(euler.z));
+		}
+	}
+
 	// ═══════════════════════════════════════════════════════════════
 	// 초기화 (Factory에서 호출)
 	// ═══════════════════════════════════════════════════════════════
@@ -92,9 +116,22 @@ namespace game
 			rb->SetAngularDamping(0.0f);
 		}
 
+		// 방향 및 회전 계산
+		engine::Vector3 velocity = m_movement->GetVelocity();
+		if (velocity.LengthSquared() > 0.0001f)
+		{
+			engine::Vector3 direction = velocity;
+			direction.Normalize();
+
+			engine::Quaternion bulletRot = BuildBulletRotationFromDirection(GetTransform()->GetWorldPosition(), direction);
+
+			GetTransform()->SetLocalRotation(bulletRot);
+
+			rb->ForceSetRotation(bulletRot, true);
+		}
+
 		// Rigidbody에 초기 속도 설정
 		if (!m_movement) return;
-
 		rb->SetLinearVelocity(m_movement->GetVelocity());
 		rb->WakeUp();
 	}

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace game
 {
@@ -32,6 +32,7 @@ namespace game
         // 이동 방식
         // ─────────────────────────────────────────────
         BulletType type = BulletType::Linear;
+		MonsterTier tier = MonsterTier::Gray;
 
         // ─────────────────────────────────────────────
         // 공통 속성

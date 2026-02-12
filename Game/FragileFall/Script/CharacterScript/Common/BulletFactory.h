@@ -106,6 +106,12 @@ namespace game
         // ─────────────────────────────────────────────
         std::unique_ptr<IBulletMovement> CreateMovement(const BulletParams& params);
 
+        // ─────────────────────────────────────────────
+        // Monster tier 별 총알 메쉬 변경
+        // ─────────────────────────────────────────────
+		void SetBulletMeshByTier(engine::Ptr<engine::GameObject> bulletGO, MonsterTier tier);
+
+
     public:
         void OnGui() override;
         void Save(engine::json& j) const override;
