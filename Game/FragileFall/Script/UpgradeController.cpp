@@ -250,6 +250,13 @@ namespace game
 
     void UpgradeController::Update()
     {
+        if (engine::Input::IsKeyHeld(engine::Keys::F3) && engine::Input::IsKeyPressed(engine::Keys::U))
+        {
+            m_ruby = 1000;
+            m_sapphire = 1000;
+            m_emerald = 1000;
+        }
+
         m_item1Count->SetText(std::to_string(m_ruby));
         m_item2Count->SetText(std::to_string(m_sapphire));
         m_item3Count->SetText(std::to_string(m_emerald));
