@@ -682,8 +682,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "게임 시작",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "ゲームスタート",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -906,8 +906,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "オプション",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -1130,8 +1130,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "크레딧",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "クレジット",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -1354,8 +1354,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "게임 종료",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "終了",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
