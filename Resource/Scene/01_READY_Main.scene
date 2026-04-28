@@ -1355,7 +1355,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
                     "Text": "ゲームスタート終了",
-                    "FontPath": "Resource/Font/JP/Zekkyou-Bolero.ttf",
+                    "FontPath": "Resource/Font/Zekkyou-Bolero.ttf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
