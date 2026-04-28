@@ -196,25 +196,29 @@ namespace engine
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
-        // 폰트 설정 시작
+        // 1. 기존 폰트 비우기
         io.Fonts->Clear();
 
-        // [추가] 한국어와 일본어 범위를 합치기 위한 빌더
-        static ImVector<ImWchar> combined_ranges;
-        ImFontGlyphRangesBuilder builder;
-        builder.AddRanges(io.Fonts->GetGlyphRangesKorean()); // 한국어 범위 추가
-        builder.AddRanges(io.Fonts->GetGlyphRangesJapanese()); // 일본어 범위 추가
-        builder.BuildRanges(&combined_ranges); // 최종 범위 생성
+        // [설정 1] 한국어 기본 폰트
+        ImFontConfig cfg_kr{};
+        cfg_kr.OversampleH = 2;
+        cfg_kr.OversampleV = 2;
+        // 한국어 글리프 범위만 할당하여 첫 번째 폰트 로드
+        io.Fonts->AddFontFromFileTTF("Resource/Font/NotoSansKR-Medium.ttf", 18.0f, &cfg_kr, io.Fonts->GetGlyphRangesKorean());
 
-        ImFontConfig cfg{};
-        cfg.OversampleH = 2;
-        cfg.OversampleV = 2;
+        // [설정 2] 일본어 병합 폰트
+        ImFontConfig cfg_jp{};
+        cfg_jp.MergeMode = true; // 이전 폰트(KR)에 합침
+        cfg_jp.OversampleH = 2;
+        cfg_jp.OversampleV = 2;
+        // 일본어 글리프 범위를 할당하여 병합 로드
+        // 이렇게 하면 KR에 없는 일본어 한자(신자체)가 JP 폰트에서 보충됩니다.
+        io.Fonts->AddFontFromFileTTF("Resource/Font/NotoSansJP-Medium.ttf", 18.0f, &cfg_jp, io.Fonts->GetGlyphRangesJapanese());
 
-        // [주의] malgun.ttf가 일본어 글자도 포함하고 있어야 합니다.
-        // 만약 일본어가 깨진다면 일본어와 한국어를 모두 지원하는 폰트(예: 나눔고딕, 본고딕 등)를 사용해 주세요.
-        io.Fonts->AddFontFromFileTTF("Resource/Font/NotoSansKR-Medium.ttf", 18.0f, &cfg, combined_ranges.Data);
+        // 2. 아틀라스 빌드 (폰트 로드 후 반드시 수행)
+        io.Fonts->Build();
 
-        // 아틀라스 재생성 (폰트가 바뀐 걸 GPU에 알려줌)
+        // 3. GPU 리소스 갱신
         ImGui_ImplDX11_InvalidateDeviceObjects();
         ImGui_ImplDX11_CreateDeviceObjects();
 
