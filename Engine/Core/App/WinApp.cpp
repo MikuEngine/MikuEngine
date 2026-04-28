@@ -182,17 +182,8 @@ namespace engine
         ImFontConfig cfg{};
         cfg.OversampleH = 2;
         cfg.OversampleV = 2;
-        //const ImWchar* ranges = io.Fonts->GetGlyphRangesKorean();
-
-        ImFontGlyphRangesBuilder builder;
-        builder.AddRanges(io.Fonts->GetGlyphRangesKorean());
-        builder.AddRanges(io.Fonts->GetGlyphRangesJapanese());
-
-        static ImVector<ImWchar> combined_ranges;
-        combined_ranges.clear();
-        builder.BuildRanges(&combined_ranges);
-
-        io.Fonts->AddFontFromFileTTF("Resource/Font/KR/NotoSansCJKkr-VF.ttf", 18.0f, &cfg, combined_ranges.Data);
+        const ImWchar* ranges = io.Fonts->GetGlyphRangesKorean();
+        io.Fonts->AddFontFromFileTTF("Resource/Font/KR/malgun.ttf", 18.0f, &cfg, ranges);
 
         ImGui_ImplDX11_InvalidateDeviceObjects();
         ImGui_ImplDX11_CreateDeviceObjects();
