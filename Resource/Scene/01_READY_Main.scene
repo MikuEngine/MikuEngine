@@ -682,8 +682,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "게임 시작 종료",
-                    "FontPath": "Resource/Font/KR/GG_Font.ttf",
+                    "Text": "ゲームスタート",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -906,8 +906,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "ゲームスタート終了",
-                    "FontPath": "Resource/Font/JP/GenRyuMin2JP-R.otf",
+                    "Text": "オプション",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -1130,8 +1130,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "ゲームスタート終了",
-                    "FontPath": "Resource/Font/JP/HannariMincho-Regular.otf",
+                    "Text": "クレジット",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
@@ -1354,8 +1354,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "ゲームスタート終了",
-                    "FontPath": "Resource/Font/Zekkyou-Bolero.ttf",
+                    "Text": "終了",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 60,
                     "Color": {
                         "x": 1.0,
