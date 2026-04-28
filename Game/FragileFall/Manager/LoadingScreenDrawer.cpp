@@ -506,22 +506,32 @@ namespace game
 
 			if (g_loadingElapsed < LOADING_TEXT_GRACE_SEC)
 			{
-				loadingStr = "로딩중...";
+				//loadingStr = "로딩중...";
+				loadingStr = "ロード中...";
 			}
 			else
 			{
 				// (B) 이후엔 단계 애니메이션
 				//g_loadingDotsTime += engine::Time::UnscaledDeltaTime();
-				g_loadStep = (int)floorf(g_loadingDotsTime / LOADING_STEP_SEC) % 6; // 0~5
+				//g_loadStep = (int)floorf(g_loadingDotsTime / LOADING_STEP_SEC) % 6; // 0~5
+				g_loadStep = (int)floorf(g_loadingDotsTime / LOADING_STEP_SEC) % 4; // 0~3
+
+				//switch (g_loadStep)
+				//{
+				//case 0: loadingStr = "로"; break;
+				//case 1: loadingStr = "로딩"; break;
+				//case 2: loadingStr = "로딩 중"; break;
+				//case 3: loadingStr = "로딩 중."; break;
+				//case 4: loadingStr = "로딩 중.."; break;
+				//default: loadingStr = "로딩 중..."; break;
+				//}
 
 				switch (g_loadStep)
 				{
-				case 0: loadingStr = "로"; break;
-				case 1: loadingStr = "로딩"; break;
-				case 2: loadingStr = "로딩 중"; break;
-				case 3: loadingStr = "로딩 중."; break;
-				case 4: loadingStr = "로딩 중.."; break;
-				default: loadingStr = "로딩 중..."; break;
+				case 0: loadingStr = "ロード中"; break;
+				case 1: loadingStr = "ロード中."; break;
+				case 2: loadingStr = "ロード中.."; break;
+				default: loadingStr = "ロード中..."; break;
 				}
 			}
 

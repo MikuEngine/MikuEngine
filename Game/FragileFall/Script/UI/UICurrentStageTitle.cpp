@@ -21,7 +21,7 @@ namespace game
                 return "Boss";
             }
 
-            return "심도 " + std::to_string(stageNumber);
+            return "深度 " + std::to_string(stageNumber);
         }
     }
 
