@@ -203,8 +203,8 @@ namespace game
 
 			// 폰트생성
 			engine::FontData::Desc fd{};
-			fd.ttfPath = "Resource/Font/GG_Font.ttf";
-			//fd.ttfPath = "Resource/Font/HannariMincho-Regular.ttf";
+			//fd.ttfPath = "Resource/Font/GG_Font.ttf";	// Korean
+			fd.ttfPath = "Resource/Font/HannariMincho-Regular.otf";	// Japanese
 			fd.pixelSize = 40; // 생성할 텍스처의 퀄리티 기준
 			fd.atlasWidth = 1024;
 			fd.atlasHeight = 1024;
