@@ -728,7 +728,8 @@ namespace game
     void UpgradeController::ClearSelectedInfoUI()
     {
         if (m_nameText) m_nameText->SetText("");
-        if (m_descText) m_descText->SetText("강화할 스킬을 선택해주세요.");
+        //if (m_descText) m_descText->SetText("강화할 스킬을 선택해주세요.");
+        if (m_descText) m_descText->SetText("強化するスキルを選んでください。");
     }
 
     void UpgradeController::BindCostSlots()
