@@ -170,6 +170,24 @@ namespace engine
         UpdateViewportTransformData();
 
 #ifdef _DEBUG
+        //IMGUI_CHECKVERSION();
+        //ImGui::CreateContext();
+        //ImGui_ImplWin32_Init(m_hWnd);
+        //ImGui_ImplDX11_Init(GraphicsDevice::Get().GetDevice().Get(), GraphicsDevice::Get().GetDeviceContext().Get());
+
+        //ImGuiIO& io = ImGui::GetIO();
+        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        //io.Fonts->Clear();
+
+        //ImFontConfig cfg{};
+        //cfg.OversampleH = 2;
+        //cfg.OversampleV = 2;
+        //const ImWchar* ranges = io.Fonts->GetGlyphRangesKorean();
+        //io.Fonts->AddFontFromFileTTF("Resource/Font/malgun.ttf", 18.0f, &cfg, ranges);
+
+        //ImGui_ImplDX11_InvalidateDeviceObjects();
+        //ImGui_ImplDX11_CreateDeviceObjects();
+
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui_ImplWin32_Init(m_hWnd);
@@ -177,16 +195,29 @@ namespace engine
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+        // 폰트 설정 시작
         io.Fonts->Clear();
+
+        // [추가] 한국어와 일본어 범위를 합치기 위한 빌더
+        static ImVector<ImWchar> combined_ranges;
+        ImFontGlyphRangesBuilder builder;
+        builder.AddRanges(io.Fonts->GetGlyphRangesKorean()); // 한국어 범위 추가
+        builder.AddRanges(io.Fonts->GetGlyphRangesJapanese()); // 일본어 범위 추가
+        builder.BuildRanges(&combined_ranges); // 최종 범위 생성
 
         ImFontConfig cfg{};
         cfg.OversampleH = 2;
         cfg.OversampleV = 2;
-        const ImWchar* ranges = io.Fonts->GetGlyphRangesKorean();
-        io.Fonts->AddFontFromFileTTF("Resource/Font/malgun.ttf", 18.0f, &cfg, ranges);
 
+        // [주의] malgun.ttf가 일본어 글자도 포함하고 있어야 합니다.
+        // 만약 일본어가 깨진다면 일본어와 한국어를 모두 지원하는 폰트(예: 나눔고딕, 본고딕 등)를 사용해 주세요.
+        io.Fonts->AddFontFromFileTTF("Resource/Font/NotoSansKR-Medium.ttf", 18.0f, &cfg, combined_ranges.Data);
+
+        // 아틀라스 재생성 (폰트가 바뀐 걸 GPU에 알려줌)
         ImGui_ImplDX11_InvalidateDeviceObjects();
         ImGui_ImplDX11_CreateDeviceObjects();
+
 #endif // _DEBUG
 
         SoundSystem::Get().Initialize();
