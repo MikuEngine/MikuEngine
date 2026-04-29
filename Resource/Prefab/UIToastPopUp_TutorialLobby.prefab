@@ -288,7 +288,7 @@
                     "RaycastTarget": true,
                     "Text": "글자",
                     "FontPath": "Resource/Font/HannariMincho-Regular.otf",
-                    "FontPx": 25,
+                    "FontPx": 17,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -296,11 +296,11 @@
                         "w": 1.0
                     },
                     "AlphaBlend": true,
-                    "Bold": false,
+                    "Bold": true,
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.2000000476837158
+                    "LineSpacingMul": 1.5140000581741333
                 }
             ]
         }

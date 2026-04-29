@@ -5262,7 +5262,7 @@
                     "RaycastTarget": true,
                     "Text": "공격력 증가",
                     "FontPath": "Resource/Font/HannariMincho-Regular.otf",
-                    "FontPx": 30,
+                    "FontPx": 24,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -5335,7 +5335,7 @@
                     "RaycastTarget": true,
                     "Text": "윤석님의 공격력이 10% 증가합니다.",
                     "FontPath": "Resource/Font/HannariMincho-Regular.otf",
-                    "FontPx": 20,
+                    "FontPx": 16,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
@@ -5347,7 +5347,7 @@
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.4440000057220459,
-                    "LineSpacingMul": 1.9889999628067017
+                    "LineSpacingMul": 1.8509999513626099
                 }
             ]
         },

@@ -155,7 +155,7 @@
                     "Active": true,
                     "AnchoredPosition": {
                         "x": -88.0,
-                        "y": 25.0
+                        "y": 13.5
                     },
                     "Width": 100.0,
                     "Height": 100.0,
@@ -179,9 +179,9 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "",
+                    "Text": "イ・ギソク (27)\n 死因: 上司病\n\"愛されたいんだ···\"",
                     "FontPath": "Resource/Font/HannariMincho-Regular.otf",
-                    "FontPx": 19,
+                    "FontPx": 15,
                     "Color": {
                         "x": 0.0,
                         "y": 0.0,
