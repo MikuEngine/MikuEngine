@@ -1727,7 +1727,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "メインメニューへ",
+                    "Text": "タイトルへ",
                     "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 30,
                     "Color": {
@@ -3425,7 +3425,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "アーカイブ",
+                    "Text": "探求日誌",
                     "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 70,
                     "Color": {
@@ -5261,7 +5261,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "공격력 증가",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 30,
                     "Color": {
                         "x": 0.0,
@@ -5334,7 +5334,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "윤석님의 공격력이 10% 증가합니다.",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 20,
                     "Color": {
                         "x": 0.0,
@@ -19499,7 +19499,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "ドラッグで回転できます",
+                    "Text": "ドラッグで回転できます。",
                     "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 25,
                     "Color": {

@@ -287,7 +287,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "글자",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 25,
                     "Color": {
                         "x": 0.0,
@@ -300,7 +300,7 @@
                     "AlignH": 0,
                     "AlignV": 0,
                     "LetterSpacingPx": 0.0,
-                    "LineSpacingMul": 1.2
+                    "LineSpacingMul": 1.2000000476837158
                 }
             ]
         }

@@ -3080,8 +3080,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "심연 진입",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "深淵へ突入",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 30,
                     "Color": {
                         "x": 0.0,
@@ -3304,8 +3304,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "강화",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "強化",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 30,
                     "Color": {
                         "x": 0.0,
@@ -3528,8 +3528,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "設定",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 30,
                     "Color": {
                         "x": 0.0,
@@ -3752,8 +3752,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "메인으로",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "タイトルへ",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 30,
                     "Color": {
                         "x": 0.0,
@@ -4591,8 +4591,8 @@
                     "Layer": 0,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "공격",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "アタック",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -4815,8 +4815,8 @@
                     "Layer": 0,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "기술",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "スキル",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -5039,8 +5039,8 @@
                     "Layer": 0,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "생존",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "サバイバル",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -5263,8 +5263,8 @@
                     "Layer": 0,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "이동",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "移動",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -5450,8 +5450,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "탐구 일지",
-                    "FontPath": "Resource/Font/Chilgok_lws_Font.ttf",
+                    "Text": "探求日誌",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -5637,8 +5637,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "보유 아이템",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "インベントリ",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 25,
                     "Color": {
                         "x": 0.0,
@@ -7286,7 +7286,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "공격력 증가",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 30,
                     "Color": {
                         "x": 0.0,
@@ -7359,7 +7359,7 @@
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
                     "Text": "윤석님의 공격력이 10% 증가합니다.",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 20,
                     "Color": {
                         "x": 0.0,
@@ -15501,8 +15501,8 @@
                     "Layer": 1,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "강화",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "強化",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 35,
                     "Color": {
                         "x": 0.0,
@@ -15849,8 +15849,8 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "뒤로",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "戻る",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 35,
                     "Color": {
                         "x": 0.0,
@@ -15922,8 +15922,8 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "設定",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -17477,8 +17477,8 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "사운드",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "サウンド",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -17550,8 +17550,8 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "효과음",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "効果音",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -17623,8 +17623,8 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "마우스 감도",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "マウス感度",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -17670,6 +17670,9 @@
                 {
                     "Type": "UpgradeController",
                     "Active": true,
+                    "Ruby": 1,
+                    "Sapphire": 1,
+                    "Emerald": 1,
                     "Purchased": []
                 }
             ]

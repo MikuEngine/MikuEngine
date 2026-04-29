@@ -180,7 +180,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 19,
                     "Color": {
                         "x": 0.0,

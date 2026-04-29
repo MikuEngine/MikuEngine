@@ -11169,7 +11169,8 @@
                     "TeleportAfterimageNumSlices": 32,
                     "TeleportAfterimageUseDefaultGradient": false,
                     "TeleportAfterimageTrailGradient": 0.9700000286102295,
-                    "TriggerWaitFramesRequired": 1
+                    "TriggerWaitFramesRequired": 1,
+                    "ExecutionTargetOffLatchFrames": 2
                 },
                 {
                     "Type": "ExecutionSlowScript",
@@ -12591,8 +12592,8 @@
                     "Layer": 1,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "設定",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -12815,8 +12816,8 @@
                     "Layer": 1,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "Text": "계속하기",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "再開",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -13039,8 +13040,8 @@
                     "Layer": 1,
                     "OrderInLayer": 3,
                     "RaycastTarget": false,
-                    "Text": "건너뛰기",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "スキップ",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 32,
                     "Color": {
                         "x": 0.0,
@@ -13112,8 +13113,8 @@
                     "Layer": 1,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Text": "일시정지됨",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "ポーズ中",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -13460,8 +13461,8 @@
                     "Layer": 2,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "뒤로",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "戻る",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 35,
                     "Color": {
                         "x": 0.0,
@@ -13533,8 +13534,8 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "설정",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "設定",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 70,
                     "Color": {
                         "x": 0.0,
@@ -15088,8 +15089,8 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "사운드",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "サウンド",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -15161,8 +15162,8 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "효과음",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "効果音",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
@@ -15234,8 +15235,8 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "마우스 감도",
-                    "FontPath": "Resource/Font/GG_Font.ttf",
+                    "Text": "マウス感度",
+                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
                     "FontPx": 40,
                     "Color": {
                         "x": 0.0,
