@@ -99,20 +99,20 @@ namespace game
 
 		static const std::vector<std::string> g_randomMessages =
 		{
-			"水晶の中心部はモンスターの弱点です。",
-			"モンスターの関節部位には結晶が生えないため、比較的弱いです。",
-			"強化すると、より深いダンジョンを探検する勇気が湧いてきます。",
-			"じっとしている紫の水晶は無敵です(?)",
-			"強化は永久的にミタに影響を与えます。",
-			"簡単な作業ではありませんが、強化なしでも全クリアできます。",
-			"たまにはロビーに戻って整備してみてはいかがでしょうか？",
-			"ダンジョンは、水晶で侵食される前に有名な鉱山でした。",
-			"ミタの年齢は21歳です。",
-			"武器 \"CR - 116\"は結晶を精錬して作られた武器で、強力な結晶の力を使います。",
-			"ミタが携帯している武器の名前は \"CR - 116\"です。",
-			"ミタは、蝕まれた隊員たちに安息を与えるために入ってきました。",
-			"ミタはミクとリタをモチーフに作られた名前です。",
-			"水晶に浸食された人は、死ぬまでその浸食が解けません。"
+			"The center of a crystal is the monster's weak spot.",
+			"Crystals don't grow on a monster's joints, so those areas are relatively weak.",
+			"Upgrading gives you the courage to explore deeper dungeons.",
+			"Idle purple crystals are invincible (?)",
+			"Upgrades affect Mita permanently.",
+			"It isn't easy, but a full clear is possible without any upgrades.",
+			"How about heading back to the lobby once in a while to regear?",
+			"Before the crystal corruption, the dungeon was a famous mine.",
+			"Mita is 21 years old.",
+			"The weapon \"CR - 116\" is forged from refined crystal and channels the crystal's power.",
+			"The weapon Mita carries is called \"CR - 116\".",
+			"Mita came here to give peace to the corrupted operatives.",
+			"The name \"Mita\" is built from the motifs of Miku and Rita.",
+			"Once corrupted by the crystal, a person stays corrupted until death."
 		};
 	}
 
@@ -507,6 +507,7 @@ namespace game
 			{
 				//loadingStr = "로딩중...";
 				loadingStr = "ロード中...";
+				loadingStr = "Loading...";
 			}
 			else
 			{
@@ -525,12 +526,20 @@ namespace game
 				//default: loadingStr = "로딩 중..."; break;
 				//}
 
+				//switch (g_loadStep)
+				//{
+				//case 0: loadingStr = "ロード中"; break;
+				//case 1: loadingStr = "ロード中."; break;
+				//case 2: loadingStr = "ロード中.."; break;
+				//default: loadingStr = "ロード中..."; break;
+				//}
+
 				switch (g_loadStep)
 				{
-				case 0: loadingStr = "ロード中"; break;
-				case 1: loadingStr = "ロード中."; break;
-				case 2: loadingStr = "ロード中.."; break;
-				default: loadingStr = "ロード中..."; break;
+				case 0: loadingStr = "Loading"; break;
+				case 1: loadingStr = "Loading."; break;
+				case 2: loadingStr = "Loading.."; break;
+				default: loadingStr = "Loading..."; break;
 				}
 			}
 

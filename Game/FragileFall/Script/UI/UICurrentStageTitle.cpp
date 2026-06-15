@@ -21,7 +21,7 @@ namespace game
                 return "Boss";
             }
 
-            return "深度 " + std::to_string(stageNumber);
+            return "Abyss Lv " + std::to_string(stageNumber);
         }
     }
 
