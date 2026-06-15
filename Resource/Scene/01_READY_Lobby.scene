@@ -19499,8 +19499,8 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "ドラッグで回転できます。",
-                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
+                    "Text": "Drag to rotate.",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 25,
                     "Color": {
                         "x": 0.7992278337478638,
