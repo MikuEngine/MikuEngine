@@ -15453,7 +15453,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "Sound",
+                    "Text": "BGM",
                     "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 40,
                     "Color": {
