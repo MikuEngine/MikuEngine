@@ -2334,7 +2334,7 @@
             "ID": 31,
             "ParentID": 22,
             "Name": "UI_RealGiveupPopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -2499,7 +2499,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "FLEE",
+                    "Text": "Give up",
                     "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
@@ -2626,7 +2626,7 @@
                     "Width": 100.0,
                     "Height": 100.0,
                     "Pivot": {
-                        "x": 0.5,
+                        "x": 0.0,
                         "y": 0.5
                     },
                     "AnchorMin": {
@@ -2699,7 +2699,7 @@
                     "Width": 100.0,
                     "Height": 100.0,
                     "Pivot": {
-                        "x": 0.5,
+                        "x": 0.0,
                         "y": 0.5
                     },
                     "AnchorMin": {

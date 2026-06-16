@@ -15603,7 +15603,7 @@
                     "Layer": 1,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Text": "Paused",
+                    "Text": "Pause",
                     "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
@@ -15625,7 +15625,7 @@
             "ID": 102,
             "ParentID": 93,
             "Name": "UI_RealGiveupPopUp",
-            "Active": false,
+            "Active": true,
             "Components": [
                 {
                     "Type": "Transform",
@@ -15790,7 +15790,7 @@
                     "Layer": 2,
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
-                    "Text": "FLEE",
+                    "Text": "Give up",
                     "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
@@ -15917,7 +15917,7 @@
                     "Width": 100.0,
                     "Height": 100.0,
                     "Pivot": {
-                        "x": 0.5,
+                        "x": 1.0,
                         "y": 0.5
                     },
                     "AnchorMin": {
@@ -15990,7 +15990,7 @@
                     "Width": 100.0,
                     "Height": 100.0,
                     "Pivot": {
-                        "x": 0.5,
+                        "x": 0.0,
                         "y": 0.5
                     },
                     "AnchorMin": {
@@ -24980,7 +24980,7 @@
                     "OrderInLayer": 0,
                     "RaycastTarget": true,
                     "Text": "\"스테이지 텍스트\"",
-                    "FontPath": "Resource/Font/HannariMincho-Regular.otf",
+                    "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 60,
                     "Color": {
                         "x": 0.3636816143989563,

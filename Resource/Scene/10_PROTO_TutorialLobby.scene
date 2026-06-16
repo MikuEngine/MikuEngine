@@ -3062,7 +3062,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.6000000238418579
+                        "y": 0.5
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -3080,7 +3080,7 @@
                     "Layer": 0,
                     "OrderInLayer": 0,
                     "RaycastTarget": false,
-                    "Text": "Enter Abyss",
+                    "Text": "Abyss Entry",
                     "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 30,
                     "Color": {
@@ -3286,7 +3286,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.6000000238418579
+                        "y": 0.5
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -3510,7 +3510,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.6000000238418579
+                        "y": 0.5
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -3734,7 +3734,7 @@
                     "Height": 0.0,
                     "Pivot": {
                         "x": 0.5,
-                        "y": 0.6000000238418579
+                        "y": 0.5
                     },
                     "AnchorMin": {
                         "x": 0.0,
@@ -5039,7 +5039,7 @@
                     "Layer": 0,
                     "OrderInLayer": 1,
                     "RaycastTarget": false,
-                    "Text": "Survive",
+                    "Text": "Survival",
                     "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 32,
                     "Color": {
