@@ -15603,7 +15603,7 @@
                     "Layer": 1,
                     "OrderInLayer": 1,
                     "RaycastTarget": true,
-                    "Text": "Pause",
+                    "Text": "Paused",
                     "FontPath": "Resource/Font/GG_Font.ttf",
                     "FontPx": 70,
                     "Color": {
